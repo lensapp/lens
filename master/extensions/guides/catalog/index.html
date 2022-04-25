@@ -835,26 +835,26 @@ It declares the currently supported versions of that kind of entity but providin
 It is possible to register custom views for specific categories by registering them on your <code>Renderer.LensExtension</code> class.</p>
 <p>A registration takes the form of a <a href="../../api/interfaces/Common.Types.CustomCategoryViewRegistration/">Common.Types.CustomCategoryViewRegistration</a></p>
 <p>For example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span><span class="p">,</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">,</span><span class="w"> </span><span class="nx">Common</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">function</span> <span class="nx">MyKubernetesClusterView</span><span class="p">({</span>
-  <span class="nx">category</span><span class="p">,</span>
-<span class="p">}</span><span class="o">:</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">CustomCategoryViewProps</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">view</span><span class="o">:</span> <span class="p">{</span><span class="nx">category</span><span class="p">.</span><span class="nx">getId</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
-<span class="p">}</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">MyKubernetesClusterView</span><span class="p">({</span><span class="w"></span>
+<span class="w">  </span><span class="nx">category</span><span class="p">,</span><span class="w"></span>
+<span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="nx">Common</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">CustomCategoryViewProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">My</span><span class="w"> </span><span class="nx">view</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">category</span><span class="p">.</span><span class="nx">getId</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/div&gt;;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">customCategoryViews</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">group</span><span class="o">:</span> <span class="s2">&quot;entity.k8slens.dev&quot;</span><span class="p">,</span>
-      <span class="nx">kind</span><span class="o">:</span> <span class="s2">&quot;KubernetesCluster&quot;</span><span class="p">,</span>
-      <span class="nx">priority</span>: <span class="kt">10</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">View</span>: <span class="kt">MyKubernetesClusterView</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">customCategoryViews</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">group</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;entity.k8slens.dev&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">kind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;KubernetesCluster&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">priority</span><span class="o">:</span><span class="w"> </span><span class="kt">10</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">View</span><span class="o">:</span><span class="w"> </span><span class="kt">MyKubernetesClusterView</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>Will register a new view for the KubernetesCluster category, and because the priority is &lt; 50 it will be displayed above the default list view.</p>
 <p>The default list view has a priority of 50 and and custom views with priority (defaulting to 50) &gt;= 50 will be displayed afterwards.</p>

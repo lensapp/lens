@@ -975,20 +975,20 @@ For example:</p>
 If the class isn't there, the theme defaults to dark. The active theme can be changed in the <strong>Preferences</strong> page:
 <img alt="Color Theme" src="../images/theme-selector.png" /></p>
 <p>There is a way of detect active theme and its changes in JS. <a href="https://github.com/mobxjs/mobx-react#observercomponent">MobX observer function/decorator</a> can be used for this purpose.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx-react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">observer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;mobx-react&quot;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="err">@</span><span class="nx">observer</span>
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">SupportPage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;SupportPage&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Active</span> <span class="nx">theme</span> <span class="nx">is</span> <span class="p">{</span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Theme</span><span class="p">.</span><span class="nx">getActiveTheme</span><span class="p">().</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/h1&gt;</span>
-      <span class="o">&lt;</span><span class="err">/div&gt;</span>
-    <span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="err">@</span><span class="nx">observer</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">SupportPage</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;SupportPage&quot;</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Active</span><span class="w"> </span><span class="nx">theme</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="p">{</span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Theme</span><span class="p">.</span><span class="nx">getActiveTheme</span><span class="p">().</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/h1&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>Theme</code> entity from <code>@k8slens/extensions</code> provides active theme object and <code>@observer</code> decorator makes component reactive - so it will rerender each time any of the observables (active theme in our case) will be changed.</p>
 <p>Working example provided in <a href="https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample">Styling with Emotion</a> sample extension.</p>
@@ -1004,9 +1004,9 @@ If the class isn't there, the theme defaults to dark. The active theme can be ch
 <p>Extensions may overwrite these defaults if needed. They have low CSS specificity, so overriding them should be fairly easy.</p>
 <h2 id="css-in-js">CSS-in-JS<a class="headerlink" href="#css-in-js" title="Permanent link">#</a></h2>
 <p>If an extension uses a system like <code>Emotion</code> to work with styles, it can use CSS variables as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">Container</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">({</span>
-  <span class="nx">backgroundColor</span><span class="o">:</span> <span class="s1">&#39;var(--mainBackground)&#39;</span>
-<span class="p">}));</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">Container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"></span>
+<span class="w">  </span><span class="nx">backgroundColor</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;var(--mainBackground)&#39;</span><span class="w"></span>
+<span class="p">}));</span><span class="w"></span>
 </code></pre></div>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h2>
 <p>You can explore samples for each styling technique that you can use for extensions:</p>

@@ -852,35 +852,35 @@ Lens uses this ID to uniquely identify your extension.</li>
 <li><code>renderer</code>: the extension's entry point run in <code>renderer</code> process.</li>
 <li><code>engines.lens</code>: the minimum version of Lens API that the extension depends upon.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;helloworld-sample&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;publisher&quot;</span><span class="o">:</span> <span class="s2">&quot;lens-samples&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Lens helloworld-sample&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;license&quot;</span><span class="o">:</span> <span class="s2">&quot;MIT&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;homepage&quot;</span><span class="o">:</span> <span class="s2">&quot;https://github.com/lensapp/lens-extension-samples&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;engines&quot;</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;lens&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.0.0&quot;</span>
-  <span class="p">},</span>
-  <span class="s2">&quot;main&quot;</span><span class="o">:</span> <span class="s2">&quot;dist/main.js&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;renderer&quot;</span><span class="o">:</span> <span class="s2">&quot;dist/renderer.js&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;scripts&quot;</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;build&quot;</span><span class="o">:</span> <span class="s2">&quot;webpack --config webpack.config.js&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;dev&quot;</span><span class="o">:</span> <span class="s2">&quot;npm run build --watch&quot;</span>
-  <span class="p">},</span>
-  <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;react-open-doodles&quot;</span><span class="o">:</span> <span class="s2">&quot;^1.0.5&quot;</span>
-  <span class="p">},</span>
-  <span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.0.0-alpha.2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ts-loader&quot;</span><span class="o">:</span> <span class="s2">&quot;^8.0.4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;typescript&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.0.3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;@types/react&quot;</span><span class="o">:</span> <span class="s2">&quot;^16.9.35&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;@types/node&quot;</span><span class="o">:</span> <span class="s2">&quot;^12.0.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;webpack&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.44.2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;webpack-cli&quot;</span><span class="o">:</span> <span class="s2">&quot;^3.3.11&quot;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;helloworld-sample&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;publisher&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;lens-samples&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;version&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Lens helloworld-sample&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;license&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;homepage&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/lensapp/lens-extension-samples&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;engines&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;lens&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.0.0&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;main&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dist/main.js&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;renderer&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dist/renderer.js&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;scripts&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;build&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;webpack --config webpack.config.js&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;dev&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;npm run build --watch&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;dependencies&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;react-open-doodles&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^1.0.5&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.0.0-alpha.2&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;ts-loader&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^8.0.4&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;typescript&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.0.3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;@types/react&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^16.9.35&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;@types/node&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^12.0.0&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;webpack&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.44.2&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;webpack-cli&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^3.3.11&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <h2 id="extension-entry-files">Extension Entry Files<a class="headerlink" href="#extension-entry-files" title="Permanent link">#</a></h2>
 <p>Lens extensions can have two separate entry files.
@@ -897,20 +897,20 @@ On the <code>renderer</code> entry point, the Hello World sample extension defin
 The <code>Cluster Page</code> object registers the <code>/extension-example</code> path, and this path renders the <code>ExamplePage</code> React component.
 It also registers the <code>MenuItem</code> component that displays the <code>ExampleIcon</code> React component and the "Hello World" text in the left-side menu of the cluster dashboard.
 These React components are defined in the additional <code>./src/page.tsx</code> file.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./page&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ExampleIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;extension-example&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">clusterPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;extension-example&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>The Hello World sample extension uses the <code>Cluster Page</code> capability, which is just one of the Lens extension API's capabilities.
 The <a href="../../capabilities/common-capabilities/">Common Capabilities</a> page will help you home in on the right capabilities to use with your own extensions.</p>

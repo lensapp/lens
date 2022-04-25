@@ -791,55 +791,55 @@
                 <h1 id="extending-kubernetescluster">Extending KubernetesCluster<a class="headerlink" href="#extending-kubernetescluster" title="Permanent link">#</a></h1>
 <p>Extension can specify it's own subclass of Common.Catalog.KubernetesCluster. Extension can also specify a new Category for it in the Catalog.</p>
 <h2 id="extending-commoncatalogkubernetescluster">Extending Common.Catalog.KubernetesCluster<a class="headerlink" href="#extending-commoncatalogkubernetescluster" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Common</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="c1">// The kind must be different from KubernetesCluster&#39;s kind</span>
-<span class="k">export</span> <span class="kd">const</span> <span class="nx">kind</span> <span class="o">=</span> <span class="s2">&quot;ManagedDevCluster&quot;</span><span class="p">;</span>
+<span class="c1">// The kind must be different from KubernetesCluster&#39;s kind</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ManagedDevCluster&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ManagedDevCluster</span> <span class="k">extends</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">KubernetesCluster</span> <span class="p">{</span>
-  <span class="k">public</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">kind</span> <span class="o">=</span> <span class="nx">kind</span><span class="p">;</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ManagedDevCluster</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">KubernetesCluster</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">kind</span><span class="p">;</span><span class="w"></span>
 
-  <span class="k">public</span> <span class="k">readonly</span> <span class="nx">kind</span> <span class="o">=</span> <span class="nx">kind</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">kind</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <h2 id="extending-commoncatalogcatalogcategory">Extending Common.Catalog.CatalogCategory<a class="headerlink" href="#extending-commoncatalogcatalogcategory" title="Permanent link">#</a></h2>
 <p>These custom Catalog entities can be added a new Category in the Catalog.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">kind</span><span class="p">,</span> <span class="nx">ManagedDevCluster</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;../entities/ManagedDevCluster&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Common</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">kind</span><span class="p">,</span><span class="w"> </span><span class="nx">ManagedDevCluster</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../entities/ManagedDevCluster&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">class</span> <span class="nx">ManagedDevClusterCategory</span> <span class="k">extends</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">CatalogCategory</span> <span class="p">{</span>
-  <span class="k">public</span> <span class="k">readonly</span> <span class="nx">apiVersion</span> <span class="o">=</span> <span class="s2">&quot;catalog.k8slens.dev/v1alpha1&quot;</span><span class="p">;</span>
-  <span class="k">public</span> <span class="k">readonly</span> <span class="nx">kind</span> <span class="o">=</span> <span class="s2">&quot;CatalogCategory&quot;</span><span class="p">;</span>
-  <span class="k">public</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Managed Dev Clusters&quot;</span><span class="p">,</span>
-    <span class="nx">icon</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
-  <span class="p">};</span>
-  <span class="k">public</span> <span class="nx">spec</span>: <span class="kt">Common.Catalog.CatalogCategorySpec</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">group</span><span class="o">:</span> <span class="s2">&quot;entity.k8slens.dev&quot;</span><span class="p">,</span>
-    <span class="nx">versions</span><span class="o">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;v1alpha1&quot;</span><span class="p">,</span>
-        <span class="nx">entityClass</span>: <span class="kt">ManagedDevCluster</span> <span class="kr">as</span> <span class="nx">any</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">],</span>
-    <span class="nx">names</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">kind</span>
-    <span class="p">},</span>
-  <span class="p">};</span>
-<span class="p">}</span>
+<span class="kd">class</span><span class="w"> </span><span class="nx">ManagedDevClusterCategory</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">CatalogCategory</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">apiVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;catalog.k8slens.dev/v1alpha1&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CatalogCategory&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="nx">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Managed Dev Clusters&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="nx">spec</span><span class="o">:</span><span class="w"> </span><span class="kt">Common.Catalog.CatalogCategorySpec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">group</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;entity.k8slens.dev&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nx">versions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;v1alpha1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nx">entityClass</span><span class="o">:</span><span class="w"> </span><span class="kt">ManagedDevCluster</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nx">names</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">kind</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="k">export</span> <span class="p">{</span> <span class="nx">ManagedDevClusterCategory</span> <span class="p">};</span>
-<span class="k">export</span> <span class="kr">type</span> <span class="p">{</span> <span class="nx">ManagedDevClusterCategory</span> <span class="kr">as</span> <span class="nx">ManagedDevClusterCategoryType</span> <span class="p">};</span>
+<span class="k">export</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ManagedDevClusterCategory</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ManagedDevClusterCategory</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">ManagedDevClusterCategoryType</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
 </code></pre></div>
 <p>The category needs to be registered in the <code>onActivate()</code> method both in main and renderer</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// in main&#39;s on onActivate</span>
-<span class="nx">Main</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">catalogCategories</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span> <span class="nx">ManagedDevClusterCategory</span><span class="p">());</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// in main&#39;s on onActivate</span><span class="w"></span>
+<span class="nx">Main</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">catalogCategories</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">ManagedDevClusterCategory</span><span class="p">());</span><span class="w"></span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">// in renderer&#39;s on onActivate</span>
-<span class="nx">Renderer</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">catalogCategories</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span> <span class="nx">ManagedDevClusterCategory</span><span class="p">());</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// in renderer&#39;s on onActivate</span><span class="w"></span>
+<span class="nx">Renderer</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">catalogCategories</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">ManagedDevClusterCategory</span><span class="p">());</span><span class="w"></span>
 </code></pre></div>
 <p>You can then add the entities to the Catalog as a new source:</p>
-<div class="highlight"><pre><span></span><code><span class="k">this</span><span class="p">.</span><span class="nx">addCatalogSource</span><span class="p">(</span><span class="s2">&quot;managedDevClusters&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">managedDevClusters</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="k">this</span><span class="p">.</span><span class="nx">addCatalogSource</span><span class="p">(</span><span class="s2">&quot;managedDevClusters&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">managedDevClusters</span><span class="p">);</span><span class="w"></span>
 </code></pre></div>
                 
               

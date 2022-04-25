@@ -1042,17 +1042,17 @@ The Renderer Extension API allows you to access, configure, and customize Lens d
 <h2 id="rendererlensextension-class"><code>Renderer.LensExtension</code> Class<a class="headerlink" href="#rendererlensextension-class" title="Permanent link">#</a></h2>
 <h3 id="onactivate-and-ondeactivate-methods"><code>onActivate()</code> and <code>onDeactivate()</code> Methods<a class="headerlink" href="#onactivate-and-ondeactivate-methods" title="Permanent link">#</a></h3>
 <p>To create a renderer extension, extend the <code>Renderer.LensExtension</code> class:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;custom renderer process extension code started&quot;</span><span class="p">);</span>
-  <span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtensionMain</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">onActivate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;custom renderer process extension code started&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  <span class="nx">onDeactivate</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;custom renderer process extension de-activated&quot;</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="nx">onDeactivate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;custom renderer process extension de-activated&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>Two methods enable you to run custom code: <code>onActivate()</code> and <code>onDeactivate()</code>.
 Enabling your extension calls <code>onActivate()</code> and disabling your extension calls <code>onDeactivate()</code>.
@@ -1073,20 +1073,20 @@ Use cluster pages to display information about or add functionality to the activ
 It is also possible to include custom details from other clusters.
 Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#Clusterstore"><code>ClusterStore.getInstance()</code></a>.</p>
 <p>Add a cluster page definition to a <code>Renderer.LensExtension</code> subclass with the following example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./page&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ExampleIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">clusterPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>clusterPages</code> is an array of objects that satisfy the <code>PageRegistration</code> interface.
 The properties of the <code>clusterPages</code> array objects are defined as follows:</p>
@@ -1097,20 +1097,20 @@ The properties of the <code>clusterPages</code> array objects are defined as fol
   It offers flexibility in defining the appearance and behavior of your page.</li>
 </ul>
 <p><code>ExamplePage</code> in the example above can be defined in <code>page.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span>
-  <span class="nx">extension</span>: <span class="kt">LensRendererExtension</span><span class="p">;</span>
-<span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">world</span><span class="o">!&lt;</span><span class="err">/p&gt;</span>
-      <span class="o">&lt;</span><span class="err">/div&gt;</span>
-    <span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">extension</span><span class="o">:</span><span class="w"> </span><span class="kt">LensRendererExtension</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Hello</span><span class="w"> </span><span class="nx">world</span><span class="o">!&lt;</span><span class="err">/p&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>Note that the <code>ExamplePage</code> class defines the <code>extension</code> property.
 This allows the <code>ExampleExtension</code> object to be passed in the cluster page definition in the React style.
@@ -1120,30 +1120,30 @@ Use <code>clusterPageMenus</code>, covered in the next section, to add cluster p
 <h3 id="clusterpagemenus"><code>clusterPageMenus</code><a class="headerlink" href="#clusterpagemenus" title="Permanent link">#</a></h3>
 <p><code>clusterPageMenus</code> allows you to add cluster page menu items to the secondary left nav, below Lens's standard cluster menus like <strong>Workloads</strong>, <strong>Custom Resources</strong>, etc.</p>
 <p>By expanding on the above example, you can add a cluster page menu item to the <code>ExampleExtension</code> definition:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./page&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ExampleIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">clusterPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
 
-  <span class="nx">clusterPageMenus</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">pageId</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span> <span class="p">},</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Hello World&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Icon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="nx">clusterPageMenus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pageId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello World&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Icon</span><span class="o">:</span><span class="w"> </span><span class="kt">ExampleIcon</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>clusterPageMenus</code> is an array of objects that satisfy the <code>ClusterPageMenuRegistration</code> interface.
 This element defines how the cluster page menu item will appear and what it will do when you click it.
@@ -1157,30 +1157,30 @@ The properties of the <code>clusterPageMenus</code> array objects are defined as
 <p>The above example creates a menu item that reads <strong>Hello World</strong>.
 When users click <strong>Hello World</strong>, the cluster dashboard will show the contents of <code>Example Page</code>.</p>
 <p>This example requires the definition of another React-based component, <code>ExampleIcon</code>, which has been added to <code>page.tsx</code>, as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kr">type</span> <span class="nx">IconProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">IconProps</span><span class="p">;</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">IconProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">IconProps</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">const</span> <span class="p">{</span>
-  <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">Icon</span> <span class="p">},</span>
-<span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">Component</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Icon</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">function</span> <span class="nx">ExampleIcon</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">IconProps</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Icon</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;pages&quot;</span> <span class="nx">tooltip</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Hi!&quot;</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">ExampleIcon</span><span class="p">(</span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">IconProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">Icon</span><span class="w"> </span><span class="p">{...</span><span class="nx">props</span><span class="p">}</span><span class="w"> </span><span class="nx">material</span><span class="o">=</span><span class="s2">&quot;pages&quot;</span><span class="w"> </span><span class="nx">tooltip</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Hi!&quot;</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span>
-  <span class="nx">extension</span>: <span class="kt">Renderer.LensExtension</span><span class="p">;</span>
-<span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">world</span><span class="o">!&lt;</span><span class="err">/p&gt;</span>
-      <span class="o">&lt;</span><span class="err">/div&gt;</span>
-    <span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">extension</span><span class="o">:</span><span class="w"> </span><span class="kt">Renderer.LensExtension</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Hello</span><span class="w"> </span><span class="nx">world</span><span class="o">!&lt;</span><span class="err">/p&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>Lens includes various built-in components available for extension developers to use.
 One of these is the <code>Renderer.Component.Icon</code>, introduced in <code>ExampleIcon</code>, which you can use to access any of the <a href="https://material.io/resources/icons/">icons</a> available at <a href="https://material.io">Material Design</a>.
@@ -1191,52 +1191,52 @@ The properties that <code>Renderer.Component.Icon</code> uses are defined as fol
 </ul>
 <p><code>clusterPageMenus</code> can also be used to define sub menu items, so that you can create groups of cluster pages.
 The following example groups two sub menu items under one parent menu item:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./page&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ExampleIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;bonjour&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExemplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">clusterPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;bonjour&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExemplePage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
 
-  <span class="nx">clusterPageMenus</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;example&quot;</span><span class="p">,</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Greetings&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Icon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-      <span class="nx">parentId</span><span class="o">:</span> <span class="s2">&quot;example&quot;</span><span class="p">,</span>
-      <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">pageId</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span> <span class="p">},</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Hello World&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Icon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-      <span class="nx">parentId</span><span class="o">:</span> <span class="s2">&quot;example&quot;</span><span class="p">,</span>
-      <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">pageId</span><span class="o">:</span> <span class="s2">&quot;bonjour&quot;</span> <span class="p">},</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Icon</span>: <span class="kt">ExempleIcon</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="nx">clusterPageMenus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;example&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Greetings&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Icon</span><span class="o">:</span><span class="w"> </span><span class="kt">ExampleIcon</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">parentId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;example&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pageId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello World&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Icon</span><span class="o">:</span><span class="w"> </span><span class="kt">ExampleIcon</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">parentId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;example&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pageId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;bonjour&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Icon</span><span class="o">:</span><span class="w"> </span><span class="kt">ExempleIcon</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>The above defines two cluster pages and three cluster page menu objects.
 The cluster page definitions are straightforward.
@@ -1256,20 +1256,20 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
 Their primary use is to display information and provide functionality across clusters (or catalog entities), including customized data and functionality unique to your extension.</p>
 <p>Unlike cluster pages, users can trigger global pages even when there is no active cluster (or catalog entity).</p>
 <p>The following example defines a <code>Renderer.LensExtension</code> subclass with a single global page definition:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./page&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">HelpPage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">HelpExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">HelpPage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">HelpExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">globalPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;help&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">HelpPage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>globalPages</code> is an array of objects that satisfy the <code>PageRegistration</code> interface.
 The properties of the <code>globalPages</code> array objects are defined as follows:</p>
@@ -1280,20 +1280,20 @@ The properties of the <code>globalPages</code> array objects are defined as foll
   It offers flexibility in defining the appearance and behavior of your page.</li>
 </ul>
 <p><code>HelpPage</code> in the example above can be defined in <code>page.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">HelpPage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span>
-  <span class="nx">extension</span>: <span class="kt">LensRendererExtension</span><span class="p">;</span>
-<span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Help</span> <span class="nx">yourself</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-      <span class="o">&lt;</span><span class="err">/div&gt;</span>
-    <span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">HelpPage</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">extension</span><span class="o">:</span><span class="w"> </span><span class="kt">LensRendererExtension</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Help</span><span class="w"> </span><span class="nx">yourself</span><span class="o">&lt;</span><span class="err">/p&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>Note that the <code>HelpPage</code> class defines the <code>extension</code> property.
 This allows the <code>HelpExtension</code> object to be passed in the global page definition in the React-style.
@@ -1310,27 +1310,27 @@ Global pages are typically made available in the following ways:</p>
 <p>The Lens <strong>Preferences</strong> page is a built-in global page.
 You can use Lens extensions to add custom preferences to the Preferences page, providing a single location for users to configure global options.</p>
 <p>The following example demonstrates adding a custom preference:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span>
-  <span class="nx">ExamplePreferenceHint</span><span class="p">,</span>
-  <span class="nx">ExamplePreferenceInput</span><span class="p">,</span>
-<span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">ExamplePreferenceHint</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nx">ExamplePreferenceInput</span><span class="p">,</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">observable</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;mobx&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleRendererExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="kd">@observable</span> <span class="nx">preference</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">enabled</span>: <span class="kt">false</span> <span class="p">};</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleRendererExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kd">@observable</span><span class="w"> </span><span class="nx">preference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
 
-  <span class="nx">appPreferences</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Preferences&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Input</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceInput</span> <span class="nx">preference</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">preference</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-        <span class="nx">Hint</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceHint</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="nx">appPreferences</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Example Preferences&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Input</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePreferenceInput</span><span class="w"> </span><span class="nx">preference</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">preference</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Hint</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePreferenceHint</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>appPreferences</code> is an array of objects that satisfies the <code>AppPreferenceRegistration</code> interface.
 The properties of the <code>appPreferences</code> array objects are defined as follows:</p>
@@ -1348,47 +1348,47 @@ The properties of the <code>appPreferences</code> array objects are defined as f
 This is how <code>ExampleRendererExtension</code> handles the state of the preference input.
 <code>ExampleRendererExtension</code> has a <code>preference</code> field, which you will add to <code>ExamplePreferenceInput</code>.</p>
 <p>In this example <code>ExamplePreferenceInput</code>, <code>ExamplePreferenceHint</code>, and <code>ExamplePreferenceProps</code> are defined in <code>./src/example-preference.tsx</code> as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">makeObservable</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">makeObservable</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;mobx&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">observer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">const</span> <span class="p">{</span>
-  <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">Checkbox</span> <span class="p">},</span>
-<span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">Component</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Checkbox</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePreferenceProps</span> <span class="p">{</span>
-  <span class="nx">preference</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">enabled</span>: <span class="kt">boolean</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExamplePreferenceProps</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">preference</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="kd">@observer</span>
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePreferenceInput</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">ExamplePreferenceProps</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="k">public</span> <span class="kr">constructor</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">super</span><span class="p">({</span> <span class="nx">preference</span><span class="o">:</span> <span class="p">{</span> <span class="nx">enabled</span>: <span class="kt">false</span> <span class="p">}</span> <span class="p">});</span>
-    <span class="nx">makeObservable</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-  <span class="p">}</span>
+<span class="kd">@observer</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExamplePreferenceInput</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">ExamplePreferenceProps</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">super</span><span class="p">({</span><span class="w"> </span><span class="nx">preference</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="w">    </span><span class="nx">makeObservable</span><span class="p">(</span><span class="k">this</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="p">{</span> <span class="nx">preference</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">Checkbox</span>
-        <span class="nx">label</span><span class="o">=</span><span class="s2">&quot;I understand appPreferences&quot;</span>
-        <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">preference</span><span class="p">.</span><span class="nx">enabled</span><span class="p">}</span>
-        <span class="nx">onChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">v</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-          <span class="nx">preference</span><span class="p">.</span><span class="nx">enabled</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span>
-        <span class="p">}}</span>
-      <span class="o">/&gt;</span>
-    <span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">preference</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">Checkbox</span><span class="w"></span>
+<span class="w">        </span><span class="nx">label</span><span class="o">=</span><span class="s2">&quot;I understand appPreferences&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">preference</span><span class="p">.</span><span class="nx">enabled</span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="nx">onChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="nx">preference</span><span class="p">.</span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">v</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}}</span><span class="w"></span>
+<span class="w">      </span><span class="o">/&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePreferenceHint</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">This</span> <span class="nx">is</span> <span class="nx">an</span> <span class="nx">example</span> <span class="k">of</span> <span class="nx">an</span> <span class="nx">appPreference</span> <span class="k">for</span> <span class="nx">extensions</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/span&gt;;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExamplePreferenceHint</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">This</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">example</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">appPreference</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">extensions</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/span&gt;;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>ExamplePreferenceInput</code> implements a simple checkbox using Lens's <code>Renderer.Component.Checkbox</code> using the following properties:</p>
 <ul>
@@ -1416,36 +1416,36 @@ However, we recommend that you manage your extension's state data using <a href=
 They can be used to display status information, or act as links to global pages as well as external pages.</p>
 <p>The following example adds a <code>statusBarItems</code> definition and a <code>globalPages</code> definition to a <code>LensRendererExtension</code> subclass.
 It configures the status bar item to navigate to the global page upon activation (normally a mouse click):</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpIcon</span><span class="p">,</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./page&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">HelpIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">HelpPage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">HelpExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">HelpPage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">HelpExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">globalPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;help&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">HelpPage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
 
-  <span class="nx">statusBarItems</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Item</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">(</span>
-          <span class="o">&lt;</span><span class="nx">div</span>
-            <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps&quot;</span>
-            <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)}</span>
-          <span class="o">&gt;</span>
-            <span class="o">&lt;</span><span class="nx">HelpIcon</span> <span class="o">/&gt;</span>
-            <span class="nx">My</span> <span class="nx">Status</span> <span class="nx">Bar</span> <span class="nx">Item</span>
-          <span class="o">&lt;</span><span class="err">/div&gt;</span>
-        <span class="p">),</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="nx">statusBarItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Item</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"></span>
+<span class="w">            </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)}</span><span class="w"></span>
+<span class="w">          </span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">HelpIcon</span><span class="w"> </span><span class="o">/&gt;</span><span class="w"></span>
+<span class="w">            </span><span class="nx">My</span><span class="w"> </span><span class="nx">Status</span><span class="w"> </span><span class="nx">Bar</span><span class="w"> </span><span class="nx">Item</span><span class="w"></span>
+<span class="w">          </span><span class="o">&lt;</span><span class="err">/div&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="p">),</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>The properties of the <code>statusBarItems</code> array objects are defined as follows:</p>
 <ul>
@@ -1465,26 +1465,26 @@ It configures the status bar item to navigate to the global page upon activation
 <p>They also appear on the title bar of the details page for specific resources:</p>
 <p><img alt="Details" src="../images/kubeobjectmenuitemdetail.png" /></p>
 <p>The following example shows how to add a <code>kubeObjectMenuItems</code> for namespace resources with an associated action:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">NamespaceMenuItem</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./src/namespace-menu-item&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NamespaceMenuItem</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./src/namespace-menu-item&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kr">type</span> <span class="nx">KubeObjectMenuProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span>
-<span class="kr">type</span> <span class="nx">Namespace</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">KubeObjectMenuProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span><span class="w"></span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">kubeObjectMenuItems</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">kind</span><span class="o">:</span> <span class="s2">&quot;Namespace&quot;</span><span class="p">,</span>
-      <span class="nx">apiVersions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;v1&quot;</span><span class="p">],</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">MenuItem</span><span class="o">:</span> <span class="p">(</span><span class="nx">props</span>: <span class="kt">KubeObjectMenuProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span>
-          <span class="o">&lt;</span><span class="nx">NamespaceMenuItem</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span>
-        <span class="p">),</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">kubeObjectMenuItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">kind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Namespace&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">apiVersions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;v1&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">MenuItem</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">KubeObjectMenuProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="o">&lt;</span><span class="nx">NamespaceMenuItem</span><span class="w"> </span><span class="p">{...</span><span class="nx">props</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="p">),</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>kubeObjectMenuItems</code> is an array of objects matching the <code>KubeObjectMenuRegistration</code> interface.
 The example above adds a menu item for namespaces in the cluster dashboard.
@@ -1497,46 +1497,46 @@ The properties of the <code>kubeObjectMenuItems</code> array objects are defined
   In this example a <code>NamespaceMenuItem</code> object is returned.</li>
 </ul>
 <p><code>NamespaceMenuItem</code> is defined in <code>./src/namespace-menu-item.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">const</span> <span class="p">{</span>
-  <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">terminalStore</span><span class="p">,</span> <span class="nx">MenuItem</span><span class="p">,</span> <span class="nx">Icon</span> <span class="p">},</span>
-  <span class="nx">Navigation</span><span class="p">,</span>
-<span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">Component</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">terminalStore</span><span class="p">,</span><span class="w"> </span><span class="nx">MenuItem</span><span class="p">,</span><span class="w"> </span><span class="nx">Icon</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="nx">Navigation</span><span class="p">,</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">;</span><span class="w"></span>
 
-<span class="kr">type</span> <span class="nx">KubeObjectMenuProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span>
-<span class="kr">type</span> <span class="nx">Namespace</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">KubeObjectMenuProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span><span class="w"></span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">function</span> <span class="nx">NamespaceMenuItem</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">KubeObjectMenuProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="p">{</span> <span class="nx">object</span>: <span class="kt">namespace</span><span class="p">,</span> <span class="nx">toolbar</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">props</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">namespace</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">NamespaceMenuItem</span><span class="p">(</span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">KubeObjectMenuProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">object</span><span class="o">:</span><span class="w"> </span><span class="kt">namespace</span><span class="p">,</span><span class="w"> </span><span class="nx">toolbar</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">props</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">namespace</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"></span>
 
-  <span class="kd">const</span> <span class="nx">namespaceName</span> <span class="o">=</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">namespaceName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">namespace</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span><span class="w"></span>
 
-  <span class="kd">const</span> <span class="nx">sendToTerminal</span> <span class="o">=</span> <span class="p">(</span><span class="nx">command</span>: <span class="kt">string</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">terminalStore</span><span class="p">.</span><span class="nx">sendCommand</span><span class="p">(</span><span class="nx">command</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">enter</span>: <span class="kt">true</span><span class="p">,</span>
-      <span class="nx">newTab</span>: <span class="kt">true</span><span class="p">,</span>
-    <span class="p">});</span>
-    <span class="nx">Navigation</span><span class="p">.</span><span class="nx">hideDetails</span><span class="p">();</span>
-  <span class="p">};</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">sendToTerminal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">terminalStore</span><span class="p">.</span><span class="nx">sendCommand</span><span class="p">(</span><span class="nx">command</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">enter</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">newTab</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
+<span class="w">    </span><span class="nx">Navigation</span><span class="p">.</span><span class="nx">hideDetails</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
 
-  <span class="kd">const</span> <span class="nx">getPods</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">sendToTerminal</span><span class="p">(</span><span class="sb">`kubectl get pods -n </span><span class="si">${</span><span class="nx">namespaceName</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
-  <span class="p">};</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">getPods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">sendToTerminal</span><span class="p">(</span><span class="sb">`kubectl get pods -n </span><span class="si">${</span><span class="nx">namespaceName</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
 
-  <span class="k">return</span> <span class="p">(</span>
-    <span class="o">&lt;</span><span class="nx">MenuItem</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">getPods</span><span class="p">}</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="nx">Icon</span>
-        <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;speaker_group&quot;</span>
-        <span class="nx">interactive</span><span class="o">=</span><span class="p">{</span><span class="nx">toolbar</span><span class="p">}</span>
-        <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;Get pods in terminal&quot;</span>
-      <span class="o">/&gt;</span>
-      <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;title&quot;</span><span class="o">&gt;</span><span class="nx">Get</span> <span class="nx">Pods</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
-    <span class="o">&lt;</span><span class="err">/MenuItem&gt;</span>
-  <span class="p">);</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="o">&lt;</span><span class="nx">MenuItem</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">getPods</span><span class="p">}</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">Icon</span><span class="w"></span>
+<span class="w">        </span><span class="nx">material</span><span class="o">=</span><span class="s2">&quot;speaker_group&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nx">interactive</span><span class="o">=</span><span class="p">{</span><span class="nx">toolbar</span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="nx">title</span><span class="o">=</span><span class="s2">&quot;Get pods in terminal&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="o">/&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">span</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;title&quot;</span><span class="o">&gt;</span><span class="nx">Get</span><span class="w"> </span><span class="nx">Pods</span><span class="o">&lt;</span><span class="err">/span&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">&lt;</span><span class="err">/MenuItem&gt;</span><span class="w"></span>
+<span class="w">  </span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>NamespaceMenuItem</code> returns a <code>Renderer.Component.MenuItem</code> which defines the menu item's appearance and its behavior when activated via the <code>onClick</code> property.
 In the example, <code>getPods()</code> opens a terminal tab and runs <code>kubectl</code> to get a list of pods running in the current namespace.</p>
@@ -1550,28 +1550,28 @@ Thus, <code>kubeObjectMenuItems</code> afford convenient access to the specific 
 These custom details appear on the details page for a specific resource, such as a Namespace as shown here:</p>
 <p><img alt="Details" src="../images/kubeobjectdetailitem.png" /></p>
 <p>The following example shows how to use <code>kubeObjectDetailItems</code> to add a tabulated list of pods to the Namespace resource details page:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">NamespaceDetailsItem</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./src/namespace-details-item&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NamespaceDetailsItem</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./src/namespace-details-item&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kr">type</span> <span class="nx">KubeObjectMenuProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span>
-<span class="kr">type</span> <span class="nx">KubeObjectDetailsProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectDetailsProps</span><span class="p">;</span>
-<span class="kr">type</span> <span class="nx">Namespace</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">KubeObjectMenuProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span><span class="w"></span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">KubeObjectDetailsProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectDetailsProps</span><span class="p">;</span><span class="w"></span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">kubeObjectDetailItems</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">kind</span><span class="o">:</span> <span class="s2">&quot;Namespace&quot;</span><span class="p">,</span>
-      <span class="nx">apiVersions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;v1&quot;</span><span class="p">],</span>
-      <span class="nx">priority</span>: <span class="kt">10</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Details</span><span class="o">:</span> <span class="p">(</span><span class="nx">props</span>: <span class="kt">KubeObjectDetailsProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span>
-          <span class="o">&lt;</span><span class="nx">NamespaceDetailsItem</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span>
-        <span class="p">),</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
-  <span class="p">];</span>
-<span class="p">}</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">kubeObjectDetailItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nx">kind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Namespace&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">apiVersions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;v1&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">      </span><span class="nx">priority</span><span class="o">:</span><span class="w"> </span><span class="kt">10</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Details</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">KubeObjectDetailsProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="o">&lt;</span><span class="nx">NamespaceDetailsItem</span><span class="w"> </span><span class="p">{...</span><span class="nx">props</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="p">),</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>kubeObjectDetailItems</code> is an array of objects matching the <code>KubeObjectDetailRegistration</code> interface.
 This example above adds a detail item for namespaces in the cluster dashboard.
@@ -1584,42 +1584,42 @@ The properties of the <code>kubeObjectDetailItems</code> array objects are defin
   In this example a <code>NamespaceDetailsItem</code> object is returned.</li>
 </ul>
 <p><code>NamespaceDetailsItem</code> is defined in <code>./src/namespace-details-item.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">PodsDetailsList</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./pods-details-list&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PodsDetailsList</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./pods-details-list&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">observable</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;mobx&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">observer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">const</span> <span class="p">{</span>
-  <span class="nx">K8sApi</span><span class="o">:</span> <span class="p">{</span> <span class="nx">podsApi</span> <span class="p">},</span>
-  <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">DrawerTitle</span> <span class="p">},</span>
-<span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">K8sApi</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">podsApi</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="nx">Component</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DrawerTitle</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">;</span><span class="w"></span>
 
-<span class="kr">type</span> <span class="nx">KubeObjectMenuProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span>
-<span class="kr">type</span> <span class="nx">Namespace</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span>
-<span class="kr">type</span> <span class="nx">Pod</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">;</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">KubeObjectMenuProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectMenuProps</span><span class="p">;</span><span class="w"></span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">;</span><span class="w"></span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Pod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">@observer</span>
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">NamespaceDetailsItem</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span>
-  <span class="nx">KubeObjectDetailsProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span>
-<span class="o">&gt;</span> <span class="p">{</span>
-  <span class="kd">@observable</span> <span class="k">private</span> <span class="nx">pods</span>: <span class="kt">Pod</span><span class="p">[];</span>
+<span class="kd">@observer</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">NamespaceDetailsItem</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="w"></span>
+<span class="w">  </span><span class="nx">KubeObjectDetailsProps</span><span class="o">&lt;</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="w"></span>
+<span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kd">@observable</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="nx">pods</span><span class="o">:</span><span class="w"> </span><span class="kt">Pod</span><span class="p">[];</span><span class="w"></span>
 
-  <span class="k">async</span> <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">namespace</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">object</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">componentDidMount</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">object</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span><span class="w"></span>
 
-    <span class="k">this</span><span class="p">.</span><span class="nx">pods</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">podsApi</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span> <span class="nx">namespace</span> <span class="p">});</span>
-  <span class="p">}</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">pods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">podsApi</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">namespace</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">DrawerTitle</span><span class="o">&gt;</span><span class="nx">Pods</span><span class="o">&lt;</span><span class="err">/DrawerTitle&gt;</span>
-        <span class="o">&lt;</span><span class="nx">PodsDetailsList</span> <span class="nx">pods</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">pods</span><span class="p">}</span> <span class="o">/&gt;</span>
-      <span class="o">&lt;</span><span class="err">/div&gt;</span>
-    <span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">DrawerTitle</span><span class="o">&gt;</span><span class="nx">Pods</span><span class="o">&lt;</span><span class="err">/DrawerTitle&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">PodsDetailsList</span><span class="w"> </span><span class="nx">pods</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">pods</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>Since <code>NamespaceDetailsItem</code> extends <code>React.Component&lt;KubeObjectDetailsProps&lt;Namespace&gt;&gt;</code>, it can access the current namespace object (type <code>Namespace</code>) through <code>this.props.object</code>.
 You can query this object for many details about the current namespace.
@@ -1638,51 +1638,51 @@ This is done simply by marking the <code>pods</code> field as an <code>observabl
 Details are placed in drawers, and using <code>Renderer.Component.DrawerTitle</code> provides a separator from details above this one.
 Multiple details in a drawer can be placed in <code>&lt;Renderer.Component.DrawerItem&gt;</code> elements for further separation, if desired.
 The rest of this example's details are defined in <code>PodsDetailsList</code>, found in <code>./pods-details-list.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">const</span> <span class="p">{</span>
-  <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">TableHead</span><span class="p">,</span> <span class="nx">TableRow</span><span class="p">,</span> <span class="nx">TableCell</span><span class="p">,</span> <span class="nx">Table</span> <span class="p">},</span>
-<span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">Component</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">TableHead</span><span class="p">,</span><span class="w"> </span><span class="nx">TableRow</span><span class="p">,</span><span class="w"> </span><span class="nx">TableCell</span><span class="p">,</span><span class="w"> </span><span class="nx">Table</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">;</span><span class="w"></span>
 
-<span class="kr">type</span> <span class="nx">Pod</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">;</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Pod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">interface</span> <span class="nx">PodsDetailsListProps</span> <span class="p">{</span>
-  <span class="nx">pods?</span>: <span class="kt">Pod</span><span class="p">[];</span>
-<span class="p">}</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">PodsDetailsListProps</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">pods?</span><span class="o">:</span><span class="w"> </span><span class="kt">Pod</span><span class="p">[];</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">PodsDetailsList</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">PodsDetailsListProps</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="nx">getTableRow</span> <span class="o">=</span> <span class="p">(</span><span class="nx">pod</span>: <span class="kt">Pod</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">TableRow</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">index</span><span class="p">}</span> <span class="nx">nowrap</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">TableCell</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podName&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">pods</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">getName</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span>
-        <span class="o">&lt;</span><span class="nx">TableCell</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podAge&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">pods</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">getAge</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span>
-        <span class="o">&lt;</span><span class="nx">TableCell</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podStatus&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">pods</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">getStatus</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span>
-      <span class="o">&lt;</span><span class="err">/TableRow&gt;</span>
-    <span class="p">);</span>
-  <span class="p">};</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">PodsDetailsList</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">PodsDetailsListProps</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nx">getTableRow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">pod</span><span class="o">:</span><span class="w"> </span><span class="kt">Pod</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">TableRow</span><span class="w"> </span><span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">index</span><span class="p">}</span><span class="w"> </span><span class="nx">nowrap</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">TableCell</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podName&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">pods</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">getName</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">TableCell</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podAge&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">pods</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">getAge</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">TableCell</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podStatus&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">pods</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">getStatus</span><span class="p">()}</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/TableRow&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
 
-  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="p">{</span> <span class="nx">pods</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pods</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span><span class="w"></span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">pods</span><span class="o">?</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">pods</span><span class="o">?</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-    <span class="k">return</span> <span class="p">(</span>
-      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">Table</span><span class="o">&gt;</span>
-          <span class="o">&lt;</span><span class="nx">TableHead</span><span class="o">&gt;</span>
-            <span class="o">&lt;</span><span class="nx">TableCell</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podName&quot;</span><span class="o">&gt;</span><span class="nx">Name</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span>
-            <span class="o">&lt;</span><span class="nx">TableCell</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podAge&quot;</span><span class="o">&gt;</span><span class="nx">Age</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span>
-            <span class="o">&lt;</span><span class="nx">TableCell</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podStatus&quot;</span><span class="o">&gt;</span><span class="nx">Status</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span>
-          <span class="o">&lt;</span><span class="err">/TableHead&gt;</span>
-          <span class="p">{</span><span class="nx">pods</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getTableRow</span><span class="p">)}</span>
-        <span class="o">&lt;</span><span class="err">/Table&gt;</span>
-      <span class="o">&lt;</span><span class="err">/div&gt;</span>
-    <span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">Table</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">          </span><span class="o">&lt;</span><span class="nx">TableHead</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">TableCell</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podName&quot;</span><span class="o">&gt;</span><span class="nx">Name</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span><span class="w"></span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">TableCell</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podAge&quot;</span><span class="o">&gt;</span><span class="nx">Age</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span><span class="w"></span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">TableCell</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;podStatus&quot;</span><span class="o">&gt;</span><span class="nx">Status</span><span class="o">&lt;</span><span class="err">/TableCell&gt;</span><span class="w"></span>
+<span class="w">          </span><span class="o">&lt;</span><span class="err">/TableHead&gt;</span><span class="w"></span>
+<span class="w">          </span><span class="p">{</span><span class="nx">pods</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getTableRow</span><span class="p">)}</span><span class="w"></span>
+<span class="w">        </span><span class="o">&lt;</span><span class="err">/Table&gt;</span><span class="w"></span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><code>PodsDetailsList</code> produces a simple table showing a list of the pods found in this namespace:</p>
 <p><img alt="DetailsWithPods" src="../images/kubeobjectdetailitemwithpods.png" /></p>

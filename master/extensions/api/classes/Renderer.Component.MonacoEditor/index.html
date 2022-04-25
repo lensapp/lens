@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.SettingLayout/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.MonacoEditor/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Class: SettingLayout - Lens Extension Development</title>
+        <title>Class: MonacoEditor - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-settinglayout" class="md-skip">
+        <a href="#class-monacoeditor" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Class: SettingLayout
+              Class: MonacoEditor
             
           </span>
         </div>
@@ -741,6 +741,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#accessors" class="md-nav__link">
+    Accessors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#methods" class="md-nav__link">
     Methods
   </a>
@@ -781,8 +788,29 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#containerelem" class="md-nav__link">
+    containerElem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#context" class="md-nav__link">
     context
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dimensions" class="md-nav__link">
+    dimensions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#editor" class="md-nav__link">
+    editor
   </a>
   
 </li>
@@ -809,6 +837,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#validatelazy" class="md-nav__link">
+    validateLazy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#contexttype" class="md-nav__link">
     contextType
   </a>
@@ -818,6 +853,47 @@
           <li class="md-nav__item">
   <a href="#defaultprops" class="md-nav__link">
     defaultProps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewstates" class="md-nav__link">
+    viewStates
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessors_1" class="md-nav__link">
+    Accessors
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#id" class="md-nav__link">
+    id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model" class="md-nav__link">
+    model
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    options
   </a>
   
 </li>
@@ -852,6 +928,13 @@
           <li class="md-nav__item">
   <a href="#unsafe_componentwillupdate" class="md-nav__link">
     UNSAFE_componentWillUpdate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bindref" class="md-nav__link">
+    bindRef
   </a>
   
 </li>
@@ -906,6 +989,27 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#createeditor" class="md-nav__link">
+    createEditor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#destroy" class="md-nav__link">
+    destroy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#focus" class="md-nav__link">
+    focus
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#forceupdate" class="md-nav__link">
     forceUpdate
   </a>
@@ -920,8 +1024,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#onescapekey" class="md-nav__link">
-    onEscapeKey
+  <a href="#getvalue" class="md-nav__link">
+    getValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onmodelchange" class="md-nav__link">
+    onModelChange
   </a>
   
 </li>
@@ -934,6 +1045,27 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#restoreviewstate" class="md-nav__link">
+    restoreViewState
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saveviewstate" class="md-nav__link">
+    saveViewState
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdimensions" class="md-nav__link">
+    setDimensions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#setstate" class="md-nav__link">
     setState
   </a>
@@ -941,8 +1073,29 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#setvalue" class="md-nav__link">
+    setValue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shouldcomponentupdate" class="md-nav__link">
     shouldComponentUpdate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    validate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#createuri" class="md-nav__link">
+    createUri
   </a>
   
 </li>
@@ -966,15 +1119,13 @@
                 
                 
                 
-                <h1 id="class-settinglayout">Class: SettingLayout<a class="headerlink" href="#class-settinglayout" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.SettingLayout</p>
-<p>Layout for settings like pages with navigation</p>
+                <h1 id="class-monacoeditor">Class: MonacoEditor<a class="headerlink" href="#class-monacoeditor" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.MonacoEditor</p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>Component</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></li>
+<li><code>Component</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></li>
 </ul>
-<p>↳ <strong><code>SettingLayout</code></strong></p>
-<p>↳↳ <a href="../Renderer.Component.PageLayout/"><code>PageLayout</code></a></p>
+<p>↳ <strong><code>MonacoEditor</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
 <ul>
@@ -982,18 +1133,30 @@
 </ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#containerelem">containerElem</a></li>
 <li><a href="./#context">context</a></li>
+<li><a href="./#dimensions">dimensions</a></li>
+<li><a href="./#editor">editor</a></li>
 <li><a href="./#props">props</a></li>
 <li><a href="./#refs">refs</a></li>
 <li><a href="./#state">state</a></li>
+<li><a href="./#validatelazy">validateLazy</a></li>
 <li><a href="./#contexttype">contextType</a></li>
 <li><a href="./#defaultprops">defaultProps</a></li>
+<li><a href="./#viewstates">viewStates</a></li>
+</ul>
+<h3 id="accessors">Accessors<a class="headerlink" href="#accessors" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#id">id</a></li>
+<li><a href="./#model">model</a></li>
+<li><a href="./#options">options</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#unsafe_componentwillmount">UNSAFE_componentWillMount</a></li>
 <li><a href="./#unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></li>
 <li><a href="./#unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></li>
+<li><a href="./#bindref">bindRef</a></li>
 <li><a href="./#componentdidcatch">componentDidCatch</a></li>
 <li><a href="./#componentdidmount">componentDidMount</a></li>
 <li><a href="./#componentdidupdate">componentDidUpdate</a></li>
@@ -1001,16 +1164,26 @@
 <li><a href="./#componentwillreceiveprops">componentWillReceiveProps</a></li>
 <li><a href="./#componentwillunmount">componentWillUnmount</a></li>
 <li><a href="./#componentwillupdate">componentWillUpdate</a></li>
+<li><a href="./#createeditor">createEditor</a></li>
+<li><a href="./#destroy">destroy</a></li>
+<li><a href="./#focus">focus</a></li>
 <li><a href="./#forceupdate">forceUpdate</a></li>
 <li><a href="./#getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
-<li><a href="./#onescapekey">onEscapeKey</a></li>
+<li><a href="./#getvalue">getValue</a></li>
+<li><a href="./#onmodelchange">onModelChange</a></li>
 <li><a href="./#render">render</a></li>
+<li><a href="./#restoreviewstate">restoreViewState</a></li>
+<li><a href="./#saveviewstate">saveViewState</a></li>
+<li><a href="./#setdimensions">setDimensions</a></li>
 <li><a href="./#setstate">setState</a></li>
+<li><a href="./#setvalue">setValue</a></li>
 <li><a href="./#shouldcomponentupdate">shouldComponentUpdate</a></li>
+<li><a href="./#validate">validate</a></li>
+<li><a href="./#createuri">createUri</a></li>
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new SettingLayout</strong>(<code>props</code>)</p>
+<p>• <strong>new MonacoEditor</strong>(<code>props</code>)</p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1022,37 +1195,16 @@
 <tbody>
 <tr>
 <td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a> | <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a></td>
 </tr>
 </tbody>
 </table>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>React.Component&lt;SettingLayoutProps>.constructor</p>
-<p>• <strong>new SettingLayout</strong>(<code>props</code>, <code>context</code>)</p>
-<p><strong><code>deprecated</code></strong></p>
-<p><strong><code>see</code></strong> https://reactjs.org/docs/legacy-context.html</p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a></td>
-</tr>
-<tr>
-<td align="left"><code>context</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>React.Component&lt;SettingLayoutProps>.constructor</p>
+<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
+<p>React.Component&lt;MonacoEditorProps\&gt;.constructor</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="containerelem">containerElem<a class="headerlink" href="#containerelem" title="Permanent link">#</a></h3>
+<p>• <strong>containerElem</strong>: <code>HTMLElement</code></p>
+<hr />
 <h3 id="context">context<a class="headerlink" href="#context" title="Permanent link">#</a></h3>
 <p>• <strong>context</strong>: <code>any</code></p>
 <p>If using the new style context, re-declare this in your class to be the
@@ -1065,12 +1217,37 @@ Should be used with type annotation or static contextType.</p>
 <span class="kr">declare</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">React.ContextType</span><span class="o">&lt;</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">MyContext</span><span class="o">&gt;</span><span class="w"></span>
 </code></pre></div>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html</p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
 <p>React.Component.context</p>
 <hr />
+<h3 id="dimensions">dimensions<a class="headerlink" href="#dimensions" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>dimensions</strong>: <code>Object</code> = <code>{}</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>height?</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+<tr>
+<td align="left"><code>width?</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="editor">editor<a class="headerlink" href="#editor" title="Permanent link">#</a></h3>
+<p>• <strong>editor</strong>: <code>IStandaloneCodeEditor</code></p>
+<hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>> &amp; <code>Readonly</code>&lt;{ <code>children?</code>: <code>ReactNode</code>  }></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>> &amp; <code>Readonly</code>&lt;{ <code>children?</code>: <code>ReactNode</code>  }></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>React.Component.props</p>
 <hr />
 <h3 id="refs">refs<a class="headerlink" href="#refs" title="Permanent link">#</a></h3>
@@ -1079,13 +1256,16 @@ Should be used with type annotation or static contextType.</p>
 https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">#</a></h4>
 <p>▪ [key: <code>string</code>]: <code>ReactInstance</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
 <p>React.Component.refs</p>
 <hr />
 <h3 id="state">state<a class="headerlink" href="#state" title="Permanent link">#</a></h3>
 <p>• <strong>state</strong>: <code>Readonly</code>&lt;{}></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p>React.Component.state</p>
+<hr />
+<h3 id="validatelazy">validateLazy<a class="headerlink" href="#validatelazy" title="Permanent link">#</a></h3>
+<p>• <strong>validateLazy</strong>: <code>DebouncedFunc</code>&lt;(<code>value</code>: <code>string</code>) =&gt; <code>void</code>></p>
 <hr />
 <h3 id="contexttype">contextType<a class="headerlink" href="#contexttype" title="Permanent link">#</a></h3>
 <p>▪ <code>Static</code> <code>Optional</code> <strong>contextType</strong>: <code>Context</code>&lt;<code>any</code>></p>
@@ -1103,11 +1283,29 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html#classcontexttype</p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>React.Component.contextType</p>
 <hr />
 <h3 id="defaultprops">defaultProps<a class="headerlink" href="#defaultprops" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <strong>defaultProps</strong>: <code>object</code></p>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>defaultProps</strong>: <code>object</code></p>
+<hr />
+<h3 id="viewstates">viewStates<a class="headerlink" href="#viewstates" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>viewStates</strong>: <code>WeakMap</code>&lt;<code>Uri</code>, <code>ICodeEditorViewState</code>></p>
+<h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
+<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
+<p>• <code>get</code> <strong>id</strong>(): <code>string</code></p>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<hr />
+<h3 id="model">model<a class="headerlink" href="#model" title="Permanent link">#</a></h3>
+<p>• <code>get</code> <strong>model</strong>(): <code>ITextModel</code></p>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>ITextModel</code></p>
+<hr />
+<h3 id="options">options<a class="headerlink" href="#options" title="Permanent link">#</a></h3>
+<p>• <code>get</code> <strong>options</strong>(): <code>IStandaloneEditorConstructionOptions</code></p>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>IStandaloneEditorConstructionOptions</code></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="unsafe_componentwillmount">UNSAFE_componentWillMount<a class="headerlink" href="#unsafe_componentwillmount" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>UNSAFE_componentWillMount</strong>(): <code>void</code></p>
@@ -1119,9 +1317,9 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use componentDidMount or the constructor instead</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>React.Component.UNSAFE_componentWillMount</p>
 <hr />
 <h3 id="unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps<a class="headerlink" href="#unsafe_componentwillreceiveprops" title="Permanent link">#</a></h3>
@@ -1136,7 +1334,7 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use static getDerivedStateFromProps instead</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1147,7 +1345,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1155,9 +1353,9 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>React.Component.UNSAFE_componentWillReceiveProps</p>
 <hr />
 <h3 id="unsafe_componentwillupdate">UNSAFE_componentWillUpdate<a class="headerlink" href="#unsafe_componentwillupdate" title="Permanent link">#</a></h3>
@@ -1170,7 +1368,7 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use getSnapshotBeforeUpdate instead</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1181,7 +1379,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
@@ -1193,10 +1391,30 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>React.Component.UNSAFE_componentWillUpdate</p>
+<hr />
+<h3 id="bindref">bindRef<a class="headerlink" href="#bindref" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>bindRef</strong>(<code>elem</code>): <code>void</code></p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>elem</code></td>
+<td align="left"><code>HTMLElement</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
 <hr />
 <h3 id="componentdidcatch">componentDidCatch<a class="headerlink" href="#componentdidcatch" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>componentDidCatch</strong>(<code>error</code>, <code>errorInfo</code>): <code>void</code></p>
@@ -1221,16 +1439,16 @@ the entire component tree to unmount.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidCatch</p>
 <hr />
 <h3 id="componentdidmount">componentDidMount<a class="headerlink" href="#componentdidmount" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentDidMount</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
+<p>▸ <strong>componentDidMount</strong>(): <code>void</code></p>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidMount</p>
 <hr />
 <h3 id="componentdidupdate">componentDidUpdate<a class="headerlink" href="#componentdidupdate" title="Permanent link">#</a></h3>
@@ -1248,7 +1466,7 @@ the entire component tree to unmount.</p>
 <tbody>
 <tr>
 <td align="left"><code>prevProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
@@ -1260,9 +1478,9 @@ the entire component tree to unmount.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>React.Component.componentDidUpdate</p>
 <hr />
 <h3 id="componentwillmount">componentWillMount<a class="headerlink" href="#componentwillmount" title="Permanent link">#</a></h3>
@@ -1274,9 +1492,9 @@ prevents this from being invoked.</p>
 <p><strong><code>deprecated</code></strong> 16.3, use componentDidMount or the constructor instead; will stop working in React 17</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state</p>
 <p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillMount</p>
 <hr />
 <h3 id="componentwillreceiveprops">componentWillReceiveProps<a class="headerlink" href="#componentwillreceiveprops" title="Permanent link">#</a></h3>
@@ -1301,7 +1519,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1309,16 +1527,16 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillReceiveProps</p>
 <hr />
 <h3 id="componentwillunmount">componentWillUnmount<a class="headerlink" href="#componentwillunmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentWillUnmount</strong>(): <code>void</code></p>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
+<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillUnmount</p>
 <hr />
 <h3 id="componentwillupdate">componentWillUpdate<a class="headerlink" href="#componentwillupdate" title="Permanent link">#</a></h3>
@@ -1341,7 +1559,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
@@ -1353,10 +1571,25 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>React.Component.componentWillUpdate</p>
+<hr />
+<h3 id="createeditor">createEditor<a class="headerlink" href="#createeditor" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>createEditor</strong>(): <code>void</code></p>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="destroy">destroy<a class="headerlink" href="#destroy" title="Permanent link">#</a></h3>
+<p>▸ <strong>destroy</strong>(): <code>void</code></p>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="focus">focus<a class="headerlink" href="#focus" title="Permanent link">#</a></h3>
+<p>▸ <strong>focus</strong>(): <code>void</code></p>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
 <hr />
 <h3 id="forceupdate">forceUpdate<a class="headerlink" href="#forceupdate" title="Permanent link">#</a></h3>
 <p>▸ <strong>forceUpdate</strong>(<code>callback?</code>): <code>void</code></p>
@@ -1375,9 +1608,9 @@ prevents this from being invoked.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>React.Component.forceUpdate</p>
 <hr />
 <h3 id="getsnapshotbeforeupdate">getSnapshotBeforeUpdate<a class="headerlink" href="#getsnapshotbeforeupdate" title="Permanent link">#</a></h3>
@@ -1398,7 +1631,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>prevProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
@@ -1406,13 +1639,13 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>any</code></p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>React.Component.getSnapshotBeforeUpdate</p>
 <hr />
-<h3 id="onescapekey">onEscapeKey<a class="headerlink" href="#onescapekey" title="Permanent link">#</a></h3>
-<p>▸ <strong>onEscapeKey</strong>(<code>evt</code>): <code>void</code></p>
+<h3 id="getvalue">getValue<a class="headerlink" href="#getvalue" title="Permanent link">#</a></h3>
+<p>▸ <strong>getValue</strong>(<code>opts?</code>): <code>string</code></p>
 <h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1423,20 +1656,118 @@ lifecycle events from running.</p>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>evt</code></td>
-<td align="left"><code>KeyboardEvent</code></td>
+<td align="left"><code>opts?</code></td>
+<td align="left"><code>Object</code></td>
+</tr>
+<tr>
+<td align="left"><code>opts.lineEnding</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>opts.preserveBOM</code></td>
+<td align="left"><code>boolean</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<hr />
+<h3 id="onmodelchange">onModelChange<a class="headerlink" href="#onmodelchange" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>onModelChange</strong>(<code>model</code>, <code>oldModel?</code>): <code>void</code></p>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>model</code></td>
+<td align="left"><code>ITextModel</code></td>
+</tr>
+<tr>
+<td align="left"><code>oldModel?</code></td>
+<td align="left"><code>ITextModel</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <code>Element</code></p>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
-<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
+<h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
 <p>React.Component.render</p>
+<hr />
+<h3 id="restoreviewstate">restoreViewState<a class="headerlink" href="#restoreviewstate" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>restoreViewState</strong>(<code>model</code>): <code>void</code></p>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>model</code></td>
+<td align="left"><code>ITextModel</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="saveviewstate">saveViewState<a class="headerlink" href="#saveviewstate" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>saveViewState</strong>(<code>model</code>): <code>void</code></p>
+<p>Save current view-model state in the editor.
+This will allow restore cursor position, selected text, etc.</p>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>model</code></td>
+<td align="left"><code>ITextModel</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="setdimensions">setDimensions<a class="headerlink" href="#setdimensions" title="Permanent link">#</a></h3>
+<p>▸ <strong>setDimensions</strong>(<code>width</code>, <code>height</code>): <code>void</code></p>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>width</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+<tr>
+<td align="left"><code>height</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
 <p>▸ <strong>setState</strong>&lt;<code>K</code>>(<code>state</code>, <code>callback?</code>): <code>void</code></p>
@@ -1455,7 +1786,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1466,7 +1797,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;{}>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>>) =&gt; {} | <code>Pick</code>&lt;{}, <code>K</code>> | <code>Pick</code>&lt;{}, <code>K</code>></td>
+<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;{}>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>>) =&gt; {} | <code>Pick</code>&lt;{}, <code>K</code>> | <code>Pick</code>&lt;{}, <code>K</code>></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>
@@ -1474,10 +1805,32 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>React.Component.setState</p>
+<hr />
+<h3 id="setvalue">setValue<a class="headerlink" href="#setvalue" title="Permanent link">#</a></h3>
+<p>▸ <strong>setValue</strong>(<code>value?</code>): <code>void</code></p>
+<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>value</code></td>
+<td align="left"><code>string</code></td>
+<td align="left"><code>""</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
 <hr />
 <h3 id="shouldcomponentupdate">shouldComponentUpdate<a class="headerlink" href="#shouldcomponentupdate" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>shouldComponentUpdate</strong>(<code>nextProps</code>, <code>nextState</code>, <code>nextContext</code>): <code>boolean</code></p>
@@ -1487,7 +1840,7 @@ lifecycle events from running.</p>
 props or states have changed.</p>
 <p>If false is returned, <code>Component#render</code>, <code>componentWillUpdate</code>
 and <code>componentDidUpdate</code> will not be called.</p>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1498,7 +1851,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.SettingLayoutProps/"><code>SettingLayoutProps</code></a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
@@ -1510,10 +1863,50 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
-<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>React.Component.shouldComponentUpdate</p>
+<hr />
+<h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">#</a></h3>
+<p>▸ <strong>validate</strong>(<code>value?</code>): <code>void</code></p>
+<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>value</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="createuri">createUri<a class="headerlink" href="#createuri" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>createUri</strong>(<code>id</code>): <code>Uri</code></p>
+<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>id</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
+<p><code>Uri</code></p>
                 
               
               

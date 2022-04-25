@@ -844,15 +844,15 @@ npm start <span class="c1"># start the webpack server in watch mode</span>
 <p>Next, you'll try changing the way the new menu item appears in the UI.
 You'll change it from "Hello World" to "Hello Lens".</p>
 <p>Open <code>my-first-lens-ext/renderer.tsx</code> and change the value of <code>title</code> from <code>"Hello World"</code> to <code>"Hello Lens"</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nx">clusterPageMenus</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-        <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">pageId</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span> <span class="p">},</span>
-        <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Hello Lens&quot;</span><span class="p">,</span>
-        <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">Icon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="nx">clusterPageMenus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pageId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello Lens&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nx">Icon</span><span class="o">:</span><span class="w"> </span><span class="kt">ExampleIcon</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">]</span><span class="w"></span>
 </code></pre></div>
 <p>Reload Lens and you will see that the menu item text has changed to "Hello Lens".
 To reload Lens, enter <code>CMD+R</code> on Mac and <code>Ctrl+R</code> on Windows/Linux.</p>
