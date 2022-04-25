@@ -114,4 +114,4 @@ export type { ServiceAccountStore as ServiceAccountsStore } from "../../renderer
 export type { RoleStore as RolesStore } from "../../renderer/components/+user-management/+roles/store";
 export type { RoleBindingStore as RoleBindingsStore } from "../../renderer/components/+user-management/+role-bindings/store";
 export type { CustomResourceDefinitionStore as CRDStore } from "../../renderer/components/+custom-resources/definition.store";
-export type { CustomResourceStore as CRDResourceStore } from "../../renderer/components/+custom-resources/resource.store";
+export type { CustomResourceStore as CRDResourceStore } from "../../common/k8s-api/api-manager/resource.store";

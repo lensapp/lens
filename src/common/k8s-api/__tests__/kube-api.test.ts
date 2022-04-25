@@ -9,22 +9,27 @@ import { KubeObject } from "../kube-object";
 import AbortController from "abort-controller";
 import { delay } from "../../utils/delay";
 import { PassThrough } from "stream";
-import type { ApiManager } from "../api-manager";
-import { apiManager } from "../api-manager";
+import { ApiManager } from "../api-manager";
 import type { FetchMock } from "jest-fetch-mock/types";
 import { DeploymentApi, Ingress, IngressApi, Pod, PodApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
+import apiManagerInjectable from "../api-manager/manager.injectable";
 
 jest.mock("../api-manager");
 
-const mockApiManager = apiManager as jest.Mocked<ApiManager>;
 const mockFetch = fetch as FetchMock;
 
 describe("forRemoteCluster", () => {
+  let apiManager: jest.Mocked<ApiManager>;
+
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     await di.runSetups();
+
+    apiManager = new ApiManager() as jest.Mocked<ApiManager>;
+
+    di.override(apiManagerInjectable, () => apiManager);
   });
 
   it("builds api client for KubeObject", async () => {
@@ -79,6 +84,7 @@ describe("forRemoteCluster", () => {
 
 describe("KubeApi", () => {
   let request: KubeJsonApi;
+  let apiManager: jest.Mocked<ApiManager>;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -89,6 +95,9 @@ describe("KubeApi", () => {
       serverAddress: `http://127.0.0.1:9999`,
       apiBase: "/api-kube",
     });
+    apiManager = new ApiManager() as jest.Mocked<ApiManager>;
+
+    di.override(apiManagerInjectable, () => apiManager);
   });
 
   it("uses url from apiBase if apiBase contains the resource", async () => {
@@ -218,7 +227,7 @@ describe("KubeApi", () => {
       await (api as any).checkPreferredVersion();
 
       expect(api.apiVersionPreferred).toBe("v1beta1");
-      expect(mockApiManager.registerApi).toBeCalledWith("/apis/extensions/v1beta1/ingresses", expect.anything());
+      expect(apiManager.registerApi).toBeCalledWith("/apis/extensions/v1beta1/ingresses", expect.anything());
     });
 
     it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred with non-grouped apis", async () => {
@@ -258,7 +267,7 @@ describe("KubeApi", () => {
       await (api as any).checkPreferredVersion();
 
       expect(api.apiVersionPreferred).toBe("v1beta1");
-      expect(mockApiManager.registerApi).toBeCalledWith("/api/v1beta1/pods", expect.anything());
+      expect(apiManager.registerApi).toBeCalledWith("/api/v1beta1/pods", expect.anything());
     });
   });
 

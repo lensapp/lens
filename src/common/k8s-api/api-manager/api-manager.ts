@@ -42,17 +42,28 @@ export class ApiManager {
     return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi<Api>(apiBase: string, api: RegisterableApi<Api>) {
-    if (!api.apiBase) return;
+  registerApi<Api>(api: RegisterableApi<Api>): void;
+  /**
+   * @deprecated Just register the `api` by itself
+   */
+  registerApi<Api>(apiBase: string, api: RegisterableApi<Api>): void;
+  registerApi<Api>(apiBaseRaw: string | RegisterableApi<Api>, apiRaw?: RegisterableApi<Api>) {
+    const api = typeof apiBaseRaw === "string"
+      ? apiRaw
+      : apiBaseRaw;
 
-    if (!this.apis.has(apiBase)) {
+    if (!api?.apiBase) {
+      return;
+    }
+
+    if (!this.apis.has(api.apiBase)) {
       this.stores.forEach((store) => {
-        if (store.api as never === api) {
-          this.stores.set(apiBase, store);
+        if (store.api === api) {
+          this.stores.set(api.apiBase, store);
         }
       });
 
-      this.apis.set(apiBase, api as never);
+      this.apis.set(api.apiBase, api);
     }
   }
 

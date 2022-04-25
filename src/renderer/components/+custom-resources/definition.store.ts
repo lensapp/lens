@@ -9,10 +9,11 @@ import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 import type { CustomResourceDefinition, CustomResourceDefinitionApi } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { InitCustomResourceStore } from "./init-resource-store.injectable";
+import type TypedEventEmitter from "typed-emitter";
+import type { LegacyAutoRegistration } from "../../../common/k8s-api/api-manager/auto-registration-emitter.injectable";
 
 export interface CustomResourceDefinitionStoreDependencies {
-  initCustomResourceStore: InitCustomResourceStore;
+  readonly autoRegistration: TypedEventEmitter<LegacyAutoRegistration>;
 }
 
 export class CustomResourceDefinitionStore extends KubeObjectStore<CustomResourceDefinition, CustomResourceDefinitionApi> {
@@ -25,8 +26,14 @@ export class CustomResourceDefinitionStore extends KubeObjectStore<CustomResourc
     makeObservable(this);
     autoBind(this);
 
-    // auto-init stores for crd-s
-    reaction(() => this.getItems(), items => items.forEach(this.dependencies.initCustomResourceStore));
+    reaction(
+      () => this.getItems(),
+      crds => {
+        for (const crd of crds) {
+          this.dependencies.autoRegistration.emit("customResourceDefinition", crd);
+        }
+      },
+    );
   }
 
   protected sortItems(items: CustomResourceDefinition[]) {

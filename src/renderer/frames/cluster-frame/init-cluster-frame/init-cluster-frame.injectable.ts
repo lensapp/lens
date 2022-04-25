@@ -11,6 +11,7 @@ import hostedClusterInjectable from "../../../../common/cluster-store/hosted-clu
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
 import clusterFrameContextInjectable from "../../../cluster-frame-context/cluster-frame-context.injectable";
 import assert from "assert";
+import autoRegistrationInjectable from "../../../../common/k8s-api/api-manager/auto-registration.injectable";
 
 const initClusterFrameInjectable = getInjectable({
   id: "init-cluster-frame",
@@ -19,6 +20,14 @@ const initClusterFrameInjectable = getInjectable({
     const hostedCluster = di.inject(hostedClusterInjectable);
 
     assert(hostedCluster, "This can only be injected within a cluster frame");
+
+    /**
+     * This is injected here to initialize it for the side effect.
+     *
+     * The side effect CANNOT be within `apiManagerInjectable` itself since that causes circular
+     * dependencies with the current need for legacy di use
+     */
+    di.inject(autoRegistrationInjectable);
 
     return initClusterFrame({
       hostedCluster,

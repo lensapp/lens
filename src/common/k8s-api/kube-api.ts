@@ -27,7 +27,7 @@ import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import logger from "../logger";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import apiManagerInjectable from "./api-manager/manager.injectable";
+import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
 
 /**
  * The options used for creating a `KubeApi`
@@ -311,15 +311,15 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
 /**
  * @deprecated In the new extension API, don't expose `KubeApi`'s constructor
  */
-function legacyRegisterApi(apiBase: string, api: KubeApi): void {
+function legacyRegisterApi(api: KubeApi): void {
   // Try both just in case, because we might be in a testing environment
   for (const env of [Environments.main, Environments.renderer]) {
     const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(env);
 
     if (di) {
-      const apiManager = di.inject(apiManagerInjectable);
+      const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
 
-      apiManager.registerApi(apiBase, api);
+      autoRegistrationEmitter.emit("kubeApi", api);
     }
   }
 }
@@ -346,15 +346,17 @@ export class KubeApi<
   protected readonly fullApiPathname: string;
   protected readonly fallbackApiBases: string[] | undefined;
 
-  constructor({
-    objectConstructor,
-    request = apiKube,
-    kind = objectConstructor.kind,
-    isNamespaced,
-    apiBase: fullApiPathname = objectConstructor.apiBase,
-    checkPreferredVersion: doCheckPreferredVersion = false,
-    fallbackApiBases,
-  }: KubeApiOptions<Object, Data>) {
+  constructor(opts: KubeApiOptions<Object, Data>) {
+    const {
+      objectConstructor,
+      request = apiKube,
+      kind = objectConstructor.kind,
+      isNamespaced,
+      apiBase: fullApiPathname = objectConstructor.apiBase,
+      checkPreferredVersion: doCheckPreferredVersion = false,
+      fallbackApiBases,
+    } = opts;
+
     assert(fullApiPathname, "apiBase MUST be provied either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
     assert(request, "request MUST be provided if not in a cluster page frame context");
 
@@ -375,8 +377,7 @@ export class KubeApi<
     this.apiResource = resource;
     this.request = request;
     this.objectConstructor = objectConstructor;
-    this.parseResponse = this.parseResponse.bind(this);
-    legacyRegisterApi(apiBase, this as unknown as KubeApi);
+    legacyRegisterApi(this as unknown as KubeApi);
   }
 
   get apiVersionWithGroup() {
@@ -457,7 +458,7 @@ export class KubeApi<
 
       if (this.apiVersionPreferred) {
         this.apiBase = this.computeApiBase();
-        legacyRegisterApi(this.apiBase, this as unknown as KubeApi);
+        legacyRegisterApi(this as unknown as KubeApi);
       }
     }
   }

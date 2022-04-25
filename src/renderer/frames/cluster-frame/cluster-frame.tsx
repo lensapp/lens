@@ -55,7 +55,10 @@ export const NonInjectedClusterFrame = observer(({
 
   return (
     <ErrorBoundary>
-      <MainLayout sidebar={<Sidebar />} footer={<Dock />}>
+      <MainLayout
+        sidebar={<Sidebar />}
+        footer={<Dock />}
+      >
         {
           Component
             ? <Component />
