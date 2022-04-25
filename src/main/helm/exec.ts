@@ -17,9 +17,7 @@ export async function execHelm(args: string[], options?: BaseEncodingOptions & E
   try {
     const opts = { ...options };
 
-    if (!opts.env) {
-      opts.env = process.env
-    }
+    opts.env ??= process.env;
 
     if (!opts.env.HTTPS_PROXY && UserStore.getInstance().httpsProxy) {
       opts.env.HTTPS_PROXY = UserStore.getInstance().httpsProxy;
