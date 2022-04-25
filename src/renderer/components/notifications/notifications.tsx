@@ -28,7 +28,7 @@ export class Notifications extends React.Component {
   }
 
   static checkedError(message: unknown, fallback: string, customOpts?: Partial<Omit<Notification, "message">>) {
-    if (typeof message === "string" || message instanceof Error) {
+    if (typeof message === "string" || message instanceof Error || message instanceof JsonApiErrorParsed) {
       return Notifications.error(message, customOpts);
     }
 

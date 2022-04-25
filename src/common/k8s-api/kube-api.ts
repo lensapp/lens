@@ -601,20 +601,19 @@ export class KubeApi<
     return parsed;
   }
 
-  async create({ name, namespace }: Partial<ResourceDescriptor>, data?: PartialDeep<Object>): Promise<Object | null> {
+  async create({ name, namespace }: Partial<ResourceDescriptor>, partialData?: PartialDeep<Object>): Promise<Object | null> {
     await this.checkPreferredVersion();
 
     const apiUrl = this.getUrl({ namespace });
-    const res = await this.request.post(apiUrl, {
-      data: merge(data, {
-        kind: this.kind,
-        apiVersion: this.apiVersionWithGroup,
-        metadata: {
-          name,
-          namespace,
-        },
-      }),
+    const data = merge(partialData, {
+      kind: this.kind,
+      apiVersion: this.apiVersionWithGroup,
+      metadata: {
+        name,
+        namespace,
+      },
     });
+    const res = await this.request.post(apiUrl, { data });
     const parsed = this.parseResponse(res);
 
     if (Array.isArray(parsed)) {

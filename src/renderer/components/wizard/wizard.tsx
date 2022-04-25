@@ -210,47 +210,43 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
       step, isFirst, isLast, children,
       loading, customButtons, disabledNext, scrollable,
       hideNextBtn, hideBackBtn, beforeContent, afterContent, noValidate, skip, moreButtons,
+      waiting, className, contentClass, prevLabel, nextLabel,
     } = this.props;
-    let { className, contentClass, nextLabel, prevLabel, waiting } = this.props;
 
     if (skip) {
       return null;
     }
-    waiting = (waiting !== undefined) ? waiting : this.state.waiting;
-    className = cssNames(`WizardStep step${step}`, className);
-    contentClass = cssNames("step-content", { scrollable }, contentClass);
-    prevLabel = prevLabel || (isFirst?.() ? "Cancel" : "Back");
-    nextLabel = nextLabel || (isLast?.() ? "Submit" : "Next");
 
     return (
       <form
-        className={className}
+        className={cssNames(`WizardStep step${step}`, className)}
         onSubmit={prevDefault(this.submit)}
         noValidate={noValidate}
         onKeyDown={(evt) => this.keyDown(evt)}
         ref={e => this.form = e}
       >
         {beforeContent}
-        <div className={contentClass}>
+        <div className={cssNames("step-content", { scrollable }, contentClass)}>
           {loading ? this.renderLoading() : children}
         </div>
-        {customButtons !== undefined ? customButtons : (
+        {customButtons ?? (
           <div className="buttons flex gaps align-center">
             {moreButtons}
             <Button
               className="back-btn"
               plain
-              label={prevLabel}
+              label={prevLabel || (isFirst?.() ? "Cancel" : "Back")}
               hidden={hideBackBtn}
               onClick={this.prev}
             />
             <Button
               primary
               type="submit"
-              label={nextLabel}
+              label={nextLabel || (isLast?.() ? "Submit" : "Next")}
               hidden={hideNextBtn}
-              waiting={waiting}
+              waiting={waiting ?? this.state.waiting}
               disabled={disabledNext}
+              onClick={this.next}
             />
           </div>
         )}

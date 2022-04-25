@@ -4,4 +4,4 @@
  */
 
 export * from "./namespace-details";
-export * from "./add-namespace-dialog";
+export * from "./add-dialog/dialog";
