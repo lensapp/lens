@@ -5,13 +5,14 @@
 
 // Tooltip decorator for simple composition with other components
 
-import type { HTMLAttributes, ReactNode } from "react";
-import React from "react";
+import type { ReactNode } from "react";
+import React, { useState } from "react";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import type { TooltipProps } from "./tooltip";
 import { Tooltip } from "./tooltip";
 import { isReactNode } from "../../utils/isReactNode";
 import uniqueId from "lodash/uniqueId";
+import type { SingleOrMany } from "../../utils";
 
 export interface TooltipDecoratorProps {
   tooltip?: ReactNode | Omit<TooltipProps, "targetId">;
@@ -20,41 +21,54 @@ export interface TooltipDecoratorProps {
    * useful for displaying tooltips even when the target is "disabled"
    */
   tooltipOverrideDisabled?: boolean;
+  id?: string | undefined;
+  children?: SingleOrMany<React.ReactNode>;
 }
 
-export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
-  const DecoratedComponent = class extends React.Component<HTMLAttributes<any> & TooltipDecoratorProps> {
-    static displayName = `withTooltip(${Target.displayName || Target.name})`;
-
+export function withTooltip<TargetProps extends Pick<TooltipDecoratorProps, "id" | "children">>(Target: React.FunctionComponent<TargetProps>): React.FunctionComponent<TargetProps & TooltipDecoratorProps> {
+  const DecoratedComponent = (props: TargetProps & TooltipDecoratorProps) => {
     // TODO: Remove side-effect to allow deterministic unit testing
-    protected tooltipId = uniqueId("tooltip_target_");
+    const [defaultTooltipId] = useState(uniqueId("tooltip_target_"));
 
-    render() {
-      const { tooltip, tooltipOverrideDisabled, ...targetProps } = this.props;
+    let {
+      id: targetId,
+      children: targetChildren,
+    } = props;
+    const {
+      tooltip,
+      tooltipOverrideDisabled,
+      id: _unusedId,
+      children: _unusedTargetChildren,
+      ...targetProps
+    } = props;
 
-      if (tooltip) {
-        const tooltipId = targetProps.id || this.tooltipId;
-        const tooltipProps: TooltipProps = {
-          targetId: tooltipId,
-          tooltipOnParentHover: tooltipOverrideDisabled,
-          formatters: { narrow: true },
-          ...(isReactNode(tooltip) ? { children: tooltip } : tooltip),
-        };
+    if (tooltip) {
+      const tooltipProps: TooltipProps = {
+        targetId: targetId || defaultTooltipId,
+        tooltipOnParentHover: tooltipOverrideDisabled,
+        formatters: { narrow: true },
+        ...(isReactNode(tooltip) ? { children: tooltip } : tooltip),
+      };
 
-        targetProps.id = tooltipId;
-        targetProps.children = (
-          <>
-            <div>
-              {targetProps.children}
-            </div>
-            <Tooltip {...tooltipProps} />
-          </>
-        );
-      }
-
-      return <Target {...targetProps as any} />;
+      targetId = tooltipProps.targetId;
+      targetChildren = (
+        <>
+          <div>
+            {targetChildren}
+          </div>
+          <Tooltip {...tooltipProps} />
+        </>
+      );
     }
+
+    return (
+      <Target id={targetId} {...targetProps as TargetProps}>
+        {targetChildren}
+      </Target>
+    );
   };
 
-  return hoistNonReactStatics(DecoratedComponent, Target) as any;
+  DecoratedComponent.displayName = `withTooltip(${Target.displayName || Target.name})`;
+
+  return hoistNonReactStatics(DecoratedComponent, Target);
 }

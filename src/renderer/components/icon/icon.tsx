@@ -9,13 +9,12 @@ import type { ReactNode } from "react";
 import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
-import { autoBind, cssNames } from "../../utils";
-import type { TooltipDecoratorProps } from "../tooltip";
+import { cssNames } from "../../utils";
 import { withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
 import { decode } from "../../../common/utils/base64";
 
-export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
+export interface IconProps extends React.HTMLAttributes<any> {
   material?: string;          // material-icon, see available names at https://material.io/icons/
   svg?: string;               // svg-filename without extension in current folder
   link?: LocationDescriptor;   // render icon as NavLink from react-router-dom
@@ -31,67 +30,38 @@ export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorPr
   disabled?: boolean;
 }
 
-@withTooltip
-export class Icon extends React.PureComponent<IconProps> {
-  private readonly ref = createRef<HTMLAnchorElement>();
+export const Icon = Object.assign(
+  withTooltip((props: IconProps) => {
+    const ref = createRef<HTMLAnchorElement>();
 
-  static defaultProps: IconProps = {
-    focusable: true,
-  };
-
-  static isSvg(content: string) {
-    return String(content).includes("svg+xml"); // data-url for raw svg-icon
-  }
-
-  constructor(props: IconProps) {
-    super(props);
-    autoBind(this);
-  }
-
-  get isInteractive() {
-    const { interactive, onClick, href, link } = this.props;
-
-    return interactive ?? !!(onClick || href || link);
-  }
-
-  onClick(evt: React.MouseEvent) {
-    if (this.props.disabled) {
-      return;
-    }
-
-    if (this.props.onClick) {
-      this.props.onClick(evt);
-    }
-  }
-
-  onKeyDown(evt: React.KeyboardEvent<any>) {
-    switch (evt.nativeEvent.code) {
-      case "Space":
-
-      // fallthrough
-      case "Enter": {
-        this.ref.current?.click();
-        evt.preventDefault();
-        break;
-      }
-    }
-
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(evt);
-    }
-  }
-
-  render() {
-    const { isInteractive } = this;
     const {
-      // skip passing props to icon's html element
+    // skip passing props to icon's html element
       className, href, link, material, svg, size, smallest, small, big,
       disabled, sticker, active, focusable, children,
-      interactive: _interactive,
-      onClick: _onClick,
-      onKeyDown: _onKeyDown,
+      interactive, onClick, onKeyDown,
       ...elemProps
-    } = this.props;
+    } = props;
+    const isInteractive = interactive ?? !!(onClick || href || link);
+
+    const boundOnClick = (event: React.MouseEvent) => {
+      if (!disabled) {
+        onClick?.(event);
+      }
+    };
+    const boundOnKeyDown = (event: React.KeyboardEvent<any>) => {
+      switch (event.nativeEvent.code) {
+        case "Space":
+
+          // fallthrough
+        case "Enter": {
+          ref.current?.click();
+          event.preventDefault();
+          break;
+        }
+      }
+
+      onKeyDown?.(event);
+    };
 
     let iconContent: ReactNode;
     const iconProps: Partial<IconProps> = {
@@ -99,8 +69,8 @@ export class Icon extends React.PureComponent<IconProps> {
         { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },
         !size ? { smallest, small, big } : {},
       ),
-      onClick: isInteractive ? this.onClick : undefined,
-      onKeyDown: isInteractive ? this.onKeyDown : undefined,
+      onClick: isInteractive ? boundOnClick : undefined,
+      onKeyDown: isInteractive ? boundOnKeyDown : undefined,
       tabIndex: isInteractive && focusable && !disabled ? 0 : undefined,
       style: size ? { "--size": size + (isNumber(size) ? "px" : "") } as React.CSSProperties : undefined,
       ...elemProps,
@@ -137,7 +107,7 @@ export class Icon extends React.PureComponent<IconProps> {
         <NavLink
           className={className}
           to={link}
-          ref={this.ref}
+          ref={ref}
         >
           {children}
         </NavLink>
@@ -149,11 +119,15 @@ export class Icon extends React.PureComponent<IconProps> {
         <a
           {...iconProps}
           href={href}
-          ref={this.ref} 
+          ref={ref}
         />
       );
     }
 
-    return <i {...iconProps} ref={this.ref} />;
-  }
-}
+    return <i {...iconProps} ref={ref} />;
+  }),
+  {
+    // data-url for raw svg-icon
+    isSvg: (content: string) => String(content).includes("svg+xml"),
+  },
+);

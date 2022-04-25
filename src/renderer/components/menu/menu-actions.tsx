@@ -16,12 +16,13 @@ import type { MenuProps } from "./menu";
 import { Menu, MenuItem } from "./menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
+import type { TooltipDecoratorProps } from "../tooltip";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
   toolbar?: boolean; // display menu as toolbar with icons
   autoCloseOnSelect?: boolean;
-  triggerIcon?: string | IconProps | React.ReactNode;
+  triggerIcon?: string | (IconProps & TooltipDecoratorProps) | React.ReactNode;
   removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
   updateAction?: () => void | Promise<void>;
   removeAction?: () => void | Promise<void>;
@@ -75,7 +76,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
 
       return React.cloneElement(triggerIcon, { id: this.id, className });
     }
-    const iconProps: Partial<IconProps> = {
+    const iconProps: IconProps & TooltipDecoratorProps = {
       id: this.id,
       interactive: true,
       material: isString(triggerIcon) ? triggerIcon : undefined,

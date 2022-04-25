@@ -18,7 +18,7 @@ import * as resourceApplierApi from "../../../../common/k8s-api/endpoints/resour
 import { Notifications } from "../../notifications";
 import logger from "../../../../common/logger";
 import type { ApiManager } from "../../../../common/k8s-api/api-manager";
-import { isString, prevDefault } from "../../../utils";
+import { isObject, prevDefault } from "../../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
@@ -77,7 +77,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
     }
 
     // skip empty documents
-    const resources = yaml.loadAll(this.data).filter(isString);
+    const resources = yaml.loadAll(this.data).filter(isObject);
 
     if (resources.length === 0) {
       return void logger.info("Nothing to create");

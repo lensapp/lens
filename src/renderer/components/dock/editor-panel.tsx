@@ -5,11 +5,11 @@
 
 import styles from "./editor-panel.module.scss";
 import throttle from "lodash/throttle";
-import React from "react";
-import { makeObservable, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import React, { createRef, useEffect } from "react";
+import { reaction } from "mobx";
+import { observer } from "mobx-react";
 import type { DockStore, TabId } from "./dock/store";
-import { cssNames } from "../../utils";
+import { cssNames, disposer } from "../../utils";
 import { MonacoEditor } from "../monaco-editor";
 import type { MonacoEditorProps, MonacoEditorRef  } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -28,51 +28,44 @@ interface Dependencies {
   dockStore: DockStore;
 }
 
-const defaultProps: Partial<EditorPanelProps> = {
-  autoFocus: true,
-};
+const NonInjectedEditorPanel = observer(({
+  dockStore,
+  onChange,
+  tabId,
+  value,
+  autoFocus = true,
+  className,
+  onError,
+}: Dependencies & EditorPanelProps) => {
+  const editor = createRef<MonacoEditorRef>();
 
-@observer
-class NonInjectedEditorPanel extends React.Component<EditorPanelProps & Dependencies> {
-  static defaultProps = defaultProps as object;
-
-  private readonly editor = React.createRef<MonacoEditorRef>();
-
-  constructor(props: EditorPanelProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      // keep focus on editor's area when <Dock/> just opened
-      reaction(() => this.props.dockStore.isOpen, isOpen => isOpen && this.editor.current?.focus(), {
+  useEffect(() => disposer(
+    reaction(
+      () => dockStore.isOpen,
+      isOpen => isOpen && editor.current?.focus(),
+      {
         fireImmediately: true,
-      }),
+      },
+    ),
+    dockStore.onResize(throttle(() => editor.current?.focus(), 250)),
+  ));
 
-      // focus to editor on dock's resize or turning into fullscreen mode
-      this.props.dockStore.onResize(throttle(() => this.editor.current?.focus(), 250)),
-    ]);
+  if (!tabId) {
+    return null;
   }
 
-  render() {
-    const { className, autoFocus, tabId, value, onChange, onError } = this.props;
-
-    if (!tabId) return null;
-
-    return (
-      <MonacoEditor
-        autoFocus={autoFocus}
-        id={tabId}
-        value={value}
-        className={cssNames(styles.EditorPanel, className)}
-        onChange={onChange}
-        onError={onError}
-        ref={this.editor}
-      />
-    );
-  }
-}
+  return (
+    <MonacoEditor
+      autoFocus={autoFocus}
+      id={tabId}
+      value={value}
+      className={cssNames(styles.EditorPanel, className)}
+      onChange={onChange}
+      onError={onError}
+      ref={editor}
+    />
+  );
+});
 
 export const EditorPanel = withInjectables<Dependencies, EditorPanelProps>(NonInjectedEditorPanel, {
   getProps: (di, props) => ({

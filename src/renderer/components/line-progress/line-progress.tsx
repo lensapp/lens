@@ -6,15 +6,18 @@
 import "./line-progress.scss";
 import React from "react";
 import { cssNames } from "../../utils";
-import type { TooltipDecoratorProps } from "../tooltip";
 import { withTooltip } from "../tooltip";
 
-export interface LineProgressProps extends React.HTMLProps<any>, TooltipDecoratorProps {
+export interface LineProgressProps extends React.HTMLProps<HTMLDivElement> {
   value: number;
   min?: number;
   max?: number;
   className?: any;
   precise?: number;
+}
+
+function valuePercent({ value, min, max, precise }: Required<Pick<LineProgressProps, "value" | "min" | "max" | "precise">>) {
+  return Math.min(100, value / (max - min) * 100).toFixed(precise);
 }
 
 export const LineProgress = withTooltip(({
@@ -25,13 +28,14 @@ export const LineProgress = withTooltip(({
   precise = 2,
   children,
   ...props
-}: LineProgressProps) => {
-  const valuePercents = Math.min(100, value / (max - min) * 100).toFixed(precise);
-
-  return (
-    <div className={cssNames("LineProgress", className)} {...props}>
-      <div className="line" style={{ width: `${valuePercents}%` }}></div>
-      {children}
-    </div>
-  );
-});
+}: LineProgressProps) => (
+  <div className={cssNames("LineProgress", className)} {...props}>
+    <div
+      className="line"
+      style={{
+        width: `${valuePercent({ min, max, value, precise })}%`,
+      }}
+    />
+    {children}
+  </div>
+));

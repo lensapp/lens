@@ -7,22 +7,13 @@ import "./status-brick.scss";
 
 import React from "react";
 import { cssNames } from "../../utils";
-import type { TooltipDecoratorProps } from "../tooltip";
 import { withTooltip } from "../tooltip";
 
-export interface StatusBrickProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
+export interface StatusBrickProps extends React.HTMLAttributes<any> {
 }
 
-@withTooltip
-export class StatusBrick extends React.Component<StatusBrickProps> {
-  render() {
-    const { className, ...elemProps } = this.props;
-
-    return (
-      <div
-        className={cssNames("StatusBrick", className)}
-        {...elemProps}
-      />
-    );
-  }
-}
+export const StatusBrick = withTooltip(({ className, ...elemProps }: StatusBrickProps) => (
+  <div
+    className={cssNames("StatusBrick", className)}
+    {...elemProps} />
+));

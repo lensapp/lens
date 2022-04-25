@@ -7,10 +7,9 @@ import "./button.scss";
 import type { ButtonHTMLAttributes } from "react";
 import React from "react";
 import { cssNames } from "../../utils";
-import type { TooltipDecoratorProps } from "../tooltip";
 import { withTooltip } from "../tooltip";
 
-export interface ButtonProps extends ButtonHTMLAttributes<any>, TooltipDecoratorProps {
+export interface ButtonProps extends ButtonHTMLAttributes<any> {
   label?: React.ReactNode;
   waiting?: boolean;
   primary?: boolean;
@@ -26,36 +25,33 @@ export interface ButtonProps extends ButtonHTMLAttributes<any>, TooltipDecorator
   target?: "_blank"; // in case of using @href
 }
 
-@withTooltip
-export class Button extends React.PureComponent<ButtonProps, {}> {
-  render() {
-    const {
-      waiting, label, primary, accent, plain, hidden, active, big,
-      round, outlined, tooltip, light, children, tooltipOverrideDisabled, ...btnProps
-    } = this.props;
+export const Button = withTooltip((props: ButtonProps) => {
+  const {
+    waiting, label, primary, accent, plain, hidden, active, big,
+    round, outlined, light, children, ...btnProps
+  } = props;
 
-    if (hidden) return null;
+  if (hidden) return null;
 
-    btnProps.className = cssNames("Button", btnProps.className, {
-      waiting, primary, accent, plain, active, big, round, outlined, light,
-    });
+  btnProps.className = cssNames("Button", btnProps.className, {
+    waiting, primary, accent, plain, active, big, round, outlined, light,
+  });
 
-    // render as link
-    if (this.props.href) {
-      return (
-        <a {...btnProps}>
-          {label}
-          {children}
-        </a>
-      );
-    }
-
-    // render as button
+  // render as link
+  if (props.href) {
     return (
-      <button type="button" {...btnProps}>
+      <a {...btnProps}>
         {label}
         {children}
-      </button>
+      </a>
     );
   }
-}
+
+  // render as button
+  return (
+    <button type="button" {...btnProps}>
+      {label}
+      {children}
+    </button>
+  );
+});
