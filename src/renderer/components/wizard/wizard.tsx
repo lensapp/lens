@@ -181,7 +181,11 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
   //because submit MIGHT be called through pressing enter, it might be fired twice.
   //we'll debounce it to ensure it isn't
   submit = debounce(() => {
-    if (this.form?.noValidate && this.form.checkValidity()) {
+    if (!this.form) {
+      return;
+    }
+
+    if (this.form.noValidate || this.form.checkValidity()) {
       this.next();
     }
   }, 100);
@@ -246,7 +250,6 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
               hidden={hideNextBtn}
               waiting={waiting ?? this.state.waiting}
               disabled={disabledNext}
-              onClick={this.next}
             />
           </div>
         )}

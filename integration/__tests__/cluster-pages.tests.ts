@@ -46,7 +46,6 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
   it(
     "should navigate around common cluster pages",
-
     async () => {
       const scenariosByParent = pipeline(
         scenarios,

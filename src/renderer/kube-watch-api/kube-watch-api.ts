@@ -77,7 +77,7 @@ export interface SubscribableStore {
     readonly apiBase: string;
     readonly kind: string;
   };
-  loadAll(opts?: KubeObjectStoreLoadAllParams): Promise<any>;
+  loadAll(opts?: KubeObjectStoreLoadAllParams): Promise<unknown>;
   subscribe(opts?: KubeObjectStoreSubscribeParams): Disposer;
 }
 

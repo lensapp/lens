@@ -114,7 +114,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
      * if user has given static list of namespaces let's not start watches
      * because watch adds stuff that's not wanted or will just fail
      */
-    if (!this.context?.cluster?.accessibleNamespaces.length) {
+    if (this.context.cluster.accessibleNamespaces.length > 0) {
       return noop;
     }
 
