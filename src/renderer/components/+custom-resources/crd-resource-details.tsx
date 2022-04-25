@@ -6,7 +6,6 @@
 import "./crd-resource-details.scss";
 
 import React from "react";
-import jsonPath from "jsonpath";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Badge } from "../badge";
@@ -16,10 +15,11 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { Input } from "../input";
 import type { AdditionalPrinterColumnsV1 } from "../../../common/k8s-api/endpoints/crd.api";
 import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
-import { parseJsonPath } from "../../utils/jsonPath";
+import { convertKubectlJsonPathToNodeJsonPath } from "../../utils/jsonPath";
 import type { KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import logger from "../../../common/logger";
+import { JSONPath } from "@astronautlabs/jsonpath";
 
 export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeObject> {
   crd: CustomResourceDefinition;
@@ -48,9 +48,9 @@ function convertSpecValue(value: any): any {
 @observer
 export class CustomResourceDetails extends React.Component<CustomResourceDetailsProps> {
   renderAdditionalColumns(resource: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
-    return columns.map(({ name, jsonPath: jp }) => (
+    return columns.map(({ name, jsonPath }) => (
       <DrawerItem key={name} name={name} renderBoolean>
-        {convertSpecValue(jsonPath.value(resource, parseJsonPath(jp.slice(1))))}
+        {convertSpecValue(JSONPath.query(resource, convertKubectlJsonPathToNodeJsonPath(jsonPath)))}
       </DrawerItem>
     ));
   }

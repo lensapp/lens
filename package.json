@@ -199,6 +199,7 @@
     }
   },
   "dependencies": {
+    "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.16.3",
@@ -229,7 +230,6 @@
     "joi": "^17.6.0",
     "js-yaml": "^4.1.0",
     "jsdom": "^16.7.0",
-    "jsonpath": "^1.1.1",
     "lodash": "^4.17.15",
     "mac-ca": "^1.0.6",
     "marked": "^4.0.12",
@@ -299,7 +299,6 @@
     "@types/jest": "^26.0.24",
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^16.2.14",
-    "@types/jsonpath": "^0.2.0",
     "@types/lodash": "^4.14.181",
     "@types/marked": "^4.0.3",
     "@types/md5-file": "^4.0.2",

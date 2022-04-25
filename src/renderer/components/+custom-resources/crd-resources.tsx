@@ -6,14 +6,13 @@
 import "./crd-resources.scss";
 
 import React from "react";
-import { value } from "jsonpath";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { IComputedValue } from "mobx";
 import { computed, makeObservable } from "mobx";
 import { crdStore } from "./crd.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
-import { parseJsonPath } from "../../utils/jsonPath";
+import { safeJSONPathValue } from "../../utils/jsonPath";
 import { TabLayout } from "../layout/tab-layout-2";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import customResourcesRouteParametersInjectable from "./custom-resources-route-parameters.injectable";
@@ -70,7 +69,7 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
             [columnId.age]: customResource => -customResource.getCreationTimestamp(),
             ...Object.fromEntries(extraColumns.map(({ name, jsonPath }) => [
               name,
-              customResource => value(customResource, parseJsonPath(jsonPath.slice(1))),
+              customResource => safeJSONPathValue(customResource, jsonPath),
             ])),
           }}
           searchFilters={[
@@ -95,22 +94,11 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
             })),
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={crdInstance => [
-            crdInstance.getName(),
-            isNamespaced && crdInstance.getNs(),
-            ...extraColumns.map((column) => {
-              let rawValue = value(crdInstance, parseJsonPath(column.jsonPath.slice(1)));
-
-              if (Array.isArray(rawValue) || typeof rawValue === "object") {
-                rawValue = JSON.stringify(rawValue);
-              }
-
-              return {
-                renderBoolean: true,
-                children: rawValue,
-              };
-            }),
-            <KubeObjectAge key="age" object={crdInstance} />,
+          renderTableContents={customResource => [
+            customResource.getName(),
+            isNamespaced && customResource.getNs(),
+            ...extraColumns.map((column) => safeJSONPathValue(customResource, column.jsonPath)),
+            <KubeObjectAge key="age" object={customResource} />,
           ]}
           failedToLoadMessage={(
             <>
