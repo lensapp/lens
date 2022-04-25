@@ -3,12 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { observable, action, untracked, computed } from "mobx";
+import { observable, action, untracked, computed, makeObservable } from "mobx";
 import type { NamespaceStore } from "../store";
 import { isMac } from "../../../../common/vars";
 import type { ActionMeta } from "react-select";
 import { Icon } from "../../icon";
 import type { SelectOption } from "../../select";
+import { autoBind } from "../../../utils";
 
 interface Dependencies {
   readonly namespaceStore: NamespaceStore;
@@ -17,11 +18,13 @@ interface Dependencies {
 export const selectAllNamespaces = Symbol("all-namespaces-selected");
 
 export type SelectAllNamespaces = typeof selectAllNamespaces;
-
 export type NamespaceSelectFilterOption = SelectOption<string | SelectAllNamespaces>;
 
 export class NamespaceSelectFilterModel {
-  constructor(private readonly dependencies: Dependencies) {}
+  constructor(private readonly dependencies: Dependencies) {
+    makeObservable(this);
+    autoBind(this);
+  }
 
   readonly options = computed((): readonly NamespaceSelectFilterOption[] => {
     const baseOptions = this.dependencies.namespaceStore.items.map(ns => ns.getName());
@@ -46,7 +49,7 @@ export class NamespaceSelectFilterModel {
     ];
   });
 
-  formatOptionLabel = ({ value, isSelected }: NamespaceSelectFilterOption) => {
+  formatOptionLabel({ value, isSelected }: NamespaceSelectFilterOption) {
     if (value === selectAllNamespaces) {
       return "All Namespaces";
     }
@@ -64,34 +67,37 @@ export class NamespaceSelectFilterModel {
         )}
       </div>
     );
-  };
+  }
 
   readonly menuIsOpen = observable.box(false);
 
-  closeMenu = action(() => {
+  @action
+  closeMenu() {
     this.menuIsOpen.set(false);
-  });
+  }
 
-  openMenu = action(() => {
+  @action
+  openMenu(){
     this.menuIsOpen.set(true);
-  });
+  }
 
   get selectedNames() {
     return untracked(() => this.dependencies.namespaceStore.selectedNames);
   }
 
-  isSelected = (namespace: string | string[]) =>
-    this.dependencies.namespaceStore.hasContext(namespace);
+  isSelected(namespace: string | string[]) {
+    return this.dependencies.namespaceStore.hasContext(namespace);
+  }
 
-  selectSingle = (namespace: string) => {
+  selectSingle(namespace: string) {
     this.dependencies.namespaceStore.selectSingle(namespace);
-  };
+  }
 
-  selectAll = () => {
+  selectAll() {
     this.dependencies.namespaceStore.selectAll();
-  };
+  }
 
-  onChange = (namespace: unknown, action: ActionMeta<NamespaceSelectFilterOption>) => {
+  onChange(namespace: unknown, action: ActionMeta<NamespaceSelectFilterOption>) {
     switch (action.action) {
       case "clear":
         this.dependencies.namespaceStore.selectAll();
@@ -113,34 +119,35 @@ export class NamespaceSelectFilterModel {
         }
         break;
     }
-  };
+  }
 
-  onClick = () => {
-    if (!this.menuIsOpen) {
+  onClick() {
+    if (!this.menuIsOpen.get()) {
       this.openMenu();
     } else if (!this.isMultiSelection) {
       this.closeMenu();
     }
-  };
+  }
 
   private isMultiSelection = false;
 
-  onKeyDown = (event: React.KeyboardEvent) => {
+  onKeyDown(event: React.KeyboardEvent) {
     if (isSelectionKey(event)) {
       this.isMultiSelection = true;
     }
-  };
+  }
 
-  onKeyUp = (event: React.KeyboardEvent) => {
+  onKeyUp(event: React.KeyboardEvent) {
     if (isSelectionKey(event)) {
       this.isMultiSelection = false;
     }
-  };
+  }
 
-  reset = action(() => {
+  @action
+  reset() {
     this.isMultiSelection = false;
     this.closeMenu();
-  });
+  }
 }
 
 const isSelectionKey = (event: React.KeyboardEvent): boolean  => {

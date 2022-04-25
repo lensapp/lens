@@ -24,31 +24,28 @@ interface Dependencies {
   model: NamespaceSelectFilterModel;
 }
 
-const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies & NamespaceSelectFilterProps) => {
-  return (
-    <div
-      onKeyUp={model.onKeyUp}
-      onKeyDown={model.onKeyDown}
-      onClick={model.onClick}
-    >
-      <Select<string | SelectAllNamespaces, NamespaceSelectFilterOption, true>
-        id={id}
-        isMulti={true}
-        isClearable={false}
-        menuIsOpen={model.menuIsOpen.get()}
-        components={{ Placeholder }}
-        closeMenuOnSelect={false}
-        controlShouldRenderValue={false}
-        onChange={model.onChange}
-        onBlur={model.reset}
-        formatOptionLabel={model.formatOptionLabel}
-        options={model.options.get()}
-        className="NamespaceSelect NamespaceSelectFilter"
-        menuClass="NamespaceSelectFilterMenu"
-      />
-    </div>
-  );
-});
+const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies & NamespaceSelectFilterProps) => (
+  <div
+    onKeyUp={model.onKeyUp}
+    onKeyDown={model.onKeyDown}
+    onClick={model.onClick}
+  >
+    <Select<string | SelectAllNamespaces, NamespaceSelectFilterOption, true>
+      id={id}
+      isMulti={true}
+      isClearable={false}
+      menuIsOpen={model.menuIsOpen.get()}
+      components={{ Placeholder }}
+      closeMenuOnSelect={false}
+      controlShouldRenderValue={false}
+      onChange={model.onChange}
+      onBlur={model.reset}
+      formatOptionLabel={model.formatOptionLabel}
+      options={model.options.get()}
+      className="NamespaceSelect NamespaceSelectFilter"
+      menuClass="NamespaceSelectFilterMenu" />
+  </div>
+));
 
 export const NamespaceSelectFilter = withInjectables<Dependencies, NamespaceSelectFilterProps>(NonInjectedNamespaceSelectFilter, {
   getProps: (di, props) => ({
