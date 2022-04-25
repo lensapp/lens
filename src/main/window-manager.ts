@@ -41,12 +41,10 @@ export class WindowManager extends Singleton {
 
   private async initMainWindow(showSplash: boolean): Promise<BrowserWindow> {
     // Manage main window size and position with state persistence
-    if (!this.windowState) {
-      this.windowState = windowStateKeeper({
-        defaultHeight: 900,
-        defaultWidth: 1440,
-      });
-    }
+    this.windowState ??= windowStateKeeper({
+      defaultHeight: 900,
+      defaultWidth: 1440,
+    });
 
     if (!this.mainWindow) {
       // show icon in dock (mac-os only)
