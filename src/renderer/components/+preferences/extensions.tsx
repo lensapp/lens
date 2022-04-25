@@ -11,6 +11,7 @@ import type { RegisteredAppPreference } from "./app-preferences/app-preference-r
 import { ExtensionSettings } from "./extension-settings";
 import { Preferences } from "./preferences";
 import extensionsPreferenceItemsInjectable from "./extension-preference-items.injectable";
+import currentPathParametersInjectable from "../../routes/current-path-parameters.injectable";
 
 interface Dependencies {
   preferenceItems: IComputedValue<RegisteredAppPreference[]>;
@@ -36,8 +37,13 @@ export const Extensions = withInjectables<Dependencies>(
   observer(NonInjectedExtensions),
 
   {
-    getProps: (di) => ({
-      preferenceItems: di.inject(extensionsPreferenceItemsInjectable),
-    }),
+    getProps: (di) => {
+      const pathParameters = di.inject(currentPathParametersInjectable);
+      const extensionId = pathParameters.get().extensionId;
+
+      return {
+        preferenceItems: di.inject(extensionsPreferenceItemsInjectable, extensionId),
+      };
+    },
   },
 );

@@ -145,31 +145,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
           <hr
             class="small"
           />
-          <section
-            class="small"
-            data-testid="extension-preference-item-for-some-other-preference-item-id"
-            id="some-other-preference-item-id"
-          >
-            <div
-              class="SubTitle"
-            >
-              Test preference item
-               
-            </div>
-            <div
-              data-testid="some-other-preference-item-input"
-            />
-            <div
-              class="hint"
-            >
-              <div
-                data-testid="some-other-preference-item-hint"
-              />
-            </div>
-          </section>
-          <hr
-            class="small"
-          />
         </section>
       </div>
       <div

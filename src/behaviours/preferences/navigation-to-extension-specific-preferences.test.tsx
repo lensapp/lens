@@ -74,7 +74,7 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("doesn't show preferences from unrelated extension", () => {
-        const actual = rendered.getByTestId("extension-preference-item-for-some-other-preference-item-id");
+        const actual = rendered.queryByTestId("extension-preference-item-for-some-other-preference-item-id");
 
         expect(actual).toBeNull();
       });
