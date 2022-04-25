@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { matches } from "lodash/fp";
 import { computed } from "mobx";
 import extensionPreferencesRouteInjectable from "../../../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
 import navigateToExtensionPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/extension/navigate-to-extension-preferences.injectable";
@@ -27,11 +26,10 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
       );
       const isVisible = extensionHasPreferences && extensionHasGeneralPreferences;
       const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
-      const extensionPreferencesRouteIsActive = di.inject(routeIsActiveInjectable, extensionRoute);
       const pathParameters = di.inject(currentPathParametersInjectable);
-      const extensionPreferencesPathParameters = { extensionId: extension.sanitizedExtensionId };
-      const isActive = extensionPreferencesRouteIsActive.get() &&
-        matches(extensionPreferencesPathParameters, pathParameters.get());
+      const routeIsActive = di.inject(routeIsActiveInjectable, extensionRoute);
+
+      const isActive = computed(() => routeIsActive.get() && pathParameters.get().extensionId === extension.sanitizedExtensionId);
 
       const extensionInjectable = getInjectable({
         id: `extension-preferences-navigation-item-${extension.sanitizedExtensionId}`,
@@ -39,7 +37,7 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
           id: `extension-${extension.sanitizedExtensionId}`,
           label: `${extension.name}`,
           navigate: () => navigateToExtensionPreferences(extension.sanitizedExtensionId),
-          isActive: computed(() => isActive),
+          isActive,
           isVisible: computed(() => isVisible),
           orderNumber: 20,
         }),
