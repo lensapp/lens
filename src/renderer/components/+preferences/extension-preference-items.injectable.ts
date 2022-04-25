@@ -2,13 +2,22 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, getInjectionToken, lifecycleEnum } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 
+import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
+
+interface ExtensionPreferenceItem extends RegisteredAppPreference {
+  extension: LensRendererExtension;
+}
+
+export const extensionPreferenceItemInjectionToken = getInjectionToken<ExtensionPreferenceItem>({
+  id: "extension-preference-item-injection-token",
+});
 
 const extensionsPreferenceItemsInjectable = getInjectable({
   id: "extension-preference-items",
