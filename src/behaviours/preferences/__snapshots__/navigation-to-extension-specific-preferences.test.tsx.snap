@@ -45,7 +45,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             </div>
           </div>
           <div
-            class="Tab flex gaps align-center"
+            class="Tab flex gaps align-center active"
             data-testid="tab-link-for-extension-some-test-extension-id"
             role="tab"
             tabindex="0"
@@ -1237,7 +1237,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             </div>
           </div>
           <div
-            class="Tab flex gaps align-center"
+            class="Tab flex gaps align-center active"
             data-testid="tab-link-for-extension-some-test-extension-id"
             role="tab"
             tabindex="0"
