@@ -90,12 +90,19 @@ describe("preferences - navigation to extension specific preferences", () => {
       beforeEach(async () => {
         const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
         const extensionWithoutPreferences = getRendererExtensionFake(extensionStubWithoutPreferences);
+        const extensionWithSpecificTab = getRendererExtensionFake(extensionStubWithShowInPreferencesTab);
 
-        await applicationBuilder.addExtensions(someTestExtension, extensionWithoutPreferences);
+        await applicationBuilder.addExtensions(someTestExtension, extensionWithoutPreferences, extensionWithSpecificTab);
       });
 
       it("doesn't show link for extension without preferences", () => {
         const actual = rendered.queryByTestId("tab-link-for-extension-without-preferences-id");
+
+        expect(actual).toBeNull();
+      });
+
+      it("doesn't show link for preferences with 'showInPreferencesTab' param", () => {
+        const actual = rendered.queryByTestId("tab-link-for-extension-specified-preferences-page-id");
 
         expect(actual).toBeNull();
       });
@@ -206,4 +213,21 @@ const someOtherExtensionStubWithExtensionSpecificPreferenceItems: Partial<LensRe
 
 const extensionStubWithoutPreferences: Partial<LensRendererExtension> = {
   id: "without-preferences-id",
+};
+
+const extensionStubWithShowInPreferencesTab: Partial<LensRendererExtension> = {
+  id: "specified-preferences-page-id",
+
+  appPreferences: [
+    {
+      title: "Test preference item",
+      id: "very-other-preference-item-id",
+      showInPreferencesTab: "some-tab",
+
+      components: {
+        Hint: () => <div data-testid="very-other-preference-item-hint" />,
+        Input: () => <div data-testid="very-other-preference-item-input" />,
+      },
+    },
+  ],
 };

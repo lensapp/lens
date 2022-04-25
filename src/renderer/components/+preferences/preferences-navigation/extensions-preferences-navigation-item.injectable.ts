@@ -21,7 +21,11 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
       const navigateToExtensionPreferences = di.inject(
         navigateToExtensionPreferencesInjectable,
       );
-      const isVisible = extension.appPreferences.length > 0;
+      const extensionHasPreferences = extension.appPreferences.length > 0;
+      const extensionHasGeneralPreferences = extension.appPreferences.some(preferences =>
+        !preferences.showInPreferencesTab,
+      );
+      const isVisible = extensionHasPreferences && extensionHasGeneralPreferences;
       const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
       const extensionPreferencesRouteIsActive = di.inject(routeIsActiveInjectable, extensionRoute);
       const pathParameters = di.inject(currentPathParametersInjectable);
