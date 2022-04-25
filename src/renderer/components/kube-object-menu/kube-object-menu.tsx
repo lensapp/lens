@@ -103,14 +103,16 @@ class NonInjectedKubeObjectMenu<TKubeObject extends KubeObject, Props extends Ku
   }
 
   render() {
-    const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
+    const { remove, update, renderRemoveMessage, isEditable, isRemovable, store } = this;
     const { className, editable, removable, object, ...menuProps } = this.props;
+
+    console.log(object, store);
 
     return (
       <MenuActions
         className={cssNames("KubeObjectMenu", className)}
-        updateAction={object && isEditable ? (() => update(object)) : undefined}
-        removeAction={object && isRemovable ? (() => remove(object)) : undefined}
+        updateAction={(object && isEditable) ? (() => update(object)) : undefined}
+        removeAction={(object && isRemovable) ? (() => remove(object)) : undefined}
         removeConfirmationMessage={renderRemoveMessage}
         {...menuProps}
       >

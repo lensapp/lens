@@ -46,6 +46,7 @@ import assert from "assert";
 import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import { init } from "@sentry/electron/renderer";
 import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
+import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -77,6 +78,17 @@ export async function bootstrap(di: DiContainer) {
 
   const rootNode = createRoot(rootElem);
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
+
+  /**
+   * This is injected here to initialize it for the side effect.
+   *
+   * The side effect CANNOT be within `apiManagerInjectable` itself since that causes circular
+   * dependencies with the current need for legacy di use.
+   *
+   * This also MUST be done before anything else so that it can start listening for the events for
+   * auto initialization.
+   */
+  di.inject(autoRegistrationInjectable);
 
   // TODO: Remove temporal dependencies to make timing of initialization not important
   di.inject(userStoreInjectable);

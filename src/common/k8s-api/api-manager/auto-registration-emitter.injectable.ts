@@ -10,7 +10,7 @@ import type { KubeApi } from "../kube-api";
 
 export interface LegacyAutoRegistration {
   customResourceDefinition: (crd: CustomResourceDefinition) => void;
-  kubeApi: (api: KubeApi) => void;
+  kubeApi: (api: KubeApi<any, any>) => void;
 }
 
 /**
