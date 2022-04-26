@@ -84,6 +84,8 @@ export const overrideIpcBridge = ({
     windowManagerInjectable,
     () =>
       ({
+        ensureMainWindow: () => Promise.resolve(),
+
         sendToView: ({ channel: channelName, data }: SendToViewArgs) => {
           const handles = rendererIpcFakeHandles.get(channelName);
 
