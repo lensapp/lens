@@ -56,11 +56,8 @@ import applicationMenuInjectable from "./menu/application-menu.injectable";
 import windowManagerInjectable from "./window-manager.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/before-application-is-ready/implementations/setup-system-ca.injectable";
-import whenApplicationWillQuitInjectable from "./electron-app/when-application-will-quit.injectable";
 import setupDeepLinkingInjectable from "./electron-app/after-application-is-ready/setup-deep-linking.injectable";
-import whenSecondInstanceInjectable from "./electron-app/when-second-instance.injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
-import setApplicationNameInjectable from "./electron-app/features/set-application-name.injectable";
 import getCommandLineSwitchInjectable from "./electron-app/features/get-command-line-switch.injectable";
 import requestSingleInstanceLockInjectable from "./electron-app/features/request-single-instance-lock.injectable";
 import disableHardwareAccelerationInjectable from "./electron-app/features/disable-hardware-acceleration.injectable";
@@ -92,7 +89,7 @@ export const getDiForUnitTesting = (
   if (doGeneralOverrides) {
     overrideOperatingSystem(di);
     overrideRunnablesHavingSideEffects(di);
-    overrideElectron(di);
+    overrideElectronFeatures(di);
 
     di.override(isDevelopmentInjectable, () => false);
     di.override(environmentVariablesInjectable, () => ({}));
@@ -187,7 +184,7 @@ const overrideOperatingSystem = (di: DiContainer) => {
   di.override(joinPathsInjectable, () => joinPathsFake);
 };
 
-const overrideElectron = (di: DiContainer) => {
+const overrideElectronFeatures = (di: DiContainer) => {
   di.override(setupMainWindowVisibilityAfterActivationInjectable, () => ({
     run: () => {},
   }));
@@ -197,10 +194,7 @@ const overrideElectron = (di: DiContainer) => {
   }));
 
   di.override(setupDeepLinkingInjectable, () => ({ run: () => {} }));
-  di.override(whenApplicationWillQuitInjectable, () => () => {});
-  di.override(whenSecondInstanceInjectable, () => () => {});
   di.override(exitAppInjectable, () => () => {});
-  di.override(setApplicationNameInjectable, () => () => {});
   di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
   di.override(requestSingleInstanceLockInjectable, () => () => true);
   di.override(disableHardwareAccelerationInjectable, () => () => {});

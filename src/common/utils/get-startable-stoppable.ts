@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 export const getStartableStoppable = (
+  id: string,
   startAndGetStopCallback: () => () => void,
 ) => {
   let dispose: () => void;
@@ -12,7 +13,7 @@ export const getStartableStoppable = (
   return {
     start: () => {
       if (started) {
-        throw new Error("Tried to start something that has already started.");
+        throw new Error(`Tried to start "${id}", but it has already started.`);
       }
 
       stopped = false;
@@ -24,11 +25,11 @@ export const getStartableStoppable = (
 
     stop: () => {
       if (stopped) {
-        throw new Error("Tried to stop something that has already stopped.");
+        throw new Error(`Tried to stop "${id}", but it has already stopped.`);
       }
 
       if (!started) {
-        throw new Error("Tried to stop something that has not started yet.");
+        throw new Error(`Tried to stop "${id}", but it has not started yet.`);
       }
 
       started = false;

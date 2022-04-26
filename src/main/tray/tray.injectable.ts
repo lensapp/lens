@@ -21,7 +21,7 @@ const trayInjectable = getInjectable({
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
 
-    return getStartableStoppable(() =>
+    return getStartableStoppable("build-of-tray", () =>
       initTray(
         windowManager,
         trayMenuItems,

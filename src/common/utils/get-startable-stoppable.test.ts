@@ -13,7 +13,7 @@ describe("getStartableStoppable", () => {
     stopMock = jest.fn();
     startMock = jest.fn(() => stopMock);
 
-    actual = getStartableStoppable(startMock);
+    actual = getStartableStoppable("some-id", startMock);
   });
 
   it("does not start yet", () => {
@@ -27,7 +27,7 @@ describe("getStartableStoppable", () => {
   it("when stopping before ever starting, throws", () => {
     expect(() => {
       actual.stop();
-    }).toThrow("Tried to stop something that has not started yet.");
+    }).toThrow("Tried to stop \"some-id\", but it has not started yet.");
   });
 
   describe("when started", () => {
@@ -42,7 +42,7 @@ describe("getStartableStoppable", () => {
     it("when started again, throws", () => {
       expect(() => {
         actual.start();
-      }).toThrow("Tried to start something that has already started.");
+      }).toThrow("Tried to start \"some-id\", but it has already started.");
     });
 
     it("does not stop yet", () => {
@@ -61,7 +61,7 @@ describe("getStartableStoppable", () => {
       it("when stopped again, throws", () => {
         expect(() => {
           actual.stop();
-        }).toThrow("Tried to stop something that has already stopped.");
+        }).toThrow("Tried to stop \"some-id\", but it has already stopped.");
       });
 
       describe("when started again", () => {

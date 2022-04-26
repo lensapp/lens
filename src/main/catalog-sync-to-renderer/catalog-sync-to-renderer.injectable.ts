@@ -13,7 +13,7 @@ const catalogSyncToRendererInjectable = getInjectable({
   instantiate: (di) => {
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
-    return getStartableStoppable(() =>
+    return getStartableStoppable("catalog-sync", () =>
       startCatalogSyncToRenderer(catalogEntityRegistry),
     );
   },

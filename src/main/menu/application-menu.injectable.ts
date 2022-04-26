@@ -14,7 +14,7 @@ const applicationMenuInjectable = getInjectable({
   instantiate: (di) => {
     const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
 
-    return getStartableStoppable(() =>
+    return getStartableStoppable("build-of-application-menu", () =>
       autorun(() => buildMenu(applicationMenuItems.get()), {
         delay: 100,
       }),
