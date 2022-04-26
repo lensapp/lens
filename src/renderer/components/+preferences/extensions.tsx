@@ -12,6 +12,7 @@ import { ExtensionSettings } from "./extension-settings";
 import { Preferences } from "./preferences";
 import extensionsPreferenceItemsInjectable from "./extension-preference-items.injectable";
 import currentPathParametersInjectable from "../../routes/current-path-parameters.injectable";
+import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 
 interface Dependencies {
   preferenceItems: IComputedValue<RegisteredAppPreference[]>;
@@ -41,10 +42,12 @@ export const Extensions = withInjectables<Dependencies>(
     getProps: (di) => {
       const pathParameters = di.inject(currentPathParametersInjectable);
       const extensionId = pathParameters.get().extensionId;
+      const extensions = di.inject(rendererExtensionsInjectable);
+      const extension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
 
       return {
         preferenceItems: di.inject(extensionsPreferenceItemsInjectable, extensionId),
-        extensionName: extensionId,
+        extensionName: extension.manifest.name,
       };
     },
   },
