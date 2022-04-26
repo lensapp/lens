@@ -74,6 +74,8 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
+        <div data-testid="page-for-helm-charts" style={{ display: "none" }}/>
+
         <ItemListLayout
           isConfigurable
           tableId="helm_charts"

@@ -33,6 +33,10 @@ import preferenceNavigationItemsInjectable from "../+preferences/preferences-nav
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
+import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
+import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -55,6 +59,10 @@ export interface ApplicationBuilder {
     navigation: {
       click: (id: string) => void;
     };
+  };
+
+  helmCharts: {
+    navigate: () => void;
   };
 }
 
@@ -192,6 +200,14 @@ export const getApplicationBuilder = () => {
       },
     },
 
+    helmCharts: {
+      navigate: () => {
+        const navigateToHelmCharts = rendererDi.inject(navigateToHelmChartsInjectable);
+
+        navigateToHelmCharts();
+      },
+    },
+
     setEnvironmentToClusterFrame: () => {
       environment = environments.clusterFrame;
 
@@ -205,6 +221,17 @@ export const getApplicationBuilder = () => {
         directoryForLensLocalStorageInjectable,
         () => "/irrelevant",
       );
+
+      rendererDi.override(hostedClusterInjectable, () => ({
+        accessibleNamespaces: [],
+      }));
+
+      const clusterFrameContext = rendererDi.inject(
+        clusterFrameContextInjectable,
+      );
+
+      // Todo: get rid of global state.
+      KubeObjectStore.defaultContext.set(clusterFrameContext);
 
       return builder;
     },

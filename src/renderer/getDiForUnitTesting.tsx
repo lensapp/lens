@@ -33,6 +33,9 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import themeStoreInjectable from "./theme-store.injectable";
+import apiManagerInjectable from "./components/kube-object-menu/dependencies/api-manager.injectable";
+import { ApiManager } from "../common/k8s-api/api-manager";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -69,7 +72,16 @@ export const getDiForUnitTesting = (
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
-    di.override(userStoreInjectable, () => ({}) as UserStore);
+
+    di.override(
+      userStoreInjectable,
+      () =>
+        ({
+          isTableColumnHidden: () => false,
+        } as unknown as UserStore),
+    );
+
+    di.override(apiManagerInjectable, () => new ApiManager());
 
     di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
     di.override(registerIpcChannelListenerInjectable, () => () => undefined);
@@ -92,6 +104,13 @@ export const getDiForUnitTesting = (
       error: (message: string, ...args: any) => console.error(message, ...args),
       info: noop,
     }));
+
+    di.override(themeStoreInjectable, () => ({
+      activeTheme: {
+        type: "some-active-theme-type",
+      },
+    }));
+
   }
 
   return di;

@@ -18,9 +18,11 @@ import ReactSelect, {
   type StylesConfig,
 } from "react-select";
 import ReactSelectCreatable, { type CreatableProps } from "react-select/creatable";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../theme.store";
 import { autoBind, cssNames } from "../../utils";
 import { merge } from "lodash";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../theme-store.injectable";
 
 const { Menu } = components;
 
@@ -34,6 +36,10 @@ export interface SelectOption<T = any> {
   label?: React.ReactNode;
 }
 
+interface Dependencies {
+  themeStore: ThemeStore;
+}
+
 export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean, GroupBase<T>> {
   id?: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
   value?: T;
@@ -45,21 +51,21 @@ export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, Crea
 }
 
 @observer
-export class Select extends React.Component<SelectProps> {
+class NonInjectedSelect extends React.Component<SelectProps & Dependencies> {
   static defaultProps: Omit<SelectProps, "id"> = {
     autoConvertOptions: true,
     menuPortalTarget: document.body,
     menuPlacement: "auto",
   };
 
-  constructor(props: SelectProps) {
+  constructor(props: SelectProps & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
   }
 
   @computed get themeClass() {
-    const themeName = this.props.themeName || ThemeStore.getInstance().activeTheme.type;
+    const themeName = this.props.themeName || this.props.themeStore.activeTheme.type;
 
     return `theme-${themeName}`;
   }
@@ -153,3 +159,14 @@ export class Select extends React.Component<SelectProps> {
       : <ReactSelect {...selectProps} />;
   }
 }
+
+export const Select = withInjectables<Dependencies, SelectProps>(
+  NonInjectedSelect,
+
+  {
+    getProps: (di, props) => ({
+      themeStore: di.inject(themeStoreInjectable),
+      ...props,
+    }),
+  },
+);

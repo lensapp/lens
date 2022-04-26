@@ -21,13 +21,16 @@ import { Spinner } from "../spinner";
 import type { ItemObject, ItemStore } from "../../../common/item.store";
 import type { Filter } from "./page-filters.store";
 import { pageFilters } from "./page-filters.store";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
-import { UserStore } from "../../../common/user-store";
-import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
+import type { UserStore } from "../../../common/user-store";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
+
+import themeStoreInjectable from "../../theme-store.injectable";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 
 export interface ItemListLayoutContentProps<I extends ItemObject> {
@@ -66,12 +69,14 @@ export interface ItemListLayoutContentProps<I extends ItemObject> {
 }
 
 interface Dependencies {
+  themeStore: ThemeStore;
+  userStore: UserStore;
   openConfirmDialog: OpenConfirmDialog;
 }
 
 @observer
-class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Component<ItemListLayoutContentProps<I> & Dependencies> {
-  constructor(props: ItemListLayoutContentProps<I> & Dependencies) {
+class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Component<Dependencies & ItemListLayoutContentProps<I>> {
+  constructor(props: Dependencies & ItemListLayoutContentProps<I>) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -255,7 +260,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
       detailsItem, className, tableProps = {}, tableId, getItems,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
-    const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
+    const classNames = cssNames(className, "box", "grow", this.props.themeStore.activeTheme.type);
     const items = getItems();
     const selectedItems = store.pickOnlySelected(items);
 
@@ -298,7 +303,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
   showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
     const { tableId, isConfigurable } = this.props;
 
-    return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
+    return !isConfigurable || !this.props.userStore.isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
   renderColumnVisibilityMenu() {
@@ -312,7 +317,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
               <Checkbox
                 label={cellProps.title ?? `<${cellProps.className}>`}
                 value={this.showColumn(cellProps)}
-                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id)}
+                onChange={() => this.props.userStore.toggleTableColumnVisibility(tableId, cellProps.id)}
               />
             </MenuItem>
           )
@@ -322,9 +327,20 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
   }
 }
 
-export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayoutContentProps<ItemObject>>(NonInjectedItemListLayoutContent, {
-  getProps: (di, props) => ({
-    ...props,
-    openConfirmDialog: di.inject(openConfirmDialogInjectable),
-  }),
-}) as <I extends ItemObject>(props: ItemListLayoutContentProps<I>) => React.ReactElement;
+const InjectedItemListLayoutContent = withInjectables<Dependencies, ItemListLayoutContentProps<ItemObject>>(
+  NonInjectedItemListLayoutContent,
+  {
+    getProps: (di, props) => ({
+      themeStore: di.inject(themeStoreInjectable),
+      userStore: di.inject(userStoreInjectable),
+      openConfirmDialog: di.inject(openConfirmDialogInjectable),
+      ...props,
+    }),
+  },
+);
+
+export function ItemListLayoutContent<I extends ItemObject>(
+  props: ItemListLayoutContentProps<I>,
+) {
+  return <InjectedItemListLayoutContent {...props} />;
+}

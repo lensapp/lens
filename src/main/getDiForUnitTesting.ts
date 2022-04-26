@@ -66,6 +66,8 @@ import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import setupMainWindowVisibilityAfterActivationInjectable from "./electron-app/after-application-is-ready/setup-main-window-visibility-after-activation.injectable";
 import setupDeviceShutdownInjectable from "./electron-app/after-application-is-ready/setup-device-shutdown.injectable";
+import setupApplicationNameInjectable from "./electron-app/before-application-is-ready/setup-application-name.injectable";
+import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/before-application-is-ready/setup-runnables-before-closing-of-application.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -195,6 +197,8 @@ const overrideElectronFeatures = (di: DiContainer) => {
 
   di.override(setupDeepLinkingInjectable, () => ({ run: () => {} }));
   di.override(exitAppInjectable, () => () => {});
+  di.override(setupApplicationNameInjectable, () => ({ run: () => {} }));
+  di.override(setupRunnablesBeforeClosingOfApplicationInjectable, () => ({ run: () => {} }));
   di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
   di.override(requestSingleInstanceLockInjectable, () => () => true);
   di.override(disableHardwareAccelerationInjectable, () => () => {});
