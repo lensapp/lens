@@ -24,7 +24,7 @@ const extensionsPreferenceItemsInjectable = getInjectable({
 
   instantiate: (di, extensionId: string): IComputedValue<RegisteredAppPreference[]> => {
     const extensions = di.inject(rendererExtensionsInjectable);
-    const extension = extensions.get().find((extension) => extension.id === extensionId);
+    const extension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
 
     return computed(() => {
       if (!extension) {
