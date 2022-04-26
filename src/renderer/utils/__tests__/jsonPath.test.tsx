@@ -54,7 +54,7 @@ describe("parseJsonPath", () => {
     expect(res).toBe("$.metadata.labels[0].foo[0]");
   });
 
-  it("converts ending .. to ..*", () => {
+  it("removes trailing ..", () => {
     const res = convertKubectlJsonPathToNodeJsonPath(".metadata.labels[]..");
 
     expect(res).toBe("$.metadata.labels[0]");
