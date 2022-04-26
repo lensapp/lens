@@ -29,14 +29,14 @@ const trailingDotDot = /\.\.$/;
  * - Allow `...foo` as well as `..foo`
  */
 export function convertKubectlJsonPathToNodeJsonPath(jsonPath: string) {
-  const startMatch = kubectlOptionPrefix.match(jsonPath);
+  const captures = kubectlOptionPrefix.captures(jsonPath);
   let start = "$";
 
-  if (!startMatch.groups) {
+  if (!captures) {
     return start;
   }
 
-  let { pathExpression } = startMatch.groups;
+  let { pathExpression } = captures;
 
   if (pathExpression.match(slashDashSearch)) {
     const [first, ...rest] = pathExpression.split(pathByBareDots);
