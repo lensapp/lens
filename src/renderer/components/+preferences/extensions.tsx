@@ -15,15 +15,16 @@ import currentPathParametersInjectable from "../../routes/current-path-parameter
 
 interface Dependencies {
   preferenceItems: IComputedValue<RegisteredAppPreference[]>;
+  extensionName: string;
 }
 
-const NonInjectedExtensions = ({ preferenceItems }: Dependencies) => (
+const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies) => (
   <Preferences data-testid="extension-preferences-page">
     <section id="extensions">
-      <h2>Extensions</h2>
-      {preferenceItems.get().map((preferenceItem) => (
+      <h2>{extensionName} settings</h2>
+      {preferenceItems.get().map((preferenceItem, index) => (
         <ExtensionSettings
-          key={preferenceItem.id}
+          key={`${preferenceItem.id}-${index}`}
           setting={preferenceItem}
           size="small"
           data-testid={`extension-preference-item-for-${preferenceItem.id}`}
@@ -43,6 +44,7 @@ export const Extensions = withInjectables<Dependencies>(
 
       return {
         preferenceItems: di.inject(extensionsPreferenceItemsInjectable, extensionId),
+        extensionName: extensionId,
       };
     },
   },
