@@ -11027,10 +11027,10 @@ react-refresh-typescript@^2.0.4:
   resolved "https://registry.yarnpkg.com/react-refresh-typescript/-/react-refresh-typescript-2.0.4.tgz#f20acdb3a538fc79da10c64fdd5560bea01309f1"
   integrity sha512-ySsBExEFik5Jjf7NoXtFbzUk2rYWM4gF5gg+wRTNmp9p7B2uMpAAa339FHWqmB8EAr0e6mzzskAXxc0Jd04fBw==
 
-react-refresh@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
-  integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
+react-refresh@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.12.0.tgz#28ac0a2c30ef2bb3433d5fd0621e69a6d774c3a4"
+  integrity sha512-suLIhrU2IHKL5JEKR/fAwJv7bbeq4kJ+pJopf77jHwuR+HmJS/HbrPIGsTBUVfw7tXPOmYv7UJ7PCaN49e8x4A==
 
 react-router-dom@^5.3.1:
   version "5.3.1"
