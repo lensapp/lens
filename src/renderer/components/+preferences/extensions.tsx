@@ -47,7 +47,7 @@ export const Extensions = withInjectables<Dependencies>(
 
       return {
         preferenceItems: di.inject(extensionsPreferenceItemsInjectable, extensionId),
-        extensionName: extension.manifest.name,
+        extensionName: extension?.manifest.name,
       };
     },
   },
