@@ -5,7 +5,7 @@
 
 // Convert object's keys to camelCase format
 import { camelCase } from "lodash";
-import type { SingleOrMany } from ".";
+import type { SingleOrMany } from "./types";
 import { isObject } from "./type-narrowing";
 
 export function toCamelCase<T extends Record<string, unknown>[]>(obj: T): T;

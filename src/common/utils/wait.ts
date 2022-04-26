@@ -4,7 +4,7 @@
  */
 import type { IComputedValue } from "mobx";
 import { runInAction, when } from "mobx";
-import type { Disposer } from ".";
+import type { Disposer } from "./disposer";
 
 /**
  * Copyright (c) OpenLens Authors. All rights reserved.
