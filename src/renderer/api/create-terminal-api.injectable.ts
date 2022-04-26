@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import hostedClusterIdInjectable from "../../common/cluster-store/hosted-cluster-id.injectable";
-import type { TerminalApiDependencies, TerminalApiQuery } from "./terminal-api";
+import type { TerminalApiQuery } from "./terminal-api";
 import { TerminalApi } from "./terminal-api";
 
 export type CreateTerminalApi = (query: TerminalApiQuery) => TerminalApi;
@@ -15,13 +15,13 @@ const createTerminalApiInjectable = getInjectable({
   instantiate: (di): CreateTerminalApi => {
     const hostedClusterId = di.inject(hostedClusterIdInjectable);
 
-    assert(hostedClusterId, "Can only create terminal APIs within a cluster frame");
+    return (query) => {
+      assert(hostedClusterId, "Can only create terminal APIs within a cluster frame");
 
-    const dependencies: TerminalApiDependencies = {
-      hostedClusterId,
+      return new TerminalApi({
+        hostedClusterId,
+      }, query);
     };
-
-    return (query) => new TerminalApi(dependencies, query);
   },
 });
 
