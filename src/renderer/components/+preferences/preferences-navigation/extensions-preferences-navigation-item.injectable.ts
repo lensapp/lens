@@ -40,6 +40,7 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
           isActive,
           isVisible: computed(() => isVisible),
           orderNumber: 20,
+          fromExtension: true,
         }),
         injectionToken: preferenceNavigationItemInjectionToken,
       });
