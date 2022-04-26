@@ -14,7 +14,6 @@ import preferenceNavigationItemsInjectable from "../preference-navigation-items.
 import { computed } from "mobx";
 import { noop } from "../../../../utils";
 import type { IComputedValue } from "mobx/dist/internal";
-import { screen } from "@testing-library/dom";
 
 describe("<PreferencesNavigation />", () => {
   let di: DiContainer;
@@ -50,14 +49,6 @@ describe("<PreferencesNavigation />", () => {
           navigate: () => noop,
           orderNumber: 1,
         },
-        {
-          id: "kube",
-          label: "Kube",
-          isActive: computed(() => false),
-          isVisible: computed(() => false),
-          navigate: () => noop,
-          orderNumber: 2,
-        },
       ]);
 
       di.override(preferenceNavigationItemsInjectable, () => generalNavItems);
@@ -78,16 +69,6 @@ describe("<PreferencesNavigation />", () => {
       );
 
       expect(container).not.toHaveTextContent("Custom Settings");
-    });
-
-    it("does not render hidden navigation items", () => {
-      const { container } = render(
-        <PreferencesNavigation/>,
-      );
-
-      screen.debug();
-
-      expect(container).not.toHaveTextContent("Kube");
     });
   });
 
@@ -169,14 +150,13 @@ describe("<PreferencesNavigation />", () => {
       expect(container).toHaveTextContent("lensapp-pod-menu");
     });
 
-    it("does not render hidden extension navigation items", () => {
-      const { container } = render(
+    it("renders extension navigation items inside custom settings block", () => {
+      const { getByTestId } = render(
         <PreferencesNavigation/>,
       );
+      const settingsBlock = getByTestId("extension-settings");
 
-      screen.debug();
-
-      expect(container).not.toHaveTextContent("metrics-plugin");
+      expect(settingsBlock).toHaveTextContent("lensapp-node-menu");
     });
   });
 });

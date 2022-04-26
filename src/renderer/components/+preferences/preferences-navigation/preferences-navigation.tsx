@@ -13,6 +13,7 @@ import type {
 import preferenceNavigationItemsInjectable from "./preference-navigation-items.injectable";
 
 import { observer } from "mobx-react";
+import { Icon } from "../../icon";
 
 interface Dependencies {
   navigationItems: IComputedValue<PreferenceNavigationItem[]>;
@@ -20,23 +21,44 @@ interface Dependencies {
 
 const NonInjectedPreferencesNavigation = ({
   navigationItems,
-}: Dependencies) => (
-  <Tabs
-    className="flex column"
-    scrollable={false}
-    onChange={(item: PreferenceNavigationItem) => item.navigate()}
-  >
-    <div className="header">Preferences</div>
+}: Dependencies) => {
+  const generalNavItems = navigationItems.get().filter(item => !item.fromExtension);
+  const extensionNavItems = navigationItems.get().filter(item => item.fromExtension);
 
-    {navigationItems.get().map((item) => (
+  function renderTab(item: PreferenceNavigationItem) {
+    return (
       <PreferencesNavigationTab
         key={item.id}
         item={item}
         data-testid={`tab-link-for-${item.id}`}
       />
-    ))}
-  </Tabs>
-);
+    );
+  }
+
+  return (
+    <Tabs
+      className="flex column"
+      scrollable={false}
+      onChange={(item: PreferenceNavigationItem) => item.navigate()}
+    >
+      <div className="header">Preferences</div>
+
+      {generalNavItems.map(renderTab)}
+
+      {extensionNavItems.length > 0 && (
+        <div data-testid="extension-settings">
+          <hr/>
+          <div className="header flex items-center">
+            <Icon material="extension" smallest className="mr-3"/> Custom Settings
+          </div>
+          <div>
+            {extensionNavItems.map(renderTab)}
+          </div>
+        </div>
+      )}
+    </Tabs>
+  );
+};
 
 interface PreferenceNavigationTabProps extends React.DOMAttributes<HTMLElement> {
   item: PreferenceNavigationItem;
