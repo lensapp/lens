@@ -106,4 +106,4 @@ class DefaultedAnimate extends React.Component<AnimateProps & typeof DefaultedAn
   }
 }
 
-export const Animate = (props: AnimateProps) => <DefaultedAnimate {...props as never} />;
+export const Animate = (props: AnimateProps) => <DefaultedAnimate {...props} />;
