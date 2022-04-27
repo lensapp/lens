@@ -768,6 +768,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cx" class="md-nav__link">
+    cx
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getstyles" class="md-nav__link">
+    getStyles
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#hasvalue" class="md-nav__link">
     hasValue
   </a>
@@ -803,6 +817,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#isrtl" class="md-nav__link">
+    isRtl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#options" class="md-nav__link">
     options
   </a>
@@ -812,6 +833,13 @@
           <li class="md-nav__item">
   <a href="#selectprops" class="md-nav__link">
     selectProps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme" class="md-nav__link">
+    theme
   </a>
   
 </li>
@@ -832,20 +860,6 @@
           <li class="md-nav__item">
   <a href="#clearvalue" class="md-nav__link">
     clearValue
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cx" class="md-nav__link">
-    cx
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getstyles" class="md-nav__link">
-    getStyles
   </a>
   
 </li>
@@ -894,7 +908,7 @@
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.CustomPlaceholderProps</p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>PlaceholderProps</code>&lt;<code>OptionTypeBase</code>, <code>boolean</code>></li>
+<li><code>PlaceholderProps</code></li>
 </ul>
 <p>↳ <strong><code>CustomPlaceholderProps</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -902,19 +916,21 @@
 <ul>
 <li><a href="./#children">children</a></li>
 <li><a href="./#classname">className</a></li>
+<li><a href="./#cx">cx</a></li>
+<li><a href="./#getstyles">getStyles</a></li>
 <li><a href="./#hasvalue">hasValue</a></li>
 <li><a href="./#innerprops">innerProps</a></li>
 <li><a href="./#isdisabled">isDisabled</a></li>
 <li><a href="./#isfocused">isFocused</a></li>
 <li><a href="./#ismulti">isMulti</a></li>
+<li><a href="./#isrtl">isRtl</a></li>
 <li><a href="./#options">options</a></li>
 <li><a href="./#selectprops">selectProps</a></li>
+<li><a href="./#theme">theme</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#clearvalue">clearValue</a></li>
-<li><a href="./#cx">cx</a></li>
-<li><a href="./#getstyles">getStyles</a></li>
 <li><a href="./#getvalue">getValue</a></li>
 <li><a href="./#selectoption">selectOption</a></li>
 <li><a href="./#setvalue">setValue</a></li>
@@ -931,65 +947,81 @@
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.className</p>
 <hr />
+<h3 id="cx">cx<a class="headerlink" href="#cx" title="Permanent link">#</a></h3>
+<p>• <strong>cx</strong>: <code>CX</code></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>PlaceholderProps.cx</p>
+<hr />
+<h3 id="getstyles">getStyles<a class="headerlink" href="#getstyles" title="Permanent link">#</a></h3>
+<p>• <strong>getStyles</strong>: <code>GetStyles</code>&lt;<code>unknown</code>, <code>boolean</code>, <code>GroupBase</code>&lt;<code>unknown</code>>></p>
+<p>Get the styles of a particular part of the select. Pass in the name of the
+property as the first argument, and the current props as the second argument.
+See the <code>styles</code> object for the properties available.</p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>PlaceholderProps.getStyles</p>
+<hr />
 <h3 id="hasvalue">hasValue<a class="headerlink" href="#hasvalue" title="Permanent link">#</a></h3>
 <p>• <strong>hasValue</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.hasValue</p>
 <hr />
 <h3 id="innerprops">innerProps<a class="headerlink" href="#innerprops" title="Permanent link">#</a></h3>
-<p>• <strong>innerProps</strong>: <code>Object</code></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>style</code></td>
-<td align="left"><code>CSSProperties</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>• <strong>innerProps</strong>: <code>DetailedHTMLProps</code>&lt;<code>HTMLAttributes</code>&lt;<code>HTMLDivElement</code>>, <code>HTMLDivElement</code>></p>
+<p>props passed to the wrapping element for the group.</p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.innerProps</p>
 <hr />
 <h3 id="isdisabled">isDisabled<a class="headerlink" href="#isdisabled" title="Permanent link">#</a></h3>
 <p>• <strong>isDisabled</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.isDisabled</p>
 <hr />
 <h3 id="isfocused">isFocused<a class="headerlink" href="#isfocused" title="Permanent link">#</a></h3>
 <p>• <strong>isFocused</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.isFocused</p>
 <hr />
 <h3 id="ismulti">isMulti<a class="headerlink" href="#ismulti" title="Permanent link">#</a></h3>
 <p>• <strong>isMulti</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.isMulti</p>
 <hr />
+<h3 id="isrtl">isRtl<a class="headerlink" href="#isrtl" title="Permanent link">#</a></h3>
+<p>• <strong>isRtl</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p>PlaceholderProps.isRtl</p>
+<hr />
 <h3 id="options">options<a class="headerlink" href="#options" title="Permanent link">#</a></h3>
-<p>• <strong>options</strong>: <code>OptionsType</code>&lt;<code>OptionTypeBase</code>></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p>• <strong>options</strong>: <code>OptionsOrGroups</code>&lt;<code>unknown</code>, <code>GroupBase</code>&lt;<code>unknown</code>>></p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.options</p>
 <hr />
 <h3 id="selectprops">selectProps<a class="headerlink" href="#selectprops" title="Permanent link">#</a></h3>
-<p>• <strong>selectProps</strong>: <code>Props</code>&lt;<code>OptionTypeBase</code>, <code>false</code>></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p>• <strong>selectProps</strong>: <code>Props</code>&lt;<code>unknown</code>, <code>boolean</code>, <code>GroupBase</code>&lt;<code>unknown</code>>></p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.selectProps</p>
+<hr />
+<h3 id="theme">theme<a class="headerlink" href="#theme" title="Permanent link">#</a></h3>
+<p>• <strong>theme</strong>: <code>Theme</code></p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p>PlaceholderProps.theme</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="clearvalue">clearValue<a class="headerlink" href="#clearvalue" title="Permanent link">#</a></h3>
 <p>▸ <strong>clearValue</strong>(): <code>void</code></p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.clearValue</p>
 <hr />
-<h3 id="cx">cx<a class="headerlink" href="#cx" title="Permanent link">#</a></h3>
-<p>▸ <strong>cx</strong>(<code>state</code>, <code>className</code>): <code>string</code></p>
+<h3 id="getvalue">getValue<a class="headerlink" href="#getvalue" title="Permanent link">#</a></h3>
+<p>▸ <strong>getValue</strong>(): <code>Options</code>&lt;<code>Option</code>></p>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>Options</code>&lt;<code>Option</code>></p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p>PlaceholderProps.getValue</p>
+<hr />
+<h3 id="selectoption">selectOption<a class="headerlink" href="#selectoption" title="Permanent link">#</a></h3>
+<p>▸ <strong>selectOption</strong>(<code>newValue</code>): <code>void</code></p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1000,22 +1032,18 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>state</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>className</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>newValue</code></td>
+<td align="left"><code>Option</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
-<p>PlaceholderProps.cx</p>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<p>PlaceholderProps.selectOption</p>
 <hr />
-<h3 id="getstyles">getStyles<a class="headerlink" href="#getstyles" title="Permanent link">#</a></h3>
-<p>▸ <strong>getStyles</strong>(<code>name</code>, <code>props</code>): <code>Object</code></p>
+<h3 id="setvalue">setValue<a class="headerlink" href="#setvalue" title="Permanent link">#</a></h3>
+<p>▸ <strong>setValue</strong>(<code>newValue</code>, <code>action</code>, <code>option?</code>): <code>void</code></p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1026,73 +1054,22 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>name</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>Object</code></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
-<p>PlaceholderProps.getStyles</p>
-<hr />
-<h3 id="getvalue">getValue<a class="headerlink" href="#getvalue" title="Permanent link">#</a></h3>
-<p>▸ <strong>getValue</strong>(): <code>OptionsType</code>&lt;<code>OptionType</code>></p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>OptionsType</code>&lt;<code>OptionType</code>></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
-<p>PlaceholderProps.getValue</p>
-<hr />
-<h3 id="selectoption">selectOption<a class="headerlink" href="#selectoption" title="Permanent link">#</a></h3>
-<p>▸ <strong>selectOption</strong>(<code>option</code>): <code>void</code></p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>option</code></td>
-<td align="left"><code>OptionType</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
-<p>PlaceholderProps.selectOption</p>
-<hr />
-<h3 id="setvalue">setValue<a class="headerlink" href="#setvalue" title="Permanent link">#</a></h3>
-<p>▸ <strong>setValue</strong>(<code>value</code>, <code>action</code>): <code>void</code></p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>value</code></td>
-<td align="left"><code>IsMulti</code> extends <code>true</code> ? <code>OptionsType</code>&lt;<code>OptionType</code>> : <code>OptionType</code></td>
+<td align="left"><code>newValue</code></td>
+<td align="left"><code>OnChangeValue</code>&lt;<code>Option</code>, <code>IsMulti</code>></td>
 </tr>
 <tr>
 <td align="left"><code>action</code></td>
-<td align="left"><code>ActionTypes</code></td>
+<td align="left"><code>SetValueAction</code></td>
+</tr>
+<tr>
+<td align="left"><code>option?</code></td>
+<td align="left"><code>Option</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>PlaceholderProps.setValue</p>
                 
               
