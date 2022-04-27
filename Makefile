@@ -28,6 +28,9 @@ compile-dev: node_modules
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
+.PHONY: validate-dev
+ci-validate-dev: binaries/client build-extensions compile-dev
+
 .PHONY: dev
 dev: binaries/client build-extensions
 	rm -rf static/build/
