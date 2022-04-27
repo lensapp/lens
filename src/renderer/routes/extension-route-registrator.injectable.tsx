@@ -37,12 +37,12 @@ const extensionRouteRegistratorInjectable = getInjectable({
         extensionInstallationCount,
       );
 
-      const routeInjectables = [
+      const routeInjectables: Injectable<any, any, any>[] = [
         ...extension.globalPages.map(toRouteInjectable(false)),
         ...extension.clusterPages.map(toRouteInjectable(true)),
       ].flat();
 
-      routeInjectables.forEach(di.register);
+      di.register(...routeInjectables);
     };
   },
 
