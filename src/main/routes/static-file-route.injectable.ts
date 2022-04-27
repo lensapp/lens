@@ -8,7 +8,7 @@ import type { SupportedFileExtension } from "../router/router-content-types";
 import { contentTypes } from "../router/router-content-types";
 import logger from "../logger";
 import { routeInjectionToken } from "../router/router.injectable";
-import { appName, publicPath, webpackDevServerPort } from "../../common/vars";
+import { appName, publicPath, staticFilesDirectory } from "../../common/vars";
 import path from "path";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
@@ -17,6 +17,7 @@ import type { GetAbsolutePath } from "../../common/path/get-absolute-path.inject
 import getAbsolutePathInjectable from "../../common/path/get-absolute-path.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
+import { webpackDevServerPort } from "../../../webpack/vars";
 
 interface ProductionDependencies {
   readFileBuffer: (path: string) => Promise<Buffer>;
@@ -27,7 +28,7 @@ interface ProductionDependencies {
 const handleStaticFileInProduction =
   ({ readFileBuffer, getAbsolutePath, joinPaths }: ProductionDependencies) =>
     async ({ params }: LensApiRequest) => {
-      const staticPath = getAbsolutePath(__static);
+      const staticPath = getAbsolutePath(staticFilesDirectory);
       let filePath = params.path;
 
       for (let retryCount = 0; retryCount < 5; retryCount += 1) {

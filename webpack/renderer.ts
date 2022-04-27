@@ -3,24 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import * as vars from "./src/common/vars";
 import path from "path";
 import type webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
-import getTSLoader from "./src/common/getTSLoader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import type { WebpackPluginInstance } from "webpack";
+import getTypescriptLoader from "./get-typescript-loader";
+import { assetsFolderName, isDevelopment, rendererDir, buildDir, appName, htmlTemplate, publicPath, sassCommonVars } from "./vars";
 
 export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
   if (showVars) {
-    console.info("WEBPACK:renderer", { ...vars });
+    console.info("WEBPACK:renderer", {
+      assetsFolderName,
+      isDevelopment,
+      rendererDir,
+      buildDir,
+      appName,
+      htmlTemplate,
+      publicPath,
+    });
   }
-
-  const assetsFolderName = "assets";
-  const { appName, buildDir, htmlTemplate, isDevelopment, publicPath, rendererDir } = vars;
 
   return {
     target: "electron-renderer",
@@ -67,7 +73,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           test: /\.node$/,
           use: "node-loader",
         },
-        getTSLoader({
+        getTypescriptLoader({
           getCustomTransformers: () => ({
             before: isDevelopment ? [require("react-refresh-typescript")()] : [],
           }),
@@ -103,14 +109,18 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         cwd: __dirname,
         exclude: /node_modules/,
         failOnError: true,
-      }),
+      }) as unknown as WebpackPluginInstance,
 
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
 
-      isDevelopment && new ReactRefreshWebpackPlugin(),
-    ].filter(Boolean),
+      ...(
+        isDevelopment
+          ? [new ReactRefreshWebpackPlugin()]
+          : []
+      ),
+    ],
   };
 }
 
@@ -143,15 +153,17 @@ export function fontsLoaderWebpackRules(): webpack.RuleSetRule[] {
   ];
 }
 
+export interface CssModulesWebpackRuleOptions {
+  styleLoader?: string;
+}
+
 /**
  * Import CSS or SASS styles with modules support (*.module.scss)
- * @param {string} styleLoader
  */
-export function cssModulesWebpackRule(
-  {
-    styleLoader = vars.isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
-  } = {}): webpack.RuleSetRule {
-  const { isDevelopment, sassCommonVars } = vars;
+export function cssModulesWebpackRule({ styleLoader }: CssModulesWebpackRuleOptions = {}): webpack.RuleSetRule {
+  styleLoader ??= isDevelopment
+    ? "style-loader"
+    : MiniCssExtractPlugin.loader;
 
   return {
     test: /\.s?css$/,

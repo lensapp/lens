@@ -64,6 +64,11 @@ export * from "../../renderer/components/layout/sub-title";
 export * from "../../renderer/components/input/search-input";
 export * from "../../renderer/components/chart/bar-chart";
 export * from "../../renderer/components/chart/pie-chart";
+export {
+  MonacoEditor,
+  type MonacoEditorProps, type MonacoEditorId,
+  type MonacoTheme, type MonacoCustomTheme,
+} from "../../renderer/components/monaco-editor";
 
 // kube helpers
 export * from "../../renderer/components/kube-detail-params";

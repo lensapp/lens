@@ -26,7 +26,7 @@
   &:first-of-type {
     padding-left: 1.5rem;
 
-    & > * {
+    & > *:not(:empty) {
       margin-right: 1rem;
     }
   }
@@ -34,7 +34,7 @@
   &:last-of-type {
     padding-right: 1.5rem;
 
-    & > * {
+    & > *:not(:empty) {
       margin-left: 1rem;
     }
   }

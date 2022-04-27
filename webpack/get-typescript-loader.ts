@@ -11,7 +11,7 @@ import type { Options as TSLoaderOptions } from "ts-loader";
  * depends on env LENS_DEV_USE_ESBUILD_LOADER to use esbuild-loader (faster) or good-old ts-loader
  * @returns ts/tsx webpack loader configuration object
  */
-const getTSLoader = (options: Partial<TSLoaderOptions> = {}, testRegExp?: RegExp) => {
+export default function getTypescriptLoader(options: Partial<TSLoaderOptions> = {}, testRegExp?: RegExp) {
   testRegExp ??= /\.tsx?$/; // by default covers react/jsx-stuff
   options.transpileOnly ??= true;
 
@@ -37,6 +37,4 @@ const getTSLoader = (options: Partial<TSLoaderOptions> = {}, testRegExp?: RegExp
       options,
     },
   };
-};
-
-export default getTSLoader;
+}
