@@ -11,7 +11,9 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
 import { Animate } from "../animate";
 import { cssNames, noop, stopPropagation } from "../../utils";
-import { navigation } from "../../navigation";
+import type { ObservableHistory } from "mobx-observable-history";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 
 // todo: refactor + handle animation-end in props.onClose()?
 
@@ -33,12 +35,16 @@ interface DialogState {
   isOpen: boolean;
 }
 
-@observer
-export class Dialog extends React.PureComponent<DialogProps, DialogState> {
-  private contentElem: HTMLElement | null = null;
-  ref = React.createRef<HTMLDivElement>();
+interface Dependencies {
+  navigation: ObservableHistory<unknown>;
+}
 
-  static defaultProps: DialogProps = {
+@observer
+class NonInjectedDialog extends React.PureComponent<DialogProps & Dependencies & typeof NonInjectedDialog.defaultProps, DialogState> {
+  private readonly contentElem = React.createRef<HTMLDivElement>();
+  private readonly ref = React.createRef<HTMLDivElement>();
+
+  static defaultProps = {
     isOpen: false,
     open: noop,
     close: noop,
@@ -67,7 +73,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     }
 
     disposeOnUnmount(this, [
-      reaction(() => navigation.toString(), () => this.close()),
+      reaction(() => this.props.navigation.toString(), () => this.close()),
     ]);
   }
 
@@ -131,7 +137,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   onClickOutside = (evt: MouseEvent) => {
     const target = evt.target as HTMLElement;
 
-    if (!this.contentElem?.contains(target)) {
+    if (!this.contentElem.current?.contains(target)) {
       this.close();
       evt.stopPropagation();
     }
@@ -149,7 +155,10 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
         ref={this.ref}
         data-testid={testId}
       >
-        <div className="box" ref={e => this.contentElem = e}>
+        <div
+          className="box"
+          ref={this.contentElem}
+        >
           {this.props.children}
         </div>
       </div>
@@ -168,3 +177,10 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     return createPortal(dialog, document.body);
   }
 }
+
+export const Dialog = withInjectables<Dependencies, DialogProps>((props) => <NonInjectedDialog {...props} />, {
+  getProps: (di, props) => ({
+    ...props,
+    navigation: di.inject(observableHistoryInjectable),
+  }),
+});
