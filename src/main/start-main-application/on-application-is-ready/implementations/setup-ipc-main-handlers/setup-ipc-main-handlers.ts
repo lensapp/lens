@@ -2,37 +2,37 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
-import { clusterFrameMap } from "../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../common/ipc/cluster";
-import type { ClusterId } from "../../../common/cluster-types";
-import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import { appEventBus } from "../../../common/app-event-bus/event-bus";
-import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../common/ipc";
-import { catalogEntityRegistry } from "../../catalog";
-import { pushCatalogToRenderer } from "../../catalog-pusher";
-import { ClusterManager } from "../../cluster-manager";
-import { ResourceApplier } from "../../resource-applier";
+import { clusterFrameMap } from "../../../../../common/cluster-frames";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../../../common/ipc/cluster";
+import type { ClusterId } from "../../../../../common/cluster-types";
+import { ClusterStore } from "../../../../../common/cluster-store/cluster-store";
+import { appEventBus } from "../../../../../common/app-event-bus/event-bus";
+import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../../common/ipc";
+import { catalogEntityRegistry } from "../../../../catalog";
+import { pushCatalogToRenderer } from "../../../../catalog-pusher";
+import type { ClusterManager } from "../../../../cluster-manager";
+import { ResourceApplier } from "../../../../resource-applier";
 import { remove } from "fs-extra";
-import { onLocationChange, handleWindowAction } from "../../ipc/window";
-import { openFilePickingDialogChannel } from "../../../common/ipc/dialog";
-import { showOpenDialog } from "../../ipc/dialog";
-import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../common/ipc/window";
-import { getNativeColorTheme } from "../../native-theme";
-import { getNativeThemeChannel } from "../../../common/ipc/native-theme";
-import type { GetAbsolutePath } from "../../../common/path/get-absolute-path.injectable";
 import type { IComputedValue } from "mobx";
-import type { MenuItemOpts } from "../../menu/application-menu-items.injectable";
+import type { GetAbsolutePath } from "../../../../../common/path/get-absolute-path.injectable";
+import type { MenuItemOpts } from "../../../../menu/application-menu-items.injectable";
+import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../../common/ipc/window";
+import { handleWindowAction, onLocationChange } from "../../../../ipc/window";
+import { openFilePickingDialogChannel } from "../../../../../common/ipc/dialog";
+import { showOpenDialog } from "../../../../ipc/dialog";
+import { getNativeThemeChannel } from "../../../../../common/ipc/native-theme";
+import { getNativeColorTheme } from "../../../../native-theme";
 
 interface Dependencies {
   directoryForLensLocalStorage: string;
   getAbsolutePath: GetAbsolutePath;
   applicationMenuItems: IComputedValue<MenuItemOpts[]>;
+  clusterManager: ClusterManager;
 }
 
-export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath }: Dependencies) => () => {
+export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -51,7 +51,7 @@ export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoca
   });
 
   ipcMainOn(clusterVisibilityHandler, (event, clusterId?: ClusterId) => {
-    ClusterManager.getInstance().visibleCluster = clusterId;
+    clusterManager.visibleCluster = clusterId;
   });
 
   ipcMainHandle(clusterRefreshHandler, (event, clusterId: ClusterId) => {
@@ -97,11 +97,11 @@ export const initIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoca
   });
 
   ipcMainHandle(clusterSetDeletingHandler, (event, clusterId: string) => {
-    ClusterManager.getInstance().deleting.add(clusterId);
+    clusterManager.deleting.add(clusterId);
   });
 
   ipcMainHandle(clusterClearDeletingHandler, (event, clusterId: string) => {
-    ClusterManager.getInstance().deleting.delete(clusterId);
+    clusterManager.deleting.delete(clusterId);
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
