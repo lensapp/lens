@@ -8,28 +8,48 @@ import styles from "./cluster-no-metrics.module.scss";
 import React from "react";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
-import { broadcastMessage } from "../../../common/ipc";
-import { IpcRendererNavigationEvents } from "../../navigation/events";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
 
 export interface ClusterNoMetricsProps {
   className: string;
 }
 
-export function ClusterNoMetrics({ className }: ClusterNoMetricsProps) {
-  function getClusterId() {
-    return catalogEntityRegistry.activeEntity;
-  }
+interface Dependencies {
+  navigateToEntitySettings: NavigateToEntitySettings;
+  clusterId: string | undefined;
+}
 
-  function openSettingsPage() {
-    broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, `/entity/${getClusterId()?.getId()}/settings`);
+export function NonInjectedClusterNoMetrics({ className, navigateToEntitySettings, clusterId }: Dependencies & ClusterNoMetricsProps) {
+  function openMetricSettingsPage() {
+    if (clusterId) {
+      navigateToEntitySettings(clusterId, "metrics");
+    }
   }
 
   return (
     <div className={cssNames(styles.ClusterNoMetrics, className)} data-testid="no-metrics-message">
       <Icon material="info"/>
       <p>Metrics are not available due to missing or invalid Prometheus configuration.</p>
-      <p><span className={styles.link} onClick={openSettingsPage}>Open cluster settings</span></p>
+      <p><span className={styles.link} onClick={openMetricSettingsPage}>Open cluster settings</span></p>
     </div>
   );
 }
+
+export const ClusterNoMetrics = withInjectables<Dependencies, ClusterNoMetricsProps>(
+  NonInjectedClusterNoMetrics,
+
+  {
+    getProps: (di, props) => {
+      const cluster = di.inject(hostedClusterInjectable);
+
+      return {
+        navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
+        clusterId: cluster?.id,
+        ...props,
+      };
+    },
+  },
+);
