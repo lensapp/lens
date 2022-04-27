@@ -37,7 +37,7 @@ const extensionRouteRegistratorInjectable = getInjectable({
         extensionInstallationCount,
       );
 
-      const routeInjectables: Injectable<any, any, any>[] = [
+      const routeInjectables = [
         ...extension.globalPages.map(toRouteInjectable(false)),
         ...extension.clusterPages.map(toRouteInjectable(true)),
       ].flat();

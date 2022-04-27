@@ -11,7 +11,7 @@ import { appEventBus } from "../common/app-event-bus/event-bus";
 import { ipcMainOn } from "../common/ipc";
 import { delay, iter, openBrowser } from "../common/utils";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
-import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import { clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { isMac, productName } from "../common/vars";
