@@ -3,11 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { Runnable } from "../run-many-for";
 
-export interface Setupable {
-  runSetup: () => Promise<void> | void;
-}
-
-export const setupableInjectionToken = getInjectionToken<Setupable>({
-  id: "setupable-injection-token",
+export const onRootFrameRenderInjectionToken = getInjectionToken<Runnable>({
+  id: "on-root-frame-render",
 });
