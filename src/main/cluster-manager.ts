@@ -5,7 +5,7 @@
 
 import "../common/ipc/cluster";
 import type http from "http";
-import { action, makeObservable, observable, observe, reaction, runInAction, toJS } from "mobx";
+import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../common/cluster/cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
@@ -68,12 +68,7 @@ export class ClusterManager extends Singleton {
 
     observe(this.deleting, change => {
       if (change.type === "add") {
-        runInAction(() => {
-          const entity = catalogEntityRegistry.getById(change.newValue);
-
-          entity.status.phase = LensKubernetesClusterStatus.DELETING;
-          entity.status.enabled = false;
-        });
+        this.updateEntityStatus(catalogEntityRegistry.getById(change.newValue));
       }
     });
 
@@ -142,39 +137,44 @@ export class ClusterManager extends Singleton {
   }
 
   @action
-  protected updateEntityStatus(entity: KubernetesCluster, cluster: Cluster) {
-    entity.status.phase = (() => {
-      if (!cluster) {
-        logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
+  protected updateEntityStatus(entity: KubernetesCluster, cluster?: Cluster) {
+    if (this.deleting.has(entity.getId())) {
+      entity.status.phase = LensKubernetesClusterStatus.DELETING;
+      entity.status.enabled = false;
+    } else {
+      entity.status.phase = (() => {
+        if (!cluster) {
+          logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
+
+          return LensKubernetesClusterStatus.DISCONNECTED;
+        }
+
+        if (cluster.accessible) {
+          logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
+
+          return LensKubernetesClusterStatus.CONNECTED;
+        }
+
+        if (!cluster.disconnected) {
+          logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
+
+          return LensKubernetesClusterStatus.CONNECTING;
+        }
+
+        // Extensions are not allowed to use the Lens specific status phases
+        if (!lensSpecificClusterStatuses.has(entity?.status?.phase)) {
+          logger.debug(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
+
+          return entity.status.phase;
+        }
+
+        logger.debug(`${logPrefix} not clearing entity ${entity.getName()} DISCONNECTED, reason=""`);
 
         return LensKubernetesClusterStatus.DISCONNECTED;
-      }
+      })();
 
-      if (cluster.accessible) {
-        logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
-
-        return LensKubernetesClusterStatus.CONNECTED;
-      }
-
-      if (!cluster.disconnected) {
-        logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
-
-        return LensKubernetesClusterStatus.CONNECTING;
-      }
-
-      // Extensions are not allowed to use the Lens specific status phases
-      if (!lensSpecificClusterStatuses.has(entity?.status?.phase)) {
-        logger.debug(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
-
-        return entity.status.phase;
-      }
-
-      logger.debug(`${logPrefix} not clearing entity ${entity.getName()} DISCONNECTED, reason=""`);
-
-      return LensKubernetesClusterStatus.DISCONNECTED;
-    })();
-
-    entity.status.enabled = true;
+      entity.status.enabled = true;
+    }
   }
 
   @action
