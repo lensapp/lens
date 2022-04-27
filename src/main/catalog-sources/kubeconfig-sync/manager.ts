@@ -6,7 +6,6 @@
 import type { IComputedValue, ObservableMap } from "mobx";
 import { action, observable, computed, runInAction, makeObservable, observe } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
-import { catalogEntityRegistry } from "../../catalog";
 import type { FSWatcher } from "chokidar";
 import { watch } from "chokidar";
 import type { Stats } from "fs";
@@ -27,6 +26,7 @@ import globToRegExp from "glob-to-regexp";
 import { inspect } from "util";
 import type { ClusterModel, UpdateClusterModel } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
+import type { CatalogEntityRegistry } from "../../catalog/entity-registry";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
@@ -52,18 +52,19 @@ const folderSyncMaxAllowedFileReadSize = 2 * 1024 * 1024; // 2 MiB
 const fileSyncMaxAllowedFileReadSize = 16 * folderSyncMaxAllowedFileReadSize; // 32 MiB
 
 interface Dependencies {
-  directoryForKubeConfigs: string;
+  readonly directoryForKubeConfigs: string;
+  readonly entityRegistry: CatalogEntityRegistry;
   createCluster: (model: ClusterModel) => Cluster;
 }
 
 const kubeConfigSyncName = "lens:kube-sync";
 
 export class KubeconfigSyncManager {
-  protected sources = observable.map<string, [IComputedValue<CatalogEntity[]>, Disposer]>();
+  protected readonly sources = observable.map<string, [IComputedValue<CatalogEntity[]>, Disposer]>();
   protected syncing = false;
   protected syncListDisposer?: Disposer;
 
-  constructor(private dependencies: Dependencies) {
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
   }
 
@@ -77,7 +78,7 @@ export class KubeconfigSyncManager {
 
     logger.info(`${logPrefix} starting requested syncs`);
 
-    catalogEntityRegistry.addComputedSource(kubeConfigSyncName, computed(() => (
+    this.dependencies.entityRegistry.addComputedSource(kubeConfigSyncName, computed(() => (
       Array.from(iter.flatMap(
         this.sources.values(),
         ([entities]) => entities.get(),
@@ -111,7 +112,7 @@ export class KubeconfigSyncManager {
       this.stopOldSync(filePath);
     }
 
-    catalogEntityRegistry.removeSource(kubeConfigSyncName);
+    this.dependencies.entityRegistry.removeSource(kubeConfigSyncName);
     this.syncing = false;
   }
 
@@ -165,7 +166,7 @@ type RootSourceValue = [Cluster, CatalogEntity];
 type RootSource = ObservableMap<string, RootSourceValue>;
 
 // exported for testing
-export const computeDiff = ({ directoryForKubeConfigs, createCluster }: Dependencies) => (contents: string, source: RootSource, filePath: string): void => {
+export const computeDiff = ({ directoryForKubeConfigs, createCluster }: Pick<Dependencies, "createCluster" | "directoryForKubeConfigs">) => (contents: string, source: RootSource, filePath: string): void => {
   runInAction(() => {
     try {
       const { config, error } = loadConfigFromString(contents);

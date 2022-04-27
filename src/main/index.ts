@@ -48,7 +48,7 @@ import extensionDiscoveryInjectable from "../extensions/extension-discovery/exte
 import directoryForExesInjectable from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
 import initIpcMainHandlersInjectable from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
 import directoryForKubeConfigsInjectable from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import kubeconfigSyncManagerInjectable from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
+import kubeconfigSyncManagerInjectable from "./catalog-sources/kubeconfig-sync/manager.injectable";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
