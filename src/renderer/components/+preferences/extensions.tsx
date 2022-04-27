@@ -22,7 +22,7 @@ interface Dependencies {
 const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies) => (
   <Preferences data-testid="extension-preferences-page">
     <section id="extensions">
-      <h2>{extensionName} settings</h2>
+      <h2>{extensionName} preferences</h2>
       {preferenceItems.get().map((preferenceItem, index) => (
         <ExtensionSettings
           key={`${preferenceItem.id}-${index}`}
