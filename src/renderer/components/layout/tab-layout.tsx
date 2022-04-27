@@ -7,7 +7,7 @@ import "./tab-layout.scss";
 
 import type { ReactNode } from "react";
 import React from "react";
-import { matchPath, Redirect, Route, Switch } from "react-router";
+import { matchPath, Redirect, Route, Switch } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { IClassName } from "../../utils";
 import { cssNames } from "../../utils";

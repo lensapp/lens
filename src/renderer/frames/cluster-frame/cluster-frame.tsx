@@ -5,7 +5,7 @@
 import React from "react";
 import type { IComputedValue } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { DeploymentScaleDialog } from "../../components/+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "../../components/+workloads-cronjobs/cronjob-trigger-dialog";

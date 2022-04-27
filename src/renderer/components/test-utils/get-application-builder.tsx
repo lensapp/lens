@@ -11,7 +11,7 @@ import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
 import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 import React from "react";
-import { Router } from "react-router";
+import { Router } from "react-router-dom";
 import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
@@ -43,7 +43,9 @@ type Callback = (dis: DiContainers) => void | Promise<void>;
 export interface ApplicationBuilder {
   dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
-  addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
+  addExtensions: (
+    ...extensions: LensRendererExtension[]
+  ) => Promise<ApplicationBuilder>;
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeSetups: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
