@@ -64,7 +64,7 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = observer(
             options={downloadMirrorOptions}
             value={userStore.downloadMirror}
             onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
-            disabled={!userStore.downloadKubectlBinaries}
+            isDisabled={!userStore.downloadKubectlBinaries}
             isOptionDisabled={({ platforms }) =>
               !platforms.has(process.platform)
             }

@@ -7,22 +7,25 @@
 // API docs: https://react-select.com/
 import "./select.scss";
 
-import type { ReactNode } from "react";
 import React from "react";
 import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import ReactSelect, { components } from "react-select";
-import ReactSelectCreatable from "react-select/creatable";
-import type { ActionMeta, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
-import type { CreatableProps } from "react-select/creatable";
-
+import ReactSelect, {
+  type ActionMeta,
+  components,
+  type GroupBase,
+  type Props as ReactSelectProps,
+  type StylesConfig,
+} from "react-select";
+import ReactSelectCreatable, { type CreatableProps } from "react-select/creatable";
 import { ThemeStore } from "../../theme.store";
 import { autoBind, cssNames } from "../../utils";
+import { merge } from "lodash";
 
 const { Menu } = components;
 
 export interface GroupSelectOption<T extends SelectOption = SelectOption> {
-  label: ReactNode;
+  label: React.ReactNode;
   options: T[];
 }
 
@@ -31,7 +34,7 @@ export interface SelectOption<T = any> {
   label?: React.ReactNode;
 }
 
-export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
+export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean, GroupBase<T>> {
   id?: string; // Optional only because of Extension API. Required to make Select deterministic in unit tests
   value?: T;
   themeName?: "dark" | "light" | "outlined" | "lens";
@@ -61,12 +64,16 @@ export class Select extends React.Component<SelectProps> {
     return `theme-${themeName}`;
   }
 
-  private styles: Styles<OptionTypeBase, boolean> = {
-    menuPortal: styles => ({
-      ...styles,
-      zIndex: "auto",
-    }),
-  };
+  @computed get styles(): StylesConfig {
+    const defaultStyles: StylesConfig = {
+      menuPortal: styles => ({
+        ...styles,
+        zIndex: "auto",
+      }),
+    };
+
+    return merge(defaultStyles, this.props.styles);
+  }
 
   protected isValidOption(opt: SelectOption | any) {
     return typeof opt === "object" && opt.value !== undefined;
@@ -104,7 +111,7 @@ export class Select extends React.Component<SelectProps> {
     }
   }
 
-  onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
+  onKeyDown(evt: React.KeyboardEvent<HTMLDivElement>) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
@@ -122,7 +129,7 @@ export class Select extends React.Component<SelectProps> {
 
     const selectProps: Partial<SelectProps> = {
       ...props,
-      ...(inputId ? { inputId }: {}),
+      ...(inputId ? { inputId } : {}),
       styles: this.styles,
       value: autoConvertOptions ? this.selectedOption : value,
       options: autoConvertOptions ? this.options : options,
@@ -142,7 +149,7 @@ export class Select extends React.Component<SelectProps> {
     };
 
     return isCreatable
-      ? <ReactSelectCreatable {...selectProps}/>
-      : <ReactSelect {...selectProps}/>;
+      ? <ReactSelectCreatable {...selectProps} /> // select list with ability to add new options
+      : <ReactSelect {...selectProps} />;
   }
 }
