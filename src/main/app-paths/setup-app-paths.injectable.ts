@@ -3,13 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-
 import type { AppPaths } from "../../common/app-paths/app-path-injection-token";
 import getElectronAppPathInjectable from "./get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
-import { setupableInjectionToken } from "../../common/setupable-injection-token/setupable-injection-token";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
 import { pathNames } from "../../common/app-paths/app-path-names";
 import { fromPairs, map } from "lodash/fp";
@@ -17,6 +15,9 @@ import { pipeline } from "@ogre-tools/fp";
 import { appPathsIpcChannel } from "../../common/app-paths/app-path-injection-token";
 import registerChannelInjectable from "./register-channel/register-channel.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
+import {
+  beforeApplicationIsReadyInjectionToken,
+} from "../start-main-application/before-application-is-ready/before-application-is-ready-injection-token";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
@@ -31,7 +32,7 @@ const setupAppPathsInjectable = getInjectable({
     const joinPaths = di.inject(joinPathsInjectable);
 
     return {
-      runSetup: () => {
+      run: () => {
         if (directoryForIntegrationTesting) {
           setElectronAppPath("appData", directoryForIntegrationTesting);
         }
@@ -53,7 +54,7 @@ const setupAppPathsInjectable = getInjectable({
     };
   },
 
-  injectionToken: setupableInjectionToken,
+  injectionToken: beforeApplicationIsReadyInjectionToken,
 });
 
 export default setupAppPathsInjectable;
