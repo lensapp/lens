@@ -18,7 +18,6 @@ import allowedResourcesInjectable from "../../../common/cluster-store/allowed-re
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { Sidebar } from "../layout/sidebar";
 import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -34,9 +33,13 @@ import navigateToPreferencesInjectable from "../../../common/front-end-routing/r
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
-import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
-import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { Cluster } from "../../../common/cluster/cluster";
+import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
+import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -219,21 +222,26 @@ export const getApplicationBuilder = () => {
         computed(() => new Set([...allowedResourcesState])),
       );
 
-      rendererDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/irrelevant",
-      );
-
-      rendererDi.override(hostedClusterInjectable, () => ({
+      const clusterStub = {
         accessibleNamespaces: [],
-      }));
+      } as Cluster;
 
-      const clusterFrameContext = rendererDi.inject(
-        clusterFrameContextInjectable,
+      const namespaceStoreStub = {} as NamespaceStore;
+
+      const clusterFrameContextFake = new ClusterFrameContext(
+        clusterStub,
+
+        {
+          namespaceStore: namespaceStoreStub,
+        },
       );
+
+      rendererDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
+      rendererDi.override(hostedClusterInjectable, () => clusterStub);
+      rendererDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
 
       // Todo: get rid of global state.
-      KubeObjectStore.defaultContext.set(clusterFrameContext);
+      KubeObjectStore.defaultContext.set(clusterFrameContextFake);
 
       return builder;
     },
