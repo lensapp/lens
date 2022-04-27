@@ -77,7 +77,7 @@ class NonInjectedCustomResourceDefinitions extends React.Component<Dependencies>
       ? "Group"
       : "Groups";
 
-    return `${prefix}: ${iter.join(this.selectedGroups, ", ")}`;
+    return `${prefix}: ${iter.join(this.selectedGroups.values(), ", ")}`;
   }
 
   render() {

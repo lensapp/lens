@@ -3,7 +3,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "5.5.0-alpha.0.1650655975317",
+  "version": "5.5.0-alpha.0.1651072882520",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
