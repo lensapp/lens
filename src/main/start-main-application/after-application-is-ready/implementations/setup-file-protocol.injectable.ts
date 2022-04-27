@@ -6,8 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 import registerFileProtocolInjectable from "../../../electron-app/features/register-file-protocol.injectable";
 
-// TODO: Remove side effect on import defining __static
-import "../../../../common/vars";
 import staticDirInjectable from "../../../../common/vars/static-dir.injectable";
 
 const setupFileProtocolInjectable = getInjectable({
