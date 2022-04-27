@@ -12,12 +12,10 @@ import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { WindowManager } from "../window-manager";
 import logger from "../logger";
 import { isDevelopment, isWindows, productName, staticFilesDirectory } from "../../common/vars";
-import { exitApp } from "../exit-app";
 import type { Disposer } from "../../common/utils";
 import { disposer, toJS } from "../../common/utils";
 import type { TrayMenuRegistration } from "./tray-menu-registration";
 import path from "path";
-
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
@@ -36,6 +34,7 @@ export function initTray(
   windowManager: WindowManager,
   trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
   navigateToPreferences: () => void,
+  stopServicesAndExitApp: () => void,
 ): Disposer {
   const icon = getTrayIconPath();
 
@@ -54,7 +53,7 @@ export function initTray(
   return disposer(
     autorun(() => {
       try {
-        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
+        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences, stopServicesAndExitApp);
 
         tray.setContextMenu(menu);
       } catch (error) {
@@ -82,6 +81,7 @@ function createTrayMenu(
   windowManager: WindowManager,
   extensionTrayItems: TrayMenuRegistration[],
   navigateToPreferences: () => void,
+  stopServicesAndExitApp: () => void,
 ): Menu {
   let template: Electron.MenuItemConstructorOptions[] = [
     {
@@ -125,7 +125,7 @@ function createTrayMenu(
     {
       label: "Quit App",
       click() {
-        exitApp();
+        stopServicesAndExitApp();
       },
     },
   ]));
