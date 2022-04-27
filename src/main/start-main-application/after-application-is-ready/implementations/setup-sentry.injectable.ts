@@ -4,14 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
-import { SentryInit } from "../../../../common/sentry";
+import { initializeSentryReporting } from "../../../../common/sentry";
+import { init } from "@sentry/electron/main";
 
 const setupSentryInjectable = getInjectable({
   id: "setup-sentry",
 
   instantiate: () => ({
     run: () => {
-      SentryInit();
+      initializeSentryReporting(init);
     },
   }),
 
