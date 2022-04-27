@@ -124,6 +124,9 @@
         "rpm",
         "AppImage"
       ],
+      "asarUnpack": [
+        "**/node_modules/sharp/**"
+      ],
       "extraResources": [
         {
           "from": "binaries/client/linux/${arch}/kubectl",
