@@ -28,7 +28,10 @@ import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../tooltip");
+jest.mock("../tooltip/tooltip");
+jest.mock("../tooltip/withTooltip", () => ({
+  withTooltip: (target: any) => target,
+}));
 
 class SomeTestExtension extends LensRendererExtension {
   constructor(

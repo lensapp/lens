@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { LensExtension } from "./lens-extension";
+import { LensExtension, lensExtensionDependencies } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
@@ -36,10 +36,10 @@ export class LensMainExtension extends LensExtension<LensMainExtensionDependenci
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    this.dependencies.entityRegistry.addObservableSource(`${this.name}:${id}`, source);
+    this[lensExtensionDependencies].entityRegistry.addObservableSource(`${this.name}:${id}`, source);
   }
 
   removeCatalogSource(id: string) {
-    this.dependencies.entityRegistry.removeSource(`${this.name}:${id}`);
+    this[lensExtensionDependencies].entityRegistry.removeSource(`${this.name}:${id}`);
   }
 }

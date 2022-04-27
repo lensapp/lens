@@ -27,8 +27,8 @@ export function cssNames(...classNames: IClassName[]): string {
     }
   }
 
-  return iter.pipeline(classNamesEnabled)
+  return iter.pipeline(classNamesEnabled.entries())
     .filter(([, isActive]) => !!isActive)
-    .map(([className]) => className.trim())
+    .filterMap(([className]) => className.trim())
     .join(" ");
 }

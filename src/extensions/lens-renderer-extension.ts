@@ -4,7 +4,7 @@
  */
 
 import type * as registries from "./registries";
-import { Disposers, LensExtension } from "./lens-extension";
+import { Disposers, LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { Disposer } from "../common/utils";
 import type { EntityFilter } from "../renderer/api/catalog/entity/registry";
@@ -46,7 +46,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
   customCategoryViews: CustomCategoryViewRegistration[] = [];
 
   async navigate(pageId?: string, params: object = {}) {
-    const routes = this.dependencies.routes.get();
+    const routes = this[lensExtensionDependencies].routes.get();
     const targetRegistration = [...this.globalPages, ...this.clusterPages]
       .find(registration => registration.id === (pageId || undefined));
 
@@ -61,7 +61,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
       return;
     }
 
-    const normalizedParams = this.dependencies.getExtensionPageParameters({
+    const normalizedParams = this[lensExtensionDependencies].getExtensionPageParameters({
       extension: this,
       registration: targetRegistration,
     });
@@ -75,7 +75,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
       fromPairs,
     );
 
-    this.dependencies.navigateToRoute(targetRoute, {
+    this[lensExtensionDependencies].navigateToRoute(targetRoute, {
       query,
     });
   }
@@ -96,7 +96,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
    * @returns A function to clean up the filter
    */
   addCatalogFilter(fn: EntityFilter): Disposer {
-    const dispose = this.dependencies.entityRegistry.addCatalogFilter(fn);
+    const dispose = this[lensExtensionDependencies].entityRegistry.addCatalogFilter(fn);
 
     this[Disposers].push(dispose);
 
@@ -109,7 +109,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
    * @returns A function to clean up the filter
    */
   addCatalogCategoryFilter(fn: CategoryFilter): Disposer {
-    const dispose = this.dependencies.categoryRegistry.addCatalogCategoryFilter(fn);
+    const dispose = this[lensExtensionDependencies].categoryRegistry.addCatalogCategoryFilter(fn);
 
     this[Disposers].push(dispose);
 

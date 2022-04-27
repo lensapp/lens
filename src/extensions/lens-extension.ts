@@ -22,7 +22,8 @@ export interface LensExtensionManifest extends PackageJson {
   renderer?: string; // path to %ext/dist/renderer.js
 }
 
-export const Disposers = Symbol();
+export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
+export const Disposers = Symbol("disposers");
 
 export class LensExtension<Dependencies extends LensExtensionDependencies = LensExtensionDependencies> {
   readonly id: LensExtensionId;
@@ -64,7 +65,7 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
     return this.manifest.description;
   }
 
-  protected readonly dependencies!: Dependencies;
+  readonly [lensExtensionDependencies]!: Dependencies;
 
   /**
    * getExtensionFileFolder returns the path to an already created folder. This
@@ -74,7 +75,7 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return this.dependencies.fileSystemProvisionerStore.requestDirectory(this.id);
+    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.id);
   }
 
   @action

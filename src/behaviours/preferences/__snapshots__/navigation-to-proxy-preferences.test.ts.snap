@@ -105,7 +105,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="SubTitle"
             >
               Theme
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -190,7 +190,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="SubTitle"
             >
               Extension Install Registry
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -269,8 +269,8 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
             <p
               class="mt-4 mb-5 leading-relaxed"
             >
-              This setting is to change the registry URL for installing extensions by name.
-              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
+              This setting is to change the registry URL for installing extensions by name. 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
               <b>
                 .npmrc
               </b>
@@ -304,7 +304,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="SubTitle"
             >
               Start-up
-
+               
             </div>
             <label
               class="Switch"
@@ -325,7 +325,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="SubTitle"
             >
               Update Channel
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -410,7 +410,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="SubTitle"
             >
               Locale Timezone
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -631,7 +631,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="SubTitle"
             >
               HTTP Proxy
-
+               
             </div>
             <div
               class="Input theme round black"
@@ -667,7 +667,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="SubTitle"
             >
               Certificate Trust
-
+               
             </div>
             <label
               class="Switch"
@@ -683,9 +683,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
               class="hint"
             >
               This will make Lens to trust ANY certificate authority without any validations.
-
+               
               Needed with some corporate proxies that do certificate re-writing.
-
+               
               Does not affect cluster communications!
             </small>
           </section>

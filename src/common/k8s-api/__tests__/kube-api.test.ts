@@ -14,6 +14,7 @@ import type { FetchMock } from "jest-fetch-mock/types";
 import { DeploymentApi, Ingress, IngressApi, Pod, PodApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
 import apiManagerInjectable from "../api-manager/manager.injectable";
+import autoRegistrationInjectable from "../api-manager/auto-registration.injectable";
 
 jest.mock("../api-manager");
 
@@ -98,6 +99,7 @@ describe("KubeApi", () => {
     apiManager = new ApiManager() as jest.Mocked<ApiManager>;
 
     di.override(apiManagerInjectable, () => apiManager);
+    di.inject(autoRegistrationInjectable);
   });
 
   it("uses url from apiBase if apiBase contains the resource", async () => {
@@ -227,7 +229,7 @@ describe("KubeApi", () => {
       await (api as any).checkPreferredVersion();
 
       expect(api.apiVersionPreferred).toBe("v1beta1");
-      expect(apiManager.registerApi).toBeCalledWith("/apis/extensions/v1beta1/ingresses", expect.anything());
+      expect(apiManager.registerApi).toBeCalledWith(api);
     });
 
     it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred with non-grouped apis", async () => {
@@ -267,7 +269,7 @@ describe("KubeApi", () => {
       await (api as any).checkPreferredVersion();
 
       expect(api.apiVersionPreferred).toBe("v1beta1");
-      expect(apiManager.registerApi).toBeCalledWith("/api/v1beta1/pods", expect.anything());
+      expect(apiManager.registerApi).toBeCalledWith(api);
     });
   });
 

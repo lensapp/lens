@@ -364,7 +364,6 @@
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
     "gunzip-maybe": "^1.4.2",
-    "hoist-non-react-statics": "^3.3.2",
     "html-webpack-plugin": "^5.5.0",
     "identity-obj-proxy": "^3.0.0",
     "ignore-loader": "^0.1.2",

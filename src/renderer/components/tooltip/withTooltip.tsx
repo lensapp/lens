@@ -7,7 +7,6 @@
 
 import type { ReactNode } from "react";
 import React, { useState } from "react";
-import hoistNonReactStatics from "hoist-non-react-statics";
 import type { TooltipProps } from "./tooltip";
 import { Tooltip } from "./tooltip";
 import { isReactNode } from "../../utils/isReactNode";
@@ -21,11 +20,15 @@ export interface TooltipDecoratorProps {
    * useful for displaying tooltips even when the target is "disabled"
    */
   tooltipOverrideDisabled?: boolean;
-  id?: string | undefined;
+  id?: string;
   children?: SingleOrMany<React.ReactNode>;
 }
 
-export function withTooltip<TargetProps extends Pick<TooltipDecoratorProps, "id" | "children">>(Target: React.FunctionComponent<TargetProps>): React.FunctionComponent<TargetProps & TooltipDecoratorProps> {
+export function withTooltip<TargetProps>(
+  Target: TargetProps extends Pick<TooltipDecoratorProps, "id" | "children">
+    ? React.FunctionComponent<TargetProps>
+    : never,
+): React.FunctionComponent<TargetProps & TooltipDecoratorProps> {
   const DecoratedComponent = (props: TargetProps & TooltipDecoratorProps) => {
     // TODO: Remove side-effect to allow deterministic unit testing
     const [defaultTooltipId] = useState(uniqueId("tooltip_target_"));
@@ -62,7 +65,7 @@ export function withTooltip<TargetProps extends Pick<TooltipDecoratorProps, "id"
     }
 
     return (
-      <Target id={targetId} {...targetProps as TargetProps}>
+      <Target id={targetId} {...targetProps as any}>
         {targetChildren}
       </Target>
     );
@@ -70,5 +73,5 @@ export function withTooltip<TargetProps extends Pick<TooltipDecoratorProps, "id"
 
   DecoratedComponent.displayName = `withTooltip(${Target.displayName || Target.name})`;
 
-  return hoistNonReactStatics(DecoratedComponent, Target);
+  return DecoratedComponent;
 }

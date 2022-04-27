@@ -137,10 +137,8 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
           labelsOnly
         >
           {
-            deployment.getConditions().map(condition => {
-              const { type, message, lastTransitionTime, status } = condition;
-
-              return (
+            deployment.getConditions()
+              .map(({ type, message, lastTransitionTime, status }) => (
                 <Badge
                   key={type}
                   label={type}
@@ -153,10 +151,8 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
                         {`Last transition time: ${lastTransitionTime}`}
                       </p>
                     </>
-                  )}
-                />
-              );
-            })
+                  )} />
+              ))
           }
         </DrawerItem>
         <PodDetailsTolerations workload={deployment}/>

@@ -6,7 +6,8 @@ import type { RenderResult } from "@testing-library/react";
 import React from "react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import type { UserStore } from "../../common/user-store";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import navigateToTelemetryPreferencesInjectable from "../../common/front-end-routing/routes/preferences/telemetry/navigate-to-telemetry-preferences.injectable";
@@ -61,8 +62,8 @@ describe("preferences - navigation to telemetry preferences", () => {
 
     describe("when extension with telemetry preference items gets enabled", () => {
       beforeEach(() => {
-        const testExtensionWithTelemetryPreferenceItems =
-          getRendererExtensionFake(extensionStubWithTelemetryPreferenceItems);
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
+        const testExtensionWithTelemetryPreferenceItems = getRendererExtensionFake(extensionStubWithTelemetryPreferenceItems);
 
         applicationBuilder.addExtensions(
           testExtensionWithTelemetryPreferenceItems,
@@ -105,18 +106,19 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("given extensions but no telemetry preference items, does not show link for telemetry preferences", () => {
-      const testExtensionWithTelemetryPreferenceItems =
-        getRendererExtensionFake({
-          id: "some-test-extension-id",
-          appPreferences: [
-            {
-              title: "irrelevant",
-              id: "irrelevant",
-              showInPreferencesTab: "not-telemetry",
-              components: { Hint: () => <div />, Input: () => <div /> },
-            },
-          ],
-        });
+      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
+      const testExtensionWithTelemetryPreferenceItems = getRendererExtensionFake({
+        id: "some-test-extension-id",
+        name: "some-test-extension-name",
+        appPreferences: [
+          {
+            title: "irrelevant",
+            id: "irrelevant",
+            showInPreferencesTab: "not-telemetry",
+            components: { Hint: () => <div />, Input: () => <div /> },
+          },
+        ],
+      });
 
       applicationBuilder.addExtensions(
         testExtensionWithTelemetryPreferenceItems,
@@ -185,8 +187,9 @@ describe("preferences - navigation to telemetry preferences", () => {
   });
 });
 
-const extensionStubWithTelemetryPreferenceItems = {
+const extensionStubWithTelemetryPreferenceItems: FakeExtensionData = {
   id: "some-test-extension-id",
+  name: "some-test-extension-name",
   appPreferences: [
     {
       title: "Some telemetry-preference item",

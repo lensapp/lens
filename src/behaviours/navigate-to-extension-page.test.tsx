@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFake } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import type { FakeExtensionData, TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../renderer/components/test-utils/get-renderer-extension-fake";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
@@ -11,9 +11,7 @@ import isEmpty from "lodash/isEmpty";
 import queryParametersInjectable from "../renderer/routes/query-parameters.injectable";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { IComputedValue } from "mobx";
-import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
-import type { SetRequired } from "type-fest";
 
 describe("navigate to extension page", () => {
   let rendered: RenderResult;
@@ -23,6 +21,7 @@ describe("navigate to extension page", () => {
 
   beforeEach(async () => {
     const applicationBuilder = getApplicationBuilder();
+    const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
 
     testExtension = getRendererExtensionFake(
       extensionWithPagesHavingParameters,
@@ -126,9 +125,9 @@ describe("navigate to extension page", () => {
   });
 });
 
-const extensionWithPagesHavingParameters: SetRequired<Partial<LensRendererExtension>, "id"> = {
+const extensionWithPagesHavingParameters: FakeExtensionData = {
   id: "some-extension-id",
-
+  name: "some-extension-name",
   globalPages: [
     {
       components: {

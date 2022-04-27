@@ -104,18 +104,14 @@ const NonInjectedKubeObjectMeta = observer(({
       {ownerRefs?.length > 0 && (
         <DrawerItem name="Controlled By" hidden={isHidden("ownerReferences")}>
           {
-            ownerRefs.map(ref => {
-              const { name, kind } = ref;
-              const ownerDetailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, object));
-
-              return (
-                <p key={name}>
-                  {kind}
-                  {" "}
-                  <Link to={ownerDetailsUrl}>{name}</Link>
-                </p>
-              );
-            })
+            ownerRefs.map(ref => (
+              <p key={ref.name}>
+                {`${ref.kind} `}
+                <Link to={getDetailsUrl(apiManager.lookupApiLink(ref, object))}>
+                  {ref.name}
+                </Link>
+              </p>
+            ))
           }
         </DrawerItem>
       )}

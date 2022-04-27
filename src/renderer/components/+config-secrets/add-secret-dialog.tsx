@@ -86,7 +86,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
   };
 
   private getDataFromFields = (fields: SecretTemplateField[] = [], processValue: (val: string) => string = (val => val)) => {
-    return iter.pipeline(fields)
+    return iter.pipeline(fields.values())
       .filterMap(({ key, value }) => (
         value
           ? [key, processValue(value)] as const

@@ -5,8 +5,6 @@
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import directoryForLensLocalStorageInjectable from "../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import routesInjectable from "../../renderer/routes/routes.injectable";
 import { matches } from "lodash/fp";
@@ -19,6 +17,8 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import assert from "assert";
 import { getSidebarItem } from "../utils";
+import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 
 describe("cluster - sidebar and tab navigation for extensions", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -43,6 +43,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
   describe("given extension with cluster pages and cluster page menus", () => {
     beforeEach(async () => {
+      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
       const testExtension = getRendererExtensionFake(extensionStubWithSidebarItems);
 
       await applicationBuilder.addExtensions(testExtension);
@@ -383,8 +384,10 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   });
 });
 
-const extensionStubWithSidebarItems = new (class extends LensRendererExtension {
-  clusterPages = [
+const extensionStubWithSidebarItems: FakeExtensionData = {
+  id: "some-extension-id",
+  name: "some-extension-name",
+  clusterPages: [
     {
       components: {
         Page: () => {
@@ -408,9 +411,8 @@ const extensionStubWithSidebarItems = new (class extends LensRendererExtension {
         ),
       },
     },
-  ];
-
-  clusterPageMenus = [
+  ],
+  clusterPageMenus: [
     {
       id: "some-parent-id",
       title: "Parent",
@@ -441,16 +443,5 @@ const extensionStubWithSidebarItems = new (class extends LensRendererExtension {
         Icon: null as never,
       },
     },
-  ];
-})({
-  absolutePath: "/some/absolute/path",
-  id: "some-extension-id",
-  isBundled: true,
-  isCompatible: true,
-  isEnabled: true,
-  manifest: {
-    name: "some-extension-name",
-    version: "1.0.0",
-  },
-  manifestPath: "/some/manifest/path",
-});
+  ],
+};

@@ -9,7 +9,10 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
 
 // TODO: Make components free of side effects by making them deterministic
-jest.mock("../../renderer/components/tooltip");
+jest.mock("../../renderer/components/tooltip/tooltip");
+jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
+  withTooltip: (target: any) => target,
+}));
 jest.mock("../../renderer/components/monaco-editor/monaco-editor");
 
 describe("add-cluster - navigation using application menu", () => {

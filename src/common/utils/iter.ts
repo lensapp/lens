@@ -5,64 +5,24 @@
 
 export type Falsey = false | 0 | "" | null | undefined;
 
-export function pipeline<T>(src: Iterable<T>) {
-  return Iterator[createPipeline](src);
+interface Iterator<T> {
+  filter(fn: (val: T) => unknown): Iterator<T>;
+  filterMap<U>(fn: (val: T) => Falsey | U): Iterator<U>;
+  find(fn: (val: T) => unknown): T | undefined;
+  collect<U>(fn: (values: Iterable<T>) => U): U;
+  map<U>(fn: (val: T) => U): Iterator<U>;
+  join(sep?: string): string;
 }
 
-const createPipeline = Symbol("create-pipeline");
-
-export class Iterator<T> {
-  #inner: Iterable<any>;
-
-  static [createPipeline]<T>(inner: Iterable<T>) {
-    return new Iterator(inner);
-  }
-
-  private constructor(inner: Iterable<T>) {
-    this.#inner = inner;
-  }
-
-  /**
-   * Wrap the interior iterator with an filter
-   */
-  public filter(fn: (val: T) => any): Iterator<T> {
-    this.#inner = filter(this.#inner, fn);
-
-    return this;
-  }
-
-  /**
-   * Wrap the interior iterator with an filterMap
-   */
-  public filterMap<U>(fn: (val: T) => Falsey | U): Iterator<U> {
-    this.#inner = filterMap(this.#inner, fn);
-
-    return this as never;
-  }
-
-  /**
-   * Consume the interior iterator until an element matches the callback and return that
-   */
-  public find(fn: (val: T) => any): T | undefined {
-    return find(this.#inner, fn);
-  }
-
-  /**
-   * Consume the interior iterator and produce a new type
-   */
-  public collect<U>(fn: (values: Iterable<T>) => U): U {
-    return fn(this.#inner);
-  }
-
-  public map<U>(fn: (val: T) => U): Iterator<U> {
-    this.#inner = map(this.#inner, fn);
-
-    return this as never;
-  }
-
-  public join(sep?: string): string {
-    return join(this.#inner, sep);
-  }
+export function pipeline<T>(src: IterableIterator<T>): Iterator<T> {
+  return {
+    filter: (fn) => pipeline(filter(src, fn)),
+    filterMap: (fn) => pipeline(filterMap(src, fn)),
+    map: (fn) => pipeline(map(src, fn)),
+    find: (fn) => find(src, fn),
+    join: (sep) => join(src, sep),
+    collect: (fn) => fn(src),
+  };
 }
 
 /**
@@ -224,8 +184,15 @@ export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => 
  * @param connector The string value to intersperse between the yielded values
  * @returns The concatenated entries of `src` interspersed with copies of `connector`
  */
-export function join(src: Iterable<unknown>, connector = ","): string {
-  return reduce(src, (acc, cur) => `${acc}${connector}${cur}`, "");
+export function join(src: IterableIterator<unknown>, connector = ","): string {
+  const iterSrc = src[Symbol.iterator]();
+  const first = iterSrc.next();
+
+  if (first.done === true) {
+    return "";
+  }
+
+  return reduce(iterSrc, (acc, cur) => `${acc}${connector}${cur}`, `${first.value}`);
 }
 
 /**

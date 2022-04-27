@@ -7,9 +7,9 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import type { UserStore } from "../../common/user-store";
-import { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import React from "react";
-import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - navigation to extension specific preferences", () => {
@@ -60,6 +60,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     describe("when extension with specific preferences is enabled", () => {
       beforeEach(() => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
 
         applicationBuilder.addExtensions(testExtension);
@@ -106,8 +107,10 @@ describe("preferences - navigation to extension specific preferences", () => {
   });
 });
 
-const extensionStubWithExtensionSpecificPreferenceItems = new (class extends LensRendererExtension{
-  appPreferences = [
+const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
+  id: "some-extension-id",
+  name: "some-extension-name",
+  appPreferences: [
     {
       title: "Some preference item",
       id: "some-preference-item-id",
@@ -128,17 +131,6 @@ const extensionStubWithExtensionSpecificPreferenceItems = new (class extends Len
         Input: () => <div />,
       },
     },
-  ];
-})({
-  absolutePath: "/some/absolute/path",
-  id: "some-extension-id",
-  isBundled: true,
-  isCompatible: true,
-  isEnabled: true,
-  manifest: {
-    name: "some-extension-name",
-    version: "1.0.0",
-  },
-  manifestPath: "/some/manifest/path",
-});
+  ],
+};
 

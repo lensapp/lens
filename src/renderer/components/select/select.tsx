@@ -164,6 +164,7 @@ class NonInjectedSelect<
       value = null,
       options,
       isMulti,
+      id: inputId,
       onChange,
       ...props
     } = this.props;
@@ -192,6 +193,7 @@ class NonInjectedSelect<
           }),
           ...styles,
         }}
+        inputId={inputId}
         filterOption={defaultFilter} // This is done because the default filter crashes on symbols
         isMulti={isMulti}
         options={convertedOptions}

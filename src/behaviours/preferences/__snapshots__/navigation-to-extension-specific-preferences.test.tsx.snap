@@ -105,7 +105,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Theme
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -190,7 +190,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Extension Install Registry
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -269,8 +269,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
             <p
               class="mt-4 mb-5 leading-relaxed"
             >
-              This setting is to change the registry URL for installing extensions by name.
-              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
+              This setting is to change the registry URL for installing extensions by name. 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
               <b>
                 .npmrc
               </b>
@@ -304,7 +304,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Start-up
-
+               
             </div>
             <label
               class="Switch"
@@ -325,7 +325,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Update Channel
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -410,7 +410,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Locale Timezone
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -645,14 +645,14 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Theme
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-14-live-region"
+                id="react-select-6-live-region"
               />
               <span
                 aria-atomic="false"
@@ -668,7 +668,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-14-placeholder"
+                    id="react-select-6-placeholder"
                   >
                     Select...
                   </div>
@@ -678,7 +678,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-14-placeholder"
+                      aria-describedby="react-select-6-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -730,14 +730,14 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Extension Install Registry
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-15-live-region"
+                id="react-select-7-live-region"
               />
               <span
                 aria-atomic="false"
@@ -753,7 +753,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-15-placeholder"
+                    id="react-select-7-placeholder"
                   >
                     Select...
                   </div>
@@ -763,7 +763,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-15-placeholder"
+                      aria-describedby="react-select-7-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -809,8 +809,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
             <p
               class="mt-4 mb-5 leading-relaxed"
             >
-              This setting is to change the registry URL for installing extensions by name.
-              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
+              This setting is to change the registry URL for installing extensions by name. 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
               <b>
                 .npmrc
               </b>
@@ -844,7 +844,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Start-up
-
+               
             </div>
             <label
               class="Switch"
@@ -865,14 +865,14 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Update Channel
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-16-live-region"
+                id="react-select-8-live-region"
               />
               <span
                 aria-atomic="false"
@@ -888,7 +888,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-16-placeholder"
+                    id="react-select-8-placeholder"
                   >
                     Select...
                   </div>
@@ -898,7 +898,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-16-placeholder"
+                      aria-describedby="react-select-8-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -950,14 +950,14 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Locale Timezone
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-17-live-region"
+                id="react-select-9-live-region"
               />
               <span
                 aria-atomic="false"
@@ -973,7 +973,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-17-placeholder"
+                    id="react-select-9-placeholder"
                   >
                     Select...
                   </div>
@@ -983,7 +983,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-17-placeholder"
+                      aria-describedby="react-select-9-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1185,7 +1185,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="SubTitle"
             >
               Some preference item
-
+               
             </div>
             <div
               data-testid="some-preference-item-input"

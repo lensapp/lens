@@ -9,11 +9,12 @@ import React from "react";
 import { cssNames } from "../../utils";
 import { withTooltip } from "../tooltip";
 
-export interface StatusBrickProps extends React.HTMLAttributes<any> {
+export interface StatusBrickProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const StatusBrick = withTooltip(({ className, ...elemProps }: StatusBrickProps) => (
   <div
     className={cssNames("StatusBrick", className)}
-    {...elemProps} />
+    {...elemProps}
+  />
 ));

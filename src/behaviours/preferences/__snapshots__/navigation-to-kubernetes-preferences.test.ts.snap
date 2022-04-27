@@ -105,7 +105,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Theme
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -190,7 +190,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Extension Install Registry
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -269,8 +269,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             <p
               class="mt-4 mb-5 leading-relaxed"
             >
-              This setting is to change the registry URL for installing extensions by name.
-              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
+              This setting is to change the registry URL for installing extensions by name. 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
               <b>
                 .npmrc
               </b>
@@ -304,7 +304,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Start-up
-
+               
             </div>
             <label
               class="Switch"
@@ -325,7 +325,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Update Channel
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -410,7 +410,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle"
             >
               Locale Timezone
-
+               
             </div>
             <div
               class="Select theme-lens css-b62m3t-container"
@@ -634,7 +634,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Kubectl binary download
-
+                 
               </div>
               <label
                 class="Switch"
@@ -652,14 +652,14 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Download mirror
-
+                 
               </div>
               <div
                 class="Select theme-lens Select--is-disabled css-3iigni-container"
               >
                 <span
                   class="css-1f43avz-a11yText-A11yText"
-                  id="react-select-14-live-region"
+                  id="react-select-10-live-region"
                 />
                 <span
                   aria-atomic="false"
@@ -675,7 +675,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   >
                     <div
                       class="Select__placeholder css-14el2xx-placeholder"
-                      id="react-select-14-placeholder"
+                      id="react-select-10-placeholder"
                     >
                       Download mirror for kubectl
                     </div>
@@ -685,7 +685,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="react-select-14-placeholder"
+                        aria-describedby="react-select-10-placeholder"
                         aria-expanded="false"
                         aria-haspopup="true"
                         autocapitalize="none"
@@ -735,7 +735,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Directory for binaries
-
+                 
               </div>
               <div
                 class="Input theme round black disabled"
@@ -767,7 +767,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 class="SubTitle"
               >
                 Path to kubectl binary
-
+                 
               </div>
               <div
                 class="Input theme round black"
@@ -812,7 +812,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="SubTitle pt-5"
             >
               Synced Items
-
+               
             </div>
             <div
               class="notice mt-3"
@@ -840,7 +840,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 >
                   <span
                     class="css-1f43avz-a11yText-A11yText"
-                    id="react-select-15-live-region"
+                    id="react-select-11-live-region"
                   />
                   <span
                     aria-atomic="false"
@@ -856,7 +856,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                     >
                       <div
                         class="Select__placeholder css-14el2xx-placeholder"
-                        id="react-select-15-placeholder"
+                        id="react-select-11-placeholder"
                       >
                         Repositories
                       </div>
@@ -866,7 +866,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       >
                         <input
                           aria-autocomplete="list"
-                          aria-describedby="react-select-15-placeholder"
+                          aria-describedby="react-select-11-placeholder"
                           aria-expanded="false"
                           aria-haspopup="true"
                           autocapitalize="none"
