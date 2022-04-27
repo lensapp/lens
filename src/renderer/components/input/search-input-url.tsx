@@ -5,65 +5,62 @@
 
 import React from "react";
 import debounce from "lodash/debounce";
-import { autorun, observable, makeObservable } from "mobx";
+import { action, autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { InputProps } from "./input";
-import { SearchInput } from "./search-input";
+import { SearchInput, type SearchInputProps } from "./search-input";
 import { createPageParam } from "../../navigation";
+import { autoBind } from "../../../common/utils";
 
 export const searchUrlParam = createPageParam({
   name: "search",
   defaultValue: "",
 });
 
-export interface SearchInputUrlProps extends InputProps {
-  compact?: boolean; // show only search-icon when not focused
+export interface SearchInputUrlProps extends SearchInputProps {
 }
 
 @observer
 export class SearchInputUrl extends React.Component<SearchInputUrlProps> {
-  @observable inputVal = ""; // fix: use empty string on init to avoid react warnings
+  @observable inputValueFromLocation = this.props.value ?? "";
 
   updateUrl = debounce((val: string) => searchUrlParam.set(val), 250);
 
-  componentDidMount(): void {
+  constructor(props: SearchInputProps) {
+    super(props);
+    makeObservable(this);
+    autoBind(this);
+
     disposeOnUnmount(this, [
-      autorun(() => this.inputVal = searchUrlParam.get()),
+      autorun(() => this.inputValueFromLocation = searchUrlParam.get()),
     ]);
   }
 
-  setValue = (value: string) => {
-    this.inputVal = value;
+  @action
+  setValue(value: string) {
+    this.inputValueFromLocation = value;
     this.updateUrl(value);
-  };
-
-  clear = () => {
-    this.setValue("");
     this.updateUrl.flush();
-  };
+  }
 
-  onChange = (val: string, evt: React.ChangeEvent<any>) => {
+  clear() {
+    this.setValue("");
+    this.props.onClear?.();
+  }
+
+  onChange(val: string, evt: React.ChangeEvent<any>) {
     this.setValue(val);
-
-    if (this.props.onChange) {
-      this.props.onChange(val, evt);
-    }
-  };
-
-  constructor(props: SearchInputUrlProps) {
-    super(props);
-    makeObservable(this);
+    this.props.onChange?.(val, evt);
   }
 
   render() {
-    const { inputVal } = this;
+    const { value, ...searchInputProps } = this.props;
 
     return (
       <SearchInput
-        value={inputVal}
+        {...searchInputProps}
+        value={this.inputValueFromLocation}
         onChange={this.onChange}
         onClear={this.clear}
-        {...this.props}
       />
     );
   }

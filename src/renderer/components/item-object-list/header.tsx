@@ -100,7 +100,12 @@ export class ItemListLayoutHeader<I extends ItemObject> extends React.Component<
           )
         }
         {filters}
-        {searchFilters.length > 0 && searchProps && <SearchInputUrl {...searchProps} />}
+        {searchFilters.length > 0 && searchProps && (
+          <SearchInputUrl
+            autoFocus={false} // avoid jumping horizontal scroll to the right for small content area width (e.g. 700px)
+            {...searchProps}
+          />
+        )}
       </div>
     );
   }
