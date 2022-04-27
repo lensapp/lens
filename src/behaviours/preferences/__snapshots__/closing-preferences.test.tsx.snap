@@ -124,7 +124,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-6-live-region"
+                id="react-select-theme-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -140,7 +140,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-6-placeholder"
+                    id="react-select-theme-input-placeholder"
                   >
                     Select...
                   </div>
@@ -150,7 +150,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-6-placeholder"
+                      aria-describedby="react-select-theme-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -209,7 +209,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-7-live-region"
+                id="react-select-extension-install-registry-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -225,7 +225,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-7-placeholder"
+                    id="react-select-extension-install-registry-input-placeholder"
                   >
                     Select...
                   </div>
@@ -235,7 +235,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-7-placeholder"
+                      aria-describedby="react-select-extension-install-registry-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -344,7 +344,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-8-live-region"
+                id="react-select-update-channel-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -360,7 +360,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-8-placeholder"
+                    id="react-select-update-channel-input-placeholder"
                   >
                     Select...
                   </div>
@@ -370,7 +370,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-8-placeholder"
+                      aria-describedby="react-select-update-channel-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -429,7 +429,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-9-live-region"
+                id="react-select-timezone-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -445,7 +445,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-9-placeholder"
+                    id="react-select-timezone-input-placeholder"
                   >
                     Select...
                   </div>
@@ -455,7 +455,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-9-placeholder"
+                      aria-describedby="react-select-timezone-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -822,7 +822,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-2-live-region"
+                id="react-select-theme-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -838,7 +838,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-2-placeholder"
+                    id="react-select-theme-input-placeholder"
                   >
                     Select...
                   </div>
@@ -848,7 +848,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-2-placeholder"
+                      aria-describedby="react-select-theme-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -907,7 +907,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-3-live-region"
+                id="react-select-extension-install-registry-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -923,7 +923,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-3-placeholder"
+                    id="react-select-extension-install-registry-input-placeholder"
                   >
                     Select...
                   </div>
@@ -933,7 +933,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-3-placeholder"
+                      aria-describedby="react-select-extension-install-registry-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1042,7 +1042,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-4-live-region"
+                id="react-select-update-channel-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -1058,7 +1058,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-4-placeholder"
+                    id="react-select-update-channel-input-placeholder"
                   >
                     Select...
                   </div>
@@ -1068,7 +1068,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-4-placeholder"
+                      aria-describedby="react-select-update-channel-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1127,7 +1127,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-5-live-region"
+                id="react-select-timezone-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -1143,7 +1143,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-5-placeholder"
+                    id="react-select-timezone-input-placeholder"
                   >
                     Select...
                   </div>
@@ -1153,7 +1153,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-5-placeholder"
+                      aria-describedby="react-select-timezone-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"

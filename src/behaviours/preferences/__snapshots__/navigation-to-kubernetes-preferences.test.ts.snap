@@ -112,7 +112,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-2-live-region"
+                id="react-select-theme-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -128,7 +128,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-2-placeholder"
+                    id="react-select-theme-input-placeholder"
                   >
                     Select...
                   </div>
@@ -138,7 +138,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-2-placeholder"
+                      aria-describedby="react-select-theme-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -197,7 +197,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-3-live-region"
+                id="react-select-extension-install-registry-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -213,7 +213,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-3-placeholder"
+                    id="react-select-extension-install-registry-input-placeholder"
                   >
                     Select...
                   </div>
@@ -223,7 +223,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-3-placeholder"
+                      aria-describedby="react-select-extension-install-registry-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -332,7 +332,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-4-live-region"
+                id="react-select-update-channel-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -348,7 +348,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-4-placeholder"
+                    id="react-select-update-channel-input-placeholder"
                   >
                     Select...
                   </div>
@@ -358,7 +358,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-4-placeholder"
+                      aria-describedby="react-select-update-channel-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -417,7 +417,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-5-live-region"
+                id="react-select-timezone-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -433,7 +433,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-5-placeholder"
+                    id="react-select-timezone-input-placeholder"
                   >
                     Select...
                   </div>
@@ -443,7 +443,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-5-placeholder"
+                      aria-describedby="react-select-timezone-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -659,7 +659,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               >
                 <span
                   class="css-1f43avz-a11yText-A11yText"
-                  id="react-select-10-live-region"
+                  id="react-select-download-mirror-input-live-region"
                 />
                 <span
                   aria-atomic="false"
@@ -675,7 +675,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   >
                     <div
                       class="Select__placeholder css-14el2xx-placeholder"
-                      id="react-select-10-placeholder"
+                      id="react-select-download-mirror-input-placeholder"
                     >
                       Download mirror for kubectl
                     </div>
@@ -685,7 +685,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="react-select-10-placeholder"
+                        aria-describedby="react-select-download-mirror-input-placeholder"
                         aria-expanded="false"
                         aria-haspopup="true"
                         autocapitalize="none"
@@ -840,7 +840,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 >
                   <span
                     class="css-1f43avz-a11yText-A11yText"
-                    id="react-select-11-live-region"
+                    id="react-select-HelmRepoSelect-live-region"
                   />
                   <span
                     aria-atomic="false"
@@ -856,7 +856,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                     >
                       <div
                         class="Select__placeholder css-14el2xx-placeholder"
-                        id="react-select-11-placeholder"
+                        id="react-select-HelmRepoSelect-placeholder"
                       >
                         Repositories
                       </div>
@@ -866,7 +866,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       >
                         <input
                           aria-autocomplete="list"
-                          aria-describedby="react-select-11-placeholder"
+                          aria-describedby="react-select-HelmRepoSelect-placeholder"
                           aria-expanded="false"
                           aria-haspopup="true"
                           autocapitalize="none"

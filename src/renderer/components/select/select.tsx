@@ -159,7 +159,10 @@ class NonInjectedSelect<
     const {
       className,
       menuClass,
-      components = {},
+      components: {
+        Menu: WrappedMenu = Menu,
+        ...components
+      } = {},
       styles,
       value = null,
       options,
@@ -168,7 +171,6 @@ class NonInjectedSelect<
       onChange,
       ...props
     } = this.props;
-    const WrappedMenu = components.Menu ?? Menu;
 
     const convertedOptions = options.map(option => (
       typeof option === "string"
@@ -193,6 +195,7 @@ class NonInjectedSelect<
           }),
           ...styles,
         }}
+        instanceId={inputId}
         inputId={inputId}
         filterOption={defaultFilter} // This is done because the default filter crashes on symbols
         isMulti={isMulti}
@@ -204,10 +207,10 @@ class NonInjectedSelect<
         onChange={action(onChange)} // This is done so that all changes are actionable
         components={{
           ...components,
-          Menu: props => (
+          Menu: ({ className, ...props }) => (
             <WrappedMenu
               {...props}
-              className={cssNames(menuClass, this.themeClass, props.className)}
+              className={cssNames(menuClass, this.themeClass, className)}
             />
           ),
         }}
