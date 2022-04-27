@@ -9,21 +9,43 @@ import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import { lazyInitialized } from "./utils/lazy-initialized";
 
+/**
+ * @deprecated Switch to using isMacInjectable
+ */
 export const isMac = process.platform === "darwin";
+
+/**
+ * @deprecated Switch to using isWindowsInjectable
+ */
 export const isWindows = process.platform === "win32";
+
+/**
+ * @deprecated Switch to using isLinuxInjectable
+ */
 export const isLinux = process.platform === "linux";
+
 export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
 export const isSnap = !!process.env.SNAP;
 export const isProduction = process.env.NODE_ENV === "production";
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
+
+/**
+ * @deprecated Switch to using isDevelopmentInjectable
+ */
 export const isDevelopment = !isTestEnv && !isProduction;
+
 export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
 
 export const integrationTestingArg = "--integration-testing";
 export const isIntegrationTesting = process.argv.includes(integrationTestingArg);
 
 export const productName = packageInfo.productName;
+
+/**
+ * @deprecated Switch to using appNameInjectable
+ */
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
+
 export const publicPath = "/build/" as string;
 export const defaultTheme = "lens-dark" as string;
 export const defaultFontSize = 12;

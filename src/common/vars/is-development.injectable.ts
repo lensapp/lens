@@ -3,11 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { isDevelopment } from "../vars";
+import { isProduction, isTestEnv } from "../vars";
 
 const isDevelopmentInjectable = getInjectable({
   id: "is-development",
-  instantiate: () => isDevelopment,
+  instantiate: () => !isTestEnv && !isProduction,
+  causesSideEffects: true,
 });
 
 export default isDevelopmentInjectable;
