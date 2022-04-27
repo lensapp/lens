@@ -5,7 +5,6 @@
 
 import type { CoreV1Api } from "@kubernetes/client-node";
 import { inspect } from "util";
-import { Singleton } from "../../common/utils";
 
 export interface PrometheusService {
   id: string;
@@ -65,7 +64,7 @@ export abstract class PrometheusProvider {
   }
 }
 
-export class PrometheusProviderRegistry extends Singleton {
+export class PrometheusProviderRegistry {
   public providers = new Map<string, PrometheusProvider>();
 
   getByKind(kind: string): PrometheusProvider {

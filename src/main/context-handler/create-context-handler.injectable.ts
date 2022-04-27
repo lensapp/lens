@@ -9,6 +9,7 @@ import { ContextHandler } from "./context-handler";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import { getKubeAuthProxyCertificate } from "../kube-auth-proxy/get-kube-auth-proxy-certificate";
 import URLParse from "url-parse";
+import prometheusProviderRegistryInjectable from "../prometheus/prometheus-provider-registry.injectable";
 
 const createContextHandlerInjectable = getInjectable({
   id: "create-context-handler",
@@ -20,6 +21,7 @@ const createContextHandlerInjectable = getInjectable({
       const dependencies = {
         createKubeAuthProxy: di.inject(createKubeAuthProxyInjectable),
         authProxyCa: getKubeAuthProxyCertificate(clusterUrl.hostname, selfsigned.generate).cert,
+        prometheusProviderRegistry: di.inject(prometheusProviderRegistryInjectable),
       };
 
       return new ContextHandler(dependencies, cluster);

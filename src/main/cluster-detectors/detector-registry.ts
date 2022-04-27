@@ -5,11 +5,17 @@
 
 import { observable } from "mobx";
 import type { ClusterMetadata } from "../../common/cluster-types";
-import { Singleton } from "../../common/utils";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
+import type { K8sRequest } from "../k8s-request.injectable";
 
-export class DetectorRegistry extends Singleton {
+interface Dependencies {
+  k8sRequest: K8sRequest;
+}
+
+export class DetectorRegistry {
+  constructor(private dependencies: Dependencies) {}
+
   registry = observable.array<typeof BaseClusterDetector>([], { deep: false });
 
   add(detectorClass: typeof BaseClusterDetector): this {
@@ -22,7 +28,7 @@ export class DetectorRegistry extends Singleton {
     const results: { [key: string]: ClusterDetectionResult } = {};
 
     for (const detectorClass of this.registry) {
-      const detector = new detectorClass(cluster);
+      const detector = new detectorClass(cluster, this.dependencies.k8sRequest);
 
       try {
         const data = await detector.detect();

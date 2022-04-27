@@ -7,7 +7,7 @@ import logger from "../../logger";
 import type WebSocket from "ws";
 import { Server as WebSocketServer } from "ws";
 import type { ProxyApiRequestArgs } from "../types";
-import { ClusterManager } from "../../cluster-manager";
+import type { ClusterManager } from "../../cluster-manager";
 import URLParse from "url-parse";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
@@ -21,10 +21,12 @@ interface Dependencies {
     tabId: string;
     nodeName?: string;
   }) => { open: () => Promise<void> };
+
+  clusterManager: ClusterManager;
 }
 
-export const shellApiRequest = ({ createShellSession, authenticateRequest }: Dependencies) => ({ req, socket, head }: ProxyApiRequestArgs): void => {
-  const cluster = ClusterManager.getInstance().getClusterForRequest(req);
+export const shellApiRequest = ({ createShellSession, authenticateRequest, clusterManager }: Dependencies) => ({ req, socket, head }: ProxyApiRequestArgs): void => {
+  const cluster = clusterManager.getClusterForRequest(req);
   const { query: { node: nodeName, shellToken, id: tabId }} = new URLParse(req.url, true);
 
   if (!cluster || !authenticateRequest(cluster.id, tabId, shellToken)) {

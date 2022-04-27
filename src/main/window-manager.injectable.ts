@@ -4,15 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { WindowManager } from "./window-manager";
+import lensProxyPortNumberStateInjectable from "./lens-proxy-port-number-state.injectable";
 
 const windowManagerInjectable = getInjectable({
   id: "window-manager",
 
-  instantiate: () => {
-    WindowManager.resetInstance();
-
-    return WindowManager.createInstance();
-  },
+  instantiate: (di) =>
+    new WindowManager({
+      lensProxyPortNumberState: di.inject(lensProxyPortNumberStateInjectable),
+    }),
 
   causesSideEffects: true,
 });

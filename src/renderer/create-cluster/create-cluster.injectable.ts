@@ -14,11 +14,15 @@ const createClusterInjectable = getInjectable({
   instantiate: (di) => {
     const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
+
+      // TODO: Dismantle wrong abstraction
       createKubeconfigManager: () => { throw new Error("Tried to access back-end feature in front-end."); },
       createKubectl: () => { throw new Error("Tried to access back-end feature in front-end.");},
       createContextHandler: () => { throw new Error("Tried to access back-end feature in front-end."); },
       createAuthorizationReview: () => { throw new Error("Tried to access back-end feature in front-end."); },
       createListNamespaces: () => { throw new Error("Tried to access back-end feature in front-end."); },
+      detectorRegistry: null,
+      createVersionDetector: () => { throw new Error("Tried to access back-end feature in front-end."); },
     };
 
     return (model) => new Cluster(dependencies, model);

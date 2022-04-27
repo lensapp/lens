@@ -53,6 +53,7 @@ const fileSyncMaxAllowedFileReadSize = 16 * folderSyncMaxAllowedFileReadSize; //
 interface Dependencies {
   directoryForKubeConfigs: string;
   createCluster: (model: ClusterModel) => Cluster;
+  clusterManager: ClusterManager;
 }
 
 const kubeConfigSyncName = "lens:kube-sync";
@@ -164,7 +165,7 @@ type RootSourceValue = [Cluster, CatalogEntity];
 type RootSource = ObservableMap<string, RootSourceValue>;
 
 // exported for testing
-export const computeDiff = ({ directoryForKubeConfigs, createCluster }: Dependencies) => (contents: string, source: RootSource, filePath: string): void => {
+export const computeDiff = ({ directoryForKubeConfigs, createCluster, clusterManager }: Dependencies) => (contents: string, source: RootSource, filePath: string): void => {
   runInAction(() => {
     try {
       const { config, error } = loadConfigFromString(contents);
@@ -184,7 +185,7 @@ export const computeDiff = ({ directoryForKubeConfigs, createCluster }: Dependen
         // remove and disconnect clusters that were removed from the config
         if (!model) {
           // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
-          ClusterManager.getInstance().deleting.delete(value[0].id);
+          clusterManager.deleting.delete(value[0].id);
 
           value[0].disconnect();
           source.delete(contextName);

@@ -5,9 +5,9 @@
 
 import { app } from "electron";
 
-const switchValue = app.commandLine.getSwitchValue("proxy-server");
-
 export function mangleProxyEnv() {
+  const switchValue = app.commandLine.getSwitchValue("proxy-server");
+
   let httpsProxy = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || "";
 
   delete process.env.HTTPS_PROXY;
@@ -19,5 +19,9 @@ export function mangleProxyEnv() {
 
   if (httpsProxy !== "") {
     process.env.APP_HTTPS_PROXY = httpsProxy;
+  }
+
+  if (app.commandLine.getSwitchValue("proxy-server") !== "") {
+    process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
   }
 }

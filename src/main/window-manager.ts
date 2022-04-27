@@ -9,13 +9,12 @@ import { app, BrowserWindow, dialog, ipcMain, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/app-event-bus/event-bus";
 import { ipcMainOn } from "../common/ipc";
-import { delay, iter, Singleton, openBrowser } from "../common/utils";
+import { delay, iter, openBrowser } from "../common/utils";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
-import { clusterFrameMap } from "../common/cluster-frames";
+import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { isMac, productName } from "../common/vars";
-import { LensProxy } from "./lens-proxy";
 import { bundledExtensionsLoaded } from "../common/ipc/extension-handling";
 
 function isHideable(window: BrowserWindow | null): boolean {
@@ -28,9 +27,11 @@ export interface SendToViewArgs {
   data?: any[];
 }
 
-export class WindowManager extends Singleton {
-  public mainContentUrl = `http://localhost:${LensProxy.getInstance().port}`;
+interface Dependencies {
+  lensProxyPortNumberState: { get: () => number };
+}
 
+export class WindowManager {
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
@@ -38,10 +39,13 @@ export class WindowManager extends Singleton {
 
   @observable activeClusterId: ClusterId;
 
-  constructor() {
-    super();
+  constructor(private dependencies: Dependencies) {
     makeObservable(this);
     this.bindEvents();
+  }
+
+  get mainContentUrl() {
+    return `http://localhost:${this.dependencies.lensProxyPortNumberState.get()}`;
   }
 
   private async initMainWindow(showSplash: boolean) {

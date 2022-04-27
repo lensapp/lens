@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { PrometheusProvider, PrometheusService } from "../prometheus/provider-registry";
-import { PrometheusProviderRegistry } from "../prometheus/provider-registry";
+import type { PrometheusProvider, PrometheusService, PrometheusProviderRegistry } from "../prometheus/provider-registry";
 import type { ClusterPrometheusPreferences } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
 import type httpProxy from "http-proxy";
@@ -30,6 +29,7 @@ interface PrometheusServicePreferences {
 interface Dependencies {
   createKubeAuthProxy: CreateKubeAuthProxy;
   authProxyCa: string;
+  prometheusProviderRegistry: PrometheusProviderRegistry;
 }
 
 export class ContextHandler {
@@ -67,11 +67,11 @@ export class ContextHandler {
       this.prometheusProvider = service.id;
     }
 
-    return PrometheusProviderRegistry.getInstance().getByKind(this.prometheusProvider);
+    return this.dependencies.prometheusProviderRegistry.getByKind(this.prometheusProvider);
   }
 
   protected listPotentialProviders(): PrometheusProvider[] {
-    const registry = PrometheusProviderRegistry.getInstance();
+    const registry = this.dependencies.prometheusProviderRegistry;
     const provider = this.prometheusProvider && registry.getByKind(this.prometheusProvider);
 
     if (provider) {
