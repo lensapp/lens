@@ -12,13 +12,21 @@ import extensionInstallationCounterInjectable from "./extension-installation-cou
 const extensionLoaderInjectable = getInjectable({
   id: "extension-loader",
 
-  instantiate: (di) =>
-    new ExtensionLoader({
+  instantiate: (di) => {
+    const extensionLoader = new ExtensionLoader({
       updateExtensionsState: di.inject(updateExtensionsStateInjectable),
       createExtensionInstance: di.inject(createExtensionInstanceInjectable),
       extensionRegistrators: di.injectMany(extensionRegistratorInjectionToken),
-      extensionInstallationCounter: di.inject(extensionInstallationCounterInjectable),
-    }),
+      extensionInstallationCounter: di.inject(
+        extensionInstallationCounterInjectable,
+      ),
+    });
+
+    // TODO: Missing await
+    extensionLoader.init();
+
+    return extensionLoader;
+  },
 });
 
 export default extensionLoaderInjectable;

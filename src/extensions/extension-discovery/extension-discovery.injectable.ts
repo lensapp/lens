@@ -16,8 +16,8 @@ import installExtensionsInjectable from "../extension-installer/install-extensio
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
 
-  instantiate: (di) =>
-    new ExtensionDiscovery({
+  instantiate: (di) => {
+    const extensionDiscovery = new ExtensionDiscovery({
       extensionLoader: di.inject(extensionLoaderInjectable),
       extensionsStore: di.inject(extensionsStoreInjectable),
 
@@ -37,7 +37,13 @@ const extensionDiscoveryInjectable = getInjectable({
       extensionPackageRootDirectory: di.inject(
         extensionPackageRootDirectoryInjectable,
       ),
-    }),
+    });
+
+    // TODO: Missing await
+    extensionDiscovery.init();
+
+    return extensionDiscovery;
+  },
 });
 
 export default extensionDiscoveryInjectable;
