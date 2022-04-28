@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { afterRootFrameIsReadyInjectionToken } from "../after-root-frame-is-ready-injection-token";
+import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import { runInAction } from "mobx";
-import lensProtocolRouterMainInjectable  from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
-import { beforeQuitOfFrontEndInjectionToken } from "../before-quit-of-front-end-injection-token";
 
-const flagRendererAsNotLoaded = getInjectable({
-  id: "stop-deep-linking",
+const flagRendererAsLoadedInjectable = getInjectable({
+  id: "flag-renderer-as-loaded",
 
   instantiate: (di) => {
     const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
@@ -17,13 +17,13 @@ const flagRendererAsNotLoaded = getInjectable({
       run: () => {
         runInAction(() => {
           // Todo: remove this kludge which enables out-of-place temporal dependency.
-          lensProtocolRouterMain.rendererLoaded = false;
+          lensProtocolRouterMain.rendererLoaded = true;
         });
       },
     };
   },
 
-  injectionToken: beforeQuitOfFrontEndInjectionToken,
+  injectionToken: afterRootFrameIsReadyInjectionToken,
 });
 
-export default flagRendererAsNotLoaded;
+export default flagRendererAsLoadedInjectable;
