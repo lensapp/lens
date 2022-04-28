@@ -26,6 +26,10 @@ export const isLinux = process.platform === "linux";
 
 export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
 export const isSnap = !!process.env.SNAP;
+
+/**
+ * @deprecated Switch to using isTestEnvInjectable
+ */
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
 
 /**
