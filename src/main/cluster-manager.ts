@@ -168,7 +168,7 @@ export class ClusterManager extends Singleton {
           return entity.status.phase;
         }
 
-        logger.debug(`${logPrefix} not clearing entity ${entity.getName()} DISCONNECTED, reason=""`);
+        logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
 
         return LensKubernetesClusterStatus.DISCONNECTED;
       })();
