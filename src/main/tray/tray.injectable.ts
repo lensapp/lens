@@ -10,6 +10,7 @@ import navigateToPreferencesInjectable from "../../common/front-end-routing/rout
 import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.injectable";
 import { getStartableStoppable } from "../../common/utils/get-startable-stoppable";
 import isAutoUpdateEnabledInjectable from "../is-auto-update-enabled.injectable";
+import trayIconPathInjectable from "./tray-icon-path.injectable";
 
 const trayInjectable = getInjectable({
   id: "tray",
@@ -20,6 +21,7 @@ const trayInjectable = getInjectable({
     const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
+    const trayIconPath = di.inject(trayIconPathInjectable);
 
     return getStartableStoppable("build-of-tray", () =>
       initTray(
@@ -28,6 +30,7 @@ const trayInjectable = getInjectable({
         navigateToPreferences,
         stopServicesAndExitApp,
         isAutoUpdateEnabled,
+        trayIconPath,
       ),
     );
   },
