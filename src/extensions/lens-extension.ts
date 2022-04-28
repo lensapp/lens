@@ -26,7 +26,7 @@ export interface LensExtensionManifest extends PackageJson {
    * Only MAJOR.MINOR version is taken in consideration.
    */
   engines?: {
-    lens?: string;
+    lens?: string; // "semver"-package format
     npm?: string;
     node?: string;
   };

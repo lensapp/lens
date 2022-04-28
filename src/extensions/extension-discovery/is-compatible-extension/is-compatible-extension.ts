@@ -2,8 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { SemVer } from "semver";
-import semver from "semver";
+import semver, { SemVer } from "semver";
 import type { LensExtensionManifest } from "../../lens-extension";
 
 interface Dependencies {
@@ -11,16 +10,17 @@ interface Dependencies {
 }
 
 export const isCompatibleExtension = (deps: Dependencies): ((manifest: LensExtensionManifest) => boolean) => {
-  const { major: appMajor } = deps.appSemVer;
+  const { major: appVersion } = deps.appSemVer;
 
   return (manifest: LensExtensionManifest): boolean => {
     if (manifest?.engines.lens) {
-      const [extMajor, extMinor] = manifest.engines.lens.split(".");
+      const { major: extMajor, minor: extMinor } = new SemVer(manifest.engines.lens, {
+        loose: true,
+      });
 
-      return semver.gte(`${extMajor}.${extMinor}`, `${appMajor}.0`);
+      return semver.gte(`${extMajor}.${extMinor}`, `${appVersion}.0`);
     }
 
-    // all extensions by default should be compatible with any Lens-engine (if not specified)
-    return true;
+    return false; // not compatible by default
   };
 };
