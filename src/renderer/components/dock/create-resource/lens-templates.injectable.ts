@@ -5,20 +5,21 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import path from "path";
 import { hasCorrectExtension } from "./has-correct-extension";
-import { staticFilesDirectory } from "../../../../common/vars";
 import readFileInjectable from "../../../../common/fs/read-file.injectable";
 import readDirInjectable from "../../../../common/fs/read-dir.injectable";
 import type { RawTemplates } from "./create-resource-templates.injectable";
 import type { GetAbsolutePath } from "../../../../common/path/get-absolute-path.injectable";
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
+import staticFilesDirectoryInjectable from "../../../../common/vars/static-files-directory.injectable";
 
 interface Dependencies {
   readDir: (dirPath: string) => Promise<string[]>;
   readFile: (filePath: string) => Promise<string>;
   getAbsolutePath: GetAbsolutePath;
+  staticFilesDirectory: string;
 }
 
-async function getTemplates({ readDir, readFile, getAbsolutePath }: Dependencies) {
+async function getTemplates({ readDir, readFile, getAbsolutePath, staticFilesDirectory }: Dependencies) {
   const templatesFolder = getAbsolutePath(staticFilesDirectory, "../templates/create-resource");
 
   /**
@@ -43,6 +44,7 @@ const lensCreateResourceTemplatesInjectable = getInjectable({
       readFile: di.inject(readFileInjectable),
       readDir: di.inject(readDirInjectable),
       getAbsolutePath: di.inject(getAbsolutePathInjectable),
+      staticFilesDirectory: di.inject(staticFilesDirectoryInjectable),
     });
 
     return ["lens", templates];

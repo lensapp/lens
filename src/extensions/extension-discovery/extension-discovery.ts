@@ -16,7 +16,7 @@ import logger from "../../main/logger";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { ExtensionLoader } from "../extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
-import { isProduction, staticFilesDirectory } from "../../common/vars";
+import { isProduction } from "../../common/vars";
 import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
 import type { PackageJson } from "type-fest";
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
@@ -34,6 +34,7 @@ interface Dependencies {
   installExtension: (name: string) => Promise<void>;
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
   extensionPackageRootDirectory: string;
+  staticFilesDirectory: string;
 }
 
 export interface InstalledExtension {
@@ -112,7 +113,7 @@ export class ExtensionDiscovery {
   }
 
   get inTreeFolderPath(): string {
-    return path.resolve(staticFilesDirectory, "../extensions");
+    return path.resolve(this.dependencies.staticFilesDirectory, "../extensions");
   }
 
   get nodeModulesPath(): string {

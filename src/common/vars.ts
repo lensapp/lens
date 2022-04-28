@@ -123,12 +123,6 @@ export const kubectlBinaryName = getBinaryName("kubectl");
  * @deprecated for being explicit side effect.
  */
 export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
-export const staticFilesDirectory = path.resolve(
-  !isProduction
-    ? process.cwd()
-    : process.resourcesPath,
-  "static",
-);
 
 // Apis
 export const apiPrefix = "/api" as string; // local router apis

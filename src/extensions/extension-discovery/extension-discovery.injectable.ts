@@ -12,6 +12,7 @@ import extensionInstallationStateStoreInjectable from "../extension-installation
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
 import extensionPackageRootDirectoryInjectable from "../extension-installer/extension-package-root-directory/extension-package-root-directory.injectable";
 import installExtensionsInjectable from "../extension-installer/install-extensions/install-extensions.injectable";
+import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
@@ -37,6 +38,8 @@ const extensionDiscoveryInjectable = getInjectable({
       extensionPackageRootDirectory: di.inject(
         extensionPackageRootDirectoryInjectable,
       ),
+
+      staticFilesDirectory: di.inject(staticFilesDirectoryInjectable),
     }),
 });
 

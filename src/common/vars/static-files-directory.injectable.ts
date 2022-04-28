@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import getAbsolutePathInjectable from "../path/get-absolute-path.injectable";
 import lensResourcesDirInjectable from "./lens-resources-dir.injectable";
 
-const staticDirInjectable = getInjectable({
-  id: "static-dir",
+const staticFilesDirectoryInjectable = getInjectable({
+  id: "static-files-directory",
 
   instantiate: (di) => {
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
@@ -17,4 +17,4 @@ const staticDirInjectable = getInjectable({
   },
 });
 
-export default staticDirInjectable;
+export default staticFilesDirectoryInjectable;
