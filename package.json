@@ -124,6 +124,9 @@
         "rpm",
         "AppImage"
       ],
+      "asarUnpack": [
+        "**/node_modules/sharp/**"
+      ],
       "extraResources": [
         {
           "from": "binaries/client/linux/${arch}/kubectl",
@@ -260,6 +263,7 @@
     "rfc6902": "^4.0.2",
     "selfsigned": "^2.0.1",
     "semver": "^7.3.7",
+    "sharp": "^0.30.3",
     "shell-env": "^3.0.1",
     "spdy": "^4.0.2",
     "tar": "^6.1.11",
@@ -388,7 +392,6 @@
     "react-window": "^1.8.6",
     "sass": "^1.49.11",
     "sass-loader": "^12.6.0",
-    "sharp": "^0.30.3",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.0.23",
     "tar-stream": "^2.2.0",
