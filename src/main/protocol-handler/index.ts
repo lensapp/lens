@@ -3,4 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export * from "./lens-protocol-router-main/lens-protocol-router-main";
+export * from "./router";

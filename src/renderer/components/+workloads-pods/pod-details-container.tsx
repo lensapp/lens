@@ -18,7 +18,7 @@ import type { IMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { ClusterMetricsResourceType } from "../../../common/cluster/types";
 import type { PortForwardStore } from "../../port-forward";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";

@@ -4,7 +4,7 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 import { LensMainExtension } from "../../extensions/lens-main-extension";
-import trayItemsInjectable from "./tray-menu-items.injectable";
+import extensionTrayItemsInjectable from "./tray-menu-items.injectable";
 import type { IComputedValue } from "mobx";
 import { computed, ObservableMap, runInAction } from "mobx";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
@@ -28,7 +28,7 @@ describe("tray-menu-items", () => {
       () => computed(() => [...extensionsStub.values()]),
     );
 
-    trayMenuItems = di.inject(trayItemsInjectable);
+    trayMenuItems = di.inject(extensionTrayItemsInjectable);
   });
 
   it("does not have any items yet", () => {

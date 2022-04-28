@@ -7,7 +7,7 @@ import type WebSocket from "ws";
 import path from "path";
 import { UserStore } from "../../../common/user-store";
 import type { Cluster } from "../../../common/cluster/cluster";
-import type { ClusterId } from "../../../common/cluster-types";
+import type { ClusterId } from "../../../common/cluster/types";
 import { ShellSession } from "../shell-session";
 import type { Kubectl } from "../../kubectl/kubectl";
 import { baseBinariesDir } from "../../../common/vars";

@@ -7,7 +7,7 @@ import fse from "fs-extra";
 import { isNull } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
-import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store";
+import type { ClusterStoreModel } from "../../common/cluster/store";
 import type { Hotbar, HotbarItem } from "../../common/hotbar-types";
 import { defaultHotbarCells, getEmptyHotbar } from "../../common/hotbar-types";
 import type { MigrationDeclaration } from "../helpers";

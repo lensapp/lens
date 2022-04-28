@@ -5,15 +5,16 @@
 
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { ContextHandler } from "../context-handler/context-handler";
 import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../../common/kube-helpers";
 import logger from "../logger";
-import { LensProxy } from "../lens-proxy";
+import type { IObservableValue } from "mobx";
+import { waitUntilSet } from "../../common/utils/wait-observable-value";
 
-interface Dependencies {
-  directoryForTemp: string;
+export interface KubeconfigManagerDependencies {
+  readonly directoryForTemp: string;
+  readonly proxyPort: IObservableValue<number | undefined>;
 }
 
 export class KubeconfigManager {
@@ -26,11 +27,7 @@ export class KubeconfigManager {
    */
   protected tempFilePath: string | null | undefined = null;
 
-  protected contextHandler: ContextHandler;
-
-  constructor(private dependencies: Dependencies, protected cluster: Cluster) {
-    this.contextHandler = cluster.contextHandler;
-  }
+  constructor(protected readonly dependencies: KubeconfigManagerDependencies, protected readonly cluster: Cluster) {}
 
   /**
    *
@@ -71,15 +68,11 @@ export class KubeconfigManager {
 
   protected async ensureFile() {
     try {
-      await this.contextHandler.ensureServer();
+      await this.cluster.contextHandler.ensureServer();
       this.tempFilePath = await this.createProxyKubeconfig();
     } catch (error) {
-      throw Object.assign(new Error("Failed to creat temp config for auth-proxy"), { cause: error });
+      throw new Error(`Failed to creat temp config for auth-proxy: ${error}`);
     }
-  }
-
-  get resolveProxyUrl() {
-    return `http://127.0.0.1:${LensProxy.getInstance().port}/${this.cluster.id}`;
   }
 
   /**
@@ -94,12 +87,13 @@ export class KubeconfigManager {
       `kubeconfig-${id}`,
     );
     const kubeConfig = await cluster.getKubeconfig();
+    const proxyPort = await waitUntilSet(this.dependencies.proxyPort);
     const proxyConfig: Partial<KubeConfig> = {
       currentContext: contextName,
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl,
+          server: `http://127.0.0.1:${proxyPort}/${this.cluster.id}`,
           skipTLSVerify: undefined,
         },
       ],

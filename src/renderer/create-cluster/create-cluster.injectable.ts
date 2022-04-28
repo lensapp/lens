@@ -14,9 +14,9 @@ const createClusterInjectable = getInjectable({
   instantiate: (di) => {
     const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
-      createKubeconfigManager: () => { throw new Error("Tried to access back-end feature in front-end."); },
-      createKubectl: () => { throw new Error("Tried to access back-end feature in front-end.");},
-      createContextHandler: () => { throw new Error("Tried to access back-end feature in front-end."); },
+      createKubeconfigManager: () => undefined,
+      createContextHandler: () => undefined,
+      createKubectl: () => { throw new Error("Tried to access back-end feature in front-end."); },
       createAuthorizationReview: () => { throw new Error("Tried to access back-end feature in front-end."); },
       createListNamespaces: () => { throw new Error("Tried to access back-end feature in front-end."); },
     };

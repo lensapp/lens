@@ -6,7 +6,7 @@
 import type { OpenDialogOptions } from "electron";
 import { ipcRenderer } from "electron";
 import { clusterActivateHandler, clusterClearDeletingHandler, clusterDeleteHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetDeletingHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
-import type { ClusterId, ClusterState } from "../../common/cluster-types";
+import type { ClusterId, ClusterState } from "../../common/cluster/types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
 import { openFilePickingDialogChannel } from "../../common/ipc/dialog";
 import { extensionDiscoveryStateChannel, extensionLoaderFromMainChannel } from "../../common/ipc/extension-handling";

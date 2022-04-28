@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterModel } from "../../common/cluster-types";
+import type { ClusterModel } from "../../common/cluster/types";
 
 jest.mock("winston", () => ({
   format: {

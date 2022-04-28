@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { ListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
 import { Notifications, notificationsStore } from "../components/notifications";
-import { ClusterStore } from "../../common/cluster-store/cluster-store";
+import { ClusterStore } from "../../common/cluster/store";
 import { Button } from "../components/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";

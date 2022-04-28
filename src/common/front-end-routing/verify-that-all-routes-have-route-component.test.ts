@@ -6,8 +6,8 @@ import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import { routeInjectionToken } from "./route-injection-token";
 import { filter, map, matches } from "lodash/fp";
-import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../cluster-store/cluster-store";
+import clusterStoreInjectable from "../cluster/store.injectable";
+import type { ClusterStore } from "../cluster/store";
 import { pipeline } from "@ogre-tools/fp";
 
 describe("verify-that-all-routes-have-component", () => {

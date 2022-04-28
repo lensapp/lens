@@ -11,7 +11,7 @@ import { cssNames } from "../../utils";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../../common/cluster/hosted.injectable";
 
 export interface ClusterNoMetricsProps {
   className: string;

@@ -5,7 +5,7 @@
 
 import type { PrometheusProvider, PrometheusService } from "../prometheus/provider-registry";
 import { PrometheusProviderRegistry } from "../prometheus/provider-registry";
-import type { ClusterPrometheusPreferences } from "../../common/cluster-types";
+import type { ClusterPrometheusPreferences } from "../../common/cluster/types";
 import type { Cluster } from "../../common/cluster/cluster";
 import type httpProxy from "http-proxy";
 import type { UrlWithStringQuery } from "url";
@@ -14,6 +14,8 @@ import { CoreV1Api } from "@kubernetes/client-node";
 import logger from "../logger";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import type { CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import type { GetKubeAuthProxyCertificate } from "../kube-auth-proxy/get-proxy-cert.injectable";
+import type { SelfSignedCert } from "selfsigned";
 
 export interface PrometheusDetails {
   prometheusPath: string;
@@ -27,21 +29,23 @@ interface PrometheusServicePreferences {
   prefix: string;
 }
 
-interface Dependencies {
+export interface ContextHandlerDependencies {
   createKubeAuthProxy: CreateKubeAuthProxy;
-  authProxyCa: string;
+  getKubeAuthProxyCertificate: GetKubeAuthProxyCertificate;
 }
 
 export class ContextHandler {
-  public clusterUrl: UrlWithStringQuery;
+  public readonly clusterUrl: UrlWithStringQuery;
   protected kubeAuthProxy?: KubeAuthProxy;
   protected apiTarget?: httpProxy.ServerOptions;
   protected prometheusProvider?: string;
   protected prometheus?: PrometheusServicePreferences;
+  private readonly proxyCert: SelfSignedCert;
 
-  constructor(private dependencies: Dependencies, protected cluster: Cluster) {
+  constructor(protected readonly dependencies: ContextHandlerDependencies, protected readonly cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
     this.setupPrometheus(cluster.preferences);
+    this.proxyCert = this.dependencies.getKubeAuthProxyCertificate(new URL(cluster.apiUrl).hostname);
   }
 
   public setupPrometheus(preferences: ClusterPrometheusPreferences = {}) {
@@ -125,7 +129,7 @@ export class ContextHandler {
   }
 
   resolveAuthProxyCa() {
-    return this.dependencies.authProxyCa;
+    return this.proxyCert.cert;
   }
 
   async getApiTarget(isLongRunningRequest = false): Promise<httpProxy.ServerOptions> {
@@ -141,7 +145,6 @@ export class ContextHandler {
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
     await this.ensureServer();
 
-    const ca = this.dependencies.authProxyCa;
     const clusterPath = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
     const apiPrefix = `${this.kubeAuthProxy.apiPrefix}${clusterPath}`;
 
@@ -151,7 +154,7 @@ export class ContextHandler {
         host: "127.0.0.1",
         port: this.kubeAuthProxy.port,
         path: apiPrefix,
-        ca,
+        ca: this.resolveAuthProxyCa(),
       },
       changeOrigin: true,
       timeout,

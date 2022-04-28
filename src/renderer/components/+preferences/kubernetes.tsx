@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { HelmCharts } from "./helm-charts";
-import { KubeconfigSyncs } from "./kubeconfig-syncs";
+import { KubeconfigSyncs } from "./kubeconfig-syncs/view";
 import { KubectlBinaries } from "./kubectl-binaries";
 import { Preferences } from "./preferences";
 

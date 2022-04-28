@@ -7,19 +7,15 @@ import { ObservableMap } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync-manager/kubeconfig-sync-manager";
-import mockFs from "mock-fs";
-import fs from "fs";
-import { ClusterManager } from "../../cluster-manager";
-import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
-import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import getConfigurationFileModelInjectable
-  from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import type { ComputeDiff } from "../kubeconfig-sync/compute-diff.injectable";
+import computeDiffInjectable from "../kubeconfig-sync/compute-diff.injectable";
+import type { ConfigToModels } from "../kubeconfig-sync/config-to-models.injectable";
+import configToModelsInjectable from "../kubeconfig-sync/config-to-models.injectable";
+import clusterStoreInjectable from "../../../common/cluster/store.injectable";
+import type { ClusterStore } from "../../../common/cluster/store";
+import mockFs from "mock-fs";
+import { writeFileSync } from "fs";
 
 jest.mock("electron", () => ({
   app: {
@@ -38,7 +34,8 @@ jest.mock("electron", () => ({
 }));
 
 describe("kubeconfig-sync.source tests", () => {
-  let computeDiff: ReturnType<typeof computeDiffFor>;
+  let computeDiff: ComputeDiff;
+  let configToModels: ConfigToModels;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -47,27 +44,18 @@ describe("kubeconfig-sync.source tests", () => {
 
     await di.runSetups();
 
-    computeDiff = computeDiffFor({
-      directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
-      createCluster: di.inject(createClusterInjectionToken),
-    });
+    di.override(clusterStoreInjectable, () => ({
+      getById: jest.fn(),
+      addCluster: jest.fn(),
+      clustersList: [],
+    } as unknown as ClusterStore));
 
-    di.override(clusterStoreInjectable, () =>
-      ClusterStore.createInstance({ createCluster: () => null }),
-    );
-
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
-
-    di.inject(clusterStoreInjectable);
-
-    ClusterManager.createInstance();
+    computeDiff = di.inject(computeDiffInjectable);
+    configToModels = di.inject(configToModelsInjectable);
   });
 
   afterEach(() => {
     mockFs.restore();
-    ClusterManager.resetInstance();
-    ClusterStore.resetInstance();
   });
 
   describe("configsToModels", () => {
@@ -86,7 +74,7 @@ describe("kubeconfig-sync.source tests", () => {
       const config = loadFromOptions({
         clusters: [{
           name: "cluster-name",
-          server: "1.2.3.4",
+          server: "https://1.2.3.4",
           skipTLSVerify: false,
         }],
         users: [{
@@ -124,7 +112,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],
@@ -149,7 +137,7 @@ describe("kubeconfig-sync.source tests", () => {
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
       const filePath = "/bar";
 
-      fs.writeFileSync(filePath, contents);
+      writeFileSync(filePath, contents);
 
       computeDiff(contents, rootSource, filePath);
 
@@ -166,7 +154,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],
@@ -192,7 +180,7 @@ describe("kubeconfig-sync.source tests", () => {
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
       const filePath = "/bar";
 
-      fs.writeFileSync(filePath, contents);
+      writeFileSync(filePath, contents);
 
       computeDiff(contents, rootSource, filePath);
 
@@ -213,7 +201,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],
@@ -246,7 +234,7 @@ describe("kubeconfig-sync.source tests", () => {
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
       const filePath = "/bar";
 
-      fs.writeFileSync(filePath, contents);
+      writeFileSync(filePath, contents);
 
       computeDiff(contents, rootSource, filePath);
 
@@ -263,7 +251,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],

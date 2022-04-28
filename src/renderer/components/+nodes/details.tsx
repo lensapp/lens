@@ -21,7 +21,7 @@ import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { ClusterMetricsResourceType } from "../../../common/cluster/types";
 import { NodeDetailsResources } from "./details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
 import type { Disposer } from "../../utils";
@@ -29,8 +29,7 @@ import logger from "../../../common/logger";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }

@@ -10,7 +10,7 @@ import React from "react";
 import { Input } from "../../input/input";
 import { observer } from "mobx-react";
 import { Icon } from "../../icon/icon";
-import { initialNodeShellImage } from "../../../../common/cluster-types";
+import { initialNodeShellImage } from "../../../../common/cluster/types";
 
 export interface ClusterNodeShellSettingProps {
   cluster: Cluster;

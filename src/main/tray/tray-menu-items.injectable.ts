@@ -6,15 +6,14 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
 
-const trayItemsInjectable = getInjectable({
-  id: "tray-items",
+const extensionTrayItemsInjectable = getInjectable({
+  id: "extension-tray-items",
 
   instantiate: (di) => {
     const extensions = di.inject(mainExtensionsInjectable);
 
-    return computed(() =>
-      extensions.get().flatMap(extension => extension.trayMenus));
+    return computed(() => extensions.get().flatMap(extension => extension.trayMenus));
   },
 });
 
-export default trayItemsInjectable;
+export default extensionTrayItemsInjectable;

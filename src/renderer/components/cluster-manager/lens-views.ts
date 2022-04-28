@@ -7,8 +7,8 @@ import type { IReactionDisposer } from "mobx";
 import { action, makeObservable, observable, when } from "mobx";
 import logger from "../../../main/logger";
 import { clusterVisibilityHandler } from "../../../common/ipc/cluster";
-import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import type { ClusterId } from "../../../common/cluster-types";
+import { ClusterStore } from "../../../common/cluster/store";
+import type { ClusterId } from "../../../common/cluster/types";
 import { getClusterFrameUrl, Singleton } from "../../utils";
 import { ipcRenderer } from "electron";
 

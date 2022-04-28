@@ -9,11 +9,11 @@ import type { ClusterContext } from "../../common/k8s-api/cluster-context";
 import { computed, makeObservable } from "mobx";
 
 interface Dependencies {
-  namespaceStore: NamespaceStore;
+  readonly namespaceStore: NamespaceStore;
 }
 
 export class ClusterFrameContext implements ClusterContext {
-  constructor(public cluster: Cluster, private dependencies: Dependencies) {
+  constructor(public readonly cluster: Cluster, protected readonly dependencies: Dependencies) {
     makeObservable(this);
   }
 

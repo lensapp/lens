@@ -108,8 +108,8 @@ export enum WebSocketCloseEvent {
 export abstract class ShellSession {
   abstract ShellType: string;
 
-  private static shellEnvs = new Map<string, Record<string, string>>();
-  private static processes = new Map<string, pty.IPty>();
+  private static readonly shellEnvs = new Map<string, Record<string, string>>();
+  private static readonly processes = new Map<string, pty.IPty>();
 
   /**
    * Kill all remaining shell backing processes. Should be called when about to
@@ -240,7 +240,7 @@ export abstract class ShellSession {
         }
 
         if (typeof data === "string") {
-          return void logger.silly(`[SHELL-SESSION]: Received message from ${this.terminalId}`, { data });
+          return void logger.debug(`[SHELL-SESSION]: Received message from ${this.terminalId}`, { data });
         }
 
         try {

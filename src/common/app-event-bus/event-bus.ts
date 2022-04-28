@@ -12,4 +12,9 @@ export interface AppEvent {
   params?: Record<string, any>;
 }
 
+export type AppEventBus = EventEmitter<[AppEvent]>;
+
+/**
+ * @deprecated use `di.inject(appEventBusInjectable)` instead
+ */
 export const appEventBus = new EventEmitter<[AppEvent]>();

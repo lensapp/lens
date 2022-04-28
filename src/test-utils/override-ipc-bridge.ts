@@ -8,8 +8,8 @@ import getValueFromRegisteredChannelInjectable from "../renderer/app-paths/get-v
 import registerChannelInjectable from "../main/app-paths/register-channel/register-channel.injectable";
 import asyncFn from "@async-fn/jest";
 import registerIpcChannelListenerInjectable from "../renderer/app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
-import windowManagerInjectable from "../main/window-manager.injectable";
-import type { SendToViewArgs, WindowManager } from "../main/window-manager";
+import windowManagerInjectable from "../main/window/manager.injectable";
+import type { SendToViewArgs, WindowManager } from "../main/window/manager";
 import { appNavigationIpcChannel } from "../common/front-end-routing/navigation-ipc-channel";
 
 export const overrideIpcBridge = ({

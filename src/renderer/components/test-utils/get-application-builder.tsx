@@ -14,7 +14,7 @@ import React from "react";
 import { Router } from "react-router";
 import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
+import allowedResourcesInjectable from "../../../common/cluster/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
@@ -22,8 +22,8 @@ import directoryForLensLocalStorageInjectable from "../../../common/directory-fo
 import { Sidebar } from "../layout/sidebar";
 import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
 import type { DiContainer } from "@ogre-tools/injectable";
-import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
+import clusterStoreInjectable from "../../../common/cluster/store.injectable";
+import type { ClusterStore } from "../../../common/cluster/store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
@@ -33,29 +33,37 @@ import preferenceNavigationItemsInjectable from "../+preferences/preferences-nav
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
+import exitAppInjectable from "../../../main/utils/exit-app.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
+export interface ApplicationMenu {
+  click: (path: string) => void;
+}
+
+export interface ApplicationPreferences {
+  close: () => void;
+  navigate: () => void;
+  navigation: {
+    click: (id: string) => void;
+  };
+}
+
+export interface ApplicationActions {
+  exit: () => void;
+}
+
 export interface ApplicationBuilder {
-  dis: DiContainers;
+  readonly dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
   addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeSetups: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
-
-  applicationMenu: {
-    click: (path: string) => void;
-  };
-
-  preferences: {
-    close: () => void;
-    navigate: () => void;
-    navigation: {
-      click: (id: string) => void;
-    };
-  };
+  readonly applicationMenu: ApplicationMenu;
+  readonly preferences: ApplicationPreferences;
+  readonly actions: ApplicationActions;
 }
 
 interface DiContainers {
@@ -106,27 +114,23 @@ export const getApplicationBuilder = () => {
     },
   };
 
+  const exit = jest.fn();
+
   let environment = environments.application;
 
-  rendererDi.override(
-    currentlyInClusterFrameInjectable,
-    () => environment === environments.clusterFrame,
-  );
-
-  rendererDi.override(rendererExtensionsInjectable, () =>
-    computed(() => extensionsState),
-  );
-
-  mainDi.override(mainExtensionsInjectable, () =>
-    computed((): LensMainExtension[] => []),
-  );
+  rendererDi.override( currentlyInClusterFrameInjectable, () => environment === environments.clusterFrame);
+  rendererDi.override(rendererExtensionsInjectable, () => computed(() => extensionsState));
+  mainDi.override(mainExtensionsInjectable, () => computed((): LensMainExtension[] => []));
+  mainDi.override(exitAppInjectable, () => exit);
 
   let allowedResourcesState: IObservableArray<KubeResource>;
   let rendered: RenderResult;
 
   const builder: ApplicationBuilder = {
     dis,
-
+    actions: {
+      exit,
+    },
     applicationMenu: {
       click: (path: string) => {
         const applicationMenuItems = mainDi.inject(

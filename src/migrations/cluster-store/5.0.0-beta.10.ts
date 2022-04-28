@@ -5,7 +5,7 @@
 
 import path from "path";
 import fse from "fs-extra";
-import type { ClusterModel } from "../../common/cluster-types";
+import type { ClusterModel } from "../../common/cluster/types";
 import type { MigrationDeclaration } from "../helpers";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";

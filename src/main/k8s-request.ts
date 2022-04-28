@@ -7,11 +7,14 @@ import type { RequestPromiseOptions } from "request-promise-native";
 import request from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
 import type { IMetricsReqParams } from "../common/k8s-api/endpoints/metrics.api";
-import { LensProxy } from "./lens-proxy";
 import type { Cluster } from "../common/cluster/cluster";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import lensProxyPortInjectable from "./lens-proxy/port.injectable";
 
 export async function k8sRequest<T = any>(cluster: Cluster, path: string, options: RequestPromiseOptions = {}): Promise<T> {
-  const kubeProxyUrl = `http://localhost:${LensProxy.getInstance().port}${apiKubePrefix}`;
+  const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+  const proxyPort = di.inject(lensProxyPortInjectable);
+  const kubeProxyUrl = `http://localhost:${proxyPort.get()}${apiKubePrefix}`;
 
   options.headers ??= {};
   options.json ??= true;

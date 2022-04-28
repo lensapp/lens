@@ -10,14 +10,15 @@ import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../comm
 import { delay, noop } from "../../../common/utils";
 import { LensExtension } from "../../../extensions/main-api";
 import { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
-import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
+import type { LensProtocolRouterMain } from "../router";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
-import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
+import lensProtocolRouterMainInjectable from "../router.injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import ensureMainWindowInjectable from "../../window/ensure-main.injectable";
 
 jest.mock("../../../common/ipc");
 
@@ -48,10 +49,10 @@ describe("protocol router tests", () => {
 
     await di.runSetups();
 
+    di.override(ensureMainWindowInjectable, () => async () => null);
+
     extensionLoader = di.inject(extensionLoaderInjectable);
-
     extensionsStore = di.inject(extensionsStoreInjectable);
-
     lpr = di.inject(lensProtocolRouterMainInjectable);
 
     lpr.rendererLoaded = true;

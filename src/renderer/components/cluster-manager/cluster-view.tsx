@@ -11,7 +11,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import { ClusterFrameHandler } from "./lens-views";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { ClusterStore } from "../../../common/cluster-store/cluster-store";
+import { ClusterStore } from "../../../common/cluster/store";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";

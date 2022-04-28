@@ -5,19 +5,12 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { checkForUpdates } from "../app-updater";
 import { docsUrl, productName, supportUrl } from "../../common/vars";
-import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
 import { showAbout } from "./menu";
-import windowManagerInjectable from "../window-manager.injectable";
-import type {
-  BrowserWindow,
-  MenuItem,
-  MenuItemConstructorOptions } from "electron";
-import {
-  webContents,
-} from "electron";
-import loggerInjectable from "../../common/logger.injectable";
+import windowManagerInjectable from "../window/manager.injectable";
+import type { BrowserWindow, MenuItem, MenuItemConstructorOptions } from "electron";
+import { webContents } from "electron";
 import appNameInjectable from "../app-paths/app-name/app-name.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
 import isAutoUpdateEnabledInjectable from "../is-auto-update-enabled.injectable";
@@ -28,6 +21,8 @@ import navigateToWelcomeInjectable from "../../common/front-end-routing/routes/w
 import navigateToAddClusterInjectable from "../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
 import { computed } from "mobx";
+import appMenuLoggerInjectable from "./logger.injectable";
+import exitAppInjectable from "../utils/exit-app.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
@@ -41,26 +36,22 @@ const applicationMenuItemsInjectable = getInjectable({
   id: "application-menu-items",
 
   instantiate: (di) => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(appMenuLoggerInjectable);
     const appName = di.inject(appNameInjectable);
     const isMac = di.inject(isMacInjectable);
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
+    const windowManager = di.inject(windowManagerInjectable);
+    const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
+    const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
+    const navigateToCatalog = di.inject(navigateToCatalogInjectable);
+    const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
+    const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
+    const exitApp = di.inject(exitAppInjectable);
+    const autoUpdateDisabled = !isAutoUpdateEnabled();
 
     return computed((): MenuItemOpts[] => {
-
-      // TODO: These injects should happen outside of the computed.
-      // TODO: Remove temporal dependencies in WindowManager to make sure timing is correct.
-      const windowManager = di.inject(windowManagerInjectable);
-      const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
-      const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
-      const navigateToCatalog = di.inject(navigateToCatalogInjectable);
-      const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
-      const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
-
-      const autoUpdateDisabled = !isAutoUpdateEnabled();
-
-      logger.info(`[MENU]: autoUpdateDisabled=${autoUpdateDisabled}`);
+      logger.info(`auto update is ${autoUpdateDisabled ? "disabled" : "enabled"}`);
 
       const macAppMenu: MenuItemOpts = {
         label: appName,
@@ -269,7 +260,7 @@ const applicationMenuItemsInjectable = getInjectable({
             id: "documentation",
             click: async () => {
               openBrowser(docsUrl).catch((error) => {
-                logger.error("[MENU]: failed to open browser", { error });
+                logger.error("failed to open browser", { error });
               });
             },
           },
@@ -278,7 +269,7 @@ const applicationMenuItemsInjectable = getInjectable({
             id: "support",
             click: async () => {
               openBrowser(supportUrl).catch((error) => {
-                logger.error("[MENU]: failed to open browser", { error });
+                logger.error("failed to open browser", { error });
               });
             },
           },
@@ -316,7 +307,7 @@ const applicationMenuItemsInjectable = getInjectable({
       for (const menuItem of electronMenuItems.get()) {
         if (!appMenu.has(menuItem.parentId)) {
           logger.error(
-            `[MENU]: cannot register menu item for parentId=${menuItem.parentId}, parent item doesn't exist`,
+            `cannot register menu item for parentId=${menuItem.parentId}, parent item doesn't exist`,
             { menuItem },
           );
 

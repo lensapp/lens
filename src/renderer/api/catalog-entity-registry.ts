@@ -9,7 +9,7 @@ import type { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogCategory
 import { catalogCategoryRegistry } from "../../common/catalog";
 import "../../common/catalog-entities";
 import type { Cluster } from "../../common/cluster/cluster";
-import { ClusterStore } from "../../common/cluster-store/cluster-store";
+import { ClusterStore } from "../../common/cluster/store";
 import { iter } from "../utils";
 import type { Disposer } from "../utils";
 import { once } from "lodash";

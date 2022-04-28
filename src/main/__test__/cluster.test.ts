@@ -38,22 +38,26 @@ import mockFs from "mock-fs";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { ClusterModel } from "../../common/cluster-types";
+import type { ClusterModel } from "../../common/cluster/types";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import type { ContextHandler } from "../context-handler/context-handler";
+import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kubeconfig-manager.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("create clusters", () => {
+  let di: DiContainer;
   let cluster: Cluster;
   let createCluster: (model: ClusterModel) => Cluster;
 
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs({
       "minikube-config.yml": JSON.stringify({
@@ -83,9 +87,11 @@ describe("create clusters", () => {
 
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
-    di.override(createContextHandlerInjectable, () => () => {
-      throw new Error("you should never come here");
-    });
+    di.override(createContextHandlerInjectable, () => () => ({
+      ensureServer: jest.fn(),
+      stopServer: jest.fn(),
+    }) as unknown as ContextHandler);
+    di.override(createKubeconfigManagerInjectable, () => () => undefined);
 
     createCluster = di.inject(createClusterInjectionToken);
 
@@ -120,11 +126,6 @@ describe("create clusters", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
     });
-
-    cluster.contextHandler = {
-      ensureServer: jest.fn(),
-      stopServer: jest.fn(),
-    } as any;
 
     jest.spyOn(cluster, "reconnect");
     jest.spyOn(cluster, "refreshConnectionStatus");

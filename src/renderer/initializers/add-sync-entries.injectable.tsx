@@ -2,13 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getAllEntries } from "../components/+preferences/kubeconfig-syncs";
 import { Notifications } from "../components/notifications";
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import React from "react";
 import navigateToKubernetesPreferencesInjectable from "../../common/front-end-routing/routes/preferences/kubernetes/navigate-to-kubernetes-preferences.injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import getAllSyncEntriesInjectable from "../components/+preferences/kubeconfig-syncs/get-all-entries.injectable";
 
 const addSyncEntriesInjectable = getInjectable({
   id: "add-sync-entries",
@@ -16,12 +15,10 @@ const addSyncEntriesInjectable = getInjectable({
   instantiate: (di) => {
     const userStore = di.inject(userStoreInjectable);
     const navigateToKubernetesPreferences = di.inject(navigateToKubernetesPreferencesInjectable);
-    const logger = di.inject(loggerInjectable);
+    const getAllSyncEntries = di.inject(getAllSyncEntriesInjectable);
 
     return async (filePaths: string[]) => {
-      userStore.syncKubeconfigEntries.merge(
-        await getAllEntries(filePaths, logger),
-      );
+      userStore.syncKubeconfigEntries.merge(await getAllSyncEntries(filePaths));
 
       Notifications.ok(
         <div>

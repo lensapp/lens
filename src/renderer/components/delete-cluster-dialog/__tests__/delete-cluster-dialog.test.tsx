@@ -8,11 +8,9 @@ import { fireEvent } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
-
 import type { Cluster } from "../../../../common/cluster/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
-
-import type { ClusterModel } from "../../../../common/cluster-types";
+import type { ClusterModel } from "../../../../common/cluster/types";
 import { getDisForUnitTesting } from "../../../../test-utils/get-dis-for-unit-testing";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";

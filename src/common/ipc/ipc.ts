@@ -58,7 +58,7 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
 
     // Send message to views.
     try {
-      logger.silly(`[IPC]: broadcasting "${channel}" to ${viewType}=${view.id}`, { args });
+      logger.debug(`[IPC]: broadcasting "${channel}" to ${viewType}=${view.id}`, { args });
       view.send(channel, ...args);
     } catch (error) {
       logger.error(`[IPC]: failed to send IPC message "${channel}" to view "${viewType}=${view.id}"`, { error });
@@ -66,7 +66,7 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
 
     // Send message to subFrames of views.
     for (const frameInfo of subFrames) {
-      logger.silly(`[IPC]: broadcasting "${channel}" to subframe "frameInfo.processId"=${frameInfo.processId} "frameInfo.frameId"=${frameInfo.frameId}`, { args });
+      logger.debug(`[IPC]: broadcasting "${channel}" to subframe "frameInfo.processId"=${frameInfo.processId} "frameInfo.frameId"=${frameInfo.frameId}`, { args });
 
       try {
         view.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);

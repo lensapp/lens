@@ -8,7 +8,6 @@ import { memoize, noop } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
-import loggerInjectable from "../common/logger.injectable";
 import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import observableHistoryInjectable from "./navigation/observable-history.injectable";
 import { searchParamsOptions } from "./navigation";
@@ -20,8 +19,8 @@ import extensionsStoreInjectable from "../extensions/extensions-store/extensions
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../common/cluster-store/cluster-store";
+import clusterStoreInjectable from "../common/cluster/store.injectable";
+import type { ClusterStore } from "../common/cluster/store";
 import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
@@ -33,6 +32,7 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import loggerInjectable from "./logger/logger.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -89,7 +89,7 @@ export const getDiForUnitTesting = (
     di.override(loggerInjectable, () => ({
       warn: noop,
       debug: noop,
-      error: (message: string, ...args: any) => console.error(message, ...args),
+      error: noop,
       info: noop,
     }));
   }

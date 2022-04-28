@@ -17,7 +17,7 @@ import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getMetricsForPvc, type IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { ClusterMetricsResourceType } from "../../../common/cluster/types";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";

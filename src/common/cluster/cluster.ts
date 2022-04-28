@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ipcMain } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage } from "../ipc";
 import type { ContextHandler } from "../../main/context-handler/context-handler";
@@ -15,21 +14,23 @@ import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "
 import type { KubeApiResource, KubeResource } from "../rbac";
 import { apiResourceRecord, apiResources } from "../rbac";
 import logger from "../../main/logger";
-import { VersionDetector } from "../../main/cluster-detectors/version-detector";
-import { DetectorRegistry } from "../../main/cluster-detectors/detector-registry";
+import { VersionDetector } from "../../main/cluster/detectors/version-detector";
+import { DetectorRegistry } from "../../main/cluster/detectors/detector-registry";
 import plimit from "p-limit";
-import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "../cluster-types";
-import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../cluster-types";
+import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "./types";
+import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "./types";
 import { disposer, toJS } from "../utils";
 import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
 import type { CanI } from "./authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
+import type { CreateKubeConfigManager } from "../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
+import type { CreateContextHandler } from "../../main/context-handler/create-context-handler.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
-  createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  createContextHandler: (cluster: Cluster) => ContextHandler;
+  createKubeconfigManager: CreateKubeConfigManager;
+  createContextHandler: CreateContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
@@ -49,9 +50,9 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @internal
    */
-  public contextHandler: ContextHandler;
-  protected proxyKubeconfigManager: KubeconfigManager;
-  protected eventsDisposer = disposer();
+  public readonly contextHandler: ContextHandler | undefined;
+  protected readonly proxyKubeconfigManager: KubeconfigManager | undefined;
+  protected readonly eventsDisposer = disposer();
   protected activated = false;
   private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
@@ -233,17 +234,15 @@ export class Cluster implements ClusterModel, ClusterState {
 
     this.apiUrl = config.getCluster(config.getContextObject(this.contextName).cluster).server;
 
-    if (ipcMain) {
-      // for the time being, until renderer gets its own cluster type
-      this.contextHandler = this.dependencies.createContextHandler(this);
-      this.proxyKubeconfigManager = this.dependencies.createKubeconfigManager(this);
+    // for the time being, until renderer gets its own cluster type
+    this.contextHandler = this.dependencies.createContextHandler(this);
+    this.proxyKubeconfigManager = this.dependencies.createKubeconfigManager(this);
 
-      logger.debug(`[CLUSTER]: Cluster init success`, {
-        id: this.id,
-        context: this.contextName,
-        apiUrl: this.apiUrl,
-      });
-    }
+    logger.debug(`[CLUSTER]: Cluster init success`, {
+      id: this.id,
+      context: this.contextName,
+      apiUrl: this.apiUrl,
+    });
   }
 
   /**
@@ -571,7 +570,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @param state cluster state
    */
   pushState(state = this.getState()) {
-    logger.silly(`[CLUSTER]: push-state`, state);
     broadcastMessage("cluster:state", this.id, state);
   }
 

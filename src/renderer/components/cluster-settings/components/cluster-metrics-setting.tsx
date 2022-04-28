@@ -12,7 +12,7 @@ import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import { observable, reaction, makeObservable } from "mobx";
-import { ClusterMetricsResourceType } from "../../../../common/cluster-types";
+import { ClusterMetricsResourceType } from "../../../../common/cluster/types";
 
 export interface ClusterMetricsSettingProps {
   cluster: Cluster;

@@ -6,6 +6,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Disposer } from "../utils";
 
+export type AddWindowEventListener = typeof addWindowEventListener;
+
 function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): Disposer {
   window.addEventListener(type, listener, options);
 

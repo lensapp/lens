@@ -18,7 +18,7 @@ import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { computeRuleDeclarations, getMetricsForIngress, type IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { ClusterMetricsResourceType } from "../../../common/cluster/types";
 import logger from "../../../common/logger";
 
 export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {

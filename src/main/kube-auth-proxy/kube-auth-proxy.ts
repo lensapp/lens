@@ -3,21 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ChildProcess, spawn } from "child_process";
+import type { ChildProcess } from "child_process";
 import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
 import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
 import { makeObservable, observable, when } from "mobx";
+import type { Spawn } from "../child-process/spawn.injectable";
+import type { GetKubeAuthProxyCertificate } from "./get-proxy-cert.injectable";
 import type { SelfSignedCert } from "selfsigned";
+import { URL } from "url";
 
 const startingServeRegex = /starting to serve on (?<address>.+)/i;
 
 export interface KubeAuthProxyDependencies {
-  proxyBinPath: string;
-  proxyCert: SelfSignedCert;
-  spawn: typeof spawn;
+  readonly proxyBinPath: string;
+  spawn: Spawn;
+  getKubeAuthProxyCertificate: GetKubeAuthProxyCertificate;
 }
 
 export class KubeAuthProxy {
@@ -30,9 +33,12 @@ export class KubeAuthProxy {
   protected _port: number;
   protected proxyProcess?: ChildProcess;
   @observable protected ready = false;
+  private readonly proxyCert: SelfSignedCert;
 
-  constructor(private dependencies: KubeAuthProxyDependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
+  constructor(protected readonly dependencies: KubeAuthProxyDependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
     makeObservable(this);
+
+    this.proxyCert = this.dependencies.getKubeAuthProxyCertificate(new URL(cluster.apiUrl).hostname);
   }
 
   get whenReady() {
@@ -45,7 +51,6 @@ export class KubeAuthProxy {
     }
 
     const proxyBin = this.dependencies.proxyBinPath;
-    const cert = this.dependencies.proxyCert;
 
     this.proxyProcess = this.dependencies.spawn(proxyBin, [], {
       env: {
@@ -53,8 +58,8 @@ export class KubeAuthProxy {
         KUBECONFIG: this.cluster.kubeConfigPath,
         KUBECONFIG_CONTEXT: this.cluster.contextName,
         API_PREFIX: this.apiPrefix,
-        PROXY_KEY: cert.private,
-        PROXY_CERT: cert.cert,
+        PROXY_KEY: this.proxyCert.private,
+        PROXY_CERT: this.proxyCert.cert,
       },
     });
     this.proxyProcess.on("error", (error) => {

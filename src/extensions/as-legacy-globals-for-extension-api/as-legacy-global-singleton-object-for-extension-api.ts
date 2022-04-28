@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { Injectable } from "@ogre-tools/injectable";
+import { baseLoggerInjectionToken } from "../../common/logger/logger.token";
 import { asLegacyGlobalForExtensionApi } from "./as-legacy-global-object-for-extension-api";
 import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
-import loggerInjectable from "../../common/logger.injectable";
 
 export const asLegacyGlobalSingletonForExtensionApi = <
   Instance,
@@ -26,11 +26,9 @@ export const asLegacyGlobalSingletonForExtensionApi = <
 
     resetInstance: () => {
       const di = getLegacyGlobalDiForExtensionApi();
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(baseLoggerInjectionToken);
 
-      logger.warn(
-        `resetInstance() for a legacy global singleton of "${injectable.id}" does nothing.`,
-      );
+      logger.warn(`resetInstance() for a legacy global singleton of "${injectable.id}" does nothing.`);
     },
   };
 };

@@ -121,14 +121,14 @@ export abstract class BaseStore<T> extends Singleton {
 
     if (ipcMain) {
       this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
-        logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
+        logger.debug(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       }));
     }
 
     if (ipcRenderer) {
       this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
-        logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
+        logger.debug(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
       }));
     }

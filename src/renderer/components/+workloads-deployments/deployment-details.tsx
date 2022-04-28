@@ -24,14 +24,13 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { ClusterMetricsResourceType } from "../../../common/cluster/types";
 import type { Disposer } from "../../utils";
 import logger from "../../../common/logger";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }

@@ -7,6 +7,10 @@ import directoryForLensLocalStorageInjectable from "../../../common/directory-fo
 import { initIpcMainHandlers } from "./init-ipc-main-handlers";
 import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
 import applicationMenuItemsInjectable from "../../menu/application-menu-items.injectable";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import clusterManagerInjectable from "../../cluster/manager.injectable";
+import clusterStoreInjectable from "../../../common/cluster/store.injectable";
+import getClusterByIdInjectable from "../../../common/cluster/get-by-id.injectable";
 
 const initIpcMainHandlersInjectable = getInjectable({
   id: "init-ipc-main-handlers",
@@ -15,6 +19,10 @@ const initIpcMainHandlersInjectable = getInjectable({
     applicationMenuItems: di.inject(applicationMenuItemsInjectable),
     directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
     getAbsolutePath: di.inject(getAbsolutePathInjectable),
+    appEventBus: di.inject(appEventBusInjectable),
+    clusterManager: di.inject(clusterManagerInjectable),
+    clusterStore: di.inject(clusterStoreInjectable),
+    getClusterById: di.inject(getClusterByIdInjectable),
   }),
 });
 

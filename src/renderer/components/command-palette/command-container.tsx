@@ -9,21 +9,21 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
 import { CommandDialog } from "./command-dialog";
-import type { ClusterId } from "../../../common/cluster-types";
+import type { ClusterId } from "../../../common/cluster/types";
 import type { CommandOverlay } from "./command-overlay.injectable";
 import commandOverlayInjectable from "./command-overlay.injectable";
 import { isMac } from "../../../common/vars";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
-import type { Disposer } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { AddWindowEventListener } from "../../window/event-listener.injectable";
 import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../../common/cluster/hosted.injectable";
 import type { IComputedValue } from "mobx";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
 
 interface Dependencies {
-  addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;
+  addWindowEventListener: AddWindowEventListener;
   commandOverlay: CommandOverlay;
   clusterId?: ClusterId;
   matchedClusterId: IComputedValue<ClusterId>;

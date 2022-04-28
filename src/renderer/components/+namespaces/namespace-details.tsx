@@ -20,15 +20,14 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { ClusterMetricsResourceType } from "../../../common/cluster/types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
 
 export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }

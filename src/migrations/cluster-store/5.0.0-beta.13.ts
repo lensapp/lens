@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../../common/cluster-types";
+import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../../common/cluster/types";
 import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";

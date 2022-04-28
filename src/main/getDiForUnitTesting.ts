@@ -16,14 +16,13 @@ import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
 import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
-import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../common/cluster-store/cluster-store";
+import clusterStoreInjectable from "../common/cluster/store.injectable";
+import type { ClusterStore } from "../common/cluster/store";
 import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
@@ -35,6 +34,7 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import loggerInjectable from "./logger/logger.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -107,7 +107,7 @@ export const getDiForUnitTesting = (
     di.override(loggerInjectable, () => ({
       warn: noop,
       debug: noop,
-      error: (message: string, ...args: any) => console.error(message, ...args),
+      error: noop,
       info: noop,
     }));
   }

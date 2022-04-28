@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import windowManagerInjectable from "../window-manager.injectable";
+import windowManagerInjectable from "../window/manager.injectable";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
 
 const navigateToUrlInjectable = getInjectable({

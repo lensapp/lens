@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterFrameContext } from "./cluster-frame-context";
 import namespaceStoreInjectable from "../components/+namespaces/namespace-store/namespace-store.injectable";
-import hostedClusterInjectable from "../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../common/cluster/hosted.injectable";
 
 const clusterFrameContextInjectable = getInjectable({
   id: "cluster-frame-context",
@@ -15,7 +15,6 @@ const clusterFrameContextInjectable = getInjectable({
 
     return new ClusterFrameContext(
       cluster,
-
       {
         namespaceStore: di.inject(namespaceStoreInjectable),
       },

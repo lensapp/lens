@@ -7,11 +7,10 @@ import type { KubeAuthProxyDependencies } from "./kube-auth-proxy";
 import { KubeAuthProxy } from "./kube-auth-proxy";
 import type { Cluster } from "../../common/cluster/cluster";
 import path from "path";
-import selfsigned from "selfsigned";
 import { getBinaryName } from "../../common/vars";
 import directoryForBundledBinariesInjectable from "../../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
 import spawnInjectable from "../child-process/spawn.injectable";
-import { getKubeAuthProxyCertificate } from "./get-kube-auth-proxy-certificate";
+import getKubeAuthProxyCertificateInjectable from "./get-proxy-cert.injectable";
 
 export type CreateKubeAuthProxy = (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
 
@@ -20,17 +19,13 @@ const createKubeAuthProxyInjectable = getInjectable({
 
   instantiate: (di): CreateKubeAuthProxy => {
     const binaryName = getBinaryName("lens-k8s-proxy");
-
-    return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => {
-      const clusterUrl = new URL(cluster.apiUrl);
-      const dependencies: KubeAuthProxyDependencies = {
-        proxyBinPath: path.join(di.inject(directoryForBundledBinariesInjectable), binaryName),
-        proxyCert: getKubeAuthProxyCertificate(clusterUrl.hostname, selfsigned.generate),
-        spawn: di.inject(spawnInjectable),
-      };
-
-      return new KubeAuthProxy(dependencies, cluster, environmentVariables);
+    const dependencies: KubeAuthProxyDependencies = {
+      proxyBinPath: path.join(di.inject(directoryForBundledBinariesInjectable), binaryName),
+      getKubeAuthProxyCertificate: di.inject(getKubeAuthProxyCertificateInjectable),
+      spawn: di.inject(spawnInjectable),
     };
+
+    return (cluster, envVars) => new KubeAuthProxy(dependencies, cluster, envVars);
   },
 });
 

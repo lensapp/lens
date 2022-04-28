@@ -10,9 +10,9 @@
      cert: string;
    }
 
-   type GenerateAttributes = Array<any>;
+   export type GenerateAttributes = Array<any>;
 
-   interface GenerateOptions {
+   export interface GenerateOptions {
      keySize?: number;
      days?: number;
      algorithm?: "sha1" | "sha256";
@@ -22,5 +22,5 @@
      clientCertificateCN?: string;
    }
 
-   export function generate(GenerateAttributes, GenerateOptions): SelfSignedCert;
+   export function generate(attrs: GenerateAttributes, opts: GenerateOptions): SelfSignedCert;
  }

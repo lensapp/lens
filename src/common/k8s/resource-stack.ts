@@ -9,7 +9,7 @@ import { ResourceApplier } from "../../main/resource-applier";
 import type { KubernetesCluster } from "../catalog-entities";
 import logger from "../../main/logger";
 import { app } from "electron";
-import { ClusterStore } from "../cluster-store/cluster-store";
+import { ClusterStore } from "../cluster/store";
 import yaml from "js-yaml";
 import { productName } from "../vars";
 import { requestKubectlApplyAll, requestKubectlDeleteAll } from "../../renderer/ipc";

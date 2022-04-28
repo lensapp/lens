@@ -8,30 +8,24 @@ import { createStorage } from "./create-storage";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { observable } from "mobx";
-import loggerInjectable from "../../../common/logger.injectable";
 import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
+import createStorageLoggerInjectable from "./logger.injectable";
 
 const createStorageInjectable = getInjectable({
   id: "create-storage",
 
-  instantiate: (di) =>
-    createStorage({
-      storage: observable({
-        initialized: false,
-        loaded: false,
-        data: {} as Record<string /*key*/, any>, // json-serializable
-      }),
-
-      readJsonFile: di.inject(readJsonFileInjectable),
-      writeJsonFile: di.inject(writeJsonFileInjectable),
-      logger: di.inject(loggerInjectable),
-
-      directoryForLensLocalStorage: di.inject(
-        directoryForLensLocalStorageInjectable,
-      ),
-
-      getAbsolutePath: di.inject(getAbsolutePathInjectable),
+  instantiate: (di) => createStorage({
+    storage: observable({
+      initialized: false,
+      loaded: false,
+      data: {} as Record<string /*key*/, any>, // json-serializable
     }),
+    readJsonFile: di.inject(readJsonFileInjectable),
+    writeJsonFile: di.inject(writeJsonFileInjectable),
+    logger: di.inject(createStorageLoggerInjectable),
+    directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
+    getAbsolutePath: di.inject(getAbsolutePathInjectable),
+  }),
 });
 
 export default createStorageInjectable;

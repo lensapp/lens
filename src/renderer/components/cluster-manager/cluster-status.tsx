@@ -15,7 +15,7 @@ import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import type { KubeAuthUpdate } from "../../../common/cluster-types";
+import type { KubeAuthUpdate } from "../../../common/cluster/types";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { requestClusterActivation } from "../../ipc";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";

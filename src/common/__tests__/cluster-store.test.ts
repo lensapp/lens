@@ -8,12 +8,12 @@ import mockFs from "mock-fs";
 import path from "path";
 import fse from "fs-extra";
 import type { Cluster } from "../cluster/cluster";
-import { ClusterStore } from "../cluster-store/cluster-store";
+import { ClusterStore } from "../cluster/store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
-import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
-import type { ClusterModel } from "../cluster-types";
+import clusterStoreInjectable from "../cluster/store.injectable";
+import type { ClusterModel } from "../cluster/types";
 import type {
   DiContainer,
 } from "@ogre-tools/injectable";

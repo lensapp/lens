@@ -26,9 +26,14 @@ interface Dependencies {
 /**
  * Creates a helper for saving data under the "key" intended for window.localStorage
  */
-export const createStorage = ({ storage, getAbsolutePath, logger, directoryForLensLocalStorage, readJsonFile, writeJsonFile }: Dependencies) => <T>(key: string, defaultValue: T) => {
-  const { logPrefix } = StorageHelper;
-
+export const createStorage = ({
+  storage,
+  getAbsolutePath,
+  logger,
+  directoryForLensLocalStorage,
+  readJsonFile,
+  writeJsonFile,
+}: Dependencies) => <T>(key: string, defaultValue: T) => {
   if (!storage.initialized) {
     storage.initialized = true;
 
@@ -44,7 +49,7 @@ export const createStorage = ({ storage, getAbsolutePath, logger, directoryForLe
 
       finally {
         if (!isTestEnv) {
-          logger.info(`${logPrefix} loading finished for ${filePath}`);
+          logger.info(`loading finished for ${filePath}`);
         }
 
         storage.loaded = true;
@@ -57,18 +62,18 @@ export const createStorage = ({ storage, getAbsolutePath, logger, directoryForLe
       });
 
       async function saveFile(state: Record<string, any> = {}) {
-        logger.info(`${logPrefix} saving ${filePath}`);
+        logger.info(`saving ${filePath}`);
 
         try {
           await writeJsonFile(filePath, state);
         } catch (error) {
-          logger.error(`${logPrefix} saving failed: ${error}`, {
+          logger.error(`saving failed: ${error}`, {
             json: state, jsonFilePath: filePath,
           });
         }
       }
     })()
-      .catch(error => logger.error(`${logPrefix} Failed to initialize storage: ${error}`));
+      .catch(error => logger.error(`Failed to initialize storage: ${error}`));
   }
 
   return new StorageHelper<T>(key, {

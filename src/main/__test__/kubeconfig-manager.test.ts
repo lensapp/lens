@@ -31,7 +31,7 @@ jest.mock("winston", () => ({
 }));
 
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
+import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import mockFs from "mock-fs";
 import type { Cluster } from "../../common/cluster/cluster";
 import fse from "fs-extra";
@@ -43,13 +43,15 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import type { ContextHandler } from "../context-handler/context-handler";
+import lensProxyPortInjectable from "../lens-proxy/port.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  let di: DiContainer; 
+  let di: DiContainer;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -82,10 +84,11 @@ describe("kubeconfig manager tests", () => {
 
     await di.runSetups();
 
-    di.override(createContextHandlerInjectable, () => () => {
-      throw new Error("you should never come here");
-    });
-
+    di.override(createContextHandlerInjectable, () => () => ({
+      ensureServer: async () => {},
+      stopServer: jest.fn(),
+    }) as unknown as ContextHandler);
+    di.inject(lensProxyPortInjectable).set(9191);
     const createCluster = di.inject(createClusterInjectionToken);
 
     createKubeconfigManager = di.inject(createKubeconfigManagerInjectable);
@@ -95,12 +98,6 @@ describe("kubeconfig manager tests", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
     });
-
-    clusterFake.contextHandler = {
-      ensureServer: () => Promise.resolve(),
-    } as any;
-
-    jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
   afterEach(() => {

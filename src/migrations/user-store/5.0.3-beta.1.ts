@@ -6,7 +6,7 @@
 import { existsSync, readFileSync } from "fs";
 import path from "path";
 import os from "os";
-import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store";
+import type { ClusterStoreModel } from "../../common/cluster/store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";

@@ -30,7 +30,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
+import clusterStoreInjectable from "../common/cluster/store.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
