@@ -8,6 +8,8 @@ import type { DOMAttributes } from "react";
 import React from "react";
 import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
 
 const TabsContext = React.createContext<TabsContextValue>({});
 
@@ -59,12 +61,12 @@ export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
   value?: D;
 }
 
-export class Tab extends React.PureComponent<TabProps> {
+class NonInjectedTab extends React.PureComponent<TabProps & Dependencies> {
   static contextType = TabsContext;
   declare context: TabsContextValue;
   public ref = React.createRef<HTMLDivElement>();
 
-  constructor(props: TabProps) {
+  constructor(props: TabProps & Dependencies) {
     super(props);
     autoBind(this);
   }
@@ -91,6 +93,9 @@ export class Tab extends React.PureComponent<TabProps> {
       return;
     }
 
+    if (value?.kind) {
+      this.props.capture(`${value?.kind} `, "Tab Click");
+    }
     onClick?.(evt);
     this.context.onChange?.(value);
   }
@@ -142,3 +147,18 @@ export class Tab extends React.PureComponent<TabProps> {
     );
   }
 }
+
+interface Dependencies {
+  capture: (id: string, action: string) => void;
+}
+
+export const Tab = withInjectables<Dependencies, TabProps>(
+  NonInjectedTab,
+
+  {
+    getProps: (di, props) => ({
+      capture: di.inject(trackWithIdInjectable),
+      ...props,
+    }),
+  },
+);

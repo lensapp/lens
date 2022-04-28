@@ -11,17 +11,23 @@ import { cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "../error-boundary";
 import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
 
+interface Dependencies {
+  captureClick: (id: string, action: string) => void;
+}
 export interface TabLayoutProps {
   tabs?: HierarchicalSidebarItem[];
   children?: React.ReactNode;
 }
 
-export const TabLayout = observer(
+const NonInjectedTabLayout = observer(
   ({
     tabs = [],
     children,
-  }: TabLayoutProps) => {
+    captureClick,
+  }: TabLayoutProps & Dependencies) => {
     const hasTabs = tabs.length > 0;
 
     return (
@@ -37,7 +43,10 @@ export const TabLayout = observer(
 
               return (
                 <Tab
-                  onClick={registration.onClick}
+                  onClick={() => {
+                    captureClick(registration.title.toString(), "Tab Click");
+                    registration.onClick();
+                  }}
                   key={registration.id}
                   label={registration.title}
                   active={active}
@@ -56,5 +65,16 @@ export const TabLayout = observer(
         </main>
       </div>
     );
+  },
+);
+
+export const TabLayout = withInjectables<Dependencies, TabLayoutProps>(
+  NonInjectedTabLayout,
+
+  {
+    getProps: (di, props) => ({
+      captureClick: di.inject(trackWithIdInjectable),
+      ...props,
+    }),
   },
 );

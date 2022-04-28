@@ -13,6 +13,8 @@ import { Animate } from "../animate";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import isEqual from "lodash/isEqual";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
 
 export const MenuContext = React.createContext<MenuContextValue | null>(null);
 export type MenuContextValue = Menu;
@@ -71,7 +73,7 @@ export class Menu extends React.Component<MenuProps, State> {
   }
   public opener: HTMLElement | null = null;
   public elem: HTMLUListElement | null = null;
-  protected items: { [index: number]: MenuItem } = {};
+  protected items: { [index: number]: NonInjectedMenuItem } = {};
   public state: State = {};
 
   get isOpen() {
@@ -308,7 +310,7 @@ export class Menu extends React.Component<MenuProps, State> {
     this.elem = elem;
   }
 
-  protected bindItemRef(item: MenuItem, index: number) {
+  protected bindItemRef(item: NonInjectedMenuItem, index: number) {
     this.items[index] = item;
   }
 
@@ -328,7 +330,7 @@ export class Menu extends React.Component<MenuProps, State> {
     const menuItems = React.Children.toArray(children).map((item, index) => {
       if (typeof item === "object" && (item as ReactElement).type === MenuItem) {
         return React.cloneElement(item as ReactElement, {
-          ref: (item: MenuItem) => this.bindItemRef(item, index),
+          ref: (item: NonInjectedMenuItem) => this.bindItemRef(item, index),
         });
       }
 
@@ -389,6 +391,9 @@ export function SubMenu(props: Partial<MenuProps>) {
   );
 }
 
+interface Dependencies {
+  captureClick: (id: string, action: string) => void;
+}
 export interface MenuItemProps extends React.HTMLProps<any> {
   icon?: string | Partial<IconProps>;
   disabled?: boolean;
@@ -401,14 +406,14 @@ const defaultPropsMenuItem: Partial<MenuItemProps> = {
   onClick: noop,
 };
 
-export class MenuItem extends React.Component<MenuItemProps> {
+class NonInjectedMenuItem extends React.Component<MenuItemProps & Dependencies> {
   static defaultProps = defaultPropsMenuItem as object;
   static contextType = MenuContext;
 
   declare context: MenuContextValue;
   public elem: HTMLElement | null = null;
 
-  constructor(props: MenuItemProps) {
+  constructor(props: MenuItemProps & Dependencies) {
     super(props);
     autoBind(this);
   }
@@ -431,6 +436,14 @@ export class MenuItem extends React.Component<MenuItemProps> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     onClick!(evt);
 
+    const name = this.elem.querySelectorAll(".title")[0]?.textContent;
+
+    if (name) {
+      const id = `${window.location.pathname.split("/").pop()} ${name}`;
+
+      this.props.captureClick(id, "Menu Item Click");
+    }
+
     if (menu.props.closeOnClickItem && !evt.defaultPrevented) {
       menu.close();
     }
@@ -441,7 +454,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
   }
 
   render() {
-    const { className, disabled, active, spacer, icon, children, ...props } = this.props;
+    const { className, disabled, active, spacer, icon, children, captureClick, ...props } = this.props;
     const iconProps: Partial<IconProps> = {};
 
     if (icon) {
@@ -474,3 +487,14 @@ export class MenuItem extends React.Component<MenuItemProps> {
     return <li {...elemProps}/>;
   }
 }
+
+export const MenuItem = withInjectables<Dependencies, MenuItemProps>(
+  NonInjectedMenuItem,
+
+  {
+    getProps: (di, props) => ({
+      captureClick: di.inject(trackWithIdInjectable),
+      ...props,
+    }),
+  },
+);

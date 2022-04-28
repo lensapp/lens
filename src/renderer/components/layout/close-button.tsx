@@ -8,13 +8,26 @@ import styles from "./close-button.module.scss";
 import type { HTMLAttributes } from "react";
 import React from "react";
 import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import trackWithIdInjectable from "../../telemetry/track-with-id.injectable";
 
 export interface CloseButtonProps extends HTMLAttributes<HTMLDivElement> {
 }
 
-export function CloseButton(props: CloseButtonProps) {
+interface Dependencies {
+  capture: (id: string, action: string) => void;
+}
+
+function NonInjectedCloseButton(props: CloseButtonProps & Dependencies) {
+  const { capture, ...rest } = props;
+
   return (
-    <div {...props}>
+    <div
+      {...rest}
+      onClick={(e) => {
+        capture(`${window.location.pathname}`, "Close Button Click");
+        props?.onClick(e);
+      }}>
       <div
         className={styles.closeButton}
         role="button"
@@ -28,3 +41,14 @@ export function CloseButton(props: CloseButtonProps) {
     </div>
   );
 }
+
+export const CloseButton = withInjectables<Dependencies, CloseButtonProps>(
+  NonInjectedCloseButton,
+
+  {
+    getProps: (di, props) => ({
+      capture: di.inject(trackWithIdInjectable),
+      ...props,
+    }),
+  },
+);

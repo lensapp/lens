@@ -17,6 +17,7 @@ import type { ThemeStore } from "../../themes/store";
 import { autoBind, cssNames } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
+import trackWithIdInjectable from "../../telemetry/track-with-id.injectable";
 
 const { Menu } = components;
 
@@ -81,6 +82,7 @@ const defaultFilter = createFilter({
 
 interface Dependencies {
   themeStore: ThemeStore;
+  capture: (id: string, action: string) => void;
 }
 
 export function onMultiSelectFor<Value, Option extends SelectOption<Value>, Group extends GroupBase<Option> = GroupBase<Option>>(collection: Set<Value> | ObservableSet<Value>): SelectProps<Value, Option, true, Group>["onChange"] {
@@ -228,7 +230,13 @@ class NonInjectedSelect<
         onKeyDown={this.onKeyDown}
         className={cssNames("Select", this.themeClass, className)}
         classNamePrefix="Select"
-        onChange={action(onChange)} // This is done so that all changes are actionable
+        onChange={action(() => {
+          if (inputId) {
+            props.capture(inputId, "Select Change");
+          }
+
+          onChange();
+        })} // This is done so that all changes are actionable
         components={{
           ...components,
           Menu: ({ className, ...props }) => (
@@ -249,6 +257,7 @@ export const Select = withInjectables<Dependencies, SelectProps<unknown, SelectO
   getProps: (di, props) => ({
     ...props,
     themeStore: di.inject(themeStoreInjectable),
+    capture: di.inject(trackWithIdInjectable),
   }),
 }) as <
   Value,

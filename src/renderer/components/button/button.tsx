@@ -8,6 +8,11 @@ import type { ButtonHTMLAttributes } from "react";
 import React from "react";
 import { cssNames } from "../../utils";
 import { withTooltip } from "../tooltip";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import trackEventInjectable from "../../telemetry/track-event.injectable";
+interface Dependencies {
+  track: (e: React.MouseEvent) => void;
+}
 
 export interface ButtonProps extends ButtonHTMLAttributes<any> {
   label?: React.ReactNode;
@@ -25,10 +30,10 @@ export interface ButtonProps extends ButtonHTMLAttributes<any> {
   target?: "_blank"; // in case of using @href
 }
 
-export const Button = withTooltip((props: ButtonProps) => {
+const NonInjectedButton = withTooltip((props: ButtonProps & Dependencies) => {
   const {
     waiting, label, primary, accent, plain, hidden, active, big,
-    round, outlined, light, children, ...btnProps
+    round, outlined, light, children, track, ...btnProps
   } = props;
 
   if (hidden) return null;
@@ -37,10 +42,18 @@ export const Button = withTooltip((props: ButtonProps) => {
     waiting, primary, accent, plain, active, big, round, outlined, light,
   });
 
+  const onClick = (e: React.MouseEvent) => {
+    track(e);
+
+    if (btnProps.onClick) {
+      btnProps.onClick(e);
+    }
+  };
+
   // render as link
   if (props.href) {
     return (
-      <a {...btnProps}>
+      <a {...btnProps} onClick={onClick}>
         {label}
         {children}
       </a>
@@ -49,9 +62,24 @@ export const Button = withTooltip((props: ButtonProps) => {
 
   // render as button
   return (
-    <button type="button" {...btnProps}>
+    <button
+      type="button"
+      {...btnProps}
+      onClick={onClick}>
       {label}
       {children}
     </button>
   );
 });
+
+
+export const Button = withInjectables<Dependencies, ButtonProps>(
+  NonInjectedButton,
+
+  {
+    getProps: (di, props) => ({
+      track: di.inject(trackEventInjectable),
+      ...props,
+    }),
+  },
+);

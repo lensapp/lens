@@ -7,6 +7,8 @@ import "./checkbox.scss";
 import React from "react";
 import type { SingleOrMany } from "../../utils";
 import { cssNames, noop } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import trackWithIdInjectable from "../../telemetry/track-with-id.injectable";
 
 export interface CheckboxProps {
   className?: string;
@@ -18,7 +20,11 @@ export interface CheckboxProps {
   children?: SingleOrMany<React.ReactChild | React.ReactFragment>;
 }
 
-export function Checkbox({ label, inline, className, value, children, onChange = noop, disabled, ...inputProps }: CheckboxProps) {
+interface Dependencies {
+  captureClick: (id: string, action: string) => void;
+}
+
+function NonInjectedCheckbox({ label, inline, className, value, children, onChange = noop, disabled, captureClick, ...inputProps }: CheckboxProps & Dependencies) {
   const componentClass = cssNames("Checkbox flex align-center", className, {
     inline,
     checked: value,
@@ -32,7 +38,13 @@ export function Checkbox({ label, inline, className, value, children, onChange =
         type="checkbox"
         checked={value}
         disabled={disabled}
-        onChange={event => onChange(event.target.checked, event)}
+        onChange={event => {
+          if (label) {
+            captureClick(`${window.location.pathname} ${label.toString()}`, `Checkbox ${event.target.checked ? "On" : "Off"}`);
+          }
+
+          onChange(event.target.checked, event);
+        }}
       />
       <i className="box flex align-center"/>
       {label ? <span className="label">{label}</span> : null}
@@ -40,3 +52,14 @@ export function Checkbox({ label, inline, className, value, children, onChange =
     </label>
   );
 }
+
+export const Checkbox = withInjectables<Dependencies, CheckboxProps>(
+  NonInjectedCheckbox,
+
+  {
+    getProps: (di, props) => ({
+      captureClick: di.inject(trackWithIdInjectable),
+      ...props,
+    }),
+  },
+);
