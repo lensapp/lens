@@ -5,7 +5,8 @@
 
 import glob from "glob";
 import { kebabCase, memoize, noop } from "lodash/fp";
-import { createContainer, DiContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
 import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
@@ -55,7 +56,7 @@ import trayInjectable from "./tray/tray.injectable";
 import applicationMenuInjectable from "./menu/application-menu.injectable";
 import windowManagerInjectable from "./window-manager.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
-import setupSystemCaInjectable from "./start-main-application/before-application-is-ready/implementations/setup-system-ca.injectable";
+import setupSystemCaInjectable from "./start-main-application/after-application-is-ready/implementations/setup-system-ca.injectable";
 import setupDeepLinkingInjectable from "./electron-app/after-application-is-ready/setup-deep-linking.injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
 import getCommandLineSwitchInjectable from "./electron-app/features/get-command-line-switch.injectable";

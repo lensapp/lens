@@ -4,7 +4,7 @@
  */
 import { injectSystemCAs } from "../../../../common/system-ca";
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeApplicationIsReadyInjectionToken } from "../before-application-is-ready-injection-token";
+import { afterApplicationIsReadyInjectionToken } from "../after-application-is-ready-injection-token";
 
 const setupSystemCaInjectable = getInjectable({
   id: "setup-system-ca",
@@ -17,7 +17,7 @@ const setupSystemCaInjectable = getInjectable({
 
   causesSideEffects: true,
 
-  injectionToken: beforeApplicationIsReadyInjectionToken,
+  injectionToken: afterApplicationIsReadyInjectionToken,
 });
 
 export default setupSystemCaInjectable;
