@@ -69,7 +69,8 @@ export async function getOrInsertWithAsync<K, V>(map: Map<K, V>, key: K, asyncBu
     map.set(key, await asyncBuilder());
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
 }
 
 /**
