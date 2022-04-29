@@ -74,6 +74,14 @@ export function isString(val: unknown): val is string {
 }
 
 /**
+ * checks if val is of type boolean
+ * @param val the value to be checked
+ */
+export function isBoolean(val: unknown): val is boolean {
+  return typeof val === "boolean";
+}
+
+/**
  * checks if val is of type object and isn't null
  * @param val the value to be checked
  */

@@ -11,7 +11,7 @@ import React from "react";
 import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { IClassName } from "../../utils";
-import { cssNames } from "../../utils";
+import { isBoolean, hasTypedProperty, isObject, isString, cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
@@ -55,8 +55,16 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      ipcRendererOn(`cluster:${this.cluster.id}:connection-update`, (evt, res: KubeAuthUpdate) => {
-        this.authOutput.push(res);
+      ipcRendererOn(`cluster:${this.cluster.id}:connection-update`, (evt, res: unknown) => {
+        if (
+          isObject(res)
+          && hasTypedProperty(res, "message", isString)
+          && hasTypedProperty(res, "isError", isBoolean)
+        ) {
+          this.authOutput.push(res);
+        } else {
+          console.warn(`Got invalid connection update for ${this.cluster.id}`, { update: res });
+        }
       }),
     ]);
   }
