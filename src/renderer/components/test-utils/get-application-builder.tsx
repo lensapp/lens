@@ -118,8 +118,9 @@ export const getApplicationBuilder = () => {
 
   let environment = environments.application;
 
-  rendererDi.override( currentlyInClusterFrameInjectable, () => environment === environments.clusterFrame);
+  rendererDi.override(currentlyInClusterFrameInjectable, () => environment === environments.clusterFrame);
   rendererDi.override(rendererExtensionsInjectable, () => computed(() => extensionsState));
+  rendererDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
   mainDi.override(mainExtensionsInjectable, () => computed((): LensMainExtension[] => []));
   mainDi.override(exitAppInjectable, () => exit);
 
@@ -202,11 +203,6 @@ export const getApplicationBuilder = () => {
 
       rendererDi.override(allowedResourcesInjectable, () =>
         computed(() => new Set([...allowedResourcesState])),
-      );
-
-      rendererDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/irrelevant",
       );
 
       return builder;

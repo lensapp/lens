@@ -10,8 +10,8 @@ import pathExistsInjectable from "../common/fs/path-exists.injectable";
 import { createFsFromVolume, Volume } from "memfs";
 import statInjectable from "../common/fs/stat.injectable";
 
-export const overrideFsWithFakes = (di: DiContainer) => {
-  const inMemoryFs = createFsFromVolume(Volume.fromJSON({}));
+export function overrideFsWithFakes(di: DiContainer, memFsVolume = Volume.fromJSON({})) {
+  const inMemoryFs = createFsFromVolume(memFsVolume);
 
   di.override(readFileInjectable, () => (
     (filePath) => Promise.resolve(inMemoryFs.readFileSync(filePath, { encoding: "utf-8" }))
@@ -28,4 +28,4 @@ export const overrideFsWithFakes = (di: DiContainer) => {
   di.override(statInjectable, () => (
     (filePath) => Promise.resolve(inMemoryFs.statSync(filePath))
   ));
-};
+}

@@ -12,9 +12,6 @@ import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
 import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
-import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
-import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
-import readFileInjectable from "../common/fs/read-file.injectable";
 import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
@@ -35,10 +32,19 @@ import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import loggerInjectable from "./logger/logger.injectable";
+import type { Volume } from "memfs/lib/volume";
+import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 
-export const getDiForUnitTesting = (
-  { doGeneralOverrides } = { doGeneralOverrides: false },
-) => {
+export interface GetDiForUnitTestingOptions {
+  doGeneralOverrides?: boolean;
+  memFsVolume?: Volume;
+}
+
+export function getDiForUnitTesting(opts?: GetDiForUnitTestingOptions) {
+  const {
+    doGeneralOverrides = false,
+    memFsVolume,
+  } = opts ?? {};
   const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
@@ -92,17 +98,7 @@ export const getDiForUnitTesting = (
       } as any;
     });
 
-    di.override(writeJsonFileInjectable, () => () => {
-      throw new Error("Tried to write JSON file to file system without specifying explicit override.");
-    });
-
-    di.override(readJsonFileInjectable, () => () => {
-      throw new Error("Tried to read JSON file from file system without specifying explicit override.");
-    });
-
-    di.override(readFileInjectable, () => () => {
-      throw new Error("Tried to read file from file system without specifying explicit override.");
-    });
+    overrideFsWithFakes(di, memFsVolume);
 
     di.override(loggerInjectable, () => ({
       warn: noop,
@@ -113,7 +109,7 @@ export const getDiForUnitTesting = (
   }
 
   return di;
-};
+}
 
 const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),

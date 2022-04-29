@@ -7,7 +7,6 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
-import directoryForLensLocalStorageInjectable from "../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import routesInjectable from "../../renderer/routes/routes.injectable";
 import { matches } from "lodash/fp";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -30,13 +29,6 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
     rendererDi = applicationBuilder.dis.rendererDi;
 
     applicationBuilder.setEnvironmentToClusterFrame();
-
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
-      rendererDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/some-directory-for-lens-local-storage",
-      );
-    });
   });
 
   describe("given extension with cluster pages and cluster page menus", () => {

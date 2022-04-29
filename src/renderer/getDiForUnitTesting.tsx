@@ -33,10 +33,18 @@ import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import loggerInjectable from "./logger/logger.injectable";
+import type { Volume } from "memfs/lib/volume";
 
-export const getDiForUnitTesting = (
-  { doGeneralOverrides } = { doGeneralOverrides: false },
-) => {
+export interface GetDiForUnitTestingOptions {
+  doGeneralOverrides?: boolean;
+  memFsVolume?: Volume;
+}
+
+export function getDiForUnitTesting(opts?: GetDiForUnitTestingOptions) {
+  const {
+    doGeneralOverrides = false,
+    memFsVolume,
+  } = opts ?? {};
   const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
@@ -74,7 +82,7 @@ export const getDiForUnitTesting = (
     di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
     di.override(registerIpcChannelListenerInjectable, () => () => undefined);
 
-    overrideFsWithFakes(di);
+    overrideFsWithFakes(di, memFsVolume);
 
     di.override(observableHistoryInjectable, () => {
       const historyFake = createMemoryHistory();
@@ -84,7 +92,7 @@ export const getDiForUnitTesting = (
       });
     });
 
-    di.override(focusWindowInjectable, () => () => {});
+    di.override(focusWindowInjectable, () => () => { });
 
     di.override(loggerInjectable, () => ({
       warn: noop,
@@ -95,7 +103,7 @@ export const getDiForUnitTesting = (
   }
 
   return di;
-};
+}
 
 const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
