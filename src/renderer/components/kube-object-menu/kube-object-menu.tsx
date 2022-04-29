@@ -134,17 +134,23 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
   private renderContextMenuItems = (object: KubeObject) => (
     [...this.menuItems]
       .reverse() // This is done because the order that we "grow" is right->left
+      .map(({ icon, ...rest }) => ({
+        ...rest,
+        icon: typeof icon === "string"
+          ? { material: icon }
+          : icon,
+      }))
       .map((item, index) => (
         <MenuItem
           key={`context-menu-item-${index}`}
           onClick={() => item.onClick(object)}
           data-testid={`menu-action-${item.title.toLowerCase().replace(/\s+/, "-")}`}
         >
-          {
-            typeof item.icon === "string"
-              ? <Icon material={item.icon} interactive={this.props.toolbar} tooltip={item.title} />
-              : <Icon {...item.icon} interactive={this.props.toolbar} tooltip={item.title} />
-          }
+          <Icon
+            {...item.icon}
+            interactive={this.props.toolbar}
+            tooltip={item.title}
+          />
           <span className="title">
             {item.title}
           </span>
