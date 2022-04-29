@@ -3,29 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { afterApplicationIsReadyInjectionToken } from "../../start-main-application/after-application-is-ready/after-application-is-ready-injection-token";
-import exitAppInjectable from "../features/exit-app.injectable";
+import { beforeApplicationIsReadyInjectionToken } from "../../start-main-application/before-application-is-ready/before-application-is-ready-injection-token";
 import requestSingleInstanceLockInjectable from "../features/request-single-instance-lock.injectable";
+import exitAppInjectable from "../features/exit-app.injectable";
 
 const enforceSingleApplicationInstanceInjectable = getInjectable({
   id: "enforce-single-application-instance",
 
   instantiate: (di) => {
-    const exitApp = di.inject(exitAppInjectable);
     const requestSingleInstanceLock = di.inject(requestSingleInstanceLockInjectable);
+    const exitApp = di.inject(exitAppInjectable);
 
     return {
       run: () => {
         if (!requestSingleInstanceLock()) {
           exitApp();
-
-          return;
         }
       },
     };
   },
 
-  injectionToken: afterApplicationIsReadyInjectionToken,
+  injectionToken: beforeApplicationIsReadyInjectionToken,
 });
 
 export default enforceSingleApplicationInstanceInjectable;
