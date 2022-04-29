@@ -78,7 +78,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Animate opacity-scale Dialog flex center ConfirmDialog modal enter"
     data-testid="confirmation-dialog"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -98,15 +98,15 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
             warning
           </span>
         </i>
-
+         
         <p>
-          Remove
+          Remove 
           some-kind
-
+           
           <b>
             some-namespace/some-name
           </b>
-           from
+           from 
           <b>
             Some name
           </b>
@@ -193,15 +193,15 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
             warning
           </span>
         </i>
-
+         
         <p>
-          Remove
+          Remove 
           some-kind
-
+           
           <b>
             some-namespace/some-name
           </b>
-           from
+           from 
           <b>
             Some name
           </b>
@@ -288,15 +288,15 @@ exports[`kube-object-menu given kube object without namespace when removing kube
             warning
           </span>
         </i>
-
+         
         <p>
-          Remove
+          Remove 
           some-kind
-
+           
           <b>
             some-name
           </b>
-           from
+           from 
           <b>
             Some name
           </b>
