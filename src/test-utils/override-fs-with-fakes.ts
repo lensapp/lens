@@ -7,59 +7,25 @@ import readFileInjectable from "../common/fs/read-file.injectable";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../common/fs/path-exists.injectable";
-
-type Override = (di: DiContainer) => void;
+import { createFsFromVolume, Volume } from "memfs";
+import statInjectable from "../common/fs/stat.injectable";
 
 export const overrideFsWithFakes = (di: DiContainer) => {
-  const state = new Map();
+  const inMemoryFs = createFsFromVolume(Volume.fromJSON({}));
 
-  const readFile = readFileFor(state);
-
-  const overrides: Override[] = [
-    (di) => {
-      di.override(readFileInjectable, () => readFile);
-    },
-
-    (di) => {
-      di.override(
-        writeJsonFileInjectable,
-        () => (filePath: string, contents: object) => {
-          state.set(filePath, JSON.stringify(contents));
-
-          return Promise.resolve();
-        },
-      );
-    },
-
-    (di) => {
-      di.override(readJsonFileInjectable, () => async (filePath: string) => {
-        const fileContent = await readFile(filePath);
-
-        return JSON.parse(fileContent.toString());
-      });
-    },
-
-    (di) => {
-      di.override(
-        pathExistsInjectable,
-        () => async (filePath: string) => Promise.resolve(state.has(filePath)),
-      );
-    },
-  ];
-
-  overrides.forEach(callback => callback(di));
-};
-
-const readFileFor = (state: Map<string, string>) => (filePath: string) => {
-  const fileContent = state.get(filePath);
-
-  if (!fileContent) {
-    const existingFilePaths = [...state.keys()].join('", "');
-
-    throw new Error(
-      `Tried to access file ${filePath} which does not exist. Existing file paths are: "${existingFilePaths}"`,
-    );
-  }
-
-  return Promise.resolve(fileContent);
+  di.override(readFileInjectable, () => (
+    (filePath) => Promise.resolve(inMemoryFs.readFileSync(filePath, { encoding: "utf-8" }))
+  ));
+  di.override(writeJsonFileInjectable, () => (
+    (filePath, contents) => Promise.resolve(inMemoryFs.writeFileSync(filePath, JSON.stringify(contents)))
+  ));
+  di.override(readJsonFileInjectable, () => (
+    (filePath) => Promise.resolve(JSON.parse(inMemoryFs.readFileSync(filePath, { encoding: "utf-8" }) as string))
+  ));
+  di.override(pathExistsInjectable, () => (
+    (filePath) => Promise.resolve(inMemoryFs.existsSync(filePath))
+  ));
+  di.override(statInjectable, () => (
+    (filePath) => Promise.resolve(inMemoryFs.statSync(filePath))
+  ));
 };

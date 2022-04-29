@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import fsInjectable from "../../../../common/fs/fs.injectable";
+import statInjectable from "../../../../common/fs/stat.injectable";
 import type { KubeconfigSyncEntry } from "../../../../common/user-store";
 import kubeconfigSyncsPreferencesLoggerInjectable from "./logger.injectable";
 import type { SyncValue } from "./view";
@@ -14,7 +14,7 @@ const getSyncEntryInjectable = getInjectable({
   id: "get-sync-entry",
   instantiate: (di): GetSyncEntry => {
     const logger = di.inject(kubeconfigSyncsPreferencesLoggerInjectable);
-    const { stat } = di.inject(fsInjectable);
+    const stat = di.inject(statInjectable);
 
     return async ({ filePath, ...data }) => {
       try {
