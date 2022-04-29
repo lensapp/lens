@@ -7,8 +7,7 @@ import "./namespace-select-filter.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { OptionTypeBase, PlaceholderProps } from "react-select";
-import { components } from "react-select";
+import { components, type PlaceholderProps } from "react-select";
 
 import { Icon } from "../icon";
 import { NamespaceSelect } from "./namespace-select";
@@ -78,7 +77,7 @@ export const NamespaceSelectFilter = withInjectables<Dependencies, SelectProps>(
   }),
 });
 
-export interface CustomPlaceholderProps extends PlaceholderProps<OptionTypeBase, boolean> {}
+export interface CustomPlaceholderProps extends PlaceholderProps {}
 
 interface PlaceholderDependencies {
   namespaceStore: NamespaceStore;

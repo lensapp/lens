@@ -49,6 +49,17 @@ export function getOrInsertWith<K, V>(map: Map<K, V>, key: K, builder: () => V):
 }
 
 /**
+ * Like {@link getOrInsertWith} but the builder is async and will be awaited before inserting into the map
+ */
+export async function getOrInsertWithAsync<K, V>(map: Map<K, V>, key: K, asyncBuilder: () => Promise<V>): Promise<V> {
+  if (!map.has(key)) {
+    map.set(key, await asyncBuilder());
+  }
+
+  return map.get(key);
+}
+
+/**
  * Set the value associated with `key` iff there was not a previous value
  * @param map The map to interact with
  * @throws if `key` already in map

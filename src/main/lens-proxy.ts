@@ -173,15 +173,6 @@ export class LensProxy extends Singleton {
         this.retryCounters.delete(retryCounterId);
       }
 
-      if (!res.headersSent && req.url) {
-        const url = new URL(req.url, "http://localhost");
-
-        if (url.searchParams.has("watch")) {
-          res.statusCode = proxyRes.statusCode;
-          res.flushHeaders();
-        }
-      }
-
       proxyRes.on("aborted", () => { // happens when proxy target aborts connection
         res.end();
       });
