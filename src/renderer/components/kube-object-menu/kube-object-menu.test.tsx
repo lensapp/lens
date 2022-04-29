@@ -165,13 +165,11 @@ describe("kube-object-menu", () => {
 
     describe("when removing kube object", () => {
       beforeEach(async () => {
-        const menuItem = await screen.findByTestId("menu-action-delete");
-
-        userEvent.click(menuItem);
-        await screen.findByTestId("confirmation-dialog");
+        userEvent.click(await screen.findByTestId("menu-action-delete"));
       });
 
-      it("renders", () => {
+      it("renders", async () => {
+        await screen.findByTestId("confirmation-dialog");
         expect(baseElement).toMatchSnapshot();
       });
 
