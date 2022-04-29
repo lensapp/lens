@@ -15,7 +15,7 @@ import windowManagerInjectable from "../window-manager.injectable";
 import trayMenuInjectable from "./tray-menu.injectable";
 import { createCurrentTrayIcon, watchShouldUseDarkColors } from "./create-icon";
 
-export const TRAY_LOG_PREFIX = "[TRAY]";
+const TRAY_LOG_PREFIX = "[TRAY]";
 
 const initTrayInjectable = getInjectable({
   id: "init-tray",

@@ -13,7 +13,8 @@ import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import logger from "../logger";
 import { productName } from "../../common/vars";
 import { exitApp } from "../exit-app";
-import { TRAY_LOG_PREFIX } from "./tray.injectable";
+
+const TRAY_LOG_PREFIX = "[TRAY]";
 
 function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron.MenuItemConstructorOptions {
   return {
