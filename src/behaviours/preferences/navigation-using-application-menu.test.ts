@@ -48,7 +48,7 @@ describe("preferences - navigation using application menu", () => {
 
   describe("when navigating to preferences using application menu", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.preferences");
+      applicationBuilder.menu.click("root.preferences");
     });
 
     it("renders", () => {

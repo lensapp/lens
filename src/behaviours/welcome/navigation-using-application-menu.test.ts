@@ -32,7 +32,7 @@ describe("welcome - navigation using application menu", () => {
 
   describe("when navigating to welcome using application menu", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click("help.welcome");
+      applicationBuilder.menu.click("help.welcome");
     });
 
     it("renders", () => {

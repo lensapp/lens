@@ -33,29 +33,37 @@ import preferenceNavigationItemsInjectable from "../+preferences/preferences-nav
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
+import showAboutInjectable from "../../../main/menu/show-about.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
+export interface ApplicationMenu {
+  click: (path: string) => void;
+}
+
+export interface ApplicationPreferences {
+  close: () => void;
+  navigate: () => void;
+  navigation: {
+    click: (id: string) => void;
+  };
+}
+
+export interface ApplicationActions {
+  showAbout: jest.MockedFunction<() => void>;
+}
+
 export interface ApplicationBuilder {
-  dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
   addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeSetups: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
-
-  applicationMenu: {
-    click: (path: string) => void;
-  };
-
-  preferences: {
-    close: () => void;
-    navigate: () => void;
-    navigation: {
-      click: (id: string) => void;
-    };
-  };
+  readonly dis: DiContainers;
+  readonly menu: ApplicationMenu;
+  readonly preferences: ApplicationPreferences;
+  readonly actions: ApplicationActions;
 }
 
 interface DiContainers {
@@ -121,13 +129,19 @@ export const getApplicationBuilder = () => {
     computed((): LensMainExtension[] => []),
   );
 
+  const showAbout = jest.fn();
+
+  mainDi.override(showAboutInjectable, () => showAbout);
+
   let allowedResourcesState: IObservableArray<KubeResource>;
   let rendered: RenderResult;
 
   const builder: ApplicationBuilder = {
     dis,
-
-    applicationMenu: {
+    actions: {
+      showAbout,
+    },
+    menu: {
       click: (path: string) => {
         const applicationMenuItems = mainDi.inject(
           applicationMenuItemsInjectable,
