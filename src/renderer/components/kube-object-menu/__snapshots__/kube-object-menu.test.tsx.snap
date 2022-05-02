@@ -5,8 +5,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
@@ -45,8 +44,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
@@ -139,8 +137,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
@@ -233,8 +230,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
@@ -326,8 +322,7 @@ exports[`kube-object-menu given no kube object, renders 1`] = `
 <body>
   <div>
     <ul
-      class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-      style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
     />
   </div>
 </body>
