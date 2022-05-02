@@ -14,7 +14,9 @@ const stopCatalogSyncInjectable = getInjectable({
 
     return {
       run: () => {
-        catalogSyncToRenderer.stop();
+        if (catalogSyncToRenderer.started) {
+          catalogSyncToRenderer.stop();
+        }
       },
     };
   },
