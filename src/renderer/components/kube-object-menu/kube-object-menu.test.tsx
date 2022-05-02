@@ -30,6 +30,8 @@ import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../tooltip");
 
+// TODO: make `animated={false}` not required to make tests deterministic
+
 class SomeTestExtension extends LensRendererExtension {
   constructor(
     kubeObjectMenuItems: KubeObjectMenuRegistration[],
@@ -144,7 +146,7 @@ describe("kube-object-menu", () => {
 
       ({ baseElement } = render(
         <div>
-          <ConfirmDialog />
+          <ConfirmDialog animated={false} />
 
           <KubeObjectMenu
             object={objectStub}
@@ -215,7 +217,7 @@ describe("kube-object-menu", () => {
 
       ({ baseElement } = render(
         <div>
-          <ConfirmDialog />
+          <ConfirmDialog animated={false} />
 
           <KubeObjectMenu
             object={objectStub}
@@ -252,7 +254,7 @@ describe("kube-object-menu", () => {
 
       ({ baseElement } = render(
         <div>
-          <ConfirmDialog />
+          <ConfirmDialog animated={false} />
 
           <KubeObjectMenu
             object={objectStub}
