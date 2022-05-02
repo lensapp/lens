@@ -170,7 +170,7 @@ describe("kube-object-menu", () => {
 
       it("renders", async () => {
         await screen.findByTestId("confirmation-dialog");
-        await waitFor(() => expect(baseElement).toMatchSnapshot());
+        expect(baseElement).toMatchSnapshot();
       });
 
       describe("when remove is confirmed", () => {
