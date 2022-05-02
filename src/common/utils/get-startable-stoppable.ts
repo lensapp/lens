@@ -11,6 +11,10 @@ export const getStartableStoppable = (
   let started = false;
 
   return {
+    get started() {
+      return started;
+    },
+
     start: () => {
       if (started) {
         throw new Error(`Tried to start "${id}", but it has already started.`);

@@ -7,7 +7,7 @@ import { getStartableStoppable } from "./get-startable-stoppable";
 describe("getStartableStoppable", () => {
   let stopMock: jest.Mock<() => void>;
   let startMock: jest.Mock<() => () => void>;
-  let actual: { stop: () => void; start: () => void };
+  let actual: { stop: () => void; start: () => void; started: boolean };
 
   beforeEach(() => {
     stopMock = jest.fn();
@@ -30,6 +30,10 @@ describe("getStartableStoppable", () => {
     }).toThrow("Tried to stop \"some-id\", but it has not started yet.");
   });
 
+  it("is not started", () => {
+    expect(actual.started).toBe(false);
+  });
+
   describe("when started", () => {
     beforeEach(() => {
       actual.start();
@@ -37,6 +41,10 @@ describe("getStartableStoppable", () => {
 
     it("starts", () => {
       expect(startMock).toHaveBeenCalled();
+    });
+
+    it("is started", () => {
+      expect(actual.started).toBe(true);
     });
 
     it("when started again, throws", () => {
@@ -58,6 +66,10 @@ describe("getStartableStoppable", () => {
         expect(stopMock).toHaveBeenCalled();
       });
 
+      it("is not started", () => {
+        expect(actual.started).toBe(false);
+      });
+
       it("when stopped again, throws", () => {
         expect(() => {
           actual.stop();
@@ -73,6 +85,10 @@ describe("getStartableStoppable", () => {
 
         it("starts", () => {
           expect(startMock).toHaveBeenCalled();
+        });
+
+        it("is started", () => {
+          expect(actual.started).toBe(true);
         });
 
         it("when stopped, stops", () => {
