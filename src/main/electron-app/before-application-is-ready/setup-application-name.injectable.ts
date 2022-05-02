@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import appNameInjectable from "../../app-paths/app-name/app-name.injectable";
-import { beforeApplicationIsReadyInjectionToken } from "../../start-main-application/before-application-is-ready/before-application-is-ready-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/before-electron-is-ready/before-electron-is-ready-injection-token";
 import electronAppInjectable from "../electron-app.injectable";
 
 const setupApplicationNameInjectable = getInjectable({
@@ -21,7 +21,7 @@ const setupApplicationNameInjectable = getInjectable({
     };
   },
 
-  injectionToken: beforeApplicationIsReadyInjectionToken,
+  injectionToken: beforeElectronIsReadyInjectionToken,
 });
 
 export default setupApplicationNameInjectable;

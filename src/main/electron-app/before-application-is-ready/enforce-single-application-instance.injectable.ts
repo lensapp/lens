@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeApplicationIsReadyInjectionToken } from "../../start-main-application/before-application-is-ready/before-application-is-ready-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/before-electron-is-ready/before-electron-is-ready-injection-token";
 import requestSingleInstanceLockInjectable from "../features/request-single-instance-lock.injectable";
 import exitAppInjectable from "../features/exit-app.injectable";
 
@@ -23,7 +23,7 @@ const enforceSingleApplicationInstanceInjectable = getInjectable({
     };
   },
 
-  injectionToken: beforeApplicationIsReadyInjectionToken,
+  injectionToken: beforeElectronIsReadyInjectionToken,
 });
 
 export default enforceSingleApplicationInstanceInjectable;

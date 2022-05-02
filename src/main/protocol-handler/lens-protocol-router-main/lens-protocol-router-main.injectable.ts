@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
 import { LensProtocolRouterMain } from "./lens-protocol-router-main";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
-import windowManagerInjectable from "../../window-manager.injectable";
+import applicationWindowInjectable from "../../start-main-application/lens-window/application-window/application-window.injectable";
 
 const lensProtocolRouterMainInjectable = getInjectable({
   id: "lens-protocol-router-main",
@@ -15,7 +15,7 @@ const lensProtocolRouterMainInjectable = getInjectable({
     new LensProtocolRouterMain({
       extensionLoader: di.inject(extensionLoaderInjectable),
       extensionsStore: di.inject(extensionsStoreInjectable),
-      windowManager: di.inject(windowManagerInjectable),
+      applicationWindow: di.inject(applicationWindowInjectable),
     }),
 });
 

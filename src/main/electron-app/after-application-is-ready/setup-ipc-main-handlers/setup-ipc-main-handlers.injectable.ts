@@ -9,9 +9,9 @@ import loggerInjectable from "../../../../common/logger.injectable";
 import clusterManagerInjectable from "../../../cluster-manager.injectable";
 import applicationMenuItemsInjectable from "../../../menu/application-menu-items.injectable";
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
-import { afterApplicationIsReadyInjectionToken } from "../../../start-main-application/after-application-is-ready/after-application-is-ready-injection-token";
 import catalogEntityRegistryInjectable from "../../../catalog/catalog-entity-registry.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
+import { whenApplicationIsLoadingInjectionToken } from "../../../start-main-application/when-application-is-loading/when-application-is-loading-injection-token";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -45,7 +45,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     };
   },
 
-  injectionToken: afterApplicationIsReadyInjectionToken,
+  injectionToken: whenApplicationIsLoadingInjectionToken,
 });
 
 export default setupIpcMainHandlersInjectable;

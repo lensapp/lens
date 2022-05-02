@@ -8,12 +8,12 @@ import {
   getEnvironmentSpecificLegacyGlobalDiForExtensionApi,
 } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
-import windowManagerInjectable from "../../main/window-manager.injectable";
+import navigateInjectable from "../../main/start-main-application/lens-window/navigate.injectable";
 
 export function navigate(url: string) {
   const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
 
-  const windowManager = di.inject(windowManagerInjectable);
+  const navigate = di.inject(navigateInjectable);
 
-  return windowManager.navigate(url);
+  return navigate(url);
 }

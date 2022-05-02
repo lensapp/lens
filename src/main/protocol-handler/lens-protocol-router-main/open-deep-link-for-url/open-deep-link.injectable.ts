@@ -9,10 +9,10 @@ const openDeepLinkInjectable = getInjectable({
   id: "open-deep-link",
 
   instantiate: (di) => {
-    const protocolRouter = di.inject(lensProtocolRouterMainInjectable);
+    const getProtocolRouter = () => di.inject(lensProtocolRouterMainInjectable);
 
     return async (url: string) => {
-      await protocolRouter.route(url);
+      await getProtocolRouter().route(url);
     };
   },
 });

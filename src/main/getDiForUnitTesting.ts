@@ -38,25 +38,24 @@ import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injecta
 import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
-import initializeExtensionsInjectable from "./start-main-application/after-application-is-ready/implementations/initialize-extensions.injectable";
+import initializeExtensionsInjectable from "./start-main-application/when-application-is-loading/implementations/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import registerFileProtocolInjectable from "./electron-app/features/register-file-protocol.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import { CatalogCategoryRegistry } from "../common/catalog";
 import catalogCategoryRegistryInjectable from "../common/catalog/catalog-category-registry.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/after-application-is-ready/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
-import setupLensProxyInjectable from "./start-main-application/after-application-is-ready/implementations/setup-lens-proxy.injectable";
-import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/after-application-is-ready/implementations/setup-runnables-for-after-root-frame-is-ready.injectable";
+import setupLensProxyInjectable from "./start-main-application/before-application-is-loading/implementations/setup-lens-proxy.injectable";
+import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/when-application-is-loading/implementations/setup-runnables-for-after-root-frame-is-ready.injectable";
 import setupOsThemeUpdatesInjectable from "./electron-app/after-application-is-ready/setup-os-theme-updates.injectable";
-import setupSentryInjectable from "./start-main-application/after-application-is-ready/implementations/setup-sentry.injectable";
-import setupShellInjectable from "./start-main-application/after-application-is-ready/implementations/setup-shell.injectable";
-import setupSyncingOfWeblinksInjectable from "./start-main-application/after-application-is-ready/implementations/setup-syncing-of-weblinks.injectable";
+import setupSentryInjectable from "./start-main-application/when-application-is-loading/implementations/setup-sentry.injectable";
+import setupShellInjectable from "./start-main-application/when-application-is-loading/implementations/setup-shell.injectable";
+import setupSyncingOfWeblinksInjectable from "./start-main-application/when-application-is-loading/implementations/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
 import trayInjectable from "./tray/tray.injectable";
 import applicationMenuInjectable from "./menu/application-menu.injectable";
-import windowManagerInjectable from "./window-manager.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
-import setupSystemCaInjectable from "./start-main-application/after-application-is-ready/implementations/setup-system-ca.injectable";
+import setupSystemCaInjectable from "./start-main-application/before-application-is-loading/implementations/setup-system-ca.injectable";
 import setupDeepLinkingInjectable from "./electron-app/after-application-is-ready/setup-deep-linking.injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
 import getCommandLineSwitchInjectable from "./electron-app/features/get-command-line-switch.injectable";
@@ -69,6 +68,12 @@ import setupMainWindowVisibilityAfterActivationInjectable from "./electron-app/a
 import setupDeviceShutdownInjectable from "./electron-app/after-application-is-ready/setup-device-shutdown.injectable";
 import setupApplicationNameInjectable from "./electron-app/before-application-is-ready/setup-application-name.injectable";
 import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/before-application-is-ready/setup-runnables-before-closing-of-application.injectable";
+import showMessagePopupInjectable from "./electron-app/features/show-message-popup.injectable";
+import clusterFramesInjectable from "../common/cluster-frames.injectable";
+import type { ClusterFrameInfo } from "../common/cluster-frames";
+import { observable } from "mobx";
+import createBrowserWindowInjectable from "./start-main-application/lens-window/application-window/create-browser-window.injectable";
+import type { BrowserWindow } from "electron";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -98,9 +103,10 @@ export const getDiForUnitTesting = (
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
 
+    di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
+
     di.override(stopServicesAndExitAppInjectable, () => () => {});
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
-    di.override(windowManagerInjectable, () => ({ ensureMainWindow: () => Promise.resolve(null) }));
 
     di.override(trayInjectable, () => ({ start: () => {}, stop: () => {} }));
     di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
@@ -204,6 +210,12 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(requestSingleInstanceLockInjectable, () => () => true);
   di.override(disableHardwareAccelerationInjectable, () => () => {});
   di.override(shouldStartHiddenInjectable, () => true);
+  di.override(showMessagePopupInjectable, () => () => {});
+
+  di.override(createBrowserWindowInjectable,  () => async () => ({
+    show: () => {},
+    hide: () => {},
+  }) as unknown as BrowserWindow);
 
   di.override(
     getElectronAppPathInjectable,

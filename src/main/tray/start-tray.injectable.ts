@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { afterApplicationIsReadyInjectionToken } from "../start-main-application/after-application-is-ready/after-application-is-ready-injection-token";
 import trayInjectable from "./tray.injectable";
+import { whenApplicationIsLoadingInjectionToken } from "../start-main-application/when-application-is-loading/when-application-is-loading-injection-token";
 
 const startTrayInjectable = getInjectable({
   id: "start-tray",
@@ -19,7 +19,7 @@ const startTrayInjectable = getInjectable({
     };
   },
 
-  injectionToken: afterApplicationIsReadyInjectionToken,
+  injectionToken: whenApplicationIsLoadingInjectionToken,
 });
 
 export default startTrayInjectable;

@@ -12,9 +12,11 @@ import { observable, when, makeObservable } from "mobx";
 import type { RouteAttempt } from "../../../common/protocol-handler";
 import { ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { disposer, noop } from "../../../common/utils";
-import type { WindowManager } from "../../window-manager";
 import type { ExtensionLoader } from "../../../extensions/extension-loader";
 import type { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
+import type {
+  LensWindow,
+} from "../../start-main-application/lens-window/application-window/lens-window-injection-token";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -40,7 +42,7 @@ function checkHost<Query>(url: URLParse<Query>): boolean {
 interface Dependencies {
   extensionLoader: ExtensionLoader;
   extensionsStore: ExtensionsStore;
-  windowManager: WindowManager;
+  applicationWindow: LensWindow;
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
@@ -77,7 +79,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
         throw new proto.RoutingError(proto.RoutingErrorType.INVALID_PROTOCOL, url);
       }
 
-      this.dependencies.windowManager.ensureMainWindow().catch(noop);
+      this.dependencies.applicationWindow.show().catch(noop);
       const routeInternally = checkHost(url);
 
       logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);

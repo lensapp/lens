@@ -7,12 +7,8 @@ import { checkForUpdates } from "../app-updater";
 import { docsUrl, productName, supportUrl } from "../../common/vars";
 import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
-import { showAbout } from "./menu";
-import windowManagerInjectable from "../window-manager.injectable";
 import type { MenuItemConstructorOptions } from "electron";
-import {
-  webContents,
-} from "electron";
+import { webContents } from "electron";
 import loggerInjectable from "../../common/logger.injectable";
 import appNameInjectable from "../app-paths/app-name/app-name.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
@@ -25,6 +21,9 @@ import navigateToAddClusterInjectable from "../../common/front-end-routing/route
 import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
 import { computed } from "mobx";
+import showAboutInjectable from "./show-about.injectable";
+import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
+import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
@@ -43,12 +42,14 @@ const applicationMenuItemsInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
+    const showAbout = di.inject(showAboutInjectable);
+    const applicationWindow = di.inject(applicationWindowInjectable);
+    const reloadApplicationWindow = di.inject(reloadWindowInjectable, applicationWindow);
 
     return computed((): MenuItemOpts[] => {
 
       // TODO: These injects should happen outside of the computed.
       // TODO: Remove temporal dependencies in WindowManager to make sure timing is correct.
-      const windowManager = di.inject(windowManagerInjectable);
       const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
       const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
       const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
@@ -75,7 +76,7 @@ const applicationMenuItemsInjectable = getInjectable({
             {
               label: "Check for updates",
               click() {
-                checkForUpdates().then(() => windowManager.ensureMainWindow());
+                checkForUpdates().then(() => applicationWindow.show());
               },
             },
           ]),
@@ -239,7 +240,7 @@ const applicationMenuItemsInjectable = getInjectable({
             accelerator: "CmdOrCtrl+R",
             id: "reload",
             click() {
-              windowManager.reload();
+              reloadApplicationWindow();
             },
           },
           { role: "toggleDevTools" },
@@ -293,7 +294,7 @@ const applicationMenuItemsInjectable = getInjectable({
                 label: "Check for updates",
                 click() {
                   checkForUpdates().then(() =>
-                    windowManager.ensureMainWindow(),
+                    applicationWindow.show(),
                   );
                 },
               },

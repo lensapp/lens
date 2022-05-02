@@ -16,8 +16,8 @@ import { appPathsIpcChannel } from "../../common/app-paths/app-path-injection-to
 import registerChannelInjectable from "./register-channel/register-channel.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import {
-  beforeApplicationIsReadyInjectionToken,
-} from "../start-main-application/before-application-is-ready/before-application-is-ready-injection-token";
+  beforeElectronIsReadyInjectionToken,
+} from "../start-main-application/before-electron-is-ready/before-electron-is-ready-injection-token";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
@@ -54,7 +54,7 @@ const setupAppPathsInjectable = getInjectable({
     };
   },
 
-  injectionToken: beforeApplicationIsReadyInjectionToken,
+  injectionToken: beforeElectronIsReadyInjectionToken,
 });
 
 export default setupAppPathsInjectable;

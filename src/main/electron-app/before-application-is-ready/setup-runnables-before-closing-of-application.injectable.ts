@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeApplicationIsReadyInjectionToken } from "../../start-main-application/before-application-is-ready/before-application-is-ready-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/before-electron-is-ready/before-electron-is-ready-injection-token";
 import { beforeQuitOfFrontEndInjectionToken } from "../../start-main-application/before-quit-of-front-end/before-quit-of-front-end-injection-token";
 import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/before-quit-of-back-end/before-quit-of-back-end-injection-token";
 import electronAppInjectable from "../electron-app.injectable";
@@ -54,7 +54,7 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
     };
   },
 
-  injectionToken: beforeApplicationIsReadyInjectionToken,
+  injectionToken: beforeElectronIsReadyInjectionToken,
 });
 
 export default setupRunnablesBeforeClosingOfApplicationInjectable;
