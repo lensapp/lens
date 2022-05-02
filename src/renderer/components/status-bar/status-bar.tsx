@@ -11,6 +11,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { RegisteredStatusBarItems } from "./registered-status-bar-items.injectable";
 import registeredStatusBarItemsInjectable from "./registered-status-bar-items.injectable";
 import type { IComputedValue } from "mobx";
+import { AutoUpdateComponent } from "./auto-update-status-bar-item";
 
 export interface StatusBarProps {}
 
@@ -19,7 +20,9 @@ interface Dependencies {
 }
 
 const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps) => {
-  const { left, right } = items.get();
+  const { left: leftItems, right } = items.get();
+
+  const left = [AutoUpdateComponent, ...leftItems];
 
   return (
     <div className={styles.StatusBar}>
