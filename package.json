@@ -313,7 +313,7 @@
     "@types/npm": "^2.0.32",
     "@types/proper-lockfile": "^4.1.2",
     "@types/randomcolor": "^0.5.6",
-    "@types/react": "^17.0.43",
+    "@types/react": "^17.0.44",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.14",
     "@types/react-router-dom": "^5.3.3",
