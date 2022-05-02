@@ -95,13 +95,13 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
           onClick: withConfirmation({
             message: this.renderRemoveMessage(object),
             labelOk: "Remove",
-            ok: () => {
+            ok: async () => {
               hideDetails();
 
               if (removeAction) {
-                removeAction();
+                await removeAction();
               } else if (store?.remove) {
-                store.remove(object);
+                await store.remove(object);
               }
             },
           }),
@@ -112,11 +112,11 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
         this.menuItems.push({
           title: "Edit",
           icon: "edit",
-          onClick: () => {
+          onClick: async () => {
             hideDetails();
 
             if (updateAction) {
-              updateAction();
+              await updateAction();
             } else {
               createEditResourceTab(object);
             }

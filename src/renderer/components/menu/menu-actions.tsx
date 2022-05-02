@@ -31,11 +31,11 @@ export interface MenuActionsProps extends Partial<MenuProps> {
   /**
    * @deprecated Provide your own update `<MenuItem>` as part of the `children` passed to this component
    */
-  updateAction?: () => void;
+  updateAction?: () => void | Promise<void>;
   /**
    * @deprecated Provide your own remove `<MenuItem>` as part of the `children` passed to this component
    */
-  removeAction?: () => void;
+  removeAction?: () => void | Promise<void>;
   onOpen?: () => void;
 }
 
