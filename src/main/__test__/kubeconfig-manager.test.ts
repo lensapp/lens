@@ -2,8 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { runSetups } from "../../common/setupable-injection-token/run-setups";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 const logger = {
   silly: jest.fn(),
   debug: jest.fn(),
@@ -57,6 +62,8 @@ describe("kubeconfig manager tests", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
 
     mockFs({
       "minikube-config.yml": JSON.stringify({
@@ -85,8 +92,6 @@ describe("kubeconfig manager tests", () => {
     di.override(createContextHandlerInjectable, () => () => {
       throw new Error("you should never come here");
     });
-
-    await runSetups(di);
 
     const createCluster = di.inject(createClusterInjectionToken);
 

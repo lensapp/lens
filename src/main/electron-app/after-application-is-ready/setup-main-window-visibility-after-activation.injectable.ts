@@ -6,14 +6,14 @@ import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../electron-app.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import { whenApplicationIsLoadingInjectionToken } from "../../start-main-application/when-application-is-loading/when-application-is-loading-injection-token";
-import applicationWindowInjectable from "../../start-main-application/lens-window/application-window/application-window.injectable";
+import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 
 const setupMainWindowVisibilityAfterActivationInjectable = getInjectable({
   id: "setup-main-window-visibility-after-activation",
 
   instantiate: (di) => {
     const app = di.inject(electronAppInjectable);
-    const applicationWindow = di.inject(applicationWindowInjectable);
+    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const logger = di.inject(loggerInjectable);
 
     return {
@@ -22,7 +22,7 @@ const setupMainWindowVisibilityAfterActivationInjectable = getInjectable({
           logger.info("APP:ACTIVATE", { hasVisibleWindows: windowIsVisible });
 
           if (!windowIsVisible) {
-            await applicationWindow.show();
+            await showApplicationWindow();
           }
         });
       },

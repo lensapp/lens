@@ -10,8 +10,9 @@ import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.inje
 import { getStartableStoppable } from "../../common/utils/get-startable-stoppable";
 import isAutoUpdateEnabledInjectable from "../is-auto-update-enabled.injectable";
 import trayIconPathInjectable from "./tray-icon-path.injectable";
-import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
 import showAboutInjectable from "../menu/show-about.injectable";
+import showApplicationWindowInjectable
+  from "../start-main-application/lens-window/show-application-window.injectable";
 
 const trayInjectable = getInjectable({
   id: "tray",
@@ -22,7 +23,7 @@ const trayInjectable = getInjectable({
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
     const trayIconPath = di.inject(trayIconPathInjectable);
-    const applicationWindow = di.inject(applicationWindowInjectable);
+    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const showAboutPopup = di.inject(showAboutInjectable);
 
     return getStartableStoppable("build-of-tray", () =>
@@ -32,7 +33,7 @@ const trayInjectable = getInjectable({
         stopServicesAndExitApp,
         isAutoUpdateEnabled,
         trayIconPath,
-        applicationWindow,
+        showApplicationWindow,
         showAboutPopup,
       ),
     );

@@ -10,7 +10,8 @@ import commandLineArgumentsInjectable from "../../utils/command-line-arguments.i
 import { pipeline } from "@ogre-tools/fp";
 import { find, startsWith, toLower, map } from "lodash/fp";
 import { whenApplicationIsLoadingInjectionToken } from "../../start-main-application/when-application-is-loading/when-application-is-loading-injection-token";
-import applicationWindowInjectable from "../../start-main-application/lens-window/application-window/application-window.injectable";
+import showApplicationWindowInjectable
+  from "../../start-main-application/lens-window/show-application-window.injectable";
 
 const setupDeepLinkingInjectable = getInjectable({
   id: "setup-deep-linking",
@@ -19,7 +20,7 @@ const setupDeepLinkingInjectable = getInjectable({
     const app = di.inject(electronAppInjectable);
     const logger = di.inject(loggerInjectable);
     const openDeepLinkForUrl = di.inject(openDeepLinkInjectable);
-    const applicationWindow = di.inject(applicationWindowInjectable);
+    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
 
     const firstInstanceCommandLineArguments = di.inject(
       commandLineArgumentsInjectable,
@@ -53,7 +54,7 @@ const setupDeepLinkingInjectable = getInjectable({
           async (_, secondInstanceCommandLineArguments) => {
             const url = getDeepLinkUrl(secondInstanceCommandLineArguments);
 
-            await applicationWindow.show();
+            await showApplicationWindow();
 
             if (url) {
               await openDeepLinkForUrl(url);

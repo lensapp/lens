@@ -6,14 +6,15 @@ import { getInjectable } from "@ogre-tools/injectable";
 import observableHistoryInjectable from "../navigation/observable-history.injectable";
 import { runInAction } from "mobx";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
-import { broadcastMessage } from "../../common/ipc";
 import { IpcRendererNavigationEvents } from "../navigation/events";
+import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 
 const navigateToUrlInjectable = getInjectable({
   id: "navigate-to-url",
 
   instantiate: (di) => {
     const observableHistory = di.inject(observableHistoryInjectable);
+    const broadcastMessage = di.inject(broadcastMessageInjectable);
 
     return (url, options = {}) => {
       if (options.forceRootFrame) {

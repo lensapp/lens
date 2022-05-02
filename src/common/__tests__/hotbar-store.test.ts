@@ -12,11 +12,10 @@ import getConfigurationFileModelInjectable from "../get-configuration-file-model
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import hotbarStoreInjectable from "../hotbar-store.injectable";
-import { HotbarStore } from "../hotbar-store";
-import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
-import { runSetups } from "../setupable-injection-token/run-setups";
+import type { HotbarStore } from "../hotbar-store";
 import catalogEntityRegistryInjectable from "../../main/catalog/catalog-entity-registry.injectable";
-
+import directoryForUserDataInjectable
+  from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -82,6 +81,9 @@ describe("HotbarStore", () => {
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
 
+    di.permitSideEffects(hotbarStoreInjectable);
+    di.unoverride(hotbarStoreInjectable);
+
     di.override(catalogEntityRegistryInjectable, () => ({
       addComputedSource: (id, source) => {},
       items: [
@@ -135,13 +137,7 @@ describe("HotbarStore", () => {
       ],
     }));
 
-    di.override(hotbarStoreInjectable, () => {
-      HotbarStore.resetInstance();
-
-      return HotbarStore.createInstance({
-        catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
-      });
-    });
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
   });
 
   afterEach(() => {
@@ -152,9 +148,9 @@ describe("HotbarStore", () => {
     beforeEach(async () => {
       mockFs();
 
-      await runSetups(di);
-
       hotbarStore = di.inject(hotbarStoreInjectable);
+
+      hotbarStore.load();
     });
 
     describe("load", () => {
@@ -320,7 +316,7 @@ describe("HotbarStore", () => {
   describe("given pre beta-5 configurations", () => {
     beforeEach(async () => {
       const configurationToBeMigrated = {
-        "some-electron-app-path-for-user-data": {
+        "some-directory-for-user-data": {
           "lens-hotbar-store.json": JSON.stringify({
             __internal__: {
               migrations: {
@@ -383,9 +379,9 @@ describe("HotbarStore", () => {
 
       mockFs(configurationToBeMigrated);
 
-      await runSetups(di);
-
       hotbarStore = di.inject(hotbarStoreInjectable);
+
+      hotbarStore.load();
     });
 
     it("allows to retrieve a hotbar", () => {

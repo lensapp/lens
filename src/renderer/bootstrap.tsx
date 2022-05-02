@@ -43,7 +43,10 @@ import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import { bindEvents } from "./navigation/events";
 import deleteClusterDialogModelInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
 import { init } from "@sentry/electron/renderer";
-import { runSetups } from "../common/setupable-injection-token/run-setups";
+import {
+  beforeFrameStartsInjectionToken,
+} from "./before-frame-starts/before-frame-starts-injection-token";
+import { runManyFor } from "../common/runnable/run-many-for";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -64,7 +67,9 @@ export async function bootstrap(di: DiContainer) {
     initializeSentryReporting(init);
   }
 
-  await runSetups(di);
+  const beforeFrameStarts = runManyFor(di)(beforeFrameStartsInjectionToken);
+
+  await beforeFrameStarts();
 
   // TODO: Consolidate import time side-effect to setup time
   bindEvents();

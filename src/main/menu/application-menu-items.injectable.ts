@@ -24,6 +24,8 @@ import { computed } from "mobx";
 import showAboutInjectable from "./show-about.injectable";
 import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
 import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
+import showApplicationWindowInjectable
+  from "../start-main-application/lens-window/show-application-window.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
@@ -44,6 +46,7 @@ const applicationMenuItemsInjectable = getInjectable({
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
     const showAbout = di.inject(showAboutInjectable);
     const applicationWindow = di.inject(applicationWindowInjectable);
+    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const reloadApplicationWindow = di.inject(reloadWindowInjectable, applicationWindow);
 
     return computed((): MenuItemOpts[] => {
@@ -76,7 +79,7 @@ const applicationMenuItemsInjectable = getInjectable({
             {
               label: "Check for updates",
               click() {
-                checkForUpdates().then(() => applicationWindow.show());
+                checkForUpdates().then(() => showApplicationWindow());
               },
             },
           ]),
@@ -294,7 +297,7 @@ const applicationMenuItemsInjectable = getInjectable({
                 label: "Check for updates",
                 click() {
                   checkForUpdates().then(() =>
-                    applicationWindow.show(),
+                    showApplicationWindow(),
                   );
                 },
               },

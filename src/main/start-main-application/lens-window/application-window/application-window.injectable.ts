@@ -3,56 +3,63 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import createBrowserWindowInjectable from "./create-browser-window.injectable";
-import type {
-  SendToViewArgs } from "./lens-window-injection-token";
-import {
-  lensWindowInjectionToken,
-} from "./lens-window-injection-token";
-import type { BrowserWindow } from "electron";
-import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
+import { lensWindowInjectionToken } from "./lens-window-injection-token";
+import createLensWindowInjectable from "./create-lens-window.injectable";
+import lensProxyPortNumberStateInjectable from "../../../lens-proxy-port-number-state.injectable";
+import isMacInjectable from "../../../../common/vars/is-mac.injectable";
+import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
+import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
+import { delay } from "../../../../common/utils";
+import { bundledExtensionsLoaded } from "../../../../common/ipc/extension-handling";
+import ipcMainInjectable from "../../../app-paths/register-channel/ipc-main/ipc-main.injectable";
 
 const applicationWindowInjectable = getInjectable({
   id: "application-window",
 
   instantiate: (di) => {
-    const createBrowserWindow = di.inject(createBrowserWindowInjectable);
+    const createLensWindow = di.inject(createLensWindowInjectable);
+    const isMac = di.inject(isMacInjectable);
+    const applicationName = di.inject(appNameInjectable);
+    const appEventBus = di.inject(appEventBusInjectable);
+    const ipcMain = di.inject(ipcMainInjectable);
 
-    let browserWindow: BrowserWindow = null;
-
-    const hideWindow = () => {
-      browserWindow?.hide();
-    };
-
-    const sendToChannelInLensWindow = di.inject(
-      sendToChannelInElectronBrowserWindowInjectable,
+    const lensProxyPortNumberState = di.inject(
+      lensProxyPortNumberStateInjectable,
     );
 
-    return {
-      show: async () => {
-        if (!browserWindow) {
-          browserWindow = await createBrowserWindow("only-application-window");
-        }
+    const getContentUrl = () => `http://localhost:${lensProxyPortNumberState.get()}`;
 
-        browserWindow.show();
+    return createLensWindow({
+      id: "only-application-window",
+      title: applicationName,
+      defaultHeight: 900,
+      defaultWidth: 1440,
+      getContentUrl,
+      resizable: true,
+      windowFrameUtilitiesAreShown: isMac,
+      centered: false,
+
+      onFocus: () => {
+        appEventBus.emit({ name: "app", action: "focus" });
       },
 
-      hide: hideWindow,
-
-      close: () => {
-        hideWindow();
-
-        browserWindow = null;
+      onBlur: () => {
+        appEventBus.emit({ name: "app", action: "blur" });
       },
 
-      send: async (args: SendToViewArgs) => {
-        if (!browserWindow) {
-          browserWindow = await createBrowserWindow("only-application-window");
-        }
-
-        return sendToChannelInLensWindow(browserWindow, args);
+      onDomReady: () => {
+        appEventBus.emit({ name: "app", action: "dom-ready" });
       },
-    };
+
+      beforeOpen: async () => {
+        const viewHasLoaded = new Promise<void>((resolve) => {
+          ipcMain.once(bundledExtensionsLoaded, () => resolve());
+        });
+
+        await viewHasLoaded;
+        await delay(50); // wait just a bit longer to let the first round of rendering happen
+      },
+    });
   },
 
   injectionToken: lensWindowInjectionToken,

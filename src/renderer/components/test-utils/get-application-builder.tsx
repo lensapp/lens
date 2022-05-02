@@ -40,6 +40,8 @@ import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.st
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
+import startFrameInjectable from "../../start-frame/start-frame.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -55,7 +57,7 @@ export interface ApplicationBuilder {
   render: () => Promise<RenderResult>;
 
   applicationMenu: {
-    click: (path: string) => void;
+    click: (path: string) => Promise<void>;
   };
 
   preferences: {
@@ -82,7 +84,7 @@ interface Environment {
 }
 
 export const getApplicationBuilder = () => {
-  const { rendererDi, mainDi, runSetups } = getDisForUnitTesting({
+  const { rendererDi, mainDi } = getDisForUnitTesting({
     doGeneralOverrides: true,
   });
 
@@ -142,7 +144,7 @@ export const getApplicationBuilder = () => {
     dis,
 
     applicationMenu: {
-      click: (path: string) => {
+      click: async (path: string) => {
         const applicationMenuItems = mainDi.inject(
           applicationMenuItemsInjectable,
         );
@@ -164,6 +166,10 @@ export const getApplicationBuilder = () => {
         }
 
         menuItem.click(undefined, undefined, undefined);
+
+        const flushPromises = () => new Promise(setImmediate);
+
+        await flushPromises();
       },
     },
 
@@ -301,7 +307,13 @@ export const getApplicationBuilder = () => {
         await callback(dis);
       }
 
-      await runSetups();
+      const startMainApplication = mainDi.inject(startMainApplicationInjectable);
+
+      await startMainApplication();
+
+      const startFrame = rendererDi.inject(startFrameInjectable);
+
+      await startFrame();
 
       const render = renderFor(rendererDi);
 

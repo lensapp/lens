@@ -18,7 +18,6 @@ describe("preferences - navigation using application menu", () => {
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
-
     applicationBuilder.beforeSetups(({ rendererDi, mainDi }) => {
       mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
 
@@ -47,8 +46,8 @@ describe("preferences - navigation using application menu", () => {
   });
 
   describe("when navigating to preferences using application menu", () => {
-    beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.preferences");
+    beforeEach(async () => {
+      await applicationBuilder.applicationMenu.click("root.preferences");
     });
 
     it("renders", () => {

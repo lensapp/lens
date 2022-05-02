@@ -4,6 +4,7 @@
  */
 import "@testing-library/jest-dom/extend-expect";
 import { KubeConfig } from "@kubernetes/client-node";
+import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
@@ -13,14 +14,25 @@ import type { Cluster } from "../../../../common/cluster/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
 
 import type { ClusterModel } from "../../../../common/cluster-types";
-import { getDisForUnitTesting } from "../../../../test-utils/get-dis-for-unit-testing";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
 import deleteClusterDialogModelInjectable from "../delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
 import type { DeleteClusterDialogModel } from "../delete-cluster-dialog-model/delete-cluster-dialog-model";
-import type { DiRender } from "../../test-utils/renderFor";
-import { renderFor } from "../../test-utils/renderFor";
 import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import type {
+  ApplicationBuilder } from "../../test-utils/get-application-builder";
+import {
+  getApplicationBuilder,
+} from "../../test-utils/get-application-builder";
+import { routeInjectionToken } from "../../../../common/front-end-routing/route-injection-token";
+import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
+import {
+  routeSpecificComponentInjectionToken,
+} from "../../../routes/route-specific-component-injection-token";
+import {
+  navigateToRouteInjectionToken,
+} from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 
 jest.mock("electron", () => ({
   app: {
@@ -92,25 +104,50 @@ users:
 let config: KubeConfig;
 
 describe("<DeleteClusterDialog />", () => {
-  let createCluster: (model: ClusterModel) => Cluster;
-  let deleteClusterDialogModel: DeleteClusterDialogModel;
-  let render: DiRender;
+  let applicationBuilder: ApplicationBuilder;
 
   beforeEach(async () => {
-    const { mainDi, rendererDi, runSetups } = getDisForUnitTesting({ doGeneralOverrides: true });
-
-    render = renderFor(rendererDi);
-
-    mainDi.override(createContextHandlerInjectable, () => () => undefined);
+    applicationBuilder = getApplicationBuilder();
 
     mockFs();
 
-    rendererDi.override(hotbarStoreInjectable, () => ({}));
+    applicationBuilder.beforeSetups(({ mainDi, rendererDi }) => {
+      mainDi.override(createContextHandlerInjectable, () => () => undefined);
 
-    await runSetups();
+      rendererDi.override(hotbarStoreInjectable, () => ({}));
 
-    deleteClusterDialogModel = rendererDi.inject(deleteClusterDialogModelInjectable);
-    createCluster = mainDi.inject(createClusterInjectionToken);
+      const testRouteInjectable = getInjectable({
+        id: "some-test-route",
+
+        instantiate: () => ({
+          path: "/some-test-path",
+          clusterFrame: false,
+          isEnabled: computed(() => true),
+        }),
+
+        injectionToken: routeInjectionToken,
+      });
+
+      const testRouteComponent = getInjectable({
+        id: "some-test-component",
+
+        instantiate: (di) => ({
+          route: di.inject(testRouteInjectable),
+          Component: () => <DeleteClusterDialog />,
+        }),
+
+        injectionToken: routeSpecificComponentInjectionToken,
+      });
+
+      applicationBuilder.beforeRender(({ rendererDi }) => {
+        const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
+        const testRoute = rendererDi.inject(testRouteInjectable);
+
+        navigateToRoute(testRoute);
+      });
+
+      rendererDi.register(testRouteInjectable, testRouteComponent);
+    });
   });
 
   afterEach(() => {
@@ -118,6 +155,10 @@ describe("<DeleteClusterDialog />", () => {
   });
 
   describe("Kubeconfig with different clusters", () => {
+    let rendered: RenderResult;
+    let createCluster: (model: ClusterModel) => Cluster;
+    let deleteClusterDialogModel: DeleteClusterDialogModel;
+
     beforeEach(async () => {
       const mockOpts = {
         "temp-kube-config": kubeconfig,
@@ -127,6 +168,11 @@ describe("<DeleteClusterDialog />", () => {
 
       config = new KubeConfig();
       config.loadFromString(kubeconfig);
+
+      rendered = await applicationBuilder.render();
+
+      deleteClusterDialogModel = applicationBuilder.dis.rendererDi.inject(deleteClusterDialogModelInjectable);
+      createCluster = applicationBuilder.dis.mainDi.inject(createClusterInjectionToken);
     });
 
     afterEach(() => {
@@ -134,9 +180,7 @@ describe("<DeleteClusterDialog />", () => {
     });
 
     it("renders w/o errors", () => {
-      const { container } = render(<DeleteClusterDialog />);
-
-      expect(container).toBeInstanceOf(HTMLElement);
+      expect(rendered.container).toBeInstanceOf(HTMLElement);
     });
 
     it("shows warning when deleting non-current-context cluster", () => {
@@ -150,11 +194,10 @@ describe("<DeleteClusterDialog />", () => {
       });
 
       deleteClusterDialogModel.open({ cluster, config });
-      const { getByText } = render(<DeleteClusterDialog />);
 
       const message = "The contents of kubeconfig file will be changed!";
 
-      expect(getByText(message)).toBeInstanceOf(HTMLElement);
+      expect(rendered.getByText(message)).toBeInstanceOf(HTMLElement);
     });
 
     it("shows warning when deleting current-context cluster", () => {
@@ -169,9 +212,7 @@ describe("<DeleteClusterDialog />", () => {
 
       deleteClusterDialogModel.open({ cluster, config });
 
-      const { getByTestId } = render(<DeleteClusterDialog />);
-
-      expect(getByTestId("current-context-warning")).toBeInstanceOf(HTMLElement);
+      expect(rendered.getByTestId("current-context-warning")).toBeInstanceOf(HTMLElement);
     });
 
     it("shows context switcher when deleting current cluster", async () => {
@@ -186,7 +227,7 @@ describe("<DeleteClusterDialog />", () => {
 
       deleteClusterDialogModel.open({ cluster, config });
 
-      const { getByText } = render(<DeleteClusterDialog />);
+      const { getByText } = rendered;
 
       expect(getByText("Select...")).toBeInTheDocument();
       selectEvent.openMenu(getByText("Select..."));
@@ -207,7 +248,7 @@ describe("<DeleteClusterDialog />", () => {
 
       deleteClusterDialogModel.open({ cluster, config });
 
-      const { getByText, getByTestId } = render(<DeleteClusterDialog />);
+      const { getByText, getByTestId } = rendered;
       const link = getByTestId("context-switch");
 
       expect(link).toBeInstanceOf(HTMLElement);
@@ -234,15 +275,17 @@ describe("<DeleteClusterDialog />", () => {
 
       deleteClusterDialogModel.open({ cluster, config });
 
-      const { getByTestId } = render(<DeleteClusterDialog />);
-
-      expect(getByTestId("internal-kubeconfig-warning")).toBeInstanceOf(HTMLElement);
+      expect(rendered.getByTestId("internal-kubeconfig-warning")).toBeInstanceOf(HTMLElement);
 
       spy.mockRestore();
     });
   });
 
   describe("Kubeconfig with single cluster", () => {
+    let rendered: RenderResult;
+    let createCluster: (model: ClusterModel) => Cluster;
+    let deleteClusterDialogModel: DeleteClusterDialogModel;
+
     beforeEach(async () => {
       const mockOpts = {
         "temp-kube-config": singleClusterConfig,
@@ -252,6 +295,11 @@ describe("<DeleteClusterDialog />", () => {
 
       config = new KubeConfig();
       config.loadFromString(singleClusterConfig);
+
+      rendered = await applicationBuilder.render();
+
+      deleteClusterDialogModel = applicationBuilder.dis.rendererDi.inject(deleteClusterDialogModelInjectable);
+      createCluster = applicationBuilder.dis.mainDi.inject(createClusterInjectionToken);
     });
 
     afterEach(() => {
@@ -270,9 +318,7 @@ describe("<DeleteClusterDialog />", () => {
 
       deleteClusterDialogModel.open({ cluster, config });
 
-      const { getByTestId } = render(<DeleteClusterDialog />);
-
-      expect(getByTestId("no-more-contexts-warning")).toBeInstanceOf(HTMLElement);
+      expect(rendered.getByTestId("no-more-contexts-warning")).toBeInstanceOf(HTMLElement);
     });
   });
 });

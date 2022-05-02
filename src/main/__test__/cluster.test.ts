@@ -2,7 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { runSetups } from "../../common/setupable-injection-token/run-setups";
+import directoryForTempInjectable
+  from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 
 const logger = {
   silly: jest.fn(),
@@ -44,6 +45,8 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -80,13 +83,13 @@ describe("create clusters", () => {
       }),
     });
 
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => () => {
       throw new Error("you should never come here");
     });
-
-    await runSetups(di);
 
     createCluster = di.inject(createClusterInjectionToken);
 

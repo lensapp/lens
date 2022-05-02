@@ -57,7 +57,10 @@ import path from "path";
 import spawnInjectable from "../child-process/spawn.injectable";
 import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
-import { runSetups } from "../../common/setupable-injection-token/run-setups";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForTempInjectable
+  from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -100,14 +103,15 @@ describe("kube auth proxy tests", () => {
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+
     di.override(spawnInjectable, () => mockSpawn);
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
 
     mockFs(mockMinikubeConfig);
-
-    await runSetups(di);
 
     createCluster = di.inject(createClusterInjectionToken);
 

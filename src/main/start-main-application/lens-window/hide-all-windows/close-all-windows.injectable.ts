@@ -5,16 +5,16 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { lensWindowInjectionToken } from "../application-window/lens-window-injection-token";
 
-const hideAllWindowsInjectable = getInjectable({
-  id: "hide-all-windows",
+const closeAllWindowsInjectable = getInjectable({
+  id: "close-all-windows",
 
   instantiate: (di) => () => {
     const lensWindows = di.injectMany(lensWindowInjectionToken);
 
     lensWindows.forEach((lensWindow) => {
-      lensWindow.hide();
+      lensWindow.close();
     });
   },
 });
 
-export default hideAllWindowsInjectable;
+export default closeAllWindowsInjectable;

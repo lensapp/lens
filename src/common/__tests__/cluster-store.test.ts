@@ -14,17 +14,13 @@ import { stdout, stderr } from "process";
 import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { ClusterModel } from "../cluster-types";
-import type {
-  DiContainer,
-} from "@ogre-tools/injectable";
-
+import type { DiContainer } from "@ogre-tools/injectable";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
-
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
-import { runSetups } from "../setupable-injection-token/run-setups";
+import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -86,12 +82,12 @@ describe("cluster-store", () => {
     mockFs();
 
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    mainDi.override(directoryForTempInjectable, () => "some-temp-directory");
 
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
     mainDi.permitSideEffects(clusterStoreInjectable);
 
-    // @ts-ignore
     mainDi.unoverride(clusterStoreInjectable);
   });
 
@@ -114,8 +110,6 @@ describe("cluster-store", () => {
       };
 
       mockFs(mockOpts);
-
-      await runSetups(mainDi);
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 
@@ -239,8 +233,6 @@ describe("cluster-store", () => {
 
       mockFs(mockOpts);
 
-      await runSetups(mainDi);
-
       createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
@@ -325,8 +317,6 @@ users:
 
       mockFs(mockOpts);
 
-      await runSetups(mainDi);
-
       createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
@@ -370,8 +360,6 @@ users:
       };
 
       mockFs(mockOpts);
-
-      await runSetups(mainDi);
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 

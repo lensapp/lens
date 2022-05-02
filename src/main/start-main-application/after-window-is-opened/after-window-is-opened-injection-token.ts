@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Runnable } from "../run-many-for";
+import type { Runnable } from "../../../common/runnable/run-many-for";
 
-export const afterApplicationIsReadyInjectionToken = getInjectionToken<Runnable>({
-  id: "after-application-is-ready",
+export const afterWindowIsOpenedInjectionToken = getInjectionToken<Runnable>({
+  id: "after-window-is-opened",
 });

@@ -72,8 +72,21 @@ import showMessagePopupInjectable from "./electron-app/features/show-message-pop
 import clusterFramesInjectable from "../common/cluster-frames.injectable";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { observable } from "mobx";
-import createBrowserWindowInjectable from "./start-main-application/lens-window/application-window/create-browser-window.injectable";
-import type { BrowserWindow } from "electron";
+// import createBrowserWindowInjectable from "./start-main-application/lens-window/application-window/create-browser-window.injectable";
+import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
+
+
+import setupListenerForCurrentClusterFrameInjectable
+  from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
+import ipcMainInjectable from "./app-paths/register-channel/ipc-main/ipc-main.injectable";
+import createElectronWindowForInjectable
+  from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
+import setupRunnablesAfterWindowIsOpenedInjectable
+  from "./electron-app/before-application-is-ready/setup-runnables-after-window-is-opened.injectable";
+import sendToChannelInElectronBrowserWindowInjectable
+  from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
+
+
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -180,6 +193,8 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     setupShellInjectable,
     setupSyncingOfWeblinksInjectable,
     setupSystemCaInjectable,
+    setupListenerForCurrentClusterFrameInjectable,
+    setupRunnablesAfterWindowIsOpenedInjectable,
   ].forEach((injectable) => {
     di.override(injectable, () => ({ run: () => {} }));
   });
@@ -211,11 +226,20 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(disableHardwareAccelerationInjectable, () => () => {});
   di.override(shouldStartHiddenInjectable, () => true);
   di.override(showMessagePopupInjectable, () => () => {});
+  di.override(waitForElectronToBeReadyInjectable, () => () => Promise.resolve());
+  di.override(ipcMainInjectable, () => ({}));
 
-  di.override(createBrowserWindowInjectable,  () => async () => ({
+  di.override(createElectronWindowForInjectable, () => () => async () => ({
     show: () => {},
-    hide: () => {},
-  }) as unknown as BrowserWindow);
+
+    close: () => {},
+
+    send: (arg) => {
+      const sendFake = di.inject(sendToChannelInElectronBrowserWindowInjectable);
+
+      sendFake(null, arg);
+    },
+  }));
 
   di.override(
     getElectronAppPathInjectable,

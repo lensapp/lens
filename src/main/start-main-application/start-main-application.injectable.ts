@@ -4,9 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-import electronAppInjectable from "../electron-app/electron-app.injectable";
-import { runManyFor } from "./run-many-for";
-import { runManySyncFor } from "./run-many-sync-for";
+import { runManyFor } from "../../common/runnable/run-many-for";
+import { runManySyncFor } from "../../common/runnable/run-many-sync-for";
 import { beforeElectronIsReadyInjectionToken } from "./before-electron-is-ready/before-electron-is-ready-injection-token";
 import { beforeApplicationIsLoadingInjectionToken } from "./before-application-is-loading/before-application-is-loading-injection-token";
 import { whenApplicationIsLoadingInjectionToken } from "./when-application-is-loading/when-application-is-loading-injection-token";
@@ -19,6 +18,7 @@ import openDeepLinkInjectable from "../protocol-handler/lens-protocol-router-mai
 import { pipeline } from "@ogre-tools/fp";
 import { find, map, startsWith, toLower } from "lodash/fp";
 import commandLineArgumentsInjectable from "../utils/command-line-arguments.injectable";
+import waitForElectronToBeReadyInjectable from "../electron-app/features/wait-for-electron-to-be-ready.injectable";
 
 const startMainApplicationInjectable = getInjectable({
   id: "start-main-application",
@@ -26,7 +26,7 @@ const startMainApplicationInjectable = getInjectable({
   instantiate: (di) => {
     const runMany = runManyFor(di);
     const runManySync = runManySyncFor(di);
-    const electronApp = di.inject(electronAppInjectable);
+    const waitForElectronToBeReady = di.inject(waitForElectronToBeReadyInjectable);
     const applicationWindow = di.inject(applicationWindowInjectable);
     const applicationIsLoadingWindow = di.inject(applicationIsLoadingWindowInjectable);
     const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
@@ -43,7 +43,7 @@ const startMainApplicationInjectable = getInjectable({
       // https://github.com/electron/electron/issues/21370
       beforeElectronIsReady();
 
-      await electronApp.whenReady();
+      await waitForElectronToBeReady();
 
       await beforeApplicationIsLoading();
 
@@ -54,10 +54,10 @@ const startMainApplicationInjectable = getInjectable({
       await whenApplicationIsLoading();
 
       if (!shouldStartHidden) {
-        const url = getDeepLinkUrl(commandLineArguments);
+        const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
 
-        if (url) {
-          await openDeepLink(url);
+        if (deepLinkUrl) {
+          await openDeepLink(deepLinkUrl);
         } else {
           await applicationWindow.show();
         }

@@ -9,8 +9,8 @@ import { stdout, stderr } from "process";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import { runInAction } from "mobx";
 import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import mockFs from "mock-fs";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 
 console = new Console(stdout, stderr);
 
@@ -110,15 +110,15 @@ describe("ExtensionLoader", () => {
   let updateExtensionStateMock: jest.Mock;
 
   beforeEach(() => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
     updateExtensionStateMock = jest.fn();
 
-    dis.mainDi.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
+    di.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
 
-    extensionLoader = dis.mainDi.inject(extensionLoaderInjectable);
+    extensionLoader = di.inject(extensionLoaderInjectable);
   });
 
   afterEach(() => {

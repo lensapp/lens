@@ -13,9 +13,9 @@ export interface SendToViewArgs {
 
 export interface LensWindow {
   show: () => Promise<void>;
-  hide: () => void;
   close: () => void;
   send: (args: SendToViewArgs) => Promise<void>;
+  visible: boolean;
 }
 
 export const lensWindowInjectionToken = getInjectionToken<LensWindow>({

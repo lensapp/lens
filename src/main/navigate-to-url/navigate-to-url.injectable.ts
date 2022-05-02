@@ -12,8 +12,8 @@ const navigateToUrlInjectable = getInjectable({
   instantiate: (di) => {
     const navigate = di.inject(navigateInjectable);
 
-    return (url) => {
-      navigate(url);
+    return async (url) => {
+      await navigate(url);
     };
   },
 

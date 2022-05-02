@@ -3,86 +3,28 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { BrowserWindow } from "electron";
-import type {
-  SendToViewArgs,
-} from "../application-window/lens-window-injection-token";
-import {
-  lensWindowInjectionToken,
-} from "../application-window/lens-window-injection-token";
+import { lensWindowInjectionToken } from "../application-window/lens-window-injection-token";
+import createLensWindowInjectable from "../application-window/create-lens-window.injectable";
 
 const applicationIsLoadingWindowInjectable = getInjectable({
   id: "application-is-loading-window",
 
-  instantiate: () => {
-    let loadingWindow: BrowserWindow;
+  instantiate: (di) => {
+    const createLensWindow = di.inject(createLensWindowInjectable);
 
-    const hideWindow = () => {
-      loadingWindow?.hide();
-    };
-
-    return {
-      show: async () => {
-        if (!loadingWindow) {
-          loadingWindow = await createLoadingWindow();
-        }
-
-        loadingWindow.show();
-      },
-
-      hide: hideWindow,
-
-      close: () => {
-        hideWindow();
-
-        loadingWindow = null;
-      },
-
-      send: async ({ channel, frameInfo, data = [] }: SendToViewArgs) => {
-        if (!loadingWindow) {
-          loadingWindow = await createLoadingWindow();
-        }
-
-        if (frameInfo) {
-          loadingWindow.webContents.sendToFrame(
-            [frameInfo.processId, frameInfo.frameId],
-            channel,
-            ...data,
-          );
-
-        } else {
-          loadingWindow.webContents.send(channel, ...data);
-        }
-      },
-    };
+    return createLensWindow({
+      id: "splash",
+      title: "Loading",
+      getContentUrl: () => "static://splash.html",
+      defaultWidth: 500,
+      defaultHeight: 300,
+      resizable: false,
+      windowFrameUtilitiesAreShown: false,
+      centered: true,
+    });
   },
 
   injectionToken: lensWindowInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default applicationIsLoadingWindowInjectable;
-
-const createLoadingWindow = async () => {
-  const loadingWindow = new BrowserWindow({
-    width: 500,
-    height: 300,
-    backgroundColor: "#1e2124",
-    center: true,
-    frame: false,
-    resizable: false,
-    show: false,
-
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      nodeIntegrationInSubFrames: true,
-      nativeWindowOpen: true,
-    },
-  });
-
-  await loadingWindow.loadURL("static://splash.html");
-
-  return loadingWindow;
-};

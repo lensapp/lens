@@ -7,16 +7,18 @@ import { iter } from "../../../common/utils";
 import applicationWindowInjectable from "./application-window/application-window.injectable";
 import clusterFramesInjectable from "../../../common/cluster-frames.injectable";
 import { IpcRendererNavigationEvents } from "../../../renderer/navigation/events";
+import showApplicationWindowInjectable from "./show-application-window.injectable";
 
 const navigateInjectable = getInjectable({
   id: "navigate",
 
   instantiate: (di) => {
     const applicationWindow = di.inject(applicationWindowInjectable);
+    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const clusterFrames = di.inject(clusterFramesInjectable);
 
     return async (url: string, frameId?: number) => {
-      await applicationWindow.show();
+      await showApplicationWindow();
 
       const frameInfo = iter.find(
         clusterFrames.values(),

@@ -26,6 +26,8 @@ const setupListenerForCurrentClusterFrameInjectable = getInjectable({
     },
   }),
 
+  causesSideEffects: true,
+
   injectionToken: whenApplicationIsLoadingInjectionToken,
 });
 

@@ -4,32 +4,51 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
-import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
-import lensProxyPortNumberStateInjectable from "../../../lens-proxy-port-number-state.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
-import { BrowserWindow, ipcMain } from "electron";
-import { delay, openBrowser } from "../../../../common/utils";
-import { bundledExtensionsLoaded } from "../../../../common/ipc/extension-handling";
-import electronAppInjectable from "../../../electron-app/electron-app.injectable";
-import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
+import { BrowserWindow } from "electron";
+import { openBrowser } from "../../../../common/utils";
+import type { SendToViewArgs } from "./lens-window-injection-token";
+import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
+import type { LensWindow } from "./create-lens-window.injectable";
 
-const createBrowserWindowInjectable = getInjectable({
-  id: "create-browser-window",
+interface ElectronWindowConfiguration {
+  id: string;
+  title: string;
+  defaultHeight: number;
+  defaultWidth: number;
+  getContentUrl: () => string;
+  resizable: boolean;
+  windowFrameUtilitiesAreShown: boolean;
+  centered: boolean;
+
+  beforeOpen?: () => Promise<void>;
+  onClose: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+  onDomReady?: () => void;
+}
+
+const createElectronWindowFor = getInjectable({
+  id: "create-electron-window-for",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
-    const applicationName = di.inject(appNameInjectable);
     const isMac = di.inject(isMacInjectable);
-    const appEventBus = di.inject(appEventBusInjectable);
 
-    const lensProxyPortNumberState = di.inject(
-      lensProxyPortNumberStateInjectable,
+    const sendToChannelInLensWindow = di.inject(
+      sendToChannelInElectronBrowserWindowInjectable,
     );
 
-    return async (id: string) => {
-      const applicationWindowState = di.inject(applicationWindowStateInjectable);
-      const app = di.inject(electronAppInjectable);
+    return (configuration: ElectronWindowConfiguration) => async (): Promise<LensWindow> => {
+      const applicationWindowState = di.inject(
+        applicationWindowStateInjectable,
+        {
+          id: configuration.id,
+          defaultHeight: configuration.defaultHeight,
+          defaultWidth: configuration.defaultWidth,
+        },
+      );
 
       const { width, height, x, y } = applicationWindowState;
 
@@ -38,13 +57,16 @@ const createBrowserWindowInjectable = getInjectable({
         y,
         width,
         height,
-        title: applicationName,
+        title: configuration.title,
+        resizable: configuration.resizable,
+        center: configuration.centered,
+        frame: configuration.windowFrameUtilitiesAreShown,
         show: false,
         minWidth: 700, // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
         titleBarStyle: isMac ? "hiddenInset" : "hidden",
-        frame: isMac,
         backgroundColor: "#1e2124",
+
         webPreferences: {
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
@@ -56,48 +78,51 @@ const createBrowserWindowInjectable = getInjectable({
 
       applicationWindowState.manage(browserWindow);
 
-      // open external links in default browser (target=_blank, window.open)
       browserWindow
         .on("focus", () => {
-          appEventBus.emit({ name: "app", action: "focus" });
+          configuration.onFocus?.();
         })
 
         .on("blur", () => {
-          appEventBus.emit({ name: "app", action: "blur" });
+          configuration.onBlur?.();
         })
 
         .on("closed", () => {
-          // clean up
+          configuration.onClose();
           applicationWindowState.unmanage();
-          // this.mainWindow = null;
-          // this.splashWindow = null;
-          app.dock?.hide(); // hide icon in dock (mac-os)
         })
 
         .webContents.on("dom-ready", () => {
-          appEventBus.emit({ name: "app", action: "dom-ready" });
+          configuration.onDomReady?.();
         })
 
         .on("did-fail-load", (_event, code, desc) => {
-          logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, {
-            code,
-            desc,
-          });
+          logger.error(
+            `[CREATE-ELECTRON-WINDOW]: Failed to load window "${configuration.id}"`,
+            {
+              code,
+              desc,
+            },
+          );
         })
 
         .on("did-finish-load", () => {
-          logger.info("[WINDOW-MANAGER]: Main window loaded");
+          logger.info(
+            `[CREATE-ELECTRON-WINDOW]: Window "${configuration.id}" loaded`,
+          );
         })
 
         .on("will-attach-webview", (event, webPreferences, params) => {
-          logger.debug("[WINDOW-MANAGER]: Attaching webview");
+          logger.debug(
+            `[CREATE-ELECTRON-WINDOW]: Attaching webview to window "${configuration.id}"`,
+          );
           // Following is security recommendations because we allow webview tag (webviewTag: true)
           // suggested by https://www.electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
           // and https://www.electronjs.org/docs/tutorial/security#10-do-not-use-allowpopups
 
           if (webPreferences.preload) {
             logger.warn(
-              "[WINDOW-MANAGER]: Strip away preload scripts of webview",
+              "[CREATE-ELECTRON-WINDOW]: Strip away preload scripts of webview",
             );
             delete webPreferences.preload;
           }
@@ -105,14 +130,14 @@ const createBrowserWindowInjectable = getInjectable({
           // @ts-expect-error some electron version uses webPreferences.preloadURL/webPreferences.preload
           if (webPreferences.preloadURL) {
             logger.warn(
-              "[WINDOW-MANAGER]: Strip away preload scripts of webview",
+              "[CREATE-ELECTRON-WINDOW]: Strip away preload scripts of webview",
             );
             delete webPreferences.preload;
           }
 
           if (params.allowpopups) {
             logger.warn(
-              "[WINDOW-MANAGER]: We do not allow allowpopups props, stop webview from renderer",
+              "[CREATE-ELECTRON-WINDOW]: We do not allow allowpopups props, stop webview from renderer",
             );
 
             // event.preventDefault() will destroy the guest page.
@@ -127,32 +152,35 @@ const createBrowserWindowInjectable = getInjectable({
 
         .setWindowOpenHandler((details) => {
           openBrowser(details.url).catch((error) => {
-            logger.error("[WINDOW-MANAGER]: failed to open browser", { error });
+            logger.error("[CREATE-ELECTRON-WINDOW]: failed to open browser", {
+              error,
+            });
           });
 
           return { action: "deny" };
         });
 
-      const contentUrl = `http://localhost:${lensProxyPortNumberState.get()}`;
+      const contentUrl = configuration.getContentUrl();
 
       logger.info(
-        `[WINDOW-MANAGER]: Loading Main window from url: ${contentUrl} ...`,
+        `[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from url: ${contentUrl}...`,
       );
 
       await browserWindow.loadURL(contentUrl);
 
-      const viewHasLoaded = new Promise<void>((resolve) => {
-        ipcMain.once(bundledExtensionsLoaded, () => resolve());
-      });
+      await configuration.beforeOpen?.();
 
-      await viewHasLoaded;
-      await delay(50); // wait just a bit longer to let the first round of rendering happen
+      return {
+        show: () => browserWindow.show(),
+        close: () => browserWindow.close(),
 
-      return browserWindow;
+        send: (args: SendToViewArgs) =>
+          sendToChannelInLensWindow(browserWindow, args),
+      };
     };
   },
 
   causesSideEffects: true,
 });
 
-export default createBrowserWindowInjectable;
+export default createElectronWindowFor;

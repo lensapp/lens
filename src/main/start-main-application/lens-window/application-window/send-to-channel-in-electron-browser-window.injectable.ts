@@ -11,7 +11,7 @@ const sendToChannelInElectronBrowserWindowInjectable = getInjectable({
 
   instantiate:
     () =>
-      async (
+      (
         browserWindow: BrowserWindow,
         { channel, frameInfo, data = [] }: SendToViewArgs,
       ) => {

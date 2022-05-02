@@ -35,8 +35,8 @@ describe("add-cluster - navigation using application menu", () => {
   });
 
   describe("when navigating to add cluster using application menu", () => {
-    beforeEach(() => {
-      applicationBuilder.applicationMenu.click("file.add-cluster");
+    beforeEach(async () => {
+      await applicationBuilder.applicationMenu.click("file.add-cluster");
     });
 
     it("renders", () => {

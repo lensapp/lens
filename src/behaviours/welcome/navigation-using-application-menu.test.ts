@@ -31,8 +31,8 @@ describe("welcome - navigation using application menu", () => {
   });
 
   describe("when navigating to welcome using application menu", () => {
-    beforeEach(() => {
-      applicationBuilder.applicationMenu.click("help.welcome");
+    beforeEach(async () => {
+      await applicationBuilder.applicationMenu.click("help.welcome");
     });
 
     it("renders", () => {

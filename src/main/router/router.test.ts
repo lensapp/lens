@@ -14,7 +14,9 @@ import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
-import { runSetups } from "../../common/setupable-injection-token/run-setups";
+import directoryForUserDataInjectable
+  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+
 
 describe("router", () => {
   let router: Router;
@@ -28,6 +30,7 @@ describe("router", () => {
     mockFs();
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({ payload: "some-payload" }));
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     const injectable = getInjectable({
       id: "some-route",
@@ -42,8 +45,6 @@ describe("router", () => {
     });
 
     di.register(injectable);
-
-    await runSetups(di);
 
     router = di.inject(routerInjectable);
   });

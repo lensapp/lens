@@ -10,6 +10,7 @@ import asyncFn from "@async-fn/jest";
 import registerIpcChannelListenerInjectable from "../renderer/app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
 import type { SendToViewArgs } from "../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import sendToChannelInElectronBrowserWindowInjectable from "../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
+import { isEmpty } from "lodash/fp";
 
 
 export const overrideIpcBridge = ({
@@ -89,9 +90,15 @@ export const overrideIpcBridge = ({
       (browserWindow, { channel: channelName, data }: SendToViewArgs) => {
         const handles = rendererIpcFakeHandles.get(channelName);
 
-        handles.forEach((handle) => handle(...data));
+        if (isEmpty(handles)) {
+          throw new Error(
+            `Tried to send message to channel "${channelName}" but there where no listeners. Current channels with listeners: "${[
+              ...rendererIpcFakeHandles.keys(),
+            ].join('", "')}"`,
+          );
+        }
 
-        return Promise.resolve();
+        handles.forEach((handle) => handle(...data));
       },
   );
 };
