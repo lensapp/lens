@@ -39,7 +39,7 @@ import { initializeSentryReporting } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { initMenu } from "./menu/menu";
 import { kubeApiUpgradeRequest } from "./proxy-functions";
-import { initTray } from "./tray/tray";
+import initTrayInjectable from "./tray/init-tray.injectable";
 import { ShellSession } from "./shell-session/shell-session";
 import { getDi } from "./getDi";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
@@ -53,10 +53,8 @@ import clusterStoreInjectable from "../common/cluster-store/cluster-store.inject
 import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
-import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 import { broadcastNativeThemeOnUpdate } from "./native-theme";
 import windowManagerInjectable from "./window-manager.injectable";
-import navigateToPreferencesInjectable from "../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import syncGeneralCatalogEntitiesInjectable from "./catalog-sources/sync-general-catalog-entities.injectable";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
@@ -300,12 +298,11 @@ async function main(di: DiContainer) {
   const windowManager = di.inject(windowManagerInjectable);
 
   const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
-  const trayMenuItems = di.inject(trayMenuItemsInjectable);
-  const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
+  const initTray = di.inject(initTrayInjectable);
 
   onQuitCleanup.push(
     initMenu(applicationMenuItems),
-    await initTray(windowManager, trayMenuItems, navigateToPreferences),
+    await initTray(),
     () => ShellSession.cleanup(),
   );
 
