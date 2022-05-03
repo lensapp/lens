@@ -68,7 +68,7 @@ jobs:
         name: Run In-tree Extension tests
 
       - run: make ci-validate-dev
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+        if: contains(github.event.pull_request.labels.*.name, 'dependencies')
         name: Validate dev mode will work
 
       - name: Install integration test dependencies
