@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuInjectable from "./application-menu.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../start-main-application/when-application-is-loading/when-application-is-loading-injection-token";
+import { whenApplicationIsLoadingInjectionToken } from "../start-main-application/runnable-tokens/when-application-is-loading-injection-token";
 
 const startApplicationMenuInjectable = getInjectable({
   id: "start-application-menu",

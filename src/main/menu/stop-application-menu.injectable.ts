@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuInjectable from "./application-menu.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../start-main-application/before-quit-of-back-end/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
 
 const stopApplicationMenuInjectable = getInjectable({
   id: "stop-application-menu",

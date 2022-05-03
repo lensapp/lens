@@ -7,7 +7,7 @@ import { IpcRendererNavigationEvents } from "../../../../renderer/navigation/eve
 import type { ClusterId } from "../../../../common/cluster-types";
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../../when-application-is-loading/when-application-is-loading-injection-token";
+import { whenApplicationIsLoadingInjectionToken } from "../../runnable-tokens/when-application-is-loading-injection-token";
 import currentClusterFrameClusterIdStateInjectable from "./current-cluster-frame-cluster-id-state.injectable";
 
 const setupListenerForCurrentClusterFrameInjectable = getInjectable({

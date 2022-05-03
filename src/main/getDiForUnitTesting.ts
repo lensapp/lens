@@ -38,25 +38,25 @@ import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injecta
 import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
-import initializeExtensionsInjectable from "./start-main-application/when-application-is-loading/implementations/initialize-extensions.injectable";
+import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import registerFileProtocolInjectable from "./electron-app/features/register-file-protocol.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import { CatalogCategoryRegistry } from "../common/catalog";
 import catalogCategoryRegistryInjectable from "../common/catalog/catalog-category-registry.injectable";
-import setupIpcMainHandlersInjectable from "./electron-app/after-application-is-ready/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
-import setupLensProxyInjectable from "./start-main-application/before-application-is-loading/implementations/setup-lens-proxy.injectable";
-import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/when-application-is-loading/implementations/setup-runnables-for-after-root-frame-is-ready.injectable";
-import setupOsThemeUpdatesInjectable from "./electron-app/after-application-is-ready/setup-os-theme-updates.injectable";
-import setupSentryInjectable from "./start-main-application/when-application-is-loading/implementations/setup-sentry.injectable";
-import setupShellInjectable from "./start-main-application/when-application-is-loading/implementations/setup-shell.injectable";
-import setupSyncingOfWeblinksInjectable from "./start-main-application/when-application-is-loading/implementations/setup-syncing-of-weblinks.injectable";
+import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
+import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
+import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/runnables/setup-runnables-for-after-root-frame-is-ready.injectable";
+import setupOsThemeUpdatesInjectable from "./electron-app/runnables/setup-os-theme-updates.injectable";
+import setupSentryInjectable from "./start-main-application/runnables/setup-sentry.injectable";
+import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
+import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
 import trayInjectable from "./tray/tray.injectable";
 import applicationMenuInjectable from "./menu/application-menu.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
-import setupSystemCaInjectable from "./start-main-application/before-application-is-loading/implementations/setup-system-ca.injectable";
-import setupDeepLinkingInjectable from "./electron-app/after-application-is-ready/setup-deep-linking.injectable";
+import setupSystemCaInjectable from "./start-main-application/runnables/setup-system-ca.injectable";
+import setupDeepLinkingInjectable from "./electron-app/runnables/setup-deep-linking.injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
 import getCommandLineSwitchInjectable from "./electron-app/features/get-command-line-switch.injectable";
 import requestSingleInstanceLockInjectable from "./electron-app/features/request-single-instance-lock.injectable";
@@ -64,10 +64,10 @@ import disableHardwareAccelerationInjectable from "./electron-app/features/disab
 import shouldStartHiddenInjectable from "./electron-app/features/should-start-hidden.injectable";
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
-import setupMainWindowVisibilityAfterActivationInjectable from "./electron-app/after-application-is-ready/setup-main-window-visibility-after-activation.injectable";
-import setupDeviceShutdownInjectable from "./electron-app/after-application-is-ready/setup-device-shutdown.injectable";
-import setupApplicationNameInjectable from "./electron-app/before-application-is-ready/setup-application-name.injectable";
-import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/before-application-is-ready/setup-runnables-before-closing-of-application.injectable";
+import setupMainWindowVisibilityAfterActivationInjectable from "./electron-app/runnables/setup-main-window-visibility-after-activation.injectable";
+import setupDeviceShutdownInjectable from "./electron-app/runnables/setup-device-shutdown.injectable";
+import setupApplicationNameInjectable from "./electron-app/runnables/setup-application-name.injectable";
+import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/runnables/setup-runnables-before-closing-of-application.injectable";
 import showMessagePopupInjectable from "./electron-app/features/show-message-popup.injectable";
 import clusterFramesInjectable from "../common/cluster-frames.injectable";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
@@ -82,7 +82,7 @@ import ipcMainInjectable from "./app-paths/register-channel/ipc-main/ipc-main.in
 import createElectronWindowForInjectable
   from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable
-  from "./electron-app/before-application-is-ready/setup-runnables-after-window-is-opened.injectable";
+  from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import sendToChannelInElectronBrowserWindowInjectable
   from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 
