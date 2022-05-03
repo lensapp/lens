@@ -1404,7 +1404,7 @@
 <p>ItemStore&lt;T\&gt;.constructor</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="api">api<a class="headerlink" href="#api" title="Permanent link">#</a></h3>
-<p>• <strong>api</strong>: <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></p>
+<p>• <code>Readonly</code> <strong>api</strong>: <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>T</code>></p>
 <hr />
 <h3 id="buffersize">bufferSize<a class="headerlink" href="#buffersize" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>bufferSize</strong>: <code>number</code> = <code>50000</code></p>
@@ -1854,7 +1854,7 @@
 <p><code>Promise</code>&lt;<code>T</code>></p>
 <hr />
 <h3 id="loadall">loadAll<a class="headerlink" href="#loadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<code>void</code> | <code>T</code>[]></p>
+<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<code>T</code>[]></p>
 <h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1871,7 +1871,7 @@
 </tbody>
 </table>
 <h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code> | <code>T</code>[]></p>
+<p><code>Promise</code>&lt;<code>T</code>[]></p>
 <h4 id="overrides_4">Overrides<a class="headerlink" href="#overrides_4" title="Permanent link">#</a></h4>
 <p>ItemStore.loadAll</p>
 <hr />
@@ -1948,7 +1948,7 @@
 <p>ItemStore.loadItems</p>
 <hr />
 <h3 id="mergeitems">mergeItems<a class="headerlink" href="#mergeitems" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>mergeItems</strong>(<code>partialItems</code>, <code>__namedParameters?</code>): <code>T</code>[]</p>
+<p>▸ <code>Protected</code> <strong>mergeItems</strong>(<code>partialItems</code>, <code>__namedParameters</code>): <code>T</code>[]</p>
 <h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1964,23 +1964,7 @@
 </tr>
 <tr>
 <td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.filter</code></td>
-<td align="left"><code>boolean</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.merge</code></td>
-<td align="left"><code>boolean</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.sort</code></td>
-<td align="left"><code>boolean</code></td>
-</tr>
-<tr>
-<td align="left"><code>__namedParameters.updateStore</code></td>
-<td align="left"><code>boolean</code></td>
+<td align="left"><code>MergeItemsOptions</code></td>
 </tr>
 </tbody>
 </table>
@@ -2034,7 +2018,7 @@
 <p>ItemStore.pickOnlySelected</p>
 <hr />
 <h3 id="reloadall">reloadAll<a class="headerlink" href="#reloadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<code>void</code> | <code>T</code>[]></p>
+<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<code>T</code>[]></p>
 <h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2063,7 +2047,7 @@
 </tbody>
 </table>
 <h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code> | <code>T</code>[]></p>
+<p><code>Promise</code>&lt;<code>T</code>[]></p>
 <hr />
 <h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
 <p>▸ <strong>remove</strong>(<code>item</code>): <code>Promise</code>&lt;<code>void</code>></p>
