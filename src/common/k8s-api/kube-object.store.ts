@@ -60,10 +60,18 @@ export interface KubeObjectStoreSubscribeParams {
   abortController?: AbortController;
 }
 
+export interface MergeItemsOptions {
+  merge?: boolean;
+  updateStore?: boolean;
+  sort?: boolean;
+  filter?: boolean;
+  namespaces: string[];
+}
+
 export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
   static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
-  public api: KubeApi<T>;
+  public readonly api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
   @observable private loadedNamespaces?: string[];
@@ -227,7 +235,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   @action
-  async loadAll({ namespaces, merge = true, reqInit, onLoadFailure }: KubeObjectStoreLoadAllParams = {}): Promise<void | T[]> {
+  async loadAll({ namespaces, merge = true, reqInit, onLoadFailure }: KubeObjectStoreLoadAllParams = {}): Promise<undefined | T[]> {
     await this.contextReady;
     namespaces ??= this.context.contextNamespaces;
     this.isLoading = true;
@@ -235,7 +243,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     try {
       const items = await this.loadItems({ namespaces, reqInit, onLoadFailure });
 
-      this.mergeItems(items, { merge });
+      this.mergeItems(items, { merge, namespaces });
 
       this.isLoaded = true;
       this.failedLoading = false;
@@ -248,29 +256,31 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     } finally {
       this.isLoading = false;
     }
+
+    return undefined;
   }
 
   @action
-  async reloadAll(opts: { force?: boolean; namespaces?: string[]; merge?: boolean } = {}) {
+  async reloadAll(opts: { force?: boolean; namespaces?: string[]; merge?: boolean } = {}): Promise<undefined | T[]> {
     const { force = false, ...loadingOptions } = opts;
 
     if (this.isLoading || (this.isLoaded && !force)) {
-      return;
+      return undefined;
     }
 
     return this.loadAll(loadingOptions);
   }
 
   @action
-  protected mergeItems(partialItems: T[], { merge = true, updateStore = true, sort = true, filter = true } = {}): T[] {
+  protected mergeItems(partialItems: T[], { merge = true, updateStore = true, sort = true, filter = true, namespaces }: MergeItemsOptions): T[] {
     let items = partialItems;
 
     // update existing items
-    if (merge) {
-      const namespaces = partialItems.map(item => item.getNs());
+    if (merge && this.api.isNamespaced) {
+      const ns = new Set(namespaces);
 
       items = [
-        ...this.items.filter(existingItem => !namespaces.includes(existingItem.getNs())),
+        ...this.items.filter(existingItem => !ns.has(existingItem.getNs())),
         ...partialItems,
       ];
     }
