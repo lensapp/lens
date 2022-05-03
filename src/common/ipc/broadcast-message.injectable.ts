@@ -8,7 +8,7 @@ import { broadcastMessage } from "./ipc";
 const broadcastMessageInjectable = getInjectable({
   id: "broadcast-message",
   instantiate: () => broadcastMessage,
-  // causesSideEffects: true,
+  causesSideEffects: true,
 });
 
 export default broadcastMessageInjectable;

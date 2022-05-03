@@ -37,6 +37,7 @@ import themeStoreInjectable from "./theme-store.injectable";
 import apiManagerInjectable from "./components/kube-object-menu/dependencies/api-manager.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
+import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -65,6 +66,10 @@ export const getDiForUnitTesting = (
     di.override(joinPathsInjectable, () => joinPathsFake);
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
+
+    di.override(broadcastMessageInjectable, () => () => {
+      throw new Error("Tried to broadcast message over IPC without explicit override.");
+    });
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);

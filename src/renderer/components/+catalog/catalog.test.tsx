@@ -27,6 +27,7 @@ import getConfigurationFileModelInjectable from "../../../common/get-configurati
 import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -92,6 +93,8 @@ describe("<Catalog />", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    di.override(broadcastMessageInjectable, () => async () => {});
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);

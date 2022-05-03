@@ -72,21 +72,13 @@ import showMessagePopupInjectable from "./electron-app/features/show-message-pop
 import clusterFramesInjectable from "../common/cluster-frames.injectable";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { observable } from "mobx";
-// import createBrowserWindowInjectable from "./start-main-application/lens-window/application-window/create-browser-window.injectable";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
-
-
-import setupListenerForCurrentClusterFrameInjectable
-  from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
+import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
 import ipcMainInjectable from "./app-paths/register-channel/ipc-main/ipc-main.injectable";
-import createElectronWindowForInjectable
-  from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
-import setupRunnablesAfterWindowIsOpenedInjectable
-  from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
-import sendToChannelInElectronBrowserWindowInjectable
-  from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
-
-
+import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
+import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
+import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
+import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -143,6 +135,10 @@ export const getDiForUnitTesting = (
     di.override(appNameInjectable, () => "some-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
+
+    di.override(broadcastMessageInjectable, () => {
+      throw new Error("Tried to broadcast message over IPC without explicit override.");
+    });
 
     di.override(spawnInjectable, () => () => {
       return {
