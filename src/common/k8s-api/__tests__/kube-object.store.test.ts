@@ -3,18 +3,25 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { when } from "mobx";
+import type { ClusterContext } from "../cluster-context";
+import type { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import type { KubeObjectStoreLoadingParams } from "../kube-object.store";
 import { KubeObjectStore } from "../kube-object.store";
 
 class FakeKubeObjectStore extends KubeObjectStore<KubeObject> {
-  get contextReady() {
-    return when(() => true);
+  _context = {
+    allNamespaces: [],
+    contextNamespaces: [],
+    hasSelectedAll: false,
+  } as ClusterContext;
+
+  get context() {
+    return this._context;
   }
 
-  constructor(private readonly _loadItems: (params: KubeObjectStoreLoadingParams) => KubeObject[]) {
-    super();
+  constructor(private readonly _loadItems: (params: KubeObjectStoreLoadingParams) => KubeObject[], api: Partial<KubeApi<KubeObject>>) {
+    super(api as KubeApi<KubeObject>);
   }
 
   async loadItems(params: KubeObjectStoreLoadingParams) {
@@ -35,7 +42,9 @@ describe("KubeObjectStore", () => {
         namespace: "default",
       },
     });
-    const store = new FakeKubeObjectStore(loadItems);
+    const store = new FakeKubeObjectStore(loadItems, {
+      isNamespaced: true,
+    });
 
     loadItems.mockImplementationOnce(() => [obj]);
 
@@ -52,5 +61,86 @@ describe("KubeObjectStore", () => {
     });
 
     expect(store.items).not.toContain(obj);
+  });
+
+  it("should not remove an object that is not returned, if it is in a different namespace", async () => {
+    const loadItems = jest.fn();
+    const objInDefaultNamespace = new KubeObject({
+      apiVersion: "v1",
+      kind: "Foo",
+      metadata: {
+        name: "some-obj-name",
+        resourceVersion: "1",
+        uid: "some-uid",
+        namespace: "default",
+      },
+    });
+    const objNotInDefaultNamespace = new KubeObject({
+      apiVersion: "v1",
+      kind: "Foo",
+      metadata: {
+        name: "some-obj-name",
+        resourceVersion: "1",
+        uid: "some-uid",
+        namespace: "not-default",
+      },
+    });
+    const store = new FakeKubeObjectStore(loadItems, {
+      isNamespaced: true,
+    });
+
+    loadItems.mockImplementationOnce(() => [objInDefaultNamespace]);
+
+    await store.loadAll({
+      namespaces: ["default"],
+    });
+
+    expect(store.items).toContain(objInDefaultNamespace);
+
+    loadItems.mockImplementationOnce(() => [objNotInDefaultNamespace]);
+
+    await store.loadAll({
+      namespaces: ["not-default"],
+    });
+
+    expect(store.items).toContain(objInDefaultNamespace);
+  });
+
+  it("should remove all objects not returned if the api is cluster-scoped", async () => {
+    const loadItems = jest.fn();
+    const clusterScopedObject1 = new KubeObject({
+      apiVersion: "v1",
+      kind: "Foo",
+      metadata: {
+        name: "some-obj-name",
+        resourceVersion: "1",
+        uid: "some-uid",
+      },
+    });
+    const clusterScopedObject2 = new KubeObject({
+      apiVersion: "v1",
+      kind: "Foo",
+      metadata: {
+        name: "some-obj-name",
+        resourceVersion: "1",
+        uid: "some-uid",
+        namespace: "not-default",
+      },
+    });
+    const store = new FakeKubeObjectStore(loadItems, {
+      isNamespaced: false,
+    });
+
+    loadItems.mockImplementationOnce(() => [clusterScopedObject1]);
+
+    await store.loadAll({});
+
+    expect(store.items).toContain(clusterScopedObject1);
+
+    loadItems.mockImplementationOnce(() => [clusterScopedObject2]);
+
+    await store.loadAll({});
+
+    expect(store.items).not.toContain(clusterScopedObject1);
   });
 });

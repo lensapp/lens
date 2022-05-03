@@ -71,7 +71,7 @@ export interface MergeItemsOptions {
 export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
   static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
-  public api: KubeApi<T>;
+  public readonly api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
   @observable private loadedNamespaces?: string[];
@@ -276,7 +276,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     let items = partialItems;
 
     // update existing items
-    if (merge) {
+    if (merge && this.api.isNamespaced) {
       const ns = new Set(namespaces);
 
       items = [
