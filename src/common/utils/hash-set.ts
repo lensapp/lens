@@ -6,7 +6,7 @@
 import type { IInterceptable, IInterceptor, IListenable, ISetWillChange, ObservableMap } from "mobx";
 import { action, observable, ObservableSet } from "mobx";
 
-export function makeIterableIterator<T>(iterator: Iterator<T>): IterableIterator<T> {
+function makeIterableIterator<T>(iterator: Iterator<T>): IterableIterator<T> {
   (iterator as IterableIterator<T>)[Symbol.iterator] = () => iterator as IterableIterator<T>;
 
   return iterator as IterableIterator<T>;

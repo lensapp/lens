@@ -26,6 +26,7 @@ export * from "./downloadFile";
 export * from "./escapeRegExp";
 export * from "./formatDuration";
 export * from "./getRandId";
+export * from "./hash-map";
 export * from "./hash-set";
 export * from "./n-fircate";
 export * from "./objects";

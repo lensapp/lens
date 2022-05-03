@@ -14,6 +14,8 @@ import { once } from "lodash";
 import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import appUpdaterStateInjectable from "./app-updater/state.injectable";
 
 let installVersion: null | string = null;
 
@@ -52,6 +54,8 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
   }
 
   const userStore = UserStore.getInstance();
+  const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+  const state = di.inject(appUpdaterStateInjectable);
 
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
@@ -94,6 +98,9 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
         });
         logger.info(`${AutoUpdateLogPrefix}: broadcasting update available`, { backchannel, version: info.version });
         broadcastMessage(UpdateAvailableChannel, backchannel, info);
+        state.set({
+          status: "update-install-ready",
+        });
       } catch (error) {
         logger.error(`${AutoUpdateLogPrefix}: broadcasting failed`, { error });
         installVersion = undefined;

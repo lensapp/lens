@@ -19,8 +19,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import windowManagerInjectable from "../window-manager.injectable";
 import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import trayMenuItemsInjectable from "./tray-menu-items.injectable";
-import createCurrentTrayIconInjectable from "./create-current-tray-icon.injectable";
-import trayIconUpdaterInjectable from "./tray-icon-updater.injectable";
+import computedTrayIconInjectable from "./computed-tray-icon.injectable";
 
 const initTrayInjectable = getInjectable({
   id: "init-tray",
@@ -28,11 +27,10 @@ const initTrayInjectable = getInjectable({
     const windowManager = di.inject(windowManagerInjectable);
     const trayMenuItems = di.inject(trayMenuItemsInjectable);
     const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
-    const createCurrentTrayIcon = di.inject(createCurrentTrayIconInjectable);
-    const trayIconUpdater = di.inject(trayIconUpdaterInjectable);
+    const computedTrayIcon = di.inject(computedTrayIconInjectable);
 
     return async (): Promise<Disposer> => {
-      const tray = new Tray(await createCurrentTrayIcon());
+      const tray = new Tray(await computedTrayIcon.getCurrent());
 
       tray.setToolTip(packageInfo.description);
       tray.setIgnoreDoubleClickEvents(true);
@@ -46,7 +44,7 @@ const initTrayInjectable = getInjectable({
       }
 
       return disposer(
-        trayIconUpdater(tray),
+        computedTrayIcon.subscribe(tray),
         autorun(() => {
           try {
             const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
