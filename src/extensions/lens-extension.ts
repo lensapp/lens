@@ -25,8 +25,8 @@ export interface LensExtensionManifest extends PackageJson {
    * Supported Lens version engine by extension could be defined in `manifest.engines.lens`
    * Only MAJOR.MINOR version is taken in consideration.
    */
-  engines?: {
-    lens?: string; // "semver"-package format
+  engines: {
+    lens: string; // "semver"-package format
     npm?: string;
     node?: string;
   };
