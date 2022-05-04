@@ -15,6 +15,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
 </div>
 `;
 
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab when navigating to specific extension tab renders 1`] = `<div />`;
+
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given multiple extensions with specific preferences, when navigating to extension specific preferences page renders 1`] = `
 <div>
   <div

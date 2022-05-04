@@ -184,6 +184,29 @@ describe("preferences - navigation to extension specific preferences", () => {
 
         expect(actual).not.toBeInTheDocument();
       });
+
+      describe("when navigating to specific extension tab", () => {
+        beforeEach(() => {
+          applicationBuilder.preferences.navigation.click("extension-specific-tab-navigation-item-license-extension-tab");
+        }
+        );
+        it("renders", () => {
+          expect(rendered.container).toMatchSnapshot();
+        }
+        );
+        it("shows related preferences for this tab", () => {
+          const actual = rendered.getByTestId("license-preference-item-hint");
+
+          expect(actual).toBeInTheDocument();
+        }
+        );
+        it("does not show unrelated preferences for this tab", () => {
+          const actual = rendered.queryByTestId("survey-preference-item-hint");
+
+          expect(actual).not.toBeInTheDocument();
+        }
+        );
+      });
     });
   });
 });
