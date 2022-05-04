@@ -47,7 +47,6 @@ import catalogCategoryRegistryInjectable from "../common/catalog/catalog-categor
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
 import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/runnables/setup-runnables-for-after-root-frame-is-ready.injectable";
-import setupOsThemeUpdatesInjectable from "./electron-app/runnables/setup-os-theme-updates.injectable";
 import setupSentryInjectable from "./start-main-application/runnables/setup-sentry.injectable";
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
@@ -79,6 +78,8 @@ import createElectronWindowForInjectable from "./start-main-application/lens-win
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
+import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
+import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -136,8 +137,8 @@ export const getDiForUnitTesting = (
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
 
-    di.override(broadcastMessageInjectable, () => {
-      throw new Error("Tried to broadcast message over IPC without explicit override.");
+    di.override(broadcastMessageInjectable, () => (channel) => {
+      throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });
 
     di.override(spawnInjectable, () => () => {
@@ -184,7 +185,6 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     setupIpcMainHandlersInjectable,
     setupLensProxyInjectable,
     setupRunnablesForAfterRootFrameIsReadyInjectable,
-    setupOsThemeUpdatesInjectable,
     setupSentryInjectable,
     setupShellInjectable,
     setupSyncingOfWeblinksInjectable,
@@ -224,6 +224,8 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(showMessagePopupInjectable, () => () => {});
   di.override(waitForElectronToBeReadyInjectable, () => () => Promise.resolve());
   di.override(ipcMainInjectable, () => ({}));
+  di.override(getElectronThemeInjectable, () => () => "dark");
+  di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
 
   di.override(createElectronWindowForInjectable, () => () => async () => ({
     show: () => {},
