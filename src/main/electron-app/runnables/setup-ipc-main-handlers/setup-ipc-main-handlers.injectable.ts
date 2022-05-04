@@ -12,6 +12,7 @@ import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path
 import catalogEntityRegistryInjectable from "../../../catalog/catalog-entity-registry.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import { whenApplicationIsLoadingInjectionToken } from "../../../start-main-application/runnable-tokens/when-application-is-loading-injection-token";
+import currentOperatingSystemThemeInjectable from "../../../theme/current-operating-system-theme.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -28,6 +29,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const clusterStore = di.inject(clusterStoreInjectable);
+    const currentOperatingSystemTheme = di.inject(currentOperatingSystemThemeInjectable);
 
     return {
       run: () => {
@@ -40,6 +42,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
           clusterManager,
           catalogEntityRegistry,
           clusterStore,
+          currentOperatingSystemTheme,
         });
       },
     };

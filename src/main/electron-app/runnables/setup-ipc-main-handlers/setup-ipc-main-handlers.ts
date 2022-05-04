@@ -23,7 +23,7 @@ import { handleWindowAction, onLocationChange } from "../../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
 import { showOpenDialog } from "../../../ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
-import { getNativeColorTheme } from "../../../native-theme";
+import type { Theme } from "../../../theme/current-operating-system-theme-state.injectable";
 
 interface Dependencies {
   directoryForLensLocalStorage: string;
@@ -32,9 +32,10 @@ interface Dependencies {
   clusterManager: ClusterManager;
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
+  currentOperatingSystemTheme: IComputedValue<Theme>;
 }
 
-export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore }: Dependencies) => {
+export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore, currentOperatingSystemTheme }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -166,7 +167,7 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
   });
 
   ipcMainHandle(getNativeThemeChannel, () => {
-    return getNativeColorTheme();
+    return currentOperatingSystemTheme.get();
   });
 
   clusterStore.provideInitialFromMain();
