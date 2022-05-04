@@ -13,8 +13,8 @@ const stopTrayInjectable = getInjectable({
     const trayInitializer = di.inject(trayInjectable);
 
     return {
-      run: () => {
-        trayInitializer.stop();
+      run: async () => {
+        await trayInitializer.stop();
       },
     };
   },

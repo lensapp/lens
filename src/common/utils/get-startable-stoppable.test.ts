@@ -2,16 +2,20 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { AsyncFnMock } from "@async-fn/jest";
+import asyncFn from "@async-fn/jest";
 import { getStartableStoppable } from "./get-startable-stoppable";
+import { getPromiseStatus } from "../test-utils/get-promise-status";
+import { flushPromises } from "../test-utils/flush-promises";
 
 describe("getStartableStoppable", () => {
-  let stopMock: jest.Mock<() => void>;
-  let startMock: jest.Mock<() => () => void>;
-  let actual: { stop: () => void; start: () => void; started: boolean };
+  let stopMock: AsyncFnMock<() => Promise<void>>;
+  let startMock: AsyncFnMock<() => Promise<() => Promise<void>>>;
+  let actual: { stop: () => Promise<void>; start: () => Promise<void>; started: boolean };
 
   beforeEach(() => {
-    stopMock = jest.fn();
-    startMock = jest.fn(() => stopMock);
+    stopMock = asyncFn();
+    startMock = asyncFn();
 
     actual = getStartableStoppable("some-id", startMock);
   });
@@ -25,9 +29,7 @@ describe("getStartableStoppable", () => {
   });
 
   it("when stopping before ever starting, throws", () => {
-    expect(() => {
-      actual.stop();
-    }).toThrow("Tried to stop \"some-id\", but it has not started yet.");
+    expect(actual.stop).rejects.toThrow("Tried to stop \"some-id\", but it has not started yet.");
   });
 
   it("is not started", () => {
@@ -35,68 +37,179 @@ describe("getStartableStoppable", () => {
   });
 
   describe("when started", () => {
+    let startPromise: Promise<void>;
+
     beforeEach(() => {
-      actual.start();
+      startPromise = actual.start();
     });
 
-    it("starts", () => {
+    it("starts starting", () => {
       expect(startMock).toHaveBeenCalled();
     });
 
-    it("is started", () => {
-      expect(actual.started).toBe(true);
+    it("starting does not resolve yet", async () => {
+      const promiseStatus = await getPromiseStatus(startPromise);
+
+      expect(promiseStatus.fulfilled).toBe(false);
     });
 
-    it("when started again, throws", () => {
-      expect(() => {
-        actual.start();
-      }).toThrow("Tried to start \"some-id\", but it has already started.");
+    it("is not started yet", () => {
+      expect(actual.started).toBe(false);
     });
 
-    it("does not stop yet", () => {
-      expect(stopMock).not.toHaveBeenCalled();
-    });
-
-    describe("when stopped", () => {
-      beforeEach(() => {
-        actual.stop();
+    describe("when starting finishes", () => {
+      beforeEach(async () => {
+        await startMock.resolve(stopMock);
       });
 
-      it("stops", () => {
-        expect(stopMock).toHaveBeenCalled();
+      it("is started", () => {
+        expect(actual.started).toBe(true);
       });
 
-      it("is not started", () => {
-        expect(actual.started).toBe(false);
+      it("starting resolves", async () => {
+        const promiseStatus = await getPromiseStatus(startPromise);
+
+        expect(promiseStatus.fulfilled).toBe(true);
       });
 
-      it("when stopped again, throws", () => {
-        expect(() => {
-          actual.stop();
-        }).toThrow("Tried to stop \"some-id\", but it has already stopped.");
+      it("when started again, throws", () => {
+        expect(actual.start).rejects.toThrow("Tried to start \"some-id\", but it has already started.");
       });
 
-      describe("when started again", () => {
+      it("does not stop yet", () => {
+        expect(stopMock).not.toHaveBeenCalled();
+      });
+
+      describe("when stopped", () => {
+        let stopPromise: Promise<void>;
+
         beforeEach(() => {
-          startMock.mockClear();
-
-          actual.start();
+          stopPromise = actual.stop();
         });
 
-        it("starts", () => {
-          expect(startMock).toHaveBeenCalled();
+        it("starts stopping", () => {
+          expect(stopMock).toHaveBeenCalled();
         });
 
-        it("is started", () => {
+        it("stopping does not resolve yet", async () => {
+          const promiseStatus = await getPromiseStatus(stopPromise);
+
+          expect(promiseStatus.fulfilled).toBe(false);
+        });
+
+        it("is not stopped yet", () => {
           expect(actual.started).toBe(true);
         });
 
-        it("when stopped, stops", () => {
-          stopMock.mockClear();
+        describe("when stopping finishes", () => {
+          beforeEach(async () => {
+            await stopMock.resolve();
+          });
 
-          actual.stop();
+          it("is not started", () => {
+            expect(actual.started).toBe(false);
+          });
 
+          it("stopping resolves", async () => {
+            const promiseStatus = await getPromiseStatus(stopPromise);
+
+            expect(promiseStatus.fulfilled).toBe(true);
+          });
+
+          it("when stopped again, throws", () => {
+            expect(actual.stop).rejects.toThrow("Tried to stop \"some-id\", but it has already stopped.");
+          });
+
+          describe("when started again", () => {
+            beforeEach(
+              () => {
+                startMock.mockClear();
+
+                actual.start();
+              });
+
+            it("starts", () => {
+              expect(startMock).toHaveBeenCalled();
+            });
+
+            it("is not started yet", () => {
+              expect(actual.started).toBe(false);
+            });
+
+            describe("when starting finishes", () => {
+              beforeEach(async () => {
+                await startMock.resolve(stopMock);
+              });
+
+              it("is started", () => {
+                expect(actual.started).toBe(true);
+              });
+
+              it("when stopped again, starts stopping again", async () => {
+                stopMock.mockClear();
+
+                actual.stop();
+
+                await flushPromises();
+
+                expect(stopMock).toHaveBeenCalled();
+              });
+            });
+          });
+        });
+      });
+    });
+
+    describe("when stopped before starting finishes", () => {
+      let stopPromise: Promise<void>;
+
+      beforeEach(() => {
+        stopPromise = actual.stop();
+      });
+
+      it("does not resolve yet", async () => {
+        const promiseStatus = await getPromiseStatus(stopPromise);
+
+        expect(promiseStatus.fulfilled).toBe(false);
+      });
+
+      it("is not started yet", () => {
+        expect(actual.started).toBe(false);
+      });
+
+      describe("when starting finishes", () => {
+        beforeEach(async () => {
+          await startMock.resolve(stopMock);
+        });
+
+        it("starts stopping", () => {
           expect(stopMock).toHaveBeenCalled();
+        });
+
+        it("is not stopped yet", () => {
+          expect(actual.started).toBe(true);
+        });
+
+        it("does not resolve yet", async () => {
+          const promiseStatus = await getPromiseStatus(stopPromise);
+
+          expect(promiseStatus.fulfilled).toBe(false);
+        });
+
+        describe("when stopping finishes", () => {
+          beforeEach(async () => {
+            await stopMock.resolve();
+          });
+
+          it("is stopped", () => {
+            expect(actual.started).toBe(false);
+          });
+
+          it("resolves", async () => {
+            const promiseStatus = await getPromiseStatus(stopPromise);
+
+            expect(promiseStatus.fulfilled).toBe(true);
+          });
         });
       });
     });

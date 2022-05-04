@@ -9,10 +9,8 @@ import navigateToPreferencesInjectable from "../../common/front-end-routing/rout
 import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.injectable";
 import { getStartableStoppable } from "../../common/utils/get-startable-stoppable";
 import isAutoUpdateEnabledInjectable from "../is-auto-update-enabled.injectable";
-import trayIconPathInjectable from "./tray-icon-path.injectable";
 import showAboutInjectable from "../menu/show-about.injectable";
-import showApplicationWindowInjectable
-  from "../start-main-application/lens-window/show-application-window.injectable";
+import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 
 const trayInjectable = getInjectable({
   id: "tray",
@@ -22,7 +20,6 @@ const trayInjectable = getInjectable({
     const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
-    const trayIconPath = di.inject(trayIconPathInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const showAboutPopup = di.inject(showAboutInjectable);
 
@@ -32,7 +29,6 @@ const trayInjectable = getInjectable({
         navigateToPreferences,
         stopServicesAndExitApp,
         isAutoUpdateEnabled,
-        trayIconPath,
         showApplicationWindow,
         showAboutPopup,
       ),
