@@ -18,10 +18,10 @@
     static-eval "2.0.2"
     underscore "1.7.0"
 
-"@async-fn/jest@1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.5.3.tgz#42be6c0e8ba5ccd737e006ca600e7e319fe2a591"
-  integrity sha512-iQ9gAPZFW5U6TNcFS99ffwYYsB9LNecTnvG73BaDc/zAD0qOWctY1imEACC1pLymmm/xaf/OUq9I9QenfkatTA==
+"@async-fn/jest@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.6.0.tgz#48980e6f07c4d0d72b468b8b57a1b3be8473a746"
+  integrity sha512-Jm4kf9qQSzcOZIyiI13C4EM4euSLORA8O4JTOWwy7SwaUr8lhVOn0nVbNLx9jnP35JTYeLsLZHfAyZLhYDIl2g==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.1", "@babel/code-frame@^7.10.4":
   version "7.14.5"
@@ -1004,43 +1004,46 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@ogre-tools/fp@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-6.0.1.tgz#d673186fcc8e89cef74938c31ba34ddb33512dd8"
-  integrity sha512-Bs385eJD0zyfQpNkAuevLL5DLq1tfPTHz1Cg2Xu2E13ZmmNFROSBgoUedqhT5YqYkqzxfmsqhXHOTS35LsRZjA==
+"@ogre-tools/fp@7.0.0", "@ogre-tools/fp@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-7.0.0.tgz#55cd32cc2fcf0505fa0d3ebfd45eb0a9bbb9554c"
+  integrity sha512-vmd+Ctr9pTSulWWiYaJT4Ca2vkq1MVQvwZ42hJq+LK/tgC4vVMf6G13EMHwhRlhPyrro1/5NeN2kf6SlhgrVOg==
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/fp@file:../ogre-tools/packages/fp":
-  version "6.0.1"
+"@ogre-tools/injectable-extension-for-auto-registration@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-7.0.0.tgz#2144417dd3b3c10afe232661e11d7d0e292a3e6b"
+  integrity sha512-11RVfzMIBIS/29EUnrhRl/WhwWTYi2cJCAEyh2NnPBV7m51wS40kE/ZjDNn9s37Mfsxc8wNX0aUKwMphXFosVw==
   dependencies:
+    "@ogre-tools/fp" "^7.0.0"
+    "@ogre-tools/injectable" "^7.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-auto-registration@file:../ogre-tools/packages/injectable-extension-for-auto-registration":
-  version "6.0.1"
+"@ogre-tools/injectable-extension-for-mobx@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-7.0.0.tgz#e53a1ac9b990fd38e8b4ab78b2dbf7c05d677a0e"
+  integrity sha512-O0lzGLrdklq7U7bXsLEPQvm6SAEOjato4CmOdxm3DF3ErA1eRl9oZ3FQvRGVbHEIaPQbxc4XgrnErpl1Or+Wlg==
   dependencies:
-    "@ogre-tools/fp" "^6.0.1"
-    "@ogre-tools/injectable" "^6.0.1"
+    "@ogre-tools/fp" "^7.0.0"
+    "@ogre-tools/injectable" "^7.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-mobx@file:../ogre-tools/packages/injectable-extension-for-mobx":
-  version "6.0.1"
+"@ogre-tools/injectable-react@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-7.0.0.tgz#09c45fbf9a904673a6a0b450cb9a6a7c1110ab14"
+  integrity sha512-L/NlM4nzIg0FOfH/5T3wYBsPUxALkpt+HaZSOcgzCM9fJnaSgYv/FwdAqshg+nA3KngPDYIMkAUdS+j3uq1yEA==
   dependencies:
-    "@ogre-tools/fp" "^6.0.1"
-    "@ogre-tools/injectable" "^6.0.1"
+    "@ogre-tools/fp" "^7.0.0"
+    "@ogre-tools/injectable" "^7.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@file:../ogre-tools/packages/injectable-react":
-  version "6.0.1"
+"@ogre-tools/injectable@7.0.0", "@ogre-tools/injectable@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-7.0.0.tgz#25e6168ba3781f6b562bfbb06d1d54c976e9c94d"
+  integrity sha512-yfdNUU/q7Oy+bXnQN1lRD2wzt81xqGpf37C4iWfarZ+5GF4sjGi9w4Wuxe1s24rl2rpHZtcQ0j9bEEX51ifQHA==
   dependencies:
-    "@ogre-tools/fp" "^6.0.1"
-    "@ogre-tools/injectable" "^6.0.1"
-    lodash "^4.17.21"
-
-"@ogre-tools/injectable@^6.0.1", "@ogre-tools/injectable@file:../ogre-tools/packages/injectable":
-  version "6.0.1"
-  dependencies:
-    "@ogre-tools/fp" "^6.0.1"
+    "@ogre-tools/fp" "^7.0.0"
     lodash "^4.17.21"
 
 "@panva/asn1.js@^1.0.0":
