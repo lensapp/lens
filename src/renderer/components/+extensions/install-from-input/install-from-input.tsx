@@ -12,7 +12,7 @@ import path from "path";
 import React from "react";
 import { readFileNotify } from "../read-file-notify/read-file-notify";
 import type { InstallRequest } from "../attempt-install/install-request";
-import type { ExtensionInfo } from "../attempt-install-by-info/attempt-install-by-info";
+import type { ExtensionInfo } from "../attempt-install-by-info.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {

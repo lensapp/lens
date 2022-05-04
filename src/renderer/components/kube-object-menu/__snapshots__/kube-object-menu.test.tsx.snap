@@ -5,15 +5,14 @@ exports[`kube-object-menu given kube object renders 1`] = `
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -45,15 +44,14 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -78,9 +76,8 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -99,21 +96,19 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
           </span>
         </i>
          
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-namespace/some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+        <p>
+          Remove 
+          some-kind
+           
+          <b>
+            some-namespace/some-name
+          </b>
+           from 
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"
@@ -142,15 +137,14 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -175,9 +169,8 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -196,21 +189,19 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
           </span>
         </i>
          
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-namespace/some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+        <p>
+          Remove 
+          some-kind
+           
+          <b>
+            some-namespace/some-name
+          </b>
+           from 
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"
@@ -239,15 +230,14 @@ exports[`kube-object-menu given kube object without namespace when removing kube
   <div>
     <div>
       <ul
-        class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+        class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
       >
         <li>
           Some menu item
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-remove"
+          data-testid="menu-action-delete"
           tabindex="0"
         >
           <i
@@ -272,9 +262,8 @@ exports[`kube-object-menu given kube object without namespace when removing kube
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center ConfirmDialog modal"
+    class="Dialog flex center ConfirmDialog modal"
     data-testid="confirmation-dialog"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
       class="box"
@@ -293,21 +282,19 @@ exports[`kube-object-menu given kube object without namespace when removing kube
           </span>
         </i>
          
-        <div>
-          <p>
-            Remove 
-            some-kind
-             
-            <b>
-              some-name
-            </b>
-             from 
-            <b>
-              Some name
-            </b>
-            ?
-          </p>
-        </div>
+        <p>
+          Remove 
+          some-kind
+           
+          <b>
+            some-name
+          </b>
+           from 
+          <b>
+            Some name
+          </b>
+          ?
+        </p>
       </div>
       <div
         class="confirm-buttons"
@@ -335,8 +322,7 @@ exports[`kube-object-menu given no kube object, renders 1`] = `
 <body>
   <div>
     <ul
-      class="Animate opacity Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-      style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
     />
   </div>
 </body>

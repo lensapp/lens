@@ -11,6 +11,9 @@ import { navigation } from "./history";
 import type { PageParamInit } from "./page-param";
 import { PageParam } from "./page-param";
 
+/**
+ * @deprecated use `di.inject(navigateInjectable)` instead
+ */
 export function navigate(location: LocationDescriptor) {
   const currentLocation = createPath(navigation.location);
 
