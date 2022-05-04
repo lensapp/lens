@@ -85,6 +85,7 @@ describe("HotbarStore", () => {
     di.unoverride(hotbarStoreInjectable);
 
     di.override(catalogEntityRegistryInjectable, () => ({
+      // eslint-disable-next-line unused-imports/no-unused-vars-ts
       addComputedSource: (id, source) => {},
       items: [
         getMockCatalogEntity({

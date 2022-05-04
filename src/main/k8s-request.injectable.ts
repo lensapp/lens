@@ -2,7 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import request, { RequestPromiseOptions } from "request-promise-native";
+import type { RequestPromiseOptions } from "request-promise-native";
+import request from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";

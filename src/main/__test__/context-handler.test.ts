@@ -5,15 +5,14 @@
 
 import { UserStore } from "../../common/user-store";
 import type { ContextHandler } from "../context-handler/context-handler";
-import type { PrometheusService } from "../prometheus";
-import { PrometheusProvider, PrometheusProviderRegistry } from "../prometheus";
+import type { PrometheusService, PrometheusProviderRegistry } from "../prometheus";
+import { PrometheusProvider } from "../prometheus";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
-import prometheusProviderRegistryInjectable
-  from "../prometheus/prometheus-provider-registry.injectable";
+import prometheusProviderRegistryInjectable from "../prometheus/prometheus-provider-registry.injectable";
 
 jest.mock("electron", () => ({
   app: {

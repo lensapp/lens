@@ -17,7 +17,8 @@ import { bytesToUnits, getOrInsertWith, iter, noop } from "../../../common/utils
 import logger from "../../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
-import { catalogEntityFromCluster, ClusterManager } from "../../cluster-manager";
+import type { ClusterManager } from "../../cluster-manager";
+import { catalogEntityFromCluster } from "../../cluster-manager";
 import { UserStore } from "../../../common/user-store";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { createHash } from "crypto";
