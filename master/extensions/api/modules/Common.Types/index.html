@@ -768,6 +768,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kubeobjecthandlerregistration" class="md-nav__link">
+    KubeObjectHandlerRegistration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubeobjectoncontextmenuopen" class="md-nav__link">
+    KubeObjectOnContextMenuOpen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shellenvmodifier" class="md-nav__link">
     ShellEnvModifier
   </a>
@@ -805,10 +819,13 @@
 <li><a href="../../interfaces/Common.Types.CustomCategoryViewComponents/">CustomCategoryViewComponents</a></li>
 <li><a href="../../interfaces/Common.Types.CustomCategoryViewProps/">CustomCategoryViewProps</a></li>
 <li><a href="../../interfaces/Common.Types.CustomCategoryViewRegistration/">CustomCategoryViewRegistration</a></li>
+<li><a href="../../interfaces/Common.Types.KubeObjectContextMenuItem/">KubeObjectContextMenuItem</a></li>
 <li><a href="../../interfaces/Common.Types.KubeObjectDetailComponents/">KubeObjectDetailComponents</a></li>
 <li><a href="../../interfaces/Common.Types.KubeObjectDetailRegistration/">KubeObjectDetailRegistration</a></li>
+<li><a href="../../interfaces/Common.Types.KubeObjectHandlers/">KubeObjectHandlers</a></li>
 <li><a href="../../interfaces/Common.Types.KubeObjectMenuComponents/">KubeObjectMenuComponents</a></li>
 <li><a href="../../interfaces/Common.Types.KubeObjectMenuRegistration/">KubeObjectMenuRegistration</a></li>
+<li><a href="../../interfaces/Common.Types.KubeObjectOnContextMenuOpenContext/">KubeObjectOnContextMenuOpenContext</a></li>
 <li><a href="../../interfaces/Common.Types.KubeObjectStatusRegistration/">KubeObjectStatusRegistration</a></li>
 <li><a href="../../interfaces/Common.Types.PageComponentProps/">PageComponentProps</a></li>
 <li><a href="../../interfaces/Common.Types.PageComponents/">PageComponents</a></li>
@@ -827,6 +844,8 @@
 <li><a href="./#ipcmainevent">IpcMainEvent</a></li>
 <li><a href="./#ipcmaininvokeevent">IpcMainInvokeEvent</a></li>
 <li><a href="./#ipcrendererevent">IpcRendererEvent</a></li>
+<li><a href="./#kubeobjecthandlerregistration">KubeObjectHandlerRegistration</a></li>
+<li><a href="./#kubeobjectoncontextmenuopen">KubeObjectOnContextMenuOpen</a></li>
 <li><a href="./#shellenvmodifier">ShellEnvModifier</a></li>
 </ul>
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
@@ -841,11 +860,36 @@ Licensed under MIT License. See LICENSE in root directory for more information.<
 <h3 id="ipcrendererevent">IpcRendererEvent<a class="headerlink" href="#ipcrendererevent" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>IpcRendererEvent</strong>: <code>Electron.IpcRendererEvent</code></p>
 <hr />
+<h3 id="kubeobjecthandlerregistration">KubeObjectHandlerRegistration<a class="headerlink" href="#kubeobjecthandlerregistration" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>KubeObjectHandlerRegistration</strong>: { <code>apiVersions</code>: <code>string</code>[] ; <code>kind</code>: <code>string</code>  } &amp; <code>RequireAtLeastOne</code>&lt;<a href="../../interfaces/Common.Types.KubeObjectHandlers/"><code>KubeObjectHandlers</code></a>></p>
+<hr />
+<h3 id="kubeobjectoncontextmenuopen">KubeObjectOnContextMenuOpen<a class="headerlink" href="#kubeobjectoncontextmenuopen" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>KubeObjectOnContextMenuOpen</strong>: (<code>ctx</code>: <a href="../../interfaces/Common.Types.KubeObjectOnContextMenuOpenContext/"><code>KubeObjectOnContextMenuOpenContext</code></a>) =&gt; <code>void</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>ctx</code>): <code>void</code></p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>ctx</code></td>
+<td align="left"><a href="../../interfaces/Common.Types.KubeObjectOnContextMenuOpenContext/"><code>KubeObjectOnContextMenuOpenContext</code></a></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>void</code></p>
+<hr />
 <h3 id="shellenvmodifier">ShellEnvModifier<a class="headerlink" href="#shellenvmodifier" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>ShellEnvModifier</strong>: (<code>ctx</code>: <a href="../../interfaces/Common.Types.ShellEnvContext/"><code>ShellEnvContext</code></a>, <code>env</code>: <code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>>) =&gt; <code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
 <p>▸ (<code>ctx</code>, <code>env</code>): <code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>></p>
-<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -864,7 +908,7 @@ Licensed under MIT License. See LICENSE in root directory for more information.<
 </tr>
 </tbody>
 </table>
-<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
 <p><code>Record</code>&lt;<code>string</code>, <code>string</code> | <code>undefined</code>></p>
                 
               

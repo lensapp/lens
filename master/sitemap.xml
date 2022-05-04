@@ -96,11 +96,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.ConfirmDialog/</loc>
-         <lastmod>2022-05-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.Dialog/</loc>
          <lastmod>2022-05-04</lastmod>
          <changefreq>daily</changefreq>
@@ -137,11 +132,6 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.Menu/</loc>
-         <lastmod>2022-05-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.MenuActions/</loc>
          <lastmod>2022-05-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -691,6 +681,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityContextMenuNavigate/</loc>
+         <lastmod>2022-05-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityData/</loc>
          <lastmod>2022-05-04</lastmod>
          <changefreq>daily</changefreq>
@@ -791,6 +786,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectContextMenuItem/</loc>
+         <lastmod>2022-05-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectDetailComponents/</loc>
          <lastmod>2022-05-04</lastmod>
          <changefreq>daily</changefreq>
@@ -801,12 +801,22 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectHandlers/</loc>
+         <lastmod>2022-05-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectMenuComponents/</loc>
          <lastmod>2022-05-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectMenuRegistration/</loc>
+         <lastmod>2022-05-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectOnContextMenuOpenContext/</loc>
          <lastmod>2022-05-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -882,6 +892,11 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.BarChartProps/</loc>
+         <lastmod>2022-05-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.BaseIconProps/</loc>
          <lastmod>2022-05-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
