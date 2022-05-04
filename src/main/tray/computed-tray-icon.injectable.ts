@@ -11,7 +11,7 @@ import type { Disposer } from "../../common/utils";
 import { getOrInsertWithAsync, HashMap } from "../../common/utils";
 import updateAvailableInjectable from "../app-updater/update-available.injectable";
 import useDarkColorsInjectable from "../electron/use-dark-colors.injectable";
-import { createTrayIcon } from "./create-tray-icon";
+import createTrayIconInjectable from "./create-tray-icon.injectable";
 
 export interface ComputedTrayIcon {
   getCurrent(): Promise<NativeImage>;
@@ -29,15 +29,13 @@ const computedTrayIconInjectable = getInjectable({
     const useDarkColors = di.inject(useDarkColorsInjectable);
     const updateAvailable = di.inject(updateAvailableInjectable);
     const logger = di.inject(loggerInjectable);
+    const createTrayIcon = di.inject(createTrayIconInjectable);
     const lock = new AwaitLock();
     const cache = new HashMap<NativeImageCacheKey, NativeImage>(
       (key) => `${key.updateAvailable ? "updateAvailable" : ""}:${key.useDarkColors ? "shouldUseDarkColors" : ""}`,
     );
 
-    const computedCurrent = (key: NativeImageCacheKey) => getOrInsertWithAsync(cache, key, () => createTrayIcon({
-      size: 16,
-      ...key,
-    }));
+    const computedCurrent = (key: NativeImageCacheKey) => getOrInsertWithAsync(cache, key, () => createTrayIcon(key));
 
     return {
       getCurrent: () => computedCurrent({
