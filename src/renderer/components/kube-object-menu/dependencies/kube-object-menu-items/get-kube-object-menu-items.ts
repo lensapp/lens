@@ -5,7 +5,7 @@
 import { conforms, includes, eq } from "lodash/fp";
 import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 import type { LensRendererExtension } from "../../../../../extensions/lens-renderer-extension";
-import { staticKubeObjectMenuItems as staticMenuItems } from "./static-kube-object-menu-items";
+import { staticKubeObjectMenuItems as staticMenuItems } from "../static-kube-object-menu-items";
 
 interface Dependencies {
   extensions: LensRendererExtension[];

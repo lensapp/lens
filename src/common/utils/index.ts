@@ -30,6 +30,7 @@ export * from "./n-fircate";
 export * from "./openBrowser";
 export * from "./paths";
 export * from "./promise-exec";
+export * from "./readonly";
 export * from "./reject-promise";
 export * from "./singleton";
 export * from "./sort-compare";

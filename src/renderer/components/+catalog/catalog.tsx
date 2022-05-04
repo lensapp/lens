@@ -11,10 +11,8 @@ import { ItemListLayout } from "../item-object-list";
 import type { IComputedValue } from "mobx";
 import { action, computed, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
-import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu } from "../../api/catalog-entity";
-import { ConfirmDialog } from "../confirm-dialog";
 import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import { Notifications } from "../notifications";
@@ -46,6 +44,10 @@ import type { HotbarStore } from "../../../common/hotbars/store";
 import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
+import type { Navigate } from "../../navigation/navigate.injectable";
+import navigateInjectable from "../../navigation/navigate.injectable";
+import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
+import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;
@@ -61,6 +63,8 @@ interface Dependencies {
   hotbarStore: HotbarStore;
   catalogCategoryRegistry: CatalogCategoryRegistry;
   onContextMenuOpen: OnContextMenuOpen;
+  navigate: Navigate;
+  normalizeMenuItem: NormalizeCatalogEntityContextMenu;
 }
 
 @observer
@@ -160,23 +164,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     }
   };
 
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-    if (menuItem.confirm) {
-      ConfirmDialog.open({
-        okButtonProps: {
-          primary: false,
-          accent: true,
-        },
-        ok: () => {
-          menuItem.onClick();
-        },
-        message: menuItem.confirm.message,
-      });
-    } else {
-      menuItem.onClick();
-    }
-  }
-
   get categories() {
     return this.props.catalogCategoryRegistry.items;
   }
@@ -206,7 +193,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
       this.menuItems.clear();
       this.props.onContextMenuOpen(entity, {
         menuItems: this.menuItems,
-        navigate: (url) => navigate(url),
+        navigate: this.props.navigate,
       });
     };
 
@@ -219,11 +206,13 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
           View Details
         </MenuItem>
         {
-          this.menuItems.map((menuItem, index) => (
-            <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              {menuItem.title}
-            </MenuItem>
-          ))
+          this.menuItems
+            .map(this.props.normalizeMenuItem)
+            .map((menuItem, index) => (
+              <MenuItem key={index} onClick={menuItem.onClick}>
+                {menuItem.title}
+              </MenuItem>
+            ))
         }
         <HotbarToggleMenuItem
           key="hotbar-toggle"
@@ -358,8 +347,9 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 }
 
-export const Catalog = withInjectables<Dependencies>( NonInjectedCatalog, {
-  getProps: (di) => ({
+export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
+  getProps: (di, props) => ({
+    ...props,
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),
@@ -370,5 +360,7 @@ export const Catalog = withInjectables<Dependencies>( NonInjectedCatalog, {
     hotbarStore: di.inject(hotbarStoreInjectable),
     catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+    navigate: di.inject(navigateInjectable),
+    normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
   }),
 });

@@ -5,8 +5,8 @@
 
 import "./animate.scss";
 import React from "react";
-import { observable, reaction, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observable, makeObservable } from "mobx";
+import { observer } from "mobx-react";
 import { cssNames, noop } from "../../utils";
 
 export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
@@ -47,15 +47,24 @@ class DefaultedAnimate extends React.Component<AnimateProps & typeof DefaultedAn
     return React.Children.only(this.props.children) as React.ReactElement<React.HTMLAttributes<any>>;
   }
 
+  private toggle(enter: boolean) {
+    if (enter) {
+      this.enter();
+    } else {
+      this.leave();
+    }
+  }
+
   componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => this.props.enter, enter => {
-        if (enter) this.enter();
-        else this.leave();
-      }, {
-        fireImmediately: true,
-      }),
-    ]);
+    this.toggle(this.props.enter);
+  }
+
+  componentDidUpdate(prevProps: Readonly<AnimateProps>): void {
+    const { enter } = this.props;
+
+    if (prevProps.enter !== enter) {
+      this.toggle(enter);
+    }
   }
 
   enter() {

@@ -133,6 +133,10 @@ export function bindPredicate<FnArgs extends any[], T>(fn: (arg1: unknown, ...ar
   return (arg1: unknown): arg1 is T => fn(arg1, ...boundArgs);
 }
 
+export function hasDefiniteField<Field extends keyof T, T>(field: Field): (val: T) => val is T & { [f in Field]-?: NonNullable<T[Field]> } {
+  return (val): val is T & { [f in Field]-?: NonNullable<T[Field]> } => val[field] != null;
+}
+
 export function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
   return isObject(error)
     && hasOptionalTypedProperty(error, "code", isString)

@@ -7,7 +7,8 @@ import "./confirm-dialog.scss";
 
 import type { ReactNode } from "react";
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import type { IObservableValue } from "mobx";
+import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
 import type { ButtonProps } from "../button";
@@ -16,6 +17,8 @@ import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import confirmDialogStateInjectable from "./state.injectable";
 
 export interface ConfirmDialogProps extends Partial<DialogProps> {
 }
@@ -34,6 +37,10 @@ export interface ConfirmDialogBooleanParams {
   cancelButtonProps?: Partial<ButtonProps>;
 }
 
+interface Dependencies {
+  state: IObservableValue<ConfirmDialogParams | undefined>;
+}
+
 const defaultParams = {
   ok: noop,
   cancel: noop,
@@ -42,41 +49,18 @@ const defaultParams = {
   icon: <Icon big material="warning"/>,
 };
 
-const dialogState = observable.box<ConfirmDialogParams | undefined>();
-
 @observer
-export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
+class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Dependencies> {
   @observable isSaving = false;
 
-  constructor(props: ConfirmDialogProps & typeof defaultParams) {
+  constructor(props: ConfirmDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(params: ConfirmDialogParams) {
-    dialogState.set(params);
-  }
-
-  static confirm(params: ConfirmDialogBooleanParams): Promise<boolean> {
-    return new Promise(resolve => {
-      ConfirmDialog.open({
-        ok: () => resolve(true),
-        cancel: () => resolve(false),
-        ...params,
-      });
-    });
-  }
-
-  static defaultParams = {
-    ok: noop,
-    cancel: noop,
-    labelOk: "Ok",
-    labelCancel: "Cancel",
-    icon: <Icon big material="warning"/>,
-  };
-
+  @computed
   get params() {
-    return Object.assign({}, ConfirmDialog.defaultParams, dialogState.get());
+    return Object.assign({}, defaultParams, this.props.state.get() ?? {} as ConfirmDialogParams);
   }
 
   ok = async () => {
@@ -100,7 +84,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       );
     } finally {
       this.isSaving = false;
-      dialogState.set(undefined);
+      this.props.state.set(undefined);
     }
   };
 
@@ -128,18 +112,18 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       );
     } finally {
       this.isSaving = false;
-      dialogState.set(undefined);
+      this.props.state.set(undefined);
     }
   };
 
   render() {
-    const { className, ...dialogProps } = this.props;
+    const { state, className, ...dialogProps } = this.props;
+    const isOpen = Boolean(state.get());
     const {
       icon, labelOk, labelCancel, message,
       okButtonProps = {},
       cancelButtonProps = {},
     } = this.params;
-    const isOpen = Boolean(dialogState.get());
 
     return (
       <Dialog
@@ -151,7 +135,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
         {...(isOpen ? { "data-testid": "confirmation-dialog" } : {})}
       >
         <div className="confirm-content">
-          {icon} 
+          {icon}
           {" "}
           {message}
         </div>
@@ -178,3 +162,10 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     );
   }
 }
+
+export const ConfirmDialog = withInjectables<Dependencies, ConfirmDialogProps>(NonInjectedConfirmDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    state: di.inject(confirmDialogStateInjectable),
+  }),
+});

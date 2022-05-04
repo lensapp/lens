@@ -13,16 +13,15 @@ import {
   LensProtocolRouter,
 } from "../../../common/protocol-handler";
 import { Notifications } from "../../components/notifications";
-import type { ExtensionInfo } from "../../components/+extensions/attempt-install-by-info/attempt-install-by-info";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { NavigateToClusterView } from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import assert from "assert";
+import type { AttemptInstallByInfo } from "../../components/+extensions/attempt-install-by-info.injectable";
 
 // TODO: make it so that the handlers are type safe and we don't need to do the asserts
-
 interface Dependencies {
-  attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>;
+  attemptInstallByInfo: AttemptInstallByInfo;
   lensProtocolRouterRenderer: LensProtocolRouterRenderer;
   navigateToCatalog: NavigateToCatalog;
   navigateToAddCluster: () => void;

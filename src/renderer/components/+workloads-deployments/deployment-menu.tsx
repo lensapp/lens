@@ -7,18 +7,20 @@ import type { KubeObjectMenuProps } from "../kube-object-menu";
 import type { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { ConfirmDialog } from "../confirm-dialog";
 import { Notifications } from "../notifications";
 import type { OpenDeploymentScaleDialog } from "./scale/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import deploymentApiInjectable from "../../../common/k8s-api/endpoints/deployment.api.injectable";
 import openDeploymentScaleDialogInjectable from "./scale/open.injectable";
+import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
+import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 
 export interface DeploymentMenuProps extends KubeObjectMenuProps<Deployment> {}
 
 interface Dependencies {
   openDeploymentScaleDialog: OpenDeploymentScaleDialog;
   deploymentApi: DeploymentApi;
+  openConfirmDialog: OpenConfirmDialog;
 }
 
 const NonInjectedDeploymentMenu = ({
@@ -26,6 +28,7 @@ const NonInjectedDeploymentMenu = ({
   object,
   openDeploymentScaleDialog,
   toolbar,
+  openConfirmDialog,
 }: Dependencies & DeploymentMenuProps) => (
   <>
     <MenuItem onClick={() => openDeploymentScaleDialog(object)}>
@@ -37,7 +40,7 @@ const NonInjectedDeploymentMenu = ({
       <span className="title">Scale</span>
     </MenuItem>
     <MenuItem
-      onClick={() => ConfirmDialog.open({
+      onClick={() => openConfirmDialog({
         ok: async () =>
         {
           try {
@@ -74,5 +77,6 @@ export const DeploymentMenu = withInjectables<Dependencies, DeploymentMenuProps>
     ...props,
     deploymentApi: di.inject(deploymentApiInjectable),
     openDeploymentScaleDialog: di.inject(openDeploymentScaleDialogInjectable),
+    openConfirmDialog: di.inject(openConfirmDialogInjectable),
   }),
 });

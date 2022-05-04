@@ -10,7 +10,6 @@ import React from "react";
 import { computed, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
 import type { ConfirmDialogParams } from "../confirm-dialog";
-import { ConfirmDialog } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { IClassName } from "../../utils";
@@ -30,6 +29,8 @@ import type { ItemListStore } from "./list-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
 import pageFiltersStoreInjectable from "./page-filters/store.injectable";
+import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
+import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -69,6 +70,7 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
 interface Dependencies {
   themeStore: ThemeStore;
   pageFiltersStore: PageFiltersStore;
+  openConfirmDialog: OpenConfirmDialog;
 }
 
 @observer
@@ -161,7 +163,7 @@ class NonInjectedItemListLayoutContent<
   }
 
   removeItemsDialog(selectedItems: Item[]) {
-    const { customizeRemoveDialog, store } = this.props;
+    const { customizeRemoveDialog, store, openConfirmDialog } = this.props;
     const visibleMaxNamesCount = 5;
     const selectedNames = selectedItems.map(ns => ns.getName()).slice(0, visibleMaxNamesCount).join(", ");
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
@@ -203,7 +205,7 @@ class NonInjectedItemListLayoutContent<
         ? removeSelectedItems.bind(store)
         : noop;
 
-    ConfirmDialog.open({
+    openConfirmDialog({
       ok: onConfirm,
       labelOk: "Remove",
       message,
@@ -372,5 +374,6 @@ export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayou
     ...props,
     themeStore: di.inject(themeStoreInjectable),
     pageFiltersStore: di.inject(pageFiltersStoreInjectable),
+    openConfirmDialog: di.inject(openConfirmDialogInjectable),
   }),
 }) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;

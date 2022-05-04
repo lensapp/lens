@@ -18,13 +18,14 @@ import type { AppPreferenceRegistration } from "../renderer/components/+preferen
 import type { AdditionalCategoryColumnRegistration } from "../renderer/components/+catalog/custom-category-columns";
 import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
 import type { StatusBarRegistration } from "../renderer/components/status-bar/status-bar-registration";
-import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/dependencies/kube-object-menu-items/kube-object-menu-registration";
+import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/kube-object-menu-registration";
 import type { WorkloadsOverviewDetailRegistration } from "../renderer/components/+workloads-overview/workloads-overview-detail-registration";
 import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";
 import { fromPairs, map, matches, toPairs } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import { getExtensionRoutePath } from "../renderer/routes/for-extension";
 import type { LensRendererExtensionDependencies } from "./lens-extension-set-dependencies";
+import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
 
 export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
   globalPages: registries.PageRegistration[] = [];
@@ -44,6 +45,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
   topBarItems: TopBarRegistration[] = [];
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
   customCategoryViews: CustomCategoryViewRegistration[] = [];
+  kubeObjectHandlers: KubeObjectHandlerRegistration[] = [];
 
   async navigate(pageId?: string, params: object = {}) {
     const routes = this[lensExtensionDependencies].routes.get();

@@ -208,7 +208,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
                 )}
               </div>
               {toolbar}
-              <Icon material="close" onClick={this.close}/>
+              <Icon material="close" tooltip="Close" onClick={this.close}/>
             </div>
             <div
               className={cssNames("drawer-content flex column box grow", contentClass)}

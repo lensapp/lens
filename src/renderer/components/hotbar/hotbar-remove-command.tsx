@@ -7,19 +7,22 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
-import { ConfirmDialog } from "../confirm-dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import type { HotbarStore } from "../../../common/hotbars/store";
+import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
+import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
+  openConfirmDialog: OpenConfirmDialog;
   hotbarStore: HotbarStore;
 }
 
 const NonInjectedHotbarRemoveCommand = observer(({
   closeCommandOverlay,
   hotbarStore,
+  openConfirmDialog,
 }: Dependencies) => (
   <Select
     menuPortalTarget={null}
@@ -29,8 +32,7 @@ const NonInjectedHotbarRemoveCommand = observer(({
       }
 
       closeCommandOverlay();
-      // TODO: make confirm dialog injectable
-      ConfirmDialog.open({
+      openConfirmDialog({
         okButtonProps: {
           label: "Remove Hotbar",
           primary: false,
@@ -68,8 +70,9 @@ const NonInjectedHotbarRemoveCommand = observer(({
 
 export const HotbarRemoveCommand = withInjectables<Dependencies>(NonInjectedHotbarRemoveCommand, {
   getProps: (di, props) => ({
+    ...props,
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
     hotbarStore: di.inject(hotbarStoreInjectable),
-    ...props,
+    openConfirmDialog: di.inject(openConfirmDialogInjectable),
   }),
 });
