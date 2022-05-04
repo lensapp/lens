@@ -8,8 +8,8 @@ import getElectronThemeInjectable from "../electron-app/features/get-electron-th
 
 export type Theme = "dark" | "light";
 
-const currentOperatingSystemThemeStateInjectable = getInjectable({
-  id: "current-operating-system-theme-state",
+const operatingSystemThemeStateInjectable = getInjectable({
+  id: "operating-system-theme-state",
 
   instantiate: (di) => {
     const getElectronTheme = di.inject(getElectronThemeInjectable);
@@ -21,4 +21,4 @@ const currentOperatingSystemThemeStateInjectable = getInjectable({
   },
 });
 
-export default currentOperatingSystemThemeStateInjectable;
+export default operatingSystemThemeStateInjectable;
