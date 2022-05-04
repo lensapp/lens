@@ -16,8 +16,10 @@ export const getKubeObjectMenuItems = ({
   extensions,
   kubeObject,
 }: Dependencies) => {
-  return staticMenuItems
-    .concat(extensions.flatMap((extension) => extension.kubeObjectMenuItems))
+  return [
+    ...staticMenuItems,
+    ...extensions.flatMap((extension) => extension.kubeObjectMenuItems),
+  ]
     .filter(
       conforms({
         kind: eq(kubeObject?.kind),

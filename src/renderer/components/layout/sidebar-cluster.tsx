@@ -25,7 +25,7 @@ import navigateInjectable from "../../navigation/navigate.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 
 export interface SidebarClusterProps {
-  clusterEntity: CatalogEntity;
+  clusterEntity: CatalogEntity | null | undefined;
 }
 
 interface Dependencies {
