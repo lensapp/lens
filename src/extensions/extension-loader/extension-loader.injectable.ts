@@ -17,9 +17,7 @@ const extensionLoaderInjectable = getInjectable({
       updateExtensionsState: di.inject(updateExtensionsStateInjectable),
       createExtensionInstance: di.inject(createExtensionInstanceInjectable),
       extensionRegistrators: di.injectMany(extensionRegistratorInjectionToken),
-      extensionInstallationCounter: di.inject(
-        extensionInstallationCounterInjectable,
-      ),
+      extensionInstallationCounter: di.inject(extensionInstallationCounterInjectable),
     }),
 });
 

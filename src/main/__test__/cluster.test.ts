@@ -2,9 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import directoryForTempInjectable
-  from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
-
 const logger = {
   silly: jest.fn(),
   debug: jest.fn(),
@@ -45,8 +42,8 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 

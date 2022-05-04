@@ -73,5 +73,4 @@ const startMainApplicationInjectable = getInjectable({
 const getDeepLinkUrl = (commandLineArguments: string[]) =>
   pipeline(commandLineArguments, map(toLower), find(startsWith("lens://")));
 
-
 export default startMainApplicationInjectable;

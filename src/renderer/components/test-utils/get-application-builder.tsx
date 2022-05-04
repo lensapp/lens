@@ -49,9 +49,7 @@ type Callback = (dis: DiContainers) => void | Promise<void>;
 export interface ApplicationBuilder {
   dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
-  addExtensions: (
-    ...extensions: LensRendererExtension[]
-  ) => Promise<ApplicationBuilder>;
+  addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeSetups: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;

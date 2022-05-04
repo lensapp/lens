@@ -9,30 +9,21 @@ import { fireEvent } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
-
 import type { Cluster } from "../../../../common/cluster/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
-
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
 import deleteClusterDialogModelInjectable from "../delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
 import type { DeleteClusterDialogModel } from "../delete-cluster-dialog-model/delete-cluster-dialog-model";
 import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
-import type {
-  ApplicationBuilder } from "../../test-utils/get-application-builder";
-import {
-  getApplicationBuilder,
-} from "../../test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../test-utils/get-application-builder";
 import { routeInjectionToken } from "../../../../common/front-end-routing/route-injection-token";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import {
-  routeSpecificComponentInjectionToken,
-} from "../../../routes/route-specific-component-injection-token";
-import {
-  navigateToRouteInjectionToken,
-} from "../../../../common/front-end-routing/navigate-to-route-injection-token";
+import { routeSpecificComponentInjectionToken } from "../../../routes/route-specific-component-injection-token";
+import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 
 jest.mock("electron", () => ({
   app: {

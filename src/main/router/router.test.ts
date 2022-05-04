@@ -14,9 +14,7 @@ import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 describe("router", () => {
   let router: Router;

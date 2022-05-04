@@ -24,8 +24,7 @@ import { computed } from "mobx";
 import showAboutInjectable from "./show-about.injectable";
 import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
 import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
-import showApplicationWindowInjectable
-  from "../start-main-application/lens-window/show-application-window.injectable";
+import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
   return check ? [] : menuItems;
