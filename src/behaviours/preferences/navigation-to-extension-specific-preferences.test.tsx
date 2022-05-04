@@ -165,6 +165,26 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
       });
     });
+
+    describe("given extension with registered tab", () => {
+      beforeEach(async () => {
+        const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
+
+        await applicationBuilder.addExtensions(extension);
+      });
+
+      it("shows extension tab in general area", () => {
+        const actual = rendered.getByTestId("tab-link-for-extension-specific-tab-navigation-item-license-extension-tab");
+
+        expect(actual).toMatchSnapshot();
+      });
+
+      it("does not show custom settings block", () => {
+        const actual = rendered.queryByTestId("extension-settings");
+
+        expect(actual).not.toBeInTheDocument();
+      });
+    });
   });
 });
 
@@ -230,4 +250,47 @@ const extensionStubWithShowInPreferencesTab: Partial<LensRendererExtension> = {
       },
     },
   ],
+};
+
+const extensionStubWithWithRegisteredTab: Partial<LensRendererExtension> = {
+  id: "registered-tab-page-id",
+
+  appPreferences: [
+    {
+      title: "License item",
+      id: "license-preference-item-id",
+      showInPreferencesTab: "license-extension-tab",
+
+      components: {
+        Hint: () => <div data-testid="license-preference-item-hint" />,
+        Input: () => <div data-testid="license-preference-item-input" />,
+      },
+    },
+    {
+      title: "Menu item",
+      id: "menu-preference-item-id",
+      showInPreferencesTab: "menu-extension-tab",
+
+      components: {
+        Hint: () => <div data-testid="menu-preference-item-hint" />,
+        Input: () => <div data-testid="menu-preference-item-input" />,
+      },
+    },
+    {
+      title: "Survey item",
+      id: "survey-preference-item-id",
+      showInPreferencesTab: "survey-extension-tab",
+
+      components: {
+        Hint: () => <div data-testid="survey-preference-item-hint" />,
+        Input: () => <div data-testid="survey-preference-item-input" />,
+      },
+    },
+  ],
+
+  appPreferenceTabs: [{
+    title: "License tab",
+    id: "license-extension-tab",
+    orderNumber: 100,
+  }],
 };

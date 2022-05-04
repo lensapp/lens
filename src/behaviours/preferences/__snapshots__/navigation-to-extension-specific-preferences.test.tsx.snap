@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab shows extension tab in general area 1`] = `
+<div
+  class="Tab flex gaps align-center"
+  data-testid="tab-link-for-extension-specific-tab-navigation-item-license-extension-tab"
+  role="tab"
+  tabindex="0"
+>
+  <div
+    class="label"
+  >
+    License tab
+  </div>
+</div>
+`;
+
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given multiple extensions with specific preferences, when navigating to extension specific preferences page renders 1`] = `
 <div>
   <div
@@ -45,30 +60,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
             </div>
           </div>
           <div
-            class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-some-test-extension-id"
-            role="tab"
-            tabindex="0"
-          >
-            <div
-              class="label"
-            >
-              some-test-extension-id
-            </div>
-          </div>
-          <div
-            class="Tab flex gaps align-center"
-            data-testid="tab-link-for-extension-some-other-test-extension-id"
-            role="tab"
-            tabindex="0"
-          >
-            <div
-              class="label"
-            >
-              some-other-test-extension-id
-            </div>
-          </div>
-          <div
             class="Tab flex gaps align-center"
             data-testid="tab-link-for-kubernetes"
             role="tab"
@@ -104,6 +95,52 @@ exports[`preferences - navigation to extension specific preferences given in pre
               Terminal
             </div>
           </div>
+          <div
+            data-testid="extension-settings"
+          >
+            <hr />
+            <div
+              class="header flex items-center"
+            >
+              <i
+                class="Icon mr-3 material focusable smallest"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+               Extensions
+            </div>
+            <div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-some-test-extension-id"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  some-test-extension-id
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-extension-some-other-test-extension-id"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  some-other-test-extension-id
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -118,7 +155,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
           id="extensions"
         >
           <h2>
-            Extensions
+            some-test-extension-id
+             preferences
           </h2>
           <section
             class="small"
@@ -765,18 +803,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </div>
           <div
             class="Tab flex gaps align-center"
-            data-testid="tab-link-for-extension-some-test-extension-id"
-            role="tab"
-            tabindex="0"
-          >
-            <div
-              class="label"
-            >
-              some-test-extension-id
-            </div>
-          </div>
-          <div
-            class="Tab flex gaps align-center"
             data-testid="tab-link-for-kubernetes"
             role="tab"
             tabindex="0"
@@ -811,6 +837,40 @@ exports[`preferences - navigation to extension specific preferences given in pre
               Terminal
             </div>
           </div>
+          <div
+            data-testid="extension-settings"
+          >
+            <hr />
+            <div
+              class="header flex items-center"
+            >
+              <i
+                class="Icon mr-3 material focusable smallest"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+               Extensions
+            </div>
+            <div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-extension-some-test-extension-id"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  some-test-extension-id
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -843,7 +903,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-14-live-region"
+                id="react-select-34-live-region"
               />
               <span
                 aria-atomic="false"
@@ -859,7 +919,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-14-placeholder"
+                    id="react-select-34-placeholder"
                   >
                     Select...
                   </div>
@@ -869,7 +929,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-14-placeholder"
+                      aria-describedby="react-select-34-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -928,7 +988,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-15-live-region"
+                id="react-select-35-live-region"
               />
               <span
                 aria-atomic="false"
@@ -944,7 +1004,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-15-placeholder"
+                    id="react-select-35-placeholder"
                   >
                     Select...
                   </div>
@@ -954,7 +1014,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-15-placeholder"
+                      aria-describedby="react-select-35-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1068,7 +1128,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-16-live-region"
+                id="react-select-36-live-region"
               />
               <span
                 aria-atomic="false"
@@ -1084,7 +1144,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-16-placeholder"
+                    id="react-select-36-placeholder"
                   >
                     Select...
                   </div>
@@ -1094,7 +1154,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-16-placeholder"
+                      aria-describedby="react-select-36-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1153,7 +1213,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-17-live-region"
+                id="react-select-37-live-region"
               />
               <span
                 aria-atomic="false"
@@ -1169,7 +1229,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-17-placeholder"
+                    id="react-select-37-placeholder"
                   >
                     Select...
                   </div>
@@ -1179,7 +1239,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-17-placeholder"
+                      aria-describedby="react-select-37-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1309,18 +1369,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
             </div>
           </div>
           <div
-            class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-some-test-extension-id"
-            role="tab"
-            tabindex="0"
-          >
-            <div
-              class="label"
-            >
-              some-test-extension-id
-            </div>
-          </div>
-          <div
             class="Tab flex gaps align-center"
             data-testid="tab-link-for-kubernetes"
             role="tab"
@@ -1356,6 +1404,40 @@ exports[`preferences - navigation to extension specific preferences given in pre
               Terminal
             </div>
           </div>
+          <div
+            data-testid="extension-settings"
+          >
+            <hr />
+            <div
+              class="header flex items-center"
+            >
+              <i
+                class="Icon mr-3 material focusable smallest"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+               Extensions
+            </div>
+            <div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-some-test-extension-id"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  some-test-extension-id
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -1370,7 +1452,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
           id="extensions"
         >
           <h2>
-            Extensions
+            some-test-extension-id
+             preferences
           </h2>
           <section
             class="small"
