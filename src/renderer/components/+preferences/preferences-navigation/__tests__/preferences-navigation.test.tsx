@@ -64,11 +64,11 @@ describe("<PreferencesNavigation />", () => {
     });
 
     it("does not show custom settings block", () => {
-      const { container } = render(
+      const { queryByTestId } = render(
         <PreferencesNavigation/>,
       );
 
-      expect(container).not.toHaveTextContent("Custom Settings");
+      expect(queryByTestId("extension-settings")).not.toBeInTheDocument();
     });
   });
 
@@ -134,11 +134,11 @@ describe("<PreferencesNavigation />", () => {
     });
 
     it("shows custom settings block", () => {
-      const { container } = render(
+      const { getByTestId } = render(
         <PreferencesNavigation/>,
       );
 
-      expect(container).toHaveTextContent("Custom Settings");
+      expect(getByTestId("extension-settings")).toBeInTheDocument();
     });
 
     it("renders extension navigation items", () => {
