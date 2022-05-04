@@ -2,7 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import asyncFn, { AsyncFnMock } from "@async-fn/jest";
+import type { AsyncFnMock } from "@async-fn/jest";
+import asyncFn from "@async-fn/jest";
 
 import {
   createContainer,
@@ -10,7 +11,9 @@ import {
   getInjectionToken,
 } from "@ogre-tools/injectable";
 
-import { runManyFor, Runnable } from "./run-many-for";
+import type { Runnable } from "./run-many-for";
+import { runManyFor } from "./run-many-for";
+import { getPromiseStatus } from "../test-utils/get-promise-status";
 
 describe("runManyFor", () => {
   describe("given no hierarchy, when running many", () => {
@@ -220,17 +223,3 @@ describe("runManyFor", () => {
     });
   });
 });
-
-const flushPromises = () => new Promise(setImmediate);
-
-const getPromiseStatus = async (promise: Promise<unknown>) => {
-  const status = { fulfilled: false };
-
-  promise.finally(() => {
-    status.fulfilled = true;
-  });
-
-  await flushPromises();
-
-  return status;
-};

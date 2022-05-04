@@ -42,6 +42,7 @@ import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-s
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
+import { flushPromises } from "../../../common/test-utils/flush-promises";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -166,8 +167,6 @@ export const getApplicationBuilder = () => {
         }
 
         menuItem.click(undefined, undefined, undefined);
-
-        const flushPromises = () => new Promise(setImmediate);
 
         await flushPromises();
       },
