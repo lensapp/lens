@@ -14,9 +14,7 @@ import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
 import { Animate } from "../animate";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
-import drawerStorageInjectable, {
-  defaultDrawerWidth,
-} from "./drawer-storage/drawer-storage.injectable";
+import drawerStorageInjectable, { defaultDrawerWidth } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import historyInjectable from "../../navigation/history.injectable";
 import type { History } from "history";
@@ -208,7 +206,11 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
                 )}
               </div>
               {toolbar}
-              <Icon material="close" tooltip="Close" onClick={this.close}/>
+              <Icon
+                material="close"
+                tooltip="Close"
+                onClick={this.close}
+              />
             </div>
             <div
               className={cssNames("drawer-content flex column box grow", contentClass)}
