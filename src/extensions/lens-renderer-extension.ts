@@ -30,6 +30,7 @@ import extensionPageParametersInjectable from "../renderer/routes/extension-page
 import { pipeline } from "@ogre-tools/fp";
 import { getExtensionRoutePath } from "../renderer/routes/get-extension-route-path";
 import { navigateToRouteInjectionToken } from "../common/front-end-routing/navigate-to-route-injection-token";
+import type { AppPreferenceTabRegistration } from "../renderer/components/+preferences/app-preference-tab/app-preference-tab-registration";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -37,6 +38,7 @@ export class LensRendererExtension extends LensExtension {
   clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
   kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
+  appPreferenceTabs: AppPreferenceTabRegistration[] = [];
   entitySettings: registries.EntitySettingRegistration[] = [];
   statusBarItems: StatusBarRegistration[] = [];
   kubeObjectDetailItems: registries.KubeObjectDetailRegistration[] = [];
