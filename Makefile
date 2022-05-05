@@ -123,12 +123,8 @@ clean-extensions:
 clean-npm:
 	rm -rf src/extensions/npm/extensions/{dist,__mocks__,node_modules}
 
-.PHONY: clean-extension-api
-clean-extension-api:
-	rm -rf src/extensions/**/*.d.ts
-
 .PHONY: clean
-clean: clean-npm clean-extensions clean-extension-api
+clean: clean-npm clean-extensions
 	rm -rf binaries/client
 	rm -rf dist
 	rm -rf static/build
