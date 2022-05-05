@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { lensWindowInjectionToken } from "../application-window/lens-window-injection-token";
 import createLensWindowInjectable from "../application-window/create-lens-window.injectable";
 
-const applicationIsLoadingWindowInjectable = getInjectable({
-  id: "application-is-loading-window",
+const splashWindowInjectable = getInjectable({
+  id: "splash-window",
 
   instantiate: (di) => {
     const createLensWindow = di.inject(createLensWindowInjectable);
@@ -27,4 +27,4 @@ const applicationIsLoadingWindowInjectable = getInjectable({
   injectionToken: lensWindowInjectionToken,
 });
 
-export default applicationIsLoadingWindowInjectable;
+export default splashWindowInjectable;

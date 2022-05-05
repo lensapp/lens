@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationIsLoadingWindowInjectable
-  from "./application-is-loading-window/application-is-loading-window.injectable";
+import splashWindowInjectable from "./splash-window/splash-window.injectable";
 import applicationWindowInjectable from "./application-window/application-window.injectable";
 
 const showApplicationWindowInjectable = getInjectable({
@@ -13,8 +12,8 @@ const showApplicationWindowInjectable = getInjectable({
   instantiate: (di) => {
     const applicationWindow = di.inject(applicationWindowInjectable);
 
-    const applicationIsLoadingWindow = di.inject(
-      applicationIsLoadingWindowInjectable,
+    const splashWindow = di.inject(
+      splashWindowInjectable,
     );
 
     return async () => {
@@ -22,11 +21,11 @@ const showApplicationWindowInjectable = getInjectable({
         return;
       }
 
-      await applicationIsLoadingWindow.show();
+      await splashWindow.show();
 
       await applicationWindow.show();
 
-      applicationIsLoadingWindow.close();
+      splashWindow.close();
     };
   },
 });

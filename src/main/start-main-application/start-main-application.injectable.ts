@@ -10,7 +10,7 @@ import { beforeElectronIsReadyInjectionToken } from "./runnable-tokens/before-el
 import { beforeApplicationIsLoadingInjectionToken } from "./runnable-tokens/before-application-is-loading-injection-token";
 import { onLoadOfApplicationInjectionToken } from "./runnable-tokens/on-load-of-application-injection-token";
 import { afterApplicationIsLoadedInjectionToken } from "./runnable-tokens/after-application-is-loaded-injection-token";
-import applicationIsLoadingWindowInjectable from "./lens-window/application-is-loading-window/application-is-loading-window.injectable";
+import splashWindowInjectable from "./lens-window/splash-window/splash-window.injectable";
 
 import applicationWindowInjectable from "./lens-window/application-window/application-window.injectable";
 import shouldStartHiddenInjectable from "../electron-app/features/should-start-hidden.injectable";
@@ -28,7 +28,7 @@ const startMainApplicationInjectable = getInjectable({
     const runManySync = runManySyncFor(di);
     const waitForElectronToBeReady = di.inject(waitForElectronToBeReadyInjectable);
     const applicationWindow = di.inject(applicationWindowInjectable);
-    const applicationIsLoadingWindow = di.inject(applicationIsLoadingWindowInjectable);
+    const splashWindow = di.inject(splashWindowInjectable);
     const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
     const openDeepLink = di.inject(openDeepLinkInjectable);
     const commandLineArguments = di.inject(commandLineArgumentsInjectable);
@@ -48,7 +48,7 @@ const startMainApplicationInjectable = getInjectable({
       await beforeApplicationIsLoading();
 
       if (!shouldStartHidden) {
-        await applicationIsLoadingWindow.show();
+        await splashWindow.show();
       }
 
       await onLoadOfApplication();
@@ -62,7 +62,7 @@ const startMainApplicationInjectable = getInjectable({
           await applicationWindow.show();
         }
 
-        applicationIsLoadingWindow.close();
+        splashWindow.close();
       }
 
       await afterApplicationIsLoaded();
