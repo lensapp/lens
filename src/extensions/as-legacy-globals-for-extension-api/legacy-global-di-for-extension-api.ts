@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import { iter } from "../../common/utils";
 
 const legacyGlobalDis = new Map<Environments, DiContainer>();
 
@@ -24,7 +23,7 @@ export const getLegacyGlobalDiForExtensionApi = () => {
     throw new Error("Tried to get DI container using legacy globals where there is multiple containers available.");
   }
 
-  const di = iter.first(legacyGlobalDis.values());
+  const [di] = [...legacyGlobalDis.values()];
 
   if (!di) {
     throw new Error("Tried to get DI container using legacy globals where there is no containers available.");
