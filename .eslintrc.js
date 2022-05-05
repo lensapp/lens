@@ -22,6 +22,7 @@ module.exports = {
     {
       files: [
         "**/*.js",
+        "**/*.mjs",
       ],
       extends: [
         "eslint:recommended",
