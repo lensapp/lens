@@ -7,7 +7,7 @@ import request from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
-import lensProxyPortNumberStateInjectable from "./lens-proxy-port-number-state.injectable";
+import lensProxyPortInjectable from "./lens-proxy-port.injectable";
 
 export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
 
@@ -15,14 +15,14 @@ const k8SRequestInjectable = getInjectable({
   id: "k8s-request",
 
   instantiate: (di) => {
-    const lensProxyPortNumberState = di.inject(lensProxyPortNumberStateInjectable);
+    const lensProxyPort = di.inject(lensProxyPortInjectable);
 
     return async (
       cluster: Cluster,
       path: string,
       options: RequestPromiseOptions = {},
     ) => {
-      const kubeProxyUrl = `http://localhost:${lensProxyPortNumberState.get()}${apiKubePrefix}`;
+      const kubeProxyUrl = `http://localhost:${lensProxyPort.get()}${apiKubePrefix}`;
 
       options.headers ??= {};
       options.json ??= true;

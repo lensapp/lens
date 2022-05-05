@@ -13,7 +13,7 @@ import logger from "../logger";
 
 interface Dependencies {
   directoryForTemp: string;
-  lensProxyPortNumberState: { get: () => number };
+  lensProxyPort: { get: () => number };
 }
 
 export class KubeconfigManager {
@@ -79,7 +79,7 @@ export class KubeconfigManager {
   }
 
   get resolveProxyUrl() {
-    return `http://127.0.0.1:${this.dependencies.lensProxyPortNumberState.get()}/${this.cluster.id}`;
+    return `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
   }
 
   /**

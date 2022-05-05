@@ -7,7 +7,7 @@ import { getAppVersion, getAppVersionFromProxyServer } from "../../../common/uti
 import exitAppInjectable from "../../electron-app/features/exit-app.injectable";
 import lensProxyInjectable from "../../lens-proxy.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import lensProxyPortNumberStateInjectable from "../../lens-proxy-port-number-state.injectable";
+import lensProxyPortInjectable from "../../lens-proxy-port.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";
@@ -19,7 +19,7 @@ const setupLensProxyInjectable = getInjectable({
     const lensProxy = di.inject(lensProxyInjectable);
     const exitApp = di.inject(exitAppInjectable);
     const logger = di.inject(loggerInjectable);
-    const lensProxyPortNumberState = di.inject(lensProxyPortNumberStateInjectable);
+    const lensProxyPort = di.inject(lensProxyPortInjectable);
     const isWindows = di.inject(isWindowsInjectable);
     const showErrorPopup = di.inject(showErrorPopupInjectable);
 
@@ -38,7 +38,7 @@ const setupLensProxyInjectable = getInjectable({
         try {
           logger.info("🔎 Testing LensProxy connection ...");
           const versionFromProxy = await getAppVersionFromProxyServer(
-            lensProxyPortNumberState.get(),
+            lensProxyPort.get(),
           );
 
           if (getAppVersion() !== versionFromProxy) {

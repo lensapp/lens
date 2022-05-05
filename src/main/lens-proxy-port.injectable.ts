@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-const lensProxyPortNumberStateInjectable = getInjectable({
-  id: "lens-proxy-port-number-state",
+const lensProxyPortInjectable = getInjectable({
+  id: "lens-proxy-port",
 
   instantiate: () => {
     let _portNumber: number;
@@ -20,6 +20,7 @@ const lensProxyPortNumberStateInjectable = getInjectable({
 
         return _portNumber;
       },
+
       set: (portNumber: number) => {
         if (_portNumber) {
           throw new Error(
@@ -33,4 +34,4 @@ const lensProxyPortNumberStateInjectable = getInjectable({
   },
 });
 
-export default lensProxyPortNumberStateInjectable;
+export default lensProxyPortInjectable;

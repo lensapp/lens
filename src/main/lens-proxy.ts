@@ -24,7 +24,7 @@ interface Dependencies {
   kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
   router: Router;
   proxy: httpProxy;
-  lensProxyPortNumberState: { set: (portNumber: number) => void };
+  lensProxyPort: { set: (portNumber: number) => void };
 }
 
 const watchParam = "watch";
@@ -105,7 +105,7 @@ export class LensProxy {
 
           const { address, port } = this.proxyServer.address() as net.AddressInfo;
 
-          this.dependencies.lensProxyPortNumberState.set(port);
+          this.dependencies.lensProxyPort.set(port);
 
           logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
 

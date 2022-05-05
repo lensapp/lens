@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { lensWindowInjectionToken } from "./lens-window-injection-token";
 import createLensWindowInjectable from "./create-lens-window.injectable";
-import lensProxyPortNumberStateInjectable from "../../../lens-proxy-port-number-state.injectable";
+import lensProxyPortInjectable from "../../../lens-proxy-port.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
@@ -23,11 +23,11 @@ const applicationWindowInjectable = getInjectable({
     const appEventBus = di.inject(appEventBusInjectable);
     const ipcMain = di.inject(ipcMainInjectable);
 
-    const lensProxyPortNumberState = di.inject(
-      lensProxyPortNumberStateInjectable,
+    const lensProxyPort = di.inject(
+      lensProxyPortInjectable,
     );
 
-    const getContentUrl = () => `http://localhost:${lensProxyPortNumberState.get()}`;
+    const getContentUrl = () => `http://localhost:${lensProxyPort.get()}`;
 
     return createLensWindow({
       id: "only-application-window",
