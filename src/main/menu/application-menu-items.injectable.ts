@@ -10,10 +10,7 @@ import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
 import { showAbout } from "./menu";
 import windowManagerInjectable from "../window-manager.injectable";
-import type {
-  BrowserWindow,
-  MenuItem,
-  MenuItemConstructorOptions } from "electron";
+import type { MenuItemConstructorOptions } from "electron";
 import {
   webContents,
 } from "electron";
@@ -69,8 +66,8 @@ const applicationMenuItemsInjectable = getInjectable({
           {
             label: `About ${productName}`,
             id: "about",
-            click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-              showAbout(browserWindow);
+            click() {
+              showAbout();
             },
           },
           ...ignoreIf(autoUpdateDisabled, [
@@ -286,8 +283,8 @@ const applicationMenuItemsInjectable = getInjectable({
             {
               label: `About ${productName}`,
               id: "about",
-              click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-                showAbout(browserWindow);
+              click() {
+                showAbout();
               },
             },
             ...ignoreIf(autoUpdateDisabled, [
