@@ -13,8 +13,9 @@ const navigateToExtensionPreferencesInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const route = di.inject(extensionPreferencesRouteInjectable);
 
-    return (extensionId: string) => navigateToRoute(route, { parameters: {
+    return (extensionId: string, tabId?: string) => navigateToRoute(route, { parameters: {
       extensionId,
+      tabId,
     }});
   },
 });

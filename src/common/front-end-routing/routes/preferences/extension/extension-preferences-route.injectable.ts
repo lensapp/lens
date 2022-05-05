@@ -9,13 +9,14 @@ import { routeInjectionToken } from "../../../route-injection-token";
 
 interface ExtensionPreferenceRouteParams {
   extensionId: string;
+  tabId?: string;
 }
 
 const extensionPreferencesRouteInjectable = getInjectable({
   id: "extension-preferences-route",
 
   instantiate: (): Route<ExtensionPreferenceRouteParams> => ({
-    path: "/preferences/extension/:extensionId",
+    path: "/preferences/extension/:extensionId/:tabId?",
     clusterFrame: false,
     isEnabled: computed(() => true),
   }),
