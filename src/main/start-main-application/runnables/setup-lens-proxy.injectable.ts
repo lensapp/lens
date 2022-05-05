@@ -5,9 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { getAppVersion, getAppVersionFromProxyServer } from "../../../common/utils";
 import exitAppInjectable from "../../electron-app/features/exit-app.injectable";
-import lensProxyInjectable from "../../lens-proxy.injectable";
+import lensProxyInjectable from "../../lens-proxy/lens-proxy.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import lensProxyPortInjectable from "../../lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";

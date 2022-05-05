@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import { KubeconfigManager } from "./kubeconfig-manager";
-import lensProxyPortInjectable from "../lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
 
 export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;

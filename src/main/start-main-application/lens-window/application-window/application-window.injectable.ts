@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { lensWindowInjectionToken } from "./lens-window-injection-token";
 import createLensWindowInjectable from "./create-lens-window.injectable";
-import lensProxyPortInjectable from "../../../lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../../../lens-proxy/lens-proxy-port.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";

@@ -7,14 +7,14 @@ import net from "net";
 import type http from "http";
 import spdy from "spdy";
 import type httpProxy from "http-proxy";
-import { apiPrefix, apiKubePrefix } from "../common/vars";
-import type { Router } from "./router/router";
-import type { ContextHandler } from "./context-handler/context-handler";
-import logger from "./logger";
-import type { Cluster } from "../common/cluster/cluster";
+import { apiPrefix, apiKubePrefix } from "../../common/vars";
+import type { Router } from "../router/router";
+import type { ContextHandler } from "../context-handler/context-handler";
+import logger from "../logger";
+import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
-import { appEventBus } from "../common/app-event-bus/event-bus";
-import { getBoolean } from "./utils/parse-query";
+import { appEventBus } from "../../common/app-event-bus/event-bus";
+import { getBoolean } from "../utils/parse-query";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
 

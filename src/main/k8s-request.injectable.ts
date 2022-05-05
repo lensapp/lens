@@ -7,7 +7,7 @@ import request from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
-import lensProxyPortInjectable from "./lens-proxy-port.injectable";
+import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
 
 export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
 

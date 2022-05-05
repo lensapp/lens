@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import logger from "../../logger";
+import logger from "../../../logger";
 import type WebSocket from "ws";
 import { Server as WebSocketServer } from "ws";
 import type { ProxyApiRequestArgs } from "../types";
-import type { ClusterManager } from "../../cluster-manager";
+import type { ClusterManager } from "../../../cluster-manager";
 import URLParse from "url-parse";
-import type { Cluster } from "../../../common/cluster/cluster";
-import type { ClusterId } from "../../../common/cluster-types";
+import type { Cluster } from "../../../../common/cluster/cluster";
+import type { ClusterId } from "../../../../common/cluster-types";
 
 interface Dependencies {
   authenticateRequest: (clusterId: ClusterId, tabId: string, shellToken: string) => boolean;

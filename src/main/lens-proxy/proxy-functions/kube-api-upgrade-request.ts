@@ -6,7 +6,7 @@
 import { chunk } from "lodash";
 import tls from "tls";
 import url from "url";
-import { apiKubePrefix } from "../../common/vars";
+import { apiKubePrefix } from "../../../common/vars";
 import type { ProxyApiRequestArgs } from "./types";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
@@ -16,8 +16,8 @@ export async function kubeApiUpgradeRequest({ req, socket, head, cluster }: Prox
   const proxyCa = await cluster.contextHandler.resolveAuthProxyCa();
   const apiUrl = url.parse(cluster.apiUrl);
   const pUrl = url.parse(proxyUrl);
-  const connectOpts = { 
-    port: parseInt(pUrl.port), 
+  const connectOpts = {
+    port: parseInt(pUrl.port),
     host: pUrl.hostname,
     ca: proxyCa,
   };
