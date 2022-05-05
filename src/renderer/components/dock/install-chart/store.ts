@@ -9,7 +9,7 @@ import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store"
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import { getChartDetails, getChartValues } from "../../../../common/k8s-api/endpoints/helm-charts.api";
 import type { HelmReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import { waitUntilDefinied } from "../../../../common/utils/wait";
+import { waitUntilDefined } from "../../../../common/utils/wait";
 
 export interface IChartInstallData {
   name: string;
@@ -44,7 +44,7 @@ export class InstallChartTabStore extends DockTabStore<IChartInstallData> {
   @action
   async loadData(tabId: string) {
     const promises = [];
-    const data = await waitUntilDefinied(() => this.getData(tabId));
+    const data = await waitUntilDefined(() => this.getData(tabId));
 
     if (!this.getData(tabId)?.values) {
       promises.push(this.loadValues(tabId));
@@ -68,7 +68,7 @@ export class InstallChartTabStore extends DockTabStore<IChartInstallData> {
 
   @action
   async loadValues(tabId: TabId, attempt = 0): Promise<void> {
-    const data = await waitUntilDefinied(() => this.getData(tabId));
+    const data = await waitUntilDefined(() => this.getData(tabId));
     const { repo, name, version } = data;
     const values = await getChartValues(repo, name, version);
 

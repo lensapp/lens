@@ -6,7 +6,7 @@
 import type { IComputedValue } from "mobx";
 import { observable } from "mobx";
 import type { PodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
-import { waitUntilDefinied } from "../../../../common/utils/wait";
+import { waitUntilDefined } from "../../../../common/utils/wait";
 import type { IntervalFn } from "../../../utils";
 import { getOrInsertWith, interval } from "../../../utils";
 import type { TabId } from "../dock/store";
@@ -117,7 +117,7 @@ export class LogStore {
         selectedContainer,
         showPrevious,
       },
-    } = await waitUntilDefinied(() => {
+    } = await waitUntilDefined(() => {
       const pod = computedPod.get();
       const tabData = logTabData.get();
 

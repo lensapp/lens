@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
-import { waitUntilDefinied } from "../../../../common/utils/wait";
+import { waitUntilDefined } from "../../../../common/utils/wait";
 import type { TerminalApi } from "../../../api/terminal-api";
 import { TerminalChannels } from "../../../api/terminal-api";
 import { noop } from "../../../utils";
@@ -46,7 +46,7 @@ const sendCommand = ({ selectTab, createTerminalTab, getTerminalApi }: Dependenc
     tabId = createTerminalTab().id;
   }
 
-  const terminalApi = await waitUntilDefinied(() => (
+  const terminalApi = await waitUntilDefined(() => (
     tabId
       ? getTerminalApi(tabId)
       : undefined

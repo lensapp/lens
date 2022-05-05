@@ -6,7 +6,7 @@ import type { IComputedValue } from "mobx";
 import { runInAction, when } from "mobx";
 import type { Disposer } from "./disposer";
 
-export async function waitUntilDefinied<T>(getter: (() => T | null | undefined) | IComputedValue<T | null | undefined>, opts?: { timeout?: number }): Promise<T> {
+export async function waitUntilDefined<T>(getter: (() => T | null | undefined) | IComputedValue<T | null | undefined>, opts?: { timeout?: number }): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     let res: T | null | undefined;
 
