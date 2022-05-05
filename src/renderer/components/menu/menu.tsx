@@ -42,6 +42,7 @@ export interface MenuProps {
   closeOnScroll?: boolean;          // applicable when usePortal={true}
   position?: MenuPosition;          // applicable when usePortal={false}
   children?: ReactNode;
+  animated?: boolean;
   toggleEvent?: "click" | "contextmenu";
 }
 
@@ -58,6 +59,7 @@ const defaultPropsMenu: Partial<MenuProps> = {
   closeOnClickOutside: true,
   closeOnScroll: false,
   toggleEvent: "click",
+  animated: true,
 };
 
 export class Menu extends React.Component<MenuProps, State> {
@@ -297,7 +299,7 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   render() {
-    const { position, id } = this.props;
+    const { position, id, animated } = this.props;
     let { className, usePortal } = this.props;
 
     className = cssNames("Menu", className, this.state.position || position, {
@@ -319,28 +321,40 @@ export class Menu extends React.Component<MenuProps, State> {
       return item;
     });
 
-    const menu = (
-      <MenuContext.Provider value={this}>
+    let menu = (
+      <ul
+        id={id}
+        ref={this.bindRef}
+        className={className}
+        style={{
+          left: this.state?.menuStyle?.left,
+          top: this.state?.menuStyle?.top,
+        }}
+        onKeyDown={this.onKeyDown}
+      >
+        {menuItems}
+      </ul>
+    );
+
+    if (animated) {
+      menu = (
         <Animate enter={this.isOpen}>
-          <ul
-            id={id}
-            ref={this.bindRef}
-            className={className}
-            style={{
-              left: this.state?.menuStyle?.left,
-              top: this.state?.menuStyle?.top,
-            }}
-            onKeyDown={this.onKeyDown}
-          >
-            {menuItems}
-          </ul>
+          {menu}
         </Animate>
+      );
+    }
+
+    menu = (
+      <MenuContext.Provider value={this}>
+        {menu}
       </MenuContext.Provider>
     );
 
     if (usePortal === true) usePortal = document.body;
 
-    return usePortal instanceof HTMLElement ? createPortal(menu, usePortal) : menu;
+    return usePortal instanceof HTMLElement
+      ? createPortal(menu, usePortal)
+      : menu;
   }
 }
 

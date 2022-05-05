@@ -26,7 +26,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import userExtensionsInjectable from "./user-extensions/user-extensions.injectable";
 import enableExtensionInjectable from "./enable-extension/enable-extension.injectable";
 import disableExtensionInjectable from "./disable-extension/disable-extension.injectable";
-import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension/confirm-uninstall-extension.injectable";
+import type { ConfirmUninstallExtension } from "./confirm-uninstall-extension.injectable";
+import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension.injectable";
 import installFromInputInjectable from "./install-from-input/install-from-input.injectable";
 import installFromSelectFileDialogInjectable from "./install-from-select-file-dialog.injectable";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
@@ -39,7 +40,7 @@ interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
   enableExtension: (id: LensExtensionId) => void;
   disableExtension: (id: LensExtensionId) => void;
-  confirmUninstallExtension: (extension: InstalledExtension) => Promise<void>;
+  confirmUninstallExtension: ConfirmUninstallExtension;
   installFromInput: (input: string) => Promise<void>;
   installFromSelectFileDialog: () => Promise<void>;
   installOnDrop: (files: File[]) => Promise<void>;

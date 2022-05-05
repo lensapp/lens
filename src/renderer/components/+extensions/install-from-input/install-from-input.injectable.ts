@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import attemptInstallInjectable from "../attempt-install/attempt-install.injectable";
 import { installFromInput } from "./install-from-input";
-import attemptInstallByInfoInjectable from "../attempt-install-by-info/attempt-install-by-info.injectable";
+import attemptInstallByInfoInjectable from "../attempt-install-by-info.injectable";
 import extensionInstallationStateStoreInjectable
   from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 

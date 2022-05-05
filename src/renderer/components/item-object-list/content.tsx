@@ -10,7 +10,6 @@ import React from "react";
 import { computed, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
 import type { ConfirmDialogParams } from "../confirm-dialog";
-import { ConfirmDialog } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { IClassName } from "../../utils";
@@ -27,6 +26,9 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
+import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 
 export interface ItemListLayoutContentProps<I extends ItemObject> {
   getFilters: () => Filter[];
@@ -63,9 +65,13 @@ export interface ItemListLayoutContentProps<I extends ItemObject> {
   failedToLoadMessage?: React.ReactNode;
 }
 
+interface Dependencies {
+  openConfirmDialog: OpenConfirmDialog;
+}
+
 @observer
-export class ItemListLayoutContent<I extends ItemObject> extends React.Component<ItemListLayoutContentProps<I>> {
-  constructor(props: ItemListLayoutContentProps<I>) {
+class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Component<ItemListLayoutContentProps<I> & Dependencies> {
+  constructor(props: ItemListLayoutContentProps<I> & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -150,7 +156,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
   }
 
   removeItemsDialog(selectedItems: I[]) {
-    const { customizeRemoveDialog, store } = this.props;
+    const { customizeRemoveDialog, store, openConfirmDialog } = this.props;
     const visibleMaxNamesCount = 5;
     const selectedNames = selectedItems.map(ns => ns.getName()).slice(0, visibleMaxNamesCount).join(", ");
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
@@ -168,7 +174,7 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
       ? () => store.removeItems(selectedItems)
       : store.removeSelectedItems;
 
-    ConfirmDialog.open({
+    openConfirmDialog({
       ok: onConfirm,
       labelOk: "Remove",
       message,
@@ -315,3 +321,10 @@ export class ItemListLayoutContent<I extends ItemObject> extends React.Component
     );
   }
 }
+
+export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayoutContentProps<ItemObject>>(NonInjectedItemListLayoutContent, {
+  getProps: (di, props) => ({
+    ...props,
+    openConfirmDialog: di.inject(openConfirmDialogInjectable),
+  }),
+}) as <I extends ItemObject>(props: ItemListLayoutContentProps<I>) => React.ReactElement;

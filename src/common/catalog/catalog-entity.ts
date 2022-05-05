@@ -278,11 +278,22 @@ export interface CatalogEntitySettingsMenu {
   };
 }
 
+export interface CatalogEntityContextMenuNavigate {
+  /**
+   * @param pathname The location to navigate to in the main iframe
+   */
+  (pathname: string, forceMainFrame?: boolean): void;
+  /**
+   * @param pathname The location to navigate to in the current iframe. Useful for when called within the cluster frame
+   */
+  (pathname: string, forceMainFrame: false): void;
+}
+
 export interface CatalogEntityContextMenuContext {
   /**
    * Navigate to the specified pathname
    */
-  navigate: (pathname: string) => void;
+  navigate: CatalogEntityContextMenuNavigate;
   menuItems: CatalogEntityContextMenu[];
 }
 
