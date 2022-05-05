@@ -174,7 +174,7 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows extension tab in general area", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-specific-tab-navigation-item-license-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-specific-tab-navigation-item-metrics-extension-tab");
 
         expect(actual).toMatchSnapshot();
       });
@@ -187,13 +187,13 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to specific extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-specific-tab-navigation-item-license-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-specific-tab-navigation-item-metrics-extension-tab");
         });
         it("renders", () => {
           expect(rendered.container).toMatchSnapshot();
         });
         it("shows related preferences for this tab", () => {
-          const actual = rendered.getByTestId("license-preference-item-hint");
+          const actual = rendered.getByTestId("metrics-preference-item-hint");
 
           expect(actual).toBeInTheDocument();
         });
@@ -277,12 +277,12 @@ const extensionStubWithWithRegisteredTab: Partial<LensRendererExtension> = {
   appPreferences: [
     {
       title: "License item",
-      id: "license-preference-item-id",
-      showInPreferencesTab: "license-extension-tab",
+      id: "metrics-preference-item-id",
+      showInPreferencesTab: "metrics-extension-tab",
 
       components: {
-        Hint: () => <div data-testid="license-preference-item-hint" />,
-        Input: () => <div data-testid="license-preference-item-input" />,
+        Hint: () => <div data-testid="metrics-preference-item-hint" />,
+        Input: () => <div data-testid="metrics-preference-item-input" />,
       },
     },
     {
@@ -308,8 +308,8 @@ const extensionStubWithWithRegisteredTab: Partial<LensRendererExtension> = {
   ],
 
   appPreferenceTabs: [{
-    title: "License tab",
-    id: "license-extension-tab",
+    title: "Metrics tab",
+    id: "metrics-extension-tab",
     orderNumber: 100,
   }],
 };

@@ -3,14 +3,14 @@
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab shows extension tab in general area 1`] = `
 <div
   class="Tab flex gaps align-center"
-  data-testid="tab-link-for-extension-specific-tab-navigation-item-license-extension-tab"
+  data-testid="tab-link-for-extension-specific-tab-navigation-item-metrics-extension-tab"
   role="tab"
   tabindex="0"
 >
   <div
     class="label"
   >
-    License tab
+    Metrics tab
   </div>
 </div>
 `;
@@ -97,14 +97,14 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-specific-tab-navigation-item-license-extension-tab"
+            data-testid="tab-link-for-extension-specific-tab-navigation-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >
             <div
               class="label"
             >
-              License tab
+              Metrics tab
             </div>
           </div>
         </div>
@@ -126,8 +126,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </h2>
           <section
             class="small"
-            data-testid="extension-preference-item-for-license-preference-item-id"
-            id="license-preference-item-id"
+            data-testid="extension-preference-item-for-metrics-preference-item-id"
+            id="metrics-preference-item-id"
           >
             <div
               class="SubTitle"
@@ -136,13 +136,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
                
             </div>
             <div
-              data-testid="license-preference-item-input"
+              data-testid="metrics-preference-item-input"
             />
             <div
               class="hint"
             >
               <div
-                data-testid="license-preference-item-hint"
+                data-testid="metrics-preference-item-hint"
               />
             </div>
           </section>

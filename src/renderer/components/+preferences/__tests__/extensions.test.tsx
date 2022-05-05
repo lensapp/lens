@@ -53,7 +53,7 @@ describe("<Extensions/>", () => {
 
   describe("when tabId param is passed and extension has same showInPreferencesTab param", () => {
     beforeEach(() => {
-      di.override(currentPathParametersInjectable, () => computed(() => ({ extensionId: "some-test-extension-id", tabId: "license-extension-tab" })));
+      di.override(currentPathParametersInjectable, () => computed(() => ({ extensionId: "some-test-extension-id", tabId: "metircs-extension-tab" })));
     });
 
     it("does render related preferences for specific tab", () => {
@@ -107,7 +107,7 @@ const extensionWithSpecificPreferenceItems: Partial<LensRendererExtension> = {
     {
       title: "preference for specific tab",
       id: "preference-for-tab-item-id",
-      showInPreferencesTab: "license-extension-tab",
+      showInPreferencesTab: "metircs-extension-tab",
 
       components: {
         Hint: () => <div />,
@@ -117,8 +117,8 @@ const extensionWithSpecificPreferenceItems: Partial<LensRendererExtension> = {
   ],
 
   appPreferenceTabs: [{
-    title: "License tab",
-    id: "license-extension-tab",
+    title: "Metrics tab",
+    id: "metircs-extension-tab",
     orderNumber: 100,
   }],
 };
