@@ -10,7 +10,7 @@ const terminalSpawningPoolInjectable = getInjectable({
   instantiate: () => {
     const pool = document.getElementById("terminal-init");
 
-    assert(pool, "DOM MUST container #terminal-init element");
+    assert(pool, "DOM MUST contain #terminal-init element");
 
     return pool;
   },
