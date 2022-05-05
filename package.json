@@ -207,7 +207,6 @@
     "@ogre-tools/injectable-react": "7.0.0",
     "@ogre-tools/fp": "7.0.0",
     "@ogre-tools/injectable-extension-for-auto-registration": "7.0.0",
-    "@ogre-tools/injectable-extension-for-mobx": "7.0.0",
     "@sentry/electron": "^3.0.7",
     "@sentry/integrations": "^6.19.3",
     "@types/circular-dependency-plugin": "5.0.5",

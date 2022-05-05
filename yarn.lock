@@ -1020,15 +1020,6 @@
     "@ogre-tools/injectable" "^7.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-mobx@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-7.0.0.tgz#e53a1ac9b990fd38e8b4ab78b2dbf7c05d677a0e"
-  integrity sha512-O0lzGLrdklq7U7bXsLEPQvm6SAEOjato4CmOdxm3DF3ErA1eRl9oZ3FQvRGVbHEIaPQbxc4XgrnErpl1Or+Wlg==
-  dependencies:
-    "@ogre-tools/fp" "^7.0.0"
-    "@ogre-tools/injectable" "^7.0.0"
-    lodash "^4.17.21"
-
 "@ogre-tools/injectable-react@7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-7.0.0.tgz#09c45fbf9a904673a6a0b450cb9a6a7c1110ab14"
