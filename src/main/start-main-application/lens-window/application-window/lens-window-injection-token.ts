@@ -8,7 +8,7 @@ import type { ClusterFrameInfo } from "../../../../common/cluster-frames";
 export interface SendToViewArgs {
   channel: string;
   frameInfo?: ClusterFrameInfo;
-  data?: any[];
+  data?: unknown[];
 }
 
 export interface LensWindow {

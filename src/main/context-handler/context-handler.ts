@@ -27,9 +27,9 @@ interface PrometheusServicePreferences {
 }
 
 interface Dependencies {
-  createKubeAuthProxy: CreateKubeAuthProxy;
-  authProxyCa: string;
-  prometheusProviderRegistry: PrometheusProviderRegistry;
+  readonly createKubeAuthProxy: CreateKubeAuthProxy;
+  readonly authProxyCa: string;
+  readonly prometheusProviderRegistry: PrometheusProviderRegistry;
 }
 
 export class ContextHandler {
