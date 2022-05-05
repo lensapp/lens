@@ -2,7 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { BrowserWindow } from "electron";
 import { app, dialog, Menu } from "electron";
 import type { IComputedValue } from "mobx";
 import { autorun } from "mobx";
@@ -20,7 +19,7 @@ export function initMenu(
   });
 }
 
-export function showAbout(browserWindow: BrowserWindow) {
+export function showAbout() {
   const appInfo = [
     `${appName}: ${app.getVersion()}`,
     `Electron: ${process.versions.electron}`,
@@ -29,7 +28,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     packageJson.copyright,
   ];
 
-  dialog.showMessageBoxSync(browserWindow, {
+  dialog.showMessageBoxSync({
     title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
     type: "info",
     buttons: ["Close"],
