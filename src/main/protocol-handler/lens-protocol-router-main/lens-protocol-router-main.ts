@@ -45,9 +45,7 @@ interface Dependencies {
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   private missingExtensionHandlers: FallbackHandler[] = [];
 
-  /**
-   * @deprecated This is used to solve out-of-place temporal dependency. Remove, and solve otherwise.
-   */
+  // TODO: This is used to solve out-of-place temporal dependency. Remove, and solve otherwise.
   @observable rendererLoaded = false;
 
   protected disposers = disposer();
