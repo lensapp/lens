@@ -4,22 +4,22 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import trayInjectable from "./tray.injectable";
-import { onLoadOfApplicationInjectionToken } from "../start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
 
-const startTrayInjectable = getInjectable({
-  id: "start-tray",
+const uninstallTrayInjectable = getInjectable({
+  id: "uninstall-tray",
 
   instantiate: (di) => {
     const trayInitializer = di.inject(trayInjectable);
 
     return {
       run: async () => {
-        await trayInitializer.start();
+        await trayInitializer.stop();
       },
     };
   },
 
-  injectionToken: onLoadOfApplicationInjectionToken,
+  injectionToken: beforeQuitOfBackEndInjectionToken,
 });
 
-export default startTrayInjectable;
+export default uninstallTrayInjectable;
