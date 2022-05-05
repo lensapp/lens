@@ -33,7 +33,7 @@ interface Dependencies {
   catalogEntityRegistry: CatalogEntityRegistry;
 }
 
-export function syncWeblinks({ weblinkStore, catalogEntityRegistry }: Dependencies) {
+export const syncWeblinks = ({ weblinkStore, catalogEntityRegistry }: Dependencies) => () => {
   const webLinkEntities = observable.map<string, [WebLink, Disposer]>();
 
   function periodicallyCheckLink(link: WebLink): Disposer {
@@ -90,4 +90,4 @@ export function syncWeblinks({ weblinkStore, catalogEntityRegistry }: Dependenci
   }, { fireImmediately: true });
 
   catalogEntityRegistry.addComputedSource("weblinks", computed(() => Array.from(webLinkEntities.values(), ([link]) => link)));
-}
+};
