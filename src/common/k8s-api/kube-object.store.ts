@@ -157,7 +157,7 @@ export abstract class KubeObjectStore<
     return [];
   }
 
-  getById(id: string | undefined): K | undefined {
+  getById(id: string): K | undefined {
     return this.items.find(item => item.getId() === id);
   }
 

@@ -109,8 +109,8 @@ export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(
     createPodTab: asLegacyGlobalFunctionForExtensionApi(createPodLogsTabInjectable),
     createWorkloadTab: asLegacyGlobalFunctionForExtensionApi(createWorkloadLogsTabInjectable),
     renameTab: (tabId: string): void => {
-      const tabData = logTabStore.getData(tabId);
-      const pod = podStore.getById(tabData?.selectedPodId);
+      const { selectedPodId } = logTabStore.getData(tabId) ?? {};
+      const pod = selectedPodId && podStore.getById(selectedPodId);
 
       if (pod) {
         renameTab(tabId, `Pod ${pod.getName()}`);
