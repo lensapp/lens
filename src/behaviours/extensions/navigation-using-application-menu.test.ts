@@ -22,7 +22,7 @@ describe("extensions - navigation using application menu", () => {
   let focusWindowMock: jest.Mock;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().beforeSetups(({ mainDi, rendererDi }) => {
+    applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ mainDi, rendererDi }) => {
       mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
       rendererDi.override(extensionsStoreInjectable, () => ({}) as unknown as ExtensionsStore);
       rendererDi.override(fileSystemProvisionerStoreInjectable, () => ({}) as unknown as FileSystemProvisionerStore);

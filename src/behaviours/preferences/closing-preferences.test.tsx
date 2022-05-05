@@ -33,7 +33,7 @@ describe("preferences - closing-preferences", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.register(testPreferencesRouteInjectable);
       rendererDi.register(testPreferencesRouteComponentInjectable);
       rendererDi.register(testFrontPageRouteInjectable);
@@ -66,7 +66,7 @@ describe("preferences - closing-preferences", () => {
     let rendererDi: DiContainer;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/some-test-path"],
@@ -139,7 +139,7 @@ describe("preferences - closing-preferences", () => {
     let rendererDi: DiContainer;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/preferences/app"],

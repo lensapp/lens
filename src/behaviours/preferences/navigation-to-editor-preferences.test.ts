@@ -16,7 +16,7 @@ describe("preferences - navigation to editor preferences", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       const userStoreStub = {
         extensionRegistryUrl: { customUrl: "some-custom-url" },
         editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },

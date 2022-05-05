@@ -16,7 +16,7 @@ describe("preferences - navigation to proxy preferences", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       const userStoreStub = {
         extensionRegistryUrl: { customUrl: "some-custom-url" },
       } as unknown as UserStore;

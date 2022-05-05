@@ -51,7 +51,7 @@ export interface ApplicationBuilder {
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
   addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
-  beforeSetups: (callback: Callback) => ApplicationBuilder;
+  beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
 
@@ -97,7 +97,7 @@ export const getApplicationBuilder = () => {
   rendererDi.override(clusterStoreInjectable, () => clusterStoreStub);
   mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
 
-  const beforeSetupsCallbacks: Callback[] = [];
+  const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeRenderCallbacks: Callback[] = [];
 
   const extensionsState = observable.array<LensRendererExtension>();
@@ -287,8 +287,8 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    beforeSetups(callback: (dis: DiContainers) => void) {
-      beforeSetupsCallbacks.push(callback);
+    beforeApplicationStart(callback: (dis: DiContainers) => void) {
+      beforeApplicationStartCallbacks.push(callback);
 
       return builder;
     },
@@ -300,7 +300,7 @@ export const getApplicationBuilder = () => {
     },
 
     async render() {
-      for (const callback of beforeSetupsCallbacks) {
+      for (const callback of beforeApplicationStartCallbacks) {
         await callback(dis);
       }
 

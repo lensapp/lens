@@ -17,7 +17,7 @@ describe("add-cluster - navigation using application menu", () => {
   let rendered: RenderResult;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().beforeSetups(({ mainDi }) => {
+    applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ mainDi }) => {
       mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
     });
 

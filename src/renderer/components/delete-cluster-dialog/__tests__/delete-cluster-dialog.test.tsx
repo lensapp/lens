@@ -102,7 +102,7 @@ describe("<DeleteClusterDialog />", () => {
 
     mockFs();
 
-    applicationBuilder.beforeSetups(({ mainDi, rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
       mainDi.override(createContextHandlerInjectable, () => () => undefined);
 
       rendererDi.override(hotbarStoreInjectable, () => ({}));

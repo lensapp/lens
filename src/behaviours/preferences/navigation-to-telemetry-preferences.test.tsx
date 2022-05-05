@@ -20,7 +20,7 @@ describe("preferences - navigation to telemetry preferences", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       const userStoreStub = {
         extensionRegistryUrl: { customUrl: "some-custom-url" },
       } as unknown as UserStore;
@@ -133,7 +133,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(sentryDnsUrlInjectable, () => "some-sentry-dns-url");
       });
 
@@ -163,7 +163,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(sentryDnsUrlInjectable, () => null);
       });
 

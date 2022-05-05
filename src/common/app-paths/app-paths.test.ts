@@ -43,7 +43,7 @@ describe("app-paths", () => {
       userData: "some-irrelevant-user-data",
     };
 
-    applicationBuilder.beforeSetups(({ mainDi }) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(
         getElectronAppPathInjectable,
         () =>
@@ -117,7 +117,7 @@ describe("app-paths", () => {
 
   describe("when running integration tests", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ mainDi }) => {
+      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(
           directoryForIntegrationTestingInjectable,
           () => "some-integration-testing-app-data",

@@ -17,7 +17,7 @@ describe("preferences - navigation to kubernetes preferences", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       const userStoreStub = {
         extensionRegistryUrl: { customUrl: "some-custom-url" },
         syncKubeconfigEntries: observable.map(),

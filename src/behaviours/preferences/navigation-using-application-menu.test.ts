@@ -18,7 +18,7 @@ describe("preferences - navigation using application menu", () => {
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
-    applicationBuilder.beforeSetups(({ rendererDi, mainDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi, mainDi }) => {
       mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
 
       const userStoreStub = {

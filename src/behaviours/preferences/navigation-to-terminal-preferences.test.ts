@@ -18,7 +18,7 @@ describe("preferences - navigation to terminal preferences", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       const userStoreStub = {
         extensionRegistryUrl: { customUrl: "some-custom-url" },
         syncKubeconfigEntries: observable.map(),

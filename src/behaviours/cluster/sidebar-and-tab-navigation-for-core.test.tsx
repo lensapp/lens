@@ -35,7 +35,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
     applicationBuilder.setEnvironmentToClusterFrame();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
@@ -45,7 +45,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
   describe("given core registrations", () => {
     beforeEach(() => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.register(testRouteInjectable);
         rendererDi.register(testRouteComponentInjectable);
         rendererDi.register(testSidebarItemsInjectable);
