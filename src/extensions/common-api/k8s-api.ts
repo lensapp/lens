@@ -26,6 +26,7 @@ export {
   KubeObject,
   KubeStatus,
   type KubeObjectMetadata,
+  type BaseKubeJsonApiObjectMetadata,
   type KubeJsonApiObjectMetadata,
   type KubeStatusData,
 } from "../../common/k8s-api/kube-object";
