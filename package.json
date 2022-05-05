@@ -283,7 +283,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
-    "@sentry/types": "^6.19.3",
+    "@sentry/types": "^6.19.7",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
