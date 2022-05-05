@@ -57,6 +57,24 @@ describe("getStartableStoppable", () => {
       expect(actual.started).toBe(false);
     });
 
+    describe("when started again before the start has finished", () => {
+      let error: Error;
+
+      beforeEach(() => {
+        startMock.mockClear();
+
+        actual.start().catch((e) => { error = e; });
+      });
+
+      it("does not start starting again", () => {
+        expect(startMock).not.toHaveBeenCalled();
+      });
+
+      it("throws", () => {
+        expect(error.message).toBe("Tried to start \"some-id\", but it is already being started.");
+      });
+    });
+
     describe("when starting finishes", () => {
       beforeEach(async () => {
         await startMock.resolve(stopMock);

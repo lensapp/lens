@@ -13,6 +13,7 @@ export const getStartableStoppable = (
   let stop: Stopper;
   let stopped = false;
   let started = false;
+  let starting = false;
   let startingPromise: Promise<Stopper> | Stopper;
 
   return {
@@ -21,6 +22,12 @@ export const getStartableStoppable = (
     },
 
     start: async () => {
+      if (starting) {
+        throw new Error(`Tried to start "${id}", but it is already being started.`);
+      }
+
+      starting = true;
+
       if (started) {
         throw new Error(`Tried to start "${id}", but it has already started.`);
       }
@@ -30,6 +37,7 @@ export const getStartableStoppable = (
 
       stopped = false;
       started = true;
+      starting = false;
     },
 
     stop: async () => {
