@@ -33,7 +33,16 @@ describe("kubeconfig manager tests", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
-    logger = di.inject(loggerInjectable) as jest.Mocked<Logger>;
+
+    logger = {
+      warn: jest.fn(),
+      debug: jest.fn(),
+      error: jest.fn(),
+      info: jest.fn(),
+      silly: jest.fn(),
+    };
+
+    di.override(loggerInjectable, () => logger);
 
     mockFs({
       "minikube-config.yml": JSON.stringify({

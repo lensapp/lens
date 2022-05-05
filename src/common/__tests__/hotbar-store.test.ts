@@ -89,7 +89,15 @@ describe("HotbarStore", () => {
 
     di.override(hasCategoryForEntityInjectable, () => () => true);
 
-    logger = di.inject(loggerInjectable) as jest.Mocked<Logger>;
+    logger = {
+      warn: jest.fn(),
+      debug: jest.fn(),
+      error: jest.fn(),
+      info: jest.fn(),
+      silly: jest.fn(),
+    };
+
+    di.override(loggerInjectable, () => logger);
 
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);

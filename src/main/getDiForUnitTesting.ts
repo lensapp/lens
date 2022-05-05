@@ -35,6 +35,7 @@ import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
+import { noop } from "../renderer/utils";
 
 export interface GetMainDiForUnitTestingOptions extends GetDiForUnitTestingOptions {
   overrideHotbarStore?: boolean;
@@ -130,11 +131,11 @@ export function getDiForUnitTesting(opts: GetMainDiForUnitTestingOptions = {}) {
     });
 
     di.override(loggerInjectable, () => ({
-      warn: jest.fn(),
-      debug: jest.fn(),
-      error: jest.fn(),
-      info: jest.fn(),
-      silly: jest.fn(),
+      warn: noop,
+      debug: noop,
+      error: noop,
+      info: noop,
+      silly: noop,
     }));
   }
 

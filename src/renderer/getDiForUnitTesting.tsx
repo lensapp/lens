@@ -34,6 +34,7 @@ import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-
 import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import historyInjectable from "./navigation/history.injectable";
+import { noop } from "./utils";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -86,11 +87,11 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
     di.override(focusWindowInjectable, () => () => {});
 
     di.override(loggerInjectable, () => ({
-      warn: jest.fn(),
-      debug: jest.fn(),
-      error: jest.fn(),
-      info: jest.fn(),
-      silly: jest.fn(),
+      warn: noop,
+      debug: noop,
+      error: noop,
+      info: noop,
+      silly: noop,
     }));
   }
 
