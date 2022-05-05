@@ -12,7 +12,7 @@ import { PassThrough } from "stream";
 import { ApiManager } from "../api-manager";
 import type { FetchMock } from "jest-fetch-mock/types";
 import { DeploymentApi, Ingress, IngressApi, Pod, PodApi } from "../endpoints";
-import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import autoRegistrationInjectable from "../api-manager/auto-registration.injectable";
 

@@ -313,14 +313,12 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
  */
 function legacyRegisterApi(api: KubeApi<any, any>): void {
   // Try both just in case, because we might be in a testing environment
-  for (const env of [Environments.main, Environments.renderer]) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(env);
+  const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
 
-    if (di) {
-      const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
+  if (di) {
+    const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
 
-      autoRegistrationEmitter.emit("kubeApi", api);
-    }
+    autoRegistrationEmitter.emit("kubeApi", api);
   }
 }
 
