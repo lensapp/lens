@@ -49,6 +49,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
   },
 
   injectionToken: whenApplicationIsLoadingInjectionToken,
+  causesSideEffects: true,
 });
 
 export default setupIpcMainHandlersInjectable;
