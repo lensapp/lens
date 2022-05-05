@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import powerMonitorInjectable from "../features/power-monitor.injectable";
 import exitAppInjectable from "../features/exit-app.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 
 const setupDeviceShutdownInjectable = getInjectable({
   id: "setup-device-shutdown",
@@ -23,7 +23,7 @@ const setupDeviceShutdownInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupDeviceShutdownInjectable;

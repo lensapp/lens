@@ -8,7 +8,7 @@ import { PrometheusHelm } from "../../prometheus/helm";
 import { PrometheusOperator } from "../../prometheus/operator";
 import { PrometheusStacklight } from "../../prometheus/stacklight";
 import prometheusProviderRegistryInjectable from "../../prometheus/prometheus-provider-registry.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 
 const setupPrometheusRegistryInjectable = getInjectable({
   id: "setup-prometheus-registry",
@@ -27,7 +27,7 @@ const setupPrometheusRegistryInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupPrometheusRegistryInjectable;

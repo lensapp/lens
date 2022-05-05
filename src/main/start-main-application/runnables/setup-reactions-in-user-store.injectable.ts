@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 
 const setupReactionsInUserStoreInjectable = getInjectable({
   id: "setup-reactions-in-user-store",
@@ -19,7 +19,7 @@ const setupReactionsInUserStoreInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupReactionsInUserStoreInjectable;

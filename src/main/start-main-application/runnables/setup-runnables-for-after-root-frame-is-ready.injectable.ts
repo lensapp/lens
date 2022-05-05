@@ -7,7 +7,7 @@ import { ipcMainOn } from "../../../common/ipc";
 import { IpcRendererNavigationEvents } from "../../../renderer/navigation/events";
 import { afterRootFrameIsReadyInjectionToken } from "../runnable-tokens/after-root-frame-is-ready-injection-token";
 import { runManyFor } from "../../../common/runnable/run-many-for";
-import { whenApplicationIsLoadingInjectionToken } from "../runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 
 const setupRunnablesForAfterRootFrameIsReadyInjectable = getInjectable({
   id: "setup-runnables-for-after-root-frame-is-ready",
@@ -31,7 +31,7 @@ const setupRunnablesForAfterRootFrameIsReadyInjectable = getInjectable({
   // Direct usage of IPC
   causesSideEffects: true,
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupRunnablesForAfterRootFrameIsReadyInjectable;

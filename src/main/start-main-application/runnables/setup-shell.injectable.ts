@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { shellSync } from "../../shell-sync";
 import loggerInjectable from "../../../common/logger.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 
 const setupShellInjectable = getInjectable({
   id: "setup-shell",
@@ -22,7 +22,7 @@ const setupShellInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
   causesSideEffects: true,
 });
 

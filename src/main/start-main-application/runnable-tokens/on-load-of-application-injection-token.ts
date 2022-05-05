@@ -5,6 +5,6 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Runnable } from "../../../common/runnable/run-many-for";
 
-export const whenApplicationIsLoadingInjectionToken = getInjectionToken<Runnable>({
-  id: "when-application-is-loading",
+export const onLoadOfApplicationInjectionToken = getInjectionToken<Runnable>({
+  id: "on-load-of-application",
 });

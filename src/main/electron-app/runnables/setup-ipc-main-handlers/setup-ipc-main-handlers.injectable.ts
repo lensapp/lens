@@ -11,7 +11,7 @@ import applicationMenuItemsInjectable from "../../../menu/application-menu-items
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import catalogEntityRegistryInjectable from "../../../catalog/catalog-entity-registry.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../../../start-main-application/runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
@@ -48,7 +48,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
   causesSideEffects: true,
 });
 

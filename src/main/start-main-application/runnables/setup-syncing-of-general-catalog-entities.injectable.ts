@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import syncGeneralCatalogEntitiesInjectable from "../../catalog-sources/sync-general-catalog-entities.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 
 const setupSyncingOfGeneralCatalogEntitiesInjectable = getInjectable({
   id: "setup-syncing-of-general-catalog-entities",
@@ -21,7 +21,7 @@ const setupSyncingOfGeneralCatalogEntitiesInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupSyncingOfGeneralCatalogEntitiesInjectable;

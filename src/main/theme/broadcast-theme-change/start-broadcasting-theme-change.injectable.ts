@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import broadcastThemeChangeInjectable from "./broadcast-theme-change.injectable";
 
 const startBroadcastingThemeChangeInjectable = getInjectable({
@@ -19,7 +19,7 @@ const startBroadcastingThemeChangeInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default startBroadcastingThemeChangeInjectable;

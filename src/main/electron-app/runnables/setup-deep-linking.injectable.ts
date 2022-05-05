@@ -9,7 +9,7 @@ import loggerInjectable from "../../../common/logger.injectable";
 import commandLineArgumentsInjectable from "../../utils/command-line-arguments.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { find, startsWith, toLower, map } from "lodash/fp";
-import { whenApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 
 const setupDeepLinkingInjectable = getInjectable({
@@ -64,7 +64,7 @@ const setupDeepLinkingInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupDeepLinkingInjectable;

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 import syncWeblinksInjectable from "../../catalog-sources/sync-weblinks.injectable";
 
 const setupSyncingOfWeblinksInjectable = getInjectable({
@@ -19,7 +19,7 @@ const setupSyncingOfWeblinksInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupSyncingOfWeblinksInjectable;

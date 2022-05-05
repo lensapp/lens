@@ -9,7 +9,7 @@ import { VersionDetector } from "../../cluster-detectors/version-detector";
 import { DistributionDetector } from "../../cluster-detectors/distribution-detector";
 import { NodesCountDetector } from "../../cluster-detectors/nodes-count-detector";
 import detectorRegistryInjectable from "../../cluster-detectors/detector-registry.injectable";
-import { whenApplicationIsLoadingInjectionToken } from "../runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 
 const setupDetectorRegistryInjectable = getInjectable({
   id: "setup-detector-registry",
@@ -29,7 +29,7 @@ const setupDetectorRegistryInjectable = getInjectable({
     };
   },
 
-  injectionToken: whenApplicationIsLoadingInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupDetectorRegistryInjectable;

@@ -8,7 +8,7 @@ import { runManyFor } from "../../common/runnable/run-many-for";
 import { runManySyncFor } from "../../common/runnable/run-many-sync-for";
 import { beforeElectronIsReadyInjectionToken } from "./runnable-tokens/before-electron-is-ready-injection-token";
 import { beforeApplicationIsLoadingInjectionToken } from "./runnable-tokens/before-application-is-loading-injection-token";
-import { whenApplicationIsLoadingInjectionToken } from "./runnable-tokens/when-application-is-loading-injection-token";
+import { onLoadOfApplicationInjectionToken } from "./runnable-tokens/on-load-of-application-injection-token";
 import { afterApplicationIsLoadedInjectionToken } from "./runnable-tokens/after-application-is-loaded-injection-token";
 import applicationIsLoadingWindowInjectable from "./lens-window/application-is-loading-window/application-is-loading-window.injectable";
 
@@ -35,7 +35,7 @@ const startMainApplicationInjectable = getInjectable({
 
     const beforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
     const beforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
-    const whenApplicationIsLoading = runMany(whenApplicationIsLoadingInjectionToken);
+    const onLoadOfApplication = runMany(onLoadOfApplicationInjectionToken);
     const afterApplicationIsLoaded = runMany(afterApplicationIsLoadedInjectionToken);
 
     return async () => {
@@ -51,7 +51,7 @@ const startMainApplicationInjectable = getInjectable({
         await applicationIsLoadingWindow.show();
       }
 
-      await whenApplicationIsLoading();
+      await onLoadOfApplication();
 
       if (!shouldStartHidden) {
         const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
