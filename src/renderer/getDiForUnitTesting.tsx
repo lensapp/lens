@@ -4,7 +4,7 @@
  */
 
 import glob from "glob";
-import { isEqual, isPlainObject, memoize } from "lodash/fp";
+import { memoize } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
@@ -32,23 +32,12 @@ import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
-import createStorageInjectable from "./utils/create-storage/create-storage.injectable";
-import { observable, toJS } from "mobx";
-import type { Draft } from "immer";
-import { produce, isDraft } from "immer";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import historyInjectable from "./navigation/history.injectable";
 
-export interface GetRendererDiForUnitTestingOptions extends GetDiForUnitTestingOptions {
-  overrideCreateStorage?: boolean;
-}
-
-export const getDiForUnitTesting = (opts: GetRendererDiForUnitTestingOptions = {}) => {
+export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
     doGeneralOverrides = false,
-  } = opts;
-  const {
-    overrideCreateStorage = doGeneralOverrides,
   } = opts;
   const di = createContainer();
 
@@ -103,43 +92,6 @@ export const getDiForUnitTesting = (opts: GetRendererDiForUnitTestingOptions = {
       info: jest.fn(),
       silly: jest.fn(),
     }));
-  }
-
-  if (overrideCreateStorage) {
-    di.override(createStorageInjectable, () => function <MockT>(key: string, defaultValue: MockT) {
-      const srcValue = observable.box(defaultValue);
-
-      return {
-        get: () => srcValue.get(),
-        isDefaultValue: val => isEqual(val, defaultValue),
-        merge: (value: Partial<MockT> | ((draft: Draft<MockT>) => void | Partial<MockT>)) => {
-          const nextValue = produce(toJS(srcValue.get()), (draft) => {
-
-            if (typeof value == "function") {
-              const newValue = value(draft);
-
-              // merge returned plain objects from `value-as-callback` usage
-              // otherwise `draft` can be just modified inside a callback without returning any value (void)
-              if (newValue && !isDraft(newValue)) {
-                Object.assign(draft, newValue);
-              }
-            } else if (isPlainObject(value)) {
-              Object.assign(draft, value);
-            }
-
-            return draft;
-          });
-
-          srcValue.set(nextValue);
-        },
-        reset: () => srcValue.set(defaultValue),
-        set: (val: MockT) => srcValue.set(val),
-        get value() {
-          return srcValue.get();
-        },
-        whenReady: Promise.resolve(),
-      };
-    });
   }
 
   return di;

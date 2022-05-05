@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
 import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
@@ -29,8 +30,7 @@ describe("DockStore", () => {
       on: jest.fn(),
       invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
     } as never));
-
-    await di.runSetups();
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     dockStore = di.inject(dockStoreInjectable);
   });
