@@ -22,21 +22,25 @@ export const extensionPreferenceItemInjectionToken = getInjectionToken<Extension
 const extensionsPreferenceItemsInjectable = getInjectable({
   id: "extension-preference-items",
 
-  instantiate: (di, extensionId: string): IComputedValue<RegisteredAppPreference[]> => {
+  instantiate: (di, pathParams: IComputedValue<Record<string, string>>): IComputedValue<RegisteredAppPreference[]> => {
     const extensions = di.inject(rendererExtensionsInjectable);
+    const { extensionId, tabId } = pathParams.get();
     const extension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
+    const preferences = extension.appPreferences.map(preference => ({
+      id: preference.id,
+      ...preference,
+    }));
 
     return computed(() => {
       if (!extension) {
         return [];
       }
 
-      return extension.appPreferences
-        .filter(preference => !preference.showInPreferencesTab)
-        .map(preference => ({
-          id: preference.id,
-          ...preference,
-        }));
+      if (tabId) {
+        return preferences.filter(preference => preference.showInPreferencesTab == tabId);
+      }
+
+      return preferences.filter(preference => !preference.showInPreferencesTab);
     });
   },
   lifecycle: lifecycleEnum.transient,

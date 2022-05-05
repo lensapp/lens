@@ -46,7 +46,7 @@ export const Extensions = withInjectables<Dependencies>(
       const extension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
 
       return {
-        preferenceItems: di.inject(extensionsPreferenceItemsInjectable, extensionId),
+        preferenceItems: di.inject(extensionsPreferenceItemsInjectable, pathParameters),
         extensionName: extension?.manifest.name,
       };
     },

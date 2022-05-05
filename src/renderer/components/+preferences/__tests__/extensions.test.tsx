@@ -36,7 +36,7 @@ describe("<Extensions/>", () => {
   it("renders proper page title", () => {
     const { getByText } = render(<Extensions />);
 
-    expect(getByText("some-test-extension-id settings")).toBeInTheDocument();
+    expect(getByText("some-test-extension-id preferences")).toBeInTheDocument();
   });
 
   it("renders relevant preference items", () => {
@@ -49,6 +49,24 @@ describe("<Extensions/>", () => {
     const { queryByTestId } = render(<Extensions />);
 
     expect(queryByTestId(`extension-preference-item-for-some-unrelated-preference-item-id`)).not.toBeInTheDocument();
+  });
+
+  describe("when tabId param is passed and extension has same showInPreferencesTab param", () => {
+    beforeEach(() => {
+      di.override(currentPathParametersInjectable, () => computed(() => ({ extensionId: "some-test-extension-id", tabId: "license-extension-tab" })));
+    });
+
+    it("does render related preferences for specific tab", () => {
+      const { getByTestId } = render(<Extensions />);
+
+      expect(getByTestId(`extension-preference-item-for-preference-for-tab-item-id`)).toBeInTheDocument();
+    });
+
+    it("does not render irrelevant preference items", () => {
+      const { queryByTestId } = render(<Extensions />);
+
+      expect(queryByTestId(`extension-preference-item-for-some-unrelated-preference-item-id`)).not.toBeInTheDocument();
+    });
   });
 });
 
@@ -85,5 +103,22 @@ const extensionWithSpecificPreferenceItems: Partial<LensRendererExtension> = {
         Input: () => <div />,
       },
     },
+
+    {
+      title: "preference for specific tab",
+      id: "preference-for-tab-item-id",
+      showInPreferencesTab: "license-extension-tab",
+
+      components: {
+        Hint: () => <div />,
+        Input: () => <div />,
+      },
+    },
   ],
+
+  appPreferenceTabs: [{
+    title: "License tab",
+    id: "license-extension-tab",
+    orderNumber: 100,
+  }],
 };
