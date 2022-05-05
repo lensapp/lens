@@ -45,7 +45,9 @@ describe("HotbarStore", () => {
   let logger: jest.Mocked<Logger>;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true, overrideHotbarStore: false });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    (di as any).unoverride(hotbarStoreInjectable);
 
     testCluster = getMockCatalogEntity({
       apiVersion: "v1",

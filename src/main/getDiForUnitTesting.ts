@@ -37,24 +37,9 @@ import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import { noop } from "../renderer/utils";
 
-export interface GetMainDiForUnitTestingOptions extends GetDiForUnitTestingOptions {
-  overrideHotbarStore?: boolean;
-  overrideUserStore?: boolean;
-  overrideExtensionsStore?: boolean;
-  overrideClusterStore?: boolean;
-  overrideFileSystemProvisionerStore?: boolean;
-}
-
-export function getDiForUnitTesting(opts: GetMainDiForUnitTestingOptions = {}) {
+export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
     doGeneralOverrides = false,
-  } = opts;
-  const {
-    overrideHotbarStore = doGeneralOverrides,
-    overrideUserStore = doGeneralOverrides,
-    overrideExtensionsStore = doGeneralOverrides,
-    overrideClusterStore = doGeneralOverrides,
-    overrideFileSystemProvisionerStore = doGeneralOverrides,
   } = opts;
 
   const di = createContainer();
@@ -73,27 +58,12 @@ export function getDiForUnitTesting(opts: GetMainDiForUnitTestingOptions = {}) {
 
   di.preventSideEffects();
 
-  if (overrideHotbarStore) {
-    di.override(hotbarStoreInjectable, () => ({}));
-  }
-
-  if (overrideUserStore) {
-    di.override(userStoreInjectable, () => ({}));
-  }
-
-  if (overrideExtensionsStore) {
-    di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
-  }
-
-  if (overrideClusterStore) {
-    di.override(clusterStoreInjectable, () => ({ getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
-  }
-
-  if (overrideFileSystemProvisionerStore) {
-    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-  }
-
   if (doGeneralOverrides) {
+    di.override(hotbarStoreInjectable, () => ({}));
+    di.override(userStoreInjectable, () => ({}));
+    di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
+    di.override(clusterStoreInjectable, () => ({ getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
+    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
     di.override(isMacInjectable, () => true);
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
