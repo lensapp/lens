@@ -384,7 +384,7 @@ export abstract class KubeObjectStore<
       "json",
     );
 
-    assert(rawItem, `Failed to patch ${item.getDescriptor()} of ${item.kind} ${item.apiVersion}`);
+    assert(rawItem, `Failed to patch ${item.getScopedName()} of ${item.kind} ${item.apiVersion}`);
 
     return this.postUpdate(rawItem);
   }
@@ -398,7 +398,7 @@ export abstract class KubeObjectStore<
       data,
     );
 
-    assert(rawItem, `Failed to update ${item.getDescriptor()} of ${item.kind} ${item.apiVersion}`);
+    assert(rawItem, `Failed to update ${item.getScopedName()} of ${item.kind} ${item.apiVersion}`);
 
     return this.postUpdate(rawItem);
   }

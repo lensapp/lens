@@ -513,7 +513,7 @@ export class KubeObject<
     return this.metadata.resourceVersion;
   }
 
-  getDescriptor() {
+  getScopedName() {
     const ns = this.getNs();
     const res = ns ? `${ns}/` : "";
 
