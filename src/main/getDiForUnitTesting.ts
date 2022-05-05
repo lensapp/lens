@@ -25,9 +25,6 @@ import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
-import isMacInjectable from "../common/vars/is-mac.injectable";
-import isWindowsInjectable from "../common/vars/is-windows.injectable";
-import isLinuxInjectable from "../common/vars/is-linux.injectable";
 import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
@@ -80,6 +77,7 @@ import sendToChannelInElectronBrowserWindowInjectable from "./start-main-applica
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
+import platformInjectable from "../common/vars/platform.injectable";
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -197,9 +195,7 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
 };
 
 const overrideOperatingSystem = (di: DiContainer) => {
-  di.override(isMacInjectable, () => true);
-  di.override(isWindowsInjectable, () => false);
-  di.override(isLinuxInjectable, () => false);
+  di.override(platformInjectable, () => "darwin");
   di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
   di.override(joinPathsInjectable, () => joinPathsFake);
 };

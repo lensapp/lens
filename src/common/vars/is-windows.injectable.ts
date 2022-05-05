@@ -3,11 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import platformInjectable from "./platform.injectable";
 
 const isWindowsInjectable = getInjectable({
   id: "is-windows",
-  instantiate: () => process.platform === "win32",
-  causesSideEffects: true,
+
+  instantiate: (di) => {
+    const platform = di.inject(platformInjectable);
+
+    return platform === "win32";
+  },
 });
 
 export default isWindowsInjectable;
