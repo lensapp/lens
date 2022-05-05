@@ -28,13 +28,13 @@ import type { ListNamespaces } from "./list-namespaces.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
-  createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  createContextHandler: (cluster: Cluster) => ContextHandler;
-  createKubectl: (clusterVersion: string) => Kubectl;
-  createAuthorizationReview: (config: KubeConfig) => CanI;
-  createListNamespaces: (config: KubeConfig) => ListNamespaces;
-  detectorRegistry: DetectorRegistry;
-  createVersionDetector: (cluster: Cluster) => VersionDetector;
+  readonly createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
+  readonly createContextHandler: (cluster: Cluster) => ContextHandler;
+  readonly createKubectl: (clusterVersion: string) => Kubectl;
+  readonly createAuthorizationReview: (config: KubeConfig) => CanI;
+  readonly createListNamespaces: (config: KubeConfig) => ListNamespaces;
+  readonly detectorRegistry: DetectorRegistry;
+  readonly createVersionDetector: (cluster: Cluster) => VersionDetector;
 }
 
 /**
