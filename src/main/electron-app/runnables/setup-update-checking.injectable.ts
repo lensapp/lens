@@ -4,23 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterRootFrameIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/after-root-frame-is-ready-injection-token";
-import { startUpdateChecking } from "../../app-updater";
-import isAutoUpdateEnabledInjectable from "../../is-auto-update-enabled.injectable";
+import startUpdateCheckingInjectable from "../../start-update-checking.injectable";
 
 const setupUpdateCheckingInjectable = getInjectable({
   id: "setup-update-checking",
 
   instantiate: (di) => {
-    const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
+    const startUpdateChecking = di.inject(startUpdateCheckingInjectable);
 
     return {
       run: () => {
-        startUpdateChecking(isAutoUpdateEnabled)();
+        startUpdateChecking();
       },
     };
   },
-
-  causesSideEffects: true,
 
   injectionToken: afterRootFrameIsReadyInjectionToken,
 });
