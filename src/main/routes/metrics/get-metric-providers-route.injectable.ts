@@ -23,11 +23,7 @@ const getMetricProvidersRouteInjectable = getInjectable({
       handler: () => {
         const providers: MetricProviderInfo[] = [];
 
-        for (const {
-          name,
-          id,
-          isConfigurable,
-        } of prometheusProviderRegistry.providers.values()) {
+        for (const { name, id, isConfigurable } of prometheusProviderRegistry.providers.values()) {
           providers.push({ name, id, isConfigurable });
         }
 
