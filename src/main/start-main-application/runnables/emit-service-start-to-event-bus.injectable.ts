@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import { afterApplicationIsLoadedInjectionToken } from "../runnable-tokens/after-application-is-loaded-injection-token";
 
-const emitServiceStartToCommandBusInjectable = getInjectable({
-  id: "emit-service-start-to-command-bus",
+const emitServiceStartToEventBusInjectable = getInjectable({
+  id: "emit-service-start-to-event-bus",
 
   instantiate: (di) => {
     const appEventBus = di.inject(appEventBusInjectable);
@@ -22,4 +22,4 @@ const emitServiceStartToCommandBusInjectable = getInjectable({
   injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 
-export default emitServiceStartToCommandBusInjectable;
+export default emitServiceStartToEventBusInjectable;

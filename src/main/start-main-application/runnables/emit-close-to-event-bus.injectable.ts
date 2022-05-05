@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import { beforeQuitOfFrontEndInjectionToken } from "../runnable-tokens/before-quit-of-front-end-injection-token";
 
-const emitCloseToCommandBusInjectable = getInjectable({
-  id: "emit-close-to-command-bus",
+const emitCloseToEventBusInjectable = getInjectable({
+  id: "emit-close-to-event-bus",
 
   instantiate: (di) => {
     const appEventBus = di.inject(appEventBusInjectable);
@@ -22,4 +22,4 @@ const emitCloseToCommandBusInjectable = getInjectable({
   injectionToken: beforeQuitOfFrontEndInjectionToken,
 });
 
-export default emitCloseToCommandBusInjectable;
+export default emitCloseToEventBusInjectable;
