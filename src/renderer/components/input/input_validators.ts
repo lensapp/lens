@@ -83,7 +83,7 @@ export const isUrl = inputValidator({
  */
 export const isExtensionNameInstallRegex = TypedRegEx("^(?<name>(@[-\\w]+\\/)?[-\\w]+)(@(?<version>[a-z0-9-_.]+))?$", "gi") as {
   isMatch(val: string): boolean;
-  captures(val: string): undefined | { name: string; version?: string | undefined };
+  captures(val: string): undefined | { name: string; version?: string };
 };
 
 export const isExtensionNameInstall = inputValidator({

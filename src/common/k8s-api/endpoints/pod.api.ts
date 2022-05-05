@@ -713,8 +713,8 @@ export interface PodSpec {
   imagePullSecrets?: LocalObjectReference[];
   initContainers?: PodContainer[];
   nodeName?: string;
-  nodeSelector?: Record<string, string | undefined>;
-  overhead?: Record<string, string | undefined>;
+  nodeSelector?: Partial<Record<string, string>>;
+  overhead?: Partial<Record<string, string>>;
   preemptionPolicy?: string;
   priority?: number;
   priorityClassName?: string;

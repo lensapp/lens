@@ -93,8 +93,8 @@ export interface DeploymentSpec {
   template: {
     metadata: {
       creationTimestamp?: string;
-      labels: Record<string, string | undefined>;
-      annotations?: Record<string, string | undefined>;
+      labels: Partial<Record<string, string>>;
+      annotations?: Partial<Record<string, string>>;
     };
     spec: PodSpec;
   };

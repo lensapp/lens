@@ -93,8 +93,8 @@ export interface HorizontalPodAutoscalerStatus {
 }
 
 interface MetricCurrentTarget {
-  current?: string | undefined;
-  target?: string | undefined;
+  current?: string;
+  target?: string;
 }
 
 export class HorizontalPodAutoscaler extends KubeObject<HorizontalPodAutoscalerStatus, HorizontalPodAutoscalerSpec, KubeObjectScope.Namespace> {

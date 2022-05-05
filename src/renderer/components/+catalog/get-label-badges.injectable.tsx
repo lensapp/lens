@@ -10,7 +10,7 @@ import searchUrlPageParamInjectable from "../input/search-url-page-param.injecta
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Badge } from "../badge";
 
-export type GetLabelBadges = (entity: CatalogEntity, onClick?: ((evt: React.MouseEvent<any, MouseEvent>) => void) | undefined) => JSX.Element[];
+export type GetLabelBadges = (entity: CatalogEntity, onClick?: (evt: React.MouseEvent<any, MouseEvent>) => void) => JSX.Element[];
 
 const getLabelBadgesInjectable = getInjectable({
   id: "get-label-badges",

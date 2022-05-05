@@ -84,7 +84,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   async getResponse<Query>(
     path: string,
-    params?: ParamsAndQuery<Params, Query> | undefined,
+    params?: ParamsAndQuery<Params, Query>,
     init: RequestInit = {},
   ): Promise<Response> {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
@@ -110,7 +110,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   get<OutData = Data, Query = QueryParams>(
     path: string,
-    params?: ParamsAndQuery<Params, Query> | undefined,
+    params?: ParamsAndQuery<Params, Query>,
     reqInit: RequestInit = {},
   ) {
     return this.request<OutData, Query>(path, params, { ...reqInit, method: "get" });
@@ -118,7 +118,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   post<OutData = Data, Query = QueryParams>(
     path: string,
-    params?: ParamsAndQuery<Params, Query> | undefined,
+    params?: ParamsAndQuery<Params, Query>,
     reqInit: RequestInit = {},
   ) {
     return this.request<OutData, Query>(path, params, { ...reqInit, method: "post" });
@@ -126,7 +126,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   put<OutData = Data, Query = QueryParams>(
     path: string,
-    params?: ParamsAndQuery<Params, Query> | undefined,
+    params?: ParamsAndQuery<Params, Query>,
     reqInit: RequestInit = {},
   ) {
     return this.request<OutData, Query>(path, params, { ...reqInit, method: "put" });
@@ -134,7 +134,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   patch<OutData = Data, Query = QueryParams>(
     path: string,
-    params?: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: Patch | PartialDeep<Data> }) | undefined,
+    params?: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: Patch | PartialDeep<Data> }),
     reqInit: RequestInit = {},
   ) {
     return this.request<OutData, Query>(path, params, { ...reqInit, method: "patch" });
@@ -142,7 +142,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   del<OutData = Data, Query = QueryParams>(
     path: string,
-    params?: ParamsAndQuery<Params, Query> | undefined,
+    params?: ParamsAndQuery<Params, Query>,
     reqInit: RequestInit = {},
   ) {
     return this.request<OutData, Query>(path, params, { ...reqInit, method: "delete" });

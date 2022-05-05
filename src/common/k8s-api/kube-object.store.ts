@@ -26,13 +26,13 @@ export type OnLoadFailure = (error: unknown) => void;
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
-  reqInit?: RequestInit | undefined;
+  reqInit?: RequestInit;
 
   /**
    * A function that is called when listing fails. If set then blocks errors
    * being rejected with
    */
-  onLoadFailure?: OnLoadFailure | undefined;
+  onLoadFailure?: OnLoadFailure;
 }
 
 export interface KubeObjectStoreLoadAllParams {
@@ -44,7 +44,7 @@ export interface KubeObjectStoreLoadAllParams {
    * A function that is called when listing fails. If set then blocks errors
    * being rejected with
    */
-  onLoadFailure?: OnLoadFailure | undefined;
+  onLoadFailure?: OnLoadFailure;
 }
 
 export interface KubeObjectStoreSubscribeParams {
@@ -52,7 +52,7 @@ export interface KubeObjectStoreSubscribeParams {
    * A function that is called when listing fails. If set then blocks errors
    * being rejected with
    */
-  onLoadFailure?: OnLoadFailure | undefined;
+  onLoadFailure?: OnLoadFailure;
 
   /**
    * An optional parent abort controller

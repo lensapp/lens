@@ -105,18 +105,18 @@ export interface IgnoredKubeApiOptions {
 }
 
 export interface KubeApiQueryParams {
-  watch?: boolean | number | undefined;
-  resourceVersion?: string | undefined;
-  timeoutSeconds?: number | undefined;
-  limit?: number | undefined; // doesn't work with ?watch
-  continue?: string | undefined; // might be used with ?limit from second request
-  labelSelector?: string | string[] | undefined; // restrict list of objects by their labels, e.g. labelSelector: ["label=value"]
-  fieldSelector?: string | string[] | undefined; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
+  watch?: boolean | number;
+  resourceVersion?: string;
+  timeoutSeconds?: number;
+  limit?: number; // doesn't work with ?watch
+  continue?: string; // might be used with ?limit from second request
+  labelSelector?: string | string[]; // restrict list of objects by their labels, e.g. labelSelector: ["label=value"]
+  fieldSelector?: string | string[]; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
 }
 
 export interface KubeApiListOptions {
-  namespace?: string | undefined;
-  reqInit?: RequestInit | undefined;
+  namespace?: string;
+  reqInit?: RequestInit;
 }
 
 export interface IKubePreferredVersion {
@@ -268,13 +268,13 @@ export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = 
 
 export interface KubeApiWatchOptions<Object extends KubeObject<any, any, KubeObjectScope>, Data extends KubeJsonApiDataFor<Object>> {
   namespace: string;
-  callback?: KubeApiWatchCallback<Data> | undefined;
-  abortController?: AbortController | undefined;
-  watchId?: string | undefined;
-  retry?: boolean | undefined;
+  callback?: KubeApiWatchCallback<Data>;
+  abortController?: AbortController;
+  watchId?: string;
+  retry?: boolean;
 
   // timeout in seconds
-  timeout?: number | undefined;
+  timeout?: number;
 }
 
 export type KubeApiPatchType = "merge" | "json" | "strategic";
@@ -296,7 +296,7 @@ export interface ResourceDescriptor {
    *
    * Note: if not provided and the resource kind is namespaced, then this defaults to `"default"`
    */
-  namespace?: string | undefined;
+  namespace?: string;
 }
 
 export interface DeleteResourceDescriptor extends ResourceDescriptor {
@@ -559,7 +559,7 @@ export class KubeApi<
     return null;
   }
 
-  private ensureMetadataSelfLink<T extends { selfLink?: string | undefined; namespace?: string | undefined; name: string }>(metadata: T): asserts metadata is T & { selfLink: string } {
+  private ensureMetadataSelfLink<T extends { selfLink?: string; namespace?: string; name: string }>(metadata: T): asserts metadata is T & { selfLink: string } {
     metadata.selfLink ||= createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,

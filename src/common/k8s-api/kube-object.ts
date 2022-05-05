@@ -354,7 +354,7 @@ export interface Affinity {
 }
 
 export interface LabelSelector {
-  matchLabels?: Record<string, string | undefined>;
+  matchLabels?: Partial<Record<string, string>>;
   matchExpressions?: LabelMatchExpression[];
 }
 
@@ -465,7 +465,7 @@ export class KubeObject<
     );
   }
 
-  static stringifyLabels(labels?: Record<string, string | undefined>): string[] {
+  static stringifyLabels(labels?: Partial<Record<string, string>>): string[] {
     if (!labels) return [];
 
     return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
