@@ -38,11 +38,11 @@ export const ReactiveDuration = observer(({ timestamp, compact = true }: Reactiv
     return <>{"<unknown>"}</>;
   }
 
-  const creationTimestamp = new Date(timestamp).getTime();
+  const timestampSeconds = new Date(timestamp).getTime();
 
   return (
     <>
-      {formatDuration(now(computeUpdateInterval(creationTimestamp)) - creationTimestamp, compact)}
+      {formatDuration(now(computeUpdateInterval(timestampSeconds)) - timestampSeconds, compact)}
     </>
   );
 });
