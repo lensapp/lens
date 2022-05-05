@@ -27,14 +27,14 @@ describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager | undefined;
   let di: DiContainer;
-  let logger: jest.Mocked<Logger>;
+  let loggerMock: jest.Mocked<Logger>;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 
-    logger = {
+    loggerMock = {
       warn: jest.fn(),
       debug: jest.fn(),
       error: jest.fn(),
@@ -42,7 +42,7 @@ describe("kubeconfig manager tests", () => {
       silly: jest.fn(),
     };
 
-    di.override(loggerInjectable, () => logger);
+    di.override(loggerInjectable, () => loggerMock);
 
     mockFs({
       "minikube-config.yml": JSON.stringify({
@@ -104,7 +104,7 @@ describe("kubeconfig manager tests", () => {
 
     assert(kubeConfManager, "should actually create one");
 
-    expect(logger.error).not.toBeCalled();
+    expect(loggerMock.error).not.toBeCalled();
     expect(await kubeConfManager.getPath()).toBe(`some-directory-for-temp${path.sep}kubeconfig-foo`);
     // this causes an intermittent "ENXIO: no such device or address, read" error
     //    const file = await fse.readFile(await kubeConfManager.getPath());

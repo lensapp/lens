@@ -42,7 +42,7 @@ describe("HotbarStore", () => {
   let testCluster: CatalogEntity;
   let minikubeCluster: CatalogEntity;
   let awsCluster: CatalogEntity;
-  let logger: jest.Mocked<Logger>;
+  let loggerMock: jest.Mocked<Logger>;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -91,7 +91,7 @@ describe("HotbarStore", () => {
 
     di.override(hasCategoryForEntityInjectable, () => () => true);
 
-    logger = {
+    loggerMock = {
       warn: jest.fn(),
       debug: jest.fn(),
       error: jest.fn(),
@@ -99,7 +99,7 @@ describe("HotbarStore", () => {
       silly: jest.fn(),
     };
 
-    di.override(loggerInjectable, () => logger);
+    di.override(loggerInjectable, () => loggerMock);
 
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
@@ -219,13 +219,13 @@ describe("HotbarStore", () => {
         hotbarStore.setActiveHotbar("hottest");
 
         hotbarStore.addToHotbar(testCluster, -1);
-        expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+        expect(loggerMock.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
         hotbarStore.addToHotbar(testCluster, 12);
-        expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+        expect(loggerMock.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
 
         hotbarStore.addToHotbar(testCluster, 13);
-        expect(logger.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+        expect(loggerMock.error).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
       });
 
       it("throws an error if getId is invalid or returns not a string", () => {
