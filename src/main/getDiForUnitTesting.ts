@@ -4,7 +4,7 @@
  */
 
 import glob from "glob";
-import { kebabCase, memoize } from "lodash/fp";
+import { kebabCase, memoize, noop } from "lodash/fp";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -75,7 +75,7 @@ import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectab
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
-import { noop } from "../renderer/utils";
+import productNameInjectable from "./app-paths/app-name/product-name.injectable";
 import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
@@ -101,9 +101,9 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
 
   if (doGeneralOverrides) {
     di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
-    di.override(userStoreInjectable, () => ({ startMainReactions: () => {} }) as UserStore);
+    di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" } }) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
-    di.override(clusterStoreInjectable, () => ({ getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
+    di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
     overrideOperatingSystem(di);
@@ -113,6 +113,8 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
     di.override(isDevelopmentInjectable, () => false);
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
+
+    di.override(productNameInjectable, () => "some-product-name");
 
     di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
 
