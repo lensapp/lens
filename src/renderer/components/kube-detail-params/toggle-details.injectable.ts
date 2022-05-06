@@ -7,7 +7,7 @@ import hideDetailsInjectable from "./hide-details.injectable";
 import kubeSelectedUrlParamInjectable from "./kube-selected-url.injectable";
 import showDetailsInjectable from "./show-details.injectable";
 
-export interface ToggleDetails {
+export interface ToggleKubeDetailsPane {
   /**
    * @param selfLink The selfLink of the kube object to toggle the details panal of
    * @param resetSelected If true then the selected kube object (for the current list view) will be reset
@@ -20,9 +20,9 @@ export interface ToggleDetails {
   (selfLink: string | undefined, resetSelected?: boolean): void;
 }
 
-const toggleDetailsInjectable = getInjectable({
-  id: "toggle-details",
-  instantiate: (di): ToggleDetails => {
+const toggleKubeDetailsPaneInjectable = getInjectable({
+  id: "toggle-kube-details-pane",
+  instantiate: (di): ToggleKubeDetailsPane => {
     const showDetails = di.inject(showDetailsInjectable);
     const hideDetails = di.inject(hideDetailsInjectable);
     const kubeSelectedUrlParam = di.inject(kubeSelectedUrlParamInjectable);
@@ -39,4 +39,4 @@ const toggleDetailsInjectable = getInjectable({
   },
 });
 
-export default toggleDetailsInjectable;
+export default toggleKubeDetailsPaneInjectable;

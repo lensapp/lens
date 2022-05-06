@@ -25,9 +25,9 @@ import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.in
 import eventStoreInjectable from "../+events/store.injectable";
 import nodeStoreInjectable from "../+nodes/store.injectable";
 import type { PageParam } from "../../navigation";
-import type { ToggleDetails } from "../kube-detail-params/toggle-details.injectable";
+import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
-import toggleDetailsInjectable from "../kube-detail-params/toggle-details.injectable";
+import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
 
 export interface ClusterIssuesProps {
   className?: string;
@@ -53,7 +53,7 @@ interface Dependencies {
   eventStore: EventStore;
   apiManager: ApiManager;
   kubeSelectedUrlParam: PageParam<string>;
-  toggleDetails: ToggleDetails;
+  toggleKubeDetailsPane: ToggleKubeDetailsPane;
 }
 
 @observer
@@ -91,7 +91,7 @@ class NonInjectedClusterIssues extends React.Component<ClusterIssuesProps & Depe
 
   getTableRow = (uid: string) => {
     const { warnings } = this;
-    const { kubeSelectedUrlParam, toggleDetails } = this.props;
+    const { kubeSelectedUrlParam, toggleKubeDetailsPane: toggleDetails } = this.props;
     const warning = warnings.find(warn => warn.getId() == uid);
 
     if (!warning) {
@@ -196,6 +196,6 @@ export const ClusterIssues = withInjectables<Dependencies, ClusterIssuesProps>(N
     eventStore: di.inject(eventStoreInjectable),
     nodeStore: di.inject(nodeStoreInjectable),
     kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
-    toggleDetails: di.inject(toggleDetailsInjectable),
+    toggleKubeDetailsPane: di.inject(toggleKubeDetailsPaneInjectable),
   }),
 });

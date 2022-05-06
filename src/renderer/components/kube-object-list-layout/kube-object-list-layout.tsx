@@ -26,9 +26,9 @@ import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/ku
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PageParam } from "../../navigation";
-import type { ToggleDetails } from "../kube-detail-params/toggle-details.injectable";
+import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
-import toggleDetailsInjectable from "../kube-detail-params/toggle-details.injectable";
+import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
 
 export interface KubeObjectListLayoutProps<
   K extends KubeObject,
@@ -46,7 +46,7 @@ interface Dependencies {
   clusterFrameContext: ClusterFrameContext;
   subscribeToStores: SubscribeStores;
   kubeSelectedUrlParam: PageParam<string>;
-  toggleDetails: ToggleDetails;
+  toggleKubeDetailsPane: ToggleKubeDetailsPane;
 }
 
 @observer
@@ -114,7 +114,7 @@ class NonInjectedKubeObjectListLayout<
       store,
       items,
       dependentStores,
-      toggleDetails,
+      toggleKubeDetailsPane: toggleDetails,
       onDetails,
       ...layoutProps
     } = this.props;
@@ -166,7 +166,7 @@ export const KubeObjectListLayout = withInjectables<
     clusterFrameContext: di.inject(clusterFrameContextInjectable),
     subscribeToStores: di.inject(subscribeStoresInjectable),
     kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
-    toggleDetails: di.inject(toggleDetailsInjectable),
+    toggleKubeDetailsPane: di.inject(toggleKubeDetailsPaneInjectable),
   }),
 }) as <
   K extends KubeObject,
