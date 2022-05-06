@@ -38,11 +38,12 @@ import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
-import ipcRendererInjectable
-  from "./app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
+import ipcRendererInjectable from "./app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable } from "mobx";
+import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
+import themeStoreInjectable from "./themes/store.injectable";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -100,6 +101,8 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
 
     di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
 
+    di.override(defaultShellInjectable, () => "some-default-shell");
+
     di.override(
       userStoreInjectable,
       () =>
@@ -127,6 +130,14 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
       error: noop,
       info: noop,
       silly: noop,
+    }));
+
+    di.override(themeStoreInjectable, () => ({
+      activeTheme: {
+        type: "some-active-theme-type",
+      },
+
+      themeOptions: [],
     }));
   }
 
