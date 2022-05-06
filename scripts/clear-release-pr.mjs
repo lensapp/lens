@@ -129,8 +129,8 @@ const relaventPrsQuery = await Promise.all(
   milestoneRelevantPrs.map(async pr => ({
     pr,
     stdout: (await execP(`git tag v${previousReleasedVersion} --no-contains ${pr.mergeCommit.oid}`)).stdout,
-  }))
-)
+  })),
+);
 const relaventPrs = relaventPrsQuery
   .filter(query => query.stdout)
   .map(query => query.pr);
@@ -158,7 +158,7 @@ if (enhancementPrs.length > 0) {
     "",
     ...enhancementPrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
     "",
-  )
+  );
 }
 
 if (bugfixPrs.length > 0) {
@@ -167,7 +167,7 @@ if (bugfixPrs.length > 0) {
     "",
     ...bugfixPrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
     "",
-  )
+  );
 }
 
 if (maintenencePrs.length > 0) {
@@ -176,7 +176,7 @@ if (maintenencePrs.length > 0) {
     "",
     ...maintenencePrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
     "",
-  )
+  );
 }
 
 const prBody = prBodyLines.join("\n");
@@ -189,22 +189,22 @@ const createPrArgs = [
   "--base", prBase,
   "--title", `release ${newVersion.format()}`,
   "--label", "skip-changelog",
-  "--body-file", "-"
+  "--body-file", "-",
 ];
 
-const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" })
+const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" });
 let result = "";
 
 createPrProcess.stdout.on("data", (chunk) => result += chunk);
 
-createPrProcess.stdin.write(prBody)
+createPrProcess.stdin.write(prBody);
 createPrProcess.stdin.end();
 
 await new Promise((resolve) => {
-  createPrProcess.on('close', () => {
+  createPrProcess.on("close", () => {
     createPrProcess.stdout.removeAllListeners();
     resolve();
-  })
-})
+  });
+});
 
 console.log(result);
