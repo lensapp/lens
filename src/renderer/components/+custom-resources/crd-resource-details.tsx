@@ -27,7 +27,15 @@ export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeO
 
 function convertSpecValue(value: any): any {
   if (Array.isArray(value)) {
-    return value.map(convertSpecValue);
+    return (
+      <ul>
+        {value.map((value, index) => (
+          <li key={index}>
+            {convertSpecValue(value)}
+          </li>
+        ))}
+      </ul>
+    );
   }
 
   if (typeof value === "object") {
