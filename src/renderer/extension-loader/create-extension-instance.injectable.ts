@@ -3,10 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { Mutable } from "type-fest";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
 import { createExtensionInstanceInjectionToken } from "../../extensions/extension-loader/create-extension-instance.token";
 import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import { lensExtensionDependencies } from "../../extensions/lens-extension";
 import type { LensRendererExtensionDependencies } from "../../extensions/lens-extension-set-dependencies";
+import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import catalogEntityRegistryInjectable from "../api/catalog/entity/registry.injectable";
 import getExtensionPageParametersInjectable from "../routes/get-extension-page-parameters.injectable";
 import navigateToRouteInjectable from "../routes/navigate-to-route.injectable";
@@ -25,9 +28,9 @@ const createExtensionInstanceInjectable = getInjectable({
     };
 
     return (ExtensionClass, extension) => {
-      const instance = new ExtensionClass(extension);
+      const instance = new ExtensionClass(extension) as LensRendererExtension;
 
-      (instance as unknown as { dependencies: LensRendererExtensionDependencies }).dependencies = deps;
+      (instance as Mutable<LensRendererExtension, typeof lensExtensionDependencies>)[lensExtensionDependencies] = deps;
 
       return instance;
     };
