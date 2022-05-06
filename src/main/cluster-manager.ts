@@ -144,21 +144,31 @@ export class ClusterManager extends Singleton {
     } else {
       entity.status.phase = (() => {
         if (!cluster) {
+          logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
+
           return LensKubernetesClusterStatus.DISCONNECTED;
         }
 
         if (cluster.accessible) {
+          logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
+
           return LensKubernetesClusterStatus.CONNECTED;
         }
 
         if (!cluster.disconnected) {
+          logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
+
           return LensKubernetesClusterStatus.CONNECTING;
         }
 
         // Extensions are not allowed to use the Lens specific status phases
         if (!lensSpecificClusterStatuses.has(entity?.status?.phase)) {
+          logger.debug(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
+
           return entity.status.phase;
         }
+
+        logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
 
         return LensKubernetesClusterStatus.DISCONNECTED;
       })();
