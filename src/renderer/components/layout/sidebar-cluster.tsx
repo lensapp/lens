@@ -17,8 +17,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { HotbarStore } from "../../../common/hotbars/store";
 import { observer } from "mobx-react";
-import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
-import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
+import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
+import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
@@ -32,13 +32,13 @@ interface Dependencies {
   navigate: Navigate;
   normalizeMenuItem: NormalizeCatalogEntityContextMenu;
   hotbarStore: HotbarStore;
-  onContextMenuOpen: OnContextMenuOpen;
+  visitEntityContextMenu: VisitEntityContextMenu;
 }
 
 const NonInjectedSidebarCluster = observer(({
   clusterEntity,
   hotbarStore,
-  onContextMenuOpen,
+  visitEntityContextMenu: onContextMenuOpen,
   navigate,
   normalizeMenuItem,
 }: Dependencies & SidebarClusterProps) => {
@@ -148,7 +148,7 @@ export const SidebarCluster = withInjectables<Dependencies, SidebarClusterProps>
   getProps: (di, props) => ({
     ...props,
     hotbarStore: di.inject(hotbarStoreInjectable),
-    onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+    visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
   }),

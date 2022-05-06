@@ -41,9 +41,9 @@ import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { HotbarStore } from "../../../common/hotbars/store";
-import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
+import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
-import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
+import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
@@ -62,7 +62,7 @@ interface Dependencies {
   navigateToCatalog: NavigateToCatalog;
   hotbarStore: HotbarStore;
   catalogCategoryRegistry: CatalogCategoryRegistry;
-  onContextMenuOpen: OnContextMenuOpen;
+  visitEntityContextMenu: VisitEntityContextMenu;
   navigate: Navigate;
   normalizeMenuItem: NormalizeCatalogEntityContextMenu;
 }
@@ -191,7 +191,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   renderItemMenu = (entity: CatalogEntity) => {
     const onOpen = () => {
       this.menuItems.clear();
-      this.props.onContextMenuOpen(entity, {
+      this.props.visitEntityContextMenu(entity, {
         menuItems: this.menuItems,
         navigate: this.props.navigate,
       });
@@ -359,7 +359,7 @@ export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
     emitEvent: di.inject(appEventBusInjectable).emit,
     hotbarStore: di.inject(hotbarStoreInjectable),
     catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
-    onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+    visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
   }),

@@ -6,11 +6,11 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { CatalogEntity, CatalogEntityContextMenuContext } from "./catalog-entity";
 import catalogCategoryRegistryInjectable from "./category-registry.injectable";
 
-export type OnContextMenuOpen = (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
+export type VisitEntityContextMenu = (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
 
-const onContextMenuOpenInjectable = getInjectable({
-  id: "on-context-menu-open",
-  instantiate: (di): OnContextMenuOpen => {
+const visitEntityContextMenuInjectable = getInjectable({
+  id: "visit-entity-context-menu",
+  instantiate: (di): VisitEntityContextMenu => {
     const categoryRegistry = di.inject(catalogCategoryRegistryInjectable);
 
     return (entity, context) => {
@@ -20,4 +20,4 @@ const onContextMenuOpenInjectable = getInjectable({
   },
 });
 
-export default onContextMenuOpenInjectable;
+export default visitEntityContextMenuInjectable;

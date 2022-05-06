@@ -16,11 +16,11 @@ import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";
-import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
+import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
 import { navigate } from "../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
-import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
+import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import activeEntityInjectable from "../../api/catalog/entity/active.injectable";
 
 export interface HotbarEntityIconProps {
@@ -35,7 +35,7 @@ export interface HotbarEntityIconProps {
 }
 
 interface Dependencies {
-  onContextMenuOpen: OnContextMenuOpen;
+  visitEntityContextMenu: VisitEntityContextMenu;
   catalogCategoryRegistry: CatalogCategoryRegistry;
   activeEntity: IComputedValue<CatalogEntity | undefined>;
 }
@@ -84,7 +84,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
       onClick: () => this.props.remove(this.props.entity.getId()),
     }]);
 
-    this.props.onContextMenuOpen(this.props.entity, {
+    this.props.visitEntityContextMenu(this.props.entity, {
       menuItems: this.menuItems,
       navigate,
     });
@@ -124,7 +124,7 @@ export const HotbarEntityIcon = withInjectables<Dependencies, HotbarEntityIconPr
   getProps: (di, props) => ({
     ...props,
     catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
-    onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+    visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     activeEntity: di.inject(activeEntityInjectable),
   }),
 });

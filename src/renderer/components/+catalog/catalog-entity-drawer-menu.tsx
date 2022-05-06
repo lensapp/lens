@@ -13,8 +13,8 @@ import { observable } from "mobx";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
-import type { OnContextMenuOpen } from "../../../common/catalog/on-context-menu-open.injectable";
-import onContextMenuOpenInjectable from "../../../common/catalog/on-context-menu-open.injectable";
+import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
+import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
@@ -28,7 +28,7 @@ export interface CatalogEntityDrawerMenuProps<Entity extends CatalogEntity> exte
 interface Dependencies {
   normalizeMenuItem: NormalizeCatalogEntityContextMenu;
   navigate: Navigate;
-  onContextMenuOpen: OnContextMenuOpen;
+  visitEntityContextMenu: VisitEntityContextMenu;
 }
 
 @observer
@@ -36,7 +36,7 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
   private readonly menuItems = observable.array<CatalogEntityContextMenu>();
 
   componentDidMount() {
-    this.props.onContextMenuOpen(this.props.entity, {
+    this.props.visitEntityContextMenu(this.props.entity, {
       menuItems: this.menuItems,
       navigate: this.props.navigate,
     });
@@ -108,7 +108,7 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
 export const CatalogEntityDrawerMenu = withInjectables<Dependencies, CatalogEntityDrawerMenuProps<CatalogEntity>>(NonInjectedCatalogEntityDrawerMenu, {
   getProps: (di, props) => ({
     ...props,
-    onContextMenuOpen: di.inject(onContextMenuOpenInjectable),
+    visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),
   }),
