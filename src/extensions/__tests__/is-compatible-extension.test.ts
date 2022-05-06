@@ -48,7 +48,7 @@ describe("Extension/App versions compatibility check", () => {
     })(getExtensionManifestMock({
       lensEngine: "*",
     }))).toBeTruthy();
-  })
+  });
 });
 
 function getExtensionManifestMock(
