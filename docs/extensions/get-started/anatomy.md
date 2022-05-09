@@ -42,7 +42,9 @@ Some of the most-important fields include:
   Lens uses this ID to uniquely identify your extension.
 - `main`: the extension's entry point run in `main` process.
 - `renderer`: the extension's entry point run in `renderer` process.
-- `engines.lens`: the minimum version of Lens API that the extension depends upon. We only support the `~` range, which is also optional to specify, and only major and minor version numbers. Meaning that `~5.4` and `5.4` both mean the same thing, and the patch version in `5.4.2` is ignored.
+- `engines.lens`: the minimum version of Lens API that the extension depends upon.
+  We only support the `~` range, which is also optional to specify, and only major and minor version numbers.
+  Meaning that `~5.4` and `5.4` both mean the same thing, and the patch version in `5.4.2` is ignored.
 
 ```javascript
 {
@@ -79,7 +81,7 @@ Some of the most-important fields include:
 
 ## Webpack configuation
 
-The following webpack `externals` are provided by `Lens` and must be used (when available) to make sure that the versions of that are used are in sync.
+The following webpack `externals` are provided by `Lens` and must be used (when available) to make sure that the versions used are in sync.
 
 | Package            | webpack external syntax     | Lens versions | Available in Main | Available in Renderer |
 | ------------------ | --------------------------- | ------------- | ----------------- | --------------------- |
@@ -92,7 +94,7 @@ The following webpack `externals` are provided by `Lens` and must be used (when 
 
 What is exported is the whole of the packages as a `*` import (within typescript).
 
-For example, if you want to use `mobx` in your main half an extension you would add the following to your webpack configuration file:
+For example, if you want to use `mobx` in your extension's main half (vs renderer half) you would add the following to your webpack configuration file:
 
 ```
   "externals": [
