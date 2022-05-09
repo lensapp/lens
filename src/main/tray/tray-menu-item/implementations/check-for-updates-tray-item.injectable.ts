@@ -6,7 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import showApplicationWindowInjectable from "../../../start-main-application/lens-window/show-application-window.injectable";
 import checkForUpdatesInjectable from "../../../check-for-updates.injectable";
-import isAutoUpdateEnabledInjectable from "../../../is-auto-update-enabled.injectable";
+import isAutoUpdateEnabledInjectable from "../../../update-app/is-auto-update-enabled.injectable";
+import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
@@ -31,6 +32,8 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
       },
     };
   },
+
+  injectionToken: trayMenuItemInjectionToken,
 });
 
 export default checkForUpdatesTrayItemInjectable;
