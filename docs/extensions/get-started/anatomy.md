@@ -54,7 +54,7 @@ Some of the most-important fields include:
   "homepage": "https://github.com/lensapp/lens-extension-samples",
   "engines": {
     "node": "^14.18.12",
-    "lens": "^5.4.0"
+    "lens": "5.4"
   },
   "main": "dist/main.js",
   "renderer": "dist/renderer.js",
