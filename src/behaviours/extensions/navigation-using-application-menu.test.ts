@@ -6,7 +6,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
+import isAutoUpdateEnabledInjectable from "../../main/update-app/is-auto-update-enabled.injectable";
 import extensionsStoreInjectable from "../../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
