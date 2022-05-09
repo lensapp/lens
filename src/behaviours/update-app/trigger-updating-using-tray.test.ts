@@ -43,9 +43,9 @@ describe("trigger updating using tray", () => {
       expect(trayItem).toBe(undefined);
     });
 
-    describe("when an update becomes available", () => {
+    describe("when an update becomes ready to be installed", () => {
       beforeEach(() => {
-        applicationBuilder.applicationUpdater.makeUpdateAvailable(true);
+        applicationBuilder.applicationUpdater.setUpdateIsReadyToBeInstalled(true);
       });
 
       it("renders", () => {
@@ -78,14 +78,14 @@ describe("trigger updating using tray", () => {
 
       describe("when update becomes unavailable", () => {
         beforeEach(async () => {
-          applicationBuilder.applicationUpdater.makeUpdateAvailable(false);
+          applicationBuilder.applicationUpdater.setUpdateIsReadyToBeInstalled(false);
         });
 
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
         });
 
-        it("does not have possibility to trigger installation of the update", () => {
+        it("does not have possibility to trigger installation of the update anymore", () => {
           const trayItem = applicationBuilder.tray.get("trigger-application-update");
 
           expect(trayItem).toBe(undefined);

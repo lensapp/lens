@@ -60,7 +60,7 @@ export interface ApplicationBuilder {
   render: () => Promise<RenderResult>;
 
   applicationUpdater: {
-    makeUpdateAvailable: (available: boolean) => void;
+    setUpdateIsReadyToBeInstalled: (available: boolean) => void;
   };
 
   tray: {
@@ -157,7 +157,7 @@ export const getApplicationBuilder = () => {
     dis,
 
     applicationUpdater: {
-      makeUpdateAvailable: action((available: boolean) => {
+      setUpdateIsReadyToBeInstalled: action((available: boolean) => {
         const updateIsAvailableState = mainDi.inject(updateIsAvailableStateInjectable);
 
         updateIsAvailableState.set(available);
