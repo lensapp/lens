@@ -6,7 +6,7 @@
 import type { UpdateInfo } from "electron-updater";
 import { autoUpdater } from "electron-updater";
 import logger from "./logger";
-import { isPublishConfigured, isTestEnv } from "../common/vars";
+import { isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import type { UpdateAvailableToBackchannel } from "../common/ipc";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateChecking, AutoUpdateLogPrefix, AutoUpdateNoUpdateAvailable, broadcastMessage, onceCorrect, UpdateAvailableChannel } from "../common/ipc";
@@ -16,10 +16,6 @@ import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
 
 let installVersion: undefined | string;
-
-export function isAutoUpdateEnabled() {
-  return autoUpdater.isUpdaterActive() && isPublishConfigured;
-}
 
 function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: UpdateAvailableToBackchannel) {
   if (arg.doUpdate) {
