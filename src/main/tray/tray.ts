@@ -24,7 +24,7 @@ const TRAY_LOG_PREFIX = "[TRAY]";
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
 
-function getTrayIcon() {
+function getTrayIconPath(): string {
   return path.resolve(
     staticFilesDirectory,
     isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
@@ -37,7 +37,7 @@ export function initTray(
   trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
   navigateToPreferences: () => void,
 ): Disposer {
-  const icon = getTrayIcon();
+  const icon = getTrayIconPath();
 
   tray = new Tray(icon);
   tray.setToolTip(packageInfo.description);
