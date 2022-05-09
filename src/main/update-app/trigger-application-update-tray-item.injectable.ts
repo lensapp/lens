@@ -6,14 +6,14 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-item-injection-token";
 import updateIsReadyToBeInstalledInjectable from "./update-is-ready-to-be-installed.injectable";
-import triggerApplicationUpdateInjectable from "./trigger-application-update.injectable";
+import quitAndInstallUpdateInjectable from "../electron-app/features/quit-and-install-update.injectable";
 
 const triggerApplicationUpdateTrayItemInjectable = getInjectable({
   id: "trigger-application-update-tray-item",
 
   instantiate: (di) => {
     const updateIsReadyToBeInstalled = di.inject(updateIsReadyToBeInstalledInjectable);
-    const triggerApplicationUpdate = di.inject(triggerApplicationUpdateInjectable);
+    const quitAndInstallUpdate = di.inject(quitAndInstallUpdateInjectable);
 
     return {
       id: "trigger-application-update",
@@ -24,7 +24,7 @@ const triggerApplicationUpdateTrayItemInjectable = getInjectable({
       visible: computed(() => updateIsReadyToBeInstalled.get()),
 
       click:  () => {
-        triggerApplicationUpdate();
+        quitAndInstallUpdate();
       },
     };
   },
