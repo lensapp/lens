@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`trigger updating using tray given no update available, when started renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`trigger updating using tray given no update available, when started when an update becomes available renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`trigger updating using tray given no update available, when started when an update becomes available when triggering installation of the update renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`trigger updating using tray given no update available, when started when an update becomes available when update becomes unavailable renders 1`] = `
+<body>
+  <div />
+</body>
+`;
