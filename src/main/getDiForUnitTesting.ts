@@ -30,7 +30,7 @@ import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
-import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
+import isAutoUpdateEnabledInjectable from "./update-app/is-auto-update-enabled.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
@@ -79,6 +79,7 @@ import productNameInjectable from "./app-paths/app-name/product-name.injectable"
 import syncUpdateIsReadyToBeInstalledInjectable from "./electron-app/runnables/update-application/sync-update-is-ready-to-be-installed.injectable";
 import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
 import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
+import packageJsonInjectable from "../common/vars/package-json.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -115,6 +116,7 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
     di.override(isDevelopmentInjectable, () => false);
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
+    di.override(packageJsonInjectable, () => ({}));
 
     di.override(productNameInjectable, () => "some-product-name");
 
