@@ -3,18 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import synchronizeUpdateIsAvailableStateInjectable from "./synchronize-update-is-available-state.injectable";
+import syncUpdateIsReadyToBeInstalledInjectable from "./sync-update-is-ready-to-be-installed.injectable";
 import { beforeQuitOfBackEndInjectionToken } from "../../../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
 
-const stopSynchronizingUpdateIsAvailableStateInjectable = getInjectable({
-  id: "stop-synchronizing-update-is-available-state",
+const stopSyncingUpdateIsReadyToBeInstalledInjectable = getInjectable({
+  id: "stop-syncing-update-is-ready-to-be-installed",
 
   instantiate: (di) => {
-    const synchronizeUpdateIsAvailableState = di.inject(synchronizeUpdateIsAvailableStateInjectable);
+    const syncUpdateIsReadyToBeInstalled = di.inject(syncUpdateIsReadyToBeInstalledInjectable);
 
     return {
       run: () => {
-        synchronizeUpdateIsAvailableState.stop();
+        syncUpdateIsReadyToBeInstalled.stop();
       },
     };
   },
@@ -22,4 +22,4 @@ const stopSynchronizingUpdateIsAvailableStateInjectable = getInjectable({
   injectionToken: beforeQuitOfBackEndInjectionToken,
 });
 
-export default stopSynchronizingUpdateIsAvailableStateInjectable;
+export default stopSyncingUpdateIsReadyToBeInstalledInjectable;

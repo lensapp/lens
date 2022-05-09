@@ -46,7 +46,7 @@ import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
 import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
-import updateIsAvailableStateInjectable from "../../../main/update-app/update-is-available-state.injectable";
+import updateIsAvailableStateInjectable from "../../../main/update-app/update-is-ready-to-be-installed-state.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
