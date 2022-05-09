@@ -14,23 +14,18 @@ const syncUpdateIsReadyToBeInstalledInjectable = getInjectable({
     const electronUpdater = di.inject(electronUpdaterInjectable);
     const updateIsReadyToBeInstalledState = di.inject(updateIsReadyToBeInstalledStateInjectable);
 
-    const makeUpdateReadyToBeInstalledFor = (available: boolean) => () => {
-      updateIsReadyToBeInstalledState.set(available);
-    };
 
     return getStartableStoppable(
       "synchronize-update-is-available-state",
       () => {
-
-        const makeUpdateReadyToBeInstalled = makeUpdateReadyToBeInstalledFor(true);
-        const makeUpdateUnavailable = makeUpdateReadyToBeInstalledFor(false);
+        const makeUpdateReadyToBeInstalled = () => {
+          updateIsReadyToBeInstalledState.set(true);
+        };
 
         electronUpdater.on("update-downloaded", makeUpdateReadyToBeInstalled);
-        electronUpdater.on("update-not-available", makeUpdateUnavailable);
 
         return () => {
           electronUpdater.off("update-downloaded", makeUpdateReadyToBeInstalled);
-          electronUpdater.off("update-not-available", makeUpdateUnavailable);
         };
       },
     );
