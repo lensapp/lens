@@ -3,16 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { autoUpdater } from "electron-updater";
+import electronUpdaterInjectable from "./electron-updater.injectable";
 
 const quitAndInstallUpdateInjectable = getInjectable({
   id: "quit-and-install-update",
 
-  instantiate: () => () => {
-    autoUpdater.quitAndInstall(true, true);
-  },
+  instantiate: (di) => {
+    const electronUpdater = di.inject(electronUpdaterInjectable);
 
-  causesSideEffects: true,
+    return () => {
+      electronUpdater.quitAndInstall(true, true);
+    };
+  },
 });
 
 export default quitAndInstallUpdateInjectable;
