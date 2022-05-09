@@ -5,9 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { observable } from "mobx";
 
-const updateIsReadyToBeInstalledState = getInjectable({
+const updateIsReadyToBeInstalledStateInjectable = getInjectable({
   id: "update-is-ready-to-be-installed-state",
   instantiate: () => observable.box<boolean>(false),
 });
 
-export default updateIsReadyToBeInstalledState;
+export default updateIsReadyToBeInstalledStateInjectable;
