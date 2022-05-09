@@ -38,13 +38,13 @@ It contains a mix of Node.js fields, including scripts and dependencies, and Len
 Some of the most-important fields include:
 
 - `name` and `publisher`: Lens uses `@<publisher>/<name>` as a unique ID for the extension.
-For example, the Hello World sample has the ID `@lensapp-samples/helloworld-sample`.
-Lens uses this ID to uniquely identify your extension.
+  For example, the Hello World sample has the ID `@lensapp-samples/helloworld-sample`.
+  Lens uses this ID to uniquely identify your extension.
 - `main`: the extension's entry point run in `main` process.
 - `renderer`: the extension's entry point run in `renderer` process.
 - `engines.lens`: the minimum version of Lens API that the extension depends upon.
 
-``` javascript
+```javascript
 {
   "name": "helloworld-sample",
   "publisher": "lens-samples",
@@ -53,7 +53,8 @@ Lens uses this ID to uniquely identify your extension.
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens-extension-samples",
   "engines": {
-    "lens": "^4.0.0"
+    "node": "^14.18.12",
+    "lens": "^5.4.0"
   },
   "main": "dist/main.js",
   "renderer": "dist/renderer.js",
@@ -65,15 +66,41 @@ Lens uses this ID to uniquely identify your extension.
     "react-open-doodles": "^1.0.5"
   },
   "devDependencies": {
-    "@k8slens/extensions": "^4.0.0-alpha.2",
+    "@k8slens/extensions": "^5.4.6",
     "ts-loader": "^8.0.4",
-    "typescript": "^4.0.3",
-    "@types/react": "^16.9.35",
-    "@types/node": "^12.0.0",
+    "typescript": "^4.5.5",
+    "@types/react": "^17.0.44",
+    "@types/node": "^14.18.12",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.11"
   }
 }
+```
+
+## Webpack configuation
+
+The following webpack `externals` are provided by `Lens` and must be used (when available) to make sure that the versions of that are used are in sync.
+
+| Package            | webpack external syntax     | Lens versions | Available in Main | Available in Renderer |
+| ------------------ | --------------------------- | ------------- | ----------------- | --------------------- |
+| `mobx`             | `var global.Mobx`           | `>5.0.0`      | ✅                | ✅                    |
+| `mobx-react`       | `var global.MobxReact`      | `>5.0.0`      | ❌                | ✅                    |
+| `react`            | `var global.React`          | `>5.0.0`      | ❌                | ✅                    |
+| `react-router`     | `var global.ReactRouter`    | `>5.0.0`      | ❌                | ✅                    |
+| `react-router-dom` | `var global.ReactRouterDom` | `>5.0.0`      | ❌                | ✅                    |
+| `react-dom`        | `var global.ReactDOM`       | `>5.5.0`      | ❌                | ✅                    |
+
+What is exported is the whole of the packages as a `*` import (within typescript).
+
+For example, if you want to use `mobx` in your main half an extension you would add the following to your webpack configuration file:
+
+```
+  "externals": [
+    ...
+    {
+      "mobx": "var global.Mobx"
+    }
+  ]
 ```
 
 ## Extension Entry Files
@@ -95,20 +122,20 @@ The `Cluster Page` object registers the `/extension-example` path, and this path
 It also registers the `MenuItem` component that displays the `ExampleIcon` React component and the "Hello World" text in the left-side menu of the cluster dashboard.
 These React components are defined in the additional `./src/page.tsx` file.
 
-``` typescript
+```typescript
 import { Renderer } from "@k8slens/extensions";
-import { ExampleIcon, ExamplePage } from "./page"
-import React from "react"
+import { ExampleIcon, ExamplePage } from "./page";
+import React from "react";
 
 export default class ExampleExtension extends Renderer.LensExtension {
   clusterPages = [
     {
       id: "extension-example",
       components: {
-        Page: () => <ExamplePage extension={this}/>,
-      }
-    }
-  ]
+        Page: () => <ExamplePage extension={this} />,
+      },
+    },
+  ];
 }
 ```
 
