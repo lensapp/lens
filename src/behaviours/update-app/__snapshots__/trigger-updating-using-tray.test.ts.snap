@@ -6,19 +6,19 @@ exports[`trigger updating using tray given no update available, when started ren
 </body>
 `;
 
-exports[`trigger updating using tray given no update available, when started when an update becomes available renders 1`] = `
+exports[`trigger updating using tray given no update available, when started when an update becomes ready to be installed renders 1`] = `
 <body>
   <div />
 </body>
 `;
 
-exports[`trigger updating using tray given no update available, when started when an update becomes available when triggering installation of the update renders 1`] = `
+exports[`trigger updating using tray given no update available, when started when an update becomes ready to be installed when triggering installation of the update renders 1`] = `
 <body>
   <div />
 </body>
 `;
 
-exports[`trigger updating using tray given no update available, when started when an update becomes available when update becomes unavailable renders 1`] = `
+exports[`trigger updating using tray given no update available, when started when an update becomes ready to be installed when update becomes unavailable renders 1`] = `
 <body>
   <div />
 </body>
