@@ -42,7 +42,7 @@ Some of the most-important fields include:
   Lens uses this ID to uniquely identify your extension.
 - `main`: the extension's entry point run in `main` process.
 - `renderer`: the extension's entry point run in `renderer` process.
-- `engines.lens`: the minimum version of Lens API that the extension depends upon.
+- `engines.lens`: the minimum version of Lens API that the extension depends upon. We only support the `~` range, which is also optional to specify, and only major and minor version numbers. Meaning that `~5.4` and `5.4` both mean the same thing, and the patch version in `5.4.2` is ignored.
 
 ```javascript
 {
