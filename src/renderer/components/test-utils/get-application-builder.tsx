@@ -7,7 +7,7 @@ import rendererExtensionsInjectable from "../../../extensions/renderer-extension
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { IObservableArray } from "mobx";
-import { computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
 import React from "react";
 import { Router } from "react-router";
@@ -25,7 +25,7 @@ import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter, find, map } from "lodash/fp";
+import { flatMap, compact, join, get, filter, find, map, matches } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
@@ -45,6 +45,8 @@ import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
 import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
+import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
+import updateIsAvailableStateInjectable from "../../../main/update-app/update-is-available-state.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -57,8 +59,13 @@ export interface ApplicationBuilder {
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
 
+  applicationUpdater: {
+    makeUpdateAvailable: (available: boolean) => void;
+  };
+
   tray: {
     click: (id: string) => Promise<void>;
+    get: (id: string) => TrayMenuItem | undefined;
   };
 
   applicationMenu: {
@@ -149,6 +156,14 @@ export const getApplicationBuilder = () => {
   const builder: ApplicationBuilder = {
     dis,
 
+    applicationUpdater: {
+      makeUpdateAvailable: action((available: boolean) => {
+        const updateIsAvailableState = mainDi.inject(updateIsAvailableStateInjectable);
+
+        updateIsAvailableState.set(available);
+      }),
+    },
+
     applicationMenu: {
       click: async (path: string) => {
         const applicationMenuItems = mainDi.inject(
@@ -186,6 +201,14 @@ export const getApplicationBuilder = () => {
     },
 
     tray: {
+      get: (id: string) => {
+        const trayMenuItems = mainDi.inject(
+          trayMenuItemsInjectable,
+        );
+
+        return trayMenuItems.get().find(matches({ id }));
+      },
+
       click: async (id: string) => {
         const trayMenuItems = mainDi.inject(
           trayMenuItemsInjectable,
