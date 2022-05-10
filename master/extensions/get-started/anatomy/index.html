@@ -386,6 +386,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#webpack-configuation" class="md-nav__link">
+    Webpack configuation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#extension-entry-files" class="md-nav__link">
     Extension Entry Files
   </a>
@@ -794,6 +801,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#webpack-configuation" class="md-nav__link">
+    Webpack configuation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#extension-entry-files" class="md-nav__link">
     Extension Entry Files
   </a>
@@ -846,11 +860,13 @@ It contains a mix of Node.js fields, including scripts and dependencies, and Len
 Some of the most-important fields include:</p>
 <ul>
 <li><code>name</code> and <code>publisher</code>: Lens uses <code>@&lt;publisher&gt;/&lt;name&gt;</code> as a unique ID for the extension.
-For example, the Hello World sample has the ID <code>@lensapp-samples/helloworld-sample</code>.
-Lens uses this ID to uniquely identify your extension.</li>
+  For example, the Hello World sample has the ID <code>@lensapp-samples/helloworld-sample</code>.
+  Lens uses this ID to uniquely identify your extension.</li>
 <li><code>main</code>: the extension's entry point run in <code>main</code> process.</li>
 <li><code>renderer</code>: the extension's entry point run in <code>renderer</code> process.</li>
-<li><code>engines.lens</code>: the minimum version of Lens API that the extension depends upon.</li>
+<li><code>engines.lens</code>: the minimum version of Lens API that the extension depends upon.
+  We only support the <code>^</code> range, which is also optional to specify, and only major and minor version numbers.
+  Meaning that <code>^5.4</code> and <code>5.4</code> both mean the same thing, and the patch version in <code>5.4.2</code> is ignored.</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;helloworld-sample&quot;</span><span class="p">,</span><span class="w"></span>
@@ -860,7 +876,8 @@ Lens uses this ID to uniquely identify your extension.</li>
 <span class="w">  </span><span class="s2">&quot;license&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="s2">&quot;homepage&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/lensapp/lens-extension-samples&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="s2">&quot;engines&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;lens&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.0.0&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;node&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^14.18.12&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;lens&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;5.4&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="p">},</span><span class="w"></span>
 <span class="w">  </span><span class="s2">&quot;main&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dist/main.js&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="s2">&quot;renderer&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dist/renderer.js&quot;</span><span class="p">,</span><span class="w"></span>
@@ -872,14 +889,88 @@ Lens uses this ID to uniquely identify your extension.</li>
 <span class="w">    </span><span class="s2">&quot;react-open-doodles&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^1.0.5&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="p">},</span><span class="w"></span>
 <span class="w">  </span><span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.0.0-alpha.2&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^5.4.6&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="s2">&quot;ts-loader&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^8.0.4&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;typescript&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.0.3&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;@types/react&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^16.9.35&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;@types/node&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^12.0.0&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;typescript&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.5.5&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;@types/react&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^17.0.44&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;@types/node&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^14.18.12&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="s2">&quot;webpack&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^4.44.2&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="s2">&quot;webpack-cli&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^3.3.11&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<h2 id="webpack-configuation">Webpack configuation<a class="headerlink" href="#webpack-configuation" title="Permanent link">#</a></h2>
+<p>The following webpack <code>externals</code> are provided by <code>Lens</code> and must be used (when available) to make sure that the versions used are in sync.</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>webpack external syntax</th>
+<th>Lens versions</th>
+<th>Available in Main</th>
+<th>Available in Renderer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mobx</code></td>
+<td><code>var global.Mobx</code></td>
+<td><code>&gt;5.0.0</code></td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>mobx-react</code></td>
+<td><code>var global.MobxReact</code></td>
+<td><code>&gt;5.0.0</code></td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>react</code></td>
+<td><code>var global.React</code></td>
+<td><code>&gt;5.0.0</code></td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>react-router</code></td>
+<td><code>var global.ReactRouter</code></td>
+<td><code>&gt;5.0.0</code></td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>react-router-dom</code></td>
+<td><code>var global.ReactRouterDom</code></td>
+<td><code>&gt;5.0.0</code></td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>react-dom</code></td>
+<td><code>var global.ReactDOM</code></td>
+<td><code>&gt;5.5.0</code></td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p>What is exported is the whole of the packages as a <code>*</code> import (within typescript).</p>
+<p>For example, the following is how you would specify these within your webpack configuration files.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="err">...</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;externals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="err">...</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;mobx&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;var global.Mobx&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;mobx-react&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;var global.MobxReact&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;react&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;var global.React&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;react-router&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;var global.ReactRouter&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;react-router-dom&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;var global.ReactRouterDom&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;react-dom&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;var global.ReactDOM&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <h2 id="extension-entry-files">Extension Entry Files<a class="headerlink" href="#extension-entry-files" title="Permanent link">#</a></h2>
@@ -898,18 +989,18 @@ The <code>Cluster Page</code> object registers the <code>/extension-example</cod
 It also registers the <code>MenuItem</code> component that displays the <code>ExampleIcon</code> React component and the "Hello World" text in the left-side menu of the cluster dashboard.
 These React components are defined in the additional <code>./src/page.tsx</code> file.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Renderer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ExampleIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="w"></span>
-<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ExampleIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">ExamplePage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./page&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span><span class="w"></span>
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleExtension</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">clusterPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;extension-example&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">      </span><span class="nx">components</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="w">        </span><span class="nx">Page</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">ExamplePage</span><span class="w"> </span><span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="p">];</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>The Hello World sample extension uses the <code>Cluster Page</code> capability, which is just one of the Lens extension API's capabilities.
