@@ -43,8 +43,8 @@ Some of the most-important fields include:
 - `main`: the extension's entry point run in `main` process.
 - `renderer`: the extension's entry point run in `renderer` process.
 - `engines.lens`: the minimum version of Lens API that the extension depends upon.
-  We only support the `~` range, which is also optional to specify, and only major and minor version numbers.
-  Meaning that `~5.4` and `5.4` both mean the same thing, and the patch version in `5.4.2` is ignored.
+  We only support the `^` range, which is also optional to specify, and only major and minor version numbers.
+  Meaning that `^5.4` and `5.4` both mean the same thing, and the patch version in `5.4.2` is ignored.
 
 ```javascript
 {
@@ -94,15 +94,23 @@ The following webpack `externals` are provided by `Lens` and must be used (when 
 
 What is exported is the whole of the packages as a `*` import (within typescript).
 
-For example, if you want to use `mobx` in your extension's main half (vs renderer half) you would add the following to your webpack configuration file:
+For example, the following is how you would specify these within your webpack configuration files.
 
-```
+```json
+{
+  ...
   "externals": [
     ...
     {
       "mobx": "var global.Mobx"
+      "mobx-react": "var global.MobxReact"
+      "react": "var global.React"
+      "react-router": "var global.ReactRouter"
+      "react-router-dom": "var global.ReactRouterDom"
+      "react-dom": "var global.ReactDOM"
     }
   ]
+}
 ```
 
 ## Extension Entry Files
