@@ -32,6 +32,18 @@ describe("Extension/App versions compatibility check", () => {
     })(getExtensionManifestMock({
       lensEngine: "5.5.0",
     }))).toBeTruthy();
+
+    expect(isCompatibleExtension({
+      appSemVer: semver.coerce("5.5.0-alpha.0"),
+    })(getExtensionManifestMock({
+      lensEngine: "^5.5.0",
+    }))).toBeTruthy();
+
+    expect(isCompatibleExtension({
+      appSemVer: semver.coerce("5.5"),
+    })(getExtensionManifestMock({
+      lensEngine: "^5.6.0",
+    }))).toBeFalsy();
   });
 
   it("is not compatible with upper %MAJOR version of base app", () => {

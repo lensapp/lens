@@ -18,7 +18,7 @@ export const isCompatibleExtension = ({ appSemVer }: Dependencies): ((manifest: 
     if (!validVersion) {
       const errorInfo = [
         `Invalid format for "manifest.engines.lens"="${manifestLensEngine}"`,
-        `Range versions could be specified only starting with '^'.`,
+        `Range versions can only be specified starting with '^'.`,
         `Otherwise it's recommended to use plain %MAJOR.%MINOR to match with supported Lens version.`,
       ].join("\n");
 
