@@ -24,6 +24,11 @@ import directoryForDownloadsInjectable from "../../../../common/app-paths/direct
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
+import type { InstallFromInput } from "../install-from-input/install-from-input";
+import installFromInputInjectable from "../install-from-input/install-from-input.injectable";
+import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import { observable, when } from "mobx";
 
 mockWindow();
 
@@ -49,6 +54,8 @@ jest.mock("../../../../common/utils/tar");
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
   let extensionDiscovery: ExtensionDiscovery;
+  let installFromInput: jest.MockedFunction<InstallFromInput>;
+  let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
 
   beforeEach(async () => {
@@ -68,8 +75,13 @@ describe("Extensions", () => {
 
     render = renderFor(di);
 
+    installFromInput = jest.fn();
+
+    di.override(installFromInputInjectable, () => installFromInput);
+
     extensionLoader = di.inject(extensionLoaderInjectable);
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+    extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
     extensionLoader.addExtension({
       id: "extensionId",
@@ -131,7 +143,17 @@ describe("Extensions", () => {
   it("disables install button while installing", async () => {
     render(<Extensions />);
 
+    const resolveInstall = observable.box(false);
+
     (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve());
+    installFromInput.mockImplementation(async (input) => {
+      expect(input).toBe("https://test.extensionurl/package.tgz");
+
+      const clear = extensionInstallationStateStore.startPreInstall();
+
+      await when(() => resolveInstall.get());
+      clear();
+    });
 
     fireEvent.change(await screen.findByPlaceholderText("File path or URL", {
       exact: false,
@@ -143,6 +165,7 @@ describe("Extensions", () => {
 
     fireEvent.click(await screen.findByText("Install"));
     expect((await screen.findByText("Install")).closest("button")).toBeDisabled();
+    resolveInstall.set(true);
   });
 
   it("displays spinner while extensions are loading", () => {

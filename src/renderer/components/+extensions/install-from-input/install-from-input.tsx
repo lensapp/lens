@@ -16,6 +16,8 @@ import type { ExtensionInfo } from "../attempt-install-by-info.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import { AsyncInputValidationError } from "../../input/input_validators";
 
+export type InstallFromInput = (input: string) => Promise<void>;
+
 interface Dependencies {
   attemptInstall: (request: InstallRequest, disposer?: ExtendableDisposer) => Promise<void>;
   attemptInstallByInfo: (extensionInfo: ExtensionInfo) => Promise<void>;
@@ -26,8 +28,8 @@ export const installFromInput = ({
   attemptInstall,
   attemptInstallByInfo,
   extensionInstallationStateStore,
-}: Dependencies) => (
-  async (input: string): Promise<void> => {
+}: Dependencies): InstallFromInput => (
+  async (input) => {
     let disposer: ExtendableDisposer | undefined = undefined;
 
     try {

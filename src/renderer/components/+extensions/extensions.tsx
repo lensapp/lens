@@ -35,13 +35,14 @@ import installOnDropInjectable from "./install-on-drop/install-on-drop.injectabl
 import { supportedExtensionFormats } from "./supported-extension-formats";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import type { InstallFromInput } from "./install-from-input/install-from-input";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
   enableExtension: (id: LensExtensionId) => void;
   disableExtension: (id: LensExtensionId) => void;
   confirmUninstallExtension: ConfirmUninstallExtension;
-  installFromInput: (input: string) => Promise<void>;
+  installFromInput: InstallFromInput;
   installFromSelectFileDialog: () => Promise<void>;
   installOnDrop: (files: File[]) => Promise<void>;
   extensionInstallationStateStore: ExtensionInstallationStateStore;

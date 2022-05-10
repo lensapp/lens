@@ -19,9 +19,6 @@ export const renderFor: DiRenderFor = (di) => (ui) => {
         {ui}
       </DiContextProvider>
     ),
-    {
-      legacyRoot: true,
-    },
   );
 
   return {

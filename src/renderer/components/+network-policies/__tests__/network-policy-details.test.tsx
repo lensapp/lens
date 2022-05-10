@@ -8,7 +8,9 @@ import { findByTestId, findByText, render } from "@testing-library/react";
 import { NetworkPolicy } from "../../../../common/k8s-api/endpoints";
 import { NetworkPolicyDetails } from "../network-policy-details";
 
-jest.mock("../../kube-object-meta");
+jest.mock("../../kube-object-meta/kube-object-meta", () => ({
+  KubeObjectMeta: () => null,
+}));
 
 describe("NetworkPolicyDetails", () => {
   it("should render w/o errors", () => {

@@ -11,22 +11,22 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import logger from "../../../main/logger";
 
-export interface DropFileInputProps extends React.DOMAttributes<any> {
+export interface DropFileInputProps<T extends HTMLElement> extends React.DOMAttributes<T> {
   className?: IClassName;
   disabled?: boolean;
-  onDropFiles(files: File[], meta: DropFileMeta): void;
+  onDropFiles(files: File[], meta: DropFileMeta<T>): void;
 }
 
-export interface DropFileMeta<T extends HTMLElement = any> {
+export interface DropFileMeta<T extends HTMLElement> {
   evt: React.DragEvent<T>;
 }
 
 @observer
-export class DropFileInput<T extends HTMLElement = any> extends React.Component<DropFileInputProps> {
+export class DropFileInput<T extends HTMLElement> extends React.Component<DropFileInputProps<T>> {
   @observable dropAreaActive = false;
   dragCounter = 0; // Counter preventing firing onDragLeave() too early (https://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element)
 
-  constructor(props: DropFileInputProps) {
+  constructor(props: DropFileInputProps<T>) {
     super(props);
     makeObservable(this);
     autoBind(this);
