@@ -60,6 +60,14 @@ describe("Extension/App versions compatibility check", () => {
     }))).toBeFalsy(); // extension with lens@5.5 is not compatible with app@6.0
   });
 
+  it("is compatible with lensEngine with prerelease", () => {
+    expect(isCompatibleExtension({
+      appSemVer: semver.coerce("5.5.0-alpha.0"),
+    })(getExtensionManifestMock({
+      lensEngine: "^5.4.0-alpha.0",
+    }))).toBeTruthy();
+  });
+
   describe("supported formats for manifest.engines.lens", () => {
     it("short version format for engines.lens", () => {
       expect(isCompatibleExtension({
