@@ -6,14 +6,13 @@
 import "./components/app.scss";
 
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM, { render, unmountComponentAtNode } from "react-dom";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
-import { createRoot } from "react-dom/client";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
@@ -42,11 +41,11 @@ import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/
 import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import { bindEvents } from "./navigation/events";
-import assert from "assert";
 import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import { init } from "@sentry/electron/renderer";
 import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
 import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
+import assert from "assert";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -73,11 +72,10 @@ export async function bootstrap(di: DiContainer) {
   bindEvents();
 
   const rootElem = document.getElementById("app");
-
-  assert(rootElem);
-
-  const rootNode = createRoot(rootElem);
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
+
+  assert(rootElem, "#app MUST exist");
+
 
   /**
    * This is injected here to initialize it for the side effect.
@@ -168,7 +166,7 @@ export async function bootstrap(di: DiContainer) {
   }
 
   try {
-    await initializeApp(() => rootNode.unmount());
+    await initializeApp(() => unmountComponentAtNode(rootElem));
   } catch (error) {
     console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
       origin: location.href,
@@ -176,12 +174,13 @@ export async function bootstrap(di: DiContainer) {
     });
   }
 
-  rootNode.render(
+  render(
     <DiContextProvider value={{ di }}>
       <Router history={di.inject(historyInjectable)}>
         {DefaultProps(App)}
       </Router>
     </DiContextProvider>,
+    rootElem,
   );
 }
 
