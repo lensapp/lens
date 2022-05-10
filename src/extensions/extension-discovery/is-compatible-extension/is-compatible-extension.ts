@@ -11,7 +11,7 @@ interface Dependencies {
 
 export const isCompatibleExtension = ({ appSemVer }: Dependencies): ((manifest: LensExtensionManifest) => boolean) => {
   return (manifest: LensExtensionManifest): boolean => {
-    const { raw: appVersion } = appSemVer;
+    const appVersion = appSemVer.raw.split("-")[0]; // drop prerelease version if any, e.g. "-alpha.0"
     const manifestLensEngine = manifest.engines.lens;
     const validVersion = manifestLensEngine.match(/^[\^0-9]\d*\.\d+\b/); // must start from ^ or number
 

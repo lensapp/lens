@@ -62,7 +62,7 @@ describe("Extension/App versions compatibility check", () => {
 
   it("is compatible with lensEngine with prerelease", () => {
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("5.5.0-alpha.0"),
+      appSemVer: semver.parse("5.5.0-alpha.0"),
     })(getExtensionManifestMock({
       lensEngine: "^5.4.0-alpha.0",
     }))).toBeTruthy();
