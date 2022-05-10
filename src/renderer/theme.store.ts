@@ -36,7 +36,7 @@ export class ThemeStore extends Singleton {
     "lens-light": lensLightThemeJson as Theme,
   });
 
-  @observable osNativeThemeType: "dark" | "light" | undefined;
+  @observable private osNativeThemeType: "dark" | "light" | undefined;
 
   @computed private get colorThemePreference(): ThemeId | "system" {
     return UserStore.getInstance().colorTheme;
