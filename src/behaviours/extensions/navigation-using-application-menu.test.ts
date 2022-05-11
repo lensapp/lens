@@ -6,7 +6,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import isAutoUpdateEnabledInjectable from "../../main/update-app/is-auto-update-enabled.injectable";
 import extensionsStoreInjectable from "../../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
@@ -22,8 +21,7 @@ describe("extensions - navigation using application menu", () => {
   let focusWindowMock: jest.Mock;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ mainDi, rendererDi }) => {
-      mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
+    applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(extensionsStoreInjectable, () => ({}) as unknown as ExtensionsStore);
       rendererDi.override(fileSystemProvisionerStoreInjectable, () => ({}) as unknown as FileSystemProvisionerStore);
 

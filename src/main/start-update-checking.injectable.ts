@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { startUpdateChecking } from "./app-updater";
-import isAutoUpdateEnabledInjectable from "./update-app/is-auto-update-enabled.injectable";
+import updatingIsEnabledInjectable from "./update-app/updating-is-enabled.injectable";
 
 const startUpdateCheckingInjectable = getInjectable({
   id: "start-update-checking",
 
   instantiate: (di) => startUpdateChecking({
-    isAutoUpdateEnabled: di.inject(isAutoUpdateEnabledInjectable),
+    updatingIsEnabled: di.inject(updatingIsEnabledInjectable),
   }),
 
   causesSideEffects: true,
