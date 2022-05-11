@@ -19,6 +19,7 @@ import selectedUpdateChannelInjectable from "../../main/update-app/selected-upda
 import progressOfUpdateDownloadInjectable from "../../main/update-app/progress-of-update-download.injectable";
 import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
+import showApplicationWindowInjectable from "../../main/start-main-application/lens-window/show-application-window.injectable";
 
 describe("installing update using tray", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -26,6 +27,7 @@ describe("installing update using tray", () => {
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<() => void>;
   let setUpdateOnQuitMock: jest.Mock;
+  let showApplicationWindowMock: jest.Mock;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
@@ -35,6 +37,9 @@ describe("installing update using tray", () => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
+      showApplicationWindowMock = jest.fn();
+
+      mainDi.override(showApplicationWindowInjectable, () => showApplicationWindowMock);
 
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
@@ -87,6 +92,10 @@ describe("installing update using tray", () => {
         );
       });
 
+      it("does not show application window yet", () => {
+        expect(showApplicationWindowMock).not.toHaveBeenCalled();
+      });
+
       xit("notifies the user that checking for updates is happening", () => {});
 
       it("user cannot check for updates again", () => {
@@ -116,6 +125,10 @@ describe("installing update using tray", () => {
           });
 
           await checkForUpdatesPromise;
+        });
+
+        it("shows application window", () => {
+          expect(showApplicationWindowMock).toHaveBeenCalled();
         });
 
         xit("notifies the user", () => {});
@@ -153,6 +166,10 @@ describe("installing update using tray", () => {
           });
 
           await checkForUpdatesPromise;
+        });
+
+        it("shows application window", () => {
+          expect(showApplicationWindowMock).toHaveBeenCalled();
         });
 
         it("starts downloading the update", () => {
