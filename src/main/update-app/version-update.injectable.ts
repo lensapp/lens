@@ -10,6 +10,7 @@ import downloadPlatformUpdateInjectable from "./download-platform-update.injecta
 import type { CheckForPlatformUpdates } from "./check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "./check-for-platform-updates.injectable";
 import type { UpdateChannel } from "./update-channels";
+import showNotificationInjectable from "../show-notification/show-notification.injectable";
 
 const versionUpdateInjectable = getInjectable({
   id: "version-update",
@@ -18,6 +19,7 @@ const versionUpdateInjectable = getInjectable({
     const selectedUpdateChannel = di.inject(selectedUpdateChannelInjectable);
     const downloadPlatformUpdate = di.inject(downloadPlatformUpdateInjectable);
     const checkForPlatformUpdates = di.inject(checkForPlatformUpdatesInjectable);
+    const showNotification = di.inject(showNotificationInjectable);
 
     const discoveredVersionState = observable.box<string>();
     const downloadingState = observable.box<boolean>(false);
@@ -36,6 +38,7 @@ const versionUpdateInjectable = getInjectable({
         checkingState,
         selectedUpdateChannel.value,
         discoveredFromUpdateChannelState,
+        showNotification,
       ),
 
       downloadUpdate: downloadUpdateFor(
@@ -72,6 +75,7 @@ const checkForUpdatesFor =
     checkingState: IObservableValue<boolean>,
     selectedUpdateChannel: IComputedValue<UpdateChannel>,
     discoveredFromUpdateChannelState: IObservableValue<UpdateChannel>,
+    showNotification: (message: string) => void,
   ) =>
     async () => {
       runInAction(() => {
@@ -81,9 +85,15 @@ const checkForUpdatesFor =
       const checkForUpdatesStartingFromChannel =
         checkForUpdatesStartingFromChannelFor(checkForPlatformUpdates);
 
+      showNotification("Checking for updates...");
+
       const { updateWasDiscovered, version, actualUpdateChannel } = await checkForUpdatesStartingFromChannel(
         selectedUpdateChannel.get(),
       );
+
+      if (!updateWasDiscovered) {
+        showNotification("No new updates available");
+      }
 
       runInAction(() => {
         discoveredFromUpdateChannelState.set(actualUpdateChannel);
@@ -91,7 +101,7 @@ const checkForUpdatesFor =
         checkingState.set(false);
       });
 
-      return { updateWasDiscovered };
+      return { updateWasDiscovered, version };
     };
 
 

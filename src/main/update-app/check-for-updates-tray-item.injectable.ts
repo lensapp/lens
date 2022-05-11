@@ -9,6 +9,9 @@ import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-ite
 import versionUpdateInjectable from "./version-update.injectable";
 import progressOfUpdateDownloadInjectable from "./progress-of-update-download.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
+import showNotificationInjectable from "../show-notification/show-notification.injectable";
+import askBooleanInjectable from "../ask-boolean/ask-boolean.injectable";
+import quitAndInstallUpdateInjectable from "../electron-app/features/quit-and-install-update.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
@@ -18,6 +21,9 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const versionUpdate = di.inject(versionUpdateInjectable);
     const progressOfUpdateDownload = di.inject(progressOfUpdateDownloadInjectable);
+    const showNotification = di.inject(showNotificationInjectable);
+    const askBoolean = di.inject(askBooleanInjectable);
+    const quitAndInstallUpdate = di.inject(quitAndInstallUpdateInjectable);
 
     return {
       id: "check-for-updates",
@@ -26,7 +32,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
       label: computed(() => {
         if (versionUpdate.downloading.get()) {
-          return `Downloading update "${versionUpdate.discoveredVersion.get()}" (${progressOfUpdateDownload.value.get()}%)...`;
+          return `Downloading update ${versionUpdate.discoveredVersion.get()} (${progressOfUpdateDownload.value.get()}%)...`;
         }
 
         if (versionUpdate.checking.get()) {
@@ -41,11 +47,19 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
       visible: computed(() => updatingIsEnabled),
 
       click: async () => {
-        const { updateWasDiscovered } = await versionUpdate.checkForUpdates();
+        const { updateWasDiscovered, version } = await versionUpdate.checkForUpdates();
 
         if (updateWasDiscovered) {
+          showNotification(`Downloading update ${version}...`);
+
           // Note: intentional orphan promise to make download happen in the background
-          versionUpdate.downloadUpdate();
+          versionUpdate.downloadUpdate().then(async () => {
+            const userWantsToInstallUpdate = await askBoolean(`Do you want to install update ${version}?`);
+
+            if (userWantsToInstallUpdate) {
+              quitAndInstallUpdate();
+            }
+          });
         }
 
         await showApplicationWindow();

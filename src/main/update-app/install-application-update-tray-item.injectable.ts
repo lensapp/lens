@@ -23,7 +23,7 @@ const installApplicationUpdateTrayItemInjectable = getInjectable({
       label: computed(() => {
         const versionToBeInstalled = versionUpdate.discoveredVersion.get();
 
-        return `Install update "${versionToBeInstalled}"`;
+        return `Install update ${versionToBeInstalled}`;
       }),
 
       enabled: computed(() => true),

@@ -20,6 +20,9 @@ import progressOfUpdateDownloadInjectable from "../../main/update-app/progress-o
 import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import showApplicationWindowInjectable from "../../main/start-main-application/lens-window/show-application-window.injectable";
+import showNotificationInjectable from "../../main/show-notification/show-notification.injectable";
+import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
+import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 
 describe("installing update using tray", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -28,6 +31,8 @@ describe("installing update using tray", () => {
   let downloadPlatformUpdateMock: AsyncFnMock<() => void>;
   let setUpdateOnQuitMock: jest.Mock;
   let showApplicationWindowMock: jest.Mock;
+  let showNotificationMock: jest.Mock;
+  let askBooleanMock: AsyncFnMock<AskBoolean>;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
@@ -38,9 +43,12 @@ describe("installing update using tray", () => {
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
       showApplicationWindowMock = jest.fn();
+      showNotificationMock = jest.fn();
+      askBooleanMock = asyncFn();
 
+      mainDi.override(showNotificationInjectable, () => showNotificationMock);
+      mainDi.override(askBooleanInjectable, () => askBooleanMock);
       mainDi.override(showApplicationWindowInjectable, () => showApplicationWindowMock);
-
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
       mainDi.override(
@@ -96,7 +104,9 @@ describe("installing update using tray", () => {
         expect(showApplicationWindowMock).not.toHaveBeenCalled();
       });
 
-      xit("notifies the user that checking for updates is happening", () => {});
+      it("notifies the user that checking for updates is happening", () => {
+        expect(showNotificationMock).toHaveBeenCalledWith("Checking for updates...");
+      });
 
       it("user cannot check for updates again", () => {
         expect(
@@ -120,6 +130,8 @@ describe("installing update using tray", () => {
 
       describe("when no new update is discovered", () => {
         beforeEach(async () => {
+          showNotificationMock.mockClear();
+
           await checkForPlatformUpdatesMock.resolve({
             updateWasDiscovered: false,
           });
@@ -131,7 +143,9 @@ describe("installing update using tray", () => {
           expect(showApplicationWindowMock).toHaveBeenCalled();
         });
 
-        xit("notifies the user", () => {});
+        it("notifies the user", () => {
+          expect(showNotificationMock).toHaveBeenCalledWith("No new updates available");
+        });
 
         it("does not start downloading update", () => {
           expect(downloadPlatformUpdateMock).not.toHaveBeenCalled();
@@ -176,7 +190,9 @@ describe("installing update using tray", () => {
           expect(downloadPlatformUpdateMock).toHaveBeenCalled();
         });
 
-        xit("notifies the user that download is happening", () => {});
+        it("notifies the user that download is happening", () => {
+          expect(showNotificationMock).toHaveBeenCalledWith("Downloading update some-version...");
+        });
 
         it("user cannot check for updates again yet", () => {
           expect(
@@ -187,7 +203,7 @@ describe("installing update using tray", () => {
         it("name of tray item for checking updates indicates that downloading is happening", () => {
           expect(
             applicationBuilder.tray.get("check-for-updates").label.get(),
-          ).toBe('Downloading update "some-version" (0%)...');
+          ).toBe("Downloading update some-version (0%)...");
         });
 
         it("when download progresses, percentage increases", () => {
@@ -199,7 +215,7 @@ describe("installing update using tray", () => {
 
           expect(
             applicationBuilder.tray.get("check-for-updates").label.get(),
-          ).toBe('Downloading update "some-version" (42%)...');
+          ).toBe("Downloading update some-version (42%)...");
         });
 
         it("user still cannot install update", () => {
@@ -222,7 +238,7 @@ describe("installing update using tray", () => {
           it("user can install update", () => {
             expect(
               applicationBuilder.tray.get("install-update").label.get(),
-            ).toBe('Install update "some-version"');
+            ).toBe("Install update some-version");
           });
 
           it("user can check for updates again", () => {
@@ -241,7 +257,39 @@ describe("installing update using tray", () => {
             expect(rendered.baseElement).toMatchSnapshot();
           });
 
-          describe("when user installs the update", () => {
+          it("asks user to install update immediately", () => {
+            expect(askBooleanMock).toHaveBeenCalledWith("Do you want to install update some-version?");
+          });
+
+          describe("when user answers to install the update", () => {
+            beforeEach(async () => {
+              await askBooleanMock.resolve(true);
+            });
+
+            it("renders", () => {
+              expect(rendered.baseElement).toMatchSnapshot();
+            });
+
+            it("quits application and installs the update", () => {
+              expect(quitAndInstallUpdateMock).toHaveBeenCalled();
+            });
+          });
+
+          describe("when user answers not to install the update", () => {
+            beforeEach(async () => {
+              await askBooleanMock.resolve(false);
+            });
+
+            it("renders", () => {
+              expect(rendered.baseElement).toMatchSnapshot();
+            });
+
+            it("does not quit application and install the update", () => {
+              expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
+            });
+          });
+
+          describe("when user disregards the question and installs the update using tray", () => {
             beforeEach(async () => {
               await applicationBuilder.tray.click("install-update");
             });
@@ -250,7 +298,7 @@ describe("installing update using tray", () => {
               expect(rendered.baseElement).toMatchSnapshot();
             });
 
-            it("quits application and installs update", () => {
+            it("quits application and installs the update", () => {
               expect(quitAndInstallUpdateMock).toHaveBeenCalled();
             });
           });
@@ -418,168 +466,6 @@ describe("installing update using tray", () => {
 
               expect(setUpdateOnQuitMock).toHaveBeenLastCalledWith(false);
             });
-          });
-        });
-      });
-    });
-  });
-
-  xdescribe("given a non-installed update is already downloaded, when started", () => {
-    let rendered: RenderResult;
-
-    beforeEach(async () => {
-      rendered = await applicationBuilder.render();
-    });
-
-    it("user can check for updates", () => {
-      expect(
-        applicationBuilder.tray.get("check-for-updates").enabled.get(),
-      ).toBe(true);
-    });
-
-    it("user can install the update", () => {
-      expect(applicationBuilder.tray.get("install-update").label.get()).toBe(
-        'Install update "some-old-version"',
-      );
-    });
-
-    it("renders", () => {
-      expect(rendered.baseElement).toMatchSnapshot();
-    });
-
-    describe("when user installs the update", () => {
-      beforeEach(() => {});
-
-      it("quits application and installs update", () => {});
-
-      it("renders", () => {
-        expect(rendered.baseElement).toMatchSnapshot();
-      });
-    });
-
-    describe("when user checks for even newer update", () => {
-      let checkForUpdatesPromise: Promise<void>;
-
-      beforeEach(() => {
-        checkForUpdatesPromise =
-          applicationBuilder.tray.click("check-for-updates");
-      });
-
-      it("user cannot check for updates again", () => {
-        expect(
-          applicationBuilder.tray.get("check-for-updates").enabled.get(),
-        ).toBe(false);
-      });
-
-      it("user cannot install any update", () => {
-        expect(applicationBuilder.tray.get("install-update")).toBeUndefined();
-      });
-
-      it("name of tray item indicates that checking is happening", () => {
-        expect(
-          applicationBuilder.tray.get("check-for-updates").label.get(),
-        ).toBe("Checking for updates...");
-      });
-
-      it("renders", () => {
-        expect(rendered.baseElement).toMatchSnapshot();
-      });
-
-      describe("when no new update is discovered", () => {
-        beforeEach(async () => {
-          await checkForPlatformUpdatesMock.resolve({
-            updateWasDiscovered: false,
-          });
-
-          await checkForUpdatesPromise;
-        });
-
-        xit("notifies the user about the old update", () => {});
-
-        it("user can check for updates again", () => {
-          expect(
-            applicationBuilder.tray.get("check-for-updates").enabled.get(),
-          ).toBe(true);
-        });
-
-        it("user can still install the old update", () => {
-          expect(
-            applicationBuilder.tray.get("install-update").label.get(),
-          ).toBe('Install update "some-old-version"');
-        });
-
-        it("name of tray item for checking update no longer indicates that checking is happening", () => {
-          expect(
-            applicationBuilder.tray.get("check-for-updates").label.get(),
-          ).toBe("Check for updates");
-        });
-
-        it("renders", () => {
-          expect(rendered.baseElement).toMatchSnapshot();
-        });
-      });
-
-      describe("when new update is discovered", () => {
-        beforeEach(async () => {
-          await checkForPlatformUpdatesMock.resolve({
-            updateWasDiscovered: true,
-            version: "some-newer-version",
-          });
-
-          await checkForUpdatesPromise;
-        });
-
-        it("starts downloading the update", () => {
-          expect(downloadPlatformUpdateMock).toHaveBeenCalled();
-        });
-
-        it("user cannot check for updates again yet", () => {
-          expect(
-            applicationBuilder.tray.get("check-for-updates").enabled.get(),
-          ).toBe(false);
-        });
-
-        it("name of tray item still indicates that download is happening", () => {
-          expect(
-            applicationBuilder.tray.get("check-for-updates").label.get(),
-          ).toBe('Downloading update "some-newer-version"...');
-        });
-
-        it("user cannot install any update yet", () => {
-          expect(applicationBuilder.tray.get("install-update")).toBeUndefined();
-        });
-
-        xit("notifies the user that download of new update is happening", () => {});
-
-        it("renders", () => {
-          expect(rendered.baseElement).toMatchSnapshot();
-        });
-
-        describe("when new update is downloaded", () => {
-          beforeEach(async () => {
-            await downloadPlatformUpdateMock.resolve();
-          });
-
-          it("user can install the new update", () => {
-            expect(
-              applicationBuilder.tray.get("install-update").label.get(),
-            ).toBe('Install update "some-new-version"');
-          });
-
-          it("user can check for updates again", () => {
-            expect(
-              applicationBuilder.tray.get("check-for-updates").enabled.get(),
-            ).toBe(true);
-          });
-
-          it("name of tray item no longer indicates that checking is happening", () => {
-            expect(
-              applicationBuilder.tray.get("check-for-updates").label.get(),
-            ).toBe("Check for updates");
-          });
-
-          it("renders", () => {
-            expect(rendered.baseElement).toMatchSnapshot();
           });
         });
       });
