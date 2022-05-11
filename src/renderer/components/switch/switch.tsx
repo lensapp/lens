@@ -21,7 +21,7 @@ export function Switch({ children, disabled, onChange, ...props }: SwitchProps) 
         type="checkbox"
         role="switch"
         disabled={disabled}
-        onChange={(event) => onChange?.(!props.checked, event)}
+        onChange={(event) => onChange?.(event.target.checked, event)}
         {...props}
       />
     </label>
