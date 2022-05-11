@@ -46,7 +46,6 @@ import setupSentryInjectable from "./start-main-application/runnables/setup-sent
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
-import trayInjectable from "./tray/tray.injectable";
 import applicationMenuInjectable from "./menu/application-menu.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/runnables/setup-system-ca.injectable";
@@ -81,6 +80,7 @@ import syncUpdateIsReadyToBeInstalledInjectable from "./electron-app/runnables/u
 import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./update-app/publish-is-configured.injectable";
+import checkForPlatformUpdatesInjectable from "./update-app/check-for-platform-updates.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -125,7 +125,6 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
     di.override(stopServicesAndExitAppInjectable, () => () => {});
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
-    di.override(trayInjectable, () => ({ start: () => {}, stop: () => {} }));
     di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
@@ -225,6 +224,10 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
   di.override(syncUpdateIsReadyToBeInstalledInjectable, () => ({ start: () => {}, stop: () => {} }));
   di.override(quitAndInstallUpdateInjectable, () => () => {});
+
+  di.override(checkForPlatformUpdatesInjectable, () => () => {
+    throw new Error("Tried to check for platform updates without explicit override.");
+  });
 
   di.override(createElectronWindowForInjectable, () => () => async () => ({
     show: () => {},
