@@ -18,7 +18,7 @@ const openAppTrayItemInjectable = getInjectable({
     return {
       id: "open-app",
       parentId: null,
-      label: `Open ${productName}`,
+      label: computed(() => `Open ${productName}`),
       orderNumber: 10,
       enabled: computed(() => true),
       visible: computed(() => true),

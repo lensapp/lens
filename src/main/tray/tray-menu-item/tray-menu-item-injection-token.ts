@@ -13,7 +13,7 @@ export interface TrayMenuItem {
   enabled: IComputedValue<boolean>;
   visible: IComputedValue<boolean>;
 
-  label?: string;
+  label?: IComputedValue<string>;
   click?: () => Promise<void> | void;
   tooltip?: string;
   separator?: boolean;

@@ -10,7 +10,7 @@ const quitAppSeparatorTrayItemInjectable = getInjectable({
   id: "quit-app-separator-tray-item",
 
   instantiate: () => ({
-    id: "quit-app-sepator",
+    id: "quit-app-separator",
     parentId: null,
     orderNumber: 149,
     enabled: computed(() => true),

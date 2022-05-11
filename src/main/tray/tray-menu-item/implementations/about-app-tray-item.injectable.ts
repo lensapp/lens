@@ -21,7 +21,7 @@ const aboutAppTrayItemInjectable = getInjectable({
       id: "about-app",
       parentId: null,
       orderNumber: 140,
-      label: `About ${productName}`,
+      label: computed(() => `About ${productName}`),
       enabled: computed(() => true),
       visible: computed(() => true),
 

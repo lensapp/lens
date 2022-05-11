@@ -47,7 +47,7 @@ const toItemInjectablesFor = (extension: LensMainExtension, installationCounter:
 
         separator: registration.type === "separator",
 
-        label: registration.label,
+        label: computed(() => registration.label),
         tooltip: registration.toolTip,
 
         click: () => {
