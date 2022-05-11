@@ -12,10 +12,12 @@ import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-pl
 import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
+import type { UpdateChannel, UpdateChannelId } from "../../main/update-app/update-channels";
 import { updateChannels } from "../../main/update-app/update-channels";
 import downloadPlatformUpdateInjectable from "../../main/update-app/download-platform-update.injectable";
 import selectedUpdateChannelInjectable from "../../main/update-app/selected-update-channel.injectable";
 import progressOfUpdateDownloadInjectable from "../../main/update-app/progress-of-update-download.injectable";
+import type { IComputedValue } from "mobx";
 
 describe("installing update using tray", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -70,7 +72,8 @@ describe("installing update using tray", () => {
       let checkForUpdatesPromise: Promise<void>;
 
       beforeEach(async () => {
-        checkForUpdatesPromise = applicationBuilder.tray.click("check-for-updates");
+        checkForUpdatesPromise =
+          applicationBuilder.tray.click("check-for-updates");
       });
 
       it('checks for updates from "latest" update channel', () => {
@@ -166,7 +169,9 @@ describe("installing update using tray", () => {
         });
 
         it("when download progresses, percentage increases", () => {
-          const progressOfUpdateDownload = applicationBuilder.dis.mainDi.inject(progressOfUpdateDownloadInjectable);
+          const progressOfUpdateDownload = applicationBuilder.dis.mainDi.inject(
+            progressOfUpdateDownloadInjectable,
+          );
 
           progressOfUpdateDownload.setValue(42);
 
@@ -231,24 +236,19 @@ describe("installing update using tray", () => {
 
         describe("when user changes update channel to other channel instead of just installing", () => {
           beforeEach(() => {
-            const selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(selectedUpdateChannelInjectable);
+            const selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
+              selectedUpdateChannelInjectable,
+            );
 
             selectedUpdateChannel.setValue(updateChannels.beta.id);
           });
 
-          it("user cannot install existing update for being from wrong update channel", () => {
-
-          });
+          it("user cannot install existing update for being from wrong update channel", () => {});
 
           describe("when user installs an update", () => {
+            beforeEach(() => {});
 
-            beforeEach(() => {
-
-            });
-
-            it('still installs the update from "latest" update channel', () => {
-
-            });
+            it('still installs the update from "latest" update channel', () => {});
           });
 
           it("when checking updates again, checks for updates from the other update channel", async () => {
@@ -265,42 +265,75 @@ describe("installing update using tray", () => {
     });
 
     describe('given update channel "alpha" is selected, when checking for updates', () => {
-      beforeEach(() => {
+      let selectedUpdateChannel: {
+        value: IComputedValue<UpdateChannel>;
+        setValue: (channelId: UpdateChannelId) => void;
+      };
 
+      beforeEach(() => {
+        selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
+          selectedUpdateChannelInjectable,
+        );
+
+        selectedUpdateChannel.setValue(updateChannels.alpha.id);
+
+        applicationBuilder.tray.click("check-for-updates");
       });
 
       it('checks updates from update channel "alpha"', () => {
-
+        expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
+          updateChannels.alpha,
+        );
       });
 
-      it("when update is discovered, does not check update from other update channels", () => {
+      it("when update is discovered, does not check update from other update channels", async () => {
+        checkForPlatformUpdatesMock.mockClear();
 
+        await checkForPlatformUpdatesMock.resolve({ updateWasDiscovered: true });
+
+        expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
       });
 
       describe("when no update is discovered", () => {
-        beforeEach(() => {
+        beforeEach(async () => {
+          checkForPlatformUpdatesMock.mockClear();
 
+          await checkForPlatformUpdatesMock.resolve({ updateWasDiscovered: false });
         });
 
         it('checks updates from update channel "beta"', () => {
-
+          expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
+            updateChannels.beta,
+          );
         });
 
-        it("when update is discovered, does not check update from other update channels", () => {
+        it("when update is discovered, does not check update from other update channels", async () => {
+          checkForPlatformUpdatesMock.mockClear();
 
+          await checkForPlatformUpdatesMock.resolve({ updateWasDiscovered: true });
+
+          expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
         });
 
         describe("when no update is discovered again", () => {
-          beforeEach(() => {
+          beforeEach(async () => {
+            checkForPlatformUpdatesMock.mockClear();
 
+            await checkForPlatformUpdatesMock.resolve({ updateWasDiscovered: false });
           });
 
           it('finally checks updates from update channel "latest"', () => {
-
+            expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
+              updateChannels.latest,
+            );
           });
 
-          it("when update is discovered, does not check update from other update channels", () => {
+          it("when update is discovered, does not check update from other update channels", async () => {
+            checkForPlatformUpdatesMock.mockClear();
 
+            await checkForPlatformUpdatesMock.resolve({ updateWasDiscovered: true });
+
+            expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
           });
         });
       });
@@ -321,9 +354,9 @@ describe("installing update using tray", () => {
     });
 
     it("user can install the update", () => {
-      expect(
-        applicationBuilder.tray.get("install-update").label.get(),
-      ).toBe('Install update "some-old-version"');
+      expect(applicationBuilder.tray.get("install-update").label.get()).toBe(
+        'Install update "some-old-version"',
+      );
     });
 
     it("renders", () => {
@@ -344,7 +377,8 @@ describe("installing update using tray", () => {
       let checkForUpdatesPromise: Promise<void>;
 
       beforeEach(() => {
-        checkForUpdatesPromise = applicationBuilder.tray.click("check-for-updates");
+        checkForUpdatesPromise =
+          applicationBuilder.tray.click("check-for-updates");
       });
 
       it("user cannot check for updates again", () => {

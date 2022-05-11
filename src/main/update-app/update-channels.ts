@@ -5,24 +5,32 @@
 
 export type UpdateChannelId = "alpha" | "beta" | "latest";
 
+const latestChannel: UpdateChannel = {
+  id: "latest",
+  label: "Stable",
+  moreStableUpdateChannel: null,
+};
+
+const betaChannel: UpdateChannel = {
+  id: "beta",
+  label: "Beta",
+  moreStableUpdateChannel: latestChannel,
+};
+
+const alphaChannel: UpdateChannel = {
+  id: "alpha",
+  label: "Alpha",
+  moreStableUpdateChannel: betaChannel,
+};
+
 export const updateChannels: Record<UpdateChannelId, UpdateChannel> = {
-  alpha: {
-    id: "alpha",
-    label: "Alpha",
-  },
-
-  beta: {
-    id: "beta",
-    label: "Beta",
-  },
-
-  latest: {
-    id: "latest",
-    label: "Stable",
-  },
+  alpha: alphaChannel,
+  beta: betaChannel,
+  latest: latestChannel,
 };
 
 export interface UpdateChannel {
   readonly id: UpdateChannelId;
   readonly label: string;
+  readonly moreStableUpdateChannel: UpdateChannel | null;
 }

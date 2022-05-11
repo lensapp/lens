@@ -62,26 +62,48 @@ const downloadUpdateFor =
       });
     };
 
-const checkForUpdatesFor = (
-  checkForPlatformUpdates: CheckForPlatformUpdates,
-  discoveredVersionState: IObservableValue<string>,
-  checkingState: IObservableValue<boolean>,
-  selectedUpdateChannel: IComputedValue<UpdateChannel>,
-) => {
-  return async () => {
-    runInAction(() => {
-      checkingState.set(true);
-    });
+const checkForUpdatesFor =
+  (
+    checkForPlatformUpdates: CheckForPlatformUpdates,
+    discoveredVersionState: IObservableValue<string>,
+    checkingState: IObservableValue<boolean>,
+    selectedUpdateChannel: IComputedValue<UpdateChannel>,
+  ) =>
+    async () => {
+      runInAction(() => {
+        checkingState.set(true);
+      });
 
-    const { updateWasDiscovered, version } = await checkForPlatformUpdates(
-      selectedUpdateChannel.get(),
-    );
+      const checkForUpdatesStartingFromChannel =
+        checkForUpdatesStartingFromChannelFor(checkForPlatformUpdates);
 
-    runInAction(() => {
-      discoveredVersionState.set(version);
-      checkingState.set(false);
-    });
+      const { updateWasDiscovered, version } = await checkForUpdatesStartingFromChannel(
+        selectedUpdateChannel.get(),
+      );
 
-    return { updateWasDiscovered };
+      runInAction(() => {
+        discoveredVersionState.set(version);
+        checkingState.set(false);
+      });
+
+      return { updateWasDiscovered };
+    };
+
+
+const checkForUpdatesStartingFromChannelFor = (checkForPlatformUpdates: CheckForPlatformUpdates) => {
+  const _recursiveCheck = async (updateChannel: UpdateChannel): Promise<{ updateWasDiscovered: boolean; version?: string }> => {
+    const result = await checkForPlatformUpdates(updateChannel);
+
+    if (result.updateWasDiscovered) {
+      return { updateWasDiscovered: true, version: result.version };
+    }
+
+    if (updateChannel.moreStableUpdateChannel) {
+      return await _recursiveCheck(updateChannel.moreStableUpdateChannel);
+    }
+
+    return { updateWasDiscovered: false };
   };
+
+  return _recursiveCheck;
 };
