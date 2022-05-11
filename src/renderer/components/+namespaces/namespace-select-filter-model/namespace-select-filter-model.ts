@@ -46,7 +46,14 @@ export class NamespaceSelectFilterModel {
     this.dependencies.namespaceStore.selectAll();
   };
 
-  onChange = ([{ value: namespace }]: SelectOption[]) => {
+  onChange = ([selected]: SelectOption<string>[]) => {
+    if (!selected) {
+      // This happens when pressing "Backspace" with an empty search field. Do nothing
+      return;
+    }
+
+    const { value: namespace } = selected;
+
     if (namespace) {
       if (this.isMultiSelection) {
         this.dependencies.namespaceStore.toggleSingle(namespace);
