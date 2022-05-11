@@ -11,6 +11,7 @@ import { getStartableStoppable } from "../../common/utils/get-startable-stoppabl
 import isAutoUpdateEnabledInjectable from "../is-auto-update-enabled.injectable";
 import showAboutInjectable from "../menu/show-about.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
+import trayIconPathInjectable from "./tray-icon-path.injectable";
 
 const trayInjectable = getInjectable({
   id: "tray",
@@ -22,6 +23,7 @@ const trayInjectable = getInjectable({
     const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const showAboutPopup = di.inject(showAboutInjectable);
+    const trayIconPath = di.inject(trayIconPathInjectable);
 
     return getStartableStoppable("build-of-tray", () =>
       initTray(
@@ -31,6 +33,7 @@ const trayInjectable = getInjectable({
         isAutoUpdateEnabled,
         showApplicationWindow,
         showAboutPopup,
+        trayIconPath,
       ),
     );
   },

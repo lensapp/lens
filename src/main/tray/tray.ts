@@ -9,24 +9,15 @@ import type { IComputedValue } from "mobx";
 import { autorun } from "mobx";
 import { checkForUpdates } from "../app-updater";
 import logger from "../logger";
-import { isDevelopment, isWindows, productName, staticFilesDirectory } from "../../common/vars";
+import { isWindows, productName } from "../../common/vars";
 import type { Disposer } from "../../common/utils";
 import { disposer, toJS } from "../../common/utils";
 import type { TrayMenuRegistration } from "./tray-menu-registration";
-import path from "path";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
-
-function getTrayIconPath(): string {
-  return path.resolve(
-    staticFilesDirectory,
-    isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-    "trayIconTemplate.png",
-  );
-}
 
 export function initTray(
   trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
@@ -35,10 +26,9 @@ export function initTray(
   isAutoUpdateEnabled: () => boolean,
   showApplicationWindow: () => Promise<void>,
   showAbout: () => void,
+  trayIconPath: string,
 ): Disposer {
-  const icon = getTrayIconPath();
-
-  tray = new Tray(icon);
+  tray = new Tray(trayIconPath);
   tray.setToolTip(packageInfo.description);
   tray.setIgnoreDoubleClickEvents(true);
 
