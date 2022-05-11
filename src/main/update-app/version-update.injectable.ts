@@ -22,9 +22,11 @@ const versionUpdateInjectable = getInjectable({
     const discoveredVersionState = observable.box<string>();
     const downloadingState = observable.box<boolean>(false);
     const checkingState = observable.box<boolean>(false);
+    const discoveredFromUpdateChannelState = observable.box<UpdateChannel>();
 
     return {
       discoveredVersion: computed(() => discoveredVersionState.get()),
+      discoveredFromUpdateChannel: computed(() => discoveredFromUpdateChannelState.get()),
       downloading: computed(() => downloadingState.get()),
       checking: computed(() => checkingState.get()),
 
@@ -33,6 +35,7 @@ const versionUpdateInjectable = getInjectable({
         discoveredVersionState,
         checkingState,
         selectedUpdateChannel.value,
+        discoveredFromUpdateChannelState,
       ),
 
       downloadUpdate: downloadUpdateFor(
@@ -68,6 +71,7 @@ const checkForUpdatesFor =
     discoveredVersionState: IObservableValue<string>,
     checkingState: IObservableValue<boolean>,
     selectedUpdateChannel: IComputedValue<UpdateChannel>,
+    discoveredFromUpdateChannelState: IObservableValue<UpdateChannel>,
   ) =>
     async () => {
       runInAction(() => {
@@ -77,11 +81,12 @@ const checkForUpdatesFor =
       const checkForUpdatesStartingFromChannel =
         checkForUpdatesStartingFromChannelFor(checkForPlatformUpdates);
 
-      const { updateWasDiscovered, version } = await checkForUpdatesStartingFromChannel(
+      const { updateWasDiscovered, version, actualUpdateChannel } = await checkForUpdatesStartingFromChannel(
         selectedUpdateChannel.get(),
       );
 
       runInAction(() => {
+        discoveredFromUpdateChannelState.set(actualUpdateChannel);
         discoveredVersionState.set(version);
         checkingState.set(false);
       });
@@ -90,12 +95,24 @@ const checkForUpdatesFor =
     };
 
 
-const checkForUpdatesStartingFromChannelFor = (checkForPlatformUpdates: CheckForPlatformUpdates) => {
-  const _recursiveCheck = async (updateChannel: UpdateChannel): Promise<{ updateWasDiscovered: boolean; version?: string }> => {
+const checkForUpdatesStartingFromChannelFor = (
+  checkForPlatformUpdates: CheckForPlatformUpdates,
+) => {
+  const _recursiveCheck = async (
+    updateChannel: UpdateChannel,
+  ): Promise<{
+    updateWasDiscovered: boolean;
+    version?: string;
+    actualUpdateChannel?: UpdateChannel;
+  }> => {
     const result = await checkForPlatformUpdates(updateChannel);
 
     if (result.updateWasDiscovered) {
-      return { updateWasDiscovered: true, version: result.version };
+      return {
+        updateWasDiscovered: true,
+        version: result.version,
+        actualUpdateChannel: updateChannel,
+      };
     }
 
     if (updateChannel.moreStableUpdateChannel) {
