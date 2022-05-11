@@ -7,7 +7,7 @@ import rendererExtensionsInjectable from "../../../extensions/renderer-extension
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { IObservableArray } from "mobx";
-import { action, computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
 import React from "react";
 import { Router } from "react-router";
@@ -46,7 +46,6 @@ import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
 import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
-import updateIsAvailableStateInjectable from "../../../main/update-app/update-is-ready-to-be-installed-state.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
@@ -59,10 +58,6 @@ export interface ApplicationBuilder {
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
-
-  applicationUpdater: {
-    setUpdateIsReadyToBeInstalled: (available: boolean) => void;
-  };
 
   tray: {
     click: (id: string) => Promise<void>;
@@ -167,14 +162,6 @@ export const getApplicationBuilder = () => {
 
   const builder: ApplicationBuilder = {
     dis,
-
-    applicationUpdater: {
-      setUpdateIsReadyToBeInstalled: action((available: boolean) => {
-        const updateIsAvailableState = mainDi.inject(updateIsAvailableStateInjectable);
-
-        updateIsAvailableState.set(available);
-      }),
-    },
 
     applicationMenu: {
       click: async (path: string) => {
