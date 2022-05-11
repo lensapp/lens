@@ -44,7 +44,6 @@ import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.inject
 import { observable } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import themeStoreInjectable from "./themes/store.injectable";
-import packageJsonInjectable from "../common/vars/package-json.injectable";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -70,7 +69,6 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
     di.override(isMacInjectable, () => true);
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
-    di.override(packageJsonInjectable, () => ({}));
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);

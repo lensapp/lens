@@ -12,7 +12,7 @@ import { webContents } from "electron";
 import loggerInjectable from "../../common/logger.injectable";
 import appNameInjectable from "../app-paths/app-name/app-name.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
-import isAutoUpdateEnabledInjectable from "../update-app/is-auto-update-enabled.injectable";
+import updatingIsEnabledInjectable from "../update-app/updating-is-enabled.injectable";
 import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import navigateToExtensionsInjectable from "../../common/front-end-routing/routes/extensions/navigate-to-extensions.injectable";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -41,7 +41,7 @@ const applicationMenuItemsInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const appName = di.inject(appNameInjectable);
     const isMac = di.inject(isMacInjectable);
-    const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
+    const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
     const showAbout = di.inject(showAboutInjectable);
     const applicationWindow = di.inject(applicationWindowInjectable);
@@ -54,11 +54,9 @@ const applicationMenuItemsInjectable = getInjectable({
     const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
 
+    logger.info(`[MENU]: autoUpdateEnabled=${updatingIsEnabled}`);
+
     return computed((): MenuItemOpts[] => {
-      const autoUpdateDisabled = !isAutoUpdateEnabled();
-
-      logger.info(`[MENU]: autoUpdateDisabled=${autoUpdateDisabled}`);
-
       const macAppMenu: MenuItemOpts = {
         label: appName,
         id: "root",
@@ -70,7 +68,7 @@ const applicationMenuItemsInjectable = getInjectable({
               showAbout();
             },
           },
-          ...ignoreIf(autoUpdateDisabled, [
+          ...ignoreIf(!updatingIsEnabled, [
             {
               label: "Check for updates",
               click() {
@@ -282,7 +280,7 @@ const applicationMenuItemsInjectable = getInjectable({
                 showAbout();
               },
             },
-            ...ignoreIf(autoUpdateDisabled, [
+            ...ignoreIf(!updatingIsEnabled, [
               {
                 label: "Check for updates",
                 click() {
