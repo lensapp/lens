@@ -33,7 +33,7 @@
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "download:binaries": "yarn run ts-node build/download_binaries.ts",
-    "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
+    "build:tray-icons": "yarn run ts-node build/generate-tray-icons.ts",
     "build:theme-vars": "yarn run ts-node build/build_theme_vars.ts",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix",
