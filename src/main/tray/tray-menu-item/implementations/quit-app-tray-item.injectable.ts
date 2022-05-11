@@ -17,7 +17,7 @@ const quitAppTrayItemInjectable = getInjectable({
       id: "quit-app",
       parentId: null,
       orderNumber: 150,
-      label: "Quit App",
+      label: computed(() => "Quit App"),
       enabled: computed(() => true),
       visible: computed(() => true),
       separated: true,

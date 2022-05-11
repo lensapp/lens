@@ -16,7 +16,7 @@ const openPreferencesTrayItemInjectable = getInjectable({
     return {
       id: "open-preferences",
       parentId: null,
-      label: "Preferences",
+      label: computed(() => "Preferences"),
       orderNumber: 20,
       enabled: computed(() => true),
       visible: computed(() => true),
