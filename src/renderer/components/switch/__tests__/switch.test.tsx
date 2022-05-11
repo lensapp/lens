@@ -48,4 +48,24 @@ describe("<Switch/>", () => {
 
     expect(onClick).not.toHaveBeenCalled();
   });
+
+  it("returns true checked attribute in a onChange callback", () => {
+    const onClick = jest.fn();
+    const { getByTestId } = render(<Switch onChange={onClick} checked={true}/>);
+    const switcher = getByTestId("switch");
+
+    fireEvent.click(switcher);
+
+    expect(onClick).toHaveBeenCalledWith(false, expect.any(Object));
+  });
+
+  it("returns false checked attribute in a onChange callback", () => {
+    const onClick = jest.fn();
+    const { getByTestId } = render(<Switch onChange={onClick}/>);
+    const switcher = getByTestId("switch");
+
+    fireEvent.click(switcher);
+
+    expect(onClick).toHaveBeenCalledWith(true, expect.any(Object));
+  });
 });
