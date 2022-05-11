@@ -305,7 +305,7 @@ async function main(di: DiContainer) {
 
   onQuitCleanup.push(
     initMenu(applicationMenuItems),
-    await initTray(windowManager, trayMenuItems, navigateToPreferences),
+    initTray(windowManager, trayMenuItems, navigateToPreferences),
     () => ShellSession.cleanup(),
   );
 

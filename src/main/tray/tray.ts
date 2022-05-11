@@ -4,22 +4,19 @@
  */
 
 import packageInfo from "../../../package.json";
-import type { NativeImage } from "electron";
-import { Menu, nativeImage, nativeTheme, Tray } from "electron";
+import { Menu, Tray } from "electron";
 import type { IComputedValue } from "mobx";
 import { autorun } from "mobx";
 import { showAbout } from "../menu/menu";
 import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
 import type { WindowManager } from "../window-manager";
 import logger from "../logger";
-import { isWindows, productName } from "../../common/vars";
+import { isDevelopment, isWindows, productName, staticFilesDirectory } from "../../common/vars";
 import { exitApp } from "../exit-app";
 import type { Disposer } from "../../common/utils";
-import { base64, disposer, getOrInsertWithAsync, toJS } from "../../common/utils";
+import { disposer, toJS } from "../../common/utils";
 import type { TrayMenuRegistration } from "./tray-menu-registration";
-import sharp from "sharp";
-import LogoLens from "../../renderer/components/icon/logo-lens.svg";
-import { JSDOM } from "jsdom";
+import path from "path";
 
 
 const TRAY_LOG_PREFIX = "[TRAY]";
@@ -27,68 +24,24 @@ const TRAY_LOG_PREFIX = "[TRAY]";
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
 
-interface CreateTrayIconArgs {
-  shouldUseDarkColors: boolean;
-  size: number;
-  sourceSvg: string;
+function getTrayIconPath(): string {
+  return path.resolve(
+    staticFilesDirectory,
+    isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
+    "trayIconTemplate.png",
+  );
 }
 
-const trayIcons = new Map<boolean, NativeImage>();
-
-async function createTrayIcon({ shouldUseDarkColors, size, sourceSvg }: CreateTrayIconArgs): Promise<NativeImage> {
-  return getOrInsertWithAsync(trayIcons, shouldUseDarkColors, async () => {
-    const trayIconColor = shouldUseDarkColors ? "white" : "black"; // Invert to show contrast
-    const parsedSvg = base64.decode(sourceSvg.split("base64,")[1]);
-    const svgDom = new JSDOM(`<body>${parsedSvg}</body>`);
-    const svgRoot = svgDom.window.document.body.getElementsByTagName("svg")[0];
-
-    svgRoot.innerHTML += `<style>* {fill: ${trayIconColor} !important;}</style>`;
-
-    const iconBuffer = await sharp(Buffer.from(svgRoot.outerHTML))
-      .resize({ width: size, height: size })
-      .png()
-      .toBuffer();
-
-    return nativeImage.createFromBuffer(iconBuffer);
-  });
-}
-
-function createCurrentTrayIcon() {
-  return createTrayIcon({
-    shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
-    size: 16,
-    sourceSvg: LogoLens,
-  });
-}
-
-function watchShouldUseDarkColors(tray: Tray): Disposer {
-  let prevShouldUseDarkColors = nativeTheme.shouldUseDarkColors;
-  const onUpdated = () => {
-    if (prevShouldUseDarkColors !== nativeTheme.shouldUseDarkColors) {
-      prevShouldUseDarkColors = nativeTheme.shouldUseDarkColors;
-      createCurrentTrayIcon()
-        .then(img => tray.setImage(img));
-    }
-  };
-
-  nativeTheme.on("updated", onUpdated);
-
-  return () => nativeTheme.off("updated", onUpdated);
-}
-
-export async function initTray(
+export function initTray(
   windowManager: WindowManager,
   trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
   navigateToPreferences: () => void,
-): Promise<Disposer> {
-  const icon = await createCurrentTrayIcon();
-  const dispose = disposer();
+): Disposer {
+  const icon = getTrayIconPath();
 
   tray = new Tray(icon);
   tray.setToolTip(packageInfo.description);
   tray.setIgnoreDoubleClickEvents(true);
-
-  dispose.push(watchShouldUseDarkColors(tray));
 
   if (isWindows) {
     tray.on("click", () => {
@@ -98,7 +51,7 @@ export async function initTray(
     });
   }
 
-  dispose.push(
+  return disposer(
     autorun(() => {
       try {
         const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
@@ -113,8 +66,6 @@ export async function initTray(
       tray = null;
     },
   );
-
-  return dispose;
 }
 
 function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron.MenuItemConstructorOptions {
