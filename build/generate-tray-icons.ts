@@ -28,23 +28,23 @@ console.log("Generating tray icon pngs");
 
 ensureDirSync(outputFolder);
 
-Promise.allSettled([
-  sharp(Buffer.from(darkTemplate))
+Promise.all([
+  sharp(Buffer.from(lightTemplate))
     .resize({ width: size, height: size })
     .png()
     .toFile(path.join(outputFolder, "trayIconDarkTemplate.png")),
-  sharp(Buffer.from(darkTemplate))
+  sharp(Buffer.from(lightTemplate))
     .resize({ width: size*2, height: size*2 })
     .png()
     .toFile(path.join(outputFolder, "trayIconDarkTemplate@2x.png")),
-  sharp(Buffer.from(lightTemplate))
+  sharp(Buffer.from(darkTemplate))
     .resize({ width: size, height: size })
     .png()
     .toFile(path.join(outputFolder, "trayIconTemplate.png")),
-  sharp(Buffer.from(lightTemplate))
+  sharp(Buffer.from(darkTemplate))
     .resize({ width: size*2, height: size*2 })
     .png()
     .toFile(path.join(outputFolder, "trayIconTemplate@2x.png")),
 ])
-  .then(console.log)
+  .then((resolutions) => console.log(`Generated ${resolutions.length} images`))
   .catch(console.error);
