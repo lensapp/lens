@@ -44,11 +44,11 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
         const { updateWasDiscovered } = await versionUpdate.checkForUpdates();
 
         if (updateWasDiscovered) {
+          // Note: intentional orphan promise to make download happen in the background
           versionUpdate.downloadUpdate();
         }
 
-
-        // await showApplicationWindow();
+        await showApplicationWindow();
       },
     };
   },
