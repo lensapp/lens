@@ -32,7 +32,7 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
         extension.appPreferenceTabs,
 
         map((tab) => {
-          const id = `extension-specific-tab-navigation-item-${tab.id}`;
+          const id = `extension-${extension.sanitizedExtensionId}-nav-item-${tab.id}`;
           const isActive = computed(() => routeIsActive.get() && pathParameters.get().tabId === tab.id);
 
           return getInjectable({

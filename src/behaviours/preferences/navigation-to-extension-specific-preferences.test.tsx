@@ -174,7 +174,7 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows extension tab in general area", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-specific-tab-navigation-item-metrics-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab");
 
         expect(actual).toMatchSnapshot();
       });
@@ -187,7 +187,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to specific extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-specific-tab-navigation-item-metrics-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
         });
         it("renders", () => {
           expect(rendered.container).toMatchSnapshot();
@@ -199,6 +199,87 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
         it("does not show unrelated preferences for this tab", () => {
           const actual = rendered.queryByTestId("survey-preference-item-hint");
+
+          expect(actual).not.toBeInTheDocument();
+        });
+      });
+    });
+
+    describe("given extension with few registered tabs", () => {
+      beforeEach(async () => {
+        const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTabs);
+
+        await applicationBuilder.addExtensions(extension);
+      });
+
+      it("shows each of registered tabs in general area", () => {
+        const helloTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-hello-extension-tab");
+        const logsTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-logs-extension-tab");
+
+        expect(helloTab).toBeInTheDocument();
+        expect(logsTab).toBeInTheDocument();
+      });
+    });
+
+    describe("given extensions with tabs having same id", () => {
+      beforeEach(async () => {
+        const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
+        const otherExtension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
+
+        await applicationBuilder.addExtensions(extension, otherExtension);
+      });
+
+      it("shows tab from the first extension", () => {
+        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+
+        expect(actual).toBeInTheDocument();
+      });
+
+      it("shows tab from the second extension", () => {
+        const actual = rendered.getByTestId("tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
+
+        expect(actual).toBeInTheDocument();
+      });
+
+      describe("when navigating to first extension tab", () => {
+        beforeEach(() => {
+          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+        });
+
+        it("renders", () => {
+          expect(rendered.container).toMatchSnapshot();
+        });
+
+        it("shows related preferences for this tab", () => {
+          const actual = rendered.getByTestId("metrics-preference-item-hint");
+
+          expect(actual).toBeInTheDocument();
+        });
+
+        it("does not show unrelated preferences for this tab", () => {
+          const actual = rendered.queryByTestId("another-metrics-preference-item-hint");
+
+          expect(actual).not.toBeInTheDocument();
+        });
+      });
+
+      describe("when navigating to second extension tab", () => {
+        beforeEach(() => {
+          applicationBuilder.preferences.navigation.click("extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
+        });
+
+        it("renders", () => {
+          expect(rendered.container).toMatchSnapshot();
+        });
+
+        it("shows related preferences for this tab", () => {
+          const actual = rendered.getByTestId("another-metrics-preference-item-hint");
+
+          expect(actual).toBeInTheDocument();
+        });
+
+        it("does not show unrelated preferences for this tab", () => {
+          const actual = rendered.queryByTestId("metrics-preference-item-hint");
 
           expect(actual).not.toBeInTheDocument();
         });
@@ -303,6 +384,66 @@ const extensionStubWithWithRegisteredTab: Partial<LensRendererExtension> = {
       components: {
         Hint: () => <div data-testid="survey-preference-item-hint" />,
         Input: () => <div data-testid="survey-preference-item-input" />,
+      },
+    },
+  ],
+
+  appPreferenceTabs: [{
+    title: "Metrics tab",
+    id: "metrics-extension-tab",
+    orderNumber: 100,
+  }],
+};
+
+const extensionStubWithWithRegisteredTabs: Partial<LensRendererExtension> = {
+  id: "hello-world-tab-page-id",
+
+  appPreferences: [
+    {
+      title: "Hello world",
+      id: "hello-preference-item-id",
+      showInPreferencesTab: "hello-extension-tab",
+
+      components: {
+        Hint: () => <div data-testid="hello-preference-item-hint" />,
+        Input: () => <div data-testid="hello-preference-item-input" />,
+      },
+    },
+    {
+      title: "Logs",
+      id: "logs-preference-item-id",
+      showInPreferencesTab: "logs-extension-tab",
+
+      components: {
+        Hint: () => <div data-testid="logs-preference-item-hint" />,
+        Input: () => <div data-testid="logs-preference-item-input" />,
+      },
+    },
+  ],
+
+  appPreferenceTabs: [{
+    title: "Metrics tab",
+    id: "hello-extension-tab",
+    orderNumber: 100,
+  }, {
+    title: "Logs tab",
+    id: "logs-extension-tab",
+    orderNumber: 200,
+  }],
+};
+
+const extensionStubWithWithSameRegisteredTab: Partial<LensRendererExtension> = {
+  id: "duplicated-tab-page-id",
+
+  appPreferences: [
+    {
+      title: "Another metrics",
+      id: "another-metrics-preference-item-id",
+      showInPreferencesTab: "metrics-extension-tab",
+
+      components: {
+        Hint: () => <div data-testid="another-metrics-preference-item-hint" />,
+        Input: () => <div data-testid="another-metrics-preference-item-input" />,
       },
     },
   ],
