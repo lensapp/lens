@@ -1859,7 +1859,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17":
+"@types/react@*":
   version "17.0.30"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.30.tgz#2f8e6f5ab6415c091cc5e571942ee9064b17609e"
   integrity sha512-3Dt/A8gd3TCXi2aRe84y7cK1K8G+N9CZRDG8kDGguOKa0kf/ZkSwTmVIDPsm/KbQOVMaDJXwhBtuOXxqwdpWVg==
@@ -1877,7 +1877,7 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@^17.0.45":
+"@types/react@^17", "@types/react@^17.0.45":
   version "17.0.45"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.45.tgz#9b3d5b661fd26365fefef0e766a1c6c30ccf7b3f"
   integrity sha512-YfhQ22Lah2e3CHPsb93tRwIGNiSwkuz1/blk4e6QrWS0jQzCSNbGLtOEYhPg02W0yGTTmpajp7dCTbBAMN3qsg==
@@ -5265,7 +5265,7 @@ eslint-plugin-import@^2.26.0:
     resolve "^1.22.0"
     tsconfig-paths "^3.14.1"
 
-eslint-plugin-react-hooks@^4.4.0:
+eslint-plugin-react-hooks@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.5.0.tgz#5f762dfedf8b2cf431c689f533c9d3fa5dcf25ad"
   integrity sha512-8k1gRt7D7h03kd+SAAlzXkQwWK22BnK6GKZG+FJA6BAGy22CFvl8kCIXKpVux0cCxMWDQUPqSok0LKaZ0aOcCw==
@@ -13388,7 +13388,7 @@ webpack-dev-middleware@^5.3.1:
     range-parser "^1.2.1"
     schema-utils "^4.0.0"
 
-webpack-dev-server@*, webpack-dev-server@^4.8.1:
+webpack-dev-server@*, webpack-dev-server@^4.9.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.9.0.tgz#737dbf44335bb8bde68f8f39127fc401c97a1557"
   integrity sha512-+Nlb39iQSOSsFv0lWUuUTim3jDQO8nhK3E68f//J2r5rIcp4lULHXz2oZ0UVdEeWXEh5lSzYUlzarZhDAeAVQw==

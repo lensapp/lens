@@ -357,7 +357,7 @@
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.4.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
@@ -406,7 +406,7 @@
     "typescript-plugin-css-modules": "^3.4.0",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.8.1",
+    "webpack-dev-server": "^4.9.0",
     "webpack-node-externals": "^3.0.0",
     "xterm": "^4.18.0",
     "xterm-addon-fit": "^0.5.0"
