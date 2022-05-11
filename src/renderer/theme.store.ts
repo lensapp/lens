@@ -36,21 +36,33 @@ export class ThemeStore extends Singleton {
     "lens-light": lensLightThemeJson as Theme,
   });
 
-  @observable osNativeTheme: "dark" | "light" | undefined;
+  @observable private osNativeThemeType: "dark" | "light" | undefined;
 
-  @computed get activeThemeId(): ThemeId {
+  @computed private get colorThemePreference(): ThemeId | "system" {
     return UserStore.getInstance().colorTheme;
   }
 
-  @computed get terminalThemeId(): ThemeId {
+  @computed private get activeThemeId(): ThemeId {
+    if (this.colorThemePreference === "system") {
+      if (this.osNativeThemeType) {
+        return `lens-${this.osNativeThemeType}`;
+      } else {
+        return defaultTheme;
+      }
+    } else {
+      return this.colorThemePreference;
+    }
+  }
+
+  @computed private get terminalThemeId(): ThemeId {
     return UserStore.getInstance().terminalTheme;
   }
 
   @computed get activeTheme(): Theme {
-    return this.systemTheme ?? this.themes.get(this.activeThemeId) ?? this.themes.get(defaultTheme);
+    return this.themes.get(this.activeThemeId) ?? this.themes.get(defaultTheme);
   }
 
-  @computed get terminalColors(): [string, string][] {
+  @computed private get terminalColors(): [string, string][] {
     const theme = this.themes.get(this.terminalThemeId) ?? this.activeTheme;
 
     return Object
@@ -76,14 +88,6 @@ export class ThemeStore extends Singleton {
     }));
   }
 
-  @computed get systemTheme() {
-    if (this.activeThemeId == "system" && this.osNativeTheme) {
-      return this.themes.get(`lens-${this.osNativeTheme}`);
-    }
-
-    return null;
-  }
-
   constructor() {
     super();
 
@@ -93,8 +97,10 @@ export class ThemeStore extends Singleton {
   }
 
   async init() {
-    await this.setNativeTheme();
-    this.bindNativeThemeUpdateEvent();
+    this.osNativeThemeType = await ipcRenderer.invoke(getNativeThemeChannel);
+    ipcRenderer.on(setNativeThemeChannel, (event, theme: "dark" | "light") => {
+      this.osNativeThemeType = theme;
+    });
 
     // auto-apply active theme
     reaction(() => ({
@@ -113,25 +119,12 @@ export class ThemeStore extends Singleton {
     });
   }
 
-  bindNativeThemeUpdateEvent() {
-    ipcRenderer.on(setNativeThemeChannel, (event, theme: "dark" | "light") => {
-      this.osNativeTheme = theme;
-      this.applyTheme(theme);
-    });
-  }
-
-  async setNativeTheme() {
-    const theme: "dark" | "light" = await ipcRenderer.invoke(getNativeThemeChannel);
-
-    this.osNativeTheme = theme;
-  }
-
   getThemeById(themeId: ThemeId): Theme {
     return this.themes.get(themeId);
   }
 
   protected applyTheme(themeId: ThemeId) {
-    const theme = this.systemTheme ?? this.getThemeById(themeId);
+    const theme = this.getThemeById(themeId);
 
     const colors = Object.entries({
       ...theme.colors,
