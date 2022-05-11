@@ -126,7 +126,6 @@ clean: clean-npm clean-extensions
 	rm -rf binaries/client
 	rm -rf dist
 	rm -rf static/build
-	rm -rf build/tray
 	rm -rf node_modules
 	rm -rf site
 	rm -rf docs/extensions/api
