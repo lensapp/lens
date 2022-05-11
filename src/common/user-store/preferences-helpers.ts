@@ -125,19 +125,6 @@ const allowUntrustedCAs: PreferenceDescription<boolean> = {
   },
 };
 
-const allowTelemetry: PreferenceDescription<boolean> = {
-  fromStore(val) {
-    return val ?? true;
-  },
-  toStore(val) {
-    if (val === true) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
 const allowErrorReporting: PreferenceDescription<boolean> = {
   fromStore(val) {
     return val ?? true;
@@ -387,7 +374,6 @@ export const DESCRIPTORS = {
   terminalTheme,
   localeTimezone,
   allowUntrustedCAs,
-  allowTelemetry,
   allowErrorReporting,
   downloadMirror,
   downloadKubectlBinaries,

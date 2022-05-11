@@ -51,7 +51,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    */
   @observable newContexts = observable.set<string>();
 
-  @observable allowTelemetry!: StoreType<typeof DESCRIPTORS["allowTelemetry"]>;
   @observable allowErrorReporting!: StoreType<typeof DESCRIPTORS["allowErrorReporting"]>;
   @observable allowUntrustedCAs!: StoreType<typeof DESCRIPTORS["allowUntrustedCAs"]>;
   @observable colorTheme!: StoreType<typeof DESCRIPTORS["colorTheme"]>;
@@ -106,11 +105,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   startMainReactions() {
-    // track telemetry availability
-    reaction(() => this.allowTelemetry, allowed => {
-      appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
-    });
-
     // open at system start-up
     reaction(() => this.openAtLogin, openAtLogin => {
       app.setLoginItemSettings({
