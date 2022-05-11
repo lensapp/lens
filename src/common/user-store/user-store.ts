@@ -46,7 +46,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable kubeConfigPath = kubeConfigDefaultPath;
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
-  @observable allowTelemetry: boolean;
   @observable allowErrorReporting: boolean;
   @observable allowUntrustedCAs: boolean;
   @observable colorTheme: string;
@@ -97,11 +96,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   startMainReactions() {
-    // track telemetry availability
-    reaction(() => this.allowTelemetry, allowed => {
-      appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
-    });
-
     // open at system start-up
     reaction(() => this.openAtLogin, openAtLogin => {
       app.setLoginItemSettings({
