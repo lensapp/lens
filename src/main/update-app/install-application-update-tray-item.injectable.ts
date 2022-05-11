@@ -5,25 +5,34 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-item-injection-token";
-import updateIsReadyToBeInstalledInjectable from "./update-is-ready-to-be-installed.injectable";
 import quitAndInstallUpdateInjectable from "../electron-app/features/quit-and-install-update.injectable";
+import versionUpdateInjectable from "./version-update.injectable";
 
-const triggerApplicationUpdateTrayItemInjectable = getInjectable({
-  id: "trigger-application-update-tray-item",
+const installApplicationUpdateTrayItemInjectable = getInjectable({
+  id: "install-update-tray-item",
 
   instantiate: (di) => {
-    const updateIsReadyToBeInstalled = di.inject(updateIsReadyToBeInstalledInjectable);
     const quitAndInstallUpdate = di.inject(quitAndInstallUpdateInjectable);
+    const versionUpdate = di.inject(versionUpdateInjectable);
 
     return {
-      id: "trigger-application-update",
+      id: "install-update",
       parentId: null,
       orderNumber: 50,
-      label: "Trigger update",
-      enabled: computed(() => true),
-      visible: computed(() => updateIsReadyToBeInstalled.get()),
 
-      click:  () => {
+      label: computed(() => {
+        const versionToBeInstalled = versionUpdate.discoveredVersion.get();
+
+        return `Install update "${versionToBeInstalled}"`;
+      }),
+
+      enabled: computed(() => true),
+
+      visible: computed(
+        () => versionUpdate.discoveredVersion.get() && !versionUpdate.downloading.get(),
+      ),
+
+      click: () => {
         quitAndInstallUpdate();
       },
     };
@@ -32,4 +41,4 @@ const triggerApplicationUpdateTrayItemInjectable = getInjectable({
   injectionToken: trayMenuItemInjectionToken,
 });
 
-export default triggerApplicationUpdateTrayItemInjectable;
+export default installApplicationUpdateTrayItemInjectable;

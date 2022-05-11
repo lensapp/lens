@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`installing update using tray given a non-installed update is already downloaded, when started renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given a non-installed update is already downloaded, when started when user checks for even newer update renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given a non-installed update is already downloaded, when started when user checks for even newer update when new update is discovered renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given a non-installed update is already downloaded, when started when user checks for even newer update when no new update is discovered renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given a non-installed update is already downloaded, when started when user installs the update renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when update is downloaded renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when update is downloaded when user installs the update renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when no new update is discovered renders 1`] = `
+<body>
+  <div />
+</body>
+`;
