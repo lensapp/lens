@@ -44,28 +44,36 @@ export class ThemeStore {
     "lens-light": lensLightTheme,
   });
 
-  @observable osNativeTheme: "dark" | "light" | undefined;
+  @observable private osNativeThemeType: "dark" | "light" | undefined;
 
-  @computed get activeThemeId(): ThemeId {
+  @computed private get colorThemePreference(): ThemeId | "system" {
     return this.dependencies.userStore.colorTheme;
   }
 
-  @computed get terminalThemeId(): ThemeId {
+  @computed private get activeThemeId(): ThemeId {
+    if (this.colorThemePreference === "system") {
+      if (this.osNativeThemeType) {
+        return `lens-${this.osNativeThemeType}`;
+      } else {
+        return defaultThemeId;
+      }
+    } else {
+      return this.colorThemePreference;
+    }
+  }
+
+  @computed private get terminalThemeId(): ThemeId {
     return this.dependencies.userStore.terminalTheme;
   }
 
   private readonly defaultTheme: Theme;
 
   @computed get activeTheme(): Theme {
-    return this.systemTheme
-      ?? this.#themes.get(this.activeThemeId)
-      ?? this.defaultTheme;
+    return this.themes.get(this.activeThemeId) ?? this.defaultTheme;
   }
 
-  @computed get terminalColors(): [string, string][] {
-    const theme = this.terminalThemeId
-      ? this.#themes.get(this.terminalThemeId) ?? this.activeTheme
-      : this.activeTheme;
+  @computed private get terminalColors(): [string, string][] {
+    const theme = this.themes.get(this.terminalThemeId) ?? this.activeTheme;
 
     return Object
       .entries(theme.colors)
@@ -87,14 +95,6 @@ export class ThemeStore {
     return this.#themes as ReadonlyDeep<Map<string, Theme>>;
   }
 
-  @computed get systemTheme() {
-    if (this.activeThemeId == "system" && this.osNativeTheme) {
-      return this.#themes.get(`lens-${this.osNativeTheme}`);
-    }
-
-    return null;
-  }
-
   constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
     autoBind(this);
@@ -108,8 +108,10 @@ export class ThemeStore {
   }
 
   async init() {
-    await this.setNativeTheme();
-    this.bindNativeThemeUpdateEvent();
+    this.osNativeThemeType = await this.dependencies.ipcRenderer.invoke(getNativeThemeChannel);
+    this.dependencies.ipcRenderer.on(setNativeThemeChannel, (event, theme: "dark" | "light") => {
+      this.osNativeThemeType = theme;
+    });
 
     // auto-apply active theme
     reaction(() => ({
@@ -128,28 +130,13 @@ export class ThemeStore {
     });
   }
 
-  bindNativeThemeUpdateEvent() {
-    this.dependencies.ipcRenderer.on(setNativeThemeChannel, (event, theme: "dark" | "light") => {
-      this.osNativeTheme = theme;
-      this.applyActiveTheme();
-    });
-  }
-
-  async setNativeTheme() {
-    const theme: "dark" | "light" = await this.dependencies.ipcRenderer.invoke(getNativeThemeChannel);
-
-    this.osNativeTheme = theme;
-  }
-
   getThemeById(themeId: ThemeId): Theme | undefined {
-    return this.#themes.get(themeId);
+    return this.themes.get(themeId);
   }
 
   protected applyActiveTheme() {
-    const theme = this.activeTheme;
-
     const colors = Object.entries({
-      ...theme.colors,
+      ...this.activeTheme.colors,
       ...Object.fromEntries(this.terminalColors),
     });
 
@@ -158,6 +145,6 @@ export class ThemeStore {
     });
 
     // Adding universal theme flag which can be used in component styles
-    document.body.classList.toggle("theme-light", theme.type === "light");
+    document.body.classList.toggle("theme-light", this.activeTheme.type === "light");
   }
 }
