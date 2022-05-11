@@ -78,7 +78,6 @@ const createElectronWindowInjectable = getInjectable({
           nodeIntegrationInSubFrames: true,
           webviewTag: true,
           contextIsolation: false,
-          nativeWindowOpen: false,
         },
       });
 
@@ -154,7 +153,6 @@ const createElectronWindowInjectable = getInjectable({
 
           // Always disable Node.js integration for all webviews
           webPreferences.nodeIntegration = false;
-          webPreferences.nativeWindowOpen = false;
         })
 
         .setWindowOpenHandler((details) => {
