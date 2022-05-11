@@ -281,7 +281,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "@sentry/types": "^6.19.7",
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^12.1.4",
+    "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.36",
