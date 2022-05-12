@@ -3,7 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-.updateButton {}
+.updateButton {
+  --active-color-hsl: 122deg 39% 49%;
+  --active-color: hsl(var(--active-color-hsl));
+
+  border: 1px solid var(--active-color);
+  border-radius: 4px;
+  background: hsl(var(--active-color-hsl) / 15%);
+  color: var(--active-color);
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 8px;
+  cursor: default;
+  transition: background-color 0.1s;
+
+  &:hover {
+    background: hsl(var(--active-color-hsl) / 5%);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--blue);
+    border-color: transparent;
+  }
+}
 
 .warningHigh {}
 

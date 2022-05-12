@@ -7,15 +7,24 @@ exports[`<UpdateButton/> should render if warning level prop passed 1`] = `
   id="update_button_2"
 >
   Update
-  <i
-    class="Icon material focusable"
+  <svg
+    height="12"
+    shape-rendering="crispEdges"
+    viewBox="0 0 12 12"
+    width="12"
   >
-    <span
-      class="icon"
-      data-icon-name="update"
-    >
-      update
-    </span>
-  </i>
+    <path
+      d="M0,8.5h12v1H0V8.5z"
+      fill="currentColor"
+    />
+    <path
+      d="M0,5.5h12v1H0V5.5z"
+      fill="currentColor"
+    />
+    <path
+      d="M0,2.5h12v1H0V2.5z"
+      fill="currentColor"
+    />
+  </svg>
 </button>
 `;
