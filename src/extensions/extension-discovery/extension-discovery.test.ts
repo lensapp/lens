@@ -74,6 +74,9 @@ describe("ExtensionDiscovery", () => {
       return {
         name: "my-extension",
         version: "1.0.0",
+        engines: {
+          lens: "5.0.0",
+        },
       };
     });
 
@@ -104,10 +107,13 @@ describe("ExtensionDiscovery", () => {
         id: path.normalize("some-directory-for-user-data/node_modules/my-extension/package.json"),
         isBundled: false,
         isEnabled: false,
-        isCompatible: false,
+        isCompatible: true,
         manifest:  {
           name: "my-extension",
           version: "1.0.0",
+          engines: {
+            lens: "5.0.0",
+          },
         },
         manifestPath: path.normalize("some-directory-for-user-data/node_modules/my-extension/package.json"),
       });
