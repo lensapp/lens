@@ -109,7 +109,7 @@ if (options.preid) {
 
 npmVersionArgs.push("--git-tag-version false");
 
-execSync(npmVersionArgs.join(" "), { stdio: "ignore" });
+execSync(npmVersionArgs.join(" "));
 
 const newVersion = new SemVer(readJsonSync("./package.json").version);
 
