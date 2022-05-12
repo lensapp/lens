@@ -2,51 +2,38 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import semver, { SemVer } from "semver";
+import semver, { type SemVer } from "semver";
 import type { LensExtensionManifest } from "../../lens-extension";
 
 interface Dependencies {
   appSemVer: SemVer;
 }
 
-export const isCompatibleExtension = ({
-  appSemVer,
-}: Dependencies): ((manifest: LensExtensionManifest) => boolean) => {
-  const { major, minor, patch, prerelease: oldPrelease } = appSemVer;
-  let prerelease = "";
-
-  if (oldPrelease.length > 0) {
-    const [first] = oldPrelease;
-
-    if (first === "alpha" || first === "beta" || first === "rc") {
-      /**
-       * Strip the build IDs and "latest" prerelease tag as that is not really
-       * a part of API version
-       */
-      prerelease = `-${oldPrelease.slice(0, 2).join(".")}`;
-    }
-  }
-
-  /**
-   * We unfortunately have to format as string because the constructor only
-   * takes an instance or a string.
-   */
-  const strippedVersion = new SemVer(
-    `${major}.${minor}.${patch}${prerelease}`,
-    { includePrerelease: true },
-  );
-
+export const isCompatibleExtension = ({ appSemVer }: Dependencies): ((manifest: LensExtensionManifest) => boolean) => {
   return (manifest: LensExtensionManifest): boolean => {
-    if (manifest.engines?.lens) {
-      /**
-       * include Lens's prerelease tag in the matching so the extension's
-       * compatibility is not limited by it
-       */
-      return semver.satisfies(strippedVersion, manifest.engines.lens, {
-        includePrerelease: true,
-      });
+    const appVersion = appSemVer.raw.split("-")[0]; // drop prerelease version if any, e.g. "-alpha.0"
+    const manifestLensEngine = manifest.engines.lens;
+    const validVersion = manifestLensEngine.match(/^[\^0-9]\d*\.\d+\b/); // must start from ^ or number
+
+    if (!validVersion) {
+      const errorInfo = [
+        `Invalid format for "manifest.engines.lens"="${manifestLensEngine}"`,
+        `Range versions can only be specified starting with '^'.`,
+        `Otherwise it's recommended to use plain %MAJOR.%MINOR to match with supported Lens version.`,
+      ].join("\n");
+
+      throw new Error(errorInfo);
     }
 
-    return false;
+    const { major: extMajor, minor: extMinor } = semver.coerce(manifestLensEngine, {
+      loose: true,
+      includePrerelease: false,
+    });
+    const supportedVersionsByExtension: string = semver.validRange(`^${extMajor}.${extMinor}`);
+
+    return semver.satisfies(appVersion, supportedVersionsByExtension, {
+      loose: true,
+      includePrerelease: false,
+    });
   };
 };

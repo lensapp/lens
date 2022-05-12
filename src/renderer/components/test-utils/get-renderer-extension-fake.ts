@@ -28,6 +28,9 @@ export const getRendererExtensionFakeFor = (builder: ApplicationBuilder) => (
       manifest: {
         name,
         version: "1.0.0",
+        engines: {
+          lens: "^5.5.0",
+        },
       },
       manifestPath: "irrelevant",
     });

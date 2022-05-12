@@ -85,6 +85,7 @@ describe("protocol router tests", () => {
       manifest: {
         name: "@mirantis/minikube",
         version: "0.1.1",
+        engines: { lens: "^5.5.0" },
       },
       isBundled: false,
       isEnabled: true,
@@ -160,6 +161,7 @@ describe("protocol router tests", () => {
       manifest: {
         name: "@foobar/icecream",
         version: "0.1.1",
+        engines: { lens: "^5.5.0" },
       },
       isBundled: false,
       isEnabled: true,
@@ -201,6 +203,7 @@ describe("protocol router tests", () => {
         manifest: {
           name: "@foobar/icecream",
           version: "0.1.1",
+          engines: { lens: "^5.5.0" },
         },
         isBundled: false,
         isEnabled: true,
@@ -226,6 +229,7 @@ describe("protocol router tests", () => {
         manifest: {
           name: "icecream",
           version: "0.1.1",
+          engines: { lens: "^5.5.0" },
         },
         isBundled: false,
         isEnabled: true,

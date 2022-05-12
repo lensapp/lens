@@ -17,6 +17,7 @@ describe("lens extension", () => {
       manifest: {
         name: "foo-bar",
         version: "0.1.1",
+        engines: { lens: "^5.5.0" },
       },
       id: "/this/is/fake/package.json",
       absolutePath: "/absolute/fake/",

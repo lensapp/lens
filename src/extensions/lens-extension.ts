@@ -4,7 +4,7 @@
  */
 
 import type { InstalledExtension } from "./extension-discovery/extension-discovery";
-import { action, observable, makeObservable, computed } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
@@ -20,6 +20,15 @@ export interface LensExtensionManifest extends PackageJson {
   version: string;
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
+  /**
+   * Supported Lens version engine by extension could be defined in `manifest.engines.lens`
+   * Only MAJOR.MINOR version is taken in consideration.
+   */
+  engines: {
+    lens: string; // "semver"-package format
+    npm?: string;
+    node?: string;
+  };
 }
 
 export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
