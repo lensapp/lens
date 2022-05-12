@@ -5,7 +5,6 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Channel } from "../../common/ipc-channel/channel";
 
-
 export interface IpcChannelListener {
   channel: Channel<unknown>;
   handle: (value: any) => void;
