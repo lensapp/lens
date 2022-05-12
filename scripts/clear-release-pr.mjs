@@ -89,6 +89,7 @@ console.log(`current version: ${currentVersion.format()}`);
 console.log("fetching tags...");
 execSync("git fetch --tags --force");
 
+const prBase = execSync("git branch --show-current", { encoding: "utf-8" });
 const actualTags = execSync("git tag --list", { encoding: "utf-8" }).split(/\r?\n/).map(line => line.trim());
 const [previousReleasedVersion] = actualTags
   .map(semverValid)
@@ -180,9 +181,6 @@ if (maintenencePrs.length > 0) {
 }
 
 const prBody = prBodyLines.join("\n");
-const prBase = newVersion.patch === 0
-  ? "master"
-  : `release/v${newVersion.major}.${newVersion.minor}`;
 const createPrArgs = [
   "pr",
   "create",
@@ -194,8 +192,10 @@ const createPrArgs = [
 
 const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" });
 let result = "";
+let errorResult = "";
 
 createPrProcess.stdout.on("data", (chunk) => result += chunk);
+createPrProcess.stderr.on("data", (chunk) => errorResult += chunk);
 
 createPrProcess.stdin.write(prBody);
 createPrProcess.stdin.end();
@@ -207,4 +207,10 @@ await new Promise((resolve) => {
   });
 });
 
-console.log(result);
+if (result) {
+  console.log(result);
+}
+
+if (errorResult) {
+  console.error(errorResult);
+}
