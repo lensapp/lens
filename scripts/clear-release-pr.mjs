@@ -198,8 +198,6 @@ const createPrArgs = [
   "--body-file", "-",
 ];
 
-console.log(createPrArgs.join(" "));
-
 const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe", shell: true });
 let result = "";
 let errorResult = "";
