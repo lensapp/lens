@@ -504,7 +504,9 @@ export class Cluster implements ClusterModel, ClusterState {
           return ClusterStatus.AccessDenied;
         }
 
-        this.broadcastConnectUpdate(error.error || error.message, true);
+        const message = String(error.error || error.message) || String(error);
+
+        this.broadcastConnectUpdate(message, true);
 
         return ClusterStatus.Offline;
       }
@@ -521,7 +523,9 @@ export class Cluster implements ClusterModel, ClusterState {
         return ClusterStatus.AccessDenied;
       }
 
-      this.broadcastConnectUpdate(error.message, true);
+      const message = String(error.error || error.message) || String(error);
+
+      this.broadcastConnectUpdate(message, true);
 
       return ClusterStatus.Offline;
     }
