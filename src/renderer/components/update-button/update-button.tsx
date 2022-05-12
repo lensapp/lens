@@ -21,7 +21,8 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
   const [opened, setOpened] = useState(false);
 
   const onKeyDown = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (evt.code == "Space" || evt.code == "Enter") {
+    if (evt.code == "Space") {
+      evt.preventDefault();
       toggle();
     }
   };
@@ -57,8 +58,6 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
         usePortal
         htmlFor={id}
         isOpen={opened}
-        closeOnClickItem
-        closeOnClickOutside
         close={toggle}
         open={noop}
       >
