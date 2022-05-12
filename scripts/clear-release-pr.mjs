@@ -111,6 +111,7 @@ npmVersionArgs.push("--git-tag-version false");
 
 execSync(npmVersionArgs.join(" "), { stdio: "ignore" });
 
+const newBranchName = execSync("git branch --show-current", { encoding: "utf-8" });
 const newVersion = new SemVer(readJsonSync("./package.json").version);
 
 const getMergedPrsArgs = [
@@ -180,14 +181,18 @@ if (maintenencePrs.length > 0) {
   );
 }
 
+execSync(`git push --set-upstream origin ${newBranchName}`);
+
 const prBody = prBodyLines.join("\n");
 const createPrArgs = [
   "pr",
   "create",
-  "--base", prBase,
+  "--base", `origin/${prBase}`,
+  "--head", `origin/${newBranchName}`,
   "--title", `release ${newVersion.format()}`,
   "--label", "skip-changelog",
   "--body-file", "-",
+  "--recover",
 ];
 
 const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" });
