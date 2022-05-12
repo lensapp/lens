@@ -3,16 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import assert from "assert";
 import semver from "semver";
-import {
-  isCompatibleExtension,
-} from "../extension-discovery/is-compatible-extension/is-compatible-extension";
+import { isCompatibleExtension } from "../extension-discovery/is-compatible-extension/is-compatible-extension";
 import type { LensExtensionManifest } from "../lens-extension";
+
+export function semverCoerce(from: string): semver.SemVer {
+  const parsed = semver.coerce(from);
+
+  assert(parsed, `"${from}" cannot be coerced to a SemVer value`);
+
+  return parsed;
+}
 
 describe("Extension/App versions compatibility check", () => {
   it("is compatible with exact version matching", () => {
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("5.5.0"),
+      appSemVer: semverCoerce("5.5.0"),
     })(getExtensionManifestMock({
       lensEngine: "5.5.0",
     }))).toBeTruthy();
@@ -20,7 +27,7 @@ describe("Extension/App versions compatibility check", () => {
 
   it("is compatible with upper %PATCH versions of base app", () => {
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("5.5.5"),
+      appSemVer: semverCoerce("5.5.5"),
     })(getExtensionManifestMock({
       lensEngine: "5.5.0",
     }))).toBeTruthy();
@@ -28,19 +35,19 @@ describe("Extension/App versions compatibility check", () => {
 
   it("is compatible with upper %MINOR version of base app", () => {
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("5.6.0"),
+      appSemVer: semverCoerce("5.6.0"),
     })(getExtensionManifestMock({
       lensEngine: "5.5.0",
     }))).toBeTruthy();
 
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("5.5.0-alpha.0"),
+      appSemVer: semverCoerce("5.5.0-alpha.0"),
     })(getExtensionManifestMock({
       lensEngine: "^5.5.0",
     }))).toBeTruthy();
 
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("5.5"),
+      appSemVer: semverCoerce("5.5"),
     })(getExtensionManifestMock({
       lensEngine: "^5.6.0",
     }))).toBeFalsy();
@@ -48,13 +55,13 @@ describe("Extension/App versions compatibility check", () => {
 
   it("is not compatible with upper %MAJOR version of base app", () => {
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("5.5.0"), // current lens-version
+      appSemVer: semverCoerce("5.5.0"), // current lens-version
     })(getExtensionManifestMock({
       lensEngine: "6.0.0",
     }))).toBeFalsy(); // extension with lens@6.0 is not compatible with app@5.5
 
     expect(isCompatibleExtension({
-      appSemVer: semver.coerce("6.0.0"), // current lens-version
+      appSemVer: semverCoerce("6.0.0"), // current lens-version
     })(getExtensionManifestMock({
       lensEngine: "5.5.0",
     }))).toBeFalsy(); // extension with lens@5.5 is not compatible with app@6.0
@@ -62,7 +69,7 @@ describe("Extension/App versions compatibility check", () => {
 
   it("is compatible with lensEngine with prerelease", () => {
     expect(isCompatibleExtension({
-      appSemVer: semver.parse("5.5.0-alpha.0"),
+      appSemVer: new semver.SemVer("5.5.0-alpha.0"),
     })(getExtensionManifestMock({
       lensEngine: "^5.4.0-alpha.0",
     }))).toBeTruthy();
@@ -71,7 +78,7 @@ describe("Extension/App versions compatibility check", () => {
   describe("supported formats for manifest.engines.lens", () => {
     it("short version format for engines.lens", () => {
       expect(isCompatibleExtension({
-        appSemVer: semver.coerce("5.5.0"),
+        appSemVer: semverCoerce("5.5.0"),
       })(getExtensionManifestMock({
         lensEngine: "5.5",
       }))).toBeTruthy();
@@ -79,19 +86,19 @@ describe("Extension/App versions compatibility check", () => {
 
     it("validates version and throws if incorrect format", () => {
       expect(() => isCompatibleExtension({
-        appSemVer: semver.coerce("1.0.0"),
+        appSemVer: semverCoerce("1.0.0"),
       })(getExtensionManifestMock({
         lensEngine: "1.0",
       }))).not.toThrow();
 
       expect(() => isCompatibleExtension({
-        appSemVer: semver.coerce("1.0.0"),
+        appSemVer: semverCoerce("1.0.0"),
       })(getExtensionManifestMock({
         lensEngine: "^1.0",
       }))).not.toThrow();
 
       expect(() => isCompatibleExtension({
-        appSemVer: semver.coerce("1.0.0"),
+        appSemVer: semverCoerce("1.0.0"),
       })(getExtensionManifestMock({
         lensEngine: ">=2.0",
       }))).toThrow(/Invalid format/i);
@@ -99,7 +106,7 @@ describe("Extension/App versions compatibility check", () => {
 
     it("'*' cannot be used for any version matching (at least in the prefix)", () => {
       expect(() => isCompatibleExtension({
-        appSemVer: semver.coerce("1.0.0"),
+        appSemVer: semverCoerce("1.0.0"),
       })(getExtensionManifestMock({
         lensEngine: "*",
       }))).toThrowError(/Invalid format/i);
