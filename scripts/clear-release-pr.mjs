@@ -5,7 +5,7 @@
  */
 
 // This script creates a release PR
-import { exec, spawn } from "child_process";
+import { exec } from "child_process";
 import commandLineArgs from "command-line-args";
 import fse from "fs-extra";
 import { basename } from "path";
@@ -190,35 +190,13 @@ await execP(`git push origin HEAD -u`);
 
 const prBody = prBodyLines.join("\n");
 const createPrArgs = [
+  "gh",
   "pr",
   "create",
   "--base", prBase,
   "--title", `"Release ${newVersion.format()}"`,
   "--label", "skip-changelog",
-  "--body-file", "-",
+  "--body", `"${prBody}"`,
 ];
 
-const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe", shell: true });
-let result = "";
-let errorResult = "";
-
-createPrProcess.stdout.on("data", (chunk) => result += chunk);
-createPrProcess.stderr.on("data", (chunk) => errorResult += chunk);
-
-createPrProcess.stdin.write(prBody);
-createPrProcess.stdin.end();
-
-await new Promise((resolve) => {
-  createPrProcess.on("close", () => {
-    createPrProcess.stdout.removeAllListeners();
-    resolve();
-  });
-});
-
-if (result) {
-  console.log(result);
-}
-
-if (errorResult) {
-  console.error(errorResult);
-}
+await execP(createPrArgs.join(" "), { shell: true });
