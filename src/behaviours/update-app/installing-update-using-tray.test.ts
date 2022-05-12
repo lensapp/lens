@@ -191,7 +191,7 @@ describe("installing update using tray", () => {
         });
 
         it("notifies the user that download is happening", () => {
-          expect(showNotificationMock).toHaveBeenCalledWith("Downloading update some-version...");
+          expect(showNotificationMock).toHaveBeenCalledWith("Download for version some-version started...");
         });
 
         it("user cannot check for updates again yet", () => {

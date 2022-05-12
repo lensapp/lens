@@ -44,6 +44,8 @@ import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.inject
 import { observable } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import themeStoreInjectable from "./themes/store.injectable";
+import notificationListenerInjectable from "./components/notifications/notification-listener.injectable";
+import { notificationChannel } from "../common/notification/notification-channel";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -119,6 +121,8 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
 
     di.override(getValueFromRegisteredChannelInjectable, () => () => Promise.resolve(undefined as never));
     di.override(registerIpcChannelListenerInjectable, () => () => undefined);
+
+    di.override(notificationListenerInjectable, () => ({ channel: notificationChannel, handle: () => {} }));
 
     overrideFsWithFakes(di);
 

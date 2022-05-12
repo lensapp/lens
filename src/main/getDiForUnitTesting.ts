@@ -80,6 +80,7 @@ import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-
 import publishIsConfiguredInjectable from "./update-app/publish-is-configured.injectable";
 import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 import checkForPlatformUpdatesInjectable from "./update-app/check-for-platform-updates.injectable";
+import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -220,6 +221,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(getElectronThemeInjectable, () => () => "dark");
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
   di.override(quitAndInstallUpdateInjectable, () => () => {});
+  di.override(setUpdateOnQuitInjectable, () => () => {});
 
   di.override(checkForPlatformUpdatesInjectable, () => () => {
     throw new Error("Tried to check for platform updates without explicit override.");
