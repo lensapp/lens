@@ -35,3 +35,8 @@
 .warningMedium {
   --active-color-hsl: 36deg 100% 50%;
 }
+
+:global(.theme-light) .warningMedium {
+  // Making medium color a bit darker for light theme
+  --active-color-hsl: 36deg 100% 46%;
+}
