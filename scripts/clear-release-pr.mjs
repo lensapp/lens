@@ -112,7 +112,6 @@ npmVersionArgs.push("--git-tag-version false");
 try {
   execSync(npmVersionArgs.join(" "));
 } catch (error) {
-  console.error(error);
   process.exit(1);
 }
 
