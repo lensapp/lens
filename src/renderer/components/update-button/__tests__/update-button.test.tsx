@@ -11,6 +11,10 @@ import "@testing-library/jest-dom/extend-expect";
 const update = jest.fn();
 
 describe("<UpdateButton/>", () => {
+  beforeEach(() => {
+    update.mockClear();
+  });
+
   it("should not render if no warning level prop passed", () => {
     const { queryByTestId } = render(<UpdateButton update={update} />);
 
