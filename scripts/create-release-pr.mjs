@@ -5,7 +5,7 @@
  */
 
 // This script creates a release PR
-import { execSync, exec, spawn } from "child_process";
+import { exec } from "child_process";
 import commandLineArgs from "command-line-args";
 import fse from "fs-extra";
 import { basename } from "path";
@@ -18,7 +18,7 @@ const {
   rcompare: semverRcompare,
   lte: semverLte,
 } = semver;
-const { readJsonSync } = fse;
+const { readJson } = fse;
 const execP = promisify(exec);
 
 const options = commandLineArgs([
@@ -81,15 +81,17 @@ if (basename(process.cwd()) === "scripts") {
   console.error(errorMessages.wrongCwd);
 }
 
-
-const currentVersion = new SemVer(readJsonSync("./package.json").version);
+const currentPackageJson = await readJson("./package.json");
+const currentVersion = new SemVer(currentPackageJson.version);
 const currentVersionMilestone = `${currentVersion.major}.${currentVersion.minor}.${currentVersion.patch}`;
 
 console.log(`current version: ${currentVersion.format()}`);
 console.log("fetching tags...");
-execSync("git fetch --tags --force");
+await execP("git fetch --tags --force");
 
-const actualTags = execSync("git tag --list", { encoding: "utf-8" }).split(/\r?\n/).map(line => line.trim());
+const prBase = (await execP("git branch --show-current", { encoding: "utf-8" })).stdout.trim();
+const tagListBody = (await execP("git tag --list", { encoding: "utf-8" })).stdout.trim();
+const actualTags = tagListBody.split(/\r?\n/).map(line => line.trim());
 const [previousReleasedVersion] = actualTags
   .map(semverValid)
   .filter(Boolean)
@@ -108,9 +110,14 @@ if (options.preid) {
 
 npmVersionArgs.push("--git-tag-version false");
 
-execSync(npmVersionArgs.join(" "), { stdio: "ignore" });
+try {
+  await execP(npmVersionArgs.join(" "));
+} catch (error) {
+  process.exit(1);
+}
 
-const newVersion = new SemVer(readJsonSync("./package.json").version);
+const newPackageJson = await readJson("./package.json");
+const newVersion = new SemVer(newPackageJson.version);
 
 const getMergedPrsArgs = [
   "gh",
@@ -123,7 +130,7 @@ const getMergedPrsArgs = [
 ];
 
 console.log("retreiving last 500 PRs to create release PR body...");
-const mergedPrs = JSON.parse(execSync(getMergedPrsArgs.join(" "), { encoding: "utf-8" }));
+const mergedPrs = JSON.parse((await execP(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout.trim());
 const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone && pr.milestone.title === currentVersionMilestone);
 const relaventPrsQuery = await Promise.all(
   milestoneRelevantPrs.map(async pr => ({
@@ -179,32 +186,20 @@ if (maintenencePrs.length > 0) {
   );
 }
 
+await execP(`git push origin HEAD -u`);
+
 const prBody = prBodyLines.join("\n");
-const prBase = newVersion.patch === 0
-  ? "master"
-  : `release/v${newVersion.major}.${newVersion.minor}`;
 const createPrArgs = [
+  "gh",
   "pr",
   "create",
   "--base", prBase,
-  "--title", `release ${newVersion.format()}`,
+  "--title", `"Release ${newVersion.format()}"`,
   "--label", "skip-changelog",
-  "--body-file", "-",
+  "--milestone", currentVersionMilestone,
+  "--body", `"${prBody}"`,
 ];
 
-const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" });
-let result = "";
+const { stdout } =  await execP(createPrArgs.join(" "), { stdio: "", shell: true });
 
-createPrProcess.stdout.on("data", (chunk) => result += chunk);
-
-createPrProcess.stdin.write(prBody);
-createPrProcess.stdin.end();
-
-await new Promise((resolve) => {
-  createPrProcess.on("close", () => {
-    createPrProcess.stdout.removeAllListeners();
-    resolve();
-  });
-});
-
-console.log(result);
+console.log(`PR created: ${stdout.trim()}`);
