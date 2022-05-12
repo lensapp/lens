@@ -115,7 +115,7 @@ const NonInjectedTopBar = observer(({ items, navigateToCatalog, catalogRouteIsAc
           onClick={goForward}
           disabled={!nextEnabled.get()}
         />
-        <UpdateButton update={noop} warningLevel="light" />
+        <UpdateButton update={noop} />
       </div>
       <div className={styles.items}>
         {renderRegisteredItems(items.get())}
