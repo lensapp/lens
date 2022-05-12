@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UpdateButton/> should render if warning level prop passed 1`] = `
+<button
+  class="updateButton"
+  data-testid="update-button"
+  id="update_button_2"
+>
+  Update
+  <i
+    class="Icon material focusable"
+  >
+    <span
+      class="icon"
+      data-icon-name="update"
+    >
+      update
+    </span>
+  </i>
+</button>
+`;
