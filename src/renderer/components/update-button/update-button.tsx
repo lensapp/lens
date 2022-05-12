@@ -62,7 +62,7 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
         close={toggle}
         open={noop}
       >
-        <MenuItem onClick={update} data-testid="update-lens-menu-item">
+        <MenuItem icon="update" onClick={update} data-testid="update-lens-menu-item">
           Relaunch to Update Lens
         </MenuItem>
       </Menu>
