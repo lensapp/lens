@@ -192,7 +192,7 @@ const createPrArgs = [
   "--title", `release ${newVersion.format()}`,
   "--label", "skip-changelog",
   "--body-file", "-",
-  "--recover",
+  "--recover", "./create-pr-body-recovery",
 ];
 
 const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" });
