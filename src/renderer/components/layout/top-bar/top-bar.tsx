@@ -11,7 +11,7 @@ import { Icon } from "../../icon";
 import { observable } from "mobx";
 import { ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
-import { cssNames } from "../../../utils";
+import { cssNames, noop } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
@@ -23,6 +23,7 @@ import type { NavigateToCatalog } from "../../../../common/front-end-routing/rou
 import navigateToCatalogInjectable from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import catalogRouteInjectable from "../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
+import { UpdateButton } from "../../update-button";
 
 interface Dependencies {
   navigateToCatalog: NavigateToCatalog;
@@ -114,6 +115,7 @@ const NonInjectedTopBar = observer(({ items, navigateToCatalog, catalogRouteIsAc
           onClick={goForward}
           disabled={!nextEnabled.get()}
         />
+        <UpdateButton update={noop} warningLevel="light" />
       </div>
       <div className={styles.items}>
         {renderRegisteredItems(items.get())}
