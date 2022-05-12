@@ -89,8 +89,8 @@ console.log(`current version: ${currentVersion.format()}`);
 console.log("fetching tags...");
 await execP("git fetch --tags --force");
 
-const prBase = (await execP("git branch --show-current", { encoding: "utf-8" })).stdout;
-const tagListBody = (await execP("git tag --list", { encoding: "utf-8" })).stdout;
+const prBase = (await execP("git branch --show-current", { encoding: "utf-8" })).stdout.trim();
+const tagListBody = (await execP("git tag --list", { encoding: "utf-8" })).stdout.trim();
 const actualTags = tagListBody.split(/\r?\n/).map(line => line.trim());
 const [previousReleasedVersion] = actualTags
   .map(semverValid)
@@ -130,7 +130,7 @@ const getMergedPrsArgs = [
 ];
 
 console.log("retreiving last 500 PRs to create release PR body...");
-const mergedPrs = JSON.parse((await execP(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout);
+const mergedPrs = JSON.parse((await execP(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout.trim());
 const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone && pr.milestone.title === currentVersionMilestone);
 const relaventPrsQuery = await Promise.all(
   milestoneRelevantPrs.map(async pr => ({
