@@ -28,6 +28,10 @@
   }
 }
 
-.warningHigh {}
+.warningHigh {
+  --active-color-hsl: 0deg 76% 62%;
+}
 
-.warningMedium {}
+.warningMedium {
+  --active-color-hsl: 36deg 100% 50%;
+}
