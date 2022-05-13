@@ -8,6 +8,7 @@
 import "./select.scss";
 
 import React from "react";
+import type { ObservableSet } from "mobx";
 import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import ReactSelect, { components, createFilter } from "react-select";
@@ -79,6 +80,28 @@ const defaultFilter = createFilter({
 
 interface Dependencies {
   themeStore: ThemeStore;
+}
+
+export function onMultiSelectFor<Value, Option extends SelectOption<Value>, Group extends GroupBase<Option> = GroupBase<Option>>(collection: Set<Value> | ObservableSet<Value>): SelectProps<Value, Option, true, Group>["onChange"] {
+  return action((newValue, meta) => {
+    switch (meta.action) {
+      case "clear":
+        collection.clear();
+        break;
+      case "deselect-option":
+      case "remove-value":
+      case "pop-value":
+        if (meta.option) {
+          collection.delete(meta.option.value);
+        }
+        break;
+      case "select-option":
+        if (meta.option) {
+          collection.add(meta.option.value);
+        }
+        break;
+    }
+  });
 }
 
 @observer

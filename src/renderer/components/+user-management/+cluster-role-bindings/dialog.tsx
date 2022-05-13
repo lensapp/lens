@@ -18,7 +18,7 @@ import { Icon } from "../../icon";
 import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
-import { Select } from "../../select";
+import { onMultiSelectFor, Select } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
 import { clusterRoleBindingStore } from "./legacy-store";
 import { clusterRoleStore } from "../+cluster-roles/legacy-store";
@@ -244,25 +244,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
               {` ${option.label}`}
             </>
           )}
-          onChange={(selected, meta) => {
-            switch (meta.action) {
-              case "clear":
-                this.selectedAccounts.clear();
-                break;
-              case "deselect-option":
-              case "remove-value":
-              case "pop-value":
-                if (meta.option) {
-                  this.selectedAccounts.delete(meta.option.value);
-                }
-                break;
-              case "select-option":
-                if (meta.option) {
-                  this.selectedAccounts.add(meta.option.value);
-                }
-                break;
-            }
-          }}
+          onChange={onMultiSelectFor(this.selectedAccounts)}
           maxMenuHeight={200}
         />
       </>

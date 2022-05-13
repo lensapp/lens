@@ -5,7 +5,7 @@
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Select } from "../../select/select";
+import { onMultiSelectFor, Select } from "../../select/select";
 import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
@@ -70,10 +70,7 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
           closeMenuOnSelect={false}
           controlShouldRenderValue={false}
           options={metricResourceTypeOptions}
-          onChange={(options) => {
-            this.hiddenMetrics.replace(options.map(opt => opt.value));
-            this.save();
-          }}
+          onChange={onMultiSelectFor(this.hiddenMetrics)}
           formatOptionLabel={(option) => (
             <div className="flex gaps align-center">
               <span>{option.value}</span>
