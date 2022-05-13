@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { createStoresAndApisInjectionToken } from "../create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { ComponentStatusApi } from "./component-status.api";
 
 const componentStatusApiInjectable = getInjectable({
   id: "component-status-api",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectionToken), "componentStatusApi is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "componentStatusApi is only available in certain environments");
 
     return new ComponentStatusApi();
   },

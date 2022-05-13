@@ -11,7 +11,7 @@ import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
 import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
-import createStoresAndApisInjectable from "../../../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../../../stores-apis-can-be-created.injectable";
 import ipcRendererInjectable from "../../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("ClusterRoleBindingDialog tests", () => {
@@ -20,7 +20,7 @@ describe("ClusterRoleBindingDialog tests", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(ipcRendererInjectable, () => ({
       on: jest.fn(),
       invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge

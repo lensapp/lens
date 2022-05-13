@@ -8,7 +8,7 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { StatefulSetStore } from "../+workloads-statefulsets/store";
 import statefulSetStoreInjectable from "../+workloads-statefulsets/store.injectable";
 import { StatefulSet, Pod } from "../../../common/k8s-api/endpoints";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningStatefulSet = new StatefulSet({
@@ -136,7 +136,7 @@ describe("StatefulSet Store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     statefulSetStore = di.inject(statefulSetStoreInjectable);
 

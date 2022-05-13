@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { createStoresAndApisInjectionToken } from "../common/k8s-api/create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../common/k8s-api/stores-apis-can-be-created.token";
 import { getClusterIdFromHost } from "./utils";
 
-const createStoresAndApisInjectable = getInjectable({
+const storesAndApisCanBeCreatedInjectable = getInjectable({
   id: "create-stores-and-apis",
   instantiate: () => Boolean(getClusterIdFromHost(location.host)),
-  injectionToken: createStoresAndApisInjectionToken,
+  injectionToken: storesAndApisCanBeCreatedInjectionToken,
 });
 
-export default createStoresAndApisInjectable;
+export default storesAndApisCanBeCreatedInjectable;

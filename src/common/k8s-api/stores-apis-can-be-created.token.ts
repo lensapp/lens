@@ -5,6 +5,6 @@
 
 import { getInjectionToken } from "@ogre-tools/injectable";
 
-export const createStoresAndApisInjectionToken = getInjectionToken<boolean>({
-  id: "create-stores-and-apis-token",
+export const storesAndApisCanBeCreatedInjectionToken = getInjectionToken<boolean>({
+  id: "stores-and-apis-can-be-created-token",
 });

@@ -7,13 +7,13 @@ import assert from "assert";
 import getPodsByOwnerIdInjectable from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import jobApiInjectable from "../../../common/k8s-api/endpoints/job.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { JobStore } from "./store";
 
 const jobStoreInjectable = getInjectable({
   id: "job-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "jobStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "jobStore is only available in certain environments");
 
     const api = di.inject(jobApiInjectable);
 

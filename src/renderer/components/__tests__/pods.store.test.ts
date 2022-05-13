@@ -6,7 +6,7 @@
 import { Pod } from "../../../common/k8s-api/endpoints";
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningPod = new Pod({
@@ -119,7 +119,7 @@ describe("Pod Store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     podStore = di.inject(podStoreInjectable);
   });

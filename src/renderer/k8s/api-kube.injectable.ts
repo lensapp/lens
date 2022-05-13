@@ -7,13 +7,13 @@ import assert from "assert";
 import { onApiError } from "../api/on-api-error";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import { apiKubeInjectionToken } from "../../common/k8s-api/api-kube";
-import { createStoresAndApisInjectionToken } from "../../common/k8s-api/create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/stores-apis-can-be-created.token";
 import { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectionToken), "apiKube is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "apiKube is only available in certain environments");
 
     const apiKube = new KubeJsonApi({
       serverAddress: `http://127.0.0.1:${window.location.port}`,

@@ -18,7 +18,7 @@ import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import type { OpenDeleteClusterDialog } from "../open.injectable";
 import openDeleteClusterDialogInjectable from "../open.injectable";
-import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import createKubeconfigManagerInjectable from "../../../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
 import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
@@ -104,7 +104,7 @@ describe("<DeleteClusterDialog />", () => {
     mainDi.override(createKubeconfigManagerInjectable, () => () => undefined);
     mockFs();
 
-    rendererDi.override(createStoresAndApisInjectable, () => true);
+    rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
     rendererDi.override(ipcRendererInjectable, () => ({
       on: jest.fn(),
       invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge

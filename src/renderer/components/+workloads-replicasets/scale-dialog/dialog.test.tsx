@@ -12,7 +12,7 @@ import type { ReplicaSetApi } from "../../../../common/k8s-api/endpoints/replica
 import { ReplicaSet } from "../../../../common/k8s-api/endpoints/replica-set.api";
 import type { OpenReplicaSetScaleDialog } from "./open.injectable";
 import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";
-import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { type DiRender, renderFor } from "../../test-utils/renderFor";
 import openReplicaSetScaleDialogInjectable from "./open.injectable";
@@ -83,7 +83,7 @@ describe("<ReplicaSetScaleDialog />", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     render = renderFor(di);
     replicaSetApi = di.inject(replicaSetApiInjectable);

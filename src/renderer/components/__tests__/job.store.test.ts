@@ -8,7 +8,7 @@ import type { JobStore } from "../+workloads-jobs/store";
 import jobStoreInjectable from "../+workloads-jobs/store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import { Job, Pod } from "../../../common/k8s-api/endpoints";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningJob = new Job({
@@ -173,7 +173,7 @@ describe("Job Store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     jobStore = di.inject(jobStoreInjectable);
 

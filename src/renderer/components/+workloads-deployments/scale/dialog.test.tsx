@@ -14,7 +14,7 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deployment.api.injectable";
 import type { OpenDeploymentScaleDialog } from "./open.injectable";
 import openDeploymentScaleDialogInjectable from "./open.injectable";
-import createStoresAndApisInjectable from "../../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 
@@ -90,7 +90,7 @@ describe("<DeploymentScaleDialog />", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     deploymentApi = di.inject(deploymentApiInjectable);
     openDeploymentScaleDialog = di.inject(openDeploymentScaleDialogInjectable);

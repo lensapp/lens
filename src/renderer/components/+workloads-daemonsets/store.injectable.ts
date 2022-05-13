@@ -6,14 +6,14 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import getPodsByOwnerIdInjectable from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import daemonSetApiInjectable from "../../../common/k8s-api/endpoints/daemon-set.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import { DaemonSetStore } from "./store";
 
 const daemonSetStoreInjectable = getInjectable({
   id: "daemon-set-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "daemonSetStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "daemonSetStore is only available in certain environments");
 
     const api = di.inject(daemonSetApiInjectable);
 

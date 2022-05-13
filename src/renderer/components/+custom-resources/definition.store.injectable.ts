@@ -7,13 +7,13 @@ import assert from "assert";
 import autoRegistrationEmitterInjectable from "../../../common/k8s-api/api-manager/auto-registration-emitter.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import customResourceDefinitionApiInjectable from "../../../common/k8s-api/endpoints/custom-resource-definition.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { CustomResourceDefinitionStore } from "./definition.store";
 
 const customResourceDefinitionStoreInjectable = getInjectable({
   id: "custom-resource-definition-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "customResourceDefinitionStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "customResourceDefinitionStore is only available in certain environments");
 
     const api = di.inject(customResourceDefinitionApiInjectable);
 

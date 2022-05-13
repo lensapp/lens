@@ -5,7 +5,7 @@
 import type { CronJobStore } from "../+workloads-cronjobs/store";
 import cronJobStoreInjectable from "../+workloads-cronjobs/store.injectable";
 import { CronJob } from "../../../common/k8s-api/endpoints";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const scheduledCronJob = new CronJob({
@@ -119,7 +119,7 @@ describe("CronJob Store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     cronJobStore = di.inject(cronJobStoreInjectable);
   });

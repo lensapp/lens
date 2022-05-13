@@ -4,7 +4,7 @@
  */
 
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
-import createStoresAndApisInjectable from "../../../renderer/create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
 import type { DeploymentApi } from "../endpoints/deployment.api";
 import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
@@ -17,7 +17,7 @@ describe("DeploymentApi", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
     kubeJsonApi = {
       getResponse: jest.fn(),
       get: jest.fn(),

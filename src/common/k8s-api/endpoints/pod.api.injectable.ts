@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { createStoresAndApisInjectionToken } from "../create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PodApi } from "./pod.api";
 
 const podApiInjectable = getInjectable({
   id: "pod-api",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectionToken), "podApi is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "podApi is only available in certain environments");
 
     return new PodApi();
   },

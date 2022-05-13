@@ -6,13 +6,13 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import limitRangeApiInjectable from "../../../common/k8s-api/endpoints/limit-range.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { LimitRangeStore } from "./store";
 
 const limitRangeStoreInjectable = getInjectable({
   id: "limit-range-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "limitRangeStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "limitRangeStore is only available in certain environments");
 
     const api = di.inject(limitRangeApiInjectable);
 

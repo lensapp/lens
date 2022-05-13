@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { createStoresAndApisInjectionToken } from "../create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { ConfigMapApi } from "./config-map.api";
 
 const configMapApiInjectable = getInjectable({
   id: "config-map-api",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectionToken), "configMapApi is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "configMapApi is only available in certain environments");
 
     return new ConfigMapApi();
   },

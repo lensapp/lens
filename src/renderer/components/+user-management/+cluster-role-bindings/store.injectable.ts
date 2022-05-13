@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { createStoresAndApisInjectionToken } from "../../../../common/k8s-api/create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../../../../common/k8s-api/stores-apis-can-be-created.token";
 import clusterRoleBindingApiInjectable from "../../../../common/k8s-api/endpoints/cluster-role-binding.api.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { ClusterRoleBindingStore } from "./store";
@@ -12,7 +12,7 @@ import { ClusterRoleBindingStore } from "./store";
 const clusterRoleBindingStoreInjectable = getInjectable({
   id: "cluster-role-binding-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectionToken), "clusterRoleBindingStore is only accessible in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "clusterRoleBindingStore is only accessible in certain environments");
 
     const api = di.inject(clusterRoleBindingApiInjectable);
 

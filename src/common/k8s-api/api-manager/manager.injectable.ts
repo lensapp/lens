@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import { createStoresAndApisInjectionToken } from "../create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import type { KubeObjectStore } from "../kube-object.store";
 import { ApiManager } from "./api-manager";
 
@@ -16,7 +16,7 @@ const apiManagerInjectable = getInjectable({
   instantiate: (di) => {
     const apiManager = new ApiManager();
 
-    if (di.inject(createStoresAndApisInjectionToken)) {
+    if (di.inject(storesAndApisCanBeCreatedInjectionToken)) {
       const stores = di.injectMany(kubeObjectStoreInjectionToken);
 
       for (const store of stores) {

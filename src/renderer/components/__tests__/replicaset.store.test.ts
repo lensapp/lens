@@ -8,7 +8,7 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import replicasetsStoreInjectable from "../+workloads-replicasets/store.injectable";
 import type { ReplicaSetStore } from "../+workloads-replicasets/store";
 import { ReplicaSet, Pod } from "../../../common/k8s-api/endpoints";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const runningReplicaSet = new ReplicaSet({
@@ -136,7 +136,7 @@ describe("ReplicaSet Store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     const podStore = di.inject(podStoreInjectable);
 

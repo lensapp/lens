@@ -6,13 +6,13 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import configMapApiInjectable from "../../../common/k8s-api/endpoints/config-map.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { ConfigMapStore } from "./store";
 
 const configMapStoreInjectable = getInjectable({
   id: "config-map-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "configMapStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "configMapStore is only available in certain environments");
 
     const api = di.inject(configMapApiInjectable);
 

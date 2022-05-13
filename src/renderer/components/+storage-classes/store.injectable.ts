@@ -7,13 +7,13 @@ import assert from "assert";
 import getPersistentVolumesByStorageClassInjectable from "../+storage-volumes/get-persisten-volumes-by-storage-class.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { StorageClassStore } from "./store";
 
 const storageClassStoreInjectable = getInjectable({
   id: "storage-class-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "storageClassStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "storageClassStore is only available in certain environments");
 
     const api = di.inject(storageClassApiInjectable);
 

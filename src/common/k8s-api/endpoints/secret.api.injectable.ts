@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { createStoresAndApisInjectionToken } from "../create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { SecretApi } from "./secret.api";
 
 const secretApiInjectable = getInjectable({
   id: "secret-api",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectionToken), "secretApi is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "secretApi is only available in certain environments");
 
     return new SecretApi();
   },

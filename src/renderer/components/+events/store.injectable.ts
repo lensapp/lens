@@ -7,13 +7,13 @@ import assert from "assert";
 import getPodByIdInjectable from "../+workloads-pods/get-pod-by-id.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import kubeEventApiInjectable from "../../../common/k8s-api/endpoints/events.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { EventStore } from "./store";
 
 const eventStoreInjectable = getInjectable({
   id: "event-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "eventStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "eventStore is only available in certain environments");
 
     const api = di.inject(kubeEventApiInjectable);
 

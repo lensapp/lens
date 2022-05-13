@@ -7,13 +7,13 @@ import assert from "assert";
 import getJobsByOwnerInjectable from "../+workloads-jobs/get-jobs-by-owner.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import cronJobApiInjectable from "../../../common/k8s-api/endpoints/cron-job.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { CronJobStore } from "./store";
 
 const cronJobStoreInjectable = getInjectable({
   id: "cron-job-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "cronJobStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "cronJobStore is only available in certain environments");
 
     const api = di.inject(cronJobApiInjectable);
 

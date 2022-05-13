@@ -5,12 +5,12 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import namespaceStoreInjectable from "../../renderer/components/+namespaces/store.injectable";
-import { createStoresAndApisInjectionToken } from "./create-stores-apis.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "./stores-apis-can-be-created.token";
 
 const selectedFilterNamespacesInjectable = getInjectable({
   id: "selected-filter-namespaces",
   instantiate: (di) => {
-    if (!di.inject(createStoresAndApisInjectionToken)) {
+    if (!di.inject(storesAndApisCanBeCreatedInjectionToken)) {
       // Dummy value so that this works in all environments
       return computed(() => []);
     }

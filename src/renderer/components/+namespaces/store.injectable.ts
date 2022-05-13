@@ -8,13 +8,13 @@ import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manag
 import createStorageInjectable from "../../utils/create-storage/create-storage.injectable";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import assert from "assert";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 
 const namespaceStoreInjectable = getInjectable({
   id: "namespace-store",
 
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "namespaceStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "namespaceStore is only available in certain environments");
 
     const createStorage = di.inject(createStorageInjectable);
     const api = di.inject(namespaceApiInjectable);

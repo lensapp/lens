@@ -9,7 +9,7 @@ import deploymentStoreInjectable from "../+workloads-deployments/store.injectabl
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { PodSpec } from "../../../common/k8s-api/endpoints";
 import { Deployment, Pod } from "../../../common/k8s-api/endpoints";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const spec: PodSpec = {
@@ -208,7 +208,7 @@ describe("Deployment Store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     const podStore = di.inject(podStoreInjectable);
 

@@ -33,7 +33,7 @@ import navigateToPreferencesInjectable from "../../../common/front-end-routing/r
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
 import type { MenuItem, MenuItemConstructorOptions } from "electron";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -81,7 +81,7 @@ export const getApplicationBuilder = () => {
   } as unknown as ClusterStore;
 
   rendererDi.override(clusterStoreInjectable, () => clusterStoreStub);
-  rendererDi.override(createStoresAndApisInjectable, () => true);
+  rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
   mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
 
   const beforeSetupsCallbacks: Callback[] = [];

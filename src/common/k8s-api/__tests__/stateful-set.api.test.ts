@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import createStoresAndApisInjectable from "../../../renderer/create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
 import type { StatefulSetApi } from "../endpoints";
@@ -17,7 +17,7 @@ describe("StatefulSetApi", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(createStoresAndApisInjectable, () => true);
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
     kubeJsonApi = {
       getResponse: jest.fn(),
       get: jest.fn(),

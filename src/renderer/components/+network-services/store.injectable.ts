@@ -6,13 +6,13 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import serviceApiInjectable from "../../../common/k8s-api/endpoints/service.api.injectable";
-import createStoresAndApisInjectable from "../../create-stores-apis.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { ServiceStore } from "./store";
 
 const serviceStoreInjectable = getInjectable({
   id: "service-store",
   instantiate: (di) => {
-    assert(di.inject(createStoresAndApisInjectable), "serviceStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectable), "serviceStore is only available in certain environments");
 
     const api = di.inject(serviceApiInjectable);
 
