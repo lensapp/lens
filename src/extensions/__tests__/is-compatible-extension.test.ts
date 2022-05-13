@@ -102,6 +102,12 @@ describe("Extension/App versions compatibility check", () => {
       })(getExtensionManifestMock({
         lensEngine: ">=2.0",
       }))).toThrow(/Invalid format/i);
+
+      expect(() => isCompatibleExtension({
+        appSemVer: semverCoerce("1.0.0"),
+      })(getExtensionManifestMock({
+        lensEngine: ">=2.0 <3.0",
+      }))).toThrow(/Invalid format/i);
     });
 
     it("'*' cannot be used for any version matching (at least in the prefix)", () => {
