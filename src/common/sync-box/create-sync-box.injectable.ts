@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import syncBoxChannelInjectable from "./sync-box-channel.injectable";
-import { sendToAgnosticChannelInjectionToken } from "./channel/send-to-agnostic-channel-injection-token";
+import { sendToAgnosticChannelInjectionToken } from "../channel/send-to-agnostic-channel-injection-token";
 import syncBoxStateInjectable from "./sync-box-state.injectable";
 
 const createSyncBoxInjectable = getInjectable({

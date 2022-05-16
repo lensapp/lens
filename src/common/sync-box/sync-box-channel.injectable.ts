@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { channelInjectionToken } from "./channel/channel-injection-token";
+import { channelInjectionToken } from "../channel/channel-injection-token";
 
 const syncBoxChannelInjectable = getInjectable({
   id: "sync-box-channel",

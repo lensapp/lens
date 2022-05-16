@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { sendToAgnosticChannelInjectionToken } from "../../common/sync-box/channel/send-to-agnostic-channel-injection-token";
+import { sendToAgnosticChannelInjectionToken } from "../../common/channel/send-to-agnostic-channel-injection-token";
 import sendToMainInjectable from "./send-to-main.injectable";
 
 const sendToAgnosticChannelInjectable = getInjectable({

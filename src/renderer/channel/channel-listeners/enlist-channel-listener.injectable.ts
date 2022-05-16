@@ -5,7 +5,7 @@
 import ipcRendererInjectable from "../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcRendererEvent } from "electron";
-import { enlistChannelListenerInjectionToken } from "../../../common/sync-box/channel/enlist-channel-listener-injection-token";
+import { enlistChannelListenerInjectionToken } from "../../../common/channel/enlist-channel-listener-injection-token";
 
 const enlistChannelListenerInjectable = getInjectable({
   id: "enlist-channel-listener-for-renderer",
