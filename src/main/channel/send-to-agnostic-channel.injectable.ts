@@ -6,7 +6,7 @@ import { lensWindowInjectionToken } from "../start-main-application/lens-window/
 import { pipeline } from "@ogre-tools/fp";
 import { getInjectable } from "@ogre-tools/injectable";
 import { filter } from "lodash/fp";
-import { sendToAgnosticChannelInjectionToken } from "../../common/sync-box/channel/send-to-agnostic-channel-injection-token";
+import { sendToAgnosticChannelInjectionToken } from "../../common/channel/send-to-agnostic-channel-injection-token";
 
 const sendToAgnosticChannelInjectable = getInjectable({
   id: "send-to-agnostic-channel-main",

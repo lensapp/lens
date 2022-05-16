@@ -4,12 +4,12 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
-import { lensWindowInjectionToken } from "../../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import { lensWindowInjectionToken } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import { sendToAgnosticChannelInjectionToken } from "./send-to-agnostic-channel-injection-token";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { channelListenerInjectionToken } from "./channel-listener-injection-token";
-import createLensWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
+import createLensWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { Channel } from "./channel-injection-token";
 import { channelInjectionToken } from "./channel-injection-token";
 

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import syncBoxChannelInjectable from "./sync-box-channel.injectable";
-import { channelListenerInjectionToken } from "./channel/channel-listener-injection-token";
+import { channelListenerInjectionToken } from "../channel/channel-listener-injection-token";
 import syncBoxStateInjectable from "./sync-box-state.injectable";
 
 const syncBoxChannelListenerInjectable = getInjectable({

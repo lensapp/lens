@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getStartableStoppable } from "../../utils/get-startable-stoppable";
+import { getStartableStoppable } from "../utils/get-startable-stoppable";
 import { channelListenerInjectionToken } from "./channel-listener-injection-token";
 import { enlistChannelListenerInjectionToken } from "./enlist-channel-listener-injection-token";
 
