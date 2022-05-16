@@ -59,6 +59,9 @@ import getConfigurationFileModelInjectable from "../../common/get-configuration-
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -105,6 +108,9 @@ describe("kube auth proxy tests", () => {
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 
     di.override(spawnInjectable, () => mockSpawn);
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);

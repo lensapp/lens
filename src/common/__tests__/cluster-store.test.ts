@@ -22,6 +22,9 @@ import getConfigurationFileModelInjectable from "../get-configuration-file-model
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
 import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
+import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../../main/kubectl/normalized-arch.injectable";
+import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -84,6 +87,9 @@ describe("cluster-store", () => {
 
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     mainDi.override(directoryForTempInjectable, () => "some-temp-directory");
+    mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
+    mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    mainDi.override(normalizedPlatformInjectable, () => "darwin");
 
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
