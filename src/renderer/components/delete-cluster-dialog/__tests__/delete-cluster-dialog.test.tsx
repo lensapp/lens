@@ -21,6 +21,10 @@ import type { DeleteClusterDialogModel } from "../delete-cluster-dialog-model/de
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
+import createKubeconfigManagerInjectable from "../../../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
+import normalizedPlatformInjectable from "../../../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../../../../main/kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../../../../main/kubectl/normalized-arch.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -102,7 +106,10 @@ describe("<DeleteClusterDialog />", () => {
     render = renderFor(rendererDi);
 
     mainDi.override(createContextHandlerInjectable, () => () => undefined);
-
+    mainDi.override(createKubeconfigManagerInjectable, () => () => undefined);
+    mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
+    mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    mainDi.override(normalizedPlatformInjectable, () => "darwin");
     mockFs();
 
     rendererDi.override(hotbarStoreInjectable, () => ({}));

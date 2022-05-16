@@ -4,9 +4,8 @@
  */
 
 import glob from "glob";
-import { kebabCase, memoize, noop } from "lodash/fp";
+import { kebabCase, memoize } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
-
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getElectronAppPathInjectable from "./app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./app-paths/set-electron-app-path/set-electron-app-path.injectable";
@@ -15,7 +14,6 @@ import registerChannelInjectable from "./app-paths/register-channel/register-cha
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
-import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
@@ -35,6 +33,9 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import { noop } from "../common/utils";
+import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
+
 
 export const getDiForUnitTesting = (
   { doGeneralOverrides } = { doGeneralOverrides: false },
@@ -82,8 +83,7 @@ export const getDiForUnitTesting = (
     di.override(setElectronAppPathInjectable, () => () => undefined);
     di.override(appNameInjectable, () => "some-electron-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
-    di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
-
+    di.override(baseBundeledBinariesDirectoryInjectable, () => "some-bin-directory");
     di.override(spawnInjectable, () => () => {
       return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
