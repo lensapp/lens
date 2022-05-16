@@ -5,14 +5,14 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import createSyncBoxInjectable from "../../sync-box/create-sync-box.injectable";
 
-const discoveredVersionStateInjectable = getInjectable({
-  id: "discovered-version-state",
+const updateIsBeingDownloadedInjectable = getInjectable({
+  id: "update-is-being-downloaded",
 
   instantiate: (di) => {
     const createSyncBox = di.inject(createSyncBoxInjectable);
 
-    return createSyncBox("discovered-version-state");
+    return createSyncBox("update-is-being-downloaded");
   },
 });
 
-export default discoveredVersionStateInjectable;
+export default updateIsBeingDownloadedInjectable;

@@ -6,16 +6,16 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-item-injection-token";
 import quitAndInstallUpdateInjectable from "../electron-app/features/quit-and-install-update.injectable";
-import discoveredVersionStateInjectable from "../../common/application-update/discovered-version/discovered-version-state.injectable";
-import downloadingUpdateStateInjectable from "../../common/application-update/downloading-update/downloading-update-state.injectable";
+import discoveredUpdateVersionInjectable from "../../common/application-update/discovered-update-version/discovered-update-version.injectable";
+import updateIsBeingDownloadedInjectable from "../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
 
 const installApplicationUpdateTrayItemInjectable = getInjectable({
   id: "install-update-tray-item",
 
   instantiate: (di) => {
     const quitAndInstallUpdate = di.inject(quitAndInstallUpdateInjectable);
-    const discoveredVersionState = di.inject(discoveredVersionStateInjectable);
-    const downloadingUpdateState = di.inject(downloadingUpdateStateInjectable);
+    const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
+    const downloadingUpdateState = di.inject(updateIsBeingDownloadedInjectable);
 
     return {
       id: "install-update",
