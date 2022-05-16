@@ -14,7 +14,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { UpdateChannel, UpdateChannelId } from "../../main/update-app/update-channels";
 import { updateChannels } from "../../main/update-app/update-channels";
-import downloadPlatformUpdateInjectable from "../../main/update-app/download-platform-update.injectable";
+import downloadPlatformUpdateInjectable from "../../main/update-app/download-platform-update/download-platform-update.injectable";
 import selectedUpdateChannelInjectable from "../../main/update-app/selected-update-channel.injectable";
 import progressOfUpdateDownloadInjectable from "../../main/update-app/progress-of-update-download.injectable";
 import type { IComputedValue } from "mobx";
