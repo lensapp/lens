@@ -47,6 +47,7 @@ import historyInjectable from "../../navigation/history.injectable";
 import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
+import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -362,6 +363,10 @@ export const getApplicationBuilder = () => {
       const startMainApplication = mainDi.inject(startMainApplicationInjectable);
 
       await startMainApplication();
+
+      const applicationWindow = mainDi.inject(applicationWindowInjectable);
+
+      await applicationWindow.show();
 
       const startFrame = rendererDi.inject(startFrameInjectable);
 
