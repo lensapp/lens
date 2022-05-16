@@ -14,7 +14,7 @@ const startUrlInjectable = getInjectable({
   id: "start-url",
 
   instantiate: (di) => {
-    const isAllowedResource = (resourceName: any) => di.inject(isAllowedResourceInjectable, resourceName);
+    const isAllowedResource = (resourceName: string) => di.inject(isAllowedResourceInjectable, resourceName);
 
     const clusterOverviewRoute = di.inject(clusterOverviewRouteInjectable);
     const workloadOverviewRoute = di.inject(workloadsOverviewRouteInjectable);

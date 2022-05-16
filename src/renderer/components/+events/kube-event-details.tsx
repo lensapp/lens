@@ -9,22 +9,23 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { Disposer } from "../../utils";
 import { cssNames } from "../../utils";
 import { LocaleDate } from "../locale-date";
-import { eventStore } from "./event.store";
+import type { EventStore } from "./store";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import eventStoreInjectable from "./store.injectable";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
+  eventStore: EventStore;
 }
 
 @observer
@@ -32,13 +33,13 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
-        eventStore,
+        this.props.eventStore,
       ]),
     ]);
   }
 
   render() {
-    const { object } = this.props;
+    const { object, eventStore } = this.props;
 
     if (!object) {
       return null;
@@ -73,9 +74,11 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
                 <DrawerItem name="Sub-object">
                   {event.involvedObject.fieldPath}
                 </DrawerItem>
-                <DrawerItem name="Last seen">
-                  <LocaleDate date={event.lastTimestamp} />
-                </DrawerItem>
+                {event.lastTimestamp && (
+                  <DrawerItem name="Last seen">
+                    <LocaleDate date={event.lastTimestamp} />
+                  </DrawerItem>
+                )}
               </div>
             ))}
           </div>
@@ -85,16 +88,13 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
   }
 }
 
-export const KubeEventDetails = withInjectables<Dependencies, KubeEventDetailsProps>(
-  NonInjectedKubeEventDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const KubeEventDetails = withInjectables<Dependencies, KubeEventDetailsProps>(NonInjectedKubeEventDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+  }),
+});
 
 
 

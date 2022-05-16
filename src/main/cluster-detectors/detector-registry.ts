@@ -9,10 +9,12 @@ import { Singleton } from "../../common/utils";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
 
-export class DetectorRegistry extends Singleton {
-  registry = observable.array<typeof BaseClusterDetector>([], { deep: false });
+export type DetectorConstructor = new (cluster: Cluster) => BaseClusterDetector;
 
-  add(detectorClass: typeof BaseClusterDetector): this {
+export class DetectorRegistry extends Singleton {
+  registry = observable.array<DetectorConstructor>([], { deep: false });
+
+  add(detectorClass: DetectorConstructor): this {
     this.registry.push(detectorClass);
 
     return this;

@@ -10,7 +10,10 @@ import { getAppVersion } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
 import { SemVer } from "semver";
-import { defaultTheme, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
+import { defaultThemeId, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
+import type { ObservableMap } from "mobx";
+import { observable } from "mobx";
+import { readonly } from "../utils/readonly";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -28,8 +31,11 @@ export const defaultTerminalConfig: TerminalConfig = {
   fontFamily: defaultTerminalFontFamily,
 };
 
-export type EditorConfiguration = Pick<editor.IStandaloneEditorConstructionOptions,
-  "minimap" | "tabSize" | "lineNumbers" | "fontSize" | "fontFamily">;
+interface BaseEditorConfiguration extends Required<Pick<editor.IStandaloneEditorConstructionOptions, "minimap" | "tabSize" | "fontSize" | "fontFamily">> {
+  lineNumbers: NonNullable<Exclude<editor.IStandaloneEditorConstructionOptions["lineNumbers"], Function>>;
+}
+
+export type EditorConfiguration = Required<BaseEditorConfiguration>;
 
 export const defaultEditorConfig: EditorConfiguration = {
   tabSize: 2,
@@ -41,7 +47,12 @@ export const defaultEditorConfig: EditorConfiguration = {
     side: "right",
   },
 };
-interface PreferenceDescription<T, R = T> {
+
+export type StoreType<P> = P extends PreferenceDescription<unknown, infer Store>
+  ? Store
+  : never;
+
+export interface PreferenceDescription<T, R = T> {
   fromStore(val: T | undefined): R;
   toStore(val: R): T | undefined;
 }
@@ -66,10 +77,10 @@ const shell: PreferenceDescription<string | undefined> = {
 
 const colorTheme: PreferenceDescription<string> = {
   fromStore(val) {
-    return val || defaultTheme;
+    return val || defaultThemeId;
   },
   toStore(val) {
-    if (!val || val === defaultTheme) {
+    if (!val || val === defaultThemeId) {
       return undefined;
     }
 
@@ -77,7 +88,7 @@ const colorTheme: PreferenceDescription<string> = {
   },
 };
 
-const terminalTheme: PreferenceDescription<string | undefined> = {
+const terminalTheme: PreferenceDescription<string> = {
   fromStore(val) {
     return val || "";
   },
@@ -86,12 +97,14 @@ const terminalTheme: PreferenceDescription<string | undefined> = {
   },
 };
 
+export const defaultLocaleTimezone = "UTC";
+
 const localeTimezone: PreferenceDescription<string> = {
   fromStore(val) {
-    return val || moment.tz.guess(true) || "UTC";
+    return val || moment.tz.guess(true) || defaultLocaleTimezone;
   },
   toStore(val) {
-    if (!val || val === moment.tz.guess(true) || val === "UTC") {
+    if (!val || val === moment.tz.guess(true) || val === defaultLocaleTimezone) {
       return undefined;
     }
 
@@ -132,12 +145,14 @@ export interface DownloadMirror {
 }
 
 export const defaultPackageMirror = "default";
+const defaultDownloadMirrorData: DownloadMirror = {
+  url: "https://storage.googleapis.com/kubernetes-release/release",
+  label: "Default (Google)",
+  platforms: new Set(["darwin", "win32", "linux"]),
+};
+
 export const packageMirrors = new Map<string, DownloadMirror>([
-  [defaultPackageMirror, {
-    url: "https://storage.googleapis.com/kubernetes-release/release",
-    label: "Default (Google)",
-    platforms: new Set(["darwin", "win32", "linux"]),
-  }],
+  [defaultPackageMirror, defaultDownloadMirrorData],
   ["china", {
     url: "https://mirror.azure.cn/kubernetes/kubectl",
     label: "China (Azure)",
@@ -147,7 +162,9 @@ export const packageMirrors = new Map<string, DownloadMirror>([
 
 const downloadMirror: PreferenceDescription<string> = {
   fromStore(val) {
-    return packageMirrors.has(val) ? val : defaultPackageMirror;
+    return !val || !packageMirrors.has(val)
+      ? defaultPackageMirror
+      : val;
   },
   toStore(val) {
     if (!val || val === defaultPackageMirror) {
@@ -244,9 +261,9 @@ const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string
 
 const mainKubeFolder = path.join(os.homedir(), ".kube");
 
-const syncKubeconfigEntries: PreferenceDescription<KubeconfigSyncEntry[], Map<string, KubeconfigSyncValue>> = {
+const syncKubeconfigEntries: PreferenceDescription<KubeconfigSyncEntry[], ObservableMap<string, KubeconfigSyncValue>> = {
   fromStore(val) {
-    return new Map(
+    return observable.map(
       val
         ?.map(({ filePath, ...rest }) => [filePath, rest])
       ?? [[mainKubeFolder, {}]],
@@ -261,7 +278,7 @@ const syncKubeconfigEntries: PreferenceDescription<KubeconfigSyncEntry[], Map<st
   },
 };
 
-const editorConfiguration: PreferenceDescription<EditorConfiguration, EditorConfiguration> = {
+const editorConfiguration: PreferenceDescription<Partial<EditorConfiguration> | undefined, EditorConfiguration> = {
   fromStore(val) {
     return merge(defaultEditorConfig, val);
   },
@@ -279,7 +296,11 @@ const terminalConfig: PreferenceDescription<TerminalConfig, TerminalConfig> = {
   },
 };
 
-const updateChannels = new Map([
+export interface UpdateChannelInfo {
+  label: string;
+}
+
+export const updateChannels = readonly(new Map<string, UpdateChannelInfo>([
   ["latest", {
     label: "Stable",
   }],
@@ -289,12 +310,14 @@ const updateChannels = new Map([
   ["alpha", {
     label: "Alpha",
   }],
-]);
-const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
+]));
+export const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
 
 const updateChannel: PreferenceDescription<string> = {
   fromStore(val) {
-    return updateChannels.has(val) ? val : defaultUpdateChannel;
+    return !val || !updateChannels.has(val)
+      ? defaultUpdateChannel
+      : val;
   },
   toStore(val) {
     if (!updateChannels.has(val) || val === defaultUpdateChannel) {
@@ -305,29 +328,27 @@ const updateChannel: PreferenceDescription<string> = {
   },
 };
 
-export enum ExtensionRegistryLocation {
-  DEFAULT = "default",
-  NPMRC = "npmrc",
-  CUSTOM = "custom",
-}
+export type ExtensionRegistryLocation = "default" | "npmrc" | "custom";
+
 export type ExtensionRegistry = {
-  location: ExtensionRegistryLocation.DEFAULT | ExtensionRegistryLocation.NPMRC;
+  location: "default" | "npmrc";
   customUrl?: undefined;
 } | {
-  location: ExtensionRegistryLocation.CUSTOM;
+  location: "custom";
   customUrl: string;
 };
 
+export const defaultExtensionRegistryUrlLocation = "default";
 export const defaultExtensionRegistryUrl = "https://registry.npmjs.org";
 
 const extensionRegistryUrl: PreferenceDescription<ExtensionRegistry> = {
   fromStore(val) {
     return val ?? {
-      location: ExtensionRegistryLocation.DEFAULT,
+      location: defaultExtensionRegistryUrlLocation,
     };
   },
   toStore(val) {
-    if (val.location === ExtensionRegistryLocation.DEFAULT) {
+    if (val.location === defaultExtensionRegistryUrlLocation) {
       return undefined;
     }
 
@@ -366,8 +387,4 @@ export const DESCRIPTORS = {
   terminalConfig,
   updateChannel,
   extensionRegistryUrl,
-};
-
-export const CONSTANTS = {
-  updateChannels,
 };

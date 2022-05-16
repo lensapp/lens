@@ -6,38 +6,28 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { InputValidator } from "../input";
 import { Input } from "../input";
-import type { Hotbar } from "../../../common/hotbar-types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
+import type { HotbarStore } from "../../../common/hotbars/store";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
-  hotbarStore: {
-    hotbars: Hotbar[];
-    getById: (id: string) => Hotbar | undefined;
-    setHotbarName: (id: string, name: string) => void;
-    getDisplayLabel: (hotbar: Hotbar) => string;
-  };
-  uniqueHotbarName: InputValidator;
+  hotbarStore: HotbarStore;
+  uniqueHotbarName: InputValidator<false>;
 }
 
-const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarStore, uniqueHotbarName }: Dependencies) => {
+const NonInjectedHotbarRenameCommand = observer(({
+  closeCommandOverlay,
+  hotbarStore,
+  uniqueHotbarName,
+}: Dependencies) => {
   const [hotbarId, setHotbarId] = useState("");
   const [hotbarName, setHotbarName] = useState("");
 
-  const options = hotbarStore.hotbars.map(hotbar => ({
-    value: hotbar.id,
-    label: hotbarStore.getDisplayLabel(hotbar),
-  }));
-
-  const onSelect = (id: string) => {
-    setHotbarId(id);
-    setHotbarName(hotbarStore.getById(id).name);
-  };
   const onSubmit = (name: string) => {
     if (!name.trim()) {
       return;
@@ -72,10 +62,21 @@ const NonInjectedHotbarRenameCommand = observer(({ closeCommandOverlay, hotbarSt
     <Select
       id="rename-hotbar-input"
       menuPortalTarget={null}
-      onChange={(v) => onSelect(v.value)}
+      onChange={(option) => {
+        if (option) {
+          setHotbarId(option.value.id);
+          setHotbarName(option.value.name);
+        }
+      }}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}
       menuIsOpen={true}
-      options={options}
+      options={(
+        hotbarStore.hotbars
+          .map(hotbar => ({
+            value: hotbar,
+            label: hotbarStore.getDisplayLabel(hotbar),
+          }))
+      )}
       autoFocus={true}
       escapeClearsValue={false}
       placeholder="Rename hotbar"

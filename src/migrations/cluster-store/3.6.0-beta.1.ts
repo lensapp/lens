@@ -21,7 +21,7 @@ import getCustomKubeConfigDirectoryInjectable
   from "../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 
 interface Pre360ClusterModel extends ClusterModel {
-  kubeConfig: string;
+  kubeConfig?: string;
 }
 
 export default {
@@ -46,6 +46,10 @@ export default {
        */
       try {
         const absPath = getCustomKubeConfigDirectory(clusterModel.id);
+
+        if (!clusterModel.kubeConfig) {
+          continue;
+        }
 
         // take the embedded kubeconfig and dump it into a file
         fse.writeFileSync(absPath, clusterModel.kubeConfig, { encoding: "utf-8", mode: 0o600 });
@@ -75,7 +79,7 @@ export default {
         }
       } catch (error) {
         migrationLog(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
-        delete clusterModel.preferences.icon;
+        delete clusterModel.preferences?.icon;
       }
 
       migratedClusters.push(clusterModel);

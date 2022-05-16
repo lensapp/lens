@@ -37,7 +37,13 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
     ]
       .filter(button => button.onClick)
       .map(({ icon, ...props }) => (
-        <Button key={icon} big round primary {...props}>
+        <Button
+          key={icon}
+          big
+          round
+          primary
+          {...props}
+        >
           <Icon material={icon} />
         </Button>
       ));

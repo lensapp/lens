@@ -6,7 +6,7 @@
 import styles from "./helm-charts.module.scss";
 
 import React from "react";
-import { computed, observable, makeObservable } from "mobx";
+import { observable, makeObservable, computed } from "mobx";
 
 import type { HelmRepo } from "../../../main/helm/helm-repo-manager";
 import { HelmRepoManager } from "../../../main/helm/helm-repo-manager";
@@ -21,6 +21,7 @@ import { RemovableItem } from "./removable-item";
 import { Notice } from "../+extensions/notice";
 import { Spinner } from "../spinner";
 import { noop } from "../../utils";
+import type { SingleValue } from "react-select";
 
 @observer
 export class HelmCharts extends React.Component {
@@ -34,10 +35,11 @@ export class HelmCharts extends React.Component {
     makeObservable(this);
   }
 
-  @computed get options(): SelectOption<HelmRepo>[] {
+  @computed get repoOptions() {
     return this.repos.map(repo => ({
-      label: repo.name,
       value: repo,
+      label: repo.name,
+      isSelected: this.addedRepos.has(repo.name),
     }));
   }
 
@@ -79,7 +81,14 @@ export class HelmCharts extends React.Component {
       await HelmRepoManager.getInstance().addRepo(repo);
       this.addedRepos.set(repo.name, repo);
     } catch (err) {
-      Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
+      Notifications.error((
+        <>
+          {"Adding helm branch "}
+          <b>{repo.name}</b>
+          {" has failed: "}
+          {String(err)}
+        </>
+      ));
     }
   }
 
@@ -89,31 +98,45 @@ export class HelmCharts extends React.Component {
       this.addedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(
-        <>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</>,
+        <>
+          {"Removing helm branch "}
+          <b>{repo.name}</b>
+          {" has failed: "}
+          {String(err)}
+        </>,
       );
     }
   }
 
-  onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>): Promise<void> => {
-    const isAdded = this.addedRepos.has(repo.name);
-
-    if (isAdded) {
-      return void Notifications.ok(<>Helm branch <b>{repo.name}</b> already in use</>);
+  onRepoSelect = async (option: SingleValue<{ value: HelmRepo }>): Promise<void> => {
+    if (!option) {
+      return;
     }
 
-    await this.addRepo(repo);
+    if (this.addedRepos.has(option.value.name)) {
+      return void Notifications.ok((
+        <>
+          {"Helm repo "}
+          <b>{option.value.name}</b>
+          {" already in use."}
+        </>
+      ));
+    }
+
+    await this.addRepo(option.value);
   };
 
-  formatOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
-    const isAdded = this.addedRepos.has(repo.name);
-
-    return (
-      <div className="flex gaps">
-        <span>{repo.name}</span>
-        {isAdded && <Icon small material="check" className="box right"/>}
-      </div>
-    );
-  };
+  formatOptionLabel = ({ value, isSelected }: SelectOption<HelmRepo>) => (
+    <div className="flex gaps">
+      <span>{value.name}</span>
+      {isSelected && (
+        <Icon
+          small
+          material="check"
+          className="box right" />
+      )}
+    </div>
+  );
 
   renderRepositories() {
     const repos = Array.from(this.addedRepos);
@@ -132,7 +155,11 @@ export class HelmCharts extends React.Component {
 
     return repos.map(([name, repo]) => {
       return (
-        <RemovableItem key={name} onRemove={() => this.removeRepo(repo)} className="mt-3">
+        <RemovableItem
+          key={name}
+          onRemove={() => this.removeRepo(repo)}
+          className="mt-3"
+        >
           <div>
             <div data-testid="repository-name" className={styles.repoName}>{name}</div>
             <div className={styles.repoUrl}>{repo.url}</div>
@@ -151,8 +178,9 @@ export class HelmCharts extends React.Component {
             placeholder="Repositories"
             isLoading={this.loadingAvailableRepos}
             isDisabled={this.loadingAvailableRepos}
-            options={this.options}
+            options={this.repoOptions}
             onChange={this.onRepoSelect}
+            value={this.repos}
             formatOptionLabel={this.formatOptionLabel}
             controlShouldRenderValue={false}
             className="box grow"

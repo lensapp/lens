@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { LensApiResult } from "./router";
+import type { LensApiResult } from "./route";
 
 export interface LensApiResultContentType {
   resultMapper: (result: LensApiResult<any>) => ({

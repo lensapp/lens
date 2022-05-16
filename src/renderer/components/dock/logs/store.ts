@@ -4,11 +4,13 @@
  */
 
 import type { IComputedValue } from "mobx";
-import { observable, when } from "mobx";
-import type { IPodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
+import { observable } from "mobx";
+import type { PodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
+import { waitUntilDefined } from "../../../../common/utils/wait";
 import type { IntervalFn } from "../../../utils";
 import { getOrInsertWith, interval } from "../../../utils";
 import type { TabId } from "../dock/store";
+import type { CallForLogs } from "./call-for-logs.injectable";
 import type { LogTabData } from "./tab-store";
 
 type PodLogLine = string;
@@ -16,7 +18,7 @@ type PodLogLine = string;
 const logLinesToLoad = 500;
 
 interface Dependencies {
-  callForLogs: ({ namespace, name }: { namespace: string; name: string }, query: IPodLogsQuery) => Promise<string>;
+  callForLogs: CallForLogs;
 }
 
 export class LogStore {
@@ -45,7 +47,7 @@ export class LogStore {
    * Also, it handles loading errors, rewriting whole logs with error
    * messages
    */
-  public async load(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): Promise<void> {
+  public async load(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>): Promise<void> {
     try {
       const logs = await this.loadLogs(computedPod, logTabData, {
         tailLines: this.getLogLines(tabId) + logLinesToLoad,
@@ -58,7 +60,7 @@ export class LogStore {
     }
   }
 
-  private getRefresher(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): IntervalFn {
+  private getRefresher(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>): IntervalFn {
     return getOrInsertWith(this.refreshers, tabId, () => (
       interval(10, () => {
         if (this.podLogs.has(tabId)) {
@@ -82,13 +84,14 @@ export class LogStore {
    * starting from last line received.
    * @param tabId
    */
-  public async loadMore(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): Promise<void> {
-    if (!this.podLogs.get(tabId).length) {
+  public async loadMore(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>): Promise<void> {
+    const oldLogs = this.podLogs.get(tabId);
+
+    if (!oldLogs?.length) {
       return;
     }
 
     try {
-      const oldLogs = this.podLogs.get(tabId);
       const logs = await this.loadLogs(computedPod, logTabData, {
         sinceTime: this.getLastSinceTime(tabId),
       });
@@ -107,11 +110,23 @@ export class LogStore {
    * @param params request parameters described in IPodLogsQuery interface
    * @returns A fetch request promise
    */
-  private async loadLogs(computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>, params: Partial<IPodLogsQuery>): Promise<string[]> {
-    await when(() => Boolean(computedPod.get() && logTabData.get()), { timeout: 5_000 });
+  private async loadLogs(computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>, params: Partial<PodLogsQuery>): Promise<string[]> {
+    const {
+      pod,
+      tabData: {
+        selectedContainer,
+        showPrevious,
+      },
+    } = await waitUntilDefined(() => {
+      const pod = computedPod.get();
+      const tabData = logTabData.get();
 
-    const { selectedContainer, showPrevious } = logTabData.get();
-    const pod = computedPod.get();
+      if (pod && tabData) {
+        return { pod, tabData };
+      }
+
+      return undefined;
+    });
     const namespace = pod.getNs();
     const name = pod.getName();
 
@@ -177,9 +192,9 @@ export class LogStore {
    * @param tabId
    */
   getLastSinceTime(tabId: TabId): string {
-    const logs = this.podLogs.get(tabId);
+    const logs = this.podLogs.get(tabId) ?? [];
     const timestamps = this.getTimestamps(logs[logs.length - 1]);
-    const stamp = new Date(timestamps ? timestamps[0] : null);
+    const stamp = timestamps[0] ? new Date(timestamps[0]) : new Date();
 
     stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
 
@@ -197,7 +212,7 @@ export class LogStore {
   }
 
   getTimestamps(logs: string): RegExpMatchArray {
-    return logs.match(/^\d+\S+/gm);
+    return logs.match(/^\d+\S+/gm) ?? [];
   }
 
   removeTimestamps(logs: string): string {
@@ -208,7 +223,7 @@ export class LogStore {
     this.podLogs.delete(tabId);
   }
 
-  reload(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData>): Promise<void> {
+  reload(tabId: TabId, computedPod: IComputedValue<Pod | undefined>, logTabData: IComputedValue<LogTabData | undefined>): Promise<void> {
     this.clearLogs(tabId);
 
     return this.load(tabId, computedPod, logTabData);

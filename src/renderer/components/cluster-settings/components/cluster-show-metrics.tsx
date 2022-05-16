@@ -53,7 +53,11 @@ export class ShowMetricsSetting extends React.Component<ShowMetricsSettingProps>
         const tooltipId = `${name}`;
 
         return (
-          <Badge key={name} flat expandable={false}>
+          <Badge
+            key={name}
+            flat
+            expandable={false}
+          >
             <span id={tooltipId}>{name}</span>
             <Icon
               smallest

@@ -6,10 +6,11 @@
 import React from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
+import type { SingleOrMany } from "../../utils";
 
 export interface RenderDelayProps {
   placeholder?: React.ReactNode;
-  children: unknown;
+  children: SingleOrMany<React.ReactNode>;
 }
 
 @observer

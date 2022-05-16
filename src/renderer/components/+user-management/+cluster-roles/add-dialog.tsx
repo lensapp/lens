@@ -15,7 +15,7 @@ import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { clusterRolesStore } from "./store";
+import { clusterRoleStore } from "./legacy-store";
 
 export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }
@@ -45,13 +45,13 @@ export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogPr
 
   createRole = async () => {
     try {
-      const role = await clusterRolesStore.create({ name: this.clusterRoleName });
+      const role = await clusterRoleStore.create({ name: this.clusterRoleName });
 
       showDetails(role.selfLink);
       this.reset();
       AddClusterRoleDialog.close();
-    } catch (err) {
-      Notifications.error(err.toString());
+    } catch (error) {
+      Notifications.checkedError(error, "Unknown error occured while creating the role");
     }
   };
 
@@ -76,7 +76,8 @@ export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogPr
           >
             <SubTitle title="ClusterRole Name" />
             <Input
-              required autoFocus
+              required
+              autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"
               value={this.clusterRoleName}

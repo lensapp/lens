@@ -10,7 +10,7 @@ import { Input } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
 import { stat } from "fs/promises";
 import { Notifications } from "../../notifications";
-import { resolveTilde } from "../../../utils";
+import { isErrnoException, resolveTilde } from "../../../utils";
 import { Icon } from "../../icon";
 import { PathPicker } from "../../path-picker";
 import { isWindows } from "../../../../common/vars";
@@ -61,7 +61,7 @@ async function validateDirectory(dir: string): Promise<string | false> {
 
     return `the provided path is ${getUserReadableFileType(stats)} and not a directory.`;
   } catch (error) {
-    switch (error?.code) {
+    switch (isErrnoException(error) ? error.code : undefined) {
       case "ENOENT":
         return `the provided path does not exist.`;
       case "EACCES":
@@ -92,7 +92,7 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTe
   useEffect(() => {
     (async () => {
       const kubeconfig = await cluster.getKubeconfig();
-      const { namespace } = kubeconfig.getContextObject(cluster.contextName);
+      const { namespace } = kubeconfig.getContextObject(cluster.contextName) ?? {};
 
       if (namespace) {
         setPlaceholderDefaultNamespace(namespace);
@@ -115,7 +115,10 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTe
         Notifications.error(
           <>
             <b>Terminal Working Directory</b>
-            <p>Your changes were not saved because {errorMessage}</p>
+            <p>
+              {"Your changes were not saved because "}
+              {errorMessage}
+            </p>
           </>,
         );
       } else {
@@ -155,7 +158,7 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTe
           onChange={setDirectory}
           onBlur={() => commitDirectory(directory)}
           placeholder={isWindows ? "$USERPROFILE" : "$HOME"}
-          iconRight={
+          iconRight={(
             <>
               {
                 directory && (
@@ -172,10 +175,11 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTe
                 onClick={openFilePicker}
               />
             </>
-          }
+          )}
         />
         <small className="hint">
-          An explicit start path where the terminal will be launched,{" "}
+          An explicit start path where the terminal will be launched,
+          {" "}
           this is used as the current working directory (cwd) for the shell process.
         </small>
       </section>

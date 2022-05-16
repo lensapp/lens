@@ -53,7 +53,11 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
     }
 
     return Object.entries(matchLabels)
-      .map(([key, value]) => <li key={key}>{key}: {value}</li>);
+      .map(([key, value]) => (
+        <li key={key}>
+          {`${key}: ${value}`}
+        </li>
+      ));
   }
 
   renderMatchExpressions(matchExpressions: LabelMatchExpression[] | undefined) {
@@ -65,12 +69,16 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
       switch (expr.operator) {
         case "DoesNotExist":
         case "Exists":
-          return <li key={expr.key}>{expr.key} ({expr.operator})</li>;
+          return (
+            <li key={expr.key}>
+              {`${expr.key} (${expr.operator})`}
+            </li>
+          );
         case "In":
         case "NotIn":
           return (
             <li key={expr.key}>
-              {expr.key}({expr.operator})
+              {`${expr.key} (${expr.operator})`}
               <ul>
                 {expr.values.map((value, index) => <li key={index}>{value}</li>)}
               </ul>
@@ -133,7 +141,10 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
         <ul>
           {ports.map(({ protocol = "TCP", port = "<all>", endPort }, index) => (
             <li key={index}>
-              {protocol}:{port}{typeof endPort === "number" && `:${endPort}`}
+              {protocol}
+              :
+              {port}
+              {typeof endPort === "number" && `:${endPort}`}
             </li>
           ))}
         </ul>

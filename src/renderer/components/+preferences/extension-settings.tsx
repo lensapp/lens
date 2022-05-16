@@ -22,7 +22,11 @@ export function ExtensionSettings({ setting, size, ...props }: ExtensionSettings
 
   return (
     <React.Fragment>
-      <section id={id} className={cssNames(size)} {...props}>
+      <section
+        id={id}
+        className={cssNames(size)}
+        {...props}
+      >
         <SubTitle title={title} />
         <Input />
         <div className="hint">

@@ -9,50 +9,61 @@
 import type ChartJS from "chart.js";
 import type { Moment } from "moment";
 import moment from "moment";
-import get from "lodash/get";
+import type { PluginServiceRegistrationOptions } from "chart.js";
 
 const defaultOptions = {
   stripeColor: "#ffffff08",
+  interval: 10,
 };
 
-export const ZebraStripes = {
-  updated: null as Moment,  // timestamp which all stripe movements based on
-  options: {},
+export interface ZebraStripesOptions {
+  stripeColor: string;
+  interval: number;
+}
 
-  getOptions(chart: ChartJS) {
-    return get(chart, "options.plugins.ZebraStripes");
-  },
+export class ZebraStripesPlugin implements PluginServiceRegistrationOptions {
+  updated: Moment | null = null;
+  options: ZebraStripesOptions;
+
+  constructor(options?: Partial<ZebraStripesOptions>) {
+    this.options = Object.assign({}, defaultOptions, options);
+  }
+
+  getOptions(chart: ChartJS): ZebraStripesOptions | undefined {
+    return chart.options.plugins?.ZebraStripes;
+  }
 
   getLastUpdate(chart: ChartJS) {
-    const data = chart.data.datasets[0].data[0] as ChartJS.ChartPoint;
+    const data = chart.data.datasets?.[0]?.data?.[0] as ChartJS.ChartPoint;
 
     return moment.unix(parseInt(data.x as string));
-  },
+  }
 
   getStripesElem(chart: ChartJS) {
-    return chart.canvas.parentElement.querySelector(".zebra-cover");
-  },
+    return chart.canvas?.parentElement?.querySelector<HTMLElement>(".zebra-cover");
+  }
 
   removeStripesElem(chart: ChartJS) {
     const elem = this.getStripesElem(chart);
 
-    if (!elem) return;
-    chart.canvas.parentElement.removeChild(elem);
-  },
+    if (elem) {
+      chart.canvas?.parentElement?.removeChild(elem);
+    }
+  }
 
   updateOptions(chart: ChartJS) {
     this.options = {
       ...defaultOptions,
       ...this.getOptions(chart),
     };
-  },
+  }
 
   getStripeMinutes() {
     return this.options.interval < 10 ? 0 : 10;
-  },
+  }
 
   renderStripes(chart: ChartJS) {
-    if (!chart.data.datasets.length) return;
+    if (!chart.data.datasets?.length) return;
     const { interval, stripeColor } = this.options;
     const { top, left, bottom, right } = chart.chartArea;
     const step = (right - left) / interval;
@@ -71,26 +82,26 @@ export const ZebraStripes = {
       repeating-linear-gradient(to right, ${stripeColor} 0px, ${stripeColor} ${stripeWidth}px,
       transparent ${stripeWidth}px, transparent ${stripeWidth * 2 + step}px)
      `;
-    chart.canvas.parentElement.appendChild(cover);
-  },
+    chart.canvas?.parentElement?.appendChild(cover);
+  }
 
   afterInit(chart: ChartJS) {
-    if (!chart.data.datasets.length) return;
+    if (!chart.data.datasets?.length) return;
     this.updateOptions(chart);
     this.updated = this.getLastUpdate(chart);
-  },
+  }
 
   afterUpdate(chart: ChartJS) {
     this.updateOptions(chart);
     this.renderStripes(chart);
-  },
+  }
 
   resize(chart: ChartJS) {
     this.removeStripesElem(chart);
-  },
+  }
 
   afterDatasetUpdate(chart: ChartJS): void {
-    if (!this.updated) this.updated = this.getLastUpdate(chart);
+    this.updated ??= this.getLastUpdate(chart);
 
     const { interval } = this.options;
     const { left, right } = chart.chartArea;
@@ -105,7 +116,9 @@ export const ZebraStripes = {
       // Move position regarding to difference in time
       const cover = this.getStripesElem(chart);
 
-      cover.style.backgroundPositionX = `${-step * minutes}px`;
+      if (cover) {
+        cover.style.backgroundPositionX = `${-step * minutes}px`;
+      }
     }
-  },
-};
+  }
+}

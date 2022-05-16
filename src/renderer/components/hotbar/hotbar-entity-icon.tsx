@@ -5,45 +5,48 @@
 
 import styles from "./hotbar-entity-icon.module.scss";
 
-import type { HTMLAttributes } from "react";
 import React from "react";
-import { makeObservable, observable } from "mobx";
+import type { IComputedValue } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 
-import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
-import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { navigate } from "../../navigation";
+import type { CatalogCategoryRegistry, CatalogEntity, CatalogEntityContextMenu } from "../../../common/catalog";
 import type { IClassName } from "../../utils";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";
+import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
+import { navigate } from "../../navigation";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
+import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
+import activeEntityInjectable from "../../api/catalog/entity/active.injectable";
 
-export interface HotbarEntityIconProps extends HTMLAttributes<HTMLElement> {
+export interface HotbarEntityIconProps {
   entity: CatalogEntity;
   index: number;
   errorClass?: IClassName;
   add: (item: CatalogEntity, index: number) => void;
   remove: (uid: string) => void;
   size?: number;
+  onClick?: () => void;
+  className?: string;
+}
+
+interface Dependencies {
+  visitEntityContextMenu: VisitEntityContextMenu;
+  catalogCategoryRegistry: CatalogCategoryRegistry;
+  activeEntity: IComputedValue<CatalogEntity | undefined>;
 }
 
 @observer
-export class HotbarEntityIcon extends React.Component<HotbarEntityIconProps> {
-  @observable private contextMenu: CatalogEntityContextMenuContext = {
-    menuItems: [],
-    navigate: (url: string) => navigate(url),
-  };
-
-  constructor(props: HotbarEntityIconProps) {
-    super(props);
-    makeObservable(this);
-  }
+class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps & Dependencies> {
+  private readonly menuItems = observable.array<CatalogEntityContextMenu>();
 
   get kindIcon() {
     const className = styles.badge;
-    const category = catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
+    const category = this.props.catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
 
     if (!category) {
       return <Icon material="bug_report" className={className} />;
@@ -51,9 +54,9 @@ export class HotbarEntityIcon extends React.Component<HotbarEntityIconProps> {
 
     if (Icon.isSvg(category.metadata.icon)) {
       return <Icon svg={category.metadata.icon} className={className} />;
-    } else {
-      return <Icon material={category.metadata.icon} className={className} />;
     }
+
+    return <Icon material={category.metadata.icon} className={className} />;
   }
 
   get ledIcon() {
@@ -61,34 +64,34 @@ export class HotbarEntityIcon extends React.Component<HotbarEntityIconProps> {
       return null;
     }
 
-    const className = cssNames(styles.led, { [styles.online]: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED }); // TODO: make it more generic
-
-    return <div className={className} />;
+    return (
+      <div
+        className={cssNames(styles.led, {
+          // TODO: make it more generic
+          [styles.online]: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED,
+        })}
+      />
+    );
   }
 
   isActive(item: CatalogEntity) {
-    return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
+    return this.props.activeEntity.get()?.metadata?.uid == item.getId();
   }
 
-  async onMenuOpen() {
-    const menuItems: CatalogEntityContextMenu[] = [];
-
-    menuItems.unshift({
+  onMenuOpen() {
+    this.menuItems.replace([{
       title: "Remove from Hotbar",
       onClick: () => this.props.remove(this.props.entity.getId()),
+    }]);
+
+    this.props.visitEntityContextMenu(this.props.entity, {
+      menuItems: this.menuItems,
+      navigate,
     });
-
-    this.contextMenu.menuItems = menuItems;
-
-    await this.props.entity.onContextMenuOpen(this.contextMenu);
   }
 
   render() {
-    if (!this.contextMenu) {
-      return null;
-    }
-
-    const { entity, errorClass, add, remove, index, children, ...elemProps } = this.props;
+    const { entity, className, onClick } = this.props;
 
     return (
       <HotbarIcon
@@ -98,13 +101,17 @@ export class HotbarEntityIcon extends React.Component<HotbarEntityIconProps> {
         src={entity.spec.icon?.src}
         material={entity.spec.icon?.material}
         background={entity.spec.icon?.background}
-        className={this.props.className}
+        className={className}
         active={this.isActive(entity)}
         onMenuOpen={() => this.onMenuOpen()}
         disabled={!entity}
-        menuItems={this.contextMenu.menuItems}
-        tooltip={`${entity.getName()} (${entity.metadata.source})`}
-        {...elemProps}
+        menuItems={this.menuItems}
+        tooltip={(
+          entity.metadata.source
+            ? `${entity.getName()} (${entity.metadata.source})`
+            : entity.getName()
+        )}
+        onClick={onClick}
       >
         { this.ledIcon }
         { this.kindIcon }
@@ -112,3 +119,12 @@ export class HotbarEntityIcon extends React.Component<HotbarEntityIconProps> {
     );
   }
 }
+
+export const HotbarEntityIcon = withInjectables<Dependencies, HotbarEntityIconProps>(NonInjectedHotbarEntityIcon, {
+  getProps: (di, props) => ({
+    ...props,
+    catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
+    visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
+    activeEntity: di.inject(activeEntityInjectable),
+  }),
+});

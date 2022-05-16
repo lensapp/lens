@@ -24,9 +24,9 @@ describe("Lens command palette", () => {
     utils.itIf(!isWindows)("opens command dialog from menu", async () => {
       await app.evaluate(async ({ app }) => {
         await app.applicationMenu
-          .getMenuItemById("view")
-          .submenu.getMenuItemById("command-palette")
-          .click();
+          ?.getMenuItemById("view")
+          ?.submenu?.getMenuItemById("command-palette")
+          ?.click();
       });
       await window.waitForSelector(".Select__option >> text=Hotbar: Switch");
     }, 10*60*1000);

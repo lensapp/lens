@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { autoBind } from "../../../renderer/utils";
+import type { KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface ServicePort {
   name?: string;
@@ -31,47 +30,40 @@ export class ServicePort {
   }
 }
 
-export interface Service {
-  spec: {
-    type: string;
-    clusterIP: string;
-    clusterIPs?: string[];
-    externalTrafficPolicy?: string;
-    externalName?: string;
-    loadBalancerIP?: string;
-    loadBalancerSourceRanges?: string[];
-    sessionAffinity: string;
-    selector: { [key: string]: string };
-    ports: ServicePort[];
-    healthCheckNodePort?: number;
-    externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
-    topologyKeys?: string[];
-    ipFamilies?: string[];
-    ipFamilyPolicy?: string;
-    allocateLoadBalancerNodePorts?: boolean;
-    loadBalancerClass?: string;
-    internalTrafficPolicy?: string;
-  };
+export interface ServiceSpec {
+  type: string;
+  clusterIP: string;
+  clusterIPs?: string[];
+  externalTrafficPolicy?: string;
+  externalName?: string;
+  loadBalancerIP?: string;
+  loadBalancerSourceRanges?: string[];
+  sessionAffinity: string;
+  selector: Partial<Record<string, string>>;
+  ports: ServicePort[];
+  healthCheckNodePort?: number;
+  externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
+  topologyKeys?: string[];
+  ipFamilies?: string[];
+  ipFamilyPolicy?: string;
+  allocateLoadBalancerNodePorts?: boolean;
+  loadBalancerClass?: string;
+  internalTrafficPolicy?: string;
+}
 
-  status: {
-    loadBalancer?: {
-      ingress?: {
-        ip?: string;
-        hostname?: string;
-      }[];
-    };
+export interface ServiceStatus {
+  loadBalancer?: {
+    ingress?: {
+      ip?: string;
+      hostname?: string;
+    }[];
   };
 }
 
-export class Service extends KubeObject {
-  static kind = "Service";
-  static namespaced = true;
-  static apiBase = "/api/v1/services";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
+export class Service extends KubeObject<ServiceStatus, ServiceSpec, KubeObjectScope.Namespace> {
+  static readonly kind = "Service";
+  static readonly namespaced = true;
+  static readonly apiBase = "/api/v1/services";
 
   getClusterIp() {
     return this.spec.clusterIP;
@@ -112,7 +104,7 @@ export class Service extends KubeObject {
   }
 
   getLoadBalancer() {
-    return this.status.loadBalancer;
+    return this.status?.loadBalancer;
   }
 
   isActive() {
@@ -132,14 +124,11 @@ export class Service extends KubeObject {
   }
 }
 
-let serviceApi: KubeApi<Service>;
-
-if (isClusterPageContext()) {
-  serviceApi = new KubeApi<Service>({
-    objectConstructor: Service,
-  });
+export class ServiceApi extends KubeApi<Service> {
+  constructor(opts: DerivedKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: Service,
+    });
+  }
 }
-
-export {
-  serviceApi,
-};

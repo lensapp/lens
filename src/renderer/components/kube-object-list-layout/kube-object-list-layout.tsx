@@ -6,59 +6,63 @@
 import "./kube-object-list-layout.scss";
 
 import React from "react";
-import { computed, makeObservable, observable, reaction } from "mobx";
+import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Disposer } from "../../utils";
-import { cssNames } from "../../utils";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { cssNames, isDefined } from "../../utils";
+import type { KubeJsonApiDataFor, KubeObject } from "../../../common/k8s-api/kube-object";
 import type { ItemListLayoutProps } from "../item-object-list/list-layout";
 import { ItemListLayout } from "../item-object-list/list-layout";
 import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
-import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
-import kubeWatchApiInjectable from "../../kube-watch-api/kube-watch-api.injectable";
-import type { KubeWatchSubscribeStoreOptions } from "../../kube-watch-api/kube-watch-api";
+import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import type { KubeApi } from "../../../common/k8s-api/kube-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { PageParam } from "../../navigation";
+import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
+import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
+import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
 
-type ItemListLayoutPropsWithoutGetItems<K extends KubeObject> = Omit<ItemListLayoutProps<K>, "getItems">;
-
-export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutPropsWithoutGetItems<K> {
+export interface KubeObjectListLayoutProps<
+  K extends KubeObject,
+  A extends KubeApi<K, D>,
+  D extends KubeJsonApiDataFor<K>,
+> extends Omit<ItemListLayoutProps<K, false>, "getItems" | "dependentStores" | "preloadStores"> {
   items?: K[];
   getItems?: () => K[];
-  store: KubeObjectStore<K>;
-  dependentStores?: KubeObjectStore<KubeObject>[];
+  store: KubeObjectStore<K, A, D>;
+  dependentStores?: SubscribableStore[];
   subscribeStores?: boolean;
 }
 
-const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
-  onDetails: (item: KubeObject) => toggleDetails(item.selfLink),
-  subscribeStores: true,
-};
-
 interface Dependencies {
   clusterFrameContext: ClusterFrameContext;
-  subscribeToStores: (stores: KubeObjectStore<KubeObject>[], options: KubeWatchSubscribeStoreOptions) => Disposer;
+  subscribeToStores: SubscribeStores;
+  kubeSelectedUrlParam: PageParam<string>;
+  toggleKubeDetailsPane: ToggleKubeDetailsPane;
 }
 
 @observer
-class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Component<KubeObjectListLayoutProps<K> & Dependencies> {
-  static defaultProps = defaultProps as object;
+class NonInjectedKubeObjectListLayout<
+  K extends KubeObject,
+  A extends KubeApi<K, D>,
+  D extends KubeJsonApiDataFor<K>,
+> extends React.Component<KubeObjectListLayoutProps<K, A, D> & Dependencies> {
+  static defaultProps = {
+    subscribeStores: true,
+  };
 
-  constructor(props: KubeObjectListLayoutProps<K> & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  @observable loadErrors: string[] = [];
+  private loadErrors = observable.array<string>();
 
   @computed get selectedItem() {
-    return this.props.store.getByPath(kubeSelectedUrlParam.get());
+    return this.props.store.getByPath(this.props.kubeSelectedUrlParam.get());
   }
 
   componentDidMount() {
@@ -104,11 +108,20 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
   }
 
   render() {
-    const { className, customizeHeader, store, items, ...layoutProps } = this.props;
+    const {
+      className,
+      customizeHeader,
+      store,
+      items,
+      dependentStores,
+      toggleKubeDetailsPane: toggleDetails,
+      onDetails,
+      ...layoutProps
+    } = this.props;
     const placeholderString = ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
 
     return (
-      <ItemListLayout
+      <ItemListLayout<K, false>
         className={cssNames("KubeObjectListLayout", className)}
         store={store}
         getItems={() => this.props.items || store.contextItems}
@@ -134,23 +147,29 @@ class NonInjectedKubeObjectListLayout<K extends KubeObject> extends React.Compon
             ),
             ...headerPlaceHolders,
           }),
-          ...[customizeHeader].flat(),
+          ...[customizeHeader].filter(isDefined).flat(),
         ]}
         renderItemMenu={item => <KubeObjectMenu object={item} />}
+        onDetails={onDetails ?? ((item) => toggleDetails(item.selfLink))}
         {...layoutProps}
       />
     );
   }
 }
 
-const InjectedKubeObjectListLayout = withInjectables<Dependencies, KubeObjectListLayoutProps<KubeObject>>(NonInjectedKubeObjectListLayout, {
+export const KubeObjectListLayout = withInjectables<
+  Dependencies,
+  KubeObjectListLayoutProps<KubeObject, KubeApi<KubeObject, KubeJsonApiDataFor<KubeObject>>, KubeJsonApiDataFor<KubeObject>>
+>(NonInjectedKubeObjectListLayout, {
   getProps: (di, props) => ({
-    clusterFrameContext: di.inject(clusterFrameContextInjectable),
-    subscribeToStores: di.inject(kubeWatchApiInjectable).subscribeStores,
     ...props,
+    clusterFrameContext: di.inject(clusterFrameContextInjectable),
+    subscribeToStores: di.inject(subscribeStoresInjectable),
+    kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
+    toggleKubeDetailsPane: di.inject(toggleKubeDetailsPaneInjectable),
   }),
-});
-
-export function KubeObjectListLayout<K extends KubeObject>(props: KubeObjectListLayoutProps<K>) {
-  return <InjectedKubeObjectListLayout {...props} />;
-}
+}) as <
+  K extends KubeObject,
+  A extends KubeApi<K, D>,
+  D extends KubeJsonApiDataFor<K> = KubeJsonApiDataFor<K>,
+>(props: KubeObjectListLayoutProps<K, A, D>) => React.ReactElement;

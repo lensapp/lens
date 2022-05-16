@@ -15,6 +15,7 @@ import type { MenuProps } from "./menu";
 import { Menu, MenuItem } from "./menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
+import type { TooltipDecoratorProps } from "../tooltip";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
@@ -23,7 +24,7 @@ export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
   toolbar?: boolean; // display menu as toolbar with icons
   autoCloseOnSelect?: boolean;
-  triggerIcon?: string | IconProps | React.ReactNode;
+  triggerIcon?: string | (IconProps & TooltipDecoratorProps) | React.ReactNode;
   /**
    * @deprecated Provide your own remove `<MenuItem>` as part of the `children` passed to this component
    */
@@ -98,9 +99,9 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
     if (isValidElement<HTMLElement>(triggerIcon)) {
       className = cssNames(triggerIcon.props.className, { active: this.isOpen });
 
-      return React.cloneElement(triggerIcon, { id: this.id, className } as any);
+      return React.cloneElement(triggerIcon, { id: this.id, className });
     }
-    const iconProps: Partial<IconProps> = {
+    const iconProps: IconProps & TooltipDecoratorProps = {
       id: this.id,
       interactive: true,
       material: isString(triggerIcon) ? triggerIcon : undefined,
@@ -147,13 +148,21 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
           {children}
           {updateAction && (
             <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} tooltip="Edit"/>
+              <Icon
+                material="edit"
+                interactive={toolbar}
+                tooltip="Edit"
+              />
               <span className="title">Edit</span>
             </MenuItem>
           )}
           {removeAction && (
             <MenuItem onClick={this.remove} data-testid="menu-action-remove">
-              <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
+              <Icon
+                material="delete"
+                interactive={toolbar}
+                tooltip="Delete"
+              />
               <span className="title">Delete</span>
             </MenuItem>
           )}

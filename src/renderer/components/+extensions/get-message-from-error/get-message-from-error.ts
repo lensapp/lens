@@ -2,16 +2,19 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-export function getMessageFromError(error: any): string {
+
+import { hasTypedProperty, isDefined } from "../../../utils";
+
+export function getMessageFromError(error: unknown): string {
   if (!error || typeof error !== "object") {
     return "an error has occurred";
   }
 
-  if (error.message) {
-    return String(error.message);
+  if (error instanceof Error) {
+    return error.message;
   }
 
-  if (error.err) {
+  if (hasTypedProperty(error, "err", isDefined)) {
     return String(error.err);
   }
 

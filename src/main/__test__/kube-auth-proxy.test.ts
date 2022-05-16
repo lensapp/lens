@@ -142,69 +142,69 @@ describe("kube auth proxy tests", () => {
     beforeEach(async () => {
       mockedCP = mock<ChildProcess>();
       listeners = new EventEmitter();
+      const stderr = mockedCP.stderr = mock<Readable>();
+      const stdout = mockedCP.stdout = mock<Readable>();
 
       jest.spyOn(Kubectl.prototype, "checkBinary").mockReturnValueOnce(Promise.resolve(true));
       jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValueOnce(Promise.resolve(false));
-      mockedCP.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): ChildProcess => {
+      mockedCP.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): ChildProcess => {
         listeners.on(event, listener);
 
         return mockedCP;
       });
-      mockedCP.stderr = mock<Readable>();
-      mockedCP.stderr.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.on(`stderr/${event}`, listener);
+      mockedCP.stderr.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.on(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.off.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stderr/${event}`, listener);
+      mockedCP.stderr.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.removeListener.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stderr/${event}`, listener);
+      mockedCP.stderr.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.once.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.once(`stderr/${event}`, listener);
+      mockedCP.stderr.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.once(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.removeAllListeners.mockImplementation((event?: string): Readable => {
-        listeners.removeAllListeners(event ?? `stderr/${event}`);
+      mockedCP.stderr.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
+        listeners.removeAllListeners(event ?? `stderr/${String(event)}`);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stdout = mock<Readable>();
-      mockedCP.stdout.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.on(`stdout/${event}`, listener);
+      mockedCP.stdout.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.on(`stdout/${String(event)}`, listener);
 
         if (event === "data") {
           listeners.emit("stdout/data", "Starting to serve on 127.0.0.1:9191");
         }
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.once.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.once(`stdout/${event}`, listener);
+      mockedCP.stdout.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.once(`stdout/${String(event)}`, listener);
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.off.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stdout/${event}`, listener);
+      mockedCP.stdout.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stdout/${String(event)}`, listener);
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.removeListener.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stdout/${event}`, listener);
+      mockedCP.stdout.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stdout/${String(event)}`, listener);
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.removeAllListeners.mockImplementation((event?: string): Readable => {
-        listeners.removeAllListeners(event ?? `stdout/${event}`);
+      mockedCP.stdout.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
+        listeners.removeAllListeners(event ?? `stdout/${String(event)}`);
 
-        return mockedCP.stdout;
+        return stdout;
       });
       mockSpawn.mockImplementationOnce((command: string): ChildProcess => {
         expect(path.basename(command).split(".")[0]).toBe("lens-k8s-proxy");

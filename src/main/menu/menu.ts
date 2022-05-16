@@ -37,9 +37,7 @@ export function showAbout() {
   });
 }
 
-export function buildMenu(
-  applicationMenuItems: MenuItemOpts[],
-) {
+export function buildMenu(applicationMenuItems: MenuItemOpts[]) {
   Menu.setApplicationMenu(
     Menu.buildFromTemplate(applicationMenuItems),
   );

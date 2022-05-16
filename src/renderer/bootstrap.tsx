@@ -36,13 +36,16 @@ import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-fram
 import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
-import themeStoreInjectable from "./theme-store.injectable";
+import themeStoreInjectable from "./themes/store.injectable";
 import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
 import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
-import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import { bindEvents } from "./navigation/events";
-import deleteClusterDialogModelInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-model/delete-cluster-dialog-model.injectable";
+import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import { init } from "@sentry/electron/renderer";
+import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
+import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
+import assert from "assert";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -71,6 +74,20 @@ export async function bootstrap(di: DiContainer) {
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
+  assert(rootElem, "#app MUST exist");
+
+
+  /**
+   * This is injected here to initialize it for the side effect.
+   *
+   * The side effect CANNOT be within `apiManagerInjectable` itself since that causes circular
+   * dependencies with the current need for legacy di use.
+   *
+   * This also MUST be done before anything else so that it can start listening for the events for
+   * auto initialization.
+   */
+  di.inject(autoRegistrationInjectable);
+
   // TODO: Remove temporal dependencies to make timing of initialization not important
   di.inject(userStoreInjectable);
 
@@ -89,19 +106,17 @@ export async function bootstrap(di: DiContainer) {
   logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
   initializers.initCatalogEntityDetailRegistry();
 
-  const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
-  const addSyncEntries = di.inject(addSyncEntriesInjectable);
-
   logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
   initializers.initCatalogCategoryRegistryEntries({
-    navigateToAddCluster,
-    addSyncEntries,
+    navigateToAddCluster: di.inject(navigateToAddClusterInjectable),
+    addSyncEntries: di.inject(addSyncEntriesInjectable),
+    kubernetesClusterCategory: di.inject(kubernetesClusterCategoryInjectable),
   });
 
   logger.info(`${logPrefix} initializing Catalog`);
   initializers.initCatalog({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
-    deleteClusterDialogModel: di.inject(deleteClusterDialogModelInjectable),
+    openDeleteClusterDialog: di.inject(openDeleteClusterDialogInjectable),
   });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
@@ -144,7 +159,6 @@ export async function bootstrap(di: DiContainer) {
   // TODO: Introduce proper architectural boundaries between root and cluster iframes
   if (process.isMainFrame) {
     initializeApp = di.inject(initRootFrameInjectable);
-
     App = (await import("./frames/root-frame/root-frame")).RootFrame;
   } else {
     initializeApp = di.inject(initClusterFrameInjectable);

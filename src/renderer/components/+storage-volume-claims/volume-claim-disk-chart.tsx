@@ -5,25 +5,31 @@
 
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
-import type { IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
 import type { ChartDataSets } from "../chart";
 import { BarChart, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import type { IResourceMetricsValue } from "../resource-metrics";
 import { ResourceMetricsContext } from "../resource-metrics";
-import { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
 
-type IContext = IResourceMetricsValue<PersistentVolumeClaim, { metrics: IPvcMetrics }>;
+export interface VolumeClaimDiskChartProps {}
 
-export const VolumeClaimDiskChart = observer(() => {
-  const { params: { metrics }, object } = useContext<IContext>(ResourceMetricsContext);
-  const { chartCapacityColor } = ThemeStore.getInstance().activeTheme.colors;
-  const id = object.getId();
+interface Dependencies {
+  themeStore: ThemeStore;
+}
 
-  if (!metrics) return null;
+const NonInjectedVolumeClaimDiskChart = observer(({
+  themeStore,
+}: Dependencies & VolumeClaimDiskChartProps) => {
+  const { metrics, tab, object } = useContext(ResourceMetricsContext) ?? {};
+
+  if (!metrics || !object || !tab) return null;
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
+  const id = object.getId();
+  const { chartCapacityColor } = themeStore.activeTheme.colors;
   const { diskUsage, diskCapacity } = metrics;
   const usage = normalizeMetrics(diskUsage).data.result[0].values;
   const capacity = normalizeMetrics(diskCapacity).data.result[0].values;
@@ -54,4 +60,11 @@ export const VolumeClaimDiskChart = observer(() => {
       data={{ datasets }}
     />
   );
+});
+
+export const VolumeClaimDiskChart = withInjectables<Dependencies, VolumeClaimDiskChartProps>(NonInjectedVolumeClaimDiskChart, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+  }),
 });

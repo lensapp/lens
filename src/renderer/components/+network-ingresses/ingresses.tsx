@@ -7,7 +7,7 @@ import "./ingresses.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { ingressStore } from "./ingress.store";
+import { ingressStore } from "./legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -30,7 +30,8 @@ export class Ingresses extends React.Component {
         <KubeObjectListLayout
           isConfigurable
           tableId="network_ingresses"
-          className="Ingresses" store={ingressStore}
+          className="Ingresses"
+          store={ingressStore}
           sortingCallbacks={{
             [columnId.name]: ingress => ingress.getName(),
             [columnId.namespace]: ingress => ingress.getNs(),
@@ -65,10 +66,15 @@ export class Ingresses extends React.Component {
                       onClick={e => e.stopPropagation()}
                     >
                       {decl.url}
-                    </a> ⇢ {decl.service}
+                    </a>
+                    {` ⇢ ${decl.service}`}
                   </span>
                 )
-                : <span key={decl.url}>{decl.url} ⇢ {decl.service}</span>
+                : (
+                  <span key={decl.url}>
+                    {`${decl.url} ⇢ ${decl.service}`}
+                  </span>
+                )
             )),
             <KubeObjectAge key="age" object={ingress} />,
           ]}

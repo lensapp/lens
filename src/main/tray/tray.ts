@@ -22,7 +22,7 @@ import path from "path";
 const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
-export let tray: Tray;
+export let tray: Tray | null = null;
 
 function getTrayIconPath(): string {
   return path.resolve(
@@ -56,7 +56,7 @@ export function initTray(
       try {
         const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
 
-        tray.setContextMenu(menu);
+        tray?.setContextMenu(menu);
       } catch (error) {
         logger.error(`${TRAY_LOG_PREFIX}: building failed`, { error });
       }
@@ -73,7 +73,7 @@ function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron
     ...trayItem,
     submenu: trayItem.submenu ? trayItem.submenu.map(getMenuItemConstructorOptions) : undefined,
     click: trayItem.click ? () => {
-      trayItem.click(trayItem);
+      trayItem.click?.(trayItem);
     } : undefined,
   };
 }

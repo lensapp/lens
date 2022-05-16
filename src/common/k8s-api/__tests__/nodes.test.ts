@@ -18,6 +18,7 @@ describe("Nodes tests", () => {
           name: "bar",
           resourceVersion: "1",
           uid: "bat",
+          selfLink: "/api/v1/nodes/bar",
         },
       });
 
@@ -33,6 +34,7 @@ describe("Nodes tests", () => {
           resourceVersion: "1",
           uid: "bat",
           labels: {},
+          selfLink: "/api/v1/nodes/bar",
         },
       });
 
@@ -51,6 +53,7 @@ describe("Nodes tests", () => {
             "node-role.kubernetes.io/foobar": "bat",
             "hellonode-role.kubernetes.io/foobar1": "bat",
           },
+          selfLink: "/api/v1/nodes/bar",
         },
       });
 
@@ -69,6 +72,7 @@ describe("Nodes tests", () => {
             "node-role.kubernetes.io/foobar": "bat",
             "hellonode-role.kubernetes.io//////foobar1": "bat",
           },
+          selfLink: "/api/v1/nodes/bar",
         },
       });
 
@@ -86,6 +90,7 @@ describe("Nodes tests", () => {
           labels: {
             "kubernetes.io/role": "master",
           },
+          selfLink: "/api/v1/nodes/bar",
         },
       });
 
@@ -103,6 +108,7 @@ describe("Nodes tests", () => {
           labels: {
             "node.kubernetes.io/role": "master",
           },
+          selfLink: "/api/v1/nodes/bar",
         },
       });
 
@@ -122,6 +128,7 @@ describe("Nodes tests", () => {
             "kubernetes.io/role": "master",
             "node.kubernetes.io/role": "master-v2-max",
           },
+          selfLink: "/api/v1/nodes/bar",
         },
       });
 

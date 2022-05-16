@@ -12,13 +12,14 @@ import { Icon } from "../icon";
 import type { InputProps, InputValidator } from "../input";
 import { Input } from "../input";
 import { autoBind } from "../../utils";
+import type { SingleOrMany } from "../../utils";
 
 export interface EditableListProps<T> {
   items: T[];
   add: (newItem: string) => void;
   remove: (info: { oldItem: T; index: number }) => void;
   placeholder?: string;
-  validators?: InputValidator | InputValidator[];
+  validators?: SingleOrMany<InputValidator<boolean>>;
 
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
@@ -26,17 +27,17 @@ export interface EditableListProps<T> {
   inputTheme?: InputProps["theme"];
 }
 
-const defaultProps: Partial<EditableListProps<any>> = {
+const defaultProps = {
   placeholder: "Add new item...",
   renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>,
   inputTheme: "round",
 };
 
 @observer
-export class EditableList<T> extends React.Component<EditableListProps<T>> {
+class DefaultedEditableList<T> extends React.Component<EditableListProps<T> & typeof defaultProps> {
   static defaultProps = defaultProps as EditableListProps<any>;
 
-  constructor(props: EditableListProps<T>) {
+  constructor(props: EditableListProps<T> & typeof defaultProps) {
     super(props);
     autoBind(this);
   }
@@ -80,4 +81,8 @@ export class EditableList<T> extends React.Component<EditableListProps<T>> {
       </div>
     );
   }
+}
+
+export function EditableList<T>(props: EditableListProps<T>) {
+  return <DefaultedEditableList {...props as never}/>;
 }

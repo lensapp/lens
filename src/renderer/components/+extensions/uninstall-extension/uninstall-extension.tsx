@@ -19,45 +19,61 @@ interface Dependencies {
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
-export const uninstallExtension =
-  ({ extensionLoader, extensionDiscovery, extensionInstallationStateStore }: Dependencies) =>
-    async (extensionId: LensExtensionId): Promise<boolean> => {
-      const { manifest } = extensionLoader.getExtension(extensionId);
-      const displayName = extensionDisplayName(manifest.name, manifest.version);
+export const uninstallExtension = ({
+  extensionLoader,
+  extensionDiscovery,
+  extensionInstallationStateStore,
+}: Dependencies) => (
+  async (extensionId: LensExtensionId): Promise<boolean> => {
+    const ext = extensionLoader.getExtension(extensionId);
 
-      try {
-        logger.debug(`[EXTENSIONS]: trying to uninstall ${extensionId}`);
-        extensionInstallationStateStore.setUninstalling(extensionId);
+    if (!ext) {
+      logger.debug(`[EXTENSIONS]: cannot uninstall ${extensionId}, was not installed`);
 
-        await extensionDiscovery.uninstallExtension(extensionId);
+      return true;
+    }
 
-        // wait for the ExtensionLoader to actually uninstall the extension
-        await when(() => !extensionLoader.userExtensions.has(extensionId));
+    const { manifest } = ext;
+    const displayName = extensionDisplayName(manifest.name, manifest.version);
 
-        Notifications.ok(
-          <p>
-          Extension <b>{displayName}</b> successfully uninstalled!
-          </p>,
-        );
+    try {
+      logger.debug(`[EXTENSIONS]: trying to uninstall ${extensionId}`);
+      extensionInstallationStateStore.setUninstalling(extensionId);
 
-        return true;
-      } catch (error) {
-        const message = getMessageFromError(error);
+      await extensionDiscovery.uninstallExtension(extensionId);
 
-        logger.info(
-          `[EXTENSION-UNINSTALL]: uninstalling ${displayName} has failed: ${error}`,
-          { error },
-        );
-        Notifications.error(
-          <p>
-          Uninstalling extension <b>{displayName}</b> has failed:{" "}
-            <em>{message}</em>
-          </p>,
-        );
+      // wait for the ExtensionLoader to actually uninstall the extension
+      await when(() => !extensionLoader.userExtensions.has(extensionId));
 
-        return false;
-      } finally {
+      Notifications.ok(
+        <p>
+          {"Extension "}
+          <b>{displayName}</b>
+          {" successfully uninstalled!"}
+        </p>,
+      );
+
+      return true;
+    } catch (error) {
+      const message = getMessageFromError(error);
+
+      logger.info(
+        `[EXTENSION-UNINSTALL]: uninstalling ${displayName} has failed: ${error}`,
+        { error },
+      );
+      Notifications.error(
+        <p>
+          {"Uninstalling extension "}
+          <b>{displayName}</b>
+          {" has failed: "}
+          <em>{message}</em>
+        </p>,
+      );
+
+      return false;
+    } finally {
       // Remove uninstall state on uninstall failure
-        extensionInstallationStateStore.clearUninstalling(extensionId);
-      }
-    };
+      extensionInstallationStateStore.clearUninstalling(extensionId);
+    }
+  }
+);

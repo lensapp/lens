@@ -40,6 +40,6 @@ export interface RegisteredPage {
   id: string;
   extensionId: string;
   url: string; // registered extension's page URL (without page params)
-  params: PageParams<PageParam>; // normalized params
+  params: PageParams<PageParam<any>>; // normalized params
   components: PageComponents; // normalized components
 }

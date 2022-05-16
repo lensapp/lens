@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { Cluster } from "../../cluster/cluster";
 import type { ClusterContext } from "../cluster-context";
 import type { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
@@ -14,6 +15,7 @@ class FakeKubeObjectStore extends KubeObjectStore<KubeObject> {
     allNamespaces: [],
     contextNamespaces: [],
     hasSelectedAll: false,
+    cluster: {} as Cluster,
   } as ClusterContext;
 
   get context() {
@@ -40,6 +42,7 @@ describe("KubeObjectStore", () => {
         resourceVersion: "1",
         uid: "some-uid",
         namespace: "default",
+        selfLink: "/some/self/link",
       },
     });
     const store = new FakeKubeObjectStore(loadItems, {
@@ -73,6 +76,7 @@ describe("KubeObjectStore", () => {
         resourceVersion: "1",
         uid: "some-uid",
         namespace: "default",
+        selfLink: "/some/self/link",
       },
     });
     const objNotInDefaultNamespace = new KubeObject({
@@ -83,6 +87,7 @@ describe("KubeObjectStore", () => {
         resourceVersion: "1",
         uid: "some-uid",
         namespace: "not-default",
+        selfLink: "/some/self/link",
       },
     });
     const store = new FakeKubeObjectStore(loadItems, {
@@ -115,6 +120,7 @@ describe("KubeObjectStore", () => {
         name: "some-obj-name",
         resourceVersion: "1",
         uid: "some-uid",
+        selfLink: "/some/self/link",
       },
     });
     const clusterScopedObject2 = new KubeObject({
@@ -125,6 +131,7 @@ describe("KubeObjectStore", () => {
         resourceVersion: "1",
         uid: "some-uid",
         namespace: "not-default",
+        selfLink: "/some/self/link",
       },
     });
     const store = new FakeKubeObjectStore(loadItems, {

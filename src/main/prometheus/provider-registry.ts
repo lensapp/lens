@@ -4,8 +4,7 @@
  */
 
 import type { CoreV1Api } from "@kubernetes/client-node";
-import { inspect } from "util";
-import { Singleton } from "../../common/utils";
+import { isRequestError, Singleton } from "../../common/utils";
 
 export interface PrometheusService {
   id: string;
@@ -30,9 +29,9 @@ export abstract class PrometheusProvider {
   protected async getFirstNamespacedService(client: CoreV1Api, ...selectors: string[]): Promise<PrometheusService> {
     try {
       for (const selector of selectors) {
-        const { body: { items: [service] }} = await client.listServiceForAllNamespaces(null, null, null, selector);
+        const { body: { items: [service] }} = await client.listServiceForAllNamespaces(undefined, undefined, undefined, selector);
 
-        if (service) {
+        if (service?.metadata?.namespace && service.metadata.name && service.spec?.ports) {
           return {
             id: this.id,
             namespace: service.metadata.namespace,
@@ -42,7 +41,7 @@ export abstract class PrometheusProvider {
         }
       }
     } catch (error) {
-      throw new Error(`Failed to list services for Prometheus${this.name} in all namespaces: ${error.response.body.message}`);
+      throw new Error(`Failed to list services for Prometheus${this.name} in all namespaces: ${isRequestError(error) ? error.response?.body.message : error}`);
     }
 
     throw new Error(`No service found for Prometheus${this.name} from any namespace`);
@@ -50,8 +49,11 @@ export abstract class PrometheusProvider {
 
   protected async getNamespacedService(client: CoreV1Api, name: string, namespace: string): Promise<PrometheusService> {
     try {
-      const resp = await client.readNamespacedService(name, namespace);
-      const service = resp.body;
+      const { body: service } = await client.readNamespacedService(name, namespace);
+
+      if (!service.metadata?.namespace || !service.metadata.name || !service.spec?.ports) {
+        throw new Error(`Service returned from Prometheus${this.name} in namespace="${namespace}" did not have required information`);
+      }
 
       return {
         id: this.id,
@@ -60,7 +62,7 @@ export abstract class PrometheusProvider {
         port: service.spec.ports[0].port,
       };
     } catch(error) {
-      throw new Error(`Failed to list services for Prometheus${this.name} in namespace=${inspect(namespace, false, undefined, false)}: ${error.response.body.message}`);
+      throw new Error(`Failed to list services for Prometheus${this.name} in namespace="${namespace}": ${isRequestError(error) ? error.response?.body.message : error}`);
     }
   }
 }

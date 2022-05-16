@@ -32,11 +32,7 @@ describe("<Welcome/>", () => {
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    await di.runSetups();
-
     render = renderFor(di);
-
     welcomeBannersStub = [];
 
     di.override(rendererExtensionsInjectable, () =>

@@ -3,25 +3,32 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// Helper for combining css classes inside components
+import { iter } from "../../common/utils";
 
-export type IClassName = string | string[] | IClassNameMap;
-export type IClassNameMap = Record<string, any>;
+export type IgnoredClassNames = number | symbol | Function;
 
-export function cssNames(...args: IClassName[]): string {
-  const map: IClassNameMap = {};
+export type IClassName = string | string[] | IClassNameMap | undefined | null | false | IgnoredClassNames;
+export type IClassNameMap = object;
 
-  args.forEach(className => {
-    if (typeof className === "string" || Array.isArray(className)) {
-      [].concat(className).forEach(name => map[name] = true);
+export function cssNames(...classNames: IClassName[]): string {
+  const classNamesEnabled = new Map<string, boolean>();
+
+  for (const className of classNames) {
+    if (typeof className === "string") {
+      classNamesEnabled.set(className, true);
+    } else if (Array.isArray(className)) {
+      for (const name of className) {
+        classNamesEnabled.set(name, true);
+      }
+    } else if (className && typeof className === "object") {
+      for (const [name, value] of Object.entries(className)) {
+        classNamesEnabled.set(name, Boolean(value));
+      }
     }
-    else {
-      Object.assign(map, className);
-    }
-  });
+  }
 
-  return Object.entries(map)
+  return iter.pipeline(classNamesEnabled.entries())
     .filter(([, isActive]) => !!isActive)
-    .map(([className]) => className.trim())
+    .filterMap(([className]) => className.trim())
     .join(" ");
 }

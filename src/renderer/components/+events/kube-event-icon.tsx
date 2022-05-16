@@ -8,7 +8,7 @@ import "./kube-event-icon.scss";
 import React from "react";
 import { Icon } from "../icon";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { eventStore } from "./event.store";
+import { eventStore } from "./legacy-store";
 import { cssNames } from "../../utils";
 import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { KubeObjectAge } from "../kube-object/age";

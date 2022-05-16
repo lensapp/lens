@@ -7,7 +7,7 @@ import { ObservableMap } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync-manager/kubeconfig-sync-manager";
+import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync/manager";
 import mockFs from "mock-fs";
 import fs from "fs";
 import { ClusterManager } from "../../cluster-manager";
@@ -53,7 +53,7 @@ describe("kubeconfig-sync.source tests", () => {
     });
 
     di.override(clusterStoreInjectable, () =>
-      ClusterStore.createInstance({ createCluster: () => null }),
+      ClusterStore.createInstance({ createCluster: () => null as never }),
     );
 
     di.permitSideEffects(getConfigurationFileModelInjectable);

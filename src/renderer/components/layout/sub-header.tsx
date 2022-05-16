@@ -5,12 +5,14 @@
 
 import "./sub-header.scss";
 import React from "react";
+import type { SingleOrMany } from "../../utils";
 import { cssNames } from "../../utils";
 
 export interface SubHeaderProps {
   className?: string;
   withLine?: boolean; // add bottom line
   compact?: boolean; // no extra padding around content
+  children: SingleOrMany<React.ReactNode>;
 }
 
 export class SubHeader extends React.Component<SubHeaderProps> {

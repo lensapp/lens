@@ -15,17 +15,19 @@ export interface ScrollSpyProps extends React.DOMAttributes<HTMLElement> {
 }
 
 export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100% 0px" }: ScrollSpyProps) => {
-  const parent = useRef<HTMLDivElement>();
+  const parent = useRef<HTMLDivElement>(null);
   const sections = useRef<NodeListOf<HTMLElement>>();
   const [tree, setTree] = useState<NavigationTree[]>([]);
   const [activeElementId, setActiveElementId] = useState("");
 
-  const setSections = () => {
-    sections.current = parent.current.querySelectorAll("section");
+  const setSections = (): NodeListOf<HTMLElement> => {
+    sections.current = parent.current?.querySelectorAll("section");
 
-    if (!sections.current.length) {
+    if (!sections.current?.length) {
       throw new Error("No <section/> tag founded! Content should be placed inside <section></section> elements to activate navigation.");
     }
+
+    return sections.current;
   };
 
   const getSectionsParentElement = () => {
@@ -36,13 +38,17 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
     setTree(getNavigation(getSectionsParentElement()));
   };
 
-  const getNavigation = (element: Element) => {
+  const getNavigation = (element: Element | null | undefined): NavigationTree[] => {
+    if (!element) {
+      return [];
+    }
+
     const sections = element.querySelectorAll(":scope > section"); // Searching only direct children of an element. Impossible without :scope
     const children: NavigationTree[] = [];
 
     sections.forEach(section => {
       const id = section.getAttribute("id");
-      const parentId = section.parentElement.id;
+      const parentId = section.parentElement?.id;
       const name = section.querySelector("h1, h2, h3, h4, h5, h6")?.textContent;
       const selected = id === activeElementId;
 
@@ -63,18 +69,20 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
   };
 
   const handleIntersect = ([entry]: IntersectionObserverEntry[]) => {
-    if (entry.isIntersecting) {
-      setActiveElementId(entry.target.closest("section[id]").id);
+    const closest = entry.target.closest("section[id]");
+
+    if (entry.isIntersecting && closest) {
+      setActiveElementId(closest.id);
     }
   };
 
-  const observeSections = () => {
+  const observeSections = (list: NodeListOf<HTMLElement>) => {
     const options: IntersectionObserverInit = {
-      root: document.getElementById(htmlFor) || getSectionsParentElement(),
+      root: (htmlFor && document.getElementById(htmlFor)) || getSectionsParentElement(),
       rootMargin,
     };
 
-    sections.current.forEach((section) => {
+    list.forEach((section) => {
       const observer = new IntersectionObserver(handleIntersect, options);
       const target = section.querySelector("section") || section;
 
@@ -83,9 +91,10 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
   };
 
   useEffect(() => {
-    setSections();
-    observeSections();
-  }, []);
+    const list = setSections();
+
+    observeSections(list);
+  }, [parent.current]);
 
   useEffect(() => {
     updateNavigation();

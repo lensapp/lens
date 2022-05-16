@@ -11,21 +11,21 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
-import { ThemeStore } from "../../../theme.store";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
-import type { HotbarStore } from "../../../../common/hotbar-store";
+import type { HotbarStore } from "../../../../common/hotbars/store";
+import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
+import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
-const mockHotbars: { [id: string]: any } = {
+const mockHotbars: Partial<Record<string, any>> = {
   "1": {
     id: "1",
     name: "Default",
-    items: [] as any,
+    items: [],
   },
 };
 
@@ -45,22 +45,22 @@ describe("<HotbarRemoveCommand />", () => {
 
     mockFs();
 
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
 
     di.permitSideEffects(hotbarStoreInjectable);
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
 
     render = renderFor(di);
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
   });
 
   it("renders w/o errors", async () => {
@@ -71,7 +71,7 @@ describe("<HotbarRemoveCommand />", () => {
       },
       hotbarIndex: () => 0,
       getDisplayLabel: () => "1: Default",
-    }) as any as HotbarStore);
+    }) as unknown as HotbarStore);
 
     await di.runSetups();
 
@@ -89,7 +89,7 @@ describe("<HotbarRemoveCommand />", () => {
       remove: removeMock,
       hotbarIndex: () => 0,
       getDisplayLabel: () => "1: Default",
-    }) as any as HotbarStore);
+    }) as unknown as HotbarStore);
 
     await di.runSetups();
 

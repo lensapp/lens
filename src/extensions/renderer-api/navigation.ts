@@ -3,14 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { PageParamInit } from "../../renderer/navigation";
-import { navigation, PageParam } from "../../renderer/navigation";
+import getDetailsUrlInjectable from "../../renderer/components/kube-detail-params/get-details-url.injectable";
+import hideDetailsInjectable from "../../renderer/components/kube-detail-params/hide-details.injectable";
+import showDetailsInjectable from "../../renderer/components/kube-detail-params/show-details.injectable";
+import createPageParamInjectable from "../../renderer/navigation/create-page-param.injectable";
+import isActiveRouteInjectable from "../../renderer/navigation/is-route-active.injectable";
+import navigateInjectable from "../../renderer/navigation/navigate.injectable";
+import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 
-export type { PageParamInit, PageParam } from "../../renderer/navigation/page-param";
-export { navigate, isActiveRoute } from "../../renderer/navigation/helpers";
-export { hideDetails, showDetails, getDetailsUrl } from "../../renderer/components/kube-detail-params";
+export type { PageParamInit, PageParam } from "../../renderer/navigation";
 export type { URLParams } from "../../common/utils/buildUrl";
 
-export function createPageParam<V>(init: PageParamInit<V>) {
-  return new PageParam<V>(init, navigation);
-}
+export const getDetailsUrl = asLegacyGlobalFunctionForExtensionApi(getDetailsUrlInjectable);
+export const showDetails = asLegacyGlobalFunctionForExtensionApi(showDetailsInjectable);
+export const hideDetails = asLegacyGlobalFunctionForExtensionApi(hideDetailsInjectable);
+export const createPageParam = asLegacyGlobalFunctionForExtensionApi(createPageParamInjectable);
+export const isActiveRoute = asLegacyGlobalFunctionForExtensionApi(isActiveRouteInjectable);
+export const navigate = asLegacyGlobalFunctionForExtensionApi(navigateInjectable);

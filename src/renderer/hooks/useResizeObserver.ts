@@ -6,7 +6,7 @@
 import { useEffect } from "react";
 
 export function useResizeObserver(
-  element: Element,
+  element: Element | undefined | null,
   callback: ResizeObserverCallback,
 ) {
 

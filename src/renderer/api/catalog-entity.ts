@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export { catalogEntityRunContext } from "./catalog-entity-registry";
 export { CatalogCategory, CatalogEntity } from "../../common/catalog";
 export type {
   CatalogEntityData,

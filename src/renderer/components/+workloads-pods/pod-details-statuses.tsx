@@ -23,11 +23,12 @@ export class PodDetailsStatuses extends React.Component<PodDetailsStatusesProps>
     return (
       <div className="PodDetailsStatuses">
         {
-          Object.keys(statuses).map(key => (
-            <span key={key} className={kebabCase(key)}>
-              {key}: {statuses[key]}
-            </span>
-          ))
+          Object.entries(statuses)
+            .map(([phase, count]) => (
+              <span key={phase} className={kebabCase(phase)}>
+                {`${phase}: ${count}`}
+              </span>
+            ))
         }
       </div>
     );

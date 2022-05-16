@@ -10,36 +10,48 @@ import { observer } from "mobx-react";
 import React, { useState } from "react";
 import commandOverlayInjectable from "./command-overlay.injectable";
 import type { CatalogEntity } from "../../../common/catalog";
-import { navigate } from "../../navigation";
 import { broadcastMessage } from "../../../common/ipc";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
 import type { RegisteredCommand } from "./registered-commands/commands";
 import { iter } from "../../utils";
-import { orderBy } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import registeredCommandsInjectable from "./registered-commands/registered-commands.injectable";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { SingleValue } from "react-select";
+import type { Navigate } from "../../navigation/navigate.injectable";
+import navigateInjectable from "../../navigation/navigate.injectable";
+import activeEntityInjectable from "../../api/catalog/entity/active.injectable";
 
 interface Dependencies {
   commands: IComputedValue<Map<string, RegisteredCommand>>;
-  activeEntity?: CatalogEntity;
+  activeEntity: IComputedValue<CatalogEntity | undefined>;
   closeCommandOverlay: () => void;
+  navigate: Navigate;
 }
 
-const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeCommandOverlay }: Dependencies) => {
+const NonInjectedCommandDialog = observer(({
+  commands,
+  activeEntity,
+  closeCommandOverlay,
+  navigate,
+}: Dependencies) => {
   const [searchValue, setSearchValue] = useState("");
+  const entity = activeEntity.get();
 
-  const executeAction = (commandId: string) => {
-    const command = commands.get().get(commandId);
+  if (!entity) {
+    return null;
+  }
 
-    if (!command) {
+  const context = { entity };
+
+  const executeAction = (option: SingleValue<typeof activeCommands[number]>) => {
+    if (!option) {
       return;
     }
 
     try {
       closeCommandOverlay();
-      command.action({
-        entity: activeEntity,
+      option.value.action({
+        ...context,
         navigate: (url, opts = {}) => {
           const { forceRootFrame = false } = opts;
 
@@ -51,43 +63,37 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
         },
       });
     } catch (error) {
-      console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
+      console.error("[COMMAND-DIALOG] failed to execute command", option.value.id, error);
     }
   };
 
-  const context = {
-    entity: activeEntity,
-  };
-  const activeCommands = iter.filter(commands.get().values(), command => {
-    try {
-      return command.isActive(context);
-    } catch (error) {
-      console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
-    }
-
-    return false;
-  });
-  const options = Array.from(activeCommands, ({ id, title }) => ({
-    value: id,
-    label: typeof title === "function"
-      ? title(context)
-      : title,
-  }));
-
-  // Make sure the options are in the correct order
-  orderBy(options, "label", "asc");
+  const activeCommands = iter.pipeline(commands.get().values())
+    .filter(command => {
+      try {
+        return command.isActive(context);
+      } catch (error) {
+        return void console.error(`[COMMAND-DIALOG]: isActive for ${command.id} threw an error, defaulting to false`, error);
+      }
+    })
+    .map(command => ({
+      value: command,
+      label: typeof command.title === "string"
+        ? command.title
+        : command.title(context),
+    }))
+    .collect(items => Array.from(items));
 
   return (
     <Select
       id="command-palette-search-input"
       menuPortalTarget={null}
-      onChange={v => executeAction(v.value)}
+      onChange={executeAction}
       components={{
         DropdownIndicator: null,
         IndicatorSeparator: null,
       }}
       menuIsOpen
-      options={options}
+      options={activeCommands}
       autoFocus={true}
       escapeClearsValue={false}
       data-test-id="command-palette-search"
@@ -105,8 +111,8 @@ const NonInjectedCommandDialog = observer(({ commands, activeEntity, closeComman
 export const CommandDialog = withInjectables<Dependencies>(NonInjectedCommandDialog, {
   getProps: di => ({
     commands: di.inject(registeredCommandsInjectable),
-    // TODO: replace with injection
-    activeEntity: catalogEntityRegistry.activeEntity,
+    activeEntity: di.inject(activeEntityInjectable),
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
+    navigate: di.inject(navigateInjectable),
   }),
 });

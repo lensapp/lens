@@ -9,7 +9,7 @@ import { stdout, stderr } from "process";
 
 console = new Console(stdout, stderr);
 
-let ext: LensExtension = null;
+let ext: LensExtension;
 
 describe("lens extension", () => {
   beforeEach(async () => {

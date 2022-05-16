@@ -4,7 +4,7 @@
  */
 
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { UserStore } from "../../../../common/user-store";
@@ -21,10 +21,14 @@ import { renderFor } from "../../test-utils/renderFor";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
-import getConfigurationFileModelInjectable
-  from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import assert from "assert";
+import type { InstallFromInput } from "../install-from-input/install-from-input";
+import installFromInputInjectable from "../install-from-input/install-from-input.injectable";
+import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import { observable, when } from "mobx";
 
 mockWindow();
 
@@ -50,6 +54,8 @@ jest.mock("../../../../common/utils/tar");
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
   let extensionDiscovery: ExtensionDiscovery;
+  let installFromInput: jest.MockedFunction<InstallFromInput>;
+  let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
 
   beforeEach(async () => {
@@ -69,8 +75,13 @@ describe("Extensions", () => {
 
     render = renderFor(di);
 
+    installFromInput = jest.fn();
+
+    di.override(installFromInputInjectable, () => installFromInput);
+
     extensionLoader = di.inject(extensionLoaderInjectable);
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+    extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
     extensionLoader.addExtension({
       id: "extensionId",
@@ -99,36 +110,53 @@ describe("Extensions", () => {
   it("disables uninstall and disable buttons while uninstalling", async () => {
     extensionDiscovery.isLoaded = true;
 
-    const res = render(<><Extensions /><ConfirmDialog /></>);
-    const table = res.getByTestId("extensions-table");
-    const menuTrigger = table.querySelector("div[role=row]:first-of-type .actions .Icon");
+    render((
+      <>
+        <Extensions />
+        <ConfirmDialog />
+      </>
+    ));
 
+    const table = await screen.findByTestId("extensions-table");
+    const menuTrigger = table.querySelector(".table div[role='rowgroup'] .actions .Icon");
+
+    assert(menuTrigger);
     fireEvent.click(menuTrigger);
 
-    expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "false");
-    expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "false");
+    expect(await screen.findByText("Disable")).toHaveAttribute("aria-disabled", "false");
+    expect(await screen.findByText("Uninstall")).toHaveAttribute("aria-disabled", "false");
 
-    fireEvent.click(res.getByText("Uninstall"));
+    fireEvent.click(await screen.findByText("Uninstall"));
 
     // Approve confirm dialog
-    fireEvent.click(res.getByText("Yes"));
+    fireEvent.click(await screen.findByText("Yes"));
 
     await waitFor(() => {
       expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
       fireEvent.click(menuTrigger);
-      expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
-      expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "true");
+      expect(screen.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
+      expect(screen.getByText("Uninstall")).toHaveAttribute("aria-disabled", "true");
     }, {
       timeout: 30000,
     });
   });
 
   it("disables install button while installing", async () => {
-    const res = render(<Extensions />);
+    render(<Extensions />);
 
-    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
+    const resolveInstall = observable.box(false);
 
-    fireEvent.change(res.getByPlaceholderText("File path or URL", {
+    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve());
+    installFromInput.mockImplementation(async (input) => {
+      expect(input).toBe("https://test.extensionurl/package.tgz");
+
+      const clear = extensionInstallationStateStore.startPreInstall();
+
+      await when(() => resolveInstall.get());
+      clear();
+    });
+
+    fireEvent.change(await screen.findByPlaceholderText("File path or URL", {
       exact: false,
     }), {
       target: {
@@ -136,8 +164,9 @@ describe("Extensions", () => {
       },
     });
 
-    fireEvent.click(res.getByText("Install"));
-    expect(res.getByText("Install").closest("button")).toBeDisabled();
+    fireEvent.click(await screen.findByText("Install"));
+    expect((await screen.findByText("Install")).closest("button")).toBeDisabled();
+    resolveInstall.set(true);
   });
 
   it("displays spinner while extensions are loading", () => {

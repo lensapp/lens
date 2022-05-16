@@ -24,7 +24,7 @@ export class ReadableWebToNodeStream<T extends TypedArray> extends Readable {
    * https://developer.mozilla.org/en-US/docs/Web/API/ReadableStreamDefaultReader
    */
   private reader: ReadableStreamReader<T>;
-  private pendingRead: Promise<ReadableStreamDefaultReadResult<T>>;
+  private pendingRead?: Promise<ReadableStreamDefaultReadResult<T>>;
 
   /**
    *

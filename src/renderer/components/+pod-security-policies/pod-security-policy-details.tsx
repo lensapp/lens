@@ -28,23 +28,29 @@ interface RuleGroup {
 
 @observer
 export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyDetailsProps> {
-  renderRuleGroup = (title: React.ReactNode, { rule, ranges }: RuleGroup) => (
-    <>
-      <DrawerTitle>{title}</DrawerTitle>
-      <DrawerItem name="Rule">
-        {rule}
-      </DrawerItem>
-      {ranges && (
-        <DrawerItem name="Ranges (Min-Max)" labelsOnly>
-          {ranges.map(({ min, max }, index) => (
-            <Badge
-              key={index}
-              label={`${min} - ${max}`} />
-          ))}
+  renderRuleGroup(title: React.ReactNode, group: RuleGroup | undefined) {
+    if (!group) return null;
+    const { rule, ranges } = group;
+
+    return (
+      <>
+        <DrawerTitle>{title}</DrawerTitle>
+        <DrawerItem name="Rule">
+          {rule}
         </DrawerItem>
-      )}
-    </>
-  );
+        {ranges && (
+          <DrawerItem name="Ranges (Min-Max)" labelsOnly>
+            {ranges.map(({ min, max }, index) => (
+              <Badge
+                key={index}
+                label={`${min} - ${max}`}
+              />
+            ))}
+          </DrawerItem>
+        )}
+      </>
+    );
+  }
 
   render() {
     const { object: psp } = this.props;

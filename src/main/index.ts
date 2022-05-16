@@ -48,17 +48,18 @@ import extensionDiscoveryInjectable from "../extensions/extension-discovery/exte
 import directoryForExesInjectable from "../common/app-paths/directory-for-exes/directory-for-exes.injectable";
 import initIpcMainHandlersInjectable from "./initializers/init-ipc-main-handlers/init-ipc-main-handlers.injectable";
 import directoryForKubeConfigsInjectable from "../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import kubeconfigSyncManagerInjectable from "./catalog-sources/kubeconfig-sync-manager/kubeconfig-sync-manager.injectable";
+import kubeconfigSyncManagerInjectable from "./catalog-sources/kubeconfig-sync/manager.injectable";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import routerInjectable from "./router/router.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import trayMenuItemsInjectable from "./tray/tray-menu-items.injectable";
 import { broadcastNativeThemeOnUpdate } from "./native-theme";
+import assert from "assert";
 import windowManagerInjectable from "./window-manager.injectable";
 import navigateToPreferencesInjectable from "../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import syncGeneralCatalogEntitiesInjectable from "./catalog-sources/sync-general-catalog-entities.injectable";
-import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import applicationMenuItemsInjectable from "./menu/application-menu-items.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { init } from "@sentry/electron/main";
@@ -70,6 +71,7 @@ async function main(di: DiContainer) {
    * Note: this MUST be called before electron's "ready" event has been emitted.
    */
   initializeSentryReporting(init);
+
   await di.runSetups();
   await app.whenReady();
 
@@ -249,10 +251,12 @@ async function main(di: DiContainer) {
     logger.info("🔌 Starting LensProxy");
     await lensProxy.listen(); // lensProxy.port available
   } catch (error) {
-    dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
+    dialog.showErrorBox("Lens Error", `Could not start proxy: ${error ? String(error) : "unknown error"}`);
 
     return app.exit();
   }
+
+  assert(lensProxy.port, "Lens Proxy failed to start");
 
   // test proxy connection
   try {
@@ -350,7 +354,7 @@ async function main(di: DiContainer) {
 
     extensionLoader.initExtensions(extensions);
   } catch (error) {
-    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+    dialog.showErrorBox("Lens Error", `Could not load extensions${error ? `: ${String(error)}` : ""}`);
     console.error(error);
     console.trace();
   }

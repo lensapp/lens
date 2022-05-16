@@ -300,7 +300,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-2-live-region"
+                id="react-select-theme-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -316,7 +316,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-2-placeholder"
+                    id="react-select-theme-input-placeholder"
                   >
                     Select...
                   </div>
@@ -326,7 +326,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-2-placeholder"
+                      aria-describedby="react-select-theme-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -385,7 +385,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-3-live-region"
+                id="react-select-extension-install-registry-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -401,7 +401,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-3-placeholder"
+                    id="react-select-extension-install-registry-input-placeholder"
                   >
                     Select...
                   </div>
@@ -411,7 +411,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-3-placeholder"
+                      aria-describedby="react-select-extension-install-registry-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -457,17 +457,12 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             <p
               class="mt-4 mb-5 leading-relaxed"
             >
-              This setting is to change the registry URL for installing extensions by name.
-               
-              If you are unable to access the default registry (
-              https://registry.npmjs.org
-              )
-               
-              you can change it in your 
+              This setting is to change the registry URL for installing extensions by name. 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
               <b>
                 .npmrc
               </b>
-               file or in the input below.
+               file or in the input below.
             </p>
             <div
               class="Input theme round black disabled invalid"
@@ -525,7 +520,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-4-live-region"
+                id="react-select-update-channel-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -541,7 +536,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-4-placeholder"
+                    id="react-select-update-channel-input-placeholder"
                   >
                     Select...
                   </div>
@@ -551,7 +546,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-4-placeholder"
+                      aria-describedby="react-select-update-channel-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -610,7 +605,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-5-live-region"
+                id="react-select-timezone-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -626,7 +621,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-5-placeholder"
+                    id="react-select-timezone-input-placeholder"
                   >
                     Select...
                   </div>
@@ -636,7 +631,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-5-placeholder"
+                      aria-describedby="react-select-timezone-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -845,7 +840,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-14-live-region"
+                id="react-select-theme-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -861,7 +856,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-14-placeholder"
+                    id="react-select-theme-input-placeholder"
                   >
                     Select...
                   </div>
@@ -871,7 +866,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-14-placeholder"
+                      aria-describedby="react-select-theme-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -930,7 +925,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-15-live-region"
+                id="react-select-extension-install-registry-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -946,7 +941,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-15-placeholder"
+                    id="react-select-extension-install-registry-input-placeholder"
                   >
                     Select...
                   </div>
@@ -956,7 +951,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-15-placeholder"
+                      aria-describedby="react-select-extension-install-registry-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1002,17 +997,12 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             <p
               class="mt-4 mb-5 leading-relaxed"
             >
-              This setting is to change the registry URL for installing extensions by name.
-               
-              If you are unable to access the default registry (
-              https://registry.npmjs.org
-              )
-               
-              you can change it in your 
+              This setting is to change the registry URL for installing extensions by name. 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
               <b>
                 .npmrc
               </b>
-               file or in the input below.
+               file or in the input below.
             </p>
             <div
               class="Input theme round black disabled invalid"
@@ -1070,7 +1060,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-16-live-region"
+                id="react-select-update-channel-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -1086,7 +1076,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-16-placeholder"
+                    id="react-select-update-channel-input-placeholder"
                   >
                     Select...
                   </div>
@@ -1096,7 +1086,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-16-placeholder"
+                      aria-describedby="react-select-update-channel-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -1155,7 +1145,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-17-live-region"
+                id="react-select-timezone-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -1171,7 +1161,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-17-placeholder"
+                    id="react-select-timezone-input-placeholder"
                   >
                     Select...
                   </div>
@@ -1181,7 +1171,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-17-placeholder"
+                      aria-describedby="react-select-timezone-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"

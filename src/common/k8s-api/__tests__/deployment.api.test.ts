@@ -3,31 +3,39 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Deployment, DeploymentApi } from "../endpoints/deployment.api";
+import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
+import type { DeploymentApi } from "../endpoints/deployment.api";
+import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
 import type { KubeJsonApi } from "../kube-json-api";
 
-class DeploymentApiTest extends DeploymentApi {
-  public setRequest(request: any) {
-    this.request = request;
-  }
-}
-
 describe("DeploymentApi", () => {
+  let deploymentApi: DeploymentApi;
+  let kubeJsonApi: jest.Mocked<KubeJsonApi>;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    kubeJsonApi = {
+      getResponse: jest.fn(),
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      patch: jest.fn(),
+      del: jest.fn(),
+    } as never;
+    di.override(apiKubeInjectable, () => kubeJsonApi);
+
+    deploymentApi = di.inject(deploymentApiInjectable);
+  });
+
   describe("scale", () => {
-    const requestMock = {
-      patch: () => ({}),
-    } as unknown as KubeJsonApi;
-
-    const sub = new DeploymentApiTest({ objectConstructor: Deployment });
-
-    sub.setRequest(requestMock);
-
     it("requests Kubernetes API with PATCH verb and correct amount of replicas", () => {
-      const patchSpy = jest.spyOn(requestMock, "patch");
+      deploymentApi.scale({ namespace: "default", name: "deployment-1" }, 5);
 
-      sub.scale({ namespace: "default", name: "deployment-1" }, 5);
-
-      expect(patchSpy).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
+      expect(kubeJsonApi.patch).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
         data: {
           spec: {
             replicas: 5,

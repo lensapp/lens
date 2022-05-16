@@ -3,18 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { isClusterPageContext } from "../utils";
-import { KubeJsonApi } from "./kube-json-api";
-import { apiKubePrefix, isDevelopment } from "../vars";
+import { getInjectionToken } from "@ogre-tools/injectable";
+import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import type { KubeJsonApi } from "./kube-json-api";
 
-export const apiKube = isClusterPageContext()
-  ? new KubeJsonApi({
-    serverAddress: `http://127.0.0.1:${window.location.port}`,
-    apiBase: apiKubePrefix,
-    debug: isDevelopment,
-  }, {
-    headers: {
-      "Host": window.location.host,
-    },
-  })
-  : undefined;
+export const apiKubeInjectionToken = getInjectionToken<KubeJsonApi>({
+  id: "api-kube-injection-token",
+});
+
+export const apiKube = asLegacyGlobalForExtensionApi(apiKubeInjectionToken);

@@ -53,7 +53,7 @@ describe("type enforced ipc tests", () => {
       const source = new EventEmitter();
       const listener = () => called += 1;
       const results = [true, false, true];
-      const verifier = (args: unknown[]): args is [] => results.pop();
+      const verifier = (args: unknown[]): args is [] => results.pop() ?? false;
       const channel = "foobar";
 
       onCorrect({ source, listener, verifier, channel });

@@ -6,5 +6,5 @@ import type { Channel } from "../channel";
 
 export const createChannel = <Message>(name: string): Channel<Message> => ({
   name,
-  _template: null,
+  _template: null as never,
 });

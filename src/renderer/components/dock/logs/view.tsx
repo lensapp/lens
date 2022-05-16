@@ -7,6 +7,7 @@ import React, { createRef, useEffect } from "react";
 import { observer } from "mobx-react";
 import { InfoPanel } from "../info-panel";
 import { LogResourceSelector } from "./resource-selector";
+import type { LogListRef } from "./list";
 import { LogList } from "./list";
 import { LogSearch } from "./search";
 import { LogControls } from "./controls";
@@ -14,13 +15,11 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import logsViewModelInjectable from "./logs-view-model.injectable";
 import type { LogTabViewModel } from "./logs-view-model";
 import type { DockTab } from "../dock/store";
-import type { Disposer } from "../../../utils";
 import { cssNames } from "../../../utils";
-import type { KubeWatchSubscribeStoreOptions } from "../../../kube-watch-api/kube-watch-api";
+import type { SubscribeStores } from "../../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../../kube-watch-api/subscribe-stores.injectable";
-import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../../common/k8s-api/kube-object";
-import { podsStore } from "../../+workloads-pods/pods.store";
+import type { PodStore } from "../../+workloads-pods/store";
+import podStoreInjectable from "../../+workloads-pods/store.injectable";
 
 export interface LogsDockTabProps {
   className?: string;
@@ -29,11 +28,18 @@ export interface LogsDockTabProps {
 
 interface Dependencies {
   model: LogTabViewModel;
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[], opts?: KubeWatchSubscribeStoreOptions) => Disposer;
+  subscribeStores: SubscribeStores;
+  podStore: PodStore;
 }
 
-const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStores }: Dependencies & LogsDockTabProps) => {
-  const logListElement = createRef<LogList>();
+const NonInjectedLogsDockTab = observer(({
+  className,
+  tab,
+  model,
+  subscribeStores,
+  podStore,
+}: Dependencies & LogsDockTabProps) => {
+  const logListElement = createRef<LogListRef>();
   const data = model.logTabData.get();
 
   useEffect(() => {
@@ -42,7 +48,7 @@ const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStore
     return model.stopLoadingLogs;
   }, [tab.id]);
   useEffect(() => subscribeStores([
-    podsStore,
+    podStore,
   ], {
     namespaces: data ? [data.namespace] : [],
   }), [data?.namespace]);
@@ -94,10 +100,11 @@ const NonInjectedLogsDockTab = observer(({ className, tab, model, subscribeStore
 
 export const LogsDockTab = withInjectables<Dependencies, LogsDockTabProps>(NonInjectedLogsDockTab, {
   getProps: (di, props) => ({
+    ...props,
     model: di.inject(logsViewModelInjectable, {
       tabId: props.tab.id,
     }),
     subscribeStores: di.inject(subscribeStoresInjectable),
-    ...props,
+    podStore: di.inject(podStoreInjectable),
   }),
 });

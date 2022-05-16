@@ -10,13 +10,13 @@ import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podStore } from "../+workloads-pods/legacy-store";
 import { Link } from "react-router-dom";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForPvc, type IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { getMetricsForPvc, type PersistentVolumeClaimMetricData, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
+import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
@@ -27,7 +27,7 @@ export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProp
 
 @observer
 export class PersistentVolumeClaimDetails extends React.Component<PersistentVolumeClaimDetailsProps> {
-  @observable metrics: IPvcMetrics = null;
+  @observable metrics: PersistentVolumeClaimMetricData | null = null;
 
   constructor(props: PersistentVolumeClaimDetailsProps) {
     super(props);
@@ -62,11 +62,7 @@ export class PersistentVolumeClaimDetails extends React.Component<PersistentVolu
     }
 
     const { storageClassName, accessModes } = volumeClaim.spec;
-    const { metrics } = this;
-    const pods = volumeClaim.getPods(podsStore.items);
-    const metricTabs = [
-      "Disk",
-    ];
+    const pods = volumeClaim.getPods(podStore.items);
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.VolumeClaim);
 
     return (
@@ -74,14 +70,18 @@ export class PersistentVolumeClaimDetails extends React.Component<PersistentVolu
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={metricTabs} object={volumeClaim} params={{ metrics }}
+            tabs={[
+              "Disk",
+            ]}
+            object={volumeClaim}
+            metrics={this.metrics}
           >
             <VolumeClaimDiskChart/>
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={volumeClaim}/>
         <DrawerItem name="Access Modes">
-          {accessModes.join(", ")}
+          {accessModes?.join(", ")}
         </DrawerItem>
         <DrawerItem name="Storage Class Name">
           {storageClassName}
@@ -111,7 +111,7 @@ export class PersistentVolumeClaimDetails extends React.Component<PersistentVolu
             <Fragment key={i}>
               <DrawerItem name="Key">{key}</DrawerItem>
               <DrawerItem name="Operator">{operator}</DrawerItem>
-              <DrawerItem name="Values">{values.join(", ")}</DrawerItem>
+              <DrawerItem name="Values">{values?.join(", ")}</DrawerItem>
             </Fragment>
           ))}
         </DrawerItem>

@@ -4,9 +4,8 @@
  */
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
+import type { SelectOption } from "./select";
 import { Select } from "./select";
-import { UserStore } from "../../../common/user-store";
-import { ThemeStore } from "../../theme.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { DiRender } from "../test-utils/renderFor";
@@ -18,6 +17,7 @@ import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import ipcRendererInjectable from "../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 jest.mock("electron", () => ({
   ipcRenderer: {
@@ -36,21 +36,18 @@ describe("<Select />", () => {
 
     mockFs();
 
-    await di.runSetups();
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
+    di.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
   });
 
   afterEach(() => {
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
-
     mockFs.restore();
   });
 
@@ -68,7 +65,13 @@ describe("<Select />", () => {
 
     const onChange = jest.fn();
 
-    const { container } = render(<Select id="some-test-input" onChange={onChange} options={options} />);
+    const { container } = render((
+      <Select
+        id="some-test-input"
+        onChange={onChange}
+        options={options}
+      />
+    ));
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
@@ -87,10 +90,16 @@ describe("<Select />", () => {
 
     const onChange = jest.fn();
 
-    const { container } = render(<Select id="some-test-input" value={options[0].value} onChange={onChange} options={options} />);
+    const { container } = render((
+      <Select
+        value={options[0].value}
+        onChange={onChange}
+        options={options}
+      />
+    ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0].label);
   });
 
   it("should reflect to change value", async () => {
@@ -107,14 +116,26 @@ describe("<Select />", () => {
 
     const onChange = jest.fn();
 
-    const { container, rerender } = render(<Select id="some-test-input" value={options[0].value} onChange={onChange} options={options} />);
+    const { container, rerender } = render((
+      <Select
+        value={options[0].value}
+        onChange={onChange}
+        options={options}
+      />
+    ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0].label);
 
-    rerender(<Select id="some-test-input" value={options[1].value} onChange={onChange} options={options} />);
+    rerender((
+      <Select
+        value={options[1].value}
+        onChange={onChange}
+        options={options}
+      />
+    ));
 
-    expect(container.querySelector(".Select__single-value").textContent).toBe(options[1].label);
+    expect(container.querySelector(".Select__single-value")?.textContent).toBe(options[1].label);
   });
 
   it("should unselect value if null is passed as a value", async () => {
@@ -131,12 +152,24 @@ describe("<Select />", () => {
 
     const onChange = jest.fn();
 
-    const { container, rerender } = render(<Select id="some-test-input" value={options[0].value} onChange={onChange} options={options} />);
+    const { container, rerender } = render((
+      <Select
+        value={options[0].value}
+        onChange={onChange}
+        options={options}
+      />
+    ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0].label);
 
-    rerender(<Select id="some-test-input" value={null} onChange={onChange} options={options} />);
+    rerender((
+      <Select<string, SelectOption<string>>
+        value={null}
+        onChange={onChange}
+        options={options}
+      />
+    ));
 
     expect(container.querySelector(".Select__single-value")).not.toBeInTheDocument();
   });
@@ -155,12 +188,24 @@ describe("<Select />", () => {
 
     const onChange = jest.fn();
 
-    const { container, rerender } = render(<Select id="some-test-input" value={options[0].value} onChange={onChange} options={options} />);
+    const { container, rerender } = render((
+      <Select
+        value={options[0].value}
+        onChange={onChange}
+        options={options}
+      />
+    ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0].label);
 
-    rerender(<Select id="some-test-input" value={undefined} onChange={onChange} options={options} />);
+    rerender((
+      <Select<string, SelectOption<string>>
+        value={undefined}
+        onChange={onChange}
+        options={options}
+      />
+    ));
 
     expect(container.querySelector(".Select__single-value")).not.toBeInTheDocument();
   });

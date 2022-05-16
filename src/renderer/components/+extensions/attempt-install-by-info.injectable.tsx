@@ -10,7 +10,6 @@ import path from "path";
 import { SemVer } from "semver";
 import URLParse from "url-parse";
 import type { InstallRequest } from "./attempt-install/install-request";
-import { reduce } from "lodash";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import type { Confirm } from "../confirm-dialog/confirm.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -18,6 +17,7 @@ import attemptInstallInjectable from "./attempt-install/attempt-install.injectab
 import getBaseRegistryUrlInjectable from "./get-base-registry-url/get-base-registry-url.injectable";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import confirmInjectable from "../confirm-dialog/confirm.injectable";
+import { reduce } from "lodash";
 
 export interface ExtensionInfo {
   name: string;
@@ -78,7 +78,11 @@ const attemptInstallByInfo = ({
         } else {
           Notifications.error((
             <p>
-              The <em>{name}</em> extension does not have a version or tag <code>{version}</code>.
+              {"The "}
+              <em>{name}</em>
+              {" extension does not have a version or tag "}
+              <code>{version}</code>
+              .
             </p>
           ));
 
@@ -91,19 +95,28 @@ const attemptInstallByInfo = ({
         // ignore pre-releases for auto picking the version
         .filter(version => version.prerelease.length === 0);
 
-      finalVersion = reduce(
-        versions,
-        (prev, curr) => prev.compareMain(curr) === -1 ? curr : prev,
-      ).format();
+      const latestVersion = reduce(versions, (prev, curr) => prev.compareMain(curr) === -1 ? curr : prev);
+
+      if (!latestVersion) {
+        console.error("No versions supplied for that extension", { name });
+        Notifications.error(`No versions found for ${name}`);
+
+        return disposer();
+      }
+
+      finalVersion = latestVersion.format();
     }
 
     if (requireConfirmation) {
       const proceed = await confirm({
         message: (
           <p>
-            Are you sure you want to install{" "}
+            Are you sure you want to install
+            {" "}
             <b>
-              {name}@{finalVersion}
+              {name}
+              @
+              {finalVersion}
             </b>
             ?
           </p>
@@ -117,7 +130,8 @@ const attemptInstallByInfo = ({
       }
     }
 
-    const url = json.versions[finalVersion].dist.tarball;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const url = json.versions[finalVersion!].dist.tarball;
     const fileName = path.basename(url);
     const { promise: dataP } = downloadFile({ url, timeout: 10 * 60 * 1000 });
 

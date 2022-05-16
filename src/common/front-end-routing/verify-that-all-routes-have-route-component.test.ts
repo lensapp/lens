@@ -14,12 +14,9 @@ describe("verify-that-all-routes-have-component", () => {
   it("verify that routes have route component", async () => {
     const rendererDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    rendererDi.override(
-      clusterStoreInjectable,
-      () => ({ getById: (): null => null } as unknown as ClusterStore),
-    );
-
-    await rendererDi.runSetups();
+    rendererDi.override(clusterStoreInjectable, () => ({
+      getById: () => null,
+    } as unknown as ClusterStore));
 
     const routes = rendererDi.injectMany(routeInjectionToken);
     const routeComponents = rendererDi.injectMany(

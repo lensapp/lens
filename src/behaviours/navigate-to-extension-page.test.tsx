@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFake } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import type { FakeExtensionData, TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../renderer/components/test-utils/get-renderer-extension-fake";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
@@ -11,7 +11,6 @@ import isEmpty from "lodash/isEmpty";
 import queryParametersInjectable from "../renderer/routes/query-parameters.injectable";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { IComputedValue } from "mobx";
-import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 
 describe("navigate to extension page", () => {
@@ -22,6 +21,7 @@ describe("navigate to extension page", () => {
 
   beforeEach(async () => {
     const applicationBuilder = getApplicationBuilder();
+    const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
 
     testExtension = getRendererExtensionFake(
       extensionWithPagesHavingParameters,
@@ -51,7 +51,7 @@ describe("navigate to extension page", () => {
     });
 
     it("URL is correct", () => {
-      expect(currentPath.get()).toBe("/extension/some-extension-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name");
     });
 
     it("query parameters is empty", () => {
@@ -70,7 +70,7 @@ describe("navigate to extension page", () => {
       });
 
       it("URL is correct", () => {
-        expect(currentPath.get()).toBe("/extension/some-extension-id");
+        expect(currentPath.get()).toBe("/extension/some-extension-name");
       });
 
       it("knows query parameters", () => {
@@ -98,7 +98,7 @@ describe("navigate to extension page", () => {
     });
 
     it("URL is correct", () => {
-      expect(currentPath.get()).toBe("/extension/some-extension-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name");
     });
 
     it("knows query parameters", () => {
@@ -120,14 +120,14 @@ describe("navigate to extension page", () => {
     });
 
     it("URL is correct", () => {
-      expect(currentPath.get()).toBe("/extension/some-extension-id/some-child-page-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name/some-child-page-id");
     });
   });
 });
 
-const extensionWithPagesHavingParameters: Partial<LensRendererExtension> = {
+const extensionWithPagesHavingParameters: FakeExtensionData = {
   id: "some-extension-id",
-
+  name: "some-extension-name",
   globalPages: [
     {
       components: {
@@ -159,20 +159,14 @@ const extensionWithPagesHavingParameters: Partial<LensRendererExtension> = {
 
       params: {
         someStringParameter: "some-string-value",
-
         someNumberParameter: {
           defaultValue: 42,
-
           stringify: (value) => value.toString(),
-
           parse: (value) => (value ? Number(value) : undefined),
         },
-
         someArrayParameter: {
           defaultValue: ["some-array-value", "some-other-array-value"],
-
           stringify: (value) => value.join(","),
-
           parse: (value: string[]) => (!isEmpty(value) ? value : undefined),
         },
       },

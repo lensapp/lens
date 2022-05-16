@@ -108,6 +108,10 @@ export async function lauchMinikubeClusterFromCatalog(window: Page): Promise<Fra
 
   const frame = await minikubeFrame.contentFrame();
 
+  if (!frame) {
+    throw new Error("No iframe for minikube found");
+  }
+
   await frame.waitForSelector("[data-testid=cluster-sidebar]");
 
   return frame;

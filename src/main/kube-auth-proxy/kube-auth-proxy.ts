@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ChildProcess, spawn } from "child_process";
+import type { ChildProcess } from "child_process";
 import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
@@ -11,27 +11,36 @@ import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
 import { makeObservable, observable, when } from "mobx";
 import type { SelfSignedCert } from "selfsigned";
+import assert from "assert";
+import { TypedRegEx } from "typed-regex";
+import type { Spawn } from "../child-process/spawn.injectable";
+import type { Logger } from "../../common/logger";
 
-const startingServeRegex = /starting to serve on (?<address>.+)/i;
+const startingServeRegex = TypedRegEx("starting to serve on (?<address>.+)", "i");
 
 export interface KubeAuthProxyDependencies {
-  proxyBinPath: string;
-  proxyCert: SelfSignedCert;
-  spawn: typeof spawn;
+  readonly proxyBinPath: string;
+  readonly proxyCert: SelfSignedCert;
+  spawn: Spawn;
+  readonly logger: Logger;
 }
 
 export class KubeAuthProxy {
   public readonly apiPrefix = `/${randomBytes(8).toString("hex")}`;
 
   public get port(): number {
-    return this._port;
+    const port = this._port;
+
+    assert(port, "port has not yet been initialized");
+
+    return port;
   }
 
-  protected _port: number;
+  protected _port?: number;
   protected proxyProcess?: ChildProcess;
   @observable protected ready = false;
 
-  constructor(private dependencies: KubeAuthProxyDependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
+  constructor(private readonly dependencies: KubeAuthProxyDependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
     makeObservable(this);
   }
 
@@ -63,7 +72,7 @@ export class KubeAuthProxy {
     });
 
     this.proxyProcess.on("exit", (code) => {
-      this.cluster.broadcastConnectUpdate(`proxy exited with code: ${code}`, code > 0);
+      this.cluster.broadcastConnectUpdate(`proxy exited with code: ${code}`, code ? code > 0: false);
       this.exit();
     });
 
@@ -71,6 +80,9 @@ export class KubeAuthProxy {
       this.cluster.broadcastConnectUpdate("Proxy disconnected communications", true );
       this.exit();
     });
+
+    assert(this.proxyProcess.stderr);
+    assert(this.proxyProcess.stdout);
 
     this.proxyProcess.stderr.on("data", (data: Buffer) => {
       if (data.includes("http: TLS handshake error")) {
@@ -91,10 +103,13 @@ export class KubeAuthProxy {
       onFind: () => this.cluster.broadcastConnectUpdate("Authentication proxy started"),
     });
 
+    logger.info(`[KUBE-AUTH-PROXY]: found port=${this._port}`);
+
     try {
       await waitUntilUsed(this.port, 500, 10000);
       this.ready = true;
     } catch (error) {
+      logger.warn("[KUBE-AUTH-PROXY]: waitUntilUsed failed", error);
       this.cluster.broadcastConnectUpdate("Proxy port failed to be used within timelimit, restarting...", true);
       this.exit();
 
@@ -108,10 +123,10 @@ export class KubeAuthProxy {
     if (this.proxyProcess) {
       logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());
       this.proxyProcess.removeAllListeners();
-      this.proxyProcess.stderr.removeAllListeners();
-      this.proxyProcess.stdout.removeAllListeners();
+      this.proxyProcess.stderr?.removeAllListeners();
+      this.proxyProcess.stdout?.removeAllListeners();
       this.proxyProcess.kill();
-      this.proxyProcess = null;
+      this.proxyProcess = undefined;
     }
   }
 }

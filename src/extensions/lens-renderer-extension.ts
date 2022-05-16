@@ -4,13 +4,11 @@
  */
 
 import type * as registries from "./registries";
-import { Disposers, LensExtension } from "./lens-extension";
+import { Disposers, LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { Disposer } from "../common/utils";
-import type { EntityFilter } from "../renderer/api/catalog-entity-registry";
-import { catalogEntityRegistry } from "../renderer/api/catalog-entity-registry";
+import type { EntityFilter } from "../renderer/api/catalog/entity/registry";
 import type { CategoryFilter } from "../renderer/api/catalog-category-registry";
-import { catalogCategoryRegistry } from "../renderer/api/catalog-category-registry";
 import type { TopBarRegistration } from "../renderer/components/layout/top-bar/top-bar-registration";
 import type { KubernetesCluster } from "../common/catalog-entities";
 import type { WelcomeMenuRegistration } from "../renderer/components/+welcome/welcome-menu-items/welcome-menu-registration";
@@ -23,16 +21,13 @@ import type { StatusBarRegistration } from "../renderer/components/status-bar/st
 import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/kube-object-menu-registration";
 import type { WorkloadsOverviewDetailRegistration } from "../renderer/components/+workloads-overview/workloads-overview-detail-registration";
 import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import routesInjectable from "../renderer/routes/routes.injectable";
 import { fromPairs, map, matches, toPairs } from "lodash/fp";
-import extensionPageParametersInjectable from "../renderer/routes/extension-page-parameters.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { getExtensionRoutePath } from "../renderer/routes/get-extension-route-path";
-import { navigateToRouteInjectionToken } from "../common/front-end-routing/navigate-to-route-injection-token";
+import { getExtensionRoutePath } from "../renderer/routes/for-extension";
+import type { LensRendererExtensionDependencies } from "./lens-extension-set-dependencies";
 import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
 
-export class LensRendererExtension extends LensExtension {
+export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
   globalPages: registries.PageRegistration[] = [];
   clusterPages: registries.PageRegistration[] = [];
   clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
@@ -52,49 +47,39 @@ export class LensRendererExtension extends LensExtension {
   customCategoryViews: CustomCategoryViewRegistration[] = [];
   kubeObjectHandlers: KubeObjectHandlerRegistration[] = [];
 
-  async navigate<P extends object>(pageId?: string, params?: P) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(
-      Environments.renderer,
-    );
+  async navigate(pageId?: string, params: object = {}) {
+    const routes = this[lensExtensionDependencies].routes.get();
+    const targetRegistration = [...this.globalPages, ...this.clusterPages]
+      .find(registration => registration.id === (pageId || undefined));
 
-    const navigateToRoute = di.inject(navigateToRouteInjectionToken);
-    const routes = di.inject(routesInjectable).get();
-
-    const targetRegistration = [...this.globalPages, ...this.clusterPages].find(
-      registration => registration.id === (pageId || undefined),
-    );
+    if (!targetRegistration) {
+      return;
+    }
 
     const targetRoutePath = getExtensionRoutePath(this, targetRegistration.id);
-
     const targetRoute = routes.find(matches({ path: targetRoutePath }));
 
-    if (targetRoute) {
-      const normalizedParams = di.inject(extensionPageParametersInjectable, {
-        extension: this,
-        registration: targetRegistration,
-      });
-
-      const query = pipeline(
-        params,
-
-        toPairs,
-
-        map(([key, value]) => {
-          const normalizedParam = normalizedParams[key];
-
-          return [
-            key,
-            normalizedParam.stringify(value),
-          ];
-        }),
-
-        fromPairs,
-      );
-
-      navigateToRoute(targetRoute, {
-        query,
-      });
+    if (!targetRoute) {
+      return;
     }
+
+    const normalizedParams = this[lensExtensionDependencies].getExtensionPageParameters({
+      extension: this,
+      registration: targetRegistration,
+    });
+    const query = pipeline(
+      params,
+      toPairs,
+      map(([key, value]) => [
+        key,
+        normalizedParams[key].stringify(value),
+      ]),
+      fromPairs,
+    );
+
+    this[lensExtensionDependencies].navigateToRoute(targetRoute, {
+      query,
+    });
   }
 
   /**
@@ -113,7 +98,7 @@ export class LensRendererExtension extends LensExtension {
    * @returns A function to clean up the filter
    */
   addCatalogFilter(fn: EntityFilter): Disposer {
-    const dispose = catalogEntityRegistry.addCatalogFilter(fn);
+    const dispose = this[lensExtensionDependencies].entityRegistry.addCatalogFilter(fn);
 
     this[Disposers].push(dispose);
 
@@ -126,7 +111,7 @@ export class LensRendererExtension extends LensExtension {
    * @returns A function to clean up the filter
    */
   addCatalogCategoryFilter(fn: CategoryFilter): Disposer {
-    const dispose = catalogCategoryRegistry.addCatalogCategoryFilter(fn);
+    const dispose = this[lensExtensionDependencies].categoryRegistry.addCatalogCategoryFilter(fn);
 
     this[Disposers].push(dispose);
 

@@ -75,7 +75,9 @@ export const unpackExtension =
 
         Notifications.ok(
           <p>
-          Extension <b>{displayName}</b> successfully installed!
+            {"Extension "}
+            <b>{displayName}</b>
+            {" successfully installed!"}
           </p>,
         );
       } catch (error) {
@@ -87,7 +89,9 @@ export const unpackExtension =
         );
         Notifications.error(
           <p>
-          Installing extension <b>{displayName}</b> has failed:{" "}
+            {"Installing extension "}
+            <b>{displayName}</b>
+            {" has failed: "}
             <em>{message}</em>
           </p>,
         );

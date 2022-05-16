@@ -21,7 +21,7 @@ describe("input validation tests", () => {
     ];
 
     it.each(tests)("validate %s", (input, output) => {
-      expect(isEmail.validate(input)).toBe(output);
+      expect(isEmail.validate(input, {})).toBe(output);
     });
   });
 
@@ -38,7 +38,7 @@ describe("input validation tests", () => {
     ];
 
     it.each(cases)("validate %s", (input, output) => {
-      expect(isUrl.validate(input)).toBe(output);
+      expect(isUrl.validate(input, {})).toBe(output);
     });
   });
 
@@ -68,7 +68,7 @@ describe("input validation tests", () => {
     ];
 
     it.each(tests)("validate %s", (input, output) => {
-      expect(systemName.validate(input)).toBe(output);
+      expect(systemName.validate(input, {})).toBe(output);
     });
   });
 });

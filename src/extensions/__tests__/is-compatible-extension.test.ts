@@ -3,10 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import assert from "assert";
 import semver from "semver";
-import {
-  isCompatibleExtension,
-} from "../extension-discovery/is-compatible-extension/is-compatible-extension";
+import { isCompatibleExtension } from "../extension-discovery/is-compatible-extension/is-compatible-extension";
 import type { LensExtensionManifest } from "../lens-extension";
 
 describe("Extension/App versions compatibility checks", () => {
@@ -59,6 +58,8 @@ describe("Extension/App versions compatibility checks", () => {
 function isCompatible({ extLensEngineVersion = "^1.0", appVersion = "1.0" } = {}): boolean {
   const appSemVer = semver.coerce(appVersion);
   const extensionManifestMock = getExtensionManifestMock(extLensEngineVersion);
+
+  assert(appSemVer);
 
   return isCompatibleExtension({ appSemVer })(extensionManifestMock);
 }

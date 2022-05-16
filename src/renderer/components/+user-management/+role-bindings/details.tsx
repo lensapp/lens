@@ -8,7 +8,7 @@ import "./details.scss";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import type { RoleBinding, RoleBindingSubject } from "../../../../common/k8s-api/endpoints";
+import type { RoleBinding } from "../../../../common/k8s-api/endpoints";
 import { prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
@@ -16,9 +16,9 @@ import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { RoleBindingDialog } from "./dialog";
-import { roleBindingsStore } from "./store";
+import { roleBindingStore } from "./legacy-store";
 import { ObservableHashSet } from "../../../../common/utils/hash-set";
-import { hashRoleBindingSubject } from "./hashers";
+import { hashSubject } from "../hashers";
 import type { OpenConfirmDialog } from "../../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../../confirm-dialog/open.injectable";
@@ -32,7 +32,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedRoleBindingDetails extends React.Component<RoleBindingDetailsProps & Dependencies> {
-  selectedSubjects = new ObservableHashSet<RoleBindingSubject>([], hashRoleBindingSubject);
+  private readonly selectedSubjects = new ObservableHashSet([], hashSubject);
 
   async componentDidMount() {
     disposeOnUnmount(this, [
@@ -47,10 +47,14 @@ class NonInjectedRoleBindingDetails extends React.Component<RoleBindingDetailsPr
     const { selectedSubjects } = this;
 
     openConfirmDialog({
-      ok: () => roleBindingsStore.removeSubjects(roleBinding, selectedSubjects.toJSON()),
+      ok: () => roleBindingStore.removeSubjects(roleBinding, selectedSubjects.toJSON()),
       labelOk: `Remove`,
       message: (
-        <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
+        <p>
+          Remove selected bindings for
+          <b>{roleBinding.getName()}</b>
+          ?
+        </p>
       ),
     });
   };
@@ -116,7 +120,7 @@ class NonInjectedRoleBindingDetails extends React.Component<RoleBindingDetailsPr
 
         <AddRemoveButtons
           onAdd={() => RoleBindingDialog.open(roleBinding)}
-          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : null}
+          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : undefined}
           addTooltip={`Edit bindings of ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
         />

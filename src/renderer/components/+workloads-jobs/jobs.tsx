@@ -7,8 +7,8 @@ import "./jobs.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { jobStore } from "./job.store";
-import { eventStore } from "../+events/event.store";
+import { jobStore } from "./legacy-store";
+import { eventStore } from "../+events/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -31,12 +31,13 @@ export class Jobs extends React.Component {
         <KubeObjectListLayout
           isConfigurable
           tableId="workload_jobs"
-          className="Jobs" store={jobStore}
+          className="Jobs"
+          store={jobStore}
           dependentStores={[eventStore]} // status icon component uses event store
           sortingCallbacks={{
             [columnId.name]: job => job.getName(),
             [columnId.namespace]: job => job.getNs(),
-            [columnId.conditions]: job => job.getCondition() != null ? job.getCondition().type : "",
+            [columnId.conditions]: job => job.getCondition()?.type,
             [columnId.age]: job => -job.getCreationTimestamp(),
           }}
           searchFilters={[
@@ -58,7 +59,7 @@ export class Jobs extends React.Component {
               job.getName(),
               job.getNs(),
               `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
-              <KubeObjectStatusIcon key="icon" object={job}/>,
+              <KubeObjectStatusIcon key="icon" object={job} />,
               <KubeObjectAge key="age" object={job} />,
               condition && {
                 title: condition.type,

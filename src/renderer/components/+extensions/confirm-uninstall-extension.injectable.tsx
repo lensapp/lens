@@ -30,7 +30,9 @@ const confirmUninstallExtension = ({
     const confirmed = await confirm({
       message: (
         <p>
-          Are you sure you want to uninstall extension <b>{displayName}</b>?
+          {"Are you sure you want to uninstall extension "}
+          <b>{displayName}</b>
+          ?
         </p>
       ),
       labelOk: "Yes",

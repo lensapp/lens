@@ -8,12 +8,11 @@ import { ClusterMetadataKey } from "../../common/cluster-types";
 
 export class DistributionDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.DISTRIBUTION;
-  version: string;
 
   public async detect() {
-    this.version = await this.getKubernetesVersion();
+    const version = await this.getKubernetesVersion();
 
-    if (this.isRke()) {
+    if (this.isRke(version)) {
       return { value: "rke", accuracy: 80 };
     }
 
@@ -21,19 +20,19 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "rancher-desktop", accuracy: 80 };
     }
 
-    if (this.isK3s()) {
+    if (this.isK3s(version)) {
       return { value: "k3s", accuracy: 80 };
     }
 
-    if (this.isGKE()) {
+    if (this.isGKE(version)) {
       return { value: "gke", accuracy: 80 };
     }
 
-    if (this.isEKS()) {
+    if (this.isEKS(version)) {
       return { value: "eks", accuracy: 80 };
     }
 
-    if (this.isIKS()) {
+    if (this.isIKS(version)) {
       return { value: "iks", accuracy: 80 };
     }
 
@@ -45,27 +44,27 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "digitalocean", accuracy: 90 };
     }
 
-    if (this.isK0s()) {
+    if (this.isK0s(version)) {
       return { value: "k0s", accuracy: 80 };
     }
 
-    if (this.isVMWare()) {
+    if (this.isVMWare(version)) {
       return { value: "vmware", accuracy: 90 };
     }
 
-    if (this.isMirantis()) {
+    if (this.isMirantis(version)) {
       return { value: "mirantis", accuracy: 90 };
     }
 
-    if (this.isAlibaba()) {
+    if (this.isAlibaba(version)) {
       return { value: "alibaba", accuracy: 90 };
     }
 
-    if (this.isHuawei()) {
+    if (this.isHuawei(version)) {
       return { value: "huawei", accuracy: 90 };
     }
 
-    if (this.isTke()) {
+    if (this.isTke(version)) {
       return { value: "tencent", accuracy: 90 };
     }
 
@@ -85,11 +84,11 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "docker-desktop", accuracy: 80 };
     }
 
-    if (this.isCustom() && await this.isOpenshift()) {
+    if (this.isCustom(version) && await this.isOpenshift()) {
       return { value: "openshift", accuracy: 90 };
     }
 
-    if (this.isCustom()) {
+    if (this.isCustom(version)) {
       return { value: "custom", accuracy: 10 };
     }
 
@@ -104,24 +103,24 @@ export class DistributionDetector extends BaseClusterDetector {
     return response.gitVersion;
   }
 
-  protected isGKE() {
-    return this.version.includes("gke");
+  protected isGKE(version: string) {
+    return version.includes("gke");
   }
 
-  protected isEKS() {
-    return this.version.includes("eks");
+  protected isEKS(version: string) {
+    return version.includes("eks");
   }
 
-  protected isIKS() {
-    return this.version.includes("IKS");
+  protected isIKS(version: string) {
+    return version.includes("IKS");
   }
 
   protected isAKS() {
     return this.cluster.apiUrl.includes("azmk8s.io");
   }
 
-  protected isMirantis() {
-    return this.version.includes("-mirantis-") || this.version.includes("-docker-");
+  protected isMirantis(version: string) {
+    return version.includes("-mirantis-") || version.includes("-docker-");
   }
 
   protected isDigitalOcean() {
@@ -144,40 +143,40 @@ export class DistributionDetector extends BaseClusterDetector {
     return this.cluster.contextName === "docker-desktop";
   }
 
-  protected isTke() {
-    return this.version.includes("-tke.");
+  protected isTke(version: string) {
+    return version.includes("-tke.");
   }
 
-  protected isCustom() {
-    return this.version.includes("+");
+  protected isCustom(version: string) {
+    return version.includes("+");
   }
 
-  protected isVMWare() {
-    return this.version.includes("+vmware");
+  protected isVMWare(version: string) {
+    return version.includes("+vmware");
   }
 
-  protected isRke() {
-    return this.version.includes("-rancher");
+  protected isRke(version: string) {
+    return version.includes("-rancher");
   }
 
   protected isRancherDesktop() {
     return this.cluster.contextName === "rancher-desktop";
   }
 
-  protected isK3s() {
-    return this.version.includes("+k3s");
+  protected isK3s(version: string) {
+    return version.includes("+k3s");
   }
 
-  protected isK0s() {
-    return this.version.includes("-k0s") || this.version.includes("+k0s");
+  protected isK0s(version: string) {
+    return version.includes("-k0s") || version.includes("+k0s");
   }
 
-  protected isAlibaba() {
-    return this.version.includes("-aliyun");
+  protected isAlibaba(version: string) {
+    return version.includes("-aliyun");
   }
 
-  protected isHuawei() {
-    return this.version.includes("-CCE");
+  protected isHuawei(version: string) {
+    return version.includes("-CCE");
   }
 
   protected async isOpenshift() {

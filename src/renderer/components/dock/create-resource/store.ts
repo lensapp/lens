@@ -3,16 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { StorageHelper } from "../../../utils";
-import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
+import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 
-interface Dependencies {
-  createStorage:<T> (storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
+export interface CreateResourceTabStoreDependencies extends DockTabStoreDependencies {
 }
 
 export class CreateResourceTabStore extends DockTabStore<string> {
-  constructor(protected dependencies: Dependencies) {
+  constructor(protected readonly dependencies: CreateResourceTabStoreDependencies) {
     super(dependencies, {
       storageKey: "create_resource",
     });

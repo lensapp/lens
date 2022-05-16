@@ -4,7 +4,7 @@
  */
 
 // Cleans up a store that had the state related data stored
-import type { Hotbar } from "../../common/hotbar-types";
+import type { Hotbar } from "../../common/hotbars/types";
 import * as uuid from "uuid";
 import type { MigrationDeclaration } from "../helpers";
 
@@ -14,9 +14,9 @@ export default {
     const rawHotbars = store.get("hotbars");
     const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars : [];
 
-    store.set("hotbars", hotbars.map((hotbar) => ({
-      id: uuid.v4(),
-      ...hotbar,
+    store.set("hotbars", hotbars.map(({ id, ...rest }) => ({
+      id: id || uuid.v4(),
+      ...rest,
     })));
   },
 } as MigrationDeclaration;

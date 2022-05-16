@@ -11,8 +11,8 @@ import { KubernetesCluster } from "../../../../common/catalog-entities";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
-import type { HotbarStore } from "../../../../common/hotbar-store";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
+import type { HotbarStore } from "../../../../common/hotbars/store";
 
 const clusterEntity = new KubernetesCluster({
   metadata: {

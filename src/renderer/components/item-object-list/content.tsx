@@ -13,49 +13,51 @@ import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { IClassName } from "../../utils";
-import { autoBind, cssNames, isReactNode, prevDefault, stopPropagation } from "../../utils";
+import { autoBind, cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
-import type { ItemObject, ItemStore } from "../../../common/item.store";
-import type { Filter } from "./page-filters.store";
-import { pageFilters } from "./page-filters.store";
-import { ThemeStore } from "../../theme.store";
+import type { ItemObject } from "../../../common/item.store";
+import type { Filter, PageFiltersStore } from "./page-filters/store";
+import type { ThemeStore } from "../../themes/store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
-import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
+import type { ItemListStore } from "./list-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
+import pageFiltersStoreInjectable from "./page-filters/store.injectable";
+import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 
-export interface ItemListLayoutContentProps<I extends ItemObject> {
+export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
   tableId?: string;
   className: IClassName;
-  getItems: () => I[];
-  store: ItemStore<I>;
+  getItems: () => Item[];
+  store: ItemListStore<Item, PreLoadStores>;
   getIsReady: () => boolean; // show loading indicator while not ready
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isConfigurable?: boolean;
   copyClassNameFromHeadCells?: boolean;
-  sortingCallbacks?: TableSortCallbacks<I>;
-  tableProps?: Partial<TableProps<I>>; // low-level table configuration
-  renderTableHeader: TableCellProps[] | null;
-  renderTableContents: (item: I) => (ReactNode | TableCellProps)[];
-  renderItemMenu?: (item: I, store: ItemStore<I>) => ReactNode;
-  customizeTableRowProps?: (item: I) => Partial<TableRowProps>;
+  sortingCallbacks?: TableSortCallbacks<Item>;
+  tableProps?: Partial<TableProps<Item>>; // low-level table configuration
+  renderTableHeader?: (TableCellProps | undefined | null)[];
+  renderTableContents: (item: Item) => (ReactNode | TableCellProps)[];
+  renderItemMenu?: (item: Item, store: ItemListStore<Item, PreLoadStores>) => ReactNode;
+  customizeTableRowProps?: (item: Item) => Partial<TableRowProps<Item>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
 
   // item details view
   hasDetailsView?: boolean;
-  detailsItem?: I;
-  onDetails?: (item: I) => void;
+  detailsItem?: Item;
+  onDetails?: (item: Item) => void;
 
   // other
-  customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
+  customizeRemoveDialog?: (selectedItems: Item[]) => Partial<ConfirmDialogParams>;
 
   /**
    * Message to display when a store failed to load
@@ -66,12 +68,17 @@ export interface ItemListLayoutContentProps<I extends ItemObject> {
 }
 
 interface Dependencies {
+  themeStore: ThemeStore;
+  pageFiltersStore: PageFiltersStore;
   openConfirmDialog: OpenConfirmDialog;
 }
 
 @observer
-class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Component<ItemListLayoutContentProps<I> & Dependencies> {
-  constructor(props: ItemListLayoutContentProps<I> & Dependencies) {
+class NonInjectedItemListLayoutContent<
+  Item extends ItemObject,
+  PreLoadStores extends boolean,
+> extends React.Component<ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies> {
+  constructor(props: ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -81,15 +88,15 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
     return this.props.store.failedLoading;
   }
 
-  renderRow(item: I) {
+  renderRow(item: Item) {
     return this.getTableRow(item);
   }
 
-  getTableRow(item: I) {
+  getTableRow(item: Item) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
       store, hasDetailsView, onDetails,
-      copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
+      copyClassNameFromHeadCells, customizeTableRowProps = () => ({}), detailsItem,
     } = this.props;
     const { isSelected } = store;
 
@@ -99,7 +106,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
         searchItem={item}
         sortItem={item}
         selected={detailsItem && detailsItem.getId() === item.getId()}
-        onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
+        onClick={hasDetailsView ? prevDefault(() => onDetails?.(item)) : undefined}
         {...customizeTableRowProps(item)}
       >
         {isSelectable && (
@@ -155,7 +162,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
     );
   }
 
-  removeItemsDialog(selectedItems: I[]) {
+  removeItemsDialog(selectedItems: Item[]) {
     const { customizeRemoveDialog, store, openConfirmDialog } = this.props;
     const visibleMaxNamesCount = 5;
     const selectedNames = selectedItems.map(ns => ns.getName()).slice(0, visibleMaxNamesCount).join(", ");
@@ -165,14 +172,38 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
       ? selectedCount - visibleMaxNamesCount
       : 0;
     const tail = tailCount > 0
-      ? <>, and <b>{tailCount}</b> more</>
+      ? (
+        <>
+          {", and "}
+          <b>{tailCount}</b>
+          {" more"}
+        </>
+      )
       : null;
     const message = selectedCount <= 1
-      ? <p>Remove item <b>{selectedNames}</b>?</p>
-      : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
-    const onConfirm = store.removeItems
-      ? () => store.removeItems(selectedItems)
-      : store.removeSelectedItems;
+      ? (
+        <p>
+          {"Remove item "}
+          <b>{selectedNames}</b>
+          ?
+        </p>
+      )
+      : (
+        <p>
+          Remove
+          <b>{selectedCount}</b>
+          {" items "}
+          <b>{selectedNames}</b>
+          {tail}
+          ?
+        </p>
+      );
+    const { removeSelectedItems, removeItems } = store;
+    const onConfirm = typeof removeItems === "function"
+      ? () => removeItems.apply(store, [selectedItems])
+      : typeof removeSelectedItems === "function"
+        ? removeSelectedItems.bind(store)
+        : noop;
 
     openConfirmDialog({
       ok: onConfirm,
@@ -196,7 +227,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
         <NoItems>
           No items found.
           <p>
-            <a onClick={() => pageFilters.reset()} className="contrast">
+            <a onClick={() => this.props.pageFiltersStore.reset()} className="contrast">
               Reset filters?
             </a>
           </p>
@@ -222,7 +253,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
       return null;
     }
 
-    const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps(item).disabled);
+    const enabledItems = this.props.getItems().filter(item => !customizeTableRowProps?.(item).disabled);
 
     return (
       <TableHead showTopLine nowrap>
@@ -237,11 +268,15 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
             )}
           </Observer>
         )}
-        {renderTableHeader.map((cellProps, index) => (
-          this.showColumn(cellProps) && (
-            <TableCell key={cellProps.id ?? index} {...cellProps} />
-          )
-        ))}
+        {
+          renderTableHeader
+            .filter(isDefined)
+            .map((cellProps, index) => (
+              this.showColumn(cellProps) && (
+                <TableCell key={cellProps.id ?? index} {...cellProps} />
+              )
+            ))
+        }
         <TableCell className="menu">
           {isConfigurable && this.renderColumnVisibilityMenu()}
         </TableCell>
@@ -252,10 +287,10 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
   render() {
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
-      detailsItem, className, tableProps = {}, tableId, getItems,
+      detailsItem, className, tableProps = {}, tableId, getItems, themeStore,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
-    const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
+    const classNames = cssNames(className, "box", "grow", themeStore.activeTheme.type);
     const items = getItems();
     const selectedItems = store.pickOnlySelected(items);
 
@@ -284,7 +319,7 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
               onRemove={
                 (store.removeItems || store.removeSelectedItems) && selectedItems.length > 0
                   ? () => this.removeItemsDialog(selectedItems)
-                  : null
+                  : undefined
               }
               removeTooltip={`Remove selected items (${selectedItems.length})`}
               {...addRemoveButtons}
@@ -298,33 +333,47 @@ class NonInjectedItemListLayoutContent<I extends ItemObject> extends React.Compo
   showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
     const { tableId, isConfigurable } = this.props;
 
-    return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
+    return !isConfigurable || !tableId || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
   renderColumnVisibilityMenu() {
-    const { renderTableHeader, tableId } = this.props;
+    const { renderTableHeader = [], tableId } = this.props;
 
     return (
-      <MenuActions className="ItemListLayoutVisibilityMenu" toolbar={false} autoCloseOnSelect={false}>
-        {renderTableHeader.map((cellProps, index) => (
-          !cellProps.showWithColumn && (
-            <MenuItem key={index} className="input">
-              <Checkbox
-                label={cellProps.title ?? `<${cellProps.className}>`}
-                value={this.showColumn(cellProps)}
-                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id)}
-              />
-            </MenuItem>
-          )
-        ))}
+      <MenuActions
+        className="ItemListLayoutVisibilityMenu"
+        toolbar={false}
+        autoCloseOnSelect={false}
+      >
+        {
+          renderTableHeader
+            .filter(isDefined)
+            .map((cellProps, index) => (
+              !cellProps.showWithColumn && (
+                <MenuItem key={index} className="input">
+                  <Checkbox
+                    label={cellProps.title ?? `<${cellProps.className}>`}
+                    value={this.showColumn(cellProps)}
+                    onChange={(
+                      tableId
+                        ? (() => cellProps.id && UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id))
+                        : undefined
+                    )}
+                  />
+                </MenuItem>
+              )
+            ))
+        }
       </MenuActions>
     );
   }
 }
 
-export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayoutContentProps<ItemObject>>(NonInjectedItemListLayoutContent, {
+export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayoutContentProps<ItemObject, boolean>>(NonInjectedItemListLayoutContent, {
   getProps: (di, props) => ({
     ...props,
+    themeStore: di.inject(themeStoreInjectable),
+    pageFiltersStore: di.inject(pageFiltersStoreInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
   }),
-}) as <I extends ItemObject>(props: ItemListLayoutContentProps<I>) => React.ReactElement;
+}) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;

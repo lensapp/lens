@@ -5,13 +5,14 @@
 
 import styles from "./avatar.module.scss";
 
-import type { HTMLAttributes, ImgHTMLAttributes } from "react";
+import type { ImgHTMLAttributes, MouseEventHandler } from "react";
 import React from "react";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
-import { cssNames, iter } from "../../utils";
+import type { SingleOrMany } from "../../utils";
+import { cssNames, isDefined, iter } from "../../utils";
 
-export interface AvatarProps extends HTMLAttributes<HTMLElement> {
+export interface AvatarProps {
   title: string;
   colorHash?: string;
   size?: number;
@@ -20,6 +21,11 @@ export interface AvatarProps extends HTMLAttributes<HTMLElement> {
   variant?: "circle" | "rounded" | "square";
   imgProps?: ImgHTMLAttributes<HTMLImageElement>;
   disabled?: boolean;
+  children?: SingleOrMany<React.ReactNode>;
+  className?: string;
+  id?: string;
+  onClick?: MouseEventHandler<HTMLDivElement>;
+  "data-testid"?: string;
 }
 
 function getNameParts(name: string): string[] {
@@ -53,36 +59,51 @@ function getLabelFromTitle(title: string) {
     ...iter.take(first, 1),
     ...iter.take(second, 1),
     ...iter.take(third, 1),
-  ].filter(Boolean).join("");
+  ].filter(isDefined).join("");
 }
 
-export function Avatar(props: AvatarProps) {
-  const { title, variant = "rounded", size = 32, colorHash, children, background, imgProps, src, className, disabled, ...rest } = props;
-  const colorFromHash = randomColor({ seed: colorHash, luminosity: "dark" });
-
-  const renderContents = () => {
-    if (src) {
-      return <img src={src} {...imgProps} alt={title}/>;
-    }
-
-    return children || getLabelFromTitle(title);
-  };
-
-  return (
-    <div
-      className={cssNames(styles.Avatar, {
-        [styles.circle]: variant == "circle",
-        [styles.rounded]: variant == "rounded",
-        [styles.disabled]: disabled,
-      }, className)}
-      style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        background: background || (src ? "transparent" : colorFromHash),
-      }}
-      {...rest}
-    >
-      {renderContents()}
-    </div>
-  );
-}
+export const Avatar = ({
+  title,
+  variant = "rounded",
+  size = 32,
+  colorHash,
+  children,
+  background,
+  imgProps,
+  src,
+  className,
+  disabled,
+  id,
+  onClick,
+  "data-testid": dataTestId,
+}: AvatarProps) => (
+  <div
+    className={cssNames(styles.Avatar, {
+      [styles.circle]: variant == "circle",
+      [styles.rounded]: variant == "rounded",
+      [styles.disabled]: disabled,
+    }, className)}
+    style={{
+      width: `${size}px`,
+      height: `${size}px`,
+      background: background || (
+        src
+          ? "transparent"
+          : randomColor({ seed: colorHash, luminosity: "dark" })
+      ),
+    }}
+    id={id}
+    onClick={onClick}
+    data-testid={dataTestId}
+  >
+    {src
+      ? (
+        <img
+          src={src}
+          {...imgProps}
+          alt={title}
+        />
+      )
+      : children || getLabelFromTitle(title)}
+  </div>
+);

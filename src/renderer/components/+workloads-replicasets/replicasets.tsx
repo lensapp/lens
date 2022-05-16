@@ -7,10 +7,10 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { replicaSetStore } from "./replicasets.store";
+import { replicaSetStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { eventStore } from "../+events/event.store";
+import { eventStore } from "../+events/legacy-store";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 
@@ -31,7 +31,8 @@ export class ReplicaSets extends React.Component {
         <KubeObjectListLayout
           isConfigurable
           tableId="workload_replicasets"
-          className="ReplicaSets" store={replicaSetStore}
+          className="ReplicaSets"
+          store={replicaSetStore}
           dependentStores={[eventStore]} // status icon component uses event store
           sortingCallbacks={{
             [columnId.name]: replicaSet => replicaSet.getName(),
@@ -56,7 +57,7 @@ export class ReplicaSets extends React.Component {
           ]}
           renderTableContents={replicaSet => [
             replicaSet.getName(),
-            <KubeObjectStatusIcon key="icon" object={replicaSet}/>,
+            <KubeObjectStatusIcon key="icon" object={replicaSet} />,
             replicaSet.getNs(),
             replicaSet.getDesired(),
             replicaSet.getCurrent(),

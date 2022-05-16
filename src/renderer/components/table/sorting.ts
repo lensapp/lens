@@ -27,9 +27,8 @@ export function getSorted<T>(rawItems: T[], sortingCallback: TableSortCallback<T
     const zipIter = tuple.zip(leftSortBy, rightSortBy);
     let r = zipIter.next();
 
-    for (; r.done === false; r = zipIter.next()) {
+    for (; !r.done; r = zipIter.next()) {
       const [nextL, nextR] = r.value;
-
       const sortOrder = rectifyOrdering(sortCompare(nextL, nextR), orderBy);
 
       if (sortOrder !== Ordering.EQUAL) {

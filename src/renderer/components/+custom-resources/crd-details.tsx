@@ -8,7 +8,7 @@ import "./crd-details.scss";
 import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
-import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
+import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import { Badge } from "../badge";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
@@ -70,7 +70,11 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
             readOnly
           />
         </DrawerItem>
-        <DrawerItem name="Conditions" className="conditions" labelsOnly>
+        <DrawerItem
+          name="Conditions"
+          className="conditions"
+          labelsOnly
+        >
           {
             crd.getConditions().map(condition => {
               const { type, message, lastTransitionTime, status } = condition;
@@ -84,7 +88,10 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
                   tooltip={(
                     <>
                       <p>{message}</p>
-                      <p>Last transition time: {lastTransitionTime}</p>
+                      <p>
+                        Last transition time:
+                        {lastTransitionTime}
+                      </p>
                     </>
                   )}
                 />
@@ -107,7 +114,7 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
             <TableCell>{listKind}</TableCell>
           </TableRow>
         </Table>
-        {printerColumns.length > 0 &&
+        {printerColumns.length > 0 && (
           <>
             <DrawerTitle>Additional Printer Columns</DrawerTitle>
             <Table selectable className="printer-columns box grow">
@@ -133,8 +140,8 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
               }
             </Table>
           </>
-        }
-        {validation &&
+        )}
+        {validation && (
           <>
             <DrawerTitle>Validation</DrawerTitle>
             <MonacoEditor
@@ -143,7 +150,7 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
               style={{ height: 400 }}
             />
           </>
-        }
+        )}
       </div>
     );
   }

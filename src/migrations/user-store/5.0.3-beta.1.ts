@@ -10,7 +10,7 @@ import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
-import { isLogicalChildPath } from "../../common/utils";
+import { isErrnoException, isLogicalChildPath } from "../../common/utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -69,7 +69,7 @@ export default {
       migrationLog("Final list of synced paths", updatedSyncEntries);
       store.set("preferences", { ...preferences, syncKubeconfigEntries: updatedSyncEntries });
     } catch (error) {
-      if (error.code !== "ENOENT") {
+      if (isErrnoException(error) && error.code !== "ENOENT") {
         // ignore files being missing
         throw error;
       }

@@ -4,11 +4,12 @@
  */
 
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
+import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DockStore, DockTab } from "../dock/store";
 import { TabKind } from "../dock/store";
 import dockStoreInjectable from "../dock/store.injectable";
-import fse from "fs-extra";
 
 const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
@@ -24,20 +25,14 @@ describe("DockStore", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(
-      directoryForUserDataInjectable,
-      () => "some-test-suite-specific-directory-for-user-data",
-    );
-    await di.runSetups();
+    di.override(hostedClusterIdInjectable, () => "some-cluster-id");
+    di.override(ipcRendererInjectable, () => ({
+      on: jest.fn(),
+      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+    } as never));
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     dockStore = di.inject(dockStoreInjectable);
-
-    await dockStore.whenReady;
-  });
-
-  afterEach(() => {
-    fse.remove("some-test-suite-specific-directory-for-user-data");
-    dockStore.closeAllTabs();
   });
 
   it("closes tab and selects one from right", () => {

@@ -30,7 +30,7 @@ const defaultTheme = createTheme({
   },
 });
 
-export function DefaultProps(App: React.ComponentType) {
+export function DefaultProps(App: React.ComponentType | React.FunctionComponent) {
   return (
     <ThemeProvider theme= { defaultTheme } >
       <App />

@@ -12,7 +12,7 @@ const catalogPreviousActiveTabStorageInjectable = getInjectable({
   instantiate: (di) => {
     const createStorage = di.inject(createStorageInjectable);
 
-    return createStorage(
+    return createStorage<string | null>(
       "catalog-previous-active-tab",
       browseCatalogTab,
     );

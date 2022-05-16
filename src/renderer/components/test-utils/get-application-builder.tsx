@@ -25,7 +25,6 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
-import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { flatMap, compact, join, get, filter } from "lodash/fp";
@@ -33,6 +32,8 @@ import preferenceNavigationItemsInjectable from "../+preferences/preferences-nav
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
+import type { MenuItem, MenuItemConstructorOptions } from "electron";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -80,6 +81,7 @@ export const getApplicationBuilder = () => {
   } as unknown as ClusterStore;
 
   rendererDi.override(clusterStoreInjectable, () => clusterStoreStub);
+  rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
   mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
 
   const beforeSetupsCallbacks: Callback[] = [];
@@ -89,7 +91,7 @@ export const getApplicationBuilder = () => {
 
   rendererDi.override(subscribeStoresInjectable, () => () => () => {});
 
-  const environments: Record<string, Environment> = {
+  const environments = {
     application: {
       renderSidebar: () => null,
 
@@ -98,12 +100,12 @@ export const getApplicationBuilder = () => {
           "Tried to allow kube resource when environment is not cluster frame.",
         );
       },
-    },
+    } as Environment,
 
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
       onAllowKubeResource: () => {},
-    },
+    } as Environment,
   };
 
   let environment = environments.application;
@@ -118,7 +120,7 @@ export const getApplicationBuilder = () => {
   );
 
   mainDi.override(mainExtensionsInjectable, () =>
-    computed((): LensMainExtension[] => []),
+    computed(() => []),
   );
 
   let allowedResourcesState: IObservableArray<KubeResource>;
@@ -149,7 +151,15 @@ export const getApplicationBuilder = () => {
           );
         }
 
-        menuItem.click(undefined, undefined, undefined);
+        menuItem.click?.(
+          {
+            menu: null as never,
+            commandId: 0,
+            ...menuItem,
+          } as MenuItem,
+          undefined,
+          {},
+        );
       },
     },
 
@@ -180,9 +190,7 @@ export const getApplicationBuilder = () => {
               .map(get("id"));
 
             throw new Error(
-              `Tried to click navigation item "${id}" which does not exist in preferences. Available IDs are "${availableIds.join(
-                '", "',
-              )}"`,
+              `Tried to click navigation item "${id}" which does not exist in preferences. Available IDs are "${availableIds.join('", "')}"`,
             );
           }
 
@@ -266,12 +274,8 @@ export const getApplicationBuilder = () => {
       await runSetups();
 
       const render = renderFor(rendererDi);
-
       const history = rendererDi.inject(observableHistoryInjectable);
-
-      const currentRouteComponent = rendererDi.inject(
-        currentRouteComponentInjectable,
-      );
+      const currentRouteComponent = rendererDi.inject(currentRouteComponentInjectable);
 
       for (const callback of beforeRenderCallbacks) {
         await callback(dis);
@@ -302,16 +306,21 @@ export const getApplicationBuilder = () => {
   return builder;
 };
 
-const toFlatChildren =
-  (parentId: string) =>
-    ({
-      submenu = [],
-      ...menuItem
-    }: MenuItemOpts): (MenuItemOpts & { path: string })[] =>
-      [
-        {
-          ...menuItem,
+export type ToFlatChildren = (opts: MenuItemConstructorOptions) => (MenuItemOpts & { path: string })[];
+
+function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
+  return ({ submenu = [], ...menuItem }) => [
+    {
+      ...menuItem,
+      path: pipeline([parentId, menuItem.id], compact, join(".")),
+    },
+    ...(
+      Array.isArray(submenu)
+        ? submenu.flatMap(toFlatChildren(menuItem.id))
+        : [{
+          ...submenu,
           path: pipeline([parentId, menuItem.id], compact, join(".")),
-        },
-        ...submenu.flatMap(toFlatChildren(menuItem.id)),
-      ];
+        }]
+    ),
+  ];
+}

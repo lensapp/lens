@@ -5,7 +5,7 @@
 
 import styles from "./cluster-metrics.module.scss";
 
-import React from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
@@ -13,19 +13,19 @@ import { MetricType } from "./cluster-overview-store/cluster-overview-store";
 import { BarChart } from "../chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { Spinner } from "../spinner";
-import { ZebraStripes } from "../chart/zebra-stripes.plugin";
+import { ZebraStripesPlugin } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import clusterOverviewStoreInjectable
-  from "./cluster-overview-store/cluster-overview-store.injectable";
+import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
 
 interface Dependencies {
   clusterOverviewStore: ClusterOverviewStore;
 }
 
 const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics }}: Dependencies) => {
+  const [plugins] = useState([new ZebraStripesPlugin()]);
   const { memoryCapacity, cpuCapacity } = getMetricLastPoints(metrics);
   const metricValues = getMetricsValues(metrics);
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
@@ -52,9 +52,13 @@ const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType
     tooltips: {
       callbacks: {
         label: ({ index }, data) => {
-          const value = data.datasets[0].data[index] as ChartPoint;
+          if (!index) {
+            return "<unknown>";
+          }
 
-          return value.y.toString();
+          const value = data.datasets?.[0].data?.[index] as ChartPoint;
+
+          return value.y?.toString() ?? "<unknown>";
         },
       },
     },
@@ -71,7 +75,11 @@ const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType
     tooltips: {
       callbacks: {
         label: ({ index }, data) => {
-          const value = data.datasets[0].data[index] as ChartPoint;
+          if (!index) {
+            return "<unknown>";
+          }
+
+          const value = data.datasets?.[0].data?.[index] as ChartPoint;
 
           return bytesToUnits(parseInt(value.y as string), { precision: 3 });
         },
@@ -96,7 +104,7 @@ const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType
         data={{ datasets }}
         timeLabelStep={5}
         showLegend={false}
-        plugins={[ZebraStripes]}
+        plugins={plugins}
         className={styles.chart}
       />
     );

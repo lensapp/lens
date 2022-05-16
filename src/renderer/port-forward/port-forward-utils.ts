@@ -30,7 +30,7 @@ export function openPortForward(portForward: ForwardedPort) {
 
 }
 
-export function predictProtocol(name: string) {
+export function predictProtocol(name: string | undefined) {
   return name === "https" ? "https" : "http";
 }
 

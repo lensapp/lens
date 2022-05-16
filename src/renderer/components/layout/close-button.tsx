@@ -15,7 +15,11 @@ export interface CloseButtonProps extends HTMLAttributes<HTMLDivElement> {
 export function CloseButton(props: CloseButtonProps) {
   return (
     <div {...props}>
-      <div className={styles.closeButton} role="button" aria-label="Close">
+      <div
+        className={styles.closeButton}
+        role="button"
+        aria-label="Close"
+      >
         <Icon material="close" className={styles.icon}/>
       </div>
       <div className={styles.esc} aria-hidden="true">

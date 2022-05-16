@@ -47,7 +47,6 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
   it(
     "should navigate around common cluster pages",
-
     async () => {
       const scenariosByParent = pipeline(
         scenarios,
@@ -139,7 +138,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   );
 
   it(
-    `should create the ${TEST_NAMESPACE} and a pod in the namespace`,
+    `should create the ${TEST_NAMESPACE} and a pod in the namespace and then remove that pod via the context menu`,
     async () => {
       await navigateToNamespaces(frame);
       await frame.click("button.add-button");
@@ -209,6 +208,10 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await frame.click(".Dock .Button >> text='Create'");
       await frame.waitForSelector(`.TableCell >> text=${testPodName}`);
+      await frame.click(".TableRow .TableCell.menu");
+      await frame.click(".MenuItem >> text=Delete");
+      await frame.click("button >> text=Remove");
+      await frame.waitForSelector(`.TableCell >> text=${testPodName}`, { state: "detached" });
     },
     10 * 60 * 1000,
   );

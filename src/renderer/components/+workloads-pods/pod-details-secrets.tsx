@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
 import type { Pod, Secret } from "../../../common/k8s-api/endpoints";
-import { secretsApi } from "../../../common/k8s-api/endpoints";
+import { secretApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 
 export interface PodDetailsSecretsProps {
@@ -25,7 +25,7 @@ export const PodDetailsSecrets = observer(({ pod }: PodDetailsSecretsProps) => {
       () => pod.getSecrets(),
       async (secretNames) => {
         const results = await Promise.allSettled(
-          secretNames.map(secretName => secretsApi.get({
+          secretNames.map(secretName => secretApi.get({
             name: secretName,
             namespace: pod.getNs(),
           })),
@@ -47,7 +47,11 @@ export const PodDetailsSecrets = observer(({ pod }: PodDetailsSecretsProps) => {
     const secret = secrets.get(name);
 
     if (!secret) {
-      return <span key={name}>{name}</span>;
+      return (
+        <span key={name}>
+          {name}
+        </span>
+      );
     }
 
     return (

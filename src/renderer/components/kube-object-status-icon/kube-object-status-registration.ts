@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { KubeObjectStatus } from "../../../extensions/renderer-api/kube-object-status";
+import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-status";
 
 export interface KubeObjectStatusRegistration {
   kind: string;

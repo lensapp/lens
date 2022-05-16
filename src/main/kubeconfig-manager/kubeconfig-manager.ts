@@ -5,15 +5,19 @@
 
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { ContextHandler } from "../context-handler/context-handler";
+import type { ClusterContextHandler } from "../context-handler/context-handler";
 import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../../common/kube-helpers";
 import logger from "../logger";
 import { LensProxy } from "../lens-proxy";
+import { isErrnoException } from "../../common/utils";
+import type { PartialDeep } from "type-fest";
+import type { Logger } from "../../common/logger";
 
-interface Dependencies {
-  directoryForTemp: string;
+export interface KubeconfigManagerDependencies {
+  readonly directoryForTemp: string;
+  readonly logger: Logger;
 }
 
 export class KubeconfigManager {
@@ -26,9 +30,9 @@ export class KubeconfigManager {
    */
   protected tempFilePath: string | null | undefined = null;
 
-  protected contextHandler: ContextHandler;
+  protected readonly contextHandler: ClusterContextHandler;
 
-  constructor(private dependencies: Dependencies, protected cluster: Cluster) {
+  constructor(private readonly dependencies: KubeconfigManagerDependencies, protected cluster: Cluster) {
     this.contextHandler = cluster.contextHandler;
   }
 
@@ -42,7 +46,7 @@ export class KubeconfigManager {
     }
 
     if (this.tempFilePath === null || !(await fs.pathExists(this.tempFilePath))) {
-      await this.ensureFile();
+      return await this.ensureFile();
     }
 
     return this.tempFilePath;
@@ -61,7 +65,7 @@ export class KubeconfigManager {
     try {
       await fs.unlink(this.tempFilePath);
     } catch (error) {
-      if (error.code !== "ENOENT") {
+      if (isErrnoException(error) && error.code !== "ENOENT") {
         throw error;
       }
     } finally {
@@ -72,7 +76,8 @@ export class KubeconfigManager {
   protected async ensureFile() {
     try {
       await this.contextHandler.ensureServer();
-      this.tempFilePath = await this.createProxyKubeconfig();
+
+      return this.tempFilePath = await this.createProxyKubeconfig();
     } catch (error) {
       throw Object.assign(new Error("Failed to creat temp config for auth-proxy"), { cause: error });
     }
@@ -94,13 +99,12 @@ export class KubeconfigManager {
       `kubeconfig-${id}`,
     );
     const kubeConfig = await cluster.getKubeconfig();
-    const proxyConfig: Partial<KubeConfig> = {
+    const proxyConfig: PartialDeep<KubeConfig> = {
       currentContext: contextName,
       clusters: [
         {
           name: contextName,
           server: this.resolveProxyUrl,
-          skipTLSVerify: undefined,
         },
       ],
       users: [
@@ -111,7 +115,7 @@ export class KubeconfigManager {
           user: "proxy",
           name: contextName,
           cluster: contextName,
-          namespace: cluster.defaultNamespace || kubeConfig.getContextObject(contextName).namespace,
+          namespace: cluster.defaultNamespace || kubeConfig.getContextObject(contextName)?.namespace,
         },
       ],
     };

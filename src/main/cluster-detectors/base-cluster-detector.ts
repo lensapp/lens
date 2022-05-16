@@ -12,15 +12,12 @@ export interface ClusterDetectionResult {
   accuracy: number;
 }
 
-export class BaseClusterDetector {
-  key: string;
+export abstract class BaseClusterDetector {
+  abstract readonly key: string;
 
-  constructor(public cluster: Cluster) {
-  }
+  constructor(public readonly cluster: Cluster) {}
 
-  detect(): Promise<ClusterDetectionResult> {
-    return null;
-  }
+  abstract detect(): Promise<ClusterDetectionResult | null>;
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
     return k8sRequest(this.cluster, path, options);

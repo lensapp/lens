@@ -5,8 +5,7 @@
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { SelectOption } from "../../select/select";
-import { Select } from "../../select/select";
+import { onMultiSelectFor, Select } from "../../select/select";
 import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
@@ -41,21 +40,8 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
     this.props.cluster.preferences.hiddenMetrics = Array.from(this.hiddenMetrics);
   };
 
-  onChangeSelect = (values: SelectOption<ClusterMetricsResourceType>[]) => {
-    for (const { value } of values) {
-      if (this.hiddenMetrics.has(value)) {
-        this.hiddenMetrics.delete(value);
-      } else {
-        this.hiddenMetrics.add(value);
-      }
-    }
-    this.save();
-  };
-
   onChangeButton = () => {
-    Object.keys(ClusterMetricsResourceType).map(value =>
-      this.hiddenMetrics.add(value),
-    );
+    this.hiddenMetrics.replace(Object.keys(ClusterMetricsResourceType));
     this.save();
   };
 
@@ -64,14 +50,13 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
     this.save();
   };
 
-  formatOptionLabel = ({ value: resource }: SelectOption<ClusterMetricsResourceType>) => (
-    <div className="flex gaps align-center">
-      <span>{resource}</span>
-      {this.hiddenMetrics.has(resource) && <Icon smallest material="check" className="box right" />}
-    </div>
-  );
-
   renderMetricsSelect() {
+    const metricResourceTypeOptions = Object.values(ClusterMetricsResourceType)
+      .map(type => ({
+        value: type,
+        label: type,
+        isSelected: this.hiddenMetrics.has(type),
+      }));
 
     return (
       <>
@@ -84,9 +69,20 @@ export class ClusterMetricsSetting extends React.Component<ClusterMetricsSetting
           onMenuClose={this.save}
           closeMenuOnSelect={false}
           controlShouldRenderValue={false}
-          options={Object.values(ClusterMetricsResourceType)}
-          onChange={this.onChangeSelect}
-          formatOptionLabel={this.formatOptionLabel}
+          options={metricResourceTypeOptions}
+          onChange={onMultiSelectFor(this.hiddenMetrics)}
+          formatOptionLabel={(option) => (
+            <div className="flex gaps align-center">
+              <span>{option.value}</span>
+              {option.isSelected && (
+                <Icon
+                  smallest
+                  material="check"
+                  className="box right"
+                />
+              )}
+            </div>
+          )}
           themeName="lens"
         />
         <Button

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { secretsApi } from "../../../../../../common/k8s-api/endpoints";
+import { secretApi } from "../../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
@@ -36,25 +36,25 @@ export const ContainerStorageInterface: VolumeVariantComponent<"csi"> = ({
       pod={pod}
       title="Controller Publish Secret"
       kubeRef={controllerPublishSecretRef}
-      api={secretsApi}
+      api={secretApi}
     />
     <LocalRef
       pod={pod}
       title="Controller Expand Secret"
       kubeRef={controllerExpandSecretRef}
-      api={secretsApi}
+      api={secretApi}
     />
     <LocalRef
       pod={pod}
       title="Node Publish Secret"
       kubeRef={nodePublishSecretRef}
-      api={secretsApi}
+      api={secretApi}
     />
     <LocalRef
       pod={pod}
       title="Node Stage Secret"
       kubeRef={nodeStageSecretRef}
-      api={secretsApi}
+      api={secretApi}
     />
     {
       Object.entries(volumeAttributes)

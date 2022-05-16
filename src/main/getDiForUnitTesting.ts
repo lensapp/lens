@@ -4,7 +4,7 @@
  */
 
 import glob from "glob";
-import { kebabCase, memoize, noop } from "lodash/fp";
+import { kebabCase, memoize } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -20,13 +20,12 @@ import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
+import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
-import type { UserStore } from "../common/user-store";
 import isMacInjectable from "../common/vars/is-mac.injectable";
 import isWindowsInjectable from "../common/vars/is-windows.injectable";
 import isLinuxInjectable from "../common/vars/is-linux.injectable";
@@ -34,11 +33,15 @@ import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectab
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
-import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../common/hotbars/store.injectable";
+import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
+import { noop } from "../renderer/utils";
 
-export const getDiForUnitTesting = (
-  { doGeneralOverrides } = { doGeneralOverrides: false },
-) => {
+export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
+  const {
+    doGeneralOverrides = false,
+  } = opts;
+
   const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
@@ -56,23 +59,17 @@ export const getDiForUnitTesting = (
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(hotbarStoreInjectable, () => ({}));
+    di.override(userStoreInjectable, () => ({}));
+    di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
+    di.override(clusterStoreInjectable, () => ({ getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
+    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
     di.override(isMacInjectable, () => true);
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
-
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
-
-    di.override(hotbarStoreInjectable, () => ({}));
-
-    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
-    di.override(userStoreInjectable, () => ({}) as UserStore);
 
     di.override(
       getElectronAppPathInjectable,
@@ -83,13 +80,12 @@ export const getDiForUnitTesting = (
     di.override(appNameInjectable, () => "some-electron-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
-
     di.override(spawnInjectable, () => () => {
       return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
         stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
         on: jest.fn(),
-      } as any;
+      } as never;
     });
 
     di.override(writeJsonFileInjectable, () => () => {
@@ -107,13 +103,14 @@ export const getDiForUnitTesting = (
     di.override(loggerInjectable, () => ({
       warn: noop,
       debug: noop,
-      error: (message: string, ...args: any) => console.error(message, ...args),
+      error: noop,
       info: noop,
+      silly: noop,
     }));
   }
 
   return di;
-};
+}
 
 const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),

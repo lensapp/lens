@@ -16,7 +16,7 @@ import { CRDDetails } from "../components/+custom-resources";
 import { EventDetails } from "../components/+events";
 import { KubeEventDetails } from "../components/+events/kube-event-details";
 import { NamespaceDetails } from "../components/+namespaces";
-import { EndpointDetails } from "../components/+network-endpoints";
+import { EndpointsDetails } from "../components/+network-endpoints";
 import { IngressDetails } from "../components/+network-ingresses";
 import { NetworkPolicyDetails } from "../components/+network-policies";
 import { ServiceDetails } from "../components/+network-services";
@@ -40,395 +40,402 @@ import { StatefulSetDetails } from "../components/+workloads-statefulsets";
 import type { KubeObjectDetailsProps } from "../components/kube-object-details";
 
 export function initKubeObjectDetailRegistry() {
-  KubeObjectDetailRegistry.getInstance()
-    .add([
-      {
-        kind: "HorizontalPodAutoscaler",
-        apiVersions: ["autoscaling/v2beta1"],
-        components: {
-          // Note: this line is left in the long form as a validation that this usecase is valid
-          Details: (props: HpaDetailsProps) => <HpaDetails {...props}/>,
-        },
-      },
-      {
-        kind: "HorizontalPodAutoscaler",
-        apiVersions: ["autoscaling/v2beta1"],
-        priority: 5,
-        components: {
-          // Note: this line is left in the long form as a validation that this usecase is valid
-          Details: (props: KubeObjectDetailsProps) => <KubeEventDetails {...props}/>,
-        },
-      },
-      {
-        kind: "LimitRange",
-        apiVersions: ["v1"],
-        components: {
-          Details: LimitRangeDetails,
-        },
-      },
-      {
-        kind: "ConfigMap",
-        apiVersions: ["v1"],
-        components: {
-          Details: ConfigMapDetails,
-        },
-      },
-      {
-        kind: "ConfigMap",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "PodDisruptionBudget",
-        apiVersions: ["policy/v1beta1"],
-        components: {
-          Details: PodDisruptionBudgetDetails,
-        },
-      },
-      {
-        kind: "ResourceQuota",
-        apiVersions: ["v1"],
-        components: {
-          Details: ResourceQuotaDetails,
-        },
-      },
-      {
-        kind: "Secret",
-        apiVersions: ["v1"],
-        components: {
-          Details: SecretDetails,
-        },
-      },
-      {
-        kind: "CustomResourceDefinition",
-        apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
-        components: {
-          Details: CRDDetails,
-        },
-      },
-      {
-        kind: "Event",
-        apiVersions: ["v1"],
-        components: {
-          Details: EventDetails,
-        },
-      },
-      {
-        kind: "Namespace",
-        apiVersions: ["v1"],
-        components: {
-          Details: NamespaceDetails,
-        },
-      },
-      {
-        kind: "Endpoints",
-        apiVersions: ["v1"],
-        components: {
-          Details: EndpointDetails,
-        },
-      },
-      {
-        kind: "Endpoints",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "Ingress",
-        apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
-        components: {
-          Details: IngressDetails,
-        },
-      },
-      {
-        kind: "Ingress",
-        apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "NetworkPolicy",
-        apiVersions: ["networking.k8s.io/v1"],
-        components: {
-          Details: NetworkPolicyDetails,
-        },
-      },
-      {
-        kind: "NetworkPolicy",
-        apiVersions: ["networking.k8s.io/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "Service",
-        apiVersions: ["v1"],
-        components: {
-          Details: ServiceDetails,
-        },
-      },
-      {
-        kind: "Service",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "Node",
-        apiVersions: ["v1"],
-        components: {
-          Details: NodeDetails,
-        },
-      },
-      {
-        kind: "Node",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "PodSecurityPolicy",
-        apiVersions: ["policy/v1beta1"],
-        components: {
-          Details: PodSecurityPolicyDetails,
-        },
-      },
-      {
-        kind: "StorageClass",
-        apiVersions: ["storage.k8s.io/v1"],
-        components: {
-          Details: StorageClassDetails,
-        },
-      },
-      {
-        kind: "StorageClass",
-        apiVersions: ["storage.k8s.io/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "PersistentVolumeClaim",
-        apiVersions: ["v1"],
-        components: {
-          Details: PersistentVolumeClaimDetails,
-        },
-      },
-      {
-        kind: "PersistentVolumeClaim",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "PersistentVolume",
-        apiVersions: ["v1"],
-        components: {
-          Details: PersistentVolumeDetails,
-        },
-      },
-      {
-        kind: "PersistentVolume",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "Role",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        components: {
-          Details: RoleDetails,
-        },
-      },
-      {
-        kind: "Role",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "ClusterRole",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        components: {
-          Details: ClusterRoleDetails,
-        },
-      },
-      {
-        kind: "ClusterRole",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "RoleBinding",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        components: {
-          Details: RoleBindingDetails,
-        },
-      },
-      {
-        kind: "RoleBinding",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "ClusterRoleBinding",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        components: {
-          Details: ClusterRoleBindingDetails,
-        },
-      },
-      {
-        kind: "ClusterRoleBinding",
-        apiVersions: ["rbac.authorization.k8s.io/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "ServiceAccount",
-        apiVersions: ["v1"],
-        components: {
-          Details: ServiceAccountsDetails,
-        },
-      },
-      {
-        kind: "ServiceAccount",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "CronJob",
-        apiVersions: ["batch/v1beta1"],
-        components: {
-          Details: CronJobDetails,
-        },
-      },
-      {
-        kind: "CronJob",
-        apiVersions: ["batch/v1beta1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "DaemonSet",
-        apiVersions: ["apps/v1"],
-        components: {
-          Details: DaemonSetDetails,
-        },
-      },
-      {
-        kind: "DaemonSet",
-        apiVersions: ["apps/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "Deployment",
-        apiVersions: ["apps/v1"],
-        components: {
-          Details: DeploymentDetails,
-        },
-      },
-      {
-        kind: "Deployment",
-        apiVersions: ["apps/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "Job",
-        apiVersions: ["batch/v1"],
-        components: {
-          Details: JobDetails,
-        },
-      },
-      {
-        kind: "Job",
-        apiVersions: ["batch/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "Pod",
-        apiVersions: ["v1"],
-        components: {
-          Details: PodDetails,
-        },
-      },
-      {
-        kind: "Pod",
-        apiVersions: ["v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "ReplicaSet",
-        apiVersions: ["apps/v1"],
-        components: {
-          Details: ReplicaSetDetails,
-        },
-      },
-      {
-        kind: "ReplicaSet",
-        apiVersions: ["apps/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-      {
-        kind: "StatefulSet",
-        apiVersions: ["apps/v1"],
-        components: {
-          Details: StatefulSetDetails,
-        },
-      },
-      {
-        kind: "StatefulSet",
-        apiVersions: ["apps/v1"],
-        priority: 5,
-        components: {
-          Details: KubeEventDetails,
-        },
-      },
-    ]);
+  const registry = KubeObjectDetailRegistry.getInstance();
+
+  registry.add({
+    kind: "HorizontalPodAutoscaler",
+    apiVersions: ["autoscaling/v2beta1"],
+    components: {
+      // Note: this line is left in the long form as a validation that this usecase is valid
+      Details: (props: HpaDetailsProps) => <HpaDetails {...props}/>,
+    },
+  });
+  registry.add({
+    kind: "HorizontalPodAutoscaler",
+    apiVersions: ["autoscaling/v2beta1"],
+    components: {
+      // Note: this line is left in the long form as a validation that this usecase is valid
+      Details: (props: HpaDetailsProps) => <HpaDetails {...props}/>,
+    },
+  });
+  registry.add({
+    kind: "HorizontalPodAutoscaler",
+    apiVersions: ["autoscaling/v2beta1"],
+    priority: 5,
+    components: {
+      // Note: this line is left in the long form as a validation that this usecase is valid
+      Details: (props: KubeObjectDetailsProps) => <KubeEventDetails {...props}/>,
+    },
+  });
+  registry.add({
+    kind: "LimitRange",
+    apiVersions: ["v1"],
+    components: {
+      Details: LimitRangeDetails,
+    },
+  });
+  registry.add({
+    kind: "ConfigMap",
+    apiVersions: ["v1"],
+    components: {
+      Details: ConfigMapDetails,
+    },
+  });
+  registry.add({
+    kind: "ConfigMap",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "PodDisruptionBudget",
+    apiVersions: ["policy/v1beta1"],
+    components: {
+      Details: PodDisruptionBudgetDetails,
+    },
+  });
+  registry.add({
+    kind: "ResourceQuota",
+    apiVersions: ["v1"],
+    components: {
+      Details: ResourceQuotaDetails,
+    },
+  });
+  registry.add({
+    kind: "Secret",
+    apiVersions: ["v1"],
+    components: {
+      Details: SecretDetails,
+    },
+  });
+  registry.add({
+    kind: "CustomResourceDefinition",
+    apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
+    components: {
+      Details: CRDDetails,
+    },
+  });
+  registry.add({
+    kind: "Event",
+    apiVersions: ["v1"],
+    components: {
+      Details: EventDetails,
+    },
+  });
+  registry.add({
+    kind: "Namespace",
+    apiVersions: ["v1"],
+    components: {
+      Details: NamespaceDetails,
+    },
+  });
+  registry.add({
+    kind: "Endpoints",
+    apiVersions: ["v1"],
+    components: {
+      Details: EndpointsDetails,
+    },
+  });
+  registry.add({
+    kind: "Endpoints",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "Ingress",
+    apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
+    components: {
+      Details: IngressDetails,
+    },
+  });
+  registry.add({
+    kind: "Ingress",
+    apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "NetworkPolicy",
+    apiVersions: ["networking.k8s.io/v1"],
+    components: {
+      Details: NetworkPolicyDetails,
+    },
+  });
+  registry.add({
+    kind: "NetworkPolicy",
+    apiVersions: ["networking.k8s.io/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "Service",
+    apiVersions: ["v1"],
+    components: {
+      Details: ServiceDetails,
+    },
+  });
+  registry.add({
+    kind: "Service",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "Node",
+    apiVersions: ["v1"],
+    components: {
+      Details: NodeDetails,
+    },
+  });
+  registry.add({
+    kind: "Node",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "PodSecurityPolicy",
+    apiVersions: ["policy/v1beta1"],
+    components: {
+      Details: PodSecurityPolicyDetails,
+    },
+  });
+  registry.add({
+    kind: "StorageClass",
+    apiVersions: ["storage.k8s.io/v1"],
+    components: {
+      Details: StorageClassDetails,
+    },
+  });
+  registry.add({
+    kind: "StorageClass",
+    apiVersions: ["storage.k8s.io/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "PersistentVolumeClaim",
+    apiVersions: ["v1"],
+    components: {
+      Details: PersistentVolumeClaimDetails,
+    },
+  });
+  registry.add({
+    kind: "PersistentVolumeClaim",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "PersistentVolume",
+    apiVersions: ["v1"],
+    components: {
+      Details: PersistentVolumeDetails,
+    },
+  });
+  registry.add({
+    kind: "PersistentVolume",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "Role",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    components: {
+      Details: RoleDetails,
+    },
+  });
+  registry.add({
+    kind: "Role",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "ClusterRole",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    components: {
+      Details: ClusterRoleDetails,
+    },
+  });
+  registry.add({
+    kind: "ClusterRole",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "RoleBinding",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    components: {
+      Details: RoleBindingDetails,
+    },
+  });
+  registry.add({
+    kind: "RoleBinding",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "ClusterRoleBinding",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    components: {
+      Details: ClusterRoleBindingDetails,
+    },
+  });
+  registry.add({
+    kind: "ClusterRoleBinding",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "ServiceAccount",
+    apiVersions: ["v1"],
+    components: {
+      Details: ServiceAccountsDetails,
+    },
+  });
+  registry.add({
+    kind: "ServiceAccount",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "CronJob",
+    apiVersions: ["batch/v1beta1"],
+    components: {
+      Details: CronJobDetails,
+    },
+  });
+  registry.add({
+    kind: "CronJob",
+    apiVersions: ["batch/v1beta1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "DaemonSet",
+    apiVersions: ["apps/v1"],
+    components: {
+      Details: DaemonSetDetails,
+    },
+  });
+  registry.add({
+    kind: "DaemonSet",
+    apiVersions: ["apps/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "Deployment",
+    apiVersions: ["apps/v1"],
+    components: {
+      Details: DeploymentDetails,
+    },
+  });
+  registry.add({
+    kind: "Deployment",
+    apiVersions: ["apps/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "Job",
+    apiVersions: ["batch/v1"],
+    components: {
+      Details: JobDetails,
+    },
+  });
+  registry.add({
+    kind: "Job",
+    apiVersions: ["batch/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "Pod",
+    apiVersions: ["v1"],
+    components: {
+      Details: PodDetails,
+    },
+  });
+  registry.add({
+    kind: "Pod",
+    apiVersions: ["v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "ReplicaSet",
+    apiVersions: ["apps/v1"],
+    components: {
+      Details: ReplicaSetDetails,
+    },
+  });
+  registry.add({
+    kind: "ReplicaSet",
+    apiVersions: ["apps/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
+  registry.add({
+    kind: "StatefulSet",
+    apiVersions: ["apps/v1"],
+    components: {
+      Details: StatefulSetDetails,
+    },
+  });
+  registry.add({
+    kind: "StatefulSet",
+    apiVersions: ["apps/v1"],
+    priority: 5,
+    components: {
+      Details: KubeEventDetails,
+    },
+  });
 }

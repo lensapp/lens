@@ -21,6 +21,8 @@ import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable"
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
+import { getSidebarItem } from "../utils";
+import sidebarStorageInjectable from "../../renderer/components/layout/sidebar-storage/sidebar-storage.injectable";
 
 describe("cluster - sidebar and tab navigation for core", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -34,7 +36,6 @@ describe("cluster - sidebar and tab navigation for core", () => {
     rendererDi = applicationBuilder.dis.rendererDi;
 
     applicationBuilder.setEnvironmentToClusterFrame();
-
     applicationBuilder.beforeSetups(({ rendererDi }) => {
       rendererDi.override(
         directoryForLensLocalStorageInjectable,
@@ -72,13 +73,13 @@ describe("cluster - sidebar and tab navigation for core", () => {
       it("parent is highlighted", () => {
         const parent = getSidebarItem(rendered, "some-parent-id");
 
-        expect(parent.dataset.isActiveTest).toBe("true");
+        expect(parent?.dataset.isActiveTest).toBe("true");
       });
 
       it("parent sidebar item is not expanded", () => {
         const child = getSidebarItem(rendered, "some-child-id");
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
 
       it("child page is shown", () => {
@@ -101,6 +102,11 @@ describe("cluster - sidebar and tab navigation for core", () => {
             },
           );
         });
+        applicationBuilder.beforeRender(async ({ rendererDi }) => {
+          const sidebarStorage = rendererDi.inject(sidebarStorageInjectable);
+
+          await sidebarStorage.whenReady;
+        });
 
         rendered = await applicationBuilder.render();
       });
@@ -112,13 +118,13 @@ describe("cluster - sidebar and tab navigation for core", () => {
       it("parent sidebar item is not highlighted", () => {
         const parent = getSidebarItem(rendered, "some-parent-id");
 
-        expect(parent.dataset.isActiveTest).toBe("false");
+        expect(parent?.dataset.isActiveTest).toBe("false");
       });
 
       it("parent sidebar item is expanded", () => {
         const child = getSidebarItem(rendered, "some-child-id");
 
-        expect(child).not.toBe(null);
+        expect(child).not.toBeUndefined();
       });
     });
 
@@ -148,7 +154,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
       it("parent sidebar item is not expanded", () => {
         const child = getSidebarItem(rendered, "some-child-id");
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
     });
 
@@ -175,7 +181,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
       it("parent sidebar item is not expanded", () => {
         const child = getSidebarItem(rendered, "some-child-id");
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
     });
 
@@ -191,13 +197,13 @@ describe("cluster - sidebar and tab navigation for core", () => {
       it("parent sidebar item is not highlighted", () => {
         const parent = getSidebarItem(rendered, "some-parent-id");
 
-        expect(parent.dataset.isActiveTest).toBe("false");
+        expect(parent?.dataset.isActiveTest).toBe("false");
       });
 
       it("parent sidebar item is not expanded", () => {
         const child = getSidebarItem(rendered, "some-child-id");
 
-        expect(child).toBe(null);
+        expect(child).toBeUndefined();
       });
 
       describe("when a parent sidebar item is expanded", () => {
@@ -216,13 +222,13 @@ describe("cluster - sidebar and tab navigation for core", () => {
         it("parent sidebar item is not highlighted", () => {
           const parent = getSidebarItem(rendered, "some-parent-id");
 
-          expect(parent.dataset.isActiveTest).toBe("false");
+          expect(parent?.dataset.isActiveTest).toBe("false");
         });
 
         it("parent sidebar item is expanded", () => {
           const child = getSidebarItem(rendered, "some-child-id");
 
-          expect(child).not.toBe(null);
+          expect(child).not.toBeUndefined();
         });
 
         describe("when a child of the parent is selected", () => {
@@ -241,13 +247,13 @@ describe("cluster - sidebar and tab navigation for core", () => {
           it("parent is highlighted", () => {
             const parent = getSidebarItem(rendered, "some-parent-id");
 
-            expect(parent.dataset.isActiveTest).toBe("true");
+            expect(parent?.dataset.isActiveTest).toBe("true");
           });
 
           it("child is highlighted", () => {
             const child = getSidebarItem(rendered, "some-child-id");
 
-            expect(child.dataset.isActiveTest).toBe("true");
+            expect(child?.dataset.isActiveTest).toBe("true");
           });
 
           it("child page is shown", () => {
@@ -288,11 +294,6 @@ describe("cluster - sidebar and tab navigation for core", () => {
   });
 });
 
-const getSidebarItem = (rendered: RenderResult, itemId: string) =>
-  rendered
-    .queryAllByTestId("sidebar-item")
-    .find((x) => x.dataset.idTest === itemId) || null;
-
 const testSidebarItemsInjectable = getInjectable({
   id: "some-sidebar-items-injectable",
 
@@ -325,7 +326,7 @@ const testSidebarItemsInjectable = getInjectable({
   injectionToken: sidebarItemsInjectionToken,
 });
 
-const testRouteInjectable = getInjectable({
+const  testRouteInjectable = getInjectable({
   id: "some-route-injectable-id",
 
   instantiate: () => ({

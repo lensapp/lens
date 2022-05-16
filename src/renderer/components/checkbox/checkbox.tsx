@@ -5,51 +5,38 @@
 
 import "./checkbox.scss";
 import React from "react";
-import { cssNames } from "../../utils";
+import type { SingleOrMany } from "../../utils";
+import { cssNames, noop } from "../../utils";
 
-export interface CheckboxProps<T = boolean> {
+export interface CheckboxProps {
   className?: string;
   label?: React.ReactNode;
   inline?: boolean;
   disabled?: boolean;
-  value?: T;
-  onChange?(value: T, evt: React.ChangeEvent<HTMLInputElement>): void;
+  value?: boolean;
+  onChange?(value: boolean, evt: React.ChangeEvent<HTMLInputElement>): void;
+  children?: SingleOrMany<React.ReactChild | React.ReactFragment>;
 }
 
-export class Checkbox extends React.PureComponent<CheckboxProps> {
-  private input: HTMLInputElement;
+export function Checkbox({ label, inline, className, value, children, onChange = noop, disabled, ...inputProps }: CheckboxProps) {
+  const componentClass = cssNames("Checkbox flex align-center", className, {
+    inline,
+    checked: value,
+    disabled,
+  });
 
-  onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (this.props.onChange) {
-      this.props.onChange(this.input.checked, evt);
-    }
-  };
-
-  getValue() {
-    if (this.props.value !== undefined) return this.props.value;
-
-    return this.input.checked;
-  }
-
-  render() {
-    const { label, inline, className, value, children, ...inputProps } = this.props;
-    const componentClass = cssNames("Checkbox flex align-center", className, {
-      inline,
-      checked: value,
-      disabled: this.props.disabled,
-    });
-
-    return (
-      <label className={componentClass}>
-        <input
-          {...inputProps}
-          type="checkbox" checked={value} onChange={this.onChange}
-          ref={e => this.input = e}
-        />
-        <i className="box flex align-center"/>
-        {label ? <span className="label">{label}</span> : null}
-        {children}
-      </label>
-    );
-  }
+  return (
+    <label className={componentClass}>
+      <input
+        {...inputProps}
+        type="checkbox"
+        checked={value}
+        disabled={disabled}
+        onChange={event => onChange(event.target.checked, event)}
+      />
+      <i className="box flex align-center"/>
+      {label ? <span className="label">{label}</span> : null}
+      {children}
+    </label>
+  );
 }

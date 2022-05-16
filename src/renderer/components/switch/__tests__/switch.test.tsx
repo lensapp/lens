@@ -6,7 +6,7 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { Switch } from "..";
+import { Switch } from "../switch";
 
 describe("<Switch/>", () => {
   it("renders w/o errors", () => {

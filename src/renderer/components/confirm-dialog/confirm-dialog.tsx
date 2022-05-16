@@ -41,7 +41,7 @@ interface Dependencies {
   state: IObservableValue<ConfirmDialogParams | undefined>;
 }
 
-const defaultParams: Partial<ConfirmDialogParams> = {
+const defaultParams = {
   ok: noop,
   cancel: noop,
   labelOk: "Ok",
@@ -60,7 +60,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
 
   @computed
   get params() {
-    return Object.assign({}, defaultParams, this.props.state.get() ?? {});
+    return Object.assign({}, defaultParams, this.props.state.get() ?? {} as ConfirmDialogParams);
   }
 
   ok = async () => {
@@ -71,7 +71,15 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
       Notifications.error(
         <>
           <p>Confirmation action failed:</p>
-          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
+          <p>
+            {(
+              error instanceof Error
+                ? error.message
+                : typeof error === "string"
+                  ? error
+                  : "Unknown error occured while ok-ing"
+            )}
+          </p>
         </>,
       );
     } finally {
@@ -91,7 +99,15 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
       Notifications.error(
         <>
           <p>Cancelling action failed:</p>
-          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
+          <p>
+            {(
+              error instanceof Error
+                ? error.message
+                : typeof error === "string"
+                  ? error
+                  : "Unknown error occured while cancelling"
+            )}
+          </p>
         </>,
       );
     } finally {
@@ -102,8 +118,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
 
   render() {
     const { state, className, ...dialogProps } = this.props;
-    const dialogState = state.get();
-    const isOpen = Boolean(dialogState);
+    const isOpen = Boolean(state.get());
     const {
       icon, labelOk, labelCancel, message,
       okButtonProps = {},
@@ -120,7 +135,9 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
         {...(isOpen ? { "data-testid": "confirmation-dialog" } : {})}
       >
         <div className="confirm-content">
-          {icon} {message}
+          {icon}
+          {" "}
+          {message}
         </div>
         <div className="confirm-buttons">
           <Button
@@ -131,7 +148,8 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
             {...cancelButtonProps}
           />
           <Button
-            autoFocus primary
+            autoFocus
+            primary
             className="ok"
             label={labelOk}
             onClick={prevDefault(this.ok)}

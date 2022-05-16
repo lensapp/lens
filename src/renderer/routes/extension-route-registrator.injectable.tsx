@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainer } from "@ogre-tools/injectable";
+import type { DiContainerForInstantiate } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
@@ -10,30 +10,23 @@ import { observer } from "mobx-react";
 import React from "react";
 import { isEmpty, matches } from "lodash/fp";
 import type { PageRegistration } from "../../extensions/registries";
-import observableHistoryInjectable from "../navigation/observable-history.injectable";
-import type { ObservableHistory } from "mobx-observable-history";
 import { extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
 import { SiblingsInTabLayout } from "../components/layout/siblings-in-tab-layout";
 import extensionPageParametersInjectable from "./extension-page-parameters.injectable";
 import { routeSpecificComponentInjectionToken } from "./route-specific-component-injection-token";
 import { computed } from "mobx";
-import { getExtensionRoutePath } from "./get-extension-route-path";
 import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import { getExtensionRoutePath } from "./for-extension";
 
 const extensionRouteRegistratorInjectable = getInjectable({
   id: "extension-route-registrator",
 
-  instantiate: (di: DiContainer) => {
-    const observableHistory = di.inject(observableHistoryInjectable);
-
-    return (
-      extension: LensRendererExtension,
-      extensionInstallationCount: number,
-    ) => {
+  instantiate: (di) => {
+    return (ext, extensionInstallationCount) => {
+      const extension = ext as LensRendererExtension;
       const toRouteInjectable = toRouteInjectableFor(
         di,
         extension,
-        observableHistory,
         extensionInstallationCount,
       );
 
@@ -42,7 +35,7 @@ const extensionRouteRegistratorInjectable = getInjectable({
         ...extension.clusterPages.map(toRouteInjectable(true)),
       ].flat();
 
-      routeInjectables.forEach(di.register);
+      routeInjectables.forEach(di.register as never);
     };
   },
 
@@ -53,9 +46,8 @@ export default extensionRouteRegistratorInjectable;
 
 const toRouteInjectableFor =
   (
-    di: DiContainer,
+    di: DiContainerForInstantiate,
     extension: LensRendererExtension,
-    observableHistory: ObservableHistory,
     extensionInstallationCount: number,
   ) =>
     (clusterFrame: boolean) =>

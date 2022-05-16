@@ -17,17 +17,17 @@ import { cssVar } from "../../utils";
 export interface DockTabsProps {
   tabs: DockTabModel[];
   autoFocus: boolean;
-  selectedTab: DockTabModel;
+  selectedTab: DockTabModel | undefined;
   onChangeTab: (tab: DockTabModel) => void;
 }
 
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabsProps) => {
-  const elem = useRef<HTMLDivElement>();
+  const elem = useRef<HTMLDivElement | null>(null);
   const minTabSize = useRef<number>(0);
   const [showScrollbar, setShowScrollbar] = useState(false);
 
   const getTabElements = (): HTMLDivElement[] => {
-    return Array.from(elem.current?.querySelectorAll(".Tabs .Tab"));
+    return Array.from(elem.current?.querySelectorAll(".Tabs .Tab") ?? []);
   };
 
   const renderTab = (tab?: DockTabModel) => {
@@ -70,9 +70,11 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   };
 
   useEffect(() => {
-    const cssVars = cssVar(elem.current);
+    if (elem.current) {
+      const cssVars = cssVar(elem.current);
 
-    minTabSize.current = cssVars.get("--min-tab-width").valueOf();
+      minTabSize.current = cssVars.get("--min-tab-width").valueOf();
+    }
   });
 
   useResizeObserver(elem.current, () => {
@@ -81,7 +83,11 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
   });
 
   return (
-    <div className={styles.dockTabs} ref={elem} role="tablist">
+    <div
+      className={styles.dockTabs}
+      ref={elem}
+      role="tablist"
+    >
       <Tabs
         autoFocus={autoFocus}
         value={selectedTab}

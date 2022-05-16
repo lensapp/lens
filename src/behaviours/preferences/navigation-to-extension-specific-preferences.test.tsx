@@ -7,11 +7,10 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import type { UserStore } from "../../common/user-store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import React from "react";
-import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - navigation to extension specific preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -25,10 +24,10 @@ describe("preferences - navigation to extension specific preferences", () => {
       } as unknown as UserStore;
 
       rendererDi.override(userStoreInjectable, () => userStoreStub);
-
-      const themeStoreStub = { themeOptions: [] } as unknown as ThemeStore;
-
-      rendererDi.override(themeStoreInjectable, () => themeStoreStub);
+      rendererDi.override(ipcRendererInjectable, () => ({
+        on: jest.fn(),
+        invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
+      } as never));
     });
   });
 
@@ -61,6 +60,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     describe("when extension with specific preferences is enabled", () => {
       beforeEach(() => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
 
         applicationBuilder.addExtensions(testExtension);
@@ -107,9 +107,9 @@ describe("preferences - navigation to extension specific preferences", () => {
   });
 });
 
-const extensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExtension> = {
-  id: "some-test-extension-id",
-
+const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
+  id: "some-extension-id",
+  name: "some-extension-name",
   appPreferences: [
     {
       title: "Some preference item",

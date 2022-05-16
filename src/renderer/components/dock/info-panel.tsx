@@ -20,7 +20,7 @@ import dockStoreInjectable from "./dock/store.injectable";
 
 export interface InfoPanelProps extends OptionalProps {
   tabId: TabId;
-  submit?: () => Promise<ReactNode | string | void>;
+  submit?: () => Promise<string | React.ReactElement | React.ReactElement[] | null | undefined | false | void>;
 }
 
 export interface OptionalProps {
@@ -79,11 +79,15 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
     this.waiting = true;
 
     try {
-      const result = await this.props.submit();
+      const result = await this.props.submit?.();
 
-      if (showNotifications && result) Notifications.ok(result);
+      if (showNotifications && result) {
+        Notifications.ok(result);
+      }
     } catch (error) {
-      if (showNotifications) Notifications.error(error.toString());
+      if (showNotifications) {
+        Notifications.checkedError(error, "Unknown error while submitting");
+      }
     } finally {
       this.waiting = false;
     }
@@ -122,12 +126,22 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
         </div>
         {showStatusPanel && (
           <div className="flex gaps align-center">
-            {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
+            {waiting ? (
+              <>
+                <Spinner /> 
+                {" "}
+                {submittingMessage}
+              </>
+            ) : this.renderErrorIcon()}
           </div>
         )}
         {showButtons && (
           <>
-            <Button plain label="Cancel" onClick={close} />
+            <Button
+              plain
+              label="Cancel"
+              onClick={close} 
+            />
             <Button
               active
               outlined={showSubmitClose}
@@ -138,7 +152,8 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
             />
             {showSubmitClose && (
               <Button
-                primary active
+                primary
+                active
                 label={`${submitLabel} & Close`}
                 onClick={submitAndClose}
                 disabled={isDisabled}

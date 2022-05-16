@@ -2,33 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    padLevels: jest.fn(),
-    ms: jest.fn(),
-    printf: jest.fn(),
-    splat: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue(logger),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
 
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
@@ -43,18 +16,33 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { parse } from "url";
+import loggerInjectable from "../../common/logger.injectable";
+import type { Logger } from "../../common/logger";
+import assert from "assert";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
-  let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  let di: DiContainer; 
+  let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager | undefined;
+  let di: DiContainer;
+  let loggerMock: jest.Mocked<Logger>;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+
+    loggerMock = {
+      warn: jest.fn(),
+      debug: jest.fn(),
+      error: jest.fn(),
+      info: jest.fn(),
+      silly: jest.fn(),
+    };
+
+    di.override(loggerInjectable, () => loggerMock);
 
     mockFs({
       "minikube-config.yml": JSON.stringify({
@@ -82,9 +70,17 @@ describe("kubeconfig manager tests", () => {
 
     await di.runSetups();
 
-    di.override(createContextHandlerInjectable, () => () => {
-      throw new Error("you should never come here");
-    });
+    di.override(createContextHandlerInjectable, () => (cluster) => ({
+      restartServer: jest.fn(),
+      stopServer: jest.fn(),
+      clusterUrl: parse(cluster.apiUrl),
+      getApiTarget: jest.fn(),
+      getPrometheusDetails: jest.fn(),
+      resolveAuthProxyCa: jest.fn(),
+      resolveAuthProxyUrl: jest.fn(),
+      setupPrometheus: jest.fn(),
+      ensureServer: jest.fn(),
+    }));
 
     const createCluster = di.inject(createClusterInjectionToken);
 
@@ -96,10 +92,6 @@ describe("kubeconfig manager tests", () => {
       kubeConfigPath: "minikube-config.yml",
     });
 
-    clusterFake.contextHandler = {
-      ensureServer: () => Promise.resolve(),
-    } as any;
-
     jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
@@ -110,7 +102,9 @@ describe("kubeconfig manager tests", () => {
   it("should create 'temp' kube config with proxy", async () => {
     const kubeConfManager = createKubeconfigManager(clusterFake);
 
-    expect(logger.error).not.toBeCalled();
+    assert(kubeConfManager, "should actually create one");
+
+    expect(loggerMock.error).not.toBeCalled();
     expect(await kubeConfManager.getPath()).toBe(`some-directory-for-temp${path.sep}kubeconfig-foo`);
     // this causes an intermittent "ENXIO: no such device or address, read" error
     //    const file = await fse.readFile(await kubeConfManager.getPath());
@@ -124,6 +118,8 @@ describe("kubeconfig manager tests", () => {
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
     const kubeConfManager = createKubeconfigManager(clusterFake);
+
+    assert(kubeConfManager, "should actually create one");
 
     const configPath = await kubeConfManager.getPath();
 

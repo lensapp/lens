@@ -130,6 +130,14 @@ module.exports = {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "no-restricted-imports": ["error", {
+          "paths": [
+            {
+              "name": ".",
+              "message": "No importing from local index.ts(x?) file. A common way to make circular dependencies.",
+            },
+          ],
+        }],
         "@typescript-eslint/member-delimiter-style": ["error", {
           "multiline": {
             "delimiter": "semi",
@@ -139,6 +147,28 @@ module.exports = {
             "delimiter": "semi",
             "requireLast": false,
           },
+        }],
+        "react/jsx-max-props-per-line": ["error", {
+          "maximum": {
+            "single": 2,
+            "multi": 1,
+          },
+        }],
+        "react/jsx-first-prop-new-line": ["error", "multiline"],
+        "react/jsx-one-expression-per-line": ["error", {
+          "allow": "single-child",
+        }],
+        "react/jsx-indent": ["error", 2],
+        "react/jsx-indent-props": ["error", 2],
+        "react/jsx-closing-tag-location": "error",
+        "react/jsx-wrap-multilines": ["error", {
+          "declaration": "parens-new-line",
+          "assignment": "parens-new-line",
+          "return": "parens-new-line",
+          "arrow": "parens-new-line",
+          "condition": "parens-new-line",
+          "logical": "parens-new-line",
+          "prop": "parens-new-line",
         }],
         "react/display-name": "off",
         "space-before-function-paren": "off",
@@ -216,6 +246,36 @@ module.exports = {
         "react-hooks/exhaustive-deps": "off",
         "no-template-curly-in-string": "error",
         "@typescript-eslint/consistent-type-imports": "error",
+      },
+    },
+    {
+      files: [
+        "src/{common,main,renderer}/**/*.ts",
+        "src/{common,main,renderer}/**/*.tsx",
+      ],
+      rules: {
+        "no-restricted-imports": ["error", {
+          "paths": [
+            {
+              "name": ".",
+              "message": "No importing from local index.ts(x?) file. A common way to make circular dependencies.",
+            },
+            {
+              "name": "..",
+              "message": "No importing from parent index.ts(x?) file. A common way to make circular dependencies.",
+            },
+          ],
+          "patterns": [
+            {
+              "group": [
+                "**/extensions/renderer-api/**/*",
+                "**/extensions/main-api/**/*",
+                "**/extensions/common-api/**/*",
+              ],
+              message: "No importing from the extension api definitions in application code",
+            },
+          ],
+        }],
       },
     },
   ],

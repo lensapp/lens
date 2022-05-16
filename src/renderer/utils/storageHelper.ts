@@ -4,18 +4,24 @@
  */
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
-import { action, comparer, computed, makeObservable, observable, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, observe, toJS, when } from "mobx";
 import type { Draft } from "immer";
 import { produce, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 
+export interface StorageChange<T> {
+  key: string;
+  value: T | undefined;
+  oldValue: T | undefined;
+}
+
 export interface StorageAdapter<T> {
-  [metadata: string]: any;
+  [metadata: string]: unknown;
   getItem(key: string): T | Promise<T>;
   setItem(key: string, value: T): void;
   removeItem(key: string): void;
-  onChange?(change: { key: string; value: T; oldValue?: T }): void;
+  onChange?(change: StorageChange<T>): void;
 }
 
 export interface StorageHelperOptions<T> {
@@ -24,11 +30,21 @@ export interface StorageHelperOptions<T> {
   defaultValue: T;
 }
 
-export class StorageHelper<T> {
+export interface StorageLayer<T> {
+  isDefaultValue(val: T): boolean;
+  get(): T;
+  readonly value: T;
+  readonly whenReady: Promise<void>;
+  set(value: T): void;
+  reset(): void;
+  merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)): void;
+}
+
+export class StorageHelper<T> implements StorageLayer<T> {
   static logPrefix = "[StorageHelper]:";
   readonly storage: StorageAdapter<T>;
 
-  private data = observable.box<T>(undefined, {
+  private data = observable.box<T | undefined>(undefined, {
     deep: true,
     equals: comparer.structural,
   });
@@ -51,9 +67,8 @@ export class StorageHelper<T> {
 
     this.storage = storage;
 
-    // TODO: This code uses undocumented MobX internal to criminally permit exotic mutations without encapsulation.
-    this.data.observe_(({ newValue, oldValue }) => {
-      this.onChange(newValue as T, oldValue as T);
+    observe(this.data, (change) => {
+      this.onChange(change.newValue as T | undefined, change.oldValue as T | undefined);
     });
 
     if (autoInit) {
@@ -99,7 +114,7 @@ export class StorageHelper<T> {
     return isEqual(value, this.defaultValue);
   }
 
-  protected onChange(value: T, oldValue?: T) {
+  protected onChange(value: T | undefined, oldValue: T | undefined) {
     if (!this.initialized) return;
 
     try {
@@ -115,9 +130,6 @@ export class StorageHelper<T> {
     }
   }
 
-  /**
-   * @deprecated Switch to using value for being reactive
-   */
   get(): T {
     return this.value;
   }
@@ -143,7 +155,7 @@ export class StorageHelper<T> {
 
   @action
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const nextValue = produce<T>(this.toJSON(), (draft: Draft<T>) => {
+    const nextValue = produce<T>(toJS(this.get()), (draft) => {
 
       if (typeof value == "function") {
         const newValue = value(draft);
@@ -161,9 +173,5 @@ export class StorageHelper<T> {
     });
 
     this.set(nextValue);
-  }
-
-  toJSON(): T {
-    return toJS(this.get());
   }
 }

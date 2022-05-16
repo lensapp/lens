@@ -3,28 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { Route } from "../../../router/router";
 import { helmService } from "../../../helm/helm-service";
-import { routeInjectionToken } from "../../../router/router.injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import { getRouteInjectable } from "../../../router/router.injectable";
+import { clusterRoute } from "../../../router/route";
 
-const listReleasesRouteInjectable = getInjectable({
+const listReleasesRouteInjectable = getRouteInjectable({
   id: "list-releases-route",
 
-  instantiate: (): Route<Record<string, any>> => ({
+  instantiate: () => clusterRoute({
     method: "get",
     path: `${apiPrefix}/v2/releases/{namespace?}`,
-
-    handler: async (request) => {
-      const { cluster, params } = request;
-
-      return {
-        response: await helmService.listReleases(cluster, params.namespace),
-      };
-    },
-  }),
-
-  injectionToken: routeInjectionToken,
+  })(async ({ cluster, params }) => ({
+    response: await helmService.listReleases(cluster, params.namespace),
+  })),
 });
 
 export default listReleasesRouteInjectable;
