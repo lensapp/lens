@@ -11,7 +11,9 @@ import registerIpcChannelListenerInjectable from "../renderer/app-paths/get-valu
 import type { SendToViewArgs } from "../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import sendToChannelInElectronBrowserWindowInjectable from "../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import { isEmpty } from "lodash/fp";
-
+import enlistChannelListenerInjectableInRenderer from "../renderer/channel/channel-listeners/enlist-channel-listener.injectable";
+import enlistChannelListenerInjectableInMain from "../main/channel/channel-listeners/enlist-channel-listener.injectable";
+import sendToMainInjectable from "../renderer/channel/send-to-main.injectable";
 
 export const overrideIpcBridge = ({
   rendererDi,
@@ -100,5 +102,50 @@ export const overrideIpcBridge = ({
 
         handles.forEach((handle) => handle(...data));
       },
+  );
+
+  const mainIpcFakeHandles = new Map<
+    string,
+    ((...args: any[]) => void)[]
+  >();
+
+  rendererDi.override(
+    enlistChannelListenerInjectableInRenderer,
+    () => (channel, handler) => {
+      const existingHandles = rendererIpcFakeHandles.get(channel.id) || [];
+
+      rendererIpcFakeHandles.set(channel.id, [...existingHandles, handler]);
+
+      return () => {
+
+      };
+    },
+  );
+
+  rendererDi.override(sendToMainInjectable, () => (channelId, message) => {
+    const handles = mainIpcFakeHandles.get(channelId);
+
+    if (isEmpty(handles)) {
+      throw new Error(
+        `Tried to send message to channel "${channelId}" but there where no listeners. Current channels with listeners: "${[
+          ...mainIpcFakeHandles.keys(),
+        ].join('", "')}"`,
+      );
+    }
+
+    handles.forEach((handle) => handle(message));
+  });
+
+  mainDi.override(
+    enlistChannelListenerInjectableInMain,
+    () => (channel, handler) => {
+      const existingHandles = mainIpcFakeHandles.get(channel.id) || [];
+
+      mainIpcFakeHandles.set(channel.id, [...existingHandles, handler]);
+
+      return () => {
+
+      };
+    },
   );
 };
