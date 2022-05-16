@@ -10,9 +10,9 @@ import showApplicationWindowInjectable from "../start-main-application/lens-wind
 import showNotificationInjectable from "../show-notification/show-notification.injectable";
 import askBooleanInjectable from "../ask-boolean/ask-boolean.injectable";
 import quitAndInstallUpdateInjectable from "../electron-app/features/quit-and-install-update.injectable";
-import discoveredVersionStateInjectable from "../../common/application-update/discovered-version/discovered-version-state.injectable";
-import downloadingUpdateStateInjectable from "../../common/application-update/downloading-update/downloading-update-state.injectable";
-import checkingForUpdatesStateInjectable from "../../common/application-update/checking-for-updates/checking-for-updates-state.injectable";
+import discoveredUpdateVersionInjectable from "../../common/application-update/discovered-update-version/discovered-update-version.injectable";
+import updateIsBeingDownloadedInjectable from "../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
+import updatesAreBeingDiscoveredInjectable from "../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
 import checkForUpdatesInjectable from "./check-for-updates/check-for-updates.injectable";
 import downloadUpdateInjectable from "./download-update/download-update.injectable";
 import progressOfUpdateDownloadInjectable from "../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
@@ -27,9 +27,9 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const showNotification = di.inject(showNotificationInjectable);
     const askBoolean = di.inject(askBooleanInjectable);
     const quitAndInstallUpdate = di.inject(quitAndInstallUpdateInjectable);
-    const discoveredVersionState = di.inject(discoveredVersionStateInjectable);
-    const downloadingUpdateState = di.inject(downloadingUpdateStateInjectable);
-    const checkingForUpdatesState = di.inject(checkingForUpdatesStateInjectable);
+    const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
+    const downloadingUpdateState = di.inject(updateIsBeingDownloadedInjectable);
+    const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const checkForUpdates = di.inject(checkForUpdatesInjectable);
     const downloadUpdate = di.inject(downloadUpdateInjectable);
 

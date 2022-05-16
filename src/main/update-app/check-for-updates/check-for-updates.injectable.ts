@@ -8,8 +8,8 @@ import checkForPlatformUpdatesInjectable from "../check-for-platform-updates/che
 import type { UpdateChannel } from "../update-channels";
 import selectedUpdateChannelInjectable from "../selected-update-channel.injectable";
 import showNotificationInjectable from "../../show-notification/show-notification.injectable";
-import checkingForUpdatesStateInjectable from "../../../common/application-update/checking-for-updates/checking-for-updates-state.injectable";
-import discoveredVersionStateInjectable from "../../../common/application-update/discovered-version/discovered-version-state.injectable";
+import updatesAreBeingDiscoveredInjectable from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
+import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import { runInAction } from "mobx";
 
 const checkForUpdatesInjectable = getInjectable({
@@ -24,10 +24,10 @@ const checkForUpdatesInjectable = getInjectable({
     );
 
     const checkingForUpdatesState = di.inject(
-      checkingForUpdatesStateInjectable,
+      updatesAreBeingDiscoveredInjectable,
     );
 
-    const discoveredVersionState = di.inject(discoveredVersionStateInjectable);
+    const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
 
     return async () => {
       runInAction(() => {

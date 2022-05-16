@@ -8,7 +8,7 @@ import { getStartableStoppable } from "../../../common/utils/get-startable-stopp
 import setUpdateOnQuitInjectable from "../../electron-app/features/set-update-on-quit.injectable";
 import selectedUpdateChannelInjectable from "../selected-update-channel.injectable";
 import type { UpdateChannel } from "../update-channels";
-import discoveredVersionStateInjectable from "../../../common/application-update/discovered-version/discovered-version-state.injectable";
+import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 
 const watchIfUpdateShouldHappenOnQuitInjectable = getInjectable({
   id: "watch-if-update-should-happen-on-quit",
@@ -16,7 +16,7 @@ const watchIfUpdateShouldHappenOnQuitInjectable = getInjectable({
   instantiate: (di) => {
     const setUpdateOnQuit = di.inject(setUpdateOnQuitInjectable);
     const selectedUpdateChannel = di.inject(selectedUpdateChannelInjectable);
-    const discoveredVersionState = di.inject(discoveredVersionStateInjectable);
+    const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
 
     return getStartableStoppable("watch-if-update-should-happen-on-quit", () =>
       autorun(() => {

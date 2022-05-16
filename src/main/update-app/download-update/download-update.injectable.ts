@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import downloadPlatformUpdateInjectable from "../download-platform-update/download-platform-update.injectable";
-import downloadingUpdateStateInjectable from "../../../common/application-update/downloading-update/downloading-update-state.injectable";
-import discoveredVersionStateInjectable from "../../../common/application-update/discovered-version/discovered-version-state.injectable";
+import updateIsBeingDownloadedInjectable from "../../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
+import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import { action, runInAction } from "mobx";
 import progressOfUpdateDownloadInjectable from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 
@@ -14,8 +14,8 @@ const downloadUpdateInjectable = getInjectable({
 
   instantiate: (di) => {
     const downloadPlatformUpdate = di.inject(downloadPlatformUpdateInjectable);
-    const downloadingUpdateState = di.inject(downloadingUpdateStateInjectable);
-    const discoveredVersionState = di.inject(discoveredVersionStateInjectable);
+    const downloadingUpdateState = di.inject(updateIsBeingDownloadedInjectable);
+    const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const progressOfUpdateDownload = di.inject(progressOfUpdateDownloadInjectable);
 
     const updateDownloadProgress = action((percentage: number) => {
