@@ -11,7 +11,7 @@ const updatesAreBeingDiscoveredInjectable = getInjectable({
   instantiate: (di) => {
     const createSyncBox = di.inject(createSyncBoxInjectable);
 
-    return createSyncBox("updates-are-being-discovered");
+    return createSyncBox<boolean>("updates-are-being-discovered");
   },
 });
 

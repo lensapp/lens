@@ -13,7 +13,7 @@ const enlistChannelListenerInjectable = getInjectable({
   instantiate: (di) => {
     const ipcMain = di.inject(ipcMainInjectable);
 
-    return (channel: any, handler: any) => {
+    return (channel, handler) => {
       const nativeCallback = (_: IpcMainEvent, message: unknown) =>
         handler(message);
 

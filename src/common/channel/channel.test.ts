@@ -6,6 +6,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import { lensWindowInjectionToken } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import type { SendToAgnosticChannel } from "./send-to-agnostic-channel-injection-token";
 import { sendToAgnosticChannelInjectionToken } from "./send-to-agnostic-channel-injection-token";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { channelListenerInjectionToken } from "./channel-listener-injection-token";
@@ -13,12 +14,14 @@ import createLensWindowInjectable from "../../main/start-main-application/lens-w
 import type { Channel } from "./channel-injection-token";
 import { channelInjectionToken } from "./channel-injection-token";
 
+type TestChannel = Channel<string>;
+
 describe("channel", () => {
   describe("messaging from main to renderer, given listener for channel in a window and application has started", () => {
-    let testChannel: Channel;
+    let testChannel: TestChannel;
     let testListenerInWindowMock: jest.Mock;
     let mainDi: DiContainer;
-    let sendToAgnosticChannel: (channel: Channel, message: any) => void;
+    let sendToAgnosticChannel: SendToAgnosticChannel;
 
     beforeEach(async () => {
       const applicationBuilder = getApplicationBuilder();
@@ -96,11 +99,11 @@ describe("channel", () => {
   });
 
   describe("messaging from renderer to main, given listener for channel in a main and application has started", () => {
-    let testChannel: Channel;
+    let testChannel: TestChannel;
     let testListenerInMainMock: jest.Mock;
     let rendererDi: DiContainer;
     let mainDi: DiContainer;
-    let sendToAgnosticChannel: (channel: Channel, message: any) => void;
+    let sendToAgnosticChannel: SendToAgnosticChannel;
 
     beforeEach(async () => {
       const applicationBuilder = getApplicationBuilder();

@@ -17,7 +17,7 @@ const createSyncBoxInjectable = getInjectable({
     const sendToAgnosticChannel = di.inject(sendToAgnosticChannelInjectionToken);
     const getSyncBoxState = (id: string) => di.inject(syncBoxStateInjectable, id);
 
-    return (id: string): SyncBox<any> => {
+    return <TData>(id: string): SyncBox<TData> => {
       const state = getSyncBoxState(id);
 
       return {
@@ -36,7 +36,6 @@ const createSyncBoxInjectable = getInjectable({
 });
 
 export default createSyncBoxInjectable;
-
 
 export interface SyncBox<TValue> {
   id: string;

@@ -11,7 +11,7 @@ const updateIsBeingDownloadedInjectable = getInjectable({
   instantiate: (di) => {
     const createSyncBox = di.inject(createSyncBoxInjectable);
 
-    return createSyncBox("update-is-being-downloaded");
+    return createSyncBox<boolean>("update-is-being-downloaded");
   },
 });
 
