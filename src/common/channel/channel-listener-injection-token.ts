@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Channel } from "./channel-injection-token";
+import type { Channel } from "./channel";
 
 export interface ChannelListener<TChannel extends Channel<unknown>> {
   channel: TChannel;
