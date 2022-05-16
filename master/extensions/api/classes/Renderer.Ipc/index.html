@@ -918,10 +918,10 @@
 <h3 id="ipcprefix">[IpcPrefix]<a class="headerlink" href="#ipcprefix" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>[IpcPrefix]</strong>: <code>string</code></p>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>IpcRegistrar.__@IpcPrefix@56394</p>
+<p>IpcRegistrar.__@IpcPrefix@69758</p>
 <hr />
 <h3 id="extension">extension<a class="headerlink" href="#extension" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>extension</strong>: <code>LensExtension</code></p>
+<p>• <code>Protected</code> <strong>extension</strong>: <code>LensExtension</code>&lt;<code>LensExtensionDependencies</code>></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>IpcRegistrar.extension</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
@@ -1098,7 +1098,6 @@ only the first's arguments will be used.</p>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
-<th align="left">Default value</th>
 <th align="left">Description</th>
 </tr>
 </thead>
@@ -1106,12 +1105,10 @@ only the first's arguments will be used.</p>
 <tr>
 <td align="left"><code>this</code></td>
 <td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
-<td align="left"><code>undefined</code></td>
 <td align="left">Implicit argument that is the child class type</td>
 </tr>
 <tr>
-<td align="left"><code>strict</code></td>
-<td align="left"><code>boolean</code></td>
+<td align="left"><code>strict?</code></td>
 <td align="left"><code>true</code></td>
 <td align="left">If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
 </tr>
@@ -1122,15 +1119,58 @@ only the first's arguments will be used.</p>
 <p>An instance of the child class</p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>IpcRegistrar.getInstance</p>
+<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>strict</code>): <code>undefined</code> | <code>T</code></p>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left"><code>T</code></td>
+</tr>
+<tr>
+<td align="left"><code>R</code></td>
+<td align="left">extends <code>any</code>[]</td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>this</code></td>
+<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
+</tr>
+<tr>
+<td align="left"><code>strict</code></td>
+<td align="left"><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><code>undefined</code> | <code>T</code></p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p>IpcRegistrar.getInstance</p>
 <hr />
 <h3 id="resetinstance">resetInstance<a class="headerlink" href="#resetinstance" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>resetInstance</strong>(): <code>void</code></p>
 <p>Delete the instance of the child class.</p>
 <p>Note: this doesn't prevent callers of <code>getInstance</code> from storing the result in a global.</p>
 <p>There is <em>no</em> way in JS or TS to prevent globals like that.</p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>IpcRegistrar.resetInstance</p>
                 
               

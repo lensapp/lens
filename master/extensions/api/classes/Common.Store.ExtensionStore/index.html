@@ -1115,7 +1115,7 @@ Licensed under MIT License. See LICENSE in root directory for more information.<
 <p>BaseStore.displayName</p>
 <hr />
 <h3 id="extension">extension<a class="headerlink" href="#extension" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>extension</strong>: <code>LensExtension</code></p>
+<p>• <code>Protected</code> <code>Optional</code> <strong>extension</strong>: <code>LensExtension</code>&lt;<code>LensExtensionDependencies</code>></p>
 <hr />
 <h3 id="params">params<a class="headerlink" href="#params" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <strong>params</strong>: <code>BaseStoreParams</code>&lt;<code>T</code>></p>
@@ -1250,7 +1250,7 @@ system.</p>
 <tbody>
 <tr>
 <td align="left"><code>extension</code></td>
-<td align="left"><code>LensExtension</code></td>
+<td align="left"><code>LensExtension</code>&lt;<code>LensExtensionDependencies</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1445,7 +1445,6 @@ only the first's arguments will be used.</p>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
-<th align="left">Default value</th>
 <th align="left">Description</th>
 </tr>
 </thead>
@@ -1453,12 +1452,10 @@ only the first's arguments will be used.</p>
 <tr>
 <td align="left"><code>this</code></td>
 <td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
-<td align="left"><code>undefined</code></td>
 <td align="left">Implicit argument that is the child class type</td>
 </tr>
 <tr>
-<td align="left"><code>strict</code></td>
-<td align="left"><code>boolean</code></td>
+<td align="left"><code>strict?</code></td>
 <td align="left"><code>true</code></td>
 <td align="left">If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
 </tr>
@@ -1469,15 +1466,58 @@ only the first's arguments will be used.</p>
 <p>An instance of the child class</p>
 <h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p>BaseStore.getInstance</p>
+<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>strict</code>): <code>undefined</code> | <code>T</code></p>
+<h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left"><code>T</code></td>
+</tr>
+<tr>
+<td align="left"><code>R</code></td>
+<td align="left">extends <code>any</code>[]</td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>this</code></td>
+<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
+</tr>
+<tr>
+<td align="left"><code>strict</code></td>
+<td align="left"><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<p><code>undefined</code> | <code>T</code></p>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<p>BaseStore.getInstance</p>
 <hr />
 <h3 id="resetinstance">resetInstance<a class="headerlink" href="#resetinstance" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>resetInstance</strong>(): <code>void</code></p>
 <p>Delete the instance of the child class.</p>
 <p>Note: this doesn't prevent callers of <code>getInstance</code> from storing the result in a global.</p>
 <p>There is <em>no</em> way in JS or TS to prevent globals like that.</p>
-<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p>BaseStore.resetInstance</p>
                 
               

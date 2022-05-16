@@ -1210,7 +1210,7 @@ Should be used with type annotation or static contextType.</p>
 <p>React.Component.context</p>
 <hr />
 <h3 id="input">input<a class="headerlink" href="#input" title="Permanent link">#</a></h3>
-<p>• <strong>input</strong>: <code>InputElement</code> = <code>null</code></p>
+<p>• <strong>input</strong>: <code>null</code> | <code>InputElement</code> = <code>null</code></p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../modules/Renderer.Component/#inputprops"><code>InputProps</code></a>> &amp; <code>Readonly</code>&lt;{ <code>children?</code>: <code>ReactNode</code>  }></p>
@@ -1235,7 +1235,7 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>React.Component.state</p>
 <hr />
 <h3 id="validators">validators<a class="headerlink" href="#validators" title="Permanent link">#</a></h3>
-<p>• <strong>validators</strong>: <a href="../../interfaces/Renderer.Component.InputValidator/"><code>InputValidator</code></a>[] = <code>[]</code></p>
+<p>• <strong>validators</strong>: <a href="../../modules/Renderer.Component/#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>[] = <code>[]</code></p>
 <hr />
 <h3 id="contexttype">contextType<a class="headerlink" href="#contexttype" title="Permanent link">#</a></h3>
 <p>▪ <code>Static</code> <code>Optional</code> <strong>contextType</strong>: <code>Context</code>&lt;<code>any</code>></p>
@@ -1265,9 +1265,9 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p><code>boolean</code></p>
 <hr />
 <h3 id="showmaxlenindicator">showMaxLenIndicator<a class="headerlink" href="#showmaxlenindicator" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>showMaxLenIndicator</strong>(): <code>boolean</code></p>
+<p>• <code>get</code> <strong>showMaxLenIndicator</strong>(): <code>undefined</code> | <code>boolean</code> | <code>0</code></p>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>boolean</code></p>
+<p><code>undefined</code> | <code>boolean</code> | <code>0</code></p>
 <hr />
 <h3 id="themeselection">themeSelection<a class="headerlink" href="#themeselection" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>themeSelection</strong>(): <code>Record</code>&lt;<code>string</code>, <code>boolean</code>></p>
@@ -1743,7 +1743,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left"><code>State</code> | (<code>prevState</code>: <code>Readonly</code>&lt;<code>State</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../modules/Renderer.Component/#inputprops"><code>InputProps</code></a>>) =&gt; <code>State</code> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>></td>
+<td align="left"><code>null</code> | <code>State</code> | (<code>prevState</code>: <code>Readonly</code>&lt;<code>State</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../modules/Renderer.Component/#inputprops"><code>InputProps</code></a>>) =&gt; <code>null</code> | <code>State</code> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>

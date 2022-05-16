@@ -1088,7 +1088,7 @@
 <p>React.Component.context</p>
 <hr />
 <h3 id="elem">elem<a class="headerlink" href="#elem" title="Permanent link">#</a></h3>
-<p>• <strong>elem</strong>: <code>HTMLElement</code></p>
+<p>• <strong>elem</strong>: <code>null</code> | <code>HTMLElement</code> = <code>null</code></p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MenuItemProps/"><code>MenuItemProps</code></a>> &amp; <code>Readonly</code>&lt;{ <code>children?</code>: <code>ReactNode</code>  }></p>
@@ -1110,7 +1110,7 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>React.Component.state</p>
 <hr />
 <h3 id="contexttype">contextType<a class="headerlink" href="#contexttype" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <strong>contextType</strong>: <code>Context</code>&lt;<a href="../Renderer.Component.Menu/"><code>Menu</code></a>> = <code>MenuContext</code></p>
+<p>▪ <code>Static</code> <strong>contextType</strong>: <code>Context</code>&lt;<code>null</code> | <a href="../Renderer.Component.Menu/"><code>Menu</code></a>> = <code>MenuContext</code></p>
 <h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p>React.Component.contextType</p>
 <hr />
@@ -1507,7 +1507,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;{}>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MenuItemProps/"><code>MenuItemProps</code></a>>) =&gt; {} | <code>Pick</code>&lt;{}, <code>K</code>> | <code>Pick</code>&lt;{}, <code>K</code>></td>
+<td align="left"><code>null</code> | {} | (<code>prevState</code>: <code>Readonly</code>&lt;{}>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MenuItemProps/"><code>MenuItemProps</code></a>>) =&gt; <code>null</code> | {} | <code>Pick</code>&lt;{}, <code>K</code>> | <code>Pick</code>&lt;{}, <code>K</code>></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>

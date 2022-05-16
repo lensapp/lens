@@ -747,6 +747,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -775,8 +782,36 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#catalogentitydatafor" class="md-nav__link">
+    CatalogEntityDataFor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogentityinstancefrom" class="md-nav__link">
+    CatalogEntityInstanceFrom
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#catalogentityspec" class="md-nav__link">
     CatalogEntitySpec
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entitymetadataobject" class="md-nav__link">
+    EntityMetadataObject
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entitymetadatavalue" class="md-nav__link">
+    EntityMetadataValue
   </a>
   
 </li>
@@ -820,6 +855,26 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#categoryversion" class="md-nav__link">
+    categoryVersion
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -848,6 +903,7 @@
 <h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="../../interfaces/Common.Catalog.CatalogCategoryEvents/">CatalogCategoryEvents</a></li>
+<li><a href="../../interfaces/Common.Catalog.CatalogCategoryMetadata/">CatalogCategoryMetadata</a></li>
 <li><a href="../../interfaces/Common.Catalog.CatalogCategorySpec/">CatalogCategorySpec</a></li>
 <li><a href="../../interfaces/Common.Catalog.CatalogCategoryVersion/">CatalogCategoryVersion</a></li>
 <li><a href="../../interfaces/Common.Catalog.CatalogEntityActionContext/">CatalogEntityActionContext</a></li>
@@ -873,13 +929,21 @@
 <ul>
 <li><a href="./#addmenufilter">AddMenuFilter</a></li>
 <li><a href="./#catalogentityconstructor">CatalogEntityConstructor</a></li>
+<li><a href="./#catalogentitydatafor">CatalogEntityDataFor</a></li>
+<li><a href="./#catalogentityinstancefrom">CatalogEntityInstanceFrom</a></li>
 <li><a href="./#catalogentityspec">CatalogEntitySpec</a></li>
+<li><a href="./#entitymetadataobject">EntityMetadataObject</a></li>
+<li><a href="./#entitymetadatavalue">EntityMetadataValue</a></li>
 <li><a href="./#kubernetesclusterstatusphase">KubernetesClusterStatusPhase</a></li>
 <li><a href="./#weblinkstatusphase">WebLinkStatusPhase</a></li>
 </ul>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#kubernetesclustercategory">kubernetesClusterCategory</a></li>
+</ul>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#categoryversion">categoryVersion</a></li>
 </ul>
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
 <h3 id="addmenufilter">AddMenuFilter<a class="headerlink" href="#addmenufilter" title="Permanent link">#</a></h3>
@@ -906,7 +970,7 @@
 <p><code>any</code></p>
 <hr />
 <h3 id="catalogentityconstructor">CatalogEntityConstructor<a class="headerlink" href="#catalogentityconstructor" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>CatalogEntityConstructor</strong>&lt;<code>Entity</code>>: (<code>data</code>: <a href="../../interfaces/Common.Catalog.CatalogEntityData/"><code>CatalogEntityData</code></a>&lt;<code>ExtractEntityMetadataType</code>&lt;<code>Entity</code>>, <code>ExtractEntityStatusType</code>&lt;<code>Entity</code>>, <code>ExtractEntitySpecType</code>&lt;<code>Entity</code>>>) =&gt; <code>Entity</code></p>
+<p>Ƭ <strong>CatalogEntityConstructor</strong>&lt;<code>Entity</code>>: (<code>data</code>: <a href="./#catalogentitydatafor"><code>CatalogEntityDataFor</code></a>&lt;<code>Entity</code>>) =&gt; <code>Entity</code></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -935,13 +999,51 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><a href="../../interfaces/Common.Catalog.CatalogEntityData/"><code>CatalogEntityData</code></a>&lt;<code>ExtractEntityMetadataType</code>&lt;<code>Entity</code>>, <code>ExtractEntityStatusType</code>&lt;<code>Entity</code>>, <code>ExtractEntitySpecType</code>&lt;<code>Entity</code>>></td>
+<td align="left"><a href="./#catalogentitydatafor"><code>CatalogEntityDataFor</code></a>&lt;<code>Entity</code>></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="catalogentitydatafor">CatalogEntityDataFor<a class="headerlink" href="#catalogentitydatafor" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>CatalogEntityDataFor</strong>&lt;<code>Entity</code>>: <code>Entity</code> extends <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;infer Metadata, infer Status, infer Spec> ? <a href="../../interfaces/Common.Catalog.CatalogEntityData/"><code>CatalogEntityData</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>> : <code>never</code></p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Entity</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="catalogentityinstancefrom">CatalogEntityInstanceFrom<a class="headerlink" href="#catalogentityinstancefrom" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>CatalogEntityInstanceFrom</strong>&lt;<code>Constructor</code>>: <code>Constructor</code> extends <a href="./#catalogentityconstructor"><code>CatalogEntityConstructor</code></a>&lt;infer Entity> ? <code>Entity</code> : <code>never</code></p>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Constructor</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="catalogentityspec">CatalogEntitySpec<a class="headerlink" href="#catalogentityspec" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>CatalogEntitySpec</strong>: <code>Record</code>&lt;<code>string</code>, <code>any</code>></p>
+<hr />
+<h3 id="entitymetadataobject">EntityMetadataObject<a class="headerlink" href="#entitymetadataobject" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>EntityMetadataObject</strong>: { [Key in string]?: EntityMetadataValue }</p>
+<hr />
+<h3 id="entitymetadatavalue">EntityMetadataValue<a class="headerlink" href="#entitymetadatavalue" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>EntityMetadataValue</strong>: <code>string</code> | <code>number</code> | <code>boolean</code> | <a href="./#entitymetadataobject"><code>EntityMetadataObject</code></a> | <code>undefined</code></p>
 <hr />
 <h3 id="kubernetesclusterstatusphase">KubernetesClusterStatusPhase<a class="headerlink" href="#kubernetesclusterstatusphase" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>KubernetesClusterStatusPhase</strong>: <code>"connected"</code> | <code>"connecting"</code> | <code>"disconnected"</code> | <code>"deleting"</code></p>
@@ -952,8 +1054,57 @@
 <h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
 <h3 id="kubernetesclustercategory">kubernetesClusterCategory<a class="headerlink" href="#kubernetesclustercategory" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>kubernetesClusterCategory</strong>: <code>KubernetesClusterCategory</code></p>
-<p>Copyright (c) OpenLens Authors. All rights reserved.
-Licensed under MIT License. See LICENSE in root directory for more information.</p>
+<h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
+<h3 id="categoryversion">categoryVersion<a class="headerlink" href="#categoryversion" title="Permanent link">#</a></h3>
+<p>▸ <strong>categoryVersion</strong>&lt;<code>T</code>, <code>Metadata</code>, <code>Status</code>, <code>Spec</code>>(<code>name</code>, <code>entityClass</code>): <a href="../../interfaces/Common.Catalog.CatalogCategoryVersion/"><code>CatalogCategoryVersion</code></a></p>
+<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left">extends <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>, <code>T</code>></td>
+</tr>
+<tr>
+<td align="left"><code>Metadata</code></td>
+<td align="left">extends <a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>&lt;<code>Metadata</code>></td>
+</tr>
+<tr>
+<td align="left"><code>Status</code></td>
+<td align="left">extends <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>Spec</code></td>
+<td align="left">extends <a href="./#catalogentityspec"><code>CatalogEntitySpec</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>name</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>entityClass</code></td>
+<td align="left">(<code>data</code>: <a href="../../interfaces/Common.Catalog.CatalogEntityData/"><code>CatalogEntityData</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>>) =&gt; <code>T</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><a href="../../interfaces/Common.Catalog.CatalogCategoryVersion/"><code>CatalogCategoryVersion</code></a></p>
                 
               
               

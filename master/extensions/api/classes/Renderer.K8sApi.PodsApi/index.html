@@ -830,6 +830,27 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#docheckpreferredversion" class="md-nav__link">
+    doCheckPreferredVersion
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallbackapibases" class="md-nav__link">
+    fallbackApiBases
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fullapipathname" class="md-nav__link">
+    fullApiPathname
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#isnamespaced" class="md-nav__link">
     isNamespaced
   </a>
@@ -846,13 +867,6 @@
           <li class="md-nav__item">
   <a href="#objectconstructor" class="md-nav__link">
     objectConstructor
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    options
   </a>
   
 </li>
@@ -1069,10 +1083,12 @@
 <li><a href="./#apiresource">apiResource</a></li>
 <li><a href="./#apiversion">apiVersion</a></li>
 <li><a href="./#apiversionpreferred">apiVersionPreferred</a></li>
+<li><a href="./#docheckpreferredversion">doCheckPreferredVersion</a></li>
+<li><a href="./#fallbackapibases">fallbackApiBases</a></li>
+<li><a href="./#fullapipathname">fullApiPathname</a></li>
 <li><a href="./#isnamespaced">isNamespaced</a></li>
 <li><a href="./#kind">kind</a></li>
 <li><a href="./#objectconstructor">objectConstructor</a></li>
-<li><a href="./#options">options</a></li>
 <li><a href="./#request">request</a></li>
 <li><a href="./#resourceversions">resourceVersions</a></li>
 <li><a href="./#watchdisposer">watchDisposer</a></li>
@@ -1103,7 +1119,7 @@
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new PodsApi</strong>(<code>options</code>)</p>
+<p>• <strong>new PodsApi</strong>(<code>opts?</code>)</p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1114,99 +1130,105 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>options</code></td>
-<td align="left"><code>IKubeApiOptions</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></td>
+<td align="left"><code>opts</code></td>
+<td align="left"><code>DerivedKubeApiOptions</code> &amp; <code>IgnoredKubeApiOptions</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#constructor">constructor</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="apibase">apiBase<a class="headerlink" href="#apibase" title="Permanent link">#</a></h3>
 <p>• <strong>apiBase</strong>: <code>string</code></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#apibase">apiBase</a></p>
 <hr />
 <h3 id="apigroup">apiGroup<a class="headerlink" href="#apigroup" title="Permanent link">#</a></h3>
 <p>• <strong>apiGroup</strong>: <code>string</code></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#apigroup">apiGroup</a></p>
 <hr />
 <h3 id="apiprefix">apiPrefix<a class="headerlink" href="#apiprefix" title="Permanent link">#</a></h3>
 <p>• <strong>apiPrefix</strong>: <code>string</code></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#apiprefix">apiPrefix</a></p>
 <hr />
 <h3 id="apiresource">apiResource<a class="headerlink" href="#apiresource" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>apiResource</strong>: <code>string</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#apiresource">apiResource</a></p>
 <hr />
 <h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>string</code></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#apiversion">apiVersion</a></p>
 <hr />
 <h3 id="apiversionpreferred">apiVersionPreferred<a class="headerlink" href="#apiversionpreferred" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>apiVersionPreferred</strong>: <code>string</code></p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p>• <strong>apiVersionPreferred</strong>: <code>undefined</code> | <code>string</code></p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#apiversionpreferred">apiVersionPreferred</a></p>
+<hr />
+<h3 id="docheckpreferredversion">doCheckPreferredVersion<a class="headerlink" href="#docheckpreferredversion" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>doCheckPreferredVersion</strong>: <code>boolean</code></p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#docheckpreferredversion">doCheckPreferredVersion</a></p>
+<hr />
+<h3 id="fallbackapibases">fallbackApiBases<a class="headerlink" href="#fallbackapibases" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>fallbackApiBases</strong>: <code>undefined</code> | <code>string</code>[]</p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#fallbackapibases">fallbackApiBases</a></p>
+<hr />
+<h3 id="fullapipathname">fullApiPathname<a class="headerlink" href="#fullapipathname" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>fullApiPathname</strong>: <code>string</code></p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#fullapipathname">fullApiPathname</a></p>
 <hr />
 <h3 id="isnamespaced">isNamespaced<a class="headerlink" href="#isnamespaced" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>isNamespaced</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#isnamespaced">isNamespaced</a></p>
 <hr />
 <h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>kind</strong>: <code>string</code></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#kind">kind</a></p>
 <hr />
 <h3 id="objectconstructor">objectConstructor<a class="headerlink" href="#objectconstructor" title="Permanent link">#</a></h3>
-<p>• <strong>objectConstructor</strong>: <code>KubeObjectConstructor</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p>• <code>Readonly</code> <strong>objectConstructor</strong>: <code>KubeObjectConstructor</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>, <code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespace</code>>, <code>PodStatus</code>, <code>PodSpec</code>>></p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#objectconstructor">objectConstructor</a></p>
 <hr />
-<h3 id="options">options<a class="headerlink" href="#options" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>options</strong>: <code>IKubeApiOptions</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#options">options</a></p>
-<hr />
 <h3 id="request">request<a class="headerlink" href="#request" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>request</strong>: <a href="../Renderer.K8sApi.KubeJsonApi/"><code>KubeJsonApi</code></a></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>request</strong>: <code>KubeJsonApi</code></p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#request">request</a></p>
 <hr />
 <h3 id="resourceversions">resourceVersions<a class="headerlink" href="#resourceversions" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>resourceVersions</strong>: <code>Map</code>&lt;<code>string</code>, <code>string</code>></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>resourceVersions</strong>: <code>Map</code>&lt;<code>string</code>, <code>string</code>></p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#resourceversions">resourceVersions</a></p>
 <hr />
 <h3 id="watchdisposer">watchDisposer<a class="headerlink" href="#watchdisposer" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>watchDisposer</strong>: () =&gt; <code>void</code></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<p>▸ (): <code>void</code></p>
-<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>watchDisposer</strong>: <code>undefined</code> | <code>Disposer</code></p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#watchdisposer">watchDisposer</a></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="apiversionwithgroup">apiVersionWithGroup<a class="headerlink" href="#apiversionwithgroup" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>apiVersionWithGroup</strong>(): <code>string</code></p>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>KubeApi.apiVersionWithGroup</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="checkpreferredversion">checkPreferredVersion<a class="headerlink" href="#checkpreferredversion" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>checkPreferredVersion</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#checkpreferredversion">checkPreferredVersion</a></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <strong>create</strong>(<code>__namedParameters</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<p>▸ <strong>create</strong>(<code>__namedParameters</code>, <code>partialData?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1221,18 +1243,18 @@
 <td align="left"><code>Partial</code>&lt;<code>ResourceDescriptor</code>></td>
 </tr>
 <tr>
-<td align="left"><code>data?</code></td>
-<td align="left"><code>PartialKubeObject</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></td>
+<td align="left"><code>partialData?</code></td>
+<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#create">create</a></p>
 <hr />
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">#</a></h3>
-<p>▸ <strong>delete</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<code>KubeJsonApiData</code>></p>
+<p>▸ <strong>delete</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1248,13 +1270,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>KubeJsonApiData</code>></p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#delete">delete</a></p>
 <hr />
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">#</a></h3>
-<p>▸ <strong>get</strong>(<code>desc</code>, <code>query?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<p>▸ <strong>get</strong>(<code>desc</code>, <code>query?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1270,13 +1292,13 @@
 </tr>
 <tr>
 <td align="left"><code>query?</code></td>
-<td align="left"><code>IKubeApiQueryParams</code></td>
+<td align="left"><code>KubeApiQueryParams</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#get">get</a></p>
 <hr />
 <h3 id="getlogs">getLogs<a class="headerlink" href="#getlogs" title="Permanent link">#</a></h3>
@@ -1292,27 +1314,19 @@
 <tbody>
 <tr>
 <td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params.namespace</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>ResourceDescriptor</code></td>
 </tr>
 <tr>
 <td align="left"><code>query?</code></td>
-<td align="left"><code>IPodLogsQuery</code></td>
+<td align="left"><code>PodLogsQuery</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>string</code>></p>
 <hr />
 <h3 id="getresourceversion">getResourceVersion<a class="headerlink" href="#getresourceversion" title="Permanent link">#</a></h3>
-<p>▸ <strong>getResourceVersion</strong>(<code>namespace?</code>): <code>string</code></p>
+<p>▸ <strong>getResourceVersion</strong>(<code>namespace?</code>): <code>undefined</code> | <code>string</code></p>
 <h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1330,9 +1344,9 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>undefined</code> | <code>string</code></p>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#getresourceversion">getResourceVersion</a></p>
 <hr />
 <h3 id="geturl">getUrl<a class="headerlink" href="#geturl" title="Permanent link">#</a></h3>
@@ -1352,13 +1366,13 @@
 </tr>
 <tr>
 <td align="left"><code>query?</code></td>
-<td align="left"><code>Partial</code>&lt;<code>IKubeApiQueryParams</code>></td>
+<td align="left"><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#geturl">getUrl</a></p>
 <hr />
 <h3 id="getwatchurl">getWatchUrl<a class="headerlink" href="#getwatchurl" title="Permanent link">#</a></h3>
@@ -1380,18 +1394,18 @@
 </tr>
 <tr>
 <td align="left"><code>query</code></td>
-<td align="left"><code>IKubeApiQueryParams</code></td>
+<td align="left"><code>KubeApiQueryParams</code></td>
 <td align="left"><code>{}</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#getwatchurl">getWatchUrl</a></p>
 <hr />
 <h3 id="list">list<a class="headerlink" href="#list" title="Permanent link">#</a></h3>
-<p>▸ <strong>list</strong>(<code>__namedParameters?</code>, <code>query?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
+<p>▸ <strong>list</strong>(<code>__namedParameters?</code>, <code>query?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
 <h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1407,13 +1421,13 @@
 </tr>
 <tr>
 <td align="left"><code>query?</code></td>
-<td align="left"><code>IKubeApiQueryParams</code></td>
+<td align="left"><code>KubeApiQueryParams</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
-<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
+<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#list">list</a></p>
 <hr />
 <h3 id="modifywatchevent">modifyWatchEvent<a class="headerlink" href="#modifywatchevent" title="Permanent link">#</a></h3>
@@ -1429,17 +1443,17 @@
 <tbody>
 <tr>
 <td align="left"><code>event</code></td>
-<td align="left"><code>IKubeWatchEvent</code>&lt;<code>KubeJsonApiData</code>></td>
+<td align="left"><code>IKubeWatchEvent</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#modifywatchevent">modifyWatchEvent</a></p>
 <hr />
 <h3 id="normalizequery">normalizeQuery<a class="headerlink" href="#normalizequery" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>normalizeQuery</strong>(<code>query?</code>): <code>Partial</code>&lt;<code>IKubeApiQueryParams</code>></p>
+<p>▸ <code>Protected</code> <strong>normalizeQuery</strong>(<code>query?</code>): <code>Partial</code>&lt;<code>KubeApiQueryParams</code>></p>
 <h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1451,17 +1465,17 @@
 <tbody>
 <tr>
 <td align="left"><code>query</code></td>
-<td align="left"><code>Partial</code>&lt;<code>IKubeApiQueryParams</code>></td>
+<td align="left"><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
-<p><code>Partial</code>&lt;<code>IKubeApiQueryParams</code>></p>
-<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<p><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></p>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#normalizequery">normalizeQuery</a></p>
 <hr />
 <h3 id="parseresponse">parseResponse<a class="headerlink" href="#parseresponse" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>parseResponse</strong>(<code>data</code>, <code>namespace?</code>): <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]</p>
+<p>▸ <code>Protected</code> <strong>parseResponse</strong>(<code>data</code>, <code>namespace?</code>): <code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]</p>
 <h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1481,13 +1495,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]</p>
-<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<p><code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]</p>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#parseresponse">parseResponse</a></p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
-<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data?</code>, <code>strategy?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data</code>, <code>strategy?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
 <h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1504,8 +1518,8 @@
 <td align="left"><code>undefined</code></td>
 </tr>
 <tr>
-<td align="left"><code>data?</code></td>
-<td align="left"><code>Patch</code> | <code>PartialKubeObject</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></td>
+<td align="left"><code>data</code></td>
+<td align="left"><code>Patch</code> | <code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></td>
 <td align="left"><code>undefined</code></td>
 </tr>
 <tr>
@@ -1515,13 +1529,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#patch">patch</a></p>
 <hr />
 <h3 id="refreshresourceversion">refreshResourceVersion<a class="headerlink" href="#refreshresourceversion" title="Permanent link">#</a></h3>
-<p>▸ <strong>refreshResourceVersion</strong>(<code>params?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
+<p>▸ <strong>refreshResourceVersion</strong>(<code>params?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
 <h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1537,9 +1551,9 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
-<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>[]></p>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#refreshresourceversion">refreshResourceVersion</a></p>
 <hr />
 <h3 id="setresourceversion">setResourceVersion<a class="headerlink" href="#setresourceversion" title="Permanent link">#</a></h3>
@@ -1566,13 +1580,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#setresourceversion">setResourceVersion</a></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>(<code>__namedParameters</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<p>▸ <strong>update</strong>(<code>__namedParameters</code>, <code>data</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
 <h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1588,13 +1602,13 @@
 </tr>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>PartialKubeObject</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></td>
+<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
-<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>></p>
+<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#update">update</a></p>
 <hr />
 <h3 id="watch">watch<a class="headerlink" href="#watch" title="Permanent link">#</a></h3>
@@ -1610,16 +1624,16 @@
 <tbody>
 <tr>
 <td align="left"><code>opts</code></td>
-<td align="left"><code>KubeApiWatchOptions</code></td>
+<td align="left"><code>KubeApiWatchOptions</code>&lt;<a href="../Renderer.K8sApi.Pod/"><code>Pod</code></a>, <code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespace</code>>, <code>PodStatus</code>, <code>PodSpec</code>>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>fn</code></p>
 <p>▸ (): <code>void</code></p>
-<h5 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h5>
+<h5 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
-<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#watch">watch</a></p>
                 
               

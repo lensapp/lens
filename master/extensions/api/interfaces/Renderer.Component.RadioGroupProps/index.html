@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-radiogroupprops" class="md-skip">
+        <a href="#interface-radiogrouppropst" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: RadioGroupProps
+              Interface: RadioGroupProps<T\>
             
           </span>
         </div>
@@ -712,6 +712,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -749,6 +756,13 @@
           <li class="md-nav__item">
   <a href="#asbuttons" class="md-nav__link">
     asButtons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#children" class="md-nav__link">
+    children
   </a>
   
 </li>
@@ -813,12 +827,26 @@
                 
                 
                 
-                <h1 id="interface-radiogroupprops">Interface: RadioGroupProps<a class="headerlink" href="#interface-radiogroupprops" title="Permanent link">#</a></h1>
+                <h1 id="interface-radiogrouppropst">Interface: RadioGroupProps&lt;T><a class="headerlink" href="#interface-radiogrouppropst" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.RadioGroupProps</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#asbuttons">asButtons</a></li>
+<li><a href="./#children">children</a></li>
 <li><a href="./#classname">className</a></li>
 <li><a href="./#disabled">disabled</a></li>
 <li><a href="./#value">value</a></li>
@@ -831,17 +859,20 @@
 <h3 id="asbuttons">asButtons<a class="headerlink" href="#asbuttons" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>asButtons</strong>: <code>boolean</code></p>
 <hr />
+<h3 id="children">children<a class="headerlink" href="#children" title="Permanent link">#</a></h3>
+<p>• <strong>children</strong>: <code>SingleOrMany</code>&lt;<code>ReactElement</code>&lt;<a href="../Renderer.Component.RadioProps/"><code>RadioProps</code></a>&lt;<code>T</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>>></p>
+<hr />
 <h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>className</strong>: <code>any</code></p>
+<p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
 <hr />
 <h3 id="disabled">disabled<a class="headerlink" href="#disabled" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>disabled</strong>: <code>boolean</code></p>
 <hr />
 <h3 id="value">value<a class="headerlink" href="#value" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>value</strong>: <code>any</code></p>
+<p>• <code>Optional</code> <strong>value</strong>: <code>T</code></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>onChange</strong>(<code>value</code>): <code>void</code></p>
+<p>▸ <strong>onChange</strong>(<code>value</code>): <code>void</code></p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -853,7 +884,7 @@
 <tbody>
 <tr>
 <td align="left"><code>value</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>T</code></td>
 </tr>
 </tbody>
 </table>

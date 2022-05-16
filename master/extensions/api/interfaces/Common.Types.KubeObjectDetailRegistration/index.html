@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-kubeobjectdetailregistration" class="md-skip">
+        <a href="#interface-kubeobjectdetailregistrationt" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: KubeObjectDetailRegistration
+              Interface: KubeObjectDetailRegistration<T\>
             
           </span>
         </div>
@@ -712,6 +712,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -786,8 +793,23 @@
                 
                 
                 
-                <h1 id="interface-kubeobjectdetailregistration">Interface: KubeObjectDetailRegistration<a class="headerlink" href="#interface-kubeobjectdetailregistration" title="Permanent link">#</a></h1>
+                <h1 id="interface-kubeobjectdetailregistrationt">Interface: KubeObjectDetailRegistration&lt;T><a class="headerlink" href="#interface-kubeobjectdetailregistrationt" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Types/">Types</a>.KubeObjectDetailRegistration</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a> = <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
@@ -801,7 +823,7 @@
 <p>• <strong>apiVersions</strong>: <code>string</code>[]</p>
 <hr />
 <h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
-<p>• <strong>components</strong>: <a href="../Common.Types.KubeObjectDetailComponents/"><code>KubeObjectDetailComponents</code></a>&lt;<a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../Renderer.K8sApi.KubeObjectMetadata/"><code>KubeObjectMetadata</code></a>, <code>any</code>, <code>any</code>>></p>
+<p>• <strong>components</strong>: <a href="../Common.Types.KubeObjectDetailComponents/"><code>KubeObjectDetailComponents</code></a>&lt;<code>T</code>></p>
 <hr />
 <h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
 <p>• <strong>kind</strong>: <code>string</code></p>

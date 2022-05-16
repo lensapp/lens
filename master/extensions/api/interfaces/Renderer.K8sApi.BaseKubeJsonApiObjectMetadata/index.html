@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeJsonApi/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Class: KubeJsonApi - Lens Extension Development</title>
+        <title>Interface: BaseKubeJsonApiObjectMetadata - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-kubejsonapi" class="md-skip">
+        <a href="#interface-basekubejsonapiobjectmetadatanamespaced" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Class: KubeJsonApi
+              Interface: BaseKubeJsonApiObjectMetadata<Namespaced\>
             
           </span>
         </div>
@@ -712,8 +712,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hierarchy" class="md-nav__link">
-    Hierarchy
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indexable" class="md-nav__link">
+    Indexable
   </a>
   
 </li>
@@ -727,42 +734,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constructors" class="md-nav__link">
-    Constructors
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#constructors_1" class="md-nav__link">
-    Constructors
-  </a>
-  
-    <nav class="md-nav" aria-label="Constructors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#constructor" class="md-nav__link">
-    constructor
   </a>
   
 </li>
@@ -781,133 +754,113 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#config" class="md-nav__link">
-    config
+  <a href="#annotations" class="md-nav__link">
+    annotations
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#ondata" class="md-nav__link">
-    onData
+  <a href="#clustername" class="md-nav__link">
+    clusterName
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#onerror" class="md-nav__link">
-    onError
+  <a href="#creationtimestamp" class="md-nav__link">
+    creationTimestamp
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#reqinit" class="md-nav__link">
-    reqInit
+  <a href="#deletiongraceperiodseconds" class="md-nav__link">
+    deletionGracePeriodSeconds
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#configdefault" class="md-nav__link">
-    configDefault
+  <a href="#deletiontimestamp" class="md-nav__link">
+    deletionTimestamp
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#reqinitdefault" class="md-nav__link">
-    reqInitDefault
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#del" class="md-nav__link">
-    del
+  <a href="#finalizers" class="md-nav__link">
+    finalizers
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#get" class="md-nav__link">
-    get
+  <a href="#generatename" class="md-nav__link">
+    generateName
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getresponse" class="md-nav__link">
-    getResponse
+  <a href="#generation" class="md-nav__link">
+    generation
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#parseerror" class="md-nav__link">
-    parseError
+  <a href="#labels" class="md-nav__link">
+    labels
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#parseresponse" class="md-nav__link">
-    parseResponse
+  <a href="#managedfields" class="md-nav__link">
+    managedFields
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#patch" class="md-nav__link">
-    patch
+  <a href="#name" class="md-nav__link">
+    name
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#post" class="md-nav__link">
-    post
+  <a href="#namespace" class="md-nav__link">
+    namespace
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#put" class="md-nav__link">
-    put
+  <a href="#ownerreferences" class="md-nav__link">
+    ownerReferences
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#request" class="md-nav__link">
-    request
+  <a href="#resourceversion" class="md-nav__link">
+    resourceVersion
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#writelog" class="md-nav__link">
-    writeLog
+  <a href="#selflink" class="md-nav__link">
+    selfLink
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#forcluster" class="md-nav__link">
-    forCluster
+  <a href="#uid" class="md-nav__link">
+    uid
   </a>
   
 </li>
@@ -931,500 +884,175 @@
                 
                 
                 
-                <h1 id="class-kubejsonapi">Class: KubeJsonApi<a class="headerlink" href="#class-kubejsonapi" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeJsonApi</p>
-<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
-<ul>
-<li><code>JsonApi</code>&lt;<code>KubeJsonApiData</code>></li>
-</ul>
-<p>↳ <strong><code>KubeJsonApi</code></strong></p>
+                <h1 id="interface-basekubejsonapiobjectmetadatanamespaced">Interface: BaseKubeJsonApiObjectMetadata&lt;Namespaced><a class="headerlink" href="#interface-basekubejsonapiobjectmetadatanamespaced" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.BaseKubeJsonApiObjectMetadata</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Namespaced</code></td>
+<td align="left">extends <code>KubeObjectScope</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="indexable">Indexable<a class="headerlink" href="#indexable" title="Permanent link">#</a></h2>
+<p>▪ [key: <code>string</code>]: <code>unknown</code></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#constructor">constructor</a></li>
-</ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#config">config</a></li>
-<li><a href="./#ondata">onData</a></li>
-<li><a href="./#onerror">onError</a></li>
-<li><a href="./#reqinit">reqInit</a></li>
-<li><a href="./#configdefault">configDefault</a></li>
-<li><a href="./#reqinitdefault">reqInitDefault</a></li>
+<li><a href="./#annotations">annotations</a></li>
+<li><a href="./#clustername">clusterName</a></li>
+<li><a href="./#creationtimestamp">creationTimestamp</a></li>
+<li><a href="./#deletiongraceperiodseconds">deletionGracePeriodSeconds</a></li>
+<li><a href="./#deletiontimestamp">deletionTimestamp</a></li>
+<li><a href="./#finalizers">finalizers</a></li>
+<li><a href="./#generatename">generateName</a></li>
+<li><a href="./#generation">generation</a></li>
+<li><a href="./#labels">labels</a></li>
+<li><a href="./#managedfields">managedFields</a></li>
+<li><a href="./#name">name</a></li>
+<li><a href="./#namespace">namespace</a></li>
+<li><a href="./#ownerreferences">ownerReferences</a></li>
+<li><a href="./#resourceversion">resourceVersion</a></li>
+<li><a href="./#selflink">selfLink</a></li>
+<li><a href="./#uid">uid</a></li>
 </ul>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#del">del</a></li>
-<li><a href="./#get">get</a></li>
-<li><a href="./#getresponse">getResponse</a></li>
-<li><a href="./#parseerror">parseError</a></li>
-<li><a href="./#parseresponse">parseResponse</a></li>
-<li><a href="./#patch">patch</a></li>
-<li><a href="./#post">post</a></li>
-<li><a href="./#put">put</a></li>
-<li><a href="./#request">request</a></li>
-<li><a href="./#writelog">writeLog</a></li>
-<li><a href="./#forcluster">forCluster</a></li>
-</ul>
-<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
-<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new KubeJsonApi</strong>(<code>config</code>, <code>reqInit?</code>)</p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>config</code></td>
-<td align="left"><code>JsonApiConfig</code></td>
-</tr>
-<tr>
-<td align="left"><code>reqInit?</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>JsonApi&lt;KubeJsonApiData>.constructor</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="config">config<a class="headerlink" href="#config" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>config</strong>: <code>JsonApiConfig</code></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>JsonApi.config</p>
+<h3 id="annotations">annotations<a class="headerlink" href="#annotations" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>annotations</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></p>
+<p>Annotations is an unstructured key value map stored with a resource that may be set by
+external tools to store and retrieve arbitrary metadata. They are not queryable and should be
+preserved when modifying objects.</p>
+<p>More info: http://kubernetes.io/docs/user-guide/annotations</p>
 <hr />
-<h3 id="ondata">onData<a class="headerlink" href="#ondata" title="Permanent link">#</a></h3>
-<p>• <strong>onData</strong>: <code>EventEmitter</code>&lt;[<code>KubeJsonApiData</code>, <code>Response</code>]></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p>JsonApi.onData</p>
+<h3 id="clustername">clusterName<a class="headerlink" href="#clustername" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>clusterName</strong>: <code>string</code></p>
+<p>The name of the cluster which the object belongs to. This is used to distinguish resources
+with same name and namespace in different clusters. This field is not set anywhere right now
+and apiserver is going to ignore it if set in create or update request.</p>
 <hr />
-<h3 id="onerror">onError<a class="headerlink" href="#onerror" title="Permanent link">#</a></h3>
-<p>• <strong>onError</strong>: <code>EventEmitter</code>&lt;[<code>JsonApiErrorParsed</code>, <code>Response</code>]></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
-<p>JsonApi.onError</p>
+<h3 id="creationtimestamp">creationTimestamp<a class="headerlink" href="#creationtimestamp" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>creationTimestamp</strong>: <code>string</code></p>
+<p>CreationTimestamp is a timestamp representing the server time when this object was created. It
+is not guaranteed to be set in happens-before order across separate operations. Clients may
+not set this value. It is represented in RFC3339 form and is in UTC.  Populated by the system.</p>
+<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata</p>
 <hr />
-<h3 id="reqinit">reqInit<a class="headerlink" href="#reqinit" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <code>Optional</code> <strong>reqInit</strong>: <code>RequestInit</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
-<p>JsonApi.reqInit</p>
+<h3 id="deletiongraceperiodseconds">deletionGracePeriodSeconds<a class="headerlink" href="#deletiongraceperiodseconds" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>deletionGracePeriodSeconds</strong>: <code>number</code></p>
+<p>Number of seconds allowed for this object to gracefully terminate before it will be removed
+from the system. Only set when deletionTimestamp is also set. May only be shortened.</p>
 <hr />
-<h3 id="configdefault">configDefault<a class="headerlink" href="#configdefault" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <strong>configDefault</strong>: <code>Partial</code>&lt;<code>JsonApiConfig</code>></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
-<p>JsonApi.configDefault</p>
+<h3 id="deletiontimestamp">deletionTimestamp<a class="headerlink" href="#deletiontimestamp" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>deletionTimestamp</strong>: <code>string</code></p>
+<p>DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field
+is set by the server when a graceful deletion is requested by the user, and is not directly
+settable by a client. The resource is expected to be deleted (no longer visible from resource
+lists, and not reachable by name) after the time in this field, once the finalizers list is
+empty. As long as the finalizers list contains items, deletion is blocked. Once the
+<code>deletionTimestamp</code> is set, this value may not be unset or be set further into the future,
+although it may be shortened or the resource may be deleted prior to this time. For example,
+a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a
+graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet
+will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the
+pod from the API. In the presence of network partitions, this object may still exist after
+this timestamp, until an administrator or automated process can determine the resource is
+fully terminated. If not set, graceful deletion of the object has not been requested.
+Populated by the system when a graceful deletion is requested.</p>
+<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata</p>
 <hr />
-<h3 id="reqinitdefault">reqInitDefault<a class="headerlink" href="#reqinitdefault" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <strong>reqInitDefault</strong>: <code>RequestInit</code></p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
-<p>JsonApi.reqInitDefault</p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="del">del<a class="headerlink" href="#del" title="Permanent link">#</a></h3>
-<p>▸ <strong>del</strong>&lt;<code>T</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>KubeJsonApiData</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>JsonApiParams</code>&lt;<code>any</code>></td>
-</tr>
-<tr>
-<td align="left"><code>reqInit</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
-<p>JsonApi.del</p>
+<h3 id="finalizers">finalizers<a class="headerlink" href="#finalizers" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>finalizers</strong>: <code>string</code>[]</p>
+<p>Must be empty before the object is deleted from the registry. Each entry is an identifier for
+the responsible component that will remove the entry from the list. If the deletionTimestamp
+of the object is non-nil, entries in this list can only be removed. Finalizers may be
+processed and removed in any order.  Order is NOT enforced because it introduces significant
+risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder
+it. If the finalizer list is processed in order, then this can lead to a situation in which
+the component responsible for the first finalizer in the list is waiting for a signal (field
+value, external system, or other) produced by a component responsible for a finalizer later in
+the list, resulting in a deadlock. Without enforced ordering finalizers are free to order
+amongst themselves and are not vulnerable to ordering changes in the list.</p>
 <hr />
-<h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">#</a></h3>
-<p>▸ <strong>get</strong>&lt;<code>T</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>KubeJsonApiData</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>JsonApiParams</code>&lt;<code>any</code>></td>
-</tr>
-<tr>
-<td align="left"><code>reqInit</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
-<p>JsonApi.get</p>
+<h3 id="generatename">generateName<a class="headerlink" href="#generatename" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>generateName</strong>: <code>string</code></p>
+<p>GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the
+Name field has not been provided. If this field is used, the name returned to the client will
+be different than the name passed. This value will also be combined with a unique suffix. The
+provided value has the same validation rules as the Name field, and may be truncated by the
+length of the suffix required to make the value unique on the server.  If this field is
+specified and the generated name exists, the server will NOT return a 409 - instead, it will
+either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not
+be found in the time allotted, and the client should retry (optionally after the time indicated
+in the Retry-After header). Applied only if Name is not specified.</p>
+<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency</p>
 <hr />
-<h3 id="getresponse">getResponse<a class="headerlink" href="#getresponse" title="Permanent link">#</a></h3>
-<p>▸ <strong>getResponse</strong>(<code>path</code>, <code>params?</code>, <code>init?</code>): <code>Promise</code>&lt;<code>Response</code>></p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>JsonApiParams</code>&lt;<code>any</code>></td>
-</tr>
-<tr>
-<td align="left"><code>init</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>Response</code>></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
-<p>JsonApi.getResponse</p>
+<h3 id="generation">generation<a class="headerlink" href="#generation" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>generation</strong>: <code>number</code></p>
+<p>A sequence number representing a specific generation of the desired state. Populated by the
+system.</p>
 <hr />
-<h3 id="parseerror">parseError<a class="headerlink" href="#parseerror" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>parseError</strong>(<code>error</code>, <code>res</code>): <code>string</code>[]</p>
-<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>error</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-<tr>
-<td align="left"><code>res</code></td>
-<td align="left"><code>Response</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>string</code>[]</p>
-<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
-<p>JsonApi.parseError</p>
+<h3 id="labels">labels<a class="headerlink" href="#labels" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>labels</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></p>
+<p>Map of string keys and values that can be used to organize and categorize (scope and select)
+objects. May match selectors of replication controllers and services.</p>
+<p>More info: http://kubernetes.io/docs/user-guide/labels</p>
 <hr />
-<h3 id="parseresponse">parseResponse<a class="headerlink" href="#parseresponse" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>parseResponse</strong>&lt;<code>D</code>>(<code>res</code>, <code>log</code>): <code>Promise</code>&lt;<code>D</code>></p>
-<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>D</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>res</code></td>
-<td align="left"><code>Response</code></td>
-</tr>
-<tr>
-<td align="left"><code>log</code></td>
-<td align="left"><code>JsonApiLog</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>D</code>></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
-<p>JsonApi.parseResponse</p>
+<h3 id="managedfields">managedFields<a class="headerlink" href="#managedfields" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>managedFields</strong>: <code>unknown</code>[]</p>
+<p>ManagedFields maps workflow-id and version to the set of fields that are managed by that
+workflow. This is mostly for internal housekeeping, and users typically shouldn't need to set
+or understand this field. A workflow can be the user's name, a controller's name, or the name
+of a specific apply path like "ci-cd". The set of fields is always in the version that the
+workflow used when modifying the object.</p>
 <hr />
-<h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
-<p>▸ <strong>patch</strong>&lt;<code>T</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>KubeJsonApiData</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>JsonApiParams</code>&lt;<code>any</code>></td>
-</tr>
-<tr>
-<td align="left"><code>reqInit</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
-<p>JsonApi.patch</p>
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>name</strong>: <code>string</code></p>
+<p>Name must be unique within a namespace. Is required when creating resources, although some
+resources may allow a client to request the generation of an appropriate name automatically.
+Name is primarily intended for creation idempotence and configuration definition.</p>
+<p>More info: http://kubernetes.io/docs/user-guide/identifiers#names</p>
 <hr />
-<h3 id="post">post<a class="headerlink" href="#post" title="Permanent link">#</a></h3>
-<p>▸ <strong>post</strong>&lt;<code>T</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>KubeJsonApiData</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>JsonApiParams</code>&lt;<code>any</code>></td>
-</tr>
-<tr>
-<td align="left"><code>reqInit</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
-<p>JsonApi.post</p>
+<h3 id="namespace">namespace<a class="headerlink" href="#namespace" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>namespace</strong>: <code>ScopedNamespace</code>&lt;<code>Namespaced</code>></p>
+<p>Namespace defines the space within which each name must be unique. An empty namespace is
+equivalent to the "default" namespace, but "default" is the canonical representation. Not all
+objects are required to be scoped to a namespace - the value of this field for those objects
+will be empty.  Must be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces</p>
 <hr />
-<h3 id="put">put<a class="headerlink" href="#put" title="Permanent link">#</a></h3>
-<p>▸ <strong>put</strong>&lt;<code>T</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>KubeJsonApiData</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>JsonApiParams</code>&lt;<code>any</code>></td>
-</tr>
-<tr>
-<td align="left"><code>reqInit</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>T</code>></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
-<p>JsonApi.put</p>
+<h3 id="ownerreferences">ownerReferences<a class="headerlink" href="#ownerreferences" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>ownerReferences</strong>: <code>OwnerReference</code>[]</p>
+<p>List of objects depended by this object. If ALL objects in the list have been deleted, this
+object will be garbage collected. If this object is managed by a controller, then an entry in
+this list will point to this controller, with the controller field set to true. There cannot
+be more than one managing controller.</p>
 <hr />
-<h3 id="request">request<a class="headerlink" href="#request" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>request</strong>&lt;<code>D</code>>(<code>path</code>, <code>params?</code>, <code>init?</code>): <code>Promise</code>&lt;<code>D</code>></p>
-<h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>D</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>JsonApiParams</code>&lt;<code>any</code>></td>
-</tr>
-<tr>
-<td align="left"><code>init</code></td>
-<td align="left"><code>RequestInit</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>D</code>></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
-<p>JsonApi.request</p>
+<h3 id="resourceversion">resourceVersion<a class="headerlink" href="#resourceversion" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>resourceVersion</strong>: <code>string</code></p>
+<p>An opaque value that represents the internal version of this object that can be used by
+clients to determine when objects have changed. May be used for optimistic concurrency, change
+detection, and the watch operation on a resource or set of resources. Clients must treat these
+values as opaque and passed unmodified back to the server. They may only be valid for a
+particular resource or set of resources. Populated by the system. Value must be treated as
+opaque by clients.</p>
+<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency</p>
 <hr />
-<h3 id="writelog">writeLog<a class="headerlink" href="#writelog" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>writeLog</strong>(<code>log</code>): <code>void</code></p>
-<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>log</code></td>
-<td align="left"><code>JsonApiLog</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
-<p>JsonApi.writeLog</p>
+<h3 id="selflink">selfLink<a class="headerlink" href="#selflink" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>selfLink</strong>: <code>string</code></p>
+<p>SelfLink is a URL representing this object. Populated by the system.</p>
 <hr />
-<h3 id="forcluster">forCluster<a class="headerlink" href="#forcluster" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>forCluster</strong>(<code>clusterId</code>): <a href="./"><code>KubeJsonApi</code></a></p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>clusterId</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><a href="./"><code>KubeJsonApi</code></a></p>
+<h3 id="uid">uid<a class="headerlink" href="#uid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>uid</strong>: <code>string</code></p>
+<p>UID is the unique in time and space value for this object. It is typically generated by the
+server on successful creation of a resource and is not allowed to change on PUT operations.
+Populated by the system.</p>
+<p>More info: http://kubernetes.io/docs/user-guide/identifiers#uids</p>
                 
               
               

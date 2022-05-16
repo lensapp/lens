@@ -831,6 +831,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#terminationmessagepath" class="md-nav__link">
+    terminationMessagePath
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminationmessagepolicy" class="md-nav__link">
+    terminationMessagePolicy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#volumemounts" class="md-nav__link">
     volumeMounts
   </a>
@@ -878,6 +892,8 @@
 <li><a href="./#readinessprobe">readinessProbe</a></li>
 <li><a href="./#resources">resources</a></li>
 <li><a href="./#startupprobe">startupProbe</a></li>
+<li><a href="./#terminationmessagepath">terminationMessagePath</a></li>
+<li><a href="./#terminationmessagepolicy">terminationMessagePolicy</a></li>
 <li><a href="./#volumemounts">volumeMounts</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
@@ -897,10 +913,10 @@
 <p>• <strong>image</strong>: <code>string</code></p>
 <hr />
 <h3 id="imagepullpolicy">imagePullPolicy<a class="headerlink" href="#imagepullpolicy" title="Permanent link">#</a></h3>
-<p>• <strong>imagePullPolicy</strong>: <code>string</code></p>
+<p>• <code>Optional</code> <strong>imagePullPolicy</strong>: <code>string</code></p>
 <hr />
 <h3 id="livenessprobe">livenessProbe<a class="headerlink" href="#livenessprobe" title="Permanent link">#</a></h3>
-<p>• <strong>livenessProbe</strong>: <code>IContainerProbe</code></p>
+<p>• <strong>livenessProbe</strong>: <code>undefined</code> | <code>IContainerProbe</code></p>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
 <p>Partial.livenessProbe</p>
 <hr />
@@ -908,10 +924,10 @@
 <p>• <strong>name</strong>: <code>string</code></p>
 <hr />
 <h3 id="ports">ports<a class="headerlink" href="#ports" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>ports</strong>: { <code>containerPort</code>: <code>number</code> ; <code>name?</code>: <code>string</code> ; <code>protocol</code>: <code>string</code>  }[]</p>
+<p>• <code>Optional</code> <strong>ports</strong>: <code>ContainerPort</code>[]</p>
 <hr />
 <h3 id="readinessprobe">readinessProbe<a class="headerlink" href="#readinessprobe" title="Permanent link">#</a></h3>
-<p>• <strong>readinessProbe</strong>: <code>IContainerProbe</code></p>
+<p>• <strong>readinessProbe</strong>: <code>undefined</code> | <code>IContainerProbe</code></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>Partial.readinessProbe</p>
 <hr />
@@ -927,8 +943,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>limits</code></td>
-<td align="left"><code>Object</code></td>
+<td align="left"><code>limits?</code></td>
+<td align="left">{ <code>cpu</code>: <code>string</code> ; <code>memory</code>: <code>string</code>  }</td>
 </tr>
 <tr>
 <td align="left"><code>limits.cpu</code></td>
@@ -939,8 +955,8 @@
 <td align="left"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>requests</code></td>
-<td align="left"><code>Object</code></td>
+<td align="left"><code>requests?</code></td>
+<td align="left">{ <code>cpu</code>: <code>string</code> ; <code>memory</code>: <code>string</code>  }</td>
 </tr>
 <tr>
 <td align="left"><code>requests.cpu</code></td>
@@ -954,12 +970,18 @@
 </table>
 <hr />
 <h3 id="startupprobe">startupProbe<a class="headerlink" href="#startupprobe" title="Permanent link">#</a></h3>
-<p>• <strong>startupProbe</strong>: <code>IContainerProbe</code></p>
+<p>• <strong>startupProbe</strong>: <code>undefined</code> | <code>IContainerProbe</code></p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
 <p>Partial.startupProbe</p>
 <hr />
+<h3 id="terminationmessagepath">terminationMessagePath<a class="headerlink" href="#terminationmessagepath" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>terminationMessagePath</strong>: <code>string</code></p>
+<hr />
+<h3 id="terminationmessagepolicy">terminationMessagePolicy<a class="headerlink" href="#terminationmessagepolicy" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>terminationMessagePolicy</strong>: <code>string</code></p>
+<hr />
 <h3 id="volumemounts">volumeMounts<a class="headerlink" href="#volumemounts" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>volumeMounts</strong>: { <code>mountPath</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>readOnly</code>: <code>boolean</code>  }[]</p>
+<p>• <code>Optional</code> <strong>volumeMounts</strong>: <code>VolumeMount</code>[]</p>
                 
               
               

@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-selectpropst" class="md-skip">
+        <a href="#interface-selectpropsvalue-option-ismulti-group" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: SelectProps<T\>
+              Interface: SelectProps<Value, Option, IsMulti, Group\>
             
           </span>
         </div>
@@ -761,13 +761,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#allowcreatewhileloading" class="md-nav__link">
-    allowCreateWhileLoading
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#aria-errormessage" class="md-nav__link">
     aria-errormessage
   </a>
@@ -882,13 +875,6 @@
           <li class="md-nav__item">
   <a href="#controlshouldrendervalue" class="md-nav__link">
     controlShouldRenderValue
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#createoptionposition" class="md-nav__link">
-    createOptionPosition
   </a>
   
 </li>
@@ -1285,36 +1271,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#formatcreatelabel" class="md-nav__link">
-    formatCreateLabel
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getnewoptiondata" class="md-nav__link">
-    getNewOptionData
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#isvalidnewoption" class="md-nav__link">
-    isValidNewOption
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#onchange" class="md-nav__link">
     onChange
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#oncreateoption" class="md-nav__link">
-    onCreateOption
   </a>
   
 </li>
@@ -1359,7 +1317,7 @@
                 
                 
                 
-                <h1 id="interface-selectpropst">Interface: SelectProps&lt;T><a class="headerlink" href="#interface-selectpropst" title="Permanent link">#</a></h1>
+                <h1 id="interface-selectpropsvalue-option-ismulti-group">Interface: SelectProps&lt;Value, Option, IsMulti, Group><a class="headerlink" href="#interface-selectpropsvalue-option-ismulti-group" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.SelectProps</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <table>
@@ -1371,26 +1329,31 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>any</code></td>
+<td align="left"><code>Value</code></td>
+<td align="left"><code>Value</code></td>
+</tr>
+<tr>
+<td align="left"><code>Option</code></td>
+<td align="left">extends <a href="../Renderer.Component.SelectOption/"><code>SelectOption</code></a>&lt;<code>Value</code>></td>
+</tr>
+<tr>
+<td align="left"><code>IsMulti</code></td>
+<td align="left">extends <code>boolean</code></td>
+</tr>
+<tr>
+<td align="left"><code>Group</code></td>
+<td align="left">extends <code>GroupBase</code>&lt;<code>Option</code>> = <code>GroupBase</code>&lt;<code>Option</code>></td>
 </tr>
 </tbody>
 </table>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li>
-<p><code>StateManagerProps</code>&lt;<code>T</code>, <code>boolean</code>></p>
-</li>
-<li>
-<p><code>CreatableProps</code>&lt;<code>T</code>, <code>boolean</code>, <code>GroupBase</code>&lt;<code>T</code>>></p>
-</li>
+<li><code>Omit</code>&lt;<code>ReactSelectProps</code>&lt;<code>Option</code>, <code>IsMulti</code>, <code>Group</code>>, <code>"value"</code> | <code>"options"</code>></li>
 </ul>
 <p>↳ <strong><code>SelectProps</code></strong></p>
-<p>↳↳ <a href="../Renderer.Component.NamespaceSelectProps/"><code>NamespaceSelectProps</code></a></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#allowcreatewhileloading">allowCreateWhileLoading</a></li>
 <li><a href="./#aria-errormessage">aria-errormessage</a></li>
 <li><a href="./#aria-invalid">aria-invalid</a></li>
 <li><a href="./#aria-label">aria-label</a></li>
@@ -1408,7 +1371,6 @@
 <li><a href="./#closemenuonselect">closeMenuOnSelect</a></li>
 <li><a href="./#components">components</a></li>
 <li><a href="./#controlshouldrendervalue">controlShouldRenderValue</a></li>
-<li><a href="./#createoptionposition">createOptionPosition</a></li>
 <li><a href="./#defaultinputvalue">defaultInputValue</a></li>
 <li><a href="./#defaultmenuisopen">defaultMenuIsOpen</a></li>
 <li><a href="./#defaultvalue">defaultValue</a></li>
@@ -1466,99 +1428,88 @@
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#formatcreatelabel">formatCreateLabel</a></li>
-<li><a href="./#getnewoptiondata">getNewOptionData</a></li>
-<li><a href="./#isvalidnewoption">isValidNewOption</a></li>
 <li><a href="./#onchange">onChange</a></li>
-<li><a href="./#oncreateoption">onCreateOption</a></li>
 <li><a href="./#oninputchange">onInputChange</a></li>
 <li><a href="./#onmenuclose">onMenuClose</a></li>
 <li><a href="./#onmenuopen">onMenuOpen</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="allowcreatewhileloading">allowCreateWhileLoading<a class="headerlink" href="#allowcreatewhileloading" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>allowCreateWhileLoading</strong>: <code>boolean</code></p>
-<p>Allow options to be created while the <code>isLoading</code> prop is true. Useful to
-prevent the "create new ..." option being displayed while async results are
-still being loaded.</p>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>CreatableProps.allowCreateWhileLoading</p>
-<hr />
 <h3 id="aria-errormessage">aria-errormessage<a class="headerlink" href="#aria-errormessage" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>aria-errormessage</strong>: <code>string</code></p>
 <p>HTML ID of an element containing an error message related to the input</p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.aria-errormessage</p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p>Omit.aria-errormessage</p>
 <hr />
 <h3 id="aria-invalid">aria-invalid<a class="headerlink" href="#aria-invalid" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>aria-invalid</strong>: <code>boolean</code> | <code>"true"</code> | <code>"false"</code> | <code>"grammar"</code> | <code>"spelling"</code></p>
 <p>Indicate if the value entered in the field is invalid</p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.aria-invalid</p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p>Omit.aria-invalid</p>
 <hr />
 <h3 id="aria-label">aria-label<a class="headerlink" href="#aria-label" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>aria-label</strong>: <code>string</code></p>
 <p>Aria label (for assistive tech)</p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.aria-label</p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>Omit.aria-label</p>
 <hr />
 <h3 id="aria-labelledby">aria-labelledby<a class="headerlink" href="#aria-labelledby" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>aria-labelledby</strong>: <code>string</code></p>
 <p>HTML ID of an element that should be used as the label (for assistive tech)</p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.aria-labelledby</p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>Omit.aria-labelledby</p>
 <hr />
 <h3 id="aria-live">aria-live<a class="headerlink" href="#aria-live" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>aria-live</strong>: <code>"off"</code> | <code>"assertive"</code> | <code>"polite"</code></p>
 <p>Used to set the priority with which screen reader should treat updates to live regions. The possible settings are: off, polite (default) or assertive</p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.aria-live</p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p>Omit.aria-live</p>
 <hr />
 <h3 id="arialivemessages">ariaLiveMessages<a class="headerlink" href="#arialivemessages" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>ariaLiveMessages</strong>: <code>AriaLiveMessages</code>&lt;<code>T</code>, <code>boolean</code>, <code>GroupBase</code>&lt;<code>T</code>>></p>
+<p>• <code>Optional</code> <strong>ariaLiveMessages</strong>: <code>AriaLiveMessages</code>&lt;<code>Option</code>, <code>IsMulti</code>, <code>Group</code>></p>
 <p>Customize the messages used by the aria-live component</p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.ariaLiveMessages</p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p>Omit.ariaLiveMessages</p>
 <hr />
 <h3 id="autoconvertoptions">autoConvertOptions<a class="headerlink" href="#autoconvertoptions" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>autoConvertOptions</strong>: <code>boolean</code></p>
+<p><strong><code>deprecated</code></strong> We will always auto convert options if they are of type <code>string</code></p>
 <hr />
 <h3 id="autofocus">autoFocus<a class="headerlink" href="#autofocus" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>autoFocus</strong>: <code>boolean</code></p>
 <p>Focus the control when it is mounted</p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.autoFocus</p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p>Omit.autoFocus</p>
 <hr />
 <h3 id="backspaceremovesvalue">backspaceRemovesValue<a class="headerlink" href="#backspaceremovesvalue" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>backspaceRemovesValue</strong>: <code>boolean</code></p>
 <p>Remove the currently focused option when the user presses backspace when Select isClearable or isMulti</p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.backspaceRemovesValue</p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p>Omit.backspaceRemovesValue</p>
 <hr />
 <h3 id="blurinputonselect">blurInputOnSelect<a class="headerlink" href="#blurinputonselect" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>blurInputOnSelect</strong>: <code>boolean</code></p>
 <p>Remove focus from the input when the user selects an option (handy for dismissing the keyboard on touch devices)</p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.blurInputOnSelect</p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p>Omit.blurInputOnSelect</p>
 <hr />
 <h3 id="capturemenuscroll">captureMenuScroll<a class="headerlink" href="#capturemenuscroll" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>captureMenuScroll</strong>: <code>boolean</code></p>
 <p>When the user reaches the top/bottom of the menu, prevent scroll on the scroll-parent</p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.captureMenuScroll</p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p>Omit.captureMenuScroll</p>
 <hr />
 <h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
 <p>Sets a className attribute on the outer component</p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.className</p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p>Omit.className</p>
 <hr />
 <h3 id="classnameprefix">classNamePrefix<a class="headerlink" href="#classnameprefix" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>classNamePrefix</strong>: <code>string</code></p>
+<p>• <code>Optional</code> <strong>classNamePrefix</strong>: <code>null</code> | <code>string</code></p>
 <p>If provided, all inner components will be given a prefixed className attribute.</p>
 <p>This is useful when styling via CSS classes instead of the Styles API approach.</p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.classNamePrefix</p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p>Omit.classNamePrefix</p>
 <hr />
 <h3 id="closemenuonscroll">closeMenuOnScroll<a class="headerlink" href="#closemenuonscroll" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>closeMenuOnScroll</strong>: <code>boolean</code> | (<code>event</code>: <code>Event</code>) =&gt; <code>boolean</code></p>
@@ -1568,70 +1519,77 @@ still being loaded.</p>
 <p><code>false</code> =&gt; The menu stays open</p>
 <p>This is useful when you have a scrollable modal and want to portal the menu out,
 but want to avoid graphical issues.</p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.closeMenuOnScroll</p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p>Omit.closeMenuOnScroll</p>
 <hr />
 <h3 id="closemenuonselect">closeMenuOnSelect<a class="headerlink" href="#closemenuonselect" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>closeMenuOnSelect</strong>: <code>boolean</code></p>
 <p>Close the select menu when the user selects an option</p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.closeMenuOnSelect</p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p>Omit.closeMenuOnSelect</p>
 <hr />
 <h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>components</strong>: <code>Partial</code>&lt;<code>SelectComponents</code>&lt;<code>T</code>, <code>boolean</code>, <code>GroupBase</code>&lt;<code>T</code>>>></p>
+<p>• <code>Optional</code> <strong>components</strong>: <code>Partial</code>&lt;<code>SelectComponents</code>&lt;<code>Option</code>, <code>IsMulti</code>, <code>Group</code>>></p>
 <p>This complex object includes all the compositional components that are used
 in <code>react-select</code>. If you wish to overwrite a component, pass in an object
 with the appropriate namespace.</p>
 <p>If you only wish to restyle a component, we recommend using the <code>styles</code> prop
 instead. For a list of the components that can be passed in, and the shape
 that will be passed to them, see <a href="/components">the components docs</a></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.components</p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p>Omit.components</p>
 <hr />
 <h3 id="controlshouldrendervalue">controlShouldRenderValue<a class="headerlink" href="#controlshouldrendervalue" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>controlShouldRenderValue</strong>: <code>boolean</code></p>
 <p>Whether the value of the select, e.g. SingleValue, should be displayed in the control.</p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.controlShouldRenderValue</p>
-<hr />
-<h3 id="createoptionposition">createOptionPosition<a class="headerlink" href="#createoptionposition" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>createOptionPosition</strong>: <code>"first"</code> | <code>"last"</code></p>
-<p>Sets the position of the createOption element in your options list. Defaults to 'last'</p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
-<p>CreatableProps.createOptionPosition</p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<p>Omit.controlShouldRenderValue</p>
 <hr />
 <h3 id="defaultinputvalue">defaultInputValue<a class="headerlink" href="#defaultinputvalue" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>defaultInputValue</strong>: <code>string</code></p>
-<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.defaultInputValue</p>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<p>Omit.defaultInputValue</p>
 <hr />
 <h3 id="defaultmenuisopen">defaultMenuIsOpen<a class="headerlink" href="#defaultmenuisopen" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>defaultMenuIsOpen</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.defaultMenuIsOpen</p>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<p>Omit.defaultMenuIsOpen</p>
 <hr />
 <h3 id="defaultvalue">defaultValue<a class="headerlink" href="#defaultvalue" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>defaultValue</strong>: <code>PropsValue</code>&lt;<code>T</code>></p>
-<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.defaultValue</p>
+<p>• <code>Optional</code> <strong>defaultValue</strong>: <code>PropsValue</code>&lt;<code>Option</code>></p>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<p>Omit.defaultValue</p>
 <hr />
 <h3 id="delimiter">delimiter<a class="headerlink" href="#delimiter" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>delimiter</strong>: <code>string</code></p>
 <p>Delimiter used to join multiple values into a single HTML Input value</p>
-<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.delimiter</p>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<p>Omit.delimiter</p>
 <hr />
 <h3 id="escapeclearsvalue">escapeClearsValue<a class="headerlink" href="#escapeclearsvalue" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>escapeClearsValue</strong>: <code>boolean</code></p>
 <p>Clear all values when the user presses escape AND the menu is closed</p>
-<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.escapeClearsValue</p>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<p>Omit.escapeClearsValue</p>
 <hr />
 <h3 id="filteroption">filterOption<a class="headerlink" href="#filteroption" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>filterOption</strong>: (<code>option</code>: <code>FilterOptionOption</code>&lt;<code>T</code>>, <code>inputValue</code>: <code>string</code>) =&gt; <code>boolean</code></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<p>▸ (<code>option</code>, <code>inputValue</code>): <code>boolean</code></p>
+<p>• <code>Optional</code> <strong>filterOption</strong>: <code>null</code> | (<code>option</code>: <code>FilterOptionOption</code>&lt;<code>Option</code>>, <code>inputValue</code>: <code>string</code>) =&gt; <code>boolean</code></p>
 <p>Custom method to filter whether an option should be displayed in the menu</p>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<p>Omit.filterOption</p>
+<hr />
+<h3 id="form">form<a class="headerlink" href="#form" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>form</strong>: <code>string</code></p>
+<p>Sets the form attribute on the input</p>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<p>Omit.form</p>
+<hr />
+<h3 id="formatgrouplabel">formatGroupLabel<a class="headerlink" href="#formatgrouplabel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>formatGroupLabel</strong>: (<code>group</code>: <code>Group</code>) =&gt; <code>ReactNode</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>group</code>): <code>ReactNode</code></p>
+<p>Formats group labels in the menu as React components</p>
+<p>An example can be found in the <a href="/advanced#replacing-builtins">Replacing builtins</a> documentation.</p>
 <h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1642,32 +1600,21 @@ that will be passed to them, see <a href="/components">the components docs</a></
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>option</code></td>
-<td align="left"><code>FilterOptionOption</code>&lt;<code>T</code>></td>
-</tr>
-<tr>
-<td align="left"><code>inputValue</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>group</code></td>
+<td align="left"><code>Group</code></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
-<p><code>boolean</code></p>
+<p><code>ReactNode</code></p>
 <h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.filterOption</p>
+<p>Omit.formatGroupLabel</p>
 <hr />
-<h3 id="form">form<a class="headerlink" href="#form" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>form</strong>: <code>string</code></p>
-<p>Sets the form attribute on the input</p>
-<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.form</p>
-<hr />
-<h3 id="formatgrouplabel">formatGroupLabel<a class="headerlink" href="#formatgrouplabel" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>formatGroupLabel</strong>: (<code>group</code>: <code>GroupBase</code>&lt;<code>T</code>>) =&gt; <code>ReactNode</code></p>
+<h3 id="formatoptionlabel">formatOptionLabel<a class="headerlink" href="#formatoptionlabel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>formatOptionLabel</strong>: (<code>data</code>: <code>Option</code>, <code>formatOptionLabelMeta</code>: <code>FormatOptionLabelMeta</code>&lt;<code>Option</code>>) =&gt; <code>ReactNode</code></p>
 <h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
-<p>▸ (<code>group</code>): <code>ReactNode</code></p>
-<p>Formats group labels in the menu as React components</p>
-<p>An example can be found in the <a href="/advanced#replacing-builtins">Replacing builtins</a> documentation.</p>
+<p>▸ (<code>data</code>, <code>formatOptionLabelMeta</code>): <code>ReactNode</code></p>
+<p>Formats option labels in the menu and control as React components</p>
 <h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1678,21 +1625,97 @@ that will be passed to them, see <a href="/components">the components docs</a></
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>group</code></td>
-<td align="left"><code>GroupBase</code>&lt;<code>T</code>></td>
+<td align="left"><code>data</code></td>
+<td align="left"><code>Option</code></td>
+</tr>
+<tr>
+<td align="left"><code>formatOptionLabelMeta</code></td>
+<td align="left"><code>FormatOptionLabelMeta</code>&lt;<code>Option</code>></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
 <p><code>ReactNode</code></p>
-<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.formatGroupLabel</p>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<p>Omit.formatOptionLabel</p>
 <hr />
-<h3 id="formatoptionlabel">formatOptionLabel<a class="headerlink" href="#formatoptionlabel" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>formatOptionLabel</strong>: (<code>data</code>: <code>T</code>, <code>formatOptionLabelMeta</code>: <code>FormatOptionLabelMeta</code>&lt;<code>T</code>>) =&gt; <code>ReactNode</code></p>
+<h3 id="getoptionlabel">getOptionLabel<a class="headerlink" href="#getoptionlabel" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>getOptionLabel</strong>: <code>GetOptionLabel</code>&lt;<code>Option</code>></p>
+<p>Resolves option data to a string to be displayed as the label by components</p>
+<p>Note: Failure to resolve to a string type can interfere with filtering and
+screen reader support.</p>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<p>Omit.getOptionLabel</p>
+<hr />
+<h3 id="getoptionvalue">getOptionValue<a class="headerlink" href="#getoptionvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>getOptionValue</strong>: <code>GetOptionValue</code>&lt;<code>Option</code>></p>
+<p>Resolves option data to a string to compare options and specify value attributes</p>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<p>Omit.getOptionValue</p>
+<hr />
+<h3 id="hideselectedoptions">hideSelectedOptions<a class="headerlink" href="#hideselectedoptions" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>hideSelectedOptions</strong>: <code>boolean</code></p>
+<p>Hide the selected option from the menu</p>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<p>Omit.hideSelectedOptions</p>
+<hr />
+<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>id</strong>: <code>string</code></p>
+<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
+<p>Omit.id</p>
+<hr />
+<h3 id="inputid">inputId<a class="headerlink" href="#inputid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>inputId</strong>: <code>string</code></p>
+<p>The id of the search input</p>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
+<p>Omit.inputId</p>
+<hr />
+<h3 id="inputvalue">inputValue<a class="headerlink" href="#inputvalue" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>inputValue</strong>: <code>string</code></p>
+<p>The value of the search input</p>
+<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
+<p>Omit.inputValue</p>
+<hr />
+<h3 id="instanceid">instanceId<a class="headerlink" href="#instanceid" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>instanceId</strong>: <code>string</code> | <code>number</code></p>
+<p>Define an id prefix for the select components e.g. {your-id}-value</p>
+<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
+<p>Omit.instanceId</p>
+<hr />
+<h3 id="isclearable">isClearable<a class="headerlink" href="#isclearable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isClearable</strong>: <code>boolean</code></p>
+<p>Is the select value clearable</p>
+<h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
+<p>Omit.isClearable</p>
+<hr />
+<h3 id="iscreatable">isCreatable<a class="headerlink" href="#iscreatable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isCreatable</strong>: <code>boolean</code></p>
+<p><strong><code>deprecated</code></strong> This option does nothing</p>
+<hr />
+<h3 id="isdisabled">isDisabled<a class="headerlink" href="#isdisabled" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isDisabled</strong>: <code>boolean</code></p>
+<p>Is the select disabled</p>
+<h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
+<p>Omit.isDisabled</p>
+<hr />
+<h3 id="isloading">isLoading<a class="headerlink" href="#isloading" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isLoading</strong>: <code>boolean</code></p>
+<p>Is the select in a state of loading (async)</p>
+<h4 id="inherited-from_33">Inherited from<a class="headerlink" href="#inherited-from_33" title="Permanent link">#</a></h4>
+<p>Omit.isLoading</p>
+<hr />
+<h3 id="ismulti">isMulti<a class="headerlink" href="#ismulti" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isMulti</strong>: <code>IsMulti</code></p>
+<p>Support multiple selected options</p>
+<h4 id="inherited-from_34">Inherited from<a class="headerlink" href="#inherited-from_34" title="Permanent link">#</a></h4>
+<p>Omit.isMulti</p>
+<hr />
+<h3 id="isoptiondisabled">isOptionDisabled<a class="headerlink" href="#isoptiondisabled" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isOptionDisabled</strong>: (<code>option</code>: <code>Option</code>, <code>selectValue</code>: <code>Options</code>&lt;<code>Option</code>>) =&gt; <code>boolean</code></p>
 <h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
-<p>▸ (<code>data</code>, <code>formatOptionLabelMeta</code>): <code>ReactNode</code></p>
-<p>Formats option labels in the menu and control as React components</p>
+<p>▸ (<code>option</code>, <code>selectValue</code>): <code>boolean</code></p>
+<p>Override the built-in logic to detect whether an option is disabled</p>
+<p>An example can be found in the <a href="/advanced#replacing-builtins">Replacing builtins</a> documentation.</p>
 <h5 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1703,96 +1726,25 @@ that will be passed to them, see <a href="/components">the components docs</a></
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>data</code></td>
-<td align="left"><code>T</code></td>
+<td align="left"><code>option</code></td>
+<td align="left"><code>Option</code></td>
 </tr>
 <tr>
-<td align="left"><code>formatOptionLabelMeta</code></td>
-<td align="left"><code>FormatOptionLabelMeta</code>&lt;<code>T</code>></td>
+<td align="left"><code>selectValue</code></td>
+<td align="left"><code>Options</code>&lt;<code>Option</code>></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
-<p><code>ReactNode</code></p>
-<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.formatOptionLabel</p>
-<hr />
-<h3 id="getoptionlabel">getOptionLabel<a class="headerlink" href="#getoptionlabel" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>getOptionLabel</strong>: <code>GetOptionLabel</code>&lt;<code>T</code>></p>
-<p>Resolves option data to a string to be displayed as the label by components</p>
-<p>Note: Failure to resolve to a string type can interfere with filtering and
-screen reader support.</p>
-<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.getOptionLabel</p>
-<hr />
-<h3 id="getoptionvalue">getOptionValue<a class="headerlink" href="#getoptionvalue" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>getOptionValue</strong>: <code>GetOptionValue</code>&lt;<code>T</code>></p>
-<p>Resolves option data to a string to compare options and specify value attributes</p>
-<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.getOptionValue</p>
-<hr />
-<h3 id="hideselectedoptions">hideSelectedOptions<a class="headerlink" href="#hideselectedoptions" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>hideSelectedOptions</strong>: <code>boolean</code></p>
-<p>Hide the selected option from the menu</p>
-<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.hideSelectedOptions</p>
-<hr />
-<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>id</strong>: <code>string</code></p>
-<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.id</p>
-<hr />
-<h3 id="inputid">inputId<a class="headerlink" href="#inputid" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>inputId</strong>: <code>string</code></p>
-<p>The id of the search input</p>
-<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.inputId</p>
-<hr />
-<h3 id="inputvalue">inputValue<a class="headerlink" href="#inputvalue" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>inputValue</strong>: <code>string</code></p>
-<p>The value of the search input</p>
-<h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.inputValue</p>
-<hr />
-<h3 id="instanceid">instanceId<a class="headerlink" href="#instanceid" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>instanceId</strong>: <code>string</code> | <code>number</code></p>
-<p>Define an id prefix for the select components e.g. {your-id}-value</p>
-<h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.instanceId</p>
-<hr />
-<h3 id="isclearable">isClearable<a class="headerlink" href="#isclearable" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isClearable</strong>: <code>boolean</code></p>
-<p>Is the select value clearable</p>
-<h4 id="inherited-from_33">Inherited from<a class="headerlink" href="#inherited-from_33" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isClearable</p>
-<hr />
-<h3 id="iscreatable">isCreatable<a class="headerlink" href="#iscreatable" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isCreatable</strong>: <code>boolean</code></p>
-<hr />
-<h3 id="isdisabled">isDisabled<a class="headerlink" href="#isdisabled" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isDisabled</strong>: <code>boolean</code></p>
-<p>Is the select disabled</p>
-<h4 id="inherited-from_34">Inherited from<a class="headerlink" href="#inherited-from_34" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isDisabled</p>
-<hr />
-<h3 id="isloading">isLoading<a class="headerlink" href="#isloading" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isLoading</strong>: <code>boolean</code></p>
-<p>Is the select in a state of loading (async)</p>
+<p><code>boolean</code></p>
 <h4 id="inherited-from_35">Inherited from<a class="headerlink" href="#inherited-from_35" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isLoading</p>
+<p>Omit.isOptionDisabled</p>
 <hr />
-<h3 id="ismulti">isMulti<a class="headerlink" href="#ismulti" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isMulti</strong>: <code>boolean</code></p>
-<p>Support multiple selected options</p>
-<h4 id="inherited-from_36">Inherited from<a class="headerlink" href="#inherited-from_36" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isMulti</p>
-<hr />
-<h3 id="isoptiondisabled">isOptionDisabled<a class="headerlink" href="#isoptiondisabled" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isOptionDisabled</strong>: (<code>option</code>: <code>T</code>, <code>selectValue</code>: <code>Options</code>&lt;<code>T</code>>) =&gt; <code>boolean</code></p>
+<h3 id="isoptionselected">isOptionSelected<a class="headerlink" href="#isoptionselected" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isOptionSelected</strong>: (<code>option</code>: <code>Option</code>, <code>selectValue</code>: <code>Options</code>&lt;<code>Option</code>>) =&gt; <code>boolean</code></p>
 <h4 id="type-declaration_3">Type declaration<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
 <p>▸ (<code>option</code>, <code>selectValue</code>): <code>boolean</code></p>
-<p>Override the built-in logic to detect whether an option is disabled</p>
-<p>An example can be found in the <a href="/advanced#replacing-builtins">Replacing builtins</a> documentation.</p>
+<p>Override the built-in logic to detect whether an option is selected</p>
 <h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1804,24 +1756,36 @@ screen reader support.</p>
 <tbody>
 <tr>
 <td align="left"><code>option</code></td>
-<td align="left"><code>T</code></td>
+<td align="left"><code>Option</code></td>
 </tr>
 <tr>
 <td align="left"><code>selectValue</code></td>
-<td align="left"><code>Options</code>&lt;<code>T</code>></td>
+<td align="left"><code>Options</code>&lt;<code>Option</code>></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h5>
 <p><code>boolean</code></p>
-<h4 id="inherited-from_37">Inherited from<a class="headerlink" href="#inherited-from_37" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isOptionDisabled</p>
+<h4 id="inherited-from_36">Inherited from<a class="headerlink" href="#inherited-from_36" title="Permanent link">#</a></h4>
+<p>Omit.isOptionSelected</p>
 <hr />
-<h3 id="isoptionselected">isOptionSelected<a class="headerlink" href="#isoptionselected" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isOptionSelected</strong>: (<code>option</code>: <code>T</code>, <code>selectValue</code>: <code>Options</code>&lt;<code>T</code>>) =&gt; <code>boolean</code></p>
+<h3 id="isrtl">isRtl<a class="headerlink" href="#isrtl" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isRtl</strong>: <code>boolean</code></p>
+<p>Is the select direction right-to-left</p>
+<h4 id="inherited-from_37">Inherited from<a class="headerlink" href="#inherited-from_37" title="Permanent link">#</a></h4>
+<p>Omit.isRtl</p>
+<hr />
+<h3 id="issearchable">isSearchable<a class="headerlink" href="#issearchable" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>isSearchable</strong>: <code>boolean</code></p>
+<p>Whether to enable search functionality</p>
+<h4 id="inherited-from_38">Inherited from<a class="headerlink" href="#inherited-from_38" title="Permanent link">#</a></h4>
+<p>Omit.isSearchable</p>
+<hr />
+<h3 id="loadingmessage">loadingMessage<a class="headerlink" href="#loadingmessage" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>loadingMessage</strong>: (<code>obj</code>: { <code>inputValue</code>: <code>string</code>  }) =&gt; <code>ReactNode</code></p>
 <h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
-<p>▸ (<code>option</code>, <code>selectValue</code>): <code>boolean</code></p>
-<p>Override the built-in logic to detect whether an option is selected</p>
+<p>▸ (<code>obj</code>): <code>ReactNode</code></p>
+<p>Async: Text to display when loading options</p>
 <h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1832,37 +1796,84 @@ screen reader support.</p>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>option</code></td>
-<td align="left"><code>T</code></td>
+<td align="left"><code>obj</code></td>
+<td align="left"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>selectValue</code></td>
-<td align="left"><code>Options</code>&lt;<code>T</code>></td>
+<td align="left"><code>obj.inputValue</code></td>
+<td align="left"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h5>
-<p><code>boolean</code></p>
-<h4 id="inherited-from_38">Inherited from<a class="headerlink" href="#inherited-from_38" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isOptionSelected</p>
-<hr />
-<h3 id="isrtl">isRtl<a class="headerlink" href="#isrtl" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isRtl</strong>: <code>boolean</code></p>
-<p>Is the select direction right-to-left</p>
+<p><code>ReactNode</code></p>
 <h4 id="inherited-from_39">Inherited from<a class="headerlink" href="#inherited-from_39" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isRtl</p>
+<p>Omit.loadingMessage</p>
 <hr />
-<h3 id="issearchable">isSearchable<a class="headerlink" href="#issearchable" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>isSearchable</strong>: <code>boolean</code></p>
-<p>Whether to enable search functionality</p>
+<h3 id="maxmenuheight">maxMenuHeight<a class="headerlink" href="#maxmenuheight" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>maxMenuHeight</strong>: <code>number</code></p>
+<p>Maximum height of the menu before scrolling</p>
 <h4 id="inherited-from_40">Inherited from<a class="headerlink" href="#inherited-from_40" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.isSearchable</p>
+<p>Omit.maxMenuHeight</p>
 <hr />
-<h3 id="loadingmessage">loadingMessage<a class="headerlink" href="#loadingmessage" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>loadingMessage</strong>: (<code>obj</code>: { <code>inputValue</code>: <code>string</code>  }) =&gt; <code>ReactNode</code></p>
+<h3 id="menuclass">menuClass<a class="headerlink" href="#menuclass" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuClass</strong>: <code>string</code></p>
+<hr />
+<h3 id="menuisopen">menuIsOpen<a class="headerlink" href="#menuisopen" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuIsOpen</strong>: <code>boolean</code></p>
+<p>Whether the menu is open</p>
+<h4 id="inherited-from_41">Inherited from<a class="headerlink" href="#inherited-from_41" title="Permanent link">#</a></h4>
+<p>Omit.menuIsOpen</p>
+<hr />
+<h3 id="menuplacement">menuPlacement<a class="headerlink" href="#menuplacement" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuPlacement</strong>: <code>MenuPlacement</code></p>
+<p>Default placement of the menu in relation to the control. 'auto' will flip
+when there isn't enough space below the control.</p>
+<h4 id="inherited-from_42">Inherited from<a class="headerlink" href="#inherited-from_42" title="Permanent link">#</a></h4>
+<p>Omit.menuPlacement</p>
+<hr />
+<h3 id="menuportaltarget">menuPortalTarget<a class="headerlink" href="#menuportaltarget" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuPortalTarget</strong>: <code>null</code> | <code>HTMLElement</code></p>
+<p>Whether the menu should use a portal, and where it should attach</p>
+<p>An example can be found in the <a href="/advanced#portaling">Portaling</a> documentation</p>
+<h4 id="inherited-from_43">Inherited from<a class="headerlink" href="#inherited-from_43" title="Permanent link">#</a></h4>
+<p>Omit.menuPortalTarget</p>
+<hr />
+<h3 id="menuposition">menuPosition<a class="headerlink" href="#menuposition" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuPosition</strong>: <code>MenuPosition</code></p>
+<p>The CSS position value of the menu, when "fixed" extra layout management is required</p>
+<h4 id="inherited-from_44">Inherited from<a class="headerlink" href="#inherited-from_44" title="Permanent link">#</a></h4>
+<p>Omit.menuPosition</p>
+<hr />
+<h3 id="menushouldblockscroll">menuShouldBlockScroll<a class="headerlink" href="#menushouldblockscroll" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuShouldBlockScroll</strong>: <code>boolean</code></p>
+<p>Whether to block scroll events when the menu is open</p>
+<h4 id="inherited-from_45">Inherited from<a class="headerlink" href="#inherited-from_45" title="Permanent link">#</a></h4>
+<p>Omit.menuShouldBlockScroll</p>
+<hr />
+<h3 id="menushouldscrollintoview">menuShouldScrollIntoView<a class="headerlink" href="#menushouldscrollintoview" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>menuShouldScrollIntoView</strong>: <code>boolean</code></p>
+<p>Whether the menu should be scrolled into view when it opens</p>
+<h4 id="inherited-from_46">Inherited from<a class="headerlink" href="#inherited-from_46" title="Permanent link">#</a></h4>
+<p>Omit.menuShouldScrollIntoView</p>
+<hr />
+<h3 id="minmenuheight">minMenuHeight<a class="headerlink" href="#minmenuheight" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>minMenuHeight</strong>: <code>number</code></p>
+<p>Minimum height of the menu before flipping</p>
+<h4 id="inherited-from_47">Inherited from<a class="headerlink" href="#inherited-from_47" title="Permanent link">#</a></h4>
+<p>Omit.minMenuHeight</p>
+<hr />
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>name</strong>: <code>string</code></p>
+<p>Name of the HTML Input (optional - without this, no input will be rendered)</p>
+<h4 id="inherited-from_48">Inherited from<a class="headerlink" href="#inherited-from_48" title="Permanent link">#</a></h4>
+<p>Omit.name</p>
+<hr />
+<h3 id="nooptionsmessage">noOptionsMessage<a class="headerlink" href="#nooptionsmessage" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>noOptionsMessage</strong>: (<code>obj</code>: { <code>inputValue</code>: <code>string</code>  }) =&gt; <code>ReactNode</code></p>
 <h4 id="type-declaration_5">Type declaration<a class="headerlink" href="#type-declaration_5" title="Permanent link">#</a></h4>
 <p>▸ (<code>obj</code>): <code>ReactNode</code></p>
-<p>Async: Text to display when loading options</p>
+<p>Text to display when there are no options</p>
 <h5 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1884,73 +1895,32 @@ screen reader support.</p>
 </table>
 <h5 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h5>
 <p><code>ReactNode</code></p>
-<h4 id="inherited-from_41">Inherited from<a class="headerlink" href="#inherited-from_41" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.loadingMessage</p>
-<hr />
-<h3 id="maxmenuheight">maxMenuHeight<a class="headerlink" href="#maxmenuheight" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>maxMenuHeight</strong>: <code>number</code></p>
-<p>Maximum height of the menu before scrolling</p>
-<h4 id="inherited-from_42">Inherited from<a class="headerlink" href="#inherited-from_42" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.maxMenuHeight</p>
-<hr />
-<h3 id="menuclass">menuClass<a class="headerlink" href="#menuclass" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>menuClass</strong>: <code>string</code></p>
-<hr />
-<h3 id="menuisopen">menuIsOpen<a class="headerlink" href="#menuisopen" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>menuIsOpen</strong>: <code>boolean</code></p>
-<p>Whether the menu is open</p>
-<h4 id="inherited-from_43">Inherited from<a class="headerlink" href="#inherited-from_43" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.menuIsOpen</p>
-<hr />
-<h3 id="menuplacement">menuPlacement<a class="headerlink" href="#menuplacement" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>menuPlacement</strong>: <code>MenuPlacement</code></p>
-<p>Default placement of the menu in relation to the control. 'auto' will flip
-when there isn't enough space below the control.</p>
-<h4 id="inherited-from_44">Inherited from<a class="headerlink" href="#inherited-from_44" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.menuPlacement</p>
-<hr />
-<h3 id="menuportaltarget">menuPortalTarget<a class="headerlink" href="#menuportaltarget" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>menuPortalTarget</strong>: <code>HTMLElement</code></p>
-<p>Whether the menu should use a portal, and where it should attach</p>
-<p>An example can be found in the <a href="/advanced#portaling">Portaling</a> documentation</p>
-<h4 id="inherited-from_45">Inherited from<a class="headerlink" href="#inherited-from_45" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.menuPortalTarget</p>
-<hr />
-<h3 id="menuposition">menuPosition<a class="headerlink" href="#menuposition" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>menuPosition</strong>: <code>MenuPosition</code></p>
-<p>The CSS position value of the menu, when "fixed" extra layout management is required</p>
-<h4 id="inherited-from_46">Inherited from<a class="headerlink" href="#inherited-from_46" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.menuPosition</p>
-<hr />
-<h3 id="menushouldblockscroll">menuShouldBlockScroll<a class="headerlink" href="#menushouldblockscroll" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>menuShouldBlockScroll</strong>: <code>boolean</code></p>
-<p>Whether to block scroll events when the menu is open</p>
-<h4 id="inherited-from_47">Inherited from<a class="headerlink" href="#inherited-from_47" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.menuShouldBlockScroll</p>
-<hr />
-<h3 id="menushouldscrollintoview">menuShouldScrollIntoView<a class="headerlink" href="#menushouldscrollintoview" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>menuShouldScrollIntoView</strong>: <code>boolean</code></p>
-<p>Whether the menu should be scrolled into view when it opens</p>
-<h4 id="inherited-from_48">Inherited from<a class="headerlink" href="#inherited-from_48" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.menuShouldScrollIntoView</p>
-<hr />
-<h3 id="minmenuheight">minMenuHeight<a class="headerlink" href="#minmenuheight" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>minMenuHeight</strong>: <code>number</code></p>
-<p>Minimum height of the menu before flipping</p>
 <h4 id="inherited-from_49">Inherited from<a class="headerlink" href="#inherited-from_49" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.minMenuHeight</p>
+<p>Omit.noOptionsMessage</p>
 <hr />
-<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>name</strong>: <code>string</code></p>
-<p>Name of the HTML Input (optional - without this, no input will be rendered)</p>
+<h3 id="onblur">onBlur<a class="headerlink" href="#onblur" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onBlur</strong>: <code>FocusEventHandler</code>&lt;<code>HTMLInputElement</code>></p>
+<p>Handle blur events on the control</p>
 <h4 id="inherited-from_50">Inherited from<a class="headerlink" href="#inherited-from_50" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.name</p>
+<p>Omit.onBlur</p>
 <hr />
-<h3 id="nooptionsmessage">noOptionsMessage<a class="headerlink" href="#nooptionsmessage" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>noOptionsMessage</strong>: (<code>obj</code>: { <code>inputValue</code>: <code>string</code>  }) =&gt; <code>ReactNode</code></p>
+<h3 id="onfocus">onFocus<a class="headerlink" href="#onfocus" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onFocus</strong>: <code>FocusEventHandler</code>&lt;<code>HTMLInputElement</code>></p>
+<p>Handle focus events on the control</p>
+<h4 id="inherited-from_51">Inherited from<a class="headerlink" href="#inherited-from_51" title="Permanent link">#</a></h4>
+<p>Omit.onFocus</p>
+<hr />
+<h3 id="onkeydown">onKeyDown<a class="headerlink" href="#onkeydown" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onKeyDown</strong>: <code>KeyboardEventHandler</code>&lt;<code>HTMLDivElement</code>></p>
+<p>Handle key down events on the select</p>
+<h4 id="inherited-from_52">Inherited from<a class="headerlink" href="#inherited-from_52" title="Permanent link">#</a></h4>
+<p>Omit.onKeyDown</p>
+<hr />
+<h3 id="onmenuscrolltobottom">onMenuScrollToBottom<a class="headerlink" href="#onmenuscrolltobottom" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMenuScrollToBottom</strong>: (<code>event</code>: <code>WheelEvent</code> | <code>TouchEvent</code>) =&gt; <code>void</code></p>
 <h4 id="type-declaration_6">Type declaration<a class="headerlink" href="#type-declaration_6" title="Permanent link">#</a></h4>
-<p>▸ (<code>obj</code>): <code>ReactNode</code></p>
-<p>Text to display when there are no options</p>
+<p>▸ (<code>event</code>): <code>void</code></p>
+<p>Fired when the user scrolls to the bottom of the menu</p>
 <h5 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1961,43 +1931,21 @@ when there isn't enough space below the control.</p>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>obj</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>obj.inputValue</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>event</code></td>
+<td align="left"><code>WheelEvent</code> | <code>TouchEvent</code></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h5>
-<p><code>ReactNode</code></p>
-<h4 id="inherited-from_51">Inherited from<a class="headerlink" href="#inherited-from_51" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.noOptionsMessage</p>
-<hr />
-<h3 id="onblur">onBlur<a class="headerlink" href="#onblur" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>onBlur</strong>: <code>FocusEventHandler</code>&lt;<code>HTMLInputElement</code>></p>
-<p>Handle blur events on the control</p>
-<h4 id="inherited-from_52">Inherited from<a class="headerlink" href="#inherited-from_52" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onBlur</p>
-<hr />
-<h3 id="onfocus">onFocus<a class="headerlink" href="#onfocus" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>onFocus</strong>: <code>FocusEventHandler</code>&lt;<code>HTMLInputElement</code>></p>
-<p>Handle focus events on the control</p>
+<p><code>void</code></p>
 <h4 id="inherited-from_53">Inherited from<a class="headerlink" href="#inherited-from_53" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onFocus</p>
+<p>Omit.onMenuScrollToBottom</p>
 <hr />
-<h3 id="onkeydown">onKeyDown<a class="headerlink" href="#onkeydown" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>onKeyDown</strong>: <code>KeyboardEventHandler</code>&lt;<code>HTMLDivElement</code>></p>
-<p>Handle key down events on the select</p>
-<h4 id="inherited-from_54">Inherited from<a class="headerlink" href="#inherited-from_54" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onKeyDown</p>
-<hr />
-<h3 id="onmenuscrolltobottom">onMenuScrollToBottom<a class="headerlink" href="#onmenuscrolltobottom" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>onMenuScrollToBottom</strong>: (<code>event</code>: <code>WheelEvent</code> | <code>TouchEvent</code>) =&gt; <code>void</code></p>
+<h3 id="onmenuscrolltotop">onMenuScrollToTop<a class="headerlink" href="#onmenuscrolltotop" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onMenuScrollToTop</strong>: (<code>event</code>: <code>WheelEvent</code> | <code>TouchEvent</code>) =&gt; <code>void</code></p>
 <h4 id="type-declaration_7">Type declaration<a class="headerlink" href="#type-declaration_7" title="Permanent link">#</a></h4>
 <p>▸ (<code>event</code>): <code>void</code></p>
-<p>Fired when the user scrolls to the bottom of the menu</p>
+<p>Fired when the user scrolls to the top of the menu</p>
 <h5 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -2015,70 +1963,42 @@ when there isn't enough space below the control.</p>
 </table>
 <h5 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
-<h4 id="inherited-from_55">Inherited from<a class="headerlink" href="#inherited-from_55" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onMenuScrollToBottom</p>
-<hr />
-<h3 id="onmenuscrolltotop">onMenuScrollToTop<a class="headerlink" href="#onmenuscrolltotop" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>onMenuScrollToTop</strong>: (<code>event</code>: <code>WheelEvent</code> | <code>TouchEvent</code>) =&gt; <code>void</code></p>
-<h4 id="type-declaration_8">Type declaration<a class="headerlink" href="#type-declaration_8" title="Permanent link">#</a></h4>
-<p>▸ (<code>event</code>): <code>void</code></p>
-<p>Fired when the user scrolls to the top of the menu</p>
-<h5 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h5>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>event</code></td>
-<td align="left"><code>WheelEvent</code> | <code>TouchEvent</code></td>
-</tr>
-</tbody>
-</table>
-<h5 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
-<h4 id="inherited-from_56">Inherited from<a class="headerlink" href="#inherited-from_56" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onMenuScrollToTop</p>
+<h4 id="inherited-from_54">Inherited from<a class="headerlink" href="#inherited-from_54" title="Permanent link">#</a></h4>
+<p>Omit.onMenuScrollToTop</p>
 <hr />
 <h3 id="openmenuonclick">openMenuOnClick<a class="headerlink" href="#openmenuonclick" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>openMenuOnClick</strong>: <code>boolean</code></p>
 <p>Allows control of whether the menu is opened when the Select is clicked</p>
-<h4 id="inherited-from_57">Inherited from<a class="headerlink" href="#inherited-from_57" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.openMenuOnClick</p>
+<h4 id="inherited-from_55">Inherited from<a class="headerlink" href="#inherited-from_55" title="Permanent link">#</a></h4>
+<p>Omit.openMenuOnClick</p>
 <hr />
 <h3 id="openmenuonfocus">openMenuOnFocus<a class="headerlink" href="#openmenuonfocus" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>openMenuOnFocus</strong>: <code>boolean</code></p>
 <p>Allows control of whether the menu is opened when the Select is focused</p>
-<h4 id="inherited-from_58">Inherited from<a class="headerlink" href="#inherited-from_58" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.openMenuOnFocus</p>
+<h4 id="inherited-from_56">Inherited from<a class="headerlink" href="#inherited-from_56" title="Permanent link">#</a></h4>
+<p>Omit.openMenuOnFocus</p>
 <hr />
 <h3 id="options">options<a class="headerlink" href="#options" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>options</strong>: <code>OptionsOrGroups</code>&lt;<code>T</code>, <code>GroupBase</code>&lt;<code>T</code>>></p>
-<p>Array of options that populate the select menu</p>
-<h4 id="inherited-from_59">Inherited from<a class="headerlink" href="#inherited-from_59" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.options</p>
+<p>• <strong>options</strong>: <code>OptionsOrGroups</code>&lt;<code>Option</code>, <code>Group</code>> | <a href="../../modules/Renderer.Component/#legacyautoconvertedoptions"><code>LegacyAutoConvertedOptions</code></a></p>
 <hr />
 <h3 id="pagesize">pageSize<a class="headerlink" href="#pagesize" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>pageSize</strong>: <code>number</code></p>
 <p>Number of options to jump in menu when page{up|down} keys are used</p>
-<h4 id="inherited-from_60">Inherited from<a class="headerlink" href="#inherited-from_60" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.pageSize</p>
+<h4 id="inherited-from_57">Inherited from<a class="headerlink" href="#inherited-from_57" title="Permanent link">#</a></h4>
+<p>Omit.pageSize</p>
 <hr />
 <h3 id="placeholder">placeholder<a class="headerlink" href="#placeholder" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>placeholder</strong>: <code>ReactNode</code></p>
 <p>Placeholder for the select value</p>
-<h4 id="inherited-from_61">Inherited from<a class="headerlink" href="#inherited-from_61" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.placeholder</p>
+<h4 id="inherited-from_58">Inherited from<a class="headerlink" href="#inherited-from_58" title="Permanent link">#</a></h4>
+<p>Omit.placeholder</p>
 <hr />
 <h3 id="screenreaderstatus">screenReaderStatus<a class="headerlink" href="#screenreaderstatus" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>screenReaderStatus</strong>: (<code>obj</code>: { <code>count</code>: <code>number</code>  }) =&gt; <code>string</code></p>
-<h4 id="type-declaration_9">Type declaration<a class="headerlink" href="#type-declaration_9" title="Permanent link">#</a></h4>
+<h4 id="type-declaration_8">Type declaration<a class="headerlink" href="#type-declaration_8" title="Permanent link">#</a></h4>
 <p>▸ (<code>obj</code>): <code>string</code></p>
 <p>Status to relay to screen readers</p>
-<h5 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h5>
+<h5 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -2097,135 +2017,46 @@ when there isn't enough space below the control.</p>
 </tr>
 </tbody>
 </table>
-<h5 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h5>
+<h5 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h5>
 <p><code>string</code></p>
-<h4 id="inherited-from_62">Inherited from<a class="headerlink" href="#inherited-from_62" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.screenReaderStatus</p>
+<h4 id="inherited-from_59">Inherited from<a class="headerlink" href="#inherited-from_59" title="Permanent link">#</a></h4>
+<p>Omit.screenReaderStatus</p>
 <hr />
 <h3 id="styles">styles<a class="headerlink" href="#styles" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>styles</strong>: <code>StylesConfig</code>&lt;<code>T</code>, <code>boolean</code>, <code>GroupBase</code>&lt;<code>T</code>>></p>
+<p>• <code>Optional</code> <strong>styles</strong>: <code>StylesConfig</code>&lt;<code>Option</code>, <code>IsMulti</code>, <code>Group</code>></p>
 <p>Style modifier methods</p>
 <p>A basic example can be found at the bottom of the <a href="/advanced#replacing-builtins">Replacing builtins</a> documentation.</p>
-<h4 id="inherited-from_63">Inherited from<a class="headerlink" href="#inherited-from_63" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.styles</p>
+<h4 id="inherited-from_60">Inherited from<a class="headerlink" href="#inherited-from_60" title="Permanent link">#</a></h4>
+<p>Omit.styles</p>
 <hr />
 <h3 id="tabindex">tabIndex<a class="headerlink" href="#tabindex" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>tabIndex</strong>: <code>number</code></p>
 <p>Sets the tabIndex attribute on the input</p>
-<h4 id="inherited-from_64">Inherited from<a class="headerlink" href="#inherited-from_64" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.tabIndex</p>
+<h4 id="inherited-from_61">Inherited from<a class="headerlink" href="#inherited-from_61" title="Permanent link">#</a></h4>
+<p>Omit.tabIndex</p>
 <hr />
 <h3 id="tabselectsvalue">tabSelectsValue<a class="headerlink" href="#tabselectsvalue" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>tabSelectsValue</strong>: <code>boolean</code></p>
 <p>Select the currently focused option when the user presses tab</p>
-<h4 id="inherited-from_65">Inherited from<a class="headerlink" href="#inherited-from_65" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.tabSelectsValue</p>
+<h4 id="inherited-from_62">Inherited from<a class="headerlink" href="#inherited-from_62" title="Permanent link">#</a></h4>
+<p>Omit.tabSelectsValue</p>
 <hr />
 <h3 id="theme">theme<a class="headerlink" href="#theme" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>theme</strong>: <code>ThemeConfig</code></p>
 <p>Theme modifier method</p>
-<h4 id="inherited-from_66">Inherited from<a class="headerlink" href="#inherited-from_66" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.theme</p>
+<h4 id="inherited-from_63">Inherited from<a class="headerlink" href="#inherited-from_63" title="Permanent link">#</a></h4>
+<p>Omit.theme</p>
 <hr />
 <h3 id="themename">themeName<a class="headerlink" href="#themename" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>themeName</strong>: <code>"lens"</code> | <code>"light"</code> | <code>"outlined"</code> | <code>"dark"</code></p>
 <hr />
 <h3 id="value">value<a class="headerlink" href="#value" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>value</strong>: <code>T</code></p>
-<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.value</p>
+<p>• <code>Optional</code> <strong>value</strong>: <code>PropsValue</code>&lt;<code>Value</code>></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="formatcreatelabel">formatCreateLabel<a class="headerlink" href="#formatcreatelabel" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>formatCreateLabel</strong>(<code>inputValue</code>): <code>ReactNode</code></p>
-<p>Gets the label for the "create new ..." option in the menu. Is given the
-current input value.</p>
-<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>inputValue</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><code>ReactNode</code></p>
-<h4 id="inherited-from_67">Inherited from<a class="headerlink" href="#inherited-from_67" title="Permanent link">#</a></h4>
-<p>CreatableProps.formatCreateLabel</p>
-<hr />
-<h3 id="getnewoptiondata">getNewOptionData<a class="headerlink" href="#getnewoptiondata" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>getNewOptionData</strong>(<code>inputValue</code>, <code>optionLabel</code>): <code>Option</code></p>
-<p>Returns the data for the new option when it is created. Used to display the
-value, and is passed to <code>onChange</code>.</p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>inputValue</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>optionLabel</code></td>
-<td align="left"><code>ReactNode</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
-<p><code>Option</code></p>
-<h4 id="inherited-from_68">Inherited from<a class="headerlink" href="#inherited-from_68" title="Permanent link">#</a></h4>
-<p>CreatableProps.getNewOptionData</p>
-<hr />
-<h3 id="isvalidnewoption">isValidNewOption<a class="headerlink" href="#isvalidnewoption" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>isValidNewOption</strong>(<code>inputValue</code>, <code>value</code>, <code>options</code>, <code>accessors</code>): <code>boolean</code></p>
-<p>Determines whether the "create new ..." option should be displayed based on
-the current input value, select value and options array.</p>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>inputValue</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>value</code></td>
-<td align="left"><code>Options</code>&lt;<code>Option</code>></td>
-</tr>
-<tr>
-<td align="left"><code>options</code></td>
-<td align="left"><code>OptionsOrGroups</code>&lt;<code>Option</code>, <code>Group</code>></td>
-</tr>
-<tr>
-<td align="left"><code>accessors</code></td>
-<td align="left"><code>Accessors</code>&lt;<code>Option</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
-<p><code>boolean</code></p>
-<h4 id="inherited-from_69">Inherited from<a class="headerlink" href="#inherited-from_69" title="Permanent link">#</a></h4>
-<p>CreatableProps.isValidNewOption</p>
-<hr />
 <h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>onChange</strong>(<code>option</code>, <code>meta?</code>): <code>void</code></p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<p>▸ <code>Optional</code> <strong>onChange</strong>(<code>newValue</code>, <code>actionMeta</code>): <code>void</code></p>
+<p>Handle change events on the select</p>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2235,49 +2066,24 @@ the current input value, select value and options array.</p>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>option</code></td>
-<td align="left"><code>T</code></td>
+<td align="left"><code>newValue</code></td>
+<td align="left"><code>OnChangeValue</code>&lt;<code>Option</code>, <code>IsMulti</code>></td>
 </tr>
 <tr>
-<td align="left"><code>meta?</code></td>
-<td align="left"><code>ActionMeta</code>&lt;<code>any</code>></td>
+<td align="left"><code>actionMeta</code></td>
+<td align="left"><code>ActionMeta</code>&lt;<code>Option</code>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onChange</p>
-<hr />
-<h3 id="oncreateoption">onCreateOption<a class="headerlink" href="#oncreateoption" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>onCreateOption</strong>(<code>inputValue</code>): <code>void</code></p>
-<p>If provided, this will be called with the input value when a new option is
-created, and <code>onChange</code> will <strong>not</strong> be called. Use this when you need more
-control over what happens when new options are created.</p>
-<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>inputValue</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<h4 id="inherited-from_70">Inherited from<a class="headerlink" href="#inherited-from_70" title="Permanent link">#</a></h4>
-<p>CreatableProps.onCreateOption</p>
+<h4 id="inherited-from_64">Inherited from<a class="headerlink" href="#inherited-from_64" title="Permanent link">#</a></h4>
+<p>Omit.onChange</p>
 <hr />
 <h3 id="oninputchange">onInputChange<a class="headerlink" href="#oninputchange" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>onInputChange</strong>(<code>newValue</code>, <code>actionMeta</code>): <code>void</code></p>
 <p>Handle change events on the input</p>
-<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2296,26 +2102,26 @@ control over what happens when new options are created.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_71">Inherited from<a class="headerlink" href="#inherited-from_71" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onInputChange</p>
+<h4 id="inherited-from_65">Inherited from<a class="headerlink" href="#inherited-from_65" title="Permanent link">#</a></h4>
+<p>Omit.onInputChange</p>
 <hr />
 <h3 id="onmenuclose">onMenuClose<a class="headerlink" href="#onmenuclose" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>onMenuClose</strong>(): <code>void</code></p>
 <p>Handle the menu closing</p>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_72">Inherited from<a class="headerlink" href="#inherited-from_72" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onMenuClose</p>
+<h4 id="inherited-from_66">Inherited from<a class="headerlink" href="#inherited-from_66" title="Permanent link">#</a></h4>
+<p>Omit.onMenuClose</p>
 <hr />
 <h3 id="onmenuopen">onMenuOpen<a class="headerlink" href="#onmenuopen" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>onMenuOpen</strong>(): <code>void</code></p>
 <p>Handle the menu opening</p>
-<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_73">Inherited from<a class="headerlink" href="#inherited-from_73" title="Permanent link">#</a></h4>
-<p>ReactSelectProps.onMenuOpen</p>
+<h4 id="inherited-from_67">Inherited from<a class="headerlink" href="#inherited-from_67" title="Permanent link">#</a></h4>
+<p>Omit.onMenuOpen</p>
                 
               
               

@@ -802,6 +802,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eventsbuffer" class="md-nav__link">
     eventsBuffer
   </a>
@@ -1054,13 +1061,6 @@
           <li class="md-nav__item">
   <a href="#getitems" class="md-nav__link">
     getItems
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getstatuses" class="md-nav__link">
-    getStatuses
   </a>
   
 </li>
@@ -1340,7 +1340,7 @@
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.NamespaceStore</p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="../Renderer.K8sApi.KubeObjectStore/"><code>KubeObjectStore</code></a>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></li>
+<li><a href="../Renderer.K8sApi.KubeObjectStore/"><code>KubeObjectStore</code></a>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>, <code>NamespaceApi</code>></li>
 </ul>
 <p>↳ <strong><code>NamespaceStore</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -1352,6 +1352,7 @@
 <ul>
 <li><a href="./#api">api</a></li>
 <li><a href="./#buffersize">bufferSize</a></li>
+<li><a href="./#dependencies">dependencies</a></li>
 <li><a href="./#eventsbuffer">eventsBuffer</a></li>
 <li><a href="./#failedloading">failedLoading</a></li>
 <li><a href="./#isloaded">isLoaded</a></li>
@@ -1391,7 +1392,6 @@
 <li><a href="./#getbypath">getByPath</a></li>
 <li><a href="./#getindexbyid">getIndexById</a></li>
 <li><a href="./#getitems">getItems</a></li>
-<li><a href="./#getstatuses">getStatuses</a></li>
 <li><a href="./#gettotalcount">getTotalCount</a></li>
 <li><a href="./#hascontext">hasContext</a></li>
 <li><a href="./#isselected">isSelected</a></li>
@@ -1431,7 +1431,7 @@
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new NamespaceStore</strong>(<code>dependencies</code>)</p>
+<p>• <strong>new NamespaceStore</strong>(<code>dependencies</code>, <code>api</code>)</p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1445,59 +1445,66 @@
 <td align="left"><code>dependencies</code></td>
 <td align="left"><code>Dependencies</code></td>
 </tr>
+<tr>
+<td align="left"><code>api</code></td>
+<td align="left"><code>NamespaceApi</code></td>
+</tr>
 </tbody>
 </table>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#constructor">constructor</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="api">api<a class="headerlink" href="#api" title="Permanent link">#</a></h3>
-<p>• <strong>api</strong>: <code>NamespaceApi</code> = <code>namespacesApi</code></p>
-<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
+<p>• <code>Readonly</code> <strong>api</strong>: <code>NamespaceApi</code></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#api">api</a></p>
 <hr />
 <h3 id="buffersize">bufferSize<a class="headerlink" href="#buffersize" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>bufferSize</strong>: <code>number</code> = <code>50000</code></p>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p>• <code>Readonly</code> <strong>bufferSize</strong>: <code>number</code></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#buffersize">bufferSize</a></p>
 <hr />
+<h3 id="dependencies">dependencies<a class="headerlink" href="#dependencies" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>dependencies</strong>: <code>Dependencies</code></p>
+<hr />
 <h3 id="eventsbuffer">eventsBuffer<a class="headerlink" href="#eventsbuffer" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>eventsBuffer</strong>: <code>IObservableArray</code>&lt;<code>IKubeWatchEvent</code>&lt;<code>KubeJsonApiData</code>>></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p>• <code>Protected</code> <strong>eventsBuffer</strong>: <code>IObservableArray</code>&lt;<code>IKubeWatchEvent</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>NamespaceStatus</code>, <code>NamespaceSpec</code>>>></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#eventsbuffer">eventsBuffer</a></p>
 <hr />
 <h3 id="failedloading">failedLoading<a class="headerlink" href="#failedloading" title="Permanent link">#</a></h3>
 <p>• <strong>failedLoading</strong>: <code>boolean</code> = <code>false</code></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#failedloading">failedLoading</a></p>
 <hr />
 <h3 id="isloaded">isLoaded<a class="headerlink" href="#isloaded" title="Permanent link">#</a></h3>
 <p>• <strong>isLoaded</strong>: <code>boolean</code> = <code>false</code></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#isloaded">isLoaded</a></p>
 <hr />
 <h3 id="isloading">isLoading<a class="headerlink" href="#isloading" title="Permanent link">#</a></h3>
 <p>• <strong>isLoading</strong>: <code>boolean</code> = <code>false</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#isloading">isLoading</a></p>
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
 <p>• <strong>items</strong>: <code>IObservableArray</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#items">items</a></p>
 <hr />
 <h3 id="limit">limit<a class="headerlink" href="#limit" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>limit</strong>: <code>number</code></p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p>• <code>Readonly</code> <strong>limit</strong>: <code>undefined</code> | <code>number</code></p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#limit">limit</a></p>
 <hr />
 <h3 id="selecteditemsids">selectedItemsIds<a class="headerlink" href="#selecteditemsids" title="Permanent link">#</a></h3>
 <p>• <strong>selectedItemsIds</strong>: <code>ObservableSet</code>&lt;<code>string</code>></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#selecteditemsids">selectedItemsIds</a></p>
 <hr />
 <h3 id="defaultcontext">defaultContext<a class="headerlink" href="#defaultcontext" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <strong>defaultContext</strong>: <code>IObservableValue</code>&lt;<code>ClusterContext</code>></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>defaultContext</strong>: <code>IObservableValue</code>&lt;<code>ClusterContext</code>></p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#defaultcontext">defaultContext</a></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="allowednamespaces">allowedNamespaces<a class="headerlink" href="#allowednamespaces" title="Permanent link">#</a></h3>
@@ -1517,14 +1524,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <p>• <code>get</code> <strong>context</strong>(): <code>ClusterContext</code></p>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>ClusterContext</code></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.context</p>
 <hr />
 <h3 id="contextitems">contextItems<a class="headerlink" href="#contextitems" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>contextItems</strong>(): <code>T</code>[]</p>
+<p>• <code>get</code> <strong>contextItems</strong>(): <code>K</code>[]</p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>T</code>[]</p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p><code>K</code>[]</p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.contextItems</p>
 <hr />
 <h3 id="contextnamespaces">contextNamespaces<a class="headerlink" href="#contextnamespaces" title="Permanent link">#</a></h3>
@@ -1537,7 +1544,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <p>• <code>get</code> <strong>contextReady</strong>(): <code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.contextReady</p>
 <hr />
 <h3 id="hasallcontexts">hasAllContexts<a class="headerlink" href="#hasallcontexts" title="Permanent link">#</a></h3>
@@ -1550,21 +1557,21 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <p>• <code>get</code> <strong>namespacesReady</strong>(): <code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.namespacesReady</p>
 <hr />
 <h3 id="query">query<a class="headerlink" href="#query" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>query</strong>(): <code>IKubeApiQueryParams</code></p>
+<p>• <code>get</code> <strong>query</strong>(): <code>KubeApiQueryParams</code></p>
 <h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>IKubeApiQueryParams</code></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p><code>KubeApiQueryParams</code></p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.query</p>
 <hr />
 <h3 id="selecteditems">selectedItems<a class="headerlink" href="#selecteditems" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>selectedItems</strong>(): <code>Item</code>[]</p>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>Item</code>[]</p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.selectedItems</p>
 <hr />
 <h3 id="selectednames">selectedNames<a class="headerlink" href="#selectednames" title="Permanent link">#</a></h3>
@@ -1577,7 +1584,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <p>▸ <strong>[iterator]</strong>(): <code>Generator</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>, <code>void</code>, <code>undefined</code>></p>
 <h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>Generator</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>, <code>void</code>, <code>undefined</code>></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#[iterator]">[iterator]</a></p>
 <hr />
 <h3 id="bindwatcheventsupdater">bindWatchEventsUpdater<a class="headerlink" href="#bindwatcheventsupdater" title="Permanent link">#</a></h3>
@@ -1601,7 +1608,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </table>
 <h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#bindwatcheventsupdater">bindWatchEventsUpdater</a></p>
 <hr />
 <h3 id="clearselected">clearSelected<a class="headerlink" href="#clearselected" title="Permanent link">#</a></h3>
@@ -1649,17 +1656,17 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 <tr>
 <td align="left"><code>data?</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></td>
+<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#create">create</a></p>
 <hr />
 <h3 id="createitem">createItem<a class="headerlink" href="#createitem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>createItem</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
+<p>▸ <code>Protected</code> <strong>createItem</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1683,13 +1690,13 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 <tr>
 <td align="left"><code>data?</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></td>
+<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#createitem">createItem</a></p>
 <hr />
 <h3 id="defaultsorting">defaultSorting<a class="headerlink" href="#defaultsorting" title="Permanent link">#</a></h3>
@@ -1711,7 +1718,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </table>
 <h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#defaultsorting">defaultSorting</a></p>
 <hr />
 <h3 id="filteritemsonload">filterItemsOnLoad<a class="headerlink" href="#filteritemsonload" title="Permanent link">#</a></h3>
@@ -1733,7 +1740,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </table>
 <h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
-<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#filteritemsonload">filterItemsOnLoad</a></p>
 <hr />
 <h3 id="getallbyns">getAllByNs<a class="headerlink" href="#getallbyns" title="Permanent link">#</a></h3>
@@ -1762,11 +1769,11 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </table>
 <h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
-<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getallbyns">getAllByNs</a></p>
 <hr />
 <h3 id="getbyid">getById<a class="headerlink" href="#getbyid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getById</strong>(<code>id</code>): <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
+<p>▸ <strong>getById</strong>(<code>id</code>): <code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
 <h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1783,8 +1790,8 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tbody>
 </table>
 <h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
-<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<p><code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
+<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getbyid">getById</a></p>
 <hr />
 <h3 id="getbylabel">getByLabel<a class="headerlink" href="#getbylabel" title="Permanent link">#</a></h3>
@@ -1800,17 +1807,17 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <tbody>
 <tr>
 <td align="left"><code>labels</code></td>
-<td align="left"><code>string</code>[] | { [label: string]: <code>string</code>;  }</td>
+<td align="left"><code>string</code>[] | <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
-<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getbylabel">getByLabel</a></p>
 <hr />
 <h3 id="getbyname">getByName<a class="headerlink" href="#getbyname" title="Permanent link">#</a></h3>
-<p>▸ <strong>getByName</strong>(<code>name</code>, <code>namespace?</code>): <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
+<p>▸ <strong>getByName</strong>(<code>name</code>, <code>namespace?</code>): <code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
 <h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1831,12 +1838,12 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tbody>
 </table>
 <h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
-<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<p><code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getbyname">getByName</a></p>
 <hr />
 <h3 id="getbypath">getByPath<a class="headerlink" href="#getbypath" title="Permanent link">#</a></h3>
-<p>▸ <strong>getByPath</strong>(<code>path</code>): <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
+<p>▸ <strong>getByPath</strong>(<code>path</code>): <code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
 <h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1853,8 +1860,8 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tbody>
 </table>
 <h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
-<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<p><code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a></p>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getbypath">getByPath</a></p>
 <hr />
 <h3 id="getindexbyid">getIndexById<a class="headerlink" href="#getindexbyid" title="Permanent link">#</a></h3>
@@ -1876,41 +1883,19 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </table>
 <h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
-<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getindexbyid">getIndexById</a></p>
 <hr />
 <h3 id="getitems">getItems<a class="headerlink" href="#getitems" title="Permanent link">#</a></h3>
 <p>▸ <strong>getItems</strong>(): <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
 <h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
-<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getitems">getItems</a></p>
-<hr />
-<h3 id="getstatuses">getStatuses<a class="headerlink" href="#getstatuses" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>getStatuses</strong>(<code>items</code>): <code>Record</code>&lt;<code>string</code>, <code>number</code>></p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>items</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
-<p><code>Record</code>&lt;<code>string</code>, <code>number</code>></p>
 <h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getstatuses">getStatuses</a></p>
+<p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#getitems">getItems</a></p>
 <hr />
 <h3 id="gettotalcount">getTotalCount<a class="headerlink" href="#gettotalcount" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTotalCount</strong>(): <code>number</code></p>
-<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
 <h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#gettotalcount">getTotalCount</a></p>
@@ -1918,7 +1903,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <h3 id="hascontext">hasContext<a class="headerlink" href="#hascontext" title="Permanent link">#</a></h3>
 <p>▸ <strong>hasContext</strong>(<code>namespaces</code>): <code>boolean</code></p>
 <p>Checks if namespace names are selected for filtering</p>
-<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1935,13 +1920,13 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
+<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <p><code>true</code> if all the provided names are selected</p>
 <hr />
 <h3 id="isselected">isSelected<a class="headerlink" href="#isselected" title="Permanent link">#</a></h3>
 <p>▸ <strong>isSelected</strong>(<code>item</code>): <code>boolean</code></p>
-<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1956,14 +1941,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
+<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#isselected">isSelected</a></p>
 <hr />
 <h3 id="isselectedall">isSelectedAll<a class="headerlink" href="#isselectedall" title="Permanent link">#</a></h3>
 <p>▸ <strong>isSelectedAll</strong>(<code>visibleItems?</code>): <code>boolean</code></p>
-<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1978,14 +1963,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
+<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#isselectedall">isSelectedAll</a></p>
 <hr />
 <h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
 <p>▸ <strong>load</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
+<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2008,14 +1993,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
+<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
 <h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#load">load</a></p>
 <hr />
 <h3 id="loadall">loadAll<a class="headerlink" href="#loadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
-<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
+<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
+<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2030,14 +2015,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
+<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
 <h4 id="inherited-from_33">Inherited from<a class="headerlink" href="#inherited-from_33" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loadall">loadAll</a></p>
 <hr />
 <h3 id="loadfrompath">loadFromPath<a class="headerlink" href="#loadfrompath" title="Permanent link">#</a></h3>
 <p>▸ <strong>loadFromPath</strong>(<code>resourcePath</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
+<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2052,14 +2037,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
+<h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
 <h4 id="inherited-from_34">Inherited from<a class="headerlink" href="#inherited-from_34" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loadfrompath">loadFromPath</a></p>
 <hr />
 <h3 id="loaditem">loadItem<a class="headerlink" href="#loaditem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>loadItem</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
+<p>▸ <code>Protected</code> <strong>loadItem</strong>(<code>params</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
+<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2082,14 +2067,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
+<h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
 <h4 id="inherited-from_35">Inherited from<a class="headerlink" href="#inherited-from_35" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loaditem">loadItem</a></p>
 <hr />
 <h3 id="loaditems">loadItems<a class="headerlink" href="#loaditems" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
-<h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
+<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2104,14 +2089,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
+<h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
-<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
+<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loaditems">loadItems</a></p>
 <hr />
 <h3 id="mergeitems">mergeItems<a class="headerlink" href="#mergeitems" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>mergeItems</strong>(<code>partialItems</code>, <code>__namedParameters</code>): <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
-<h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
+<h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2130,14 +2115,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_35">Returns<a class="headerlink" href="#returns_35" title="Permanent link">#</a></h4>
+<h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
 <h4 id="inherited-from_36">Inherited from<a class="headerlink" href="#inherited-from_36" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#mergeitems">mergeItems</a></p>
 <hr />
 <h3 id="oncontextchange">onContextChange<a class="headerlink" href="#oncontextchange" title="Permanent link">#</a></h3>
 <p>▸ <strong>onContextChange</strong>(<code>callback</code>, <code>opts?</code>): <code>IReactionDisposer</code></p>
-<h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
+<h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2160,12 +2145,12 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_36">Returns<a class="headerlink" href="#returns_36" title="Permanent link">#</a></h4>
+<h4 id="returns_35">Returns<a class="headerlink" href="#returns_35" title="Permanent link">#</a></h4>
 <p><code>IReactionDisposer</code></p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
 <p>▸ <strong>patch</strong>(<code>item</code>, <code>patch</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
+<h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2184,14 +2169,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_37">Returns<a class="headerlink" href="#returns_37" title="Permanent link">#</a></h4>
+<h4 id="returns_36">Returns<a class="headerlink" href="#returns_36" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
 <h4 id="inherited-from_37">Inherited from<a class="headerlink" href="#inherited-from_37" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#patch">patch</a></p>
 <hr />
 <h3 id="pickonlyselected">pickOnlySelected<a class="headerlink" href="#pickonlyselected" title="Permanent link">#</a></h3>
 <p>▸ <strong>pickOnlySelected</strong>(<code>items</code>): <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
-<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
+<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2206,14 +2191,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_38">Returns<a class="headerlink" href="#returns_38" title="Permanent link">#</a></h4>
+<h4 id="returns_37">Returns<a class="headerlink" href="#returns_37" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
 <h4 id="inherited-from_38">Inherited from<a class="headerlink" href="#inherited-from_38" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#pickonlyselected">pickOnlySelected</a></p>
 <hr />
 <h3 id="reloadall">reloadAll<a class="headerlink" href="#reloadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
-<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
+<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
+<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2240,14 +2225,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_39">Returns<a class="headerlink" href="#returns_39" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
+<h4 id="returns_38">Returns<a class="headerlink" href="#returns_38" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]></p>
 <h4 id="inherited-from_39">Inherited from<a class="headerlink" href="#inherited-from_39" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#reloadall">reloadAll</a></p>
 <hr />
 <h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
 <p>▸ <strong>remove</strong>(<code>item</code>): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
+<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2262,14 +2247,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_40">Returns<a class="headerlink" href="#returns_40" title="Permanent link">#</a></h4>
+<h4 id="returns_39">Returns<a class="headerlink" href="#returns_39" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
+<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#remove">remove</a></p>
 <hr />
 <h3 id="removeitem">removeItem<a class="headerlink" href="#removeitem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>removeItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
+<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2288,14 +2273,14 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_41">Returns<a class="headerlink" href="#returns_41" title="Permanent link">#</a></h4>
+<h4 id="returns_40">Returns<a class="headerlink" href="#returns_40" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
 <h4 id="inherited-from_40">Inherited from<a class="headerlink" href="#inherited-from_40" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#removeitem">removeItem</a></p>
 <hr />
 <h3 id="removeitems">removeItems<a class="headerlink" href="#removeitems" title="Permanent link">#</a></h3>
 <p>▸ <strong>removeItems</strong>(<code>items</code>): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
+<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2310,28 +2295,28 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_42">Returns<a class="headerlink" href="#returns_42" title="Permanent link">#</a></h4>
+<h4 id="returns_41">Returns<a class="headerlink" href="#returns_41" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>void</code>></p>
 <h4 id="inherited-from_41">Inherited from<a class="headerlink" href="#inherited-from_41" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#removeitems">removeItems</a></p>
 <hr />
 <h3 id="removeselecteditems">removeSelectedItems<a class="headerlink" href="#removeselecteditems" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeSelectedItems</strong>(): <code>Promise</code>&lt;<code>void</code>[]></p>
-<h4 id="returns_43">Returns<a class="headerlink" href="#returns_43" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>[]></p>
+<p>▸ <strong>removeSelectedItems</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
+<h4 id="returns_42">Returns<a class="headerlink" href="#returns_42" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>void</code>></p>
 <h4 id="inherited-from_42">Inherited from<a class="headerlink" href="#inherited-from_42" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#removeselecteditems">removeSelectedItems</a></p>
 <hr />
 <h3 id="reset">reset<a class="headerlink" href="#reset" title="Permanent link">#</a></h3>
 <p>▸ <strong>reset</strong>(): <code>void</code></p>
-<h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
+<h4 id="returns_43">Returns<a class="headerlink" href="#returns_43" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_43">Inherited from<a class="headerlink" href="#inherited-from_43" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#reset">reset</a></p>
 <hr />
 <h3 id="resetonerror">resetOnError<a class="headerlink" href="#resetonerror" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>resetOnError</strong>(<code>error</code>): <code>void</code></p>
-<h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
+<h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2346,21 +2331,21 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_45">Returns<a class="headerlink" href="#returns_45" title="Permanent link">#</a></h4>
+<h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_44">Inherited from<a class="headerlink" href="#inherited-from_44" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#resetonerror">resetOnError</a></p>
 <hr />
 <h3 id="resetselection">resetSelection<a class="headerlink" href="#resetselection" title="Permanent link">#</a></h3>
 <p>▸ <strong>resetSelection</strong>(): <code>void</code></p>
-<h4 id="returns_46">Returns<a class="headerlink" href="#returns_46" title="Permanent link">#</a></h4>
+<h4 id="returns_45">Returns<a class="headerlink" href="#returns_45" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_45">Inherited from<a class="headerlink" href="#inherited-from_45" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#resetselection">resetSelection</a></p>
 <hr />
 <h3 id="select">select<a class="headerlink" href="#select" title="Permanent link">#</a></h3>
 <p>▸ <strong>select</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_31">Parameters<a class="headerlink" href="#parameters_31" title="Permanent link">#</a></h4>
+<h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2375,7 +2360,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_47">Returns<a class="headerlink" href="#returns_47" title="Permanent link">#</a></h4>
+<h4 id="returns_46">Returns<a class="headerlink" href="#returns_46" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_46">Inherited from<a class="headerlink" href="#inherited-from_46" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#select">select</a></p>
@@ -2384,12 +2369,12 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <p>▸ <strong>selectAll</strong>(): <code>void</code></p>
 <p>Selects all available namespaces.</p>
 <p>Note: If new namespaces appear in the future those will be selected too</p>
-<h4 id="returns_48">Returns<a class="headerlink" href="#returns_48" title="Permanent link">#</a></h4>
+<h4 id="returns_47">Returns<a class="headerlink" href="#returns_47" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="selectnamespaces">selectNamespaces<a class="headerlink" href="#selectnamespaces" title="Permanent link">#</a></h3>
 <p>▸ <strong>selectNamespaces</strong>(<code>namespace</code>): <code>void</code></p>
-<h4 id="parameters_32">Parameters<a class="headerlink" href="#parameters_32" title="Permanent link">#</a></h4>
+<h4 id="parameters_31">Parameters<a class="headerlink" href="#parameters_31" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2404,13 +2389,13 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_49">Returns<a class="headerlink" href="#returns_49" title="Permanent link">#</a></h4>
+<h4 id="returns_48">Returns<a class="headerlink" href="#returns_48" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="selectsingle">selectSingle<a class="headerlink" href="#selectsingle" title="Permanent link">#</a></h3>
 <p>▸ <strong>selectSingle</strong>(<code>namespace</code>): <code>void</code></p>
 <p>Makes the given namespace the sole selected namespace</p>
-<h4 id="parameters_33">Parameters<a class="headerlink" href="#parameters_33" title="Permanent link">#</a></h4>
+<h4 id="parameters_32">Parameters<a class="headerlink" href="#parameters_32" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2425,7 +2410,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_50">Returns<a class="headerlink" href="#returns_50" title="Permanent link">#</a></h4>
+<h4 id="returns_49">Returns<a class="headerlink" href="#returns_49" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="sortitems">sortItems<a class="headerlink" href="#sortitems" title="Permanent link">#</a></h3>
@@ -2434,7 +2419,7 @@ the filter or if the user has clicked the "All Namespaces" option</p>
 <code>items</code> are sorted to the same "index" then the next sorting function is used
 to determine where to place them relative to each other. Once the <code>sorting</code>
 functions have been all exhausted then the order is unchanged (ie a stable sort).</p>
-<h4 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h4>
+<h4 id="parameters_33">Parameters<a class="headerlink" href="#parameters_33" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2461,14 +2446,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_51">Returns<a class="headerlink" href="#returns_51" title="Permanent link">#</a></h4>
+<h4 id="returns_50">Returns<a class="headerlink" href="#returns_50" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>[]</p>
 <h4 id="inherited-from_47">Inherited from<a class="headerlink" href="#inherited-from_47" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#sortitems">sortItems</a></p>
 <hr />
 <h3 id="subscribe">subscribe<a class="headerlink" href="#subscribe" title="Permanent link">#</a></h3>
 <p>▸ <strong>subscribe</strong>(): <T\>(...<code>args</code>: <code>T</code>) => <code>void</code></p>
-<h4 id="returns_52">Returns<a class="headerlink" href="#returns_52" title="Permanent link">#</a></h4>
+<h4 id="returns_51">Returns<a class="headerlink" href="#returns_51" title="Permanent link">#</a></h4>
 <p><code>fn</code></p>
 <p>▸ &lt;<code>T</code>>(...<code>args</code>): <code>void</code></p>
 <p>A function that does nothing</p>
@@ -2487,7 +2472,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h5 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h5>
+<h5 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -2502,9 +2487,9 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h5 id="returns_53">Returns<a class="headerlink" href="#returns_53" title="Permanent link">#</a></h5>
+<h5 id="returns_52">Returns<a class="headerlink" href="#returns_52" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
-<h4 id="overrides_4">Overrides<a class="headerlink" href="#overrides_4" title="Permanent link">#</a></h4>
+<h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#subscribe">subscribe</a></p>
 <hr />
 <h3 id="toggleall">toggleAll<a class="headerlink" href="#toggleall" title="Permanent link">#</a></h3>
@@ -2512,7 +2497,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <p>This function selects all namespaces implicitly.</p>
 <p>NOTE: does not toggle any namespaces</p>
 <p><strong><code>deprecated</code></strong> Use <code>NamespaceStore.selectAll</code> instead.</p>
-<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
+<h4 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2529,13 +2514,13 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_54">Returns<a class="headerlink" href="#returns_54" title="Permanent link">#</a></h4>
+<h4 id="returns_53">Returns<a class="headerlink" href="#returns_53" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="togglecontext">toggleContext<a class="headerlink" href="#togglecontext" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggleContext</strong>(<code>namespaces</code>): <code>void</code></p>
 <p>Acts like <code>toggleSingle</code> but can work on several at a time</p>
-<h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
+<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2552,12 +2537,12 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_55">Returns<a class="headerlink" href="#returns_55" title="Permanent link">#</a></h4>
+<h4 id="returns_54">Returns<a class="headerlink" href="#returns_54" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="toggleselection">toggleSelection<a class="headerlink" href="#toggleselection" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggleSelection</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_38">Parameters<a class="headerlink" href="#parameters_38" title="Permanent link">#</a></h4>
+<h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2572,14 +2557,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_56">Returns<a class="headerlink" href="#returns_56" title="Permanent link">#</a></h4>
+<h4 id="returns_55">Returns<a class="headerlink" href="#returns_55" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_48">Inherited from<a class="headerlink" href="#inherited-from_48" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#toggleselection">toggleSelection</a></p>
 <hr />
 <h3 id="toggleselectionall">toggleSelectionAll<a class="headerlink" href="#toggleselectionall" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggleSelectionAll</strong>(<code>visibleItems?</code>): <code>void</code></p>
-<h4 id="parameters_39">Parameters<a class="headerlink" href="#parameters_39" title="Permanent link">#</a></h4>
+<h4 id="parameters_38">Parameters<a class="headerlink" href="#parameters_38" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2594,7 +2579,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_57">Returns<a class="headerlink" href="#returns_57" title="Permanent link">#</a></h4>
+<h4 id="returns_56">Returns<a class="headerlink" href="#returns_56" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_49">Inherited from<a class="headerlink" href="#inherited-from_49" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#toggleselectionall">toggleSelectionAll</a></p>
@@ -2604,7 +2589,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <p>Toggles the selection state of <code>namespace</code>. Namely, if it was previously
 specifically or implicitly selected then after this call it will be
 explicitly deselected.</p>
-<h4 id="parameters_40">Parameters<a class="headerlink" href="#parameters_40" title="Permanent link">#</a></h4>
+<h4 id="parameters_39">Parameters<a class="headerlink" href="#parameters_39" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2621,12 +2606,12 @@ explicitly deselected.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_58">Returns<a class="headerlink" href="#returns_58" title="Permanent link">#</a></h4>
+<h4 id="returns_57">Returns<a class="headerlink" href="#returns_57" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="unselect">unselect<a class="headerlink" href="#unselect" title="Permanent link">#</a></h3>
 <p>▸ <strong>unselect</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_41">Parameters<a class="headerlink" href="#parameters_41" title="Permanent link">#</a></h4>
+<h4 id="parameters_40">Parameters<a class="headerlink" href="#parameters_40" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2641,14 +2626,14 @@ explicitly deselected.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_59">Returns<a class="headerlink" href="#returns_59" title="Permanent link">#</a></h4>
+<h4 id="returns_58">Returns<a class="headerlink" href="#returns_58" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_50">Inherited from<a class="headerlink" href="#inherited-from_50" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#unselect">unselect</a></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="parameters_42">Parameters<a class="headerlink" href="#parameters_42" title="Permanent link">#</a></h4>
+<h4 id="parameters_41">Parameters<a class="headerlink" href="#parameters_41" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2663,25 +2648,25 @@ explicitly deselected.</p>
 </tr>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></td>
+<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_60">Returns<a class="headerlink" href="#returns_60" title="Permanent link">#</a></h4>
+<h4 id="returns_59">Returns<a class="headerlink" href="#returns_59" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
 <h4 id="inherited-from_51">Inherited from<a class="headerlink" href="#inherited-from_51" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#update">update</a></p>
 <hr />
 <h3 id="updatefromeventsbuffer">updateFromEventsBuffer<a class="headerlink" href="#updatefromeventsbuffer" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>updateFromEventsBuffer</strong>(): <code>void</code></p>
-<h4 id="returns_61">Returns<a class="headerlink" href="#returns_61" title="Permanent link">#</a></h4>
+<h4 id="returns_60">Returns<a class="headerlink" href="#returns_60" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_52">Inherited from<a class="headerlink" href="#inherited-from_52" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#updatefromeventsbuffer">updateFromEventsBuffer</a></p>
 <hr />
 <h3 id="updateitem">updateItem<a class="headerlink" href="#updateitem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
-<h4 id="parameters_43">Parameters<a class="headerlink" href="#parameters_43" title="Permanent link">#</a></h4>
+<h4 id="parameters_42">Parameters<a class="headerlink" href="#parameters_42" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2700,7 +2685,7 @@ explicitly deselected.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_62">Returns<a class="headerlink" href="#returns_62" title="Permanent link">#</a></h4>
+<h4 id="returns_61">Returns<a class="headerlink" href="#returns_61" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Namespace/"><code>Namespace</code></a>></p>
 <h4 id="inherited-from_53">Inherited from<a class="headerlink" href="#inherited-from_53" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#updateitem">updateItem</a></p>

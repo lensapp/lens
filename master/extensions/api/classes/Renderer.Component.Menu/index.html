@@ -1218,7 +1218,7 @@ Should be used with type annotation or static contextType.</p>
 <p>React.Component.context</p>
 <hr />
 <h3 id="elem">elem<a class="headerlink" href="#elem" title="Permanent link">#</a></h3>
-<p>• <strong>elem</strong>: <code>HTMLUListElement</code></p>
+<p>• <strong>elem</strong>: <code>null</code> | <code>HTMLUListElement</code> = <code>null</code></p>
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <strong>items</strong>: <code>Object</code> = <code>{}</code></p>
@@ -1226,7 +1226,7 @@ Should be used with type annotation or static contextType.</p>
 <p>▪ [index: <code>number</code>]: <a href="../Renderer.Component.MenuItem/"><code>MenuItem</code></a></p>
 <hr />
 <h3 id="opener">opener<a class="headerlink" href="#opener" title="Permanent link">#</a></h3>
-<p>• <strong>opener</strong>: <code>HTMLElement</code></p>
+<p>• <strong>opener</strong>: <code>null</code> | <code>HTMLElement</code> = <code>null</code></p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>> &amp; <code>Readonly</code>&lt;{ <code>children?</code>: <code>ReactNode</code>  }></p>
@@ -1275,9 +1275,9 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p><a href="../Renderer.Component.MenuItem/"><code>MenuItem</code></a>[]</p>
 <hr />
 <h3 id="focuseditem">focusedItem<a class="headerlink" href="#focuseditem" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <code>get</code> <strong>focusedItem</strong>(): <a href="../Renderer.Component.MenuItem/"><code>MenuItem</code></a></p>
+<p>• <code>Protected</code> <code>get</code> <strong>focusedItem</strong>(): <code>undefined</code> | <a href="../Renderer.Component.MenuItem/"><code>MenuItem</code></a></p>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.Component.MenuItem/"><code>MenuItem</code></a></p>
+<p><code>undefined</code> | <a href="../Renderer.Component.MenuItem/"><code>MenuItem</code></a></p>
 <hr />
 <h3 id="isclosed">isClosed<a class="headerlink" href="#isclosed" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>isClosed</strong>(): <code>boolean</code></p>
@@ -1715,7 +1715,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>evt</code></td>
-<td align="left"><code>UIEvent</code></td>
+<td align="left"><code>Event</code></td>
 </tr>
 </tbody>
 </table>
@@ -1772,7 +1772,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left"><code>State</code> | (<code>prevState</code>: <code>Readonly</code>&lt;<code>State</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>>) =&gt; <code>State</code> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>></td>
+<td align="left"><code>null</code> | <code>State</code> | (<code>prevState</code>: <code>Readonly</code>&lt;<code>State</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>>) =&gt; <code>null</code> | <code>State</code> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>> | <code>Pick</code>&lt;<code>State</code>, <code>K</code>></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>

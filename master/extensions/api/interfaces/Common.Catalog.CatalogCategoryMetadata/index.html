@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.InputValidator/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogCategoryMetadata/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Interface: InputValidator - Lens Extension Development</title>
+        <title>Interface: CatalogCategoryMetadata - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-inputvalidator" class="md-skip">
+        <a href="#interface-catalogcategorymetadata" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: InputValidator
+              Interface: CatalogCategoryMetadata
             
           </span>
         </div>
@@ -726,13 +726,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -747,42 +740,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#debounce" class="md-nav__link">
-    debounce
+  <a href="#icon" class="md-nav__link">
+    icon
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#message" class="md-nav__link">
-    message
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#condition" class="md-nav__link">
-    condition
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validate" class="md-nav__link">
-    validate
+  <a href="#name" class="md-nav__link">
+    name
   </a>
   
 </li>
@@ -806,69 +772,23 @@
                 
                 
                 
-                <h1 id="interface-inputvalidator">Interface: InputValidator<a class="headerlink" href="#interface-inputvalidator" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.InputValidator</p>
+                <h1 id="interface-catalogcategorymetadata">Interface: CatalogCategoryMetadata<a class="headerlink" href="#interface-catalogcategorymetadata" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Catalog/">Catalog</a>.CatalogCategoryMetadata</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#debounce">debounce</a></li>
-<li><a href="./#message">message</a></li>
-</ul>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#condition">condition</a></li>
-<li><a href="./#validate">validate</a></li>
+<li><a href="./#icon">icon</a></li>
+<li><a href="./#name">name</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="debounce">debounce<a class="headerlink" href="#debounce" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>debounce</strong>: <code>number</code></p>
+<h3 id="icon">icon<a class="headerlink" href="#icon" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>icon</strong>: <code>string</code></p>
+<p>Either an <code>&lt;svg&gt;</code> or the name of an icon from <a href="../Renderer.Component.IconProps/">IconProps</a></p>
 <hr />
-<h3 id="message">message<a class="headerlink" href="#message" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>message</strong>: <code>ReactNode</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="../../modules/Renderer.Component/#inputprops"><code>InputProps</code></a>) =&gt; <code>ReactNode</code></p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="condition">condition<a class="headerlink" href="#condition" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>condition</strong>(<code>props</code>): <code>boolean</code></p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#inputprops"><code>InputProps</code></a></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>boolean</code></p>
-<hr />
-<h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">#</a></h3>
-<p>▸ <strong>validate</strong>(<code>value</code>, <code>props?</code>): <code>boolean</code> | <code>Promise</code>&lt;<code>any</code>></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>value</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>props?</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#inputprops"><code>InputProps</code></a></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>boolean</code> | <code>Promise</code>&lt;<code>any</code>></p>
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>name</strong>: <code>string</code></p>
+<p>The name of your category. The category can be searched for by this
+value. This will also be used for the catalog menu.</p>
                 
               
               

@@ -720,13 +720,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    References
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#classes" class="md-nav__link">
     Classes
   </a>
@@ -753,12 +746,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#references_1" class="md-nav__link">
-    References
+  <a href="#functions_1" class="md-nav__link">
+    Functions
   </a>
   
-    <nav class="md-nav" aria-label="References">
+    <nav class="md-nav" aria-label="Functions">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#createpageparam" class="md-nav__link">
+    createPageParam
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#getdetailsurl" class="md-nav__link">
@@ -775,33 +775,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#showdetails" class="md-nav__link">
-    showDetails
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#functions_1" class="md-nav__link">
-    Functions
-  </a>
-  
-    <nav class="md-nav" aria-label="Functions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#createpageparam" class="md-nav__link">
-    createPageParam
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#isactiveroute" class="md-nav__link">
     isActiveRoute
   </a>
@@ -811,6 +784,13 @@
           <li class="md-nav__item">
   <a href="#navigate" class="md-nav__link">
     navigate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#showdetails" class="md-nav__link">
+    showDetails
   </a>
   
 </li>
@@ -837,12 +817,6 @@
                 <h1 id="namespace-navigation">Namespace: Navigation<a class="headerlink" href="#namespace-navigation" title="Permanent link">#</a></h1>
 <p><a href="../Renderer/">Renderer</a>.Navigation</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#getdetailsurl">getDetailsUrl</a></li>
-<li><a href="./#hidedetails">hideDetails</a></li>
-<li><a href="./#showdetails">showDetails</a></li>
-</ul>
 <h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="../../classes/Renderer.Navigation.PageParam/">PageParam</a></li>
@@ -855,31 +829,27 @@
 <h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#createpageparam">createPageParam</a></li>
+<li><a href="./#getdetailsurl">getDetailsUrl</a></li>
+<li><a href="./#hidedetails">hideDetails</a></li>
 <li><a href="./#isactiveroute">isActiveRoute</a></li>
 <li><a href="./#navigate">navigate</a></li>
+<li><a href="./#showdetails">showDetails</a></li>
 </ul>
-<h2 id="references_1">References<a class="headerlink" href="#references_1" title="Permanent link">#</a></h2>
-<h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
-<p>Re-exports <a href="../Renderer.Component/#getdetailsurl">getDetailsUrl</a></p>
-<hr />
-<h3 id="hidedetails">hideDetails<a class="headerlink" href="#hidedetails" title="Permanent link">#</a></h3>
-<p>Re-exports <a href="../Renderer.Component/#hidedetails">hideDetails</a></p>
-<hr />
-<h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
-<p>Re-exports <a href="../Renderer.Component/#showdetails">showDetails</a></p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
 <h3 id="createpageparam">createPageParam<a class="headerlink" href="#createpageparam" title="Permanent link">#</a></h3>
-<p>▸ <strong>createPageParam</strong>&lt;<code>V</code>>(<code>init</code>): <a href="../../classes/Renderer.Navigation.PageParam/"><code>PageParam</code></a>&lt;<code>V</code>></p>
+<p>▸ <strong>createPageParam</strong>&lt;<code>Value</code>>(<code>init</code>): <a href="../../classes/Renderer.Navigation.PageParam/"><code>PageParam</code></a>&lt;<code>Value</code>></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
+<th align="left">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>V</code></td>
+<td align="left"><code>Value</code></td>
+<td align="left"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -894,15 +864,15 @@
 <tbody>
 <tr>
 <td align="left"><code>init</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Navigation.PageParamInit/"><code>PageParamInit</code></a>&lt;<code>V</code>></td>
+<td align="left"><a href="../../interfaces/Renderer.Navigation.PageParamInit/"><code>PageParamInit</code></a>&lt;<code>Value</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><a href="../../classes/Renderer.Navigation.PageParam/"><code>PageParam</code></a>&lt;<code>V</code>></p>
+<p><a href="../../classes/Renderer.Navigation.PageParam/"><code>PageParam</code></a>&lt;<code>Value</code>></p>
 <hr />
-<h3 id="isactiveroute">isActiveRoute<a class="headerlink" href="#isactiveroute" title="Permanent link">#</a></h3>
-<p>▸ <strong>isActiveRoute</strong>(<code>route</code>): <code>boolean</code></p>
+<h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
+<p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -913,18 +883,50 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>route</code></td>
-<td align="left"><code>string</code> | <code>string</code>[] | <code>RouteProps</code></td>
+<td align="left"><code>selfLink</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>resetSelected?</code></td>
+<td align="left"><code>boolean</code></td>
+</tr>
+<tr>
+<td align="left"><code>mergeGlobals?</code></td>
+<td align="left"><code>boolean</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<hr />
+<h3 id="hidedetails">hideDetails<a class="headerlink" href="#hidedetails" title="Permanent link">#</a></h3>
+<p>▸ <strong>hideDetails</strong>(): <code>void</code></p>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="isactiveroute">isActiveRoute<a class="headerlink" href="#isactiveroute" title="Permanent link">#</a></h3>
+<p>▸ <strong>isActiveRoute</strong>(<code>route</code>): <code>boolean</code></p>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>route</code></td>
+<td align="left"><code>string</code> | <code>string</code>[] | <code>RouteProps</code>&lt;<code>string</code>, {}></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <hr />
 <h3 id="navigate">navigate<a class="headerlink" href="#navigate" title="Permanent link">#</a></h3>
 <p>▸ <strong>navigate</strong>(<code>location</code>): <code>void</code></p>
-<p><strong><code>deprecated</code></strong> use <code>di.inject(navigateInjectable)</code> instead</p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -939,7 +941,31 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
+<p>▸ <strong>showDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>selfLink</code></td>
+<td align="left"><code>undefined</code> | <code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>resetSelected?</code></td>
+<td align="left"><code>boolean</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
                 
               

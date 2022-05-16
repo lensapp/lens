@@ -1053,7 +1053,7 @@
 </ul>
 <hr />
 <h3 id="filters">filters<a class="headerlink" href="#filters" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>filters</strong>: <code>ObservableSet</code>&lt;<a href="../../modules/Common.Catalog/#addmenufilter"><code>AddMenuFilter</code></a>></p>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>filters</strong>: <code>ObservableSet</code>&lt;<a href="../../modules/Common.Catalog/#addmenufilter"><code>AddMenuFilter</code></a>></p>
 <p><strong><code>internal</code></strong></p>
 <hr />
 <h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
@@ -1065,33 +1065,11 @@
 </ul>
 <hr />
 <h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <code>Abstract</code> <strong>metadata</strong>: <code>Object</code></p>
+<p>• <code>Readonly</code> <code>Abstract</code> <strong>metadata</strong>: <a href="../../interfaces/Common.Catalog.CatalogCategoryMetadata/"><code>CatalogCategoryMetadata</code></a></p>
 <p>The data about the category itself</p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>icon</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">Either an <code>&lt;svg&gt;</code> or the name of an icon from <a href="../../interfaces/Renderer.Component.IconProps/">IconProps</a></td>
-</tr>
-<tr>
-<td align="left"><code>name</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">The name of your category. The category can be searched for by this value. This will also be used for the catalog menu.</td>
-</tr>
-</tbody>
-</table>
 <hr />
 <h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
-<p>• <code>Abstract</code> <strong>spec</strong>: <a href="../../interfaces/Common.Catalog.CatalogCategorySpec/"><code>CatalogCategorySpec</code></a></p>
+<p>• <code>Readonly</code> <code>Abstract</code> <strong>spec</strong>: <a href="../../interfaces/Common.Catalog.CatalogCategorySpec/"><code>CatalogCategorySpec</code></a></p>
 <p>The most important part of a category, as it is where entity versions are declared.</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="addlistener">addListener<a class="headerlink" href="#addlistener" title="Permanent link">#</a></h3>

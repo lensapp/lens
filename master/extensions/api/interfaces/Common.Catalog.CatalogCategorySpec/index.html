@@ -798,7 +798,7 @@
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="displaycolumns">displayColumns<a class="headerlink" href="#displaycolumns" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>displayColumns</strong>: <a href="../Renderer.Component.CategoryColumnRegistration/"><code>CategoryColumnRegistration</code></a>[]</p>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>displayColumns</strong>: <a href="../Renderer.Component.CategoryColumnRegistration/"><code>CategoryColumnRegistration</code></a>[]</p>
 <p>These are the columns used for displaying entities when in the catalog.</p>
 <p>If this is not provided then some default columns will be used, similar in
 scope to the columns in the "Browse" view.</p>
@@ -807,11 +807,11 @@ scope to the columns in the "Browse" view.</p>
 <p>These columns will not be used in the "Browse" view.</p>
 <hr />
 <h3 id="group">group<a class="headerlink" href="#group" title="Permanent link">#</a></h3>
-<p>• <strong>group</strong>: <code>string</code></p>
+<p>• <code>Readonly</code> <strong>group</strong>: <code>string</code></p>
 <p>The grouping for for the category. This MUST be a DNS label.</p>
 <hr />
 <h3 id="names">names<a class="headerlink" href="#names" title="Permanent link">#</a></h3>
-<p>• <strong>names</strong>: <code>Object</code></p>
+<p>• <code>Readonly</code> <strong>names</strong>: <code>Object</code></p>
 <p>This is the concerning the category</p>
 <h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <table>
@@ -826,13 +826,13 @@ scope to the columns in the "Browse" view.</p>
 <tr>
 <td align="left"><code>kind</code></td>
 <td align="left"><code>string</code></td>
-<td align="left">The kind of entity that this category is for. This value MUST be a DNS label and MUST be equal to the <code>kind</code> fields that are produced by the <code>.versions.[] | .entityClass</code> fields.</td>
+<td align="left">The kind of entity that this category is for. This value MUST be a DNS label and MUST be equal to the <code>kind</code> fields that are produced by the <code>.versions.[] \| .entityClass</code> fields.</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="versions">versions<a class="headerlink" href="#versions" title="Permanent link">#</a></h3>
-<p>• <strong>versions</strong>: <a href="../Common.Catalog.CatalogCategoryVersion/"><code>CatalogCategoryVersion</code></a>&lt;<a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>>[]</p>
+<p>• <code>Readonly</code> <strong>versions</strong>: <a href="../Common.Catalog.CatalogCategoryVersion/"><code>CatalogCategoryVersion</code></a>[]</p>
 <p>The specific versions of the constructors.</p>
 <p>NOTE: the field <code>.apiVersion</code> after construction MUST match <code>{.group}/{.versions.[] | .name}</code>.
 For example, if <code>group = "entity.k8slens.dev"</code> and there is an entry in <code>.versions</code> with

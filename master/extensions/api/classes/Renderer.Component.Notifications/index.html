@@ -955,6 +955,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#checkederror" class="md-nav__link">
+    checkedError
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#error" class="md-nav__link">
     error
   </a>
@@ -1041,6 +1048,7 @@
 <li><a href="./#scrolltolastnotification">scrollToLastNotification</a></li>
 <li><a href="./#setstate">setState</a></li>
 <li><a href="./#shouldcomponentupdate">shouldComponentUpdate</a></li>
+<li><a href="./#checkederror">checkedError</a></li>
 <li><a href="./#error">error</a></li>
 <li><a href="./#info">info</a></li>
 <li><a href="./#ok">ok</a></li>
@@ -1107,7 +1115,7 @@ Should be used with type annotation or static contextType.</p>
 <p>React.Component.context</p>
 <hr />
 <h3 id="elem">elem<a class="headerlink" href="#elem" title="Permanent link">#</a></h3>
-<p>• <strong>elem</strong>: <code>HTMLElement</code></p>
+<p>• <strong>elem</strong>: <code>null</code> | <code>HTMLDivElement</code> = <code>null</code></p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;{}> &amp; <code>Readonly</code>&lt;{ <code>children?</code>: <code>ReactNode</code>  }></p>
@@ -1511,7 +1519,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;{}>, <code>props</code>: <code>Readonly</code>&lt;{}>) =&gt; {} | <code>Pick</code>&lt;{}, <code>K</code>> | <code>Pick</code>&lt;{}, <code>K</code>></td>
+<td align="left"><code>null</code> | {} | (<code>prevState</code>: <code>Readonly</code>&lt;{}>, <code>props</code>: <code>Readonly</code>&lt;{}>) =&gt; <code>null</code> | {} | <code>Pick</code>&lt;{}, <code>K</code>> | <code>Pick</code>&lt;{}, <code>K</code>></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>
@@ -1560,8 +1568,8 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p>React.Component.shouldComponentUpdate</p>
 <hr />
-<h3 id="error">error<a class="headerlink" href="#error" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>error</strong>(<code>message</code>, <code>customOpts?</code>): () =&gt; <code>void</code></p>
+<h3 id="checkederror">checkedError<a class="headerlink" href="#checkederror" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>checkedError</strong>(<code>message</code>, <code>fallback</code>, <code>customOpts?</code>): () =&gt; <code>void</code></p>
 <h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1573,11 +1581,15 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <tbody>
 <tr>
 <td align="left"><code>message</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#notificationmessage"><code>NotificationMessage</code></a></td>
+<td align="left"><code>unknown</code></td>
 </tr>
 <tr>
-<td align="left"><code>customOpts</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>></td>
+<td align="left"><code>fallback</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>customOpts?</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>></td>
 </tr>
 </tbody>
 </table>
@@ -1587,8 +1599,8 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <h5 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
 <hr />
-<h3 id="info">info<a class="headerlink" href="#info" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>info</strong>(<code>message</code>, <code>customOpts?</code>): () =&gt; <code>void</code></p>
+<h3 id="error">error<a class="headerlink" href="#error" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>error</strong>(<code>message</code>, <code>customOpts?</code>): () =&gt; <code>void</code></p>
 <h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1604,7 +1616,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 <tr>
 <td align="left"><code>customOpts</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>></td>
+<td align="left"><code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>></td>
 </tr>
 </tbody>
 </table>
@@ -1614,32 +1626,9 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <h5 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
 <hr />
-<h3 id="ok">ok<a class="headerlink" href="#ok" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>ok</strong>(<code>message</code>): () =&gt; <code>void</code></p>
+<h3 id="info">info<a class="headerlink" href="#info" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>info</strong>(<code>message</code>, <code>customOpts?</code>): () =&gt; <code>void</code></p>
 <h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>message</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#notificationmessage"><code>NotificationMessage</code></a></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
-<p><code>fn</code></p>
-<p>▸ (): <code>void</code></p>
-<h5 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
-<hr />
-<h3 id="shortinfo">shortInfo<a class="headerlink" href="#shortinfo" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>shortInfo</strong>(<code>message</code>, <code>customOpts?</code>): () =&gt; <code>void</code></p>
-<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1654,7 +1643,30 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 <tr>
 <td align="left"><code>customOpts</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>></td>
+<td align="left"><code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<p><code>fn</code></p>
+<p>▸ (): <code>void</code></p>
+<h5 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h5>
+<p><code>void</code></p>
+<hr />
+<h3 id="ok">ok<a class="headerlink" href="#ok" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>ok</strong>(<code>message</code>): () =&gt; <code>void</code></p>
+<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>message</code></td>
+<td align="left"><a href="../../modules/Renderer.Component/#notificationmessage"><code>NotificationMessage</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1662,6 +1674,33 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <p><code>fn</code></p>
 <p>▸ (): <code>void</code></p>
 <h5 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h5>
+<p><code>void</code></p>
+<hr />
+<h3 id="shortinfo">shortInfo<a class="headerlink" href="#shortinfo" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>shortInfo</strong>(<code>message</code>, <code>customOpts?</code>): () =&gt; <code>void</code></p>
+<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>message</code></td>
+<td align="left"><a href="../../modules/Renderer.Component/#notificationmessage"><code>NotificationMessage</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>customOpts</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
+<p><code>fn</code></p>
+<p>▸ (): <code>void</code></p>
+<h5 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
                 
               

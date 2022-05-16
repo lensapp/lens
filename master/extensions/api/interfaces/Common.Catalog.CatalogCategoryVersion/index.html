@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-catalogcategoryversionentity" class="md-skip">
+        <a href="#interface-catalogcategoryversion" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: CatalogCategoryVersion<Entity\>
+              Interface: CatalogCategoryVersion
             
           </span>
         </div>
@@ -712,13 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#type-parameters" class="md-nav__link">
-    Type parameters
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -779,23 +772,8 @@
                 
                 
                 
-                <h1 id="interface-catalogcategoryversionentity">Interface: CatalogCategoryVersion&lt;Entity><a class="headerlink" href="#interface-catalogcategoryversionentity" title="Permanent link">#</a></h1>
+                <h1 id="interface-catalogcategoryversion">Interface: CatalogCategoryVersion<a class="headerlink" href="#interface-catalogcategoryversion" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Catalog/">Catalog</a>.CatalogCategoryVersion</p>
-<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>Entity</code></td>
-<td align="left">extends <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a></td>
-</tr>
-</tbody>
-</table>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
@@ -804,11 +782,11 @@
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="entityclass">entityClass<a class="headerlink" href="#entityclass" title="Permanent link">#</a></h3>
-<p>• <strong>entityClass</strong>: <a href="../../modules/Common.Catalog/#catalogentityconstructor"><code>CatalogEntityConstructor</code></a>&lt;<code>Entity</code>></p>
+<p>• <code>Readonly</code> <strong>entityClass</strong>: <a href="../../modules/Common.Catalog/#catalogentityconstructor"><code>CatalogEntityConstructor</code></a>&lt;<a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>></p>
 <p>The constructor for the entities.</p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
-<p>• <strong>name</strong>: <code>string</code></p>
+<p>• <code>Readonly</code> <strong>name</strong>: <code>string</code></p>
 <p>The specific version that the associated constructor is for. This MUST be
 a DNS label and SHOULD be of the form <code>vN</code>, <code>vNalphaY</code>, or <code>vNbetaY</code> where
 <code>N</code> and <code>Y</code> are both integers greater than 0.</p>
