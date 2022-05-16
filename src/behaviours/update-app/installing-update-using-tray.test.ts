@@ -8,8 +8,8 @@ import quitAndInstallUpdateInjectable from "../../main/electron-app/features/qui
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "../../main/update-app/publish-is-configured.injectable";
-import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-platform-updates.injectable";
-import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates.injectable";
+import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
+import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { UpdateChannel, UpdateChannelId } from "../../main/update-app/update-channels";
