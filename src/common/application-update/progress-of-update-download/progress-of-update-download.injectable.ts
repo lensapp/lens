@@ -3,21 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { action, computed, observable } from "mobx";
+import createSyncBoxInjectable from "../../sync-box/create-sync-box.injectable";
 
 const progressOfUpdateDownloadInjectable = getInjectable({
-  id: "progress-of-update-download",
+  id: "progress-of-update-download-state",
 
-  instantiate: () => {
-    const state = observable.box(0);
+  instantiate: (di) => {
+    const createSyncBox = di.inject(createSyncBoxInjectable);
 
-    return {
-      value: computed(() => state.get()),
-
-      setValue: action((percentage: number) => {
-        state.set(percentage);
-      }),
-    };
+    return createSyncBox("progress-of-update-download");
   },
 });
 
