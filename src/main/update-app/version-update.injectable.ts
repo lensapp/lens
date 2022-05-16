@@ -3,14 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { IComputedValue, IObservableValue } from "mobx";
-import { computed, observable, runInAction } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed, runInAction } from "mobx";
 import selectedUpdateChannelInjectable from "./selected-update-channel.injectable";
 import downloadPlatformUpdateInjectable from "./download-platform-update/download-platform-update.injectable";
 import type { CheckForPlatformUpdates } from "./check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "./check-for-platform-updates/check-for-platform-updates.injectable";
 import type { UpdateChannel } from "./update-channels";
 import showNotificationInjectable from "../show-notification/show-notification.injectable";
+import checkingForUpdatesStateInjectable from "../../common/application-update/checking-for-updates/checking-for-updates-state.injectable";
+import type { SyncBox } from "../../common/sync-box/create-sync-box.injectable";
+import downloadingUpdateStateInjectable from "../../common/application-update/downloading-update/downloading-update-state.injectable";
+import discoveredVersionStateInjectable from "../../common/application-update/discovered-version/discovered-version-state.injectable";
 
 const versionUpdateInjectable = getInjectable({
   id: "version-update",
@@ -20,30 +24,37 @@ const versionUpdateInjectable = getInjectable({
     const downloadPlatformUpdate = di.inject(downloadPlatformUpdateInjectable);
     const checkForPlatformUpdates = di.inject(checkForPlatformUpdatesInjectable);
     const showNotification = di.inject(showNotificationInjectable);
-
-    const discoveredVersionState = observable.box<string>();
-    const downloadingState = observable.box<boolean>(false);
-    const checkingState = observable.box<boolean>(false);
-    const discoveredFromUpdateChannelState = observable.box<UpdateChannel>();
+    const checkingForUpdatesState = di.inject(checkingForUpdatesStateInjectable);
+    const downloadingUpdateState = di.inject(downloadingUpdateStateInjectable);
+    const discoveredVersionState = di.inject(discoveredVersionStateInjectable);
 
     return {
-      discoveredVersion: computed(() => discoveredVersionState.get()),
-      discoveredFromUpdateChannel: computed(() => discoveredFromUpdateChannelState.get()),
-      downloading: computed(() => downloadingState.get()),
-      checking: computed(() => checkingState.get()),
+      discoveredVersion: computed(() => {
+        const discoveredVersion = discoveredVersionState.value.get();
+
+        return discoveredVersion?.version;
+      }),
+
+      discoveredFromUpdateChannel: computed(() => {
+        const discoveredVersion = discoveredVersionState.value.get();
+
+        return discoveredVersion?.updateChannel;
+      }),
+
+      downloading: computed(() => downloadingUpdateState.value.get()),
+      checking: computed(() => checkingForUpdatesState.value.get()),
 
       checkForUpdates: checkForUpdatesFor(
         checkForPlatformUpdates,
         discoveredVersionState,
-        checkingState,
         selectedUpdateChannel.value,
-        discoveredFromUpdateChannelState,
         showNotification,
+        checkingForUpdatesState,
       ),
 
       downloadUpdate: downloadUpdateFor(
         downloadPlatformUpdate,
-        downloadingState,
+        downloadingUpdateState,
       ),
     };
   },
@@ -53,33 +64,32 @@ export default versionUpdateInjectable;
 
 const downloadUpdateFor =
   (
-    downloadPlatformUpdate: () => Promise<void>,
-    downloadingState: IObservableValue<boolean>,
+    downloadPlatformUpdate: () => Promise<{ downloadWasSuccessful: boolean }>,
+    downloadingUpdateState: SyncBox<boolean>,
   ) =>
     async () => {
       runInAction(() => {
-        downloadingState.set(true);
+        downloadingUpdateState.set(true);
       });
 
       await downloadPlatformUpdate();
 
       runInAction(() => {
-        downloadingState.set(false);
+        downloadingUpdateState.set(false);
       });
     };
 
 const checkForUpdatesFor =
   (
     checkForPlatformUpdates: CheckForPlatformUpdates,
-    discoveredVersionState: IObservableValue<string>,
-    checkingState: IObservableValue<boolean>,
+    discoveredVersionState: SyncBox<{ version: string; updateChannel: UpdateChannel }>,
     selectedUpdateChannel: IComputedValue<UpdateChannel>,
-    discoveredFromUpdateChannelState: IObservableValue<UpdateChannel>,
     showNotification: (message: string) => void,
+    checkingForUpdatesState: SyncBox<boolean>,
   ) =>
     async () => {
       runInAction(() => {
-        checkingState.set(true);
+        checkingForUpdatesState.set(true);
       });
 
       const checkForUpdatesStartingFromChannel =
@@ -96,9 +106,8 @@ const checkForUpdatesFor =
       }
 
       runInAction(() => {
-        discoveredFromUpdateChannelState.set(actualUpdateChannel);
-        discoveredVersionState.set(version);
-        checkingState.set(false);
+        discoveredVersionState.set({ version, updateChannel: actualUpdateChannel });
+        checkingForUpdatesState.set(false);
       });
 
       return { updateWasDiscovered, version };
