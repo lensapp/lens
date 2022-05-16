@@ -9,4 +9,4 @@ export interface ShellEnvContext {
   catalogEntity: CatalogEntity;
 }
 
-export type ShellEnvModifier = (ctx: ShellEnvContext, env: Record<string, string | undefined>) => Record<string, string | undefined>;
+export type ShellEnvModifier = (ctx: ShellEnvContext, env: Partial<Record<string, string>>) => Partial<Record<string, string>>;

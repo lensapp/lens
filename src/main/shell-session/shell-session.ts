@@ -104,6 +104,13 @@ export enum WebSocketCloseEvent {
   TlsHandshake = 1015,
 }
 
+export interface ShellSessionArgs {
+  kubectl: Kubectl;
+  websocket: WebSocket;
+  cluster: Cluster;
+  tabId: string;
+}
+
 export abstract class ShellSession {
   abstract readonly ShellType: string;
 
@@ -130,8 +137,11 @@ export abstract class ShellSession {
   protected readonly kubectlBinDirP: Promise<string>;
   protected readonly kubeconfigPathP: Promise<string>;
   protected readonly terminalId: string;
+  protected readonly kubectl: Kubectl;
+  protected readonly websocket: WebSocket;
+  protected readonly cluster: Cluster;
 
-  protected abstract get cwd(): string | undefined;
+  protected abstract readonly cwd: string | undefined;
 
   protected ensureShellProcess(shell: string, args: string[], env: Record<string, string | undefined>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
     const resume = ShellSession.processes.has(this.terminalId);
@@ -152,10 +162,13 @@ export abstract class ShellSession {
     return { shellProcess, resume };
   }
 
-  constructor(protected readonly kubectl: Kubectl, protected readonly websocket: WebSocket, protected readonly cluster: Cluster, terminalId: string) {
+  constructor({ cluster, kubectl, tabId, websocket }: ShellSessionArgs) {
+    this.cluster = cluster;
+    this.kubectl = kubectl;
+    this.websocket = websocket;
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
-    this.terminalId = `${cluster.id}:${terminalId}`;
+    this.terminalId = `${cluster.id}:${tabId}`;
   }
 
   protected send(message: TerminalMessage): void {

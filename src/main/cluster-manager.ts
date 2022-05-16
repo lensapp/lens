@@ -4,12 +4,10 @@
  */
 
 import "../common/ipc/cluster";
-import type http from "http";
 import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../common/cluster/cluster";
 import logger from "./logger";
-import { apiKubePrefix } from "../common/vars";
-import { getClusterIdFromHost, isErrnoException } from "../common/utils";
+import { isErrnoException } from "../common/utils";
 import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
@@ -260,27 +258,6 @@ export class ClusterManager {
       cluster.disconnect();
     });
   }
-
-  getClusterForRequest = (req: http.IncomingMessage): Cluster | undefined => {
-    if (!req.headers.host) {
-      return undefined;
-    }
-
-    // lens-server is connecting to 127.0.0.1:<port>/<uid>
-    if (req.url && req.headers.host.startsWith("127.0.0.1")) {
-      const clusterId = req.url.split("/")[1];
-      const cluster = this.dependencies.store.getById(clusterId);
-
-      if (cluster) {
-        // we need to swap path prefix so that request is proxied to kube api
-        req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
-      }
-
-      return cluster;
-    }
-
-    return this.dependencies.store.getById(getClusterIdFromHost(req.headers.host));
-  };
 }
 
 export function catalogEntityFromCluster(cluster: Cluster) {

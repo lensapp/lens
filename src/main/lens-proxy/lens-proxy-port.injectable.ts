@@ -8,27 +8,27 @@ const lensProxyPortInjectable = getInjectable({
   id: "lens-proxy-port",
 
   instantiate: () => {
-    let _portNumber: number;
+    let portNumber: number;
 
     return {
       get: () => {
-        if (!_portNumber) {
+        if (!portNumber) {
           throw new Error(
             "Tried to access port number of LensProxy while it has not been set yet.",
           );
         }
 
-        return _portNumber;
+        return portNumber;
       },
 
-      set: (portNumber: number) => {
-        if (_portNumber) {
+      set: (port: number) => {
+        if (port) {
           throw new Error(
             "Tried to set port number for LensProxy when it has already been set.",
           );
         }
 
-        _portNumber = portNumber;
+        portNumber = port;
       },
     };
   },

@@ -4,32 +4,24 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { LensProxy } from "./lens-proxy";
-import { kubeApiUpgradeRequest } from "./proxy-functions";
 import routerInjectable from "../router/router.injectable";
 import httpProxy from "http-proxy";
-import clusterManagerInjectable from "../cluster-manager.injectable";
-import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
+import shellApiRequestInjectable from "./proxy-functions/shell/api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
+import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
+import kubeApiUpgradeRequestInjectable from "./proxy-functions/kube/api-upgrade-request.injectable";
 
 const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
 
-  instantiate: (di) => {
-    const clusterManager = di.inject(clusterManagerInjectable);
-    const router = di.inject(routerInjectable);
-    const shellApiRequest = di.inject(shellApiRequestInjectable);
-    const proxy = httpProxy.createProxy();
-    const lensProxyPort = di.inject(lensProxyPortInjectable);
-
-    return new LensProxy({
-      router,
-      proxy,
-      kubeApiUpgradeRequest,
-      shellApiRequest,
-      getClusterForRequest: clusterManager.getClusterForRequest,
-      lensProxyPort,
-    });
-  },
+  instantiate: (di) => new LensProxy({
+    router: di.inject(routerInjectable),
+    proxy: httpProxy.createProxy(),
+    kubeApiUpgradeRequest: di.inject(kubeApiUpgradeRequestInjectable),
+    shellApiRequest: di.inject(shellApiRequestInjectable),
+    getClusterForRequest: di.inject(getClusterForRequestInjectable),
+    lensProxyPort: di.inject(lensProxyPortInjectable),
+  }),
 });
 
 export default lensProxyInjectable;

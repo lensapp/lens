@@ -11,21 +11,20 @@ import { apiPrefix, apiKubePrefix, contentSecurityPolicy } from "../../common/va
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import logger from "../logger";
-import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { appEventBus } from "../../common/app-event-bus/event-bus";
 import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
-
-type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
+import type { GetClusterForRequest } from "./get-cluster-for-request.injectable";
 
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
+export type ProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
 
 interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
-  shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
-  kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  shellApiRequest: ProxyApiRequest;
+  kubeApiUpgradeRequest: ProxyApiRequest;
   router: Router;
   proxy: httpProxy;
   lensProxyPort: { set: (portNumber: number) => void };

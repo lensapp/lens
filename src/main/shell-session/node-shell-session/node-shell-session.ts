@@ -3,18 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type WebSocket from "ws";
 import { v4 as uuid } from "uuid";
 import { Watch, CoreV1Api } from "@kubernetes/client-node";
 import type { KubeConfig } from "@kubernetes/client-node";
-import type { Cluster } from "../../../common/cluster/cluster";
+import type { ShellSessionArgs } from "../shell-session";
 import { ShellOpenError, ShellSession } from "../shell-session";
 import { get, once } from "lodash";
 import { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import { KubeJsonApi } from "../../../common/k8s-api/kube-json-api";
 import logger from "../../logger";
-import type { Kubectl } from "../../kubectl/kubectl";
 import { TerminalChannels } from "../../../common/terminal/channels";
+
+export interface NodeShellSessionArgs extends ShellSessionArgs {
+  nodeName: string;
+}
 
 export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
@@ -22,9 +24,11 @@ export class NodeShellSession extends ShellSession {
   protected readonly podName = `node-shell-${uuid()}`;
 
   protected readonly cwd: string | undefined = undefined;
+  protected readonly nodeName: string;
 
-  constructor(protected nodeName: string, kubectl: Kubectl, socket: WebSocket, cluster: Cluster, terminalId: string) {
-    super(kubectl, socket, cluster, terminalId);
+  constructor({ nodeName, ...args }: NodeShellSessionArgs) {
+    super(args);
+    this.nodeName = nodeName;
   }
 
   public async open() {
