@@ -26,10 +26,10 @@
     static-eval "2.0.2"
     underscore "1.7.0"
 
-"@async-fn/jest@1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.5.3.tgz#42be6c0e8ba5ccd737e006ca600e7e319fe2a591"
-  integrity sha512-iQ9gAPZFW5U6TNcFS99ffwYYsB9LNecTnvG73BaDc/zAD0qOWctY1imEACC1pLymmm/xaf/OUq9I9QenfkatTA==
+"@async-fn/jest@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.6.0.tgz#48980e6f07c4d0d72b468b8b57a1b3be8473a746"
+  integrity sha512-Jm4kf9qQSzcOZIyiI13C4EM4euSLORA8O4JTOWwy7SwaUr8lhVOn0nVbNLx9jnP35JTYeLsLZHfAyZLhYDIl2g==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.16.7", "@babel/code-frame@^7.8.3":
   version "7.16.7"
