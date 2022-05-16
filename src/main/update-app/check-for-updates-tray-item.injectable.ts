@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import updatingIsEnabledInjectable from "./updating-is-enabled.injectable";
 import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-item-injection-token";
-import progressOfUpdateDownloadInjectable from "./progress-of-update-download.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 import showNotificationInjectable from "../show-notification/show-notification.injectable";
 import askBooleanInjectable from "../ask-boolean/ask-boolean.injectable";
@@ -16,6 +15,7 @@ import downloadingUpdateStateInjectable from "../../common/application-update/do
 import checkingForUpdatesStateInjectable from "../../common/application-update/checking-for-updates/checking-for-updates-state.injectable";
 import checkForUpdatesInjectable from "./check-for-updates/check-for-updates.injectable";
 import downloadUpdateInjectable from "./download-update/download-update.injectable";
+import progressOfUpdateDownloadInjectable from "../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",

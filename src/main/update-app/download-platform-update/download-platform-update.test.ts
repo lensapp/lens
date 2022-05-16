@@ -9,19 +9,17 @@ import type { AppUpdater } from "electron-updater";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
-import progressOfUpdateDownloadInjectable from "../progress-of-update-download.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { Logger } from "../../../common/logger";
 
 describe("download-platform-update", () => {
-  let downloadPlatformUpdate: () => Promise<{ downloadWasSuccessful: boolean }>;
+  let downloadPlatformUpdate: (onDownloadProgress: (percentage: number) => void) => Promise<{ downloadWasSuccessful: boolean }>;
   let downloadUpdateMock: AsyncFnMock<() => void>;
   let electronUpdaterFake: AppUpdater;
   let electronUpdaterOnMock: jest.Mock;
   let electronUpdaterOffMock: jest.Mock;
   let di: DiContainer;
-  let progressOfUpdateDownload: { value: { get: () => number }};
   let logErrorMock: jest.Mock;
 
   beforeEach(() => {
@@ -47,14 +45,16 @@ describe("download-platform-update", () => {
     di.override(loggerInjectable, () => ({ error: logErrorMock }) as unknown as Logger);
 
     downloadPlatformUpdate = di.inject(downloadPlatformUpdateInjectable);
-    progressOfUpdateDownload = di.inject(progressOfUpdateDownloadInjectable);
   });
 
   describe("when called", () => {
     let actualPromise: Promise<{ downloadWasSuccessful: boolean }>;
+    let onDownloadProgressMock: jest.Mock;
 
     beforeEach(() => {
-      actualPromise = downloadPlatformUpdate();
+      onDownloadProgressMock = jest.fn();
+
+      actualPromise = downloadPlatformUpdate(onDownloadProgressMock);
     });
 
     it("calls for downloading of update", () => {
@@ -68,11 +68,13 @@ describe("download-platform-update", () => {
     });
 
     it("starts progress of download from 0", () => {
-      expect(progressOfUpdateDownload.value.get()).toBe(0);
+      expect(onDownloadProgressMock).toHaveBeenCalledWith(0);
     });
 
     describe("when downloading progresses", () => {
       beforeEach(() => {
+        onDownloadProgressMock.mockClear();
+
         const [, callback] = electronUpdaterOnMock.mock.calls.find(
           ([event]) => event === "download-progress",
         );
@@ -87,11 +89,13 @@ describe("download-platform-update", () => {
       });
 
       it("updates progress of the download", () => {
-        expect(progressOfUpdateDownload.value.get()).toBe(42);
+        expect(onDownloadProgressMock).toHaveBeenCalledWith(42);
       });
 
       describe("when downloading resolves", () => {
         beforeEach(async () => {
+          onDownloadProgressMock.mockClear();
+
           await downloadUpdateMock.resolve();
         });
 
@@ -102,7 +106,7 @@ describe("download-platform-update", () => {
         });
 
         it("does not reset progress of download yet", () => {
-          expect(progressOfUpdateDownload.value.get()).toBe(42);
+          expect(onDownloadProgressMock).not.toHaveBeenCalled();
         });
 
         it("stops watching for download progress", () => {
@@ -113,9 +117,9 @@ describe("download-platform-update", () => {
         });
 
         it("when starting download again, resets progress of download", () => {
-          downloadPlatformUpdate();
+          downloadPlatformUpdate(onDownloadProgressMock);
 
-          expect(progressOfUpdateDownload.value.get()).toBe(0);
+          expect(onDownloadProgressMock).toHaveBeenCalledWith(0);
         });
       });
 
