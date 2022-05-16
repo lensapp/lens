@@ -3,14 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { SyncBoxChannel } from "./sync-box-channel.injectable";
 import syncBoxChannelInjectable from "./sync-box-channel.injectable";
+import type { ChannelListener } from "../channel/channel-listener-injection-token";
 import { channelListenerInjectionToken } from "../channel/channel-listener-injection-token";
 import syncBoxStateInjectable from "./sync-box-state.injectable";
 
 const syncBoxChannelListenerInjectable = getInjectable({
   id: "sync-box-channel-listener",
 
-  instantiate: (di) => {
+  instantiate: (di): ChannelListener<SyncBoxChannel> => {
     const getSyncBoxState = (id: string) => di.inject(syncBoxStateInjectable, id);
 
     return {

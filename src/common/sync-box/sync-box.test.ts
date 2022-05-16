@@ -24,7 +24,7 @@ describe("sync-box", () => {
       instantiate: (di) => {
         const createSyncBox = di.inject(createSyncBoxInjectable);
 
-        return createSyncBox("some-state");
+        return createSyncBox<string>("some-state");
       },
     });
 

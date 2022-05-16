@@ -5,6 +5,12 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Channel } from "./channel-injection-token";
 
-export const sendToAgnosticChannelInjectionToken = getInjectionToken<(channel: Channel, message: any) => void>({
-  id: "send-to-agnostic-channel",
-});
+export type SendToAgnosticChannel = <TChannel extends Channel<unknown>>(
+  channel: TChannel,
+  message: TChannel["_template"]
+) => void;
+
+export const sendToAgnosticChannelInjectionToken =
+  getInjectionToken<SendToAgnosticChannel>({
+    id: "send-to-agnostic-channel",
+  });
