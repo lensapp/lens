@@ -18,25 +18,31 @@ exports[`installing update using tray given no update is already downloaded, and
 </body>
 `;
 
-exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when update is downloaded renders 1`] = `
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download fails renders 1`] = `
 <body>
   <div />
 </body>
 `;
 
-exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when update is downloaded when user answers not to install the update renders 1`] = `
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds renders 1`] = `
 <body>
   <div />
 </body>
 `;
 
-exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when update is downloaded when user answers to install the update renders 1`] = `
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds when user answers not to install the update renders 1`] = `
 <body>
   <div />
 </body>
 `;
 
-exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when update is downloaded when user disregards the question and installs the update using tray renders 1`] = `
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds when user answers to install the update renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds when user disregards the question and installs the update using tray renders 1`] = `
 <body>
   <div />
 </body>

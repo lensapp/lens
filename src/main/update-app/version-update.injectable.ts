@@ -55,6 +55,7 @@ const versionUpdateInjectable = getInjectable({
       downloadUpdate: downloadUpdateFor(
         downloadPlatformUpdate,
         downloadingUpdateState,
+        discoveredVersionState,
       ),
     };
   },
@@ -66,17 +67,24 @@ const downloadUpdateFor =
   (
     downloadPlatformUpdate: () => Promise<{ downloadWasSuccessful: boolean }>,
     downloadingUpdateState: SyncBox<boolean>,
+    discoveredVersionState: SyncBox<{ version: string; updateChannel: UpdateChannel }>,
   ) =>
     async () => {
       runInAction(() => {
         downloadingUpdateState.set(true);
       });
 
-      await downloadPlatformUpdate();
+      const { downloadWasSuccessful } = await downloadPlatformUpdate();
 
       runInAction(() => {
+        if (!downloadWasSuccessful) {
+          discoveredVersionState.set(null);
+        }
+
         downloadingUpdateState.set(false);
       });
+
+      return { downloadWasSuccessful };
     };
 
 const checkForUpdatesFor =

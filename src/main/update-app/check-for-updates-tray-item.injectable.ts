@@ -53,7 +53,14 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
           showNotification(`Download for version ${version} started...`);
 
           // Note: intentional orphan promise to make download happen in the background
-          versionUpdate.downloadUpdate().then(async () => {
+          versionUpdate.downloadUpdate().then(async ({ downloadWasSuccessful }) => {
+
+            if (!downloadWasSuccessful) {
+              showNotification(`Download for update failed`);
+
+              return;
+            }
+
             const userWantsToInstallUpdate = await askBoolean(`Do you want to install update ${version}?`);
 
             if (userWantsToInstallUpdate) {
