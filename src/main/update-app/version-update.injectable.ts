@@ -7,8 +7,8 @@ import type { IComputedValue, IObservableValue } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import selectedUpdateChannelInjectable from "./selected-update-channel.injectable";
 import downloadPlatformUpdateInjectable from "./download-platform-update.injectable";
-import type { CheckForPlatformUpdates } from "./check-for-platform-updates.injectable";
-import checkForPlatformUpdatesInjectable from "./check-for-platform-updates.injectable";
+import type { CheckForPlatformUpdates } from "./check-for-platform-updates/check-for-platform-updates.injectable";
+import checkForPlatformUpdatesInjectable from "./check-for-platform-updates/check-for-platform-updates.injectable";
 import type { UpdateChannel } from "./update-channels";
 import showNotificationInjectable from "../show-notification/show-notification.injectable";
 

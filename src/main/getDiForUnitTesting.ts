@@ -78,8 +78,8 @@ import productNameInjectable from "./app-paths/app-name/product-name.injectable"
 import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./update-app/publish-is-configured.injectable";
+import checkForPlatformUpdatesInjectable from "./update-app/check-for-platform-updates/check-for-platform-updates.injectable";
 import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
-import checkForPlatformUpdatesInjectable from "./update-app/check-for-platform-updates.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
