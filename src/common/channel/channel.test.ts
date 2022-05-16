@@ -11,8 +11,7 @@ import { sendToAgnosticChannelInjectionToken } from "./send-to-agnostic-channel-
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { channelListenerInjectionToken } from "./channel-listener-injection-token";
 import createLensWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
-import type { Channel } from "./channel-injection-token";
-import { channelInjectionToken } from "./channel-injection-token";
+import type { Channel } from "./channel";
 
 type TestChannel = Channel<string>;
 
@@ -158,8 +157,6 @@ const testChannelInjectable = getInjectable({
       id: channelId,
     };
   },
-
-  injectionToken: channelInjectionToken,
 });
 
 const createTestWindow = (di: DiContainer, id: string) => {
