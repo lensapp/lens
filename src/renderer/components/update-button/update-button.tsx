@@ -5,7 +5,7 @@
 
 import styles from "./styles.module.scss";
 
-import type { HTMLAttributes} from "react";
+import type { HTMLAttributes } from "react";
 import React, { useState } from "react";
 import { Menu, MenuItem } from "../menu";
 import { noop } from "lodash";
