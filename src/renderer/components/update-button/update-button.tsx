@@ -5,21 +5,21 @@
 
 import styles from "./styles.module.scss";
 
+import type { HTMLAttributes} from "react";
 import React, { useState } from "react";
 import { Menu, MenuItem } from "../menu";
-import uniqueId from "lodash/uniqueId";
 import { noop } from "lodash";
 import { cssNames } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 
-interface UpdateButtonProps {
+interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
   warningLevel?: "light" | "medium" | "high";
   update: () => void;
 }
 
-export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
-  const id = uniqueId("update_button_");
+export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
+  const buttonId = id ?? "update-lens-button";
   const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
 
@@ -42,7 +42,7 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
     <>
       <button
         data-testid="update-button"
-        id="update-lens-button"
+        id={buttonId}
         className={cssNames(styles.updateButton, {
           [styles.warningHigh]: warningLevel === "high",
           [styles.warningMedium]: warningLevel === "medium",
@@ -55,7 +55,7 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
       </button>
       <Menu
         usePortal
-        htmlFor="update-lens-button"
+        htmlFor={buttonId}
         isOpen={opened}
         close={toggle}
         open={noop}
