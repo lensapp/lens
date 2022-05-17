@@ -4,27 +4,37 @@
  */
 
 .updateButton {
-  --active-color-hsl: 122deg 39% 49%;
-  --active-color: hsl(var(--active-color-hsl));
+  --accent-color: var(--colorOk);
 
-  border: 1px solid var(--active-color);
+  border: 1px solid var(--accent-color);
   border-radius: 4px;
-  background: hsl(var(--active-color-hsl) / 15%);
-  color: var(--active-color);
+  color: var(--accent-color);
   display: flex;
   align-items: center;
   padding: 4px 8px;
-  gap: 8px;
+  gap: 6px;
   cursor: default;
-  transition: background-color 0.1s;
+  position: relative;
 
-  &:hover {
-    background: hsl(var(--active-color-hsl) / 5%);
+  &:hover::before{
+    opacity: 0.25;
   }
 
   &:focus-visible {
     box-shadow: 0 0 0 2px var(--blue);
     border-color: transparent;
+  }
+
+  &::before {
+    content: " ";
+    position: absolute;
+    background: var(--accent-color);
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.15;
+    z-index: -1;
+    transition: opacity 0.1s;
   }
 }
 
@@ -33,15 +43,10 @@
   height: 16px;
 }
 
-.warningHigh {
-  --active-color-hsl: 0deg 76% 62%;
-}
-
 .warningMedium {
-  --active-color-hsl: 36deg 100% 50%;
+  --accent-color: var(--colorWarning);
 }
 
-:global(.theme-light) .warningMedium {
-  // Making medium color a bit darker for light theme
-  --active-color-hsl: 36deg 100% 46%;
+.warningHigh {
+  --accent-color: var(--colorSoftError);
 }
