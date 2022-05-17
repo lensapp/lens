@@ -10,6 +10,8 @@ import { Menu, MenuItem } from "../menu";
 import uniqueId from "lodash/uniqueId";
 import { noop } from "lodash";
 import { cssNames } from "../../utils";
+import type { IconProps } from "../icon";
+import { Icon } from "../icon";
 
 interface UpdateButtonProps {
   warningLevel?: "light" | "medium" | "high";
@@ -18,6 +20,7 @@ interface UpdateButtonProps {
 
 export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
   const id = uniqueId("update_button_");
+  const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
 
   const onKeyDown = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -48,11 +51,7 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
         onKeyDown={onKeyDown}
       >
         Update
-        <svg width="12" height="12" viewBox="0 0 12 12" shapeRendering="crispEdges">
-          <path fill="currentColor" d="M0,8.5h12v1H0V8.5z"/>
-          <path fill="currentColor" d="M0,5.5h12v1H0V5.5z"/>
-          <path fill="currentColor" d="M0,2.5h12v1H0V2.5z"/>
-        </svg>
+        <Icon material="arrow_drop_down" className={styles.icon}/>
       </button>
       <Menu
         usePortal
@@ -61,7 +60,7 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
         close={toggle}
         open={noop}
       >
-        <MenuItem icon="update" onClick={update} data-testid="update-lens-menu-item">
+        <MenuItem icon={menuIconProps} onClick={update} data-testid="update-lens-menu-item">
           Relaunch to Update Lens
         </MenuItem>
       </Menu>
