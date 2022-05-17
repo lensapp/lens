@@ -50,7 +50,11 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
         close={toggle}
         open={toggle}
       >
-        <MenuItem icon={menuIconProps} onClick={update} data-testid="update-lens-menu-item">
+        <MenuItem
+          icon={menuIconProps}
+          onClick={update}
+          data-testid="update-lens-menu-item"
+        >
           Relaunch to Update Lens
         </MenuItem>
       </Menu>
