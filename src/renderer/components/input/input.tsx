@@ -12,15 +12,25 @@ import { Icon } from "../icon";
 import type { TooltipProps } from "../tooltip";
 import { Tooltip } from "../tooltip";
 import * as Validators from "./input_validators";
-import type { InputValidator } from "./input_validators";
+import type { InputValidator, InputValidation, InputValidationResult, SyncValidationMessageBuilder } from "./input_validators";
 import isFunction from "lodash/isFunction";
 import uniqueId from "lodash/uniqueId";
 import { debounce } from "lodash";
 
-const { conditionalValidators, ...InputValidators } = Validators;
+const { conditionalValidators, AsyncInputValidationError, asyncInputValidator, inputValidator, ...InputValidators } = Validators;
 
-export { InputValidators };
-export type { InputValidator };
+export {
+  InputValidators,
+  AsyncInputValidationError,
+  asyncInputValidator,
+  inputValidator,
+};
+export type {
+  InputValidator,
+  InputValidation,
+  InputValidationResult,
+  SyncValidationMessageBuilder,
+};
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps =
@@ -78,7 +88,7 @@ const defaultProps: Partial<InputProps> = {
   blurOnEnter: true,
 };
 
-function isAsyncValidator(validator: InputValidator<boolean>): validator is InputValidator<true> {
+function isAsyncValidator<RequireProps extends boolean>(validator: InputValidator<boolean, RequireProps>): validator is InputValidator<true, RequireProps> {
   return typeof validator.debounce === "number";
 }
 
@@ -86,7 +96,7 @@ export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
 
   public input: InputElement | null = null;
-  public validators: InputValidator<boolean>[] = [];
+  public validators: InputValidator[] = [];
 
   public state: State = {
     focused: false,
@@ -218,7 +228,7 @@ export class Input extends React.Component<InputProps, State> {
     });
   }
 
-  private getValidatorError(value: string, { message }: InputValidator<boolean>) {
+  private getValidatorError(value: string, { message }: InputValidator) {
     if (isFunction(message)) return message(value, this.props);
 
     return message || "";

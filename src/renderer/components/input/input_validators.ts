@@ -28,7 +28,7 @@ export type SyncValidationMessageBuilder<RequireProps extends boolean> = (
     : (value: string, props?: InputProps) => ReactNode
 );
 
-export type InputValidator<IsAsync extends boolean = boolean, RequireProps extends boolean = false> = {
+export type InputValidator<IsAsync extends boolean = boolean, RequireProps extends boolean = boolean> = {
   /**
    * Filters itself based on the input props
    */
