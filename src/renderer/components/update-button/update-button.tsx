@@ -42,7 +42,7 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
     <>
       <button
         data-testid="update-button"
-        id={id}
+        id="update-lens-button"
         className={cssNames(styles.updateButton, {
           [styles.warningHigh]: warningLevel === "high",
           [styles.warningMedium]: warningLevel === "medium",
@@ -55,7 +55,7 @@ export function UpdateButton({ warningLevel, update }: UpdateButtonProps) {
       </button>
       <Menu
         usePortal
-        htmlFor={id}
+        htmlFor="update-lens-button"
         isOpen={opened}
         close={toggle}
         open={noop}
