@@ -21,9 +21,9 @@ import type { MenuItemOpts } from "../../../menu/application-menu-items.injectab
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
-import { showOpenDialog } from "../../../ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
 import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
+import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
 
 interface Dependencies {
   directoryForLensLocalStorage: string;
@@ -33,9 +33,10 @@ interface Dependencies {
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
+  askUserForFilePaths: AskUserForFilePaths;
 }
 
-export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore, operatingSystemTheme }: Dependencies) => {
+export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore, operatingSystemTheme, askUserForFilePaths }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -149,7 +150,7 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
 
   ipcMainOn(windowLocationChangedChannel, () => onLocationChange());
 
-  ipcMainHandle(openFilePickingDialogChannel, (event, opts) => showOpenDialog(opts));
+  ipcMainHandle(openFilePickingDialogChannel, (event, opts) => askUserForFilePaths(opts));
 
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 

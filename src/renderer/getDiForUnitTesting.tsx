@@ -34,11 +34,15 @@ import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-
 import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import historyInjectable from "./navigation/history.injectable";
-import themeStoreInjectable from "./theme-store.injectable";
-import apiManagerInjectable from "./components/kube-object-menu/dependencies/api-manager.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
+import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
+import ipcRendererInjectable
+  from "./app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
+import type { IpcRenderer } from "electron";
+import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
+import { observable } from "mobx";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -75,6 +79,11 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
+    di.override(ipcRendererInjectable, () => ({
+      invoke: () => {},
+      on: () => {},
+    }) as unknown as IpcRenderer);
+
     di.override(broadcastMessageInjectable, () => () => {
       throw new Error("Tried to broadcast message over IPC without explicit override.");
     });
@@ -89,11 +98,17 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
 
+    di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
+
     di.override(
       userStoreInjectable,
       () =>
         ({
           isTableColumnHidden: () => false,
+          extensionRegistryUrl: { customUrl: "some-custom-url" },
+          syncKubeconfigEntries: observable.map(),
+          terminalConfig: { fontSize: 42 },
+          editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
         } as unknown as UserStore),
     );
 
@@ -112,12 +127,6 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
       error: noop,
       info: noop,
       silly: noop,
-    }));
-
-    di.override(themeStoreInjectable, () => ({
-      activeTheme: {
-        type: "some-active-theme-type",
-      },
     }));
   }
 

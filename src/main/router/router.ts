@@ -8,8 +8,8 @@ import type http from "http";
 import { toPairs } from "lodash/fp";
 import type { Cluster } from "../../common/cluster/cluster";
 import { contentTypes } from "./router-content-types";
-import type { ServerIncomingMessage } from "../lens-proxy";
 import type { LensApiRequest, LensApiResult, Route } from "./route";
+import type { ServerIncomingMessage } from "../lens-proxy/lens-proxy";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;

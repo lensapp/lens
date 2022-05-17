@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { ClusterFrameHandler } from "./lens-views";
+import { ClusterFrameHandler } from "./cluster-frame-handler";
 
-const clusterFramesInjectable = getInjectable({
-  id: "cluster-frames",
+const clusterFrameHandlerInjectable = getInjectable({
+  id: "cluster-frame-handler",
   instantiate: () => new ClusterFrameHandler(),
 });
 
-export default clusterFramesInjectable;
+export default clusterFrameHandlerInjectable;

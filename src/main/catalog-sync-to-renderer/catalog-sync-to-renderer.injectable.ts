@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import catalogEntityRegistryInjectable from "../catalog/catalog-entity-registry.injectable";
 import { startCatalogSyncToRenderer } from "../catalog-pusher";
 import { getStartableStoppable } from "../../common/utils/get-startable-stoppable";
+import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 
 const catalogSyncToRendererInjectable = getInjectable({
   id: "catalog-sync-to-renderer",

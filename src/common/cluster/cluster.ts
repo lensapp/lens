@@ -30,8 +30,8 @@ export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
   readonly logger: Logger;
   readonly detectorRegistry: DetectorRegistry;
-  createKubeconfigManager: (cluster: Cluster) => KubeconfigManager | undefined;
-  createContextHandler: (cluster: Cluster) => ClusterContextHandler | undefined;
+  createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
+  createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;

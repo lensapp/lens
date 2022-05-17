@@ -15,10 +15,12 @@ import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import type { Route } from "./route";
+import type { SetRequired } from "type-fest";
 
 describe("router", () => {
   let router: Router;
-  let routeHandlerMock: AsyncFnMock<RouteHandler<any, string>>;
+  let routeHandlerMock: AsyncFnMock<() => any>;
 
   beforeEach(async () => {
     routeHandlerMock = asyncFn();

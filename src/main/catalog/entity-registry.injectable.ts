@@ -4,14 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import hasCategoryForEntityInjectable from "../../common/catalog/has-category-for-entity.injectable";
-import { CatalogEntityRegistry } from "./catalog-entity-registry";
-import catalogCategoryRegistryInjectable from "../../common/catalog/catalog-category-registry.injectable";
+import { CatalogEntityRegistry } from "./entity-registry";
 
 const catalogEntityRegistryInjectable = getInjectable({
   id: "catalog-entity-registry",
+
   instantiate: (di) => new CatalogEntityRegistry({
     hasCategoryForEntity: di.inject(hasCategoryForEntityInjectable),
-    categoryRegistryRegistry: di.inject(catalogCategoryRegistryInjectable);
   }),
 });
 

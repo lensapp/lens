@@ -9,7 +9,6 @@ import { extensionRegistratorInjectionToken } from "../../../extensions/extensio
 import type { IObservableArray } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
-import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 import React from "react";
 import { Router } from "react-router-dom";
 import { Observer } from "mobx-react";
@@ -37,13 +36,14 @@ import navigateToHelmChartsInjectable from "../../../common/front-end-routing/ro
 import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
 import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { Cluster } from "../../../common/cluster/cluster";
-import type { NamespaceStore } from "../+namespaces/namespace-store/namespace.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import namespaceStoreInjectable from "../+namespaces/namespace-store/namespace-store.injectable";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
 import { flushPromises } from "../../../common/test-utils/flush-promises";
+import type { NamespaceStore } from "../+namespaces/store";
+import namespaceStoreInjectable from "../+namespaces/store.injectable";
+import historyInjectable from "../../navigation/history.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -235,9 +235,11 @@ export const getApplicationBuilder = () => {
 
       const clusterStub = {
         accessibleNamespaces: [],
-      } as Cluster;
+      } as unknown as Cluster;
 
-      const namespaceStoreStub = {} as NamespaceStore;
+      const namespaceStoreStub = {
+        contextNamespaces: [],
+      } as unknown as NamespaceStore;
 
       const clusterFrameContextFake = new ClusterFrameContext(
         clusterStub,
@@ -321,7 +323,7 @@ export const getApplicationBuilder = () => {
       await startFrame();
 
       const render = renderFor(rendererDi);
-      const history = rendererDi.inject(observableHistoryInjectable);
+      const history = rendererDi.inject(historyInjectable) as any;
       const currentRouteComponent = rendererDi.inject(currentRouteComponentInjectable);
 
       for (const callback of beforeRenderCallbacks) {

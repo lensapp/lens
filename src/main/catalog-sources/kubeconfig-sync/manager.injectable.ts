@@ -7,7 +7,7 @@ import directoryForKubeConfigsInjectable from "../../../common/app-paths/directo
 import { KubeconfigSyncManager } from "./manager";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 import clusterManagerInjectable from "../../cluster-manager.injectable";
-import catalogEntityRegistryInjectable from "../../catalog/catalog-entity-registry.injectable";
+import catalogEntityRegistryInjectable from "../../catalog/entity-registry.injectable";
 
 const kubeconfigSyncManagerInjectable = getInjectable({
   id: "kubeconfig-sync-manager",

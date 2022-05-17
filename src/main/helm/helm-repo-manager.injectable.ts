@@ -12,10 +12,14 @@ import logger from "../logger";
 import { execHelm } from "./exec";
 import type { HelmEnv, HelmRepo, HelmRepoConfig } from "./helm-repo-manager";
 
-class HelmRepoManager {
-  protected repos: HelmRepo[];
-  protected helmEnv: HelmEnv;
-  protected didUpdateOnce: boolean;
+interface EnsuredHelmRepoManagerData {
+  helmEnv: HelmEnv;
+  didUpdateOnce: boolean;
+}
+
+export class HelmRepoManager {
+  protected helmEnv?: HelmEnv;
+  protected didUpdateOnce?: boolean;
 
   public async loadAvailableRepos(): Promise<HelmRepo[]> {
     const res = await customRequestPromise({
@@ -25,13 +29,13 @@ class HelmRepoManager {
       timeout: 10000,
     });
 
-    return orderBy(res.body as HelmRepo[], (repo) => repo.name);
+    return orderBy(res.body as HelmRepo[], repo => repo.name);
   }
 
-  private async ensureInitialized() {
+  private async ensureInitialized(): Promise<EnsuredHelmRepoManagerData> {
     this.helmEnv ??= await this.parseHelmEnv();
 
-    const repos = await this.list();
+    const repos = await this.list(this.helmEnv);
 
     if (repos.length === 0) {
       await this.addRepo({
@@ -44,12 +48,17 @@ class HelmRepoManager {
       await this.update();
       this.didUpdateOnce = true;
     }
+
+    return {
+      didUpdateOnce: this.didUpdateOnce,
+      helmEnv: this.helmEnv,
+    };
   }
 
   protected async parseHelmEnv() {
     const output = await execHelm(["env"]);
     const lines = output.split(/\r?\n/); // split by new line feed
-    const env: HelmEnv = {};
+    const env: Partial<Record<string, string>> = {};
 
     lines.forEach((line: string) => {
       const [key, value] = line.split("=");
@@ -59,21 +68,18 @@ class HelmRepoManager {
       }
     });
 
-    return env;
+    return env as HelmEnv;
   }
 
-  public async repo(name: string): Promise<HelmRepo> {
+  public async repo(name: string): Promise<HelmRepo | undefined> {
     const repos = await this.repositories();
 
-    return repos.find((repo) => repo.name === name);
+    return repos.find(repo => repo.name === name);
   }
 
-  private async list(): Promise<HelmRepo[]> {
+  private async list(helmEnv: HelmEnv): Promise<HelmRepo[]> {
     try {
-      const rawConfig = await readFile(
-        this.helmEnv.HELM_REPOSITORY_CONFIG,
-        "utf8",
-      );
+      const rawConfig = await readFile(helmEnv.HELM_REPOSITORY_CONFIG, "utf8");
       const parsedConfig = yaml.load(rawConfig) as HelmRepoConfig;
 
       if (typeof parsedConfig === "object" && parsedConfig) {
@@ -88,13 +94,13 @@ class HelmRepoManager {
 
   public async repositories(): Promise<HelmRepo[]> {
     try {
-      await this.ensureInitialized();
+      const { helmEnv } = await this.ensureInitialized();
 
-      const repos = await this.list();
+      const repos = await this.list(helmEnv);
 
-      return repos.map((repo) => ({
+      return repos.map(repo => ({
         ...repo,
-        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
+        cacheFilePath: `${helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`,
       }));
     } catch (error) {
       logger.error(`[HELM]: repositories listing error`, error);
@@ -104,21 +110,20 @@ class HelmRepoManager {
   }
 
   public async update() {
-    return execHelm(["repo", "update"]);
+    return execHelm([
+      "repo",
+      "update",
+    ]);
   }
 
-  public async addRepo({
-    name,
-    url,
-    insecureSkipTlsVerify,
-    username,
-    password,
-    caFile,
-    keyFile,
-    certFile,
-  }: HelmRepo) {
+  public async addRepo({ name, url, insecureSkipTlsVerify, username, password, caFile, keyFile, certFile }: HelmRepo) {
     logger.info(`[HELM]: adding repo ${name} from ${url}`);
-    const args = ["repo", "add", name, url];
+    const args = [
+      "repo",
+      "add",
+      name,
+      url,
+    ];
 
     if (insecureSkipTlsVerify) {
       args.push("--insecure-skip-tls-verify");
@@ -150,7 +155,11 @@ class HelmRepoManager {
   public async removeRepo({ name, url }: HelmRepo): Promise<string> {
     logger.info(`[HELM]: removing repo ${name} (${url})`);
 
-    return execHelm(["repo", "remove", name]);
+    return execHelm([
+      "repo",
+      "remove",
+      name,
+    ]);
   }
 }
 

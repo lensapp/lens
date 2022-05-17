@@ -31,7 +31,6 @@ import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
-import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
@@ -41,8 +40,6 @@ import initializeExtensionsInjectable from "./start-main-application/runnables/i
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import registerFileProtocolInjectable from "./electron-app/features/register-file-protocol.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
-import { CatalogCategoryRegistry } from "../common/catalog";
-import catalogCategoryRegistryInjectable from "../common/catalog/catalog-category-registry.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
 import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/runnables/setup-runnables-for-after-root-frame-is-ready.injectable";
@@ -124,8 +121,6 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
 
     di.override(trayInjectable, () => ({ start: () => {}, stop: () => {} }));
     di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
-
-    di.override(catalogCategoryRegistryInjectable, () => new CatalogCategoryRegistry());
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
@@ -229,7 +224,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
     close: () => {},
 
     send: (arg) => {
-      const sendFake = di.inject(sendToChannelInElectronBrowserWindowInjectable);
+      const sendFake = di.inject(sendToChannelInElectronBrowserWindowInjectable) as any;
 
       sendFake(null, arg);
     },

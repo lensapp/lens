@@ -13,7 +13,7 @@ interface Dependencies {
   k8sRequest: K8sRequest;
 }
 
-export type DetectorConstructor = new (cluster: Cluster) => BaseClusterDetector;
+export type DetectorConstructor = new (cluster: Cluster, k8sRequest: K8sRequest) => BaseClusterDetector;
 
 export class DetectorRegistry {
   constructor(private dependencies: Dependencies) {}

@@ -18,12 +18,13 @@ const createClusterInjectable = getInjectable({
       logger: di.inject(loggerInjectable),
 
       // TODO: Dismantle wrong abstraction
-      createKubeconfigManager: () => undefined,
+      // Note: "as never" to get around strictness in unnatural scenario
+      createKubeconfigManager: () => undefined as never,
       createKubectl: () => { throw new Error("Tried to access back-end feature in front-end.");},
-      createContextHandler: () => undefined,
+      createContextHandler: () => undefined as never,
       createAuthorizationReview: () => { throw new Error("Tried to access back-end feature in front-end."); },
       createListNamespaces: () => { throw new Error("Tried to access back-end feature in front-end."); },
-      detectorRegistry: undefined,
+      detectorRegistry: undefined as never,
       createVersionDetector: () => { throw new Error("Tried to access back-end feature in front-end."); },
     };
 

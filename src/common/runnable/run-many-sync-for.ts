@@ -8,32 +8,38 @@ import type {
   InjectionToken,
 } from "@ogre-tools/injectable";
 import { filter, map } from "lodash/fp";
+import type { Runnable } from "./run-many-for";
 
 export interface RunnableSync<TParameter = void> {
-  run: (parameter: TParameter) => void;
+  run: RunSync<TParameter>;
   runAfter?: this;
 }
 
-export const runManySyncFor =
-  (di: DiContainerForInjection) =>
-  <TRunnable extends RunnableSync<unknown>>(
-      injectionToken: InjectionToken<TRunnable, void>,
+type RunSync<Param> = (parameter: Param) => void;
+
+export type RunManySync = <Param>(
+  injectionToken: InjectionToken<Runnable<Param>, void>
+) => RunSync<Param>;
+
+export function runManySyncFor(di: DiContainerForInjection): RunManySync {
+  return (injectionToken) => async (parameter) => {
+    const allRunnables = di.injectMany(injectionToken);
+
+    const recursedRun = (
+      runAfterRunnable: RunnableSync<any> | undefined = undefined,
     ) =>
-      (parameter: Parameters<TRunnable["run"]>[0]) => {
-        const allRunnables = di.injectMany(injectionToken);
+      pipeline(
+        allRunnables,
 
-        const recursedRun = (runAfterRunnable: RunnableSync<unknown> = undefined) =>
-          pipeline(
-            allRunnables,
+        filter((runnable) => runnable.runAfter === runAfterRunnable),
 
-            filter((runnable) => runnable.runAfter === runAfterRunnable),
+        map((runnable) => {
+          runnable.run(parameter);
 
-            map((runnable) => {
-              runnable.run(parameter);
+          recursedRun(runnable);
+        }),
+      );
 
-              recursedRun(runnable);
-            }),
-          );
-
-        recursedRun();
-      };
+    recursedRun();
+  };
+}

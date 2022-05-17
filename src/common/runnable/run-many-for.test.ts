@@ -45,7 +45,7 @@ describe("runManyFor", () => {
 
       const runMany = runManyFor(rootDi)(someInjectionTokenForRunnables);
 
-      actualPromise = runMany();
+      actualPromise = runMany() as Promise<void>;
     });
 
     it("runs all runnables at the same time", () => {
@@ -66,7 +66,7 @@ describe("runManyFor", () => {
   });
 
   describe("given hierarchy that is three levels deep, when running many", () => {
-    let runMock: AsyncFnMock<(arg: string) => Promise<void>>;
+    let runMock: AsyncFnMock<(...args: unknown[]) => Promise<void>>;
     let actualPromise: Promise<void>;
 
     beforeEach(() => {
@@ -110,7 +110,7 @@ describe("runManyFor", () => {
 
       const runMany = runManyFor(di)(someInjectionTokenForRunnables);
 
-      actualPromise = runMany();
+      actualPromise = runMany() as Promise<void>;
     });
 
     it("runs first level runnables", () => {
@@ -173,7 +173,7 @@ describe("runManyFor", () => {
   });
 
   describe("when running many with parameter", () => {
-    let runMock: AsyncFnMock<(arg: string, arg2: string) => Promise<void>>;
+    let runMock: AsyncFnMock<(...args: unknown[]) => Promise<void>>;
 
     beforeEach(() => {
       const rootDi = createContainer();

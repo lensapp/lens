@@ -10,13 +10,13 @@ import type { Cluster } from "../common/cluster/cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { getClusterIdFromHost, isErrnoException } from "../common/utils";
-import type { catalogEntityRegistry } from "./catalog";
 import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { ClusterId } from "../common/cluster-types";
+import type { CatalogEntityRegistry } from "./catalog";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
@@ -261,7 +261,7 @@ export class ClusterManager {
     });
   }
 
-  getClusterForRequest(req: http.IncomingMessage): Cluster | undefined {
+  getClusterForRequest = (req: http.IncomingMessage): Cluster | undefined => {
     if (!req.headers.host) {
       return undefined;
     }

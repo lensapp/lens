@@ -5,13 +5,19 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiBase } from "../../common/k8s-api";
 import { onApiError } from "./on-api-error";
+import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
 
 const setupOnApiErrorListenersInjectable = getInjectable({
   id: "setup-on-api-error-listeners",
-  setup: () => {
-    apiBase?.onError.addListener(onApiError);
-  },
-  instantiate: () => undefined,
+
+  instantiate: () => ({
+    run: () => {
+      apiBase?.onError.addListener(onApiError);
+    },
+  }),
+
+  injectionToken: beforeFrameStartsInjectionToken,
+  causesSideEffects: true,
 });
 
 export default setupOnApiErrorListenersInjectable;

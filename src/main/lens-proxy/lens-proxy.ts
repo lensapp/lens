@@ -7,7 +7,7 @@ import net from "net";
 import type http from "http";
 import spdy from "spdy";
 import type httpProxy from "http-proxy";
-import { apiPrefix, apiKubePrefix } from "../common/vars";
+import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import logger from "../logger";
@@ -59,12 +59,9 @@ const disallowedPorts = new Set([
 ]);
 
 export class LensProxy {
-  protected origin: string;
   protected proxyServer: http.Server;
   protected closed = false;
   protected retryCounters = new Map<string, number>();
-  protected getClusterForRequest: GetClusterForRequest;
-
 
   constructor(private dependencies: Dependencies) {
     this.configureProxy(dependencies.proxy);

@@ -105,7 +105,7 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
   upgradeVersion = (release: HelmRelease) => {
     const { hideDetails, createUpgradeChartTab } = this.props;
 
-    this.props.createUpgradeChartTab(this.release);
+    createUpgradeChartTab(release);
     hideDetails();
   };
 

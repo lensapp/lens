@@ -35,7 +35,7 @@ describe("get-electron-app-path", () => {
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(joinPathsInjectable, () => joinPathsFake);
 
-    getElectronAppPath = di.inject(getElectronAppPathInjectable);
+    getElectronAppPath = di.inject(getElectronAppPathInjectable) as (name: string) => string;
   });
 
   it("given app path exists, when called, returns app path", () => {

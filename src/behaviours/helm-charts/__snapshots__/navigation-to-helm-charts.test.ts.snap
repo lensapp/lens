@@ -340,7 +340,7 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
           class="items box grow flex column"
         >
           <div
-            class="Table flex column HelmCharts box grow some-active-theme-type selectable scrollable sortable autoSize virtual"
+            class="Table flex column HelmCharts box grow dark selectable scrollable sortable autoSize virtual"
           >
             <div
               class="TableHead sticky nowrap topLine"
@@ -430,7 +430,7 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
                 >
                   <i
                     class="Icon material interactive focusable"
-                    id="menu_actions_15"
+                    id="menu_actions_17"
                     tabindex="0"
                   >
                     <span

@@ -87,8 +87,8 @@ export const overrideIpcBridge = ({
   mainDi.override(
     sendToChannelInElectronBrowserWindowInjectable,
     () =>
-      (browserWindow, { channel: channelName, data }: SendToViewArgs) => {
-        const handles = rendererIpcFakeHandles.get(channelName);
+      (browserWindow, { channel: channelName, data = [] }: SendToViewArgs) => {
+        const handles = rendererIpcFakeHandles.get(channelName) || [];
 
         if (isEmpty(handles)) {
           throw new Error(

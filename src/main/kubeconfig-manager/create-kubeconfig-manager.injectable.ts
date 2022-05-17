@@ -14,7 +14,7 @@ export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;
 }
 
-export type CreateKubeconfigManager = (cluster: Cluster) => KubeconfigManager | undefined;
+export type CreateKubeconfigManager = (cluster: Cluster) => KubeconfigManager;
 
 const createKubeconfigManagerInjectable = getInjectable({
   id: "create-kubeconfig-manager",

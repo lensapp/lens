@@ -284,7 +284,7 @@ describe("HotbarStore", () => {
   });
 
   describe("given data from 5.0.0-beta.3 and version being 5.0.0-beta.10", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const configurationToBeMigrated = {
         "some-directory-for-user-data": {
           "lens-hotbar-store.json": JSON.stringify({
@@ -350,8 +350,6 @@ describe("HotbarStore", () => {
       mockFs(configurationToBeMigrated);
 
       di.override(appVersionInjectable, () => "5.0.0-beta.10");
-
-      await di.runSetups();
 
       hotbarStore = di.inject(hotbarStoreInjectable);
 

@@ -19,7 +19,7 @@ const createContextHandlerInjectable = getInjectable({
     const createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
     const prometheusProviderRegistry = di.inject(prometheusProviderRegistryInjectable);
 
-    return (cluster: Cluster): ClusterContextHandler | undefined => {
+    return (cluster: Cluster): ClusterContextHandler => {
       const clusterUrl = new URLParse(cluster.apiUrl);
 
       const dependencies = {

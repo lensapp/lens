@@ -28,7 +28,7 @@ const setupLensProxyInjectable = getInjectable({
         try {
           logger.info("🔌 Starting LensProxy");
           await lensProxy.listen(); // lensProxy.port available
-        } catch (error) {
+        } catch (error: any) {
           showErrorPopup("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
           return exitApp();

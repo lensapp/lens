@@ -34,7 +34,7 @@ const createLensWindowInjectable = getInjectable({
   instantiate:
     (di) =>
       (configuration: LensWindowConfiguration) => {
-        let browserWindow: LensWindow = null;
+        let browserWindow: LensWindow | undefined;
 
         const createElectronWindow = di.inject(createElectronWindowForInjectable)(
           {
@@ -52,14 +52,14 @@ const createLensWindowInjectable = getInjectable({
             beforeOpen: configuration.beforeOpen,
 
             onClose: () => {
-              browserWindow = null;
+              browserWindow = undefined;
             },
           },
         );
 
         return {
           get visible() {
-            return !!this.browserWindow;
+            return !!browserWindow;
           },
 
           show: async () => {
@@ -72,7 +72,7 @@ const createLensWindowInjectable = getInjectable({
 
           close: () => {
             browserWindow?.close();
-            browserWindow = null;
+            browserWindow = undefined;
           },
 
           send: async (args: SendToViewArgs) => {

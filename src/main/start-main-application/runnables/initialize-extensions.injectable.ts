@@ -44,7 +44,7 @@ const initializeExtensionsInjectable = getInjectable({
             });
 
           extensionLoader.initExtensions(extensions);
-        } catch (error) {
+        } catch (error: any) {
           showErrorPopup(
             "Lens Error",
             `Could not load extensions${

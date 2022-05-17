@@ -9,10 +9,11 @@ import loggerInjectable from "../../../../common/logger.injectable";
 import clusterManagerInjectable from "../../../cluster-manager.injectable";
 import applicationMenuItemsInjectable from "../../../menu/application-menu-items.injectable";
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
-import catalogEntityRegistryInjectable from "../../../catalog/catalog-entity-registry.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import { onLoadOfApplicationInjectionToken } from "../../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
+import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
+import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -30,6 +31,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const clusterStore = di.inject(clusterStoreInjectable);
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
+    const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
 
     return {
       run: () => {
@@ -43,6 +45,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
           catalogEntityRegistry,
           clusterStore,
           operatingSystemTheme,
+          askUserForFilePaths,
         });
       },
     };
