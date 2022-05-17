@@ -78,6 +78,8 @@ jobs:
 
       - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
         name: Run Linux integration tests
+        env:
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         if: runner.os == 'Linux'
 
       - run: make integration
