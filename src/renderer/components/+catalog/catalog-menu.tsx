@@ -18,7 +18,7 @@ import { observer } from "mobx-react";
 import { CatalogCategoryLabel } from "./catalog-category-label";
 
 export interface CatalogMenuProps {
-  activeItem: string;
+  activeTab: string | undefined;
   onItemClick: (id: string) => void;
 }
 
@@ -54,9 +54,14 @@ export const CatalogMenu = observer((props: CatalogMenuProps) => {
           defaultExpanded={["catalog"]}
           defaultCollapseIcon={<Icon material="expand_more"/>}
           defaultExpandIcon={<Icon material="chevron_right" />}
-          selected={props.activeItem || "browse"}
+          selected={props.activeTab || "browse"}
         >
-          <Item nodeId="browse" label="Browse" data-testid="*-tab" onClick={() => props.onItemClick("*")}/>
+          <Item
+            nodeId="browse"
+            label="Browse"
+            data-testid="*-tab"
+            onClick={() => props.onItemClick("*")}
+          />
           <Item
             nodeId="catalog"
             label={<div className={styles.parent}>Categories</div>}

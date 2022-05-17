@@ -5,23 +5,26 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { crdStore } from "./crd.store";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
+import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
 
 const customResourceDefinitionsInjectable = getInjectable({
   id: "custom-resource-definitions",
 
   instantiate: (di) => {
-    const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
+    const createStoresAndApis = di.inject(storesAndApisCanBeCreatedInjectable);
 
-    if (currentlyInClusterFrame) {
-      const subscribeStores = di.inject(subscribeStoresInjectable);
-
-      subscribeStores([crdStore]);
+    if (!createStoresAndApis) {
+      return computed(() => []);
     }
 
-    return computed(() => [...crdStore.items]);
+    const store = di.inject(customResourceDefinitionStoreInjectable);
+    const subscribeStores = di.inject(subscribeStoresInjectable);
+
+    subscribeStores([store]);
+
+    return computed(() => [...store.items]);
   },
 });
 

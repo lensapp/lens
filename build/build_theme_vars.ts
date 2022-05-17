@@ -5,11 +5,11 @@
 
 import fs from "fs-extra";
 import path from "path";
-import defaultBaseLensTheme from "../src/renderer/themes/lens-dark.json";
+import defaultBaseLensTheme from "../src/renderer/themes/lens-dark";
 
 const outputCssFile = path.resolve("src/renderer/themes/theme-vars.css");
 
-const banner = `/* 
+const banner = `/*
     Generated Lens theme CSS-variables, don't edit manually.
     To refresh file run $: yarn run ts-node build/${path.basename(__filename)}
 */`;

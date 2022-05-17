@@ -14,6 +14,7 @@ import { routeInjectionToken } from "../../common/front-end-routing/route-inject
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
+import { getSidebarItem } from "../utils";
 
 describe("cluster - visibility of sidebar items", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -43,7 +44,7 @@ describe("cluster - visibility of sidebar items", () => {
     it("related sidebar item does not exist", () => {
       const item = getSidebarItem(rendered, "some-item-id");
 
-      expect(item).toBeNull();
+      expect(item).toBeUndefined();
     });
 
     describe("when kube resource becomes allowed", () => {
@@ -58,16 +59,11 @@ describe("cluster - visibility of sidebar items", () => {
       it("related sidebar item exists", () => {
         const item = getSidebarItem(rendered, "some-item-id");
 
-        expect(item).not.toBeNull();
+        expect(item).not.toBeUndefined();
       });
     });
   });
 });
-
-const getSidebarItem = (rendered: RenderResult, itemId: string) =>
-  rendered
-    .queryAllByTestId("sidebar-item")
-    .find((x) => x.dataset.idTest === itemId) || null;
 
 const testRouteInjectable = getInjectable({
   id: "some-route-injectable-id",

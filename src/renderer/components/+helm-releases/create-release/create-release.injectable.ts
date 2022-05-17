@@ -3,8 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+
 import type {
-  IReleaseCreatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
+  HelmReleaseCreatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import {
   createRelease,
 } from "../../../../common/k8s-api/endpoints/helm-releases.api";
@@ -16,7 +17,7 @@ const createReleaseInjectable = getInjectable({
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
 
-    return async (payload: IReleaseCreatePayload) => {
+    return async (payload: HelmReleaseCreatePayload) => {
       const release = await createRelease(payload);
 
       releases.invalidate();

@@ -6,5 +6,8 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { ClusterModel } from "../cluster-types";
 import type { Cluster } from "./cluster";
 
-export const createClusterInjectionToken =
-  getInjectionToken<(model: ClusterModel) => Cluster>({ id: "create-cluster-token" });
+export type CreateCluster = (model: ClusterModel) => Cluster;
+
+export const createClusterInjectionToken = getInjectionToken<CreateCluster>({
+  id: "create-cluster-token",
+});

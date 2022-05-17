@@ -8,15 +8,13 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import type { StorageHelper } from "../../utils";
+import type { SingleOrMany, StorageLayer } from "../../utils";
 import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
 import { Animate } from "../animate";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
-import drawerStorageInjectable, {
-  defaultDrawerWidth,
-} from "./drawer-storage/drawer-storage.injectable";
+import drawerStorageInjectable, { defaultDrawerWidth } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import historyInjectable from "../../navigation/history.injectable";
 import type { History } from "history";
@@ -40,9 +38,10 @@ export interface DrawerProps {
   animation?: AnimateName;
   onClose?: () => void;
   toolbar?: React.ReactNode;
+  children?: SingleOrMany<React.ReactNode>;
 }
 
-const defaultProps: Partial<DrawerProps> = {
+const defaultProps = {
   position: "right",
   animation: "slide-right",
   usePortal: false,
@@ -54,24 +53,24 @@ interface State {
   width: number;
 }
 
-const resizingAnchorProps = new Map<DrawerPosition, [ResizeDirection, ResizeSide, ResizeGrowthDirection]>();
-
-resizingAnchorProps.set("right", [ResizeDirection.HORIZONTAL, ResizeSide.LEADING, ResizeGrowthDirection.RIGHT_TO_LEFT]);
-resizingAnchorProps.set("left", [ResizeDirection.HORIZONTAL, ResizeSide.TRAILING, ResizeGrowthDirection.LEFT_TO_RIGHT]);
-resizingAnchorProps.set("top", [ResizeDirection.VERTICAL, ResizeSide.TRAILING, ResizeGrowthDirection.TOP_TO_BOTTOM]);
-resizingAnchorProps.set("bottom", [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP]);
+export const resizingAnchorProps: Record<DrawerPosition, [ResizeDirection, ResizeSide, ResizeGrowthDirection]> = {
+  "right": [ResizeDirection.HORIZONTAL, ResizeSide.LEADING, ResizeGrowthDirection.RIGHT_TO_LEFT],
+  "left": [ResizeDirection.HORIZONTAL, ResizeSide.TRAILING, ResizeGrowthDirection.LEFT_TO_RIGHT],
+  "top": [ResizeDirection.VERTICAL, ResizeSide.TRAILING, ResizeGrowthDirection.TOP_TO_BOTTOM],
+  "bottom": [ResizeDirection.VERTICAL, ResizeSide.LEADING, ResizeGrowthDirection.BOTTOM_TO_TOP],
+};
 
 interface Dependencies {
   history: History;
-  drawerStorage: StorageHelper<{ width: number }>;
+  drawerStorage: StorageLayer<{ width: number }>;
 }
 
-class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, State> {
+class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typeof defaultProps, State> {
   static defaultProps = defaultProps as object;
 
-  private mouseDownTarget: HTMLElement;
-  private contentElem: HTMLElement;
-  private scrollElem: HTMLElement;
+  private mouseDownTarget: HTMLElement | null = null;
+  private contentElem: HTMLElement | null = null;
+  private scrollElem: HTMLElement | null = null;
   private scrollPos = new Map<string, number>();
 
   private stopListenLocation = this.props.history.listen(() => {
@@ -109,22 +108,26 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
     if (ev.detail === 3) {
       const selection = window.getSelection();
 
-      selection.selectAllChildren(selection.anchorNode?.parentNode);
+      if (selection?.anchorNode?.parentNode) {
+        selection.selectAllChildren(selection.anchorNode.parentNode);
+      }
     }
   };
 
   saveScrollPos = () => {
-    if (!this.scrollElem) return;
     const key = this.props.history.location.key;
 
-    this.scrollPos.set(key, this.scrollElem.scrollTop);
+    if (this.scrollElem && key) {
+      this.scrollPos.set(key, this.scrollElem.scrollTop);
+    }
   };
 
   restoreScrollPos = () => {
-    if (!this.scrollElem) return;
     const key = this.props.history.location.key;
 
-    this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
+    if (this.scrollElem && key) {
+      this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
+    }
   };
 
   onEscapeKey = (evt: KeyboardEvent) => {
@@ -140,7 +143,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
   onClickOutside = (evt: MouseEvent) => {
     const { contentElem, mouseDownTarget, close, props: { open }} = this;
 
-    if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
+    if (!open || evt.defaultPrevented || contentElem?.contains(mouseDownTarget)) {
       return;
     }
     const clickedElem = evt.target as HTMLElement;
@@ -180,7 +183,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
     const copyTooltip = isCopied ? "Copied!" : "Copy";
     const copyIcon = isCopied ? "done" : "content_copy";
     const canCopyTitle = typeof title === "string" && title.length > 0;
-    const [direction, placement, growthDirection] = resizingAnchorProps.get(position);
+    const [direction, placement, growthDirection] = resizingAnchorProps[position];
     const drawerSize = size || `${width}px`;
 
     const drawer = (
@@ -195,11 +198,19 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
               <div className="drawer-title-text flex gaps align-center">
                 {title}
                 {canCopyTitle && (
-                  <Icon material={copyIcon} tooltip={copyTooltip} onClick={() => this.copyTitle(title)}/>
+                  <Icon
+                    material={copyIcon}
+                    tooltip={copyTooltip}
+                    onClick={() => this.copyTitle(title)}
+                  />
                 )}
               </div>
               {toolbar}
-              <Icon material="close" tooltip="Close" onClick={this.close}/>
+              <Icon
+                material="close"
+                tooltip="Close"
+                onClick={this.close}
+              />
             </div>
             <div
               className={cssNames("drawer-content flex column box grow", contentClass)}
@@ -231,15 +242,11 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies, Stat
   }
 }
 
-export const Drawer = withInjectables<Dependencies, DrawerProps>(
-  NonInjectedDrawer,
-
-  {
-    getProps: (di, props) => ({
-      history: di.inject(historyInjectable),
-      drawerStorage: di.inject(drawerStorageInjectable),
-      ...props,
-    }),
-  },
-);
+export const Drawer = withInjectables<Dependencies, DrawerProps>(NonInjectedDrawer as React.ElementType<DrawerProps & Dependencies>, {
+  getProps: (di, props) => ({
+    ...props,
+    history: di.inject(historyInjectable),
+    drawerStorage: di.inject(drawerStorageInjectable),
+  }),
+});
 

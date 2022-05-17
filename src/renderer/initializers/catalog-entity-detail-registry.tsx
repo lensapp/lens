@@ -31,6 +31,9 @@ export function initCatalogEntityDetailRegistry() {
           ),
         },
       },
+    ]);
+  CatalogEntityDetailRegistry.getInstance()
+    .add([
       {
         apiVersions: [WebLink.apiVersion],
         kind: WebLink.kind,

@@ -18,7 +18,7 @@ const deepDash = getDeepDash(_);
 
 export interface NavigationTree {
   id: string;
-  parentId: string;
+  parentId?: string;
   name: string;
   selected?: boolean;
   children?: NavigationTree[];

@@ -6,7 +6,7 @@ import { delay } from "../../../../common/utils";
 import { broadcastMessage } from "../../../../common/ipc";
 import logger from "../../../../common/logger";
 import type { ExtensionLoading } from "../../../../extensions/extension-loader";
-import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import { bundledExtensionsLoaded } from "../../../../common/ipc/extension-handling";
 
 

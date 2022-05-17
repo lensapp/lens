@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
+import type { PodContainer, Pod } from "../../../../common/k8s-api/endpoints";
 import type { TabId } from "../dock/store";
 import createLogsTabInjectable from "./create-logs-tab.injectable";
 
 export interface PodLogsTabData {
   selectedPod: Pod;
-  selectedContainer: IPodContainer;
+  selectedContainer: PodContainer;
 }
 
 const createPodLogsTabInjectable = getInjectable({

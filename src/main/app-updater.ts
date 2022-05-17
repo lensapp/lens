@@ -15,7 +15,7 @@ import { ipcMain } from "electron";
 import { nextUpdateChannel } from "./utils/update-channel";
 import { UserStore } from "../common/user-store";
 
-let installVersion: null | string = null;
+let installVersion: undefined | string;
 
 export function isAutoUpdateEnabled() {
   return autoUpdater.isUpdaterActive() && isPublishConfigured;
@@ -28,10 +28,9 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
       autoUpdater.quitAndInstall(true, true);
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
-      autoUpdater.autoInstallOnAppQuit = true;
     }
   } else {
-    logger.info(`${AutoUpdateLogPrefix}: User chose not to update`);
+    logger.info(`${AutoUpdateLogPrefix}: User chose not to update, will update on quit anyway`);
   }
 }
 
@@ -48,8 +47,9 @@ interface Dependencies {
 
 /**
  * starts the automatic update checking
+ * @param interval milliseconds between interval to check on, defaults to 2h
  */
-export const startUpdateChecking = ({ isAutoUpdateEnabled } : Dependencies) => once(function (interval = 1000 * 60 * 60 * 24): void {
+export const startUpdateChecking = ({ isAutoUpdateEnabled } : Dependencies) => once(function (interval = 1000 * 60 * 60 * 2): void {
   if (!isAutoUpdateEnabled() || isTestEnv) {
     return;
   }
@@ -57,26 +57,17 @@ export const startUpdateChecking = ({ isAutoUpdateEnabled } : Dependencies) => o
   const userStore = UserStore.getInstance();
 
   autoUpdater.autoDownload = false;
-  autoUpdater.autoInstallOnAppQuit = false;
+  autoUpdater.autoInstallOnAppQuit = true;
   autoUpdater.channel = userStore.updateChannel;
   autoUpdater.allowDowngrade = userStore.isAllowedToDowngrade;
 
   autoUpdater
     .on("update-available", (info: UpdateInfo) => {
-      if (autoUpdater.autoInstallOnAppQuit) {
-        // a previous auto-update loop was completed with YES+LATER, check if same version
-        if (installVersion === info.version) {
-          // same version, don't broadcast
-          return;
-        }
+      if (installVersion === info.version) {
+        // same version, don't broadcast
+        return;
       }
 
-      /**
-       * This should be always set to false here because it is the reasonable
-       * default. Namely, if a don't auto update to a version that the user
-       * didn't ask for.
-       */
-      autoUpdater.autoInstallOnAppQuit = false;
       installVersion = info.version;
 
       autoUpdater.downloadUpdate()

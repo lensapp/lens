@@ -5,7 +5,7 @@
 
 // Cleans up a store that had the state related data stored
 import type { MigrationDeclaration } from "../helpers";
-import { getEmptyHotbar } from "../../common/hotbar-types";
+import { getEmptyHotbar } from "../../common/hotbars/types";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import catalogCatalogEntityInjectable from "../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import type { Pod, PodVolume, PodVolumeKind } from "../../../../../common/k8s-api/endpoints";
+import type { Pod, PodSpecVolume, PodVolumeKind } from "../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../drawer";
 import { Icon } from "../../../icon";
 import { AwsElasticBlockStore } from "./variants/aws-elastic-block-store";
@@ -47,7 +47,7 @@ const deprecatedVolumeTypes = new Set<PodVolumeKind>([
 
 interface VolumeVariantProps {
   pod: Pod;
-  volume: PodVolume;
+  volume: PodSpecVolume;
 }
 
 interface VolumeVariantRender {
@@ -59,210 +59,330 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
   if (volume.awsElasticBlockStore) {
     return {
       kind: "awsElasticBlockStore",
-      element: <AwsElasticBlockStore variant={volume.awsElasticBlockStore} pod={pod} volumeName={volume.name} />,
+      element: <AwsElasticBlockStore
+        variant={volume.awsElasticBlockStore}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.azureDisk) {
     return {
       kind: "azureDisk",
-      element: <AzureDisk variant={volume.azureDisk} pod={pod} volumeName={volume.name} />,
+      element: <AzureDisk
+        variant={volume.azureDisk}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.azureFile) {
     return {
       kind: "azureFile",
-      element: <AzureFile variant={volume.azureFile} pod={pod} volumeName={volume.name} />,
+      element: <AzureFile
+        variant={volume.azureFile}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.cephfs) {
     return {
       kind: "cephfs",
-      element: <CephFs variant={volume.cephfs} pod={pod} volumeName={volume.name} />,
+      element: <CephFs
+        variant={volume.cephfs}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.cinder) {
     return {
       kind: "cinder",
-      element: <Cinder variant={volume.cinder} pod={pod} volumeName={volume.name} />,
+      element: <Cinder
+        variant={volume.cinder}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.configMap) {
     return {
       kind: "configMap",
-      element: <ConfigMap variant={volume.configMap} pod={pod} volumeName={volume.name} />,
+      element: <ConfigMap
+        variant={volume.configMap}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.csi) {
     return {
       kind: "csi",
-      element: <ContainerStorageInterface variant={volume.csi} pod={pod} volumeName={volume.name} />,
+      element: <ContainerStorageInterface
+        variant={volume.csi}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.downwardAPI) {
     return {
       kind: "downwardAPI",
-      element: <DownwardAPI variant={volume.downwardAPI} pod={pod} volumeName={volume.name} />,
+      element: <DownwardAPI
+        variant={volume.downwardAPI}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.emptyDir) {
     return {
       kind: "emptyDir",
-      element: <EmptyDir variant={volume.emptyDir} pod={pod} volumeName={volume.name} />,
+      element: <EmptyDir
+        variant={volume.emptyDir}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.ephemeral) {
     return {
       kind: "ephemeral",
-      element: <Ephemeral variant={volume.ephemeral} pod={pod} volumeName={volume.name} />,
+      element: <Ephemeral
+        variant={volume.ephemeral}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.fc) {
     return {
       kind: "fc",
-      element: <FiberChannel variant={volume.fc} pod={pod} volumeName={volume.name} />,
+      element: <FiberChannel
+        variant={volume.fc}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.flexVolume) {
     return {
       kind: "flexVolume",
-      element: <FlexVolume variant={volume.flexVolume} pod={pod} volumeName={volume.name} />,
+      element: <FlexVolume
+        variant={volume.flexVolume}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.flocker) {
     return {
       kind: "flocker",
-      element: <Flocker variant={volume.flocker} pod={pod} volumeName={volume.name} />,
+      element: <Flocker
+        variant={volume.flocker}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.gcePersistentDisk) {
     return {
       kind: "gcePersistentDisk",
-      element: <GcePersistentDisk variant={volume.gcePersistentDisk} pod={pod} volumeName={volume.name} />,
+      element: <GcePersistentDisk
+        variant={volume.gcePersistentDisk}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.gitRepo) {
     return {
       kind: "gitRepo",
-      element: <GitRepo variant={volume.gitRepo} pod={pod} volumeName={volume.name} />,
+      element: <GitRepo
+        variant={volume.gitRepo}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.glusterfs) {
     return {
       kind: "glusterfs",
-      element: <GlusterFs variant={volume.glusterfs} pod={pod} volumeName={volume.name} />,
+      element: <GlusterFs
+        variant={volume.glusterfs}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.hostPath) {
     return {
       kind: "hostPath",
-      element: <HostPath variant={volume.hostPath} pod={pod} volumeName={volume.name} />,
+      element: <HostPath
+        variant={volume.hostPath}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.iscsi) {
     return {
       kind: "iscsi",
-      element: <IScsi variant={volume.iscsi} pod={pod} volumeName={volume.name} />,
+      element: <IScsi
+        variant={volume.iscsi}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.local) {
     return {
       kind: "local",
-      element: <Local variant={volume.local} pod={pod} volumeName={volume.name} />,
+      element: <Local
+        variant={volume.local}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.nfs) {
     return {
       kind: "nfs",
-      element: <NetworkFs variant={volume.nfs} pod={pod} volumeName={volume.name} />,
+      element: <NetworkFs
+        variant={volume.nfs}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.persistentVolumeClaim) {
     return {
       kind: "persistentVolumeClaim",
-      element: <PersistentVolumeClaim variant={volume.persistentVolumeClaim} pod={pod} volumeName={volume.name} />,
+      element: <PersistentVolumeClaim
+        variant={volume.persistentVolumeClaim}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.photonPersistentDisk) {
     return {
       kind: "photonPersistentDisk",
-      element: <PhotonPersistentDisk variant={volume.photonPersistentDisk} pod={pod} volumeName={volume.name} />,
+      element: <PhotonPersistentDisk
+        variant={volume.photonPersistentDisk}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.portworxVolume) {
     return {
       kind: "portworxVolume",
-      element: <PortworxVolume variant={volume.portworxVolume} pod={pod} volumeName={volume.name} />,
+      element: <PortworxVolume
+        variant={volume.portworxVolume}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.projected) {
     return {
       kind: "projected",
-      element: <Projected variant={volume.projected} pod={pod} volumeName={volume.name} />,
+      element: <Projected
+        variant={volume.projected}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.quobyte) {
     return {
       kind: "quobyte",
-      element: <Quobyte variant={volume.quobyte} pod={pod} volumeName={volume.name} />,
+      element: <Quobyte
+        variant={volume.quobyte}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.rbd) {
     return {
       kind: "rbd",
-      element: <RadosBlockDevice variant={volume.rbd} pod={pod} volumeName={volume.name} />,
+      element: <RadosBlockDevice
+        variant={volume.rbd}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.scaleIO) {
     return {
       kind: "scaleIO",
-      element: <ScaleIo variant={volume.scaleIO} pod={pod} volumeName={volume.name} />,
+      element: <ScaleIo
+        variant={volume.scaleIO}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.secret) {
     return {
       kind: "secret",
-      element: <Secret variant={volume.secret} pod={pod} volumeName={volume.name} />,
+      element: <Secret
+        variant={volume.secret}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.storageos) {
     return {
       kind: "storageos",
-      element: <StorageOs variant={volume.storageos} pod={pod} volumeName={volume.name} />,
+      element: <StorageOs
+        variant={volume.storageos}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 
   if (volume.vsphereVolume) {
     return {
       kind: "vsphereVolume",
-      element: <VsphereVolume variant={volume.vsphereVolume} pod={pod} volumeName={volume.name} />,
+      element: <VsphereVolume
+        variant={volume.vsphereVolume}
+        pod={pod}
+        volumeName={volume.name}
+      />,
     };
   }
 

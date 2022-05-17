@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { StorageHelper } from "../../../utils";
+import type { StorageLayer } from "../../../utils";
 import type { TableSortParams } from "../table";
 
 export interface TableStorageModel {
@@ -12,7 +12,7 @@ export interface TableStorageModel {
 }
 
 interface Dependencies {
-  storage: StorageHelper<TableStorageModel>;
+  storage: StorageLayer<TableStorageModel>;
 }
 
 export class TableModel {

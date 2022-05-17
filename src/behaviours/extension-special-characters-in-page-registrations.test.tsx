@@ -2,12 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFake } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import type { FakeExtensionData, TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../renderer/components/test-utils/get-renderer-extension-fake";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
-import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
 import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 
@@ -18,6 +17,7 @@ describe("extension special characters in page registrations", () => {
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
+    const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
 
     testExtension = getRendererExtensionFake(
       extensionWithPagesHavingSpecialCharacters,
@@ -44,14 +44,14 @@ describe("extension special characters in page registrations", () => {
     it("knows URL", () => {
       const currentPath = applicationBuilder.dis.rendererDi.inject(currentPathInjectable);
 
-      expect(currentPath.get()).toBe("/extension/some-extension-id--/some-page-id");
+      expect(currentPath.get()).toBe("/extension/some-extension-name--/some-page-id");
     });
   });
 });
 
-const extensionWithPagesHavingSpecialCharacters: Partial<LensRendererExtension> = {
-  id: "@some-extension-id/",
-
+const extensionWithPagesHavingSpecialCharacters: FakeExtensionData = {
+  id: "some-extension-id",
+  name: "@some-extension-name/",
   globalPages: [
     {
       id: "/some-page-id/",

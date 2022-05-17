@@ -9,8 +9,9 @@ import { getElectronAppPath } from "./get-electron-app-path";
 const getElectronAppPathInjectable = getInjectable({
   id: "get-electron-app-path",
 
-  instantiate: (di) =>
-    getElectronAppPath({ app: di.inject(electronAppInjectable) }),
+  instantiate: (di) => getElectronAppPath({
+    app: di.inject(electronAppInjectable),
+  }),
 });
 
 export default getElectronAppPathInjectable;

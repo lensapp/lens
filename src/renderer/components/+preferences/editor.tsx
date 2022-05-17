@@ -13,17 +13,27 @@ import { Input, InputValidators } from "../input";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-
-enum EditorLineNumbersStyles {
-  on = "On",
-  off = "Off",
-  relative = "Relative",
-  interval = "Interval",
-}
+import { defaultEditorConfig } from "../../../common/user-store/preferences-helpers";
+import { capitalize } from "lodash";
 
 interface Dependencies {
   userStore: UserStore;
 }
+
+const minimapPositionOptions = (["left", "right"] as const)
+  .map(side => ({
+    value: side,
+    label: side,
+  }));
+const lineNumberOptions = ([
+  "on",
+  "off",
+  "relative",
+  "interval",
+] as const).map(lineNumbers => ({
+  value: lineNumbers,
+  label: capitalize(lineNumbers),
+}));
 
 const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
   const editorConfiguration = userStore.editorConfiguration;
@@ -33,7 +43,7 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
       <section id="editor">
         <h2 data-testid="editor-configuration-header">Editor configuration</h2>
 
-        <SubTitle title="Minimap" />
+        <SubTitle title="Minimap"/>
         <section>
           <div className="flex gaps justify-space-between">
             <div className="flex gaps align-center">
@@ -49,24 +59,21 @@ const NonInjectedEditor = observer(({ userStore }: Dependencies) => {
               <Select
                 id="minimap-input"
                 themeName="lens"
-                options={["left", "right"]}
+                options={minimapPositionOptions}
                 value={editorConfiguration.minimap.side}
-                onChange={({ value }) => editorConfiguration.minimap.side = value}
+                onChange={option => editorConfiguration.minimap.side = option?.value}
               />
             </div>
           </div>
         </section>
 
         <section>
-          <SubTitle title="Line numbers" />
+          <SubTitle title="Line numbers"/>
           <Select
             id="editor-line-numbers-input"
-            options={Object.entries(EditorLineNumbersStyles).map(([value, label]) => ({
-              label,
-              value,
-            }))}
+            options={lineNumberOptions}
             value={editorConfiguration.lineNumbers}
-            onChange={({ value }) => editorConfiguration.lineNumbers = value}
+            onChange={option => editorConfiguration.lineNumbers = option?.value ?? defaultEditorConfig.lineNumbers}
             themeName="lens"
           />
         </section>

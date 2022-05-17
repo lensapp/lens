@@ -4,8 +4,9 @@
  */
 
 import { action, observable, reaction } from "mobx";
-import type { StorageHelper } from "../../../utils";
+import type { StorageLayer } from "../../../utils";
 import { autoBind, toJS } from "../../../utils";
+import type { CreateStorage } from "../../../utils/create-storage/create-storage";
 import type { TabId } from "../dock/store";
 
 export interface DockTabStoreOptions {
@@ -15,37 +16,26 @@ export interface DockTabStoreOptions {
 
 export type DockTabStorageState<T> = Record<TabId, T>;
 
-interface DockTabStoreDependencies {
-  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
+export interface DockTabStoreDependencies {
+  createStorage: CreateStorage;
 }
 
 export class DockTabStore<T> {
-  protected storage?: StorageHelper<DockTabStorageState<T>>;
-  private data = observable.map<TabId, T>();
+  protected readonly storage?: StorageLayer<DockTabStorageState<T>>;
+  private readonly data = observable.map<TabId, T>();
 
-  constructor(protected dependencies: DockTabStoreDependencies, protected options: DockTabStoreOptions) {
+  constructor(protected readonly dependencies: DockTabStoreDependencies, protected readonly options: DockTabStoreOptions) {
     autoBind(this);
+    this.options.autoInit ??= true;
 
-    this.options = {
-      autoInit: true,
-      ...this.options,
-    };
+    const { storageKey, autoInit } = this.options;
 
-    if (this.options.autoInit) {
-      this.init();
-    }
-  }
+    if (autoInit && storageKey) {
+      const storage = this.storage = this.dependencies.createStorage(storageKey, {});
 
-  protected init() {
-    const { storageKey } = this.options;
-
-    // auto-save to local-storage
-    if (storageKey) {
-      this.storage = this.dependencies.createStorage<T>(storageKey, {});
-
-      this.storage.whenReady.then(() => {
-        this.data.replace(this.storage.value);
-        reaction(() => this.toJSON(), data => this.storage.set(data));
+      storage.whenReady.then(() => {
+        this.data.replace(storage.value);
+        reaction(() => this.toJSON(), data => storage.set(data));
       });
     }
   }

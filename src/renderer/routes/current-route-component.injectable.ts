@@ -18,14 +18,14 @@ const currentRouteComponentInjectable = getInjectable({
       const currentRoute = route.get();
 
       if (!currentRoute) {
-        return null;
+        return undefined;
       }
 
       const routeSpecificComponent = di
         .injectMany(routeSpecificComponentInjectionToken)
         .find(matches({ route: currentRoute }));
 
-      return routeSpecificComponent.Component;
+      return routeSpecificComponent?.Component;
     });
   },
 });

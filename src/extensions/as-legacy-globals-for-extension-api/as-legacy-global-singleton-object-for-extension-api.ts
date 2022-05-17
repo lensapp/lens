@@ -7,17 +7,23 @@ import { asLegacyGlobalForExtensionApi } from "./as-legacy-global-object-for-ext
 import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
 import loggerInjectable from "../../common/logger.injectable";
 
-export const asLegacyGlobalSingletonForExtensionApi = <
-  Instance,
-  InstantiationParameter = void,
->(
-    injectable: Injectable<Instance, unknown, InstantiationParameter>,
-    instantiationParameter?: InstantiationParameter,
-  ) => {
+export interface LegacySingleton<T> {
+  createInstance(): T;
+  getInstance(): T;
+  resetInstance(): void;
+}
+
+export function asLegacyGlobalSingletonForExtensionApi<Instance>(injectable: Injectable<Instance, unknown, void>): LegacySingleton<Instance>;
+export function asLegacyGlobalSingletonForExtensionApi<Instance, InstantiationParameter>(injectable: Injectable<Instance, unknown, InstantiationParameter>, param: InstantiationParameter): LegacySingleton<Instance>;
+
+export function asLegacyGlobalSingletonForExtensionApi<Instance, InstantiationParameter>(
+  injectable: Injectable<Instance, unknown, InstantiationParameter>,
+  instantiationParameter?: InstantiationParameter,
+): LegacySingleton<Instance> {
   const instance = asLegacyGlobalForExtensionApi(
-    injectable,
+    injectable as never,
     instantiationParameter,
-  );
+  ) as Instance;
 
   return {
     createInstance: () => instance,
@@ -33,4 +39,4 @@ export const asLegacyGlobalSingletonForExtensionApi = <
       );
     },
   };
-};
+}

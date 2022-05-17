@@ -6,26 +6,27 @@
 import "./pod-details-tolerations.scss";
 import React from "react";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
-import type  { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
+import type  { Toleration, KubeObject } from "../../../common/k8s-api/kube-object";
 import { PodTolerations } from "./pod-tolerations";
 
-export interface PodDetailsTolerationsProps {
-  workload: WorkloadKubeObject;
+export interface KubeObjectWithTolerations extends KubeObject {
+  getTolerations(): Toleration[];
 }
 
-export class PodDetailsTolerations extends React.Component<PodDetailsTolerationsProps> {
-  render() {
-    const { workload } = this.props;
-    const tolerations = workload.getTolerations();
+export interface PodDetailsTolerationsProps {
+  workload: KubeObjectWithTolerations;
+}
 
-    if (!tolerations.length) return null;
+export function PodDetailsTolerations({ workload }: PodDetailsTolerationsProps) {
+  const tolerations = workload.getTolerations();
 
-    return (
-      <DrawerItem name="Tolerations" className="PodDetailsTolerations">
-        <DrawerParamToggler label={tolerations.length}>
-          <PodTolerations tolerations={tolerations} />
-        </DrawerParamToggler>
-      </DrawerItem>
-    );
-  }
+  if (!tolerations.length) return null;
+
+  return (
+    <DrawerItem name="Tolerations" className="PodDetailsTolerations">
+      <DrawerParamToggler label={tolerations.length}>
+        <PodTolerations tolerations={tolerations} />
+      </DrawerParamToggler>
+    </DrawerItem>
+  );
 }

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { secretsApi } from "../../../../../../common/k8s-api/endpoints";
+import { secretApi } from "../../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
@@ -30,7 +30,7 @@ export const CephFs: VolumeVariantComponent<"cephfs"> = (
               pod={pod}
               title="Secret"
               kubeRef={secretRef}
-              api={secretsApi}
+              api={secretApi}
             />
           )
           : (

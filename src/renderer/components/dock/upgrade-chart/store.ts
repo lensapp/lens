@@ -5,19 +5,18 @@
 
 import { action, computed, makeObservable } from "mobx";
 import type { TabId } from "../dock/store";
-import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
+import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import { getReleaseValues } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import type { StorageHelper } from "../../../utils";
+import assert from "assert";
 
 export interface IChartUpgradeData {
   releaseName: string;
   releaseNamespace: string;
 }
 
-interface Dependencies {
+export interface UpgradeChartTabStoreDependencies extends DockTabStoreDependencies {
   valuesStore: DockTabStore<string>;
-  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
 }
 
 export class UpgradeChartTabStore extends DockTabStore<IChartUpgradeData> {
@@ -29,7 +28,7 @@ export class UpgradeChartTabStore extends DockTabStore<IChartUpgradeData> {
     return this.dependencies.valuesStore;
   }
 
-  constructor(protected dependencies : Dependencies) {
+  constructor(protected readonly dependencies: UpgradeChartTabStoreDependencies) {
     super(dependencies, {
       storageKey: "chart_releases",
     });
@@ -40,13 +39,17 @@ export class UpgradeChartTabStore extends DockTabStore<IChartUpgradeData> {
   @action
   async reloadValues(tabId: TabId) {
     this.values.clearData(tabId); // reset
-    const { releaseName, releaseNamespace } = this.getData(tabId);
+    const data =  this.getData(tabId);
+
+    assert(data, "cannot reload values if no data");
+
+    const { releaseName, releaseNamespace } = data;
     const values = await getReleaseValues(releaseName, releaseNamespace, true);
 
     this.values.setData(tabId, values);
   }
 
-  getTabIdByRelease(releaseName: string): TabId {
+  getTabIdByRelease(releaseName: string) {
     return this.releaseNameReverseLookup.get(releaseName);
   }
 }

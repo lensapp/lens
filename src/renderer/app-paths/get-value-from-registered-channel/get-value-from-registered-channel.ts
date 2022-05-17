@@ -9,9 +9,8 @@ interface Dependencies {
   ipcRenderer: IpcRenderer;
 }
 
-export const getValueFromRegisteredChannel =
-  ({ ipcRenderer }: Dependencies) =>
+export const getValueFromRegisteredChannel = ({ ipcRenderer }: Dependencies) =>
   <TChannel extends Channel<TInstance>, TInstance>(
-      channel: TChannel,
-    ): Promise<TChannel["_template"]> =>
-      ipcRenderer.invoke(channel.name);
+    channel: TChannel,
+  ): Promise<TChannel["_template"]> =>
+    ipcRenderer.invoke(channel.name);

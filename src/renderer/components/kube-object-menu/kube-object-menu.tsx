@@ -13,9 +13,10 @@ import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterNameInjectable from "./dependencies/cluster-name.injectable";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
-import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
-import apiManagerInjectable from "./dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import type { HideDetails } from "../kube-detail-params/hide-details.injectable";
+import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 import type { OnKubeObjectContextMenuOpen } from "./on-context-menu-open.injectable";
 import onKubeObjectContextMenuOpenInjectable from "./on-context-menu-open.injectable";
 import type { KubeObjectContextMenuItem } from "../../kube-object/handler";
@@ -28,7 +29,7 @@ import withConfirmationInjectable from "../confirm-dialog/with-confirm.injectabl
 import { observer } from "mobx-react";
 
 export interface KubeObjectMenuProps<TKubeObject extends KubeObject> extends MenuActionsProps {
-  object: TKubeObject | null | undefined;
+  object: TKubeObject;
   editable?: boolean;
   removable?: boolean;
 }
@@ -36,8 +37,8 @@ export interface KubeObjectMenuProps<TKubeObject extends KubeObject> extends Men
 interface Dependencies {
   apiManager: ApiManager;
   kubeObjectMenuItems: React.ElementType[];
-  clusterName: string;
-  hideDetails: () => void;
+  clusterName: string | undefined;
+  hideDetails: HideDetails;
   createEditResourceTab: (kubeObject: KubeObject) => void;
   onContextMenuOpen: OnKubeObjectContextMenuOpen;
   withConfirmation: WithConfirmation;
@@ -54,7 +55,11 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
 
     return (
       <p>
-        Remove {object.kind} <b>{breadcrumb}</b> from <b>{this.props.clusterName}</b>?
+        {`Remove ${object.kind} `}
+        <b>{breadcrumb}</b>
+        {" from "}
+        <b>{this.props.clusterName}</b>
+        ?
       </p>
     );
   }
@@ -63,7 +68,11 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
     const { object, toolbar } = this.props;
 
     return this.props.kubeObjectMenuItems.map((MenuItem, index) => (
-      <MenuItem object={object} toolbar={toolbar} key={`menu-item-${index}`} />
+      <MenuItem
+        object={object}
+        toolbar={toolbar}
+        key={`menu-item-${index}`}
+      />
     ));
   }
 

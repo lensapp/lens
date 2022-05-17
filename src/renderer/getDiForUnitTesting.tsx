@@ -10,16 +10,13 @@ import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as
 import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import observableHistoryInjectable from "./navigation/observable-history.injectable";
-import { searchParamsOptions } from "./navigation";
 import { createMemoryHistory } from "history";
-import { createObservableHistory } from "mobx-observable-history";
 import registerIpcChannelListenerInjectable from "./app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
 import focusWindowInjectable from "./ipc-channel-listeners/focus-window.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
+import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";
@@ -32,16 +29,22 @@ import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectab
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
-import hotbarStoreInjectable from "../common/hotbar-store.injectable";
+import hotbarStoreInjectable from "../common/hotbars/store.injectable";
+import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
+import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
+import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
+import historyInjectable from "./navigation/history.injectable";
 import themeStoreInjectable from "./theme-store.injectable";
 import apiManagerInjectable from "./components/kube-object-menu/dependencies/api-manager.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 
-export const getDiForUnitTesting = (
-  { doGeneralOverrides } = { doGeneralOverrides: false },
-) => {
+export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
+  const {
+    doGeneralOverrides = false,
+  } = opts;
+
   const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
@@ -62,8 +65,13 @@ export const getDiForUnitTesting = (
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
 
+    di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
+    di.override(hostedClusterIdInjectable, () => undefined);
+
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
+
+    di.override(historyInjectable, () => createMemoryHistory());
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
@@ -91,26 +99,19 @@ export const getDiForUnitTesting = (
 
     di.override(apiManagerInjectable, () => new ApiManager());
 
-    di.override(getValueFromRegisteredChannelInjectable, () => () => undefined);
+    di.override(getValueFromRegisteredChannelInjectable, () => () => Promise.resolve(undefined as never));
     di.override(registerIpcChannelListenerInjectable, () => () => undefined);
 
     overrideFsWithFakes(di);
-
-    di.override(observableHistoryInjectable, () => {
-      const historyFake = createMemoryHistory();
-
-      return createObservableHistory(historyFake, {
-        searchParams: searchParamsOptions,
-      });
-    });
 
     di.override(focusWindowInjectable, () => () => {});
 
     di.override(loggerInjectable, () => ({
       warn: noop,
       debug: noop,
-      error: (message: string, ...args: any) => console.error(message, ...args),
+      error: noop,
       info: noop,
+      silly: noop,
     }));
 
     di.override(themeStoreInjectable, () => ({
@@ -118,7 +119,6 @@ export const getDiForUnitTesting = (
         type: "some-active-theme-type",
       },
     }));
-
   }
 
   return di;

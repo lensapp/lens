@@ -46,7 +46,11 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
 
     return (
       <MenuItem onClick={Util.prevDefault(() => this.showLogs(containers[0]))}>
-        <Icon material="subject" interactive={toolbar} tooltip={toolbar && "Pod Logs"}/>
+        <Icon
+          material="subject"
+          interactive={toolbar}
+          tooltip={toolbar && "Pod Logs"}
+        />
         <span className="title">Logs</span>
         {containers.length > 1 && (
           <>
@@ -63,7 +67,11 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
                   ) : null;
 
                   return (
-                    <MenuItem key={name} onClick={Util.prevDefault(() => this.showLogs(container))} className="flex align-center">
+                    <MenuItem
+                      key={name}
+                      onClick={Util.prevDefault(() => this.showLogs(container))}
+                      className="flex align-center"
+                    >
                       {brick}
                       <span>{name}</span>
                     </MenuItem>

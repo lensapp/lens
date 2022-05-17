@@ -7,12 +7,13 @@ import { computed } from "mobx";
 import rendererExtensionsInjectable from "../../extensions/renderer-extensions.injectable";
 import { getOrInsert, getOrInsertMap, readonly } from "../utils";
 import type { KubeObjectHandlerRegistration, KubeObjectHandlers } from "./handler";
-import { staticKubeObjectContextMenuHandlers } from "./static-handlers";
+import { staticKubeObjectHandlerInjectionToken } from "./handler";
 
 const kubeObjectHandlersInjectable = getInjectable({
   id: "kube-object-handlers",
   instantiate: (di) => {
     const extensions = di.inject(rendererExtensionsInjectable);
+    const staticKubeObjectContextMenuHandlers = di.injectMany(staticKubeObjectHandlerInjectionToken);
 
     return computed(() => {
       const res = new Map<string, Map<string, Partial<KubeObjectHandlers>[]>>();

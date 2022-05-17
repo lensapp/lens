@@ -10,16 +10,22 @@ import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
 import type { DatasetTooltipLabel, PieChartData } from "../chart";
 import { PieChart } from "../chart";
-import { cssVar } from "../../utils";
-import { ThemeStore } from "../../theme.store";
+import { cssVar, object } from "../../utils";
+import type { ThemeStore } from "../../themes/store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
 
 export interface OverviewWorkloadStatusProps {
-  status: Record<string, number>;
+  status: Partial<Record<string, number>>;
+}
+
+interface Dependencies {
+  themeStore: ThemeStore;
 }
 
 @observer
-export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStatusProps> {
-  elem?: HTMLElement;
+class NonInjectedOverviewWorkloadStatus extends React.Component<OverviewWorkloadStatusProps & Dependencies> {
+  private elem: HTMLElement | null = null;
 
   renderChart() {
     if (!this.elem) {
@@ -32,12 +38,12 @@ export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStat
       datasets: [],
     };
 
-    const statuses = Object.entries(this.props.status).filter(([, val]) => val > 0);
+    const statuses = object.entries(this.props.status).filter(([, val]) => val > 0);
 
     if (statuses.length === 0) {
       chartData.datasets.push({
         data: [1],
-        backgroundColor: [ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor],
+        backgroundColor: [this.props.themeStore.activeTheme.colors.pieChartDefaultColor],
         label: "Empty",
       });
     } else {
@@ -84,3 +90,10 @@ export class OverviewWorkloadStatus extends React.Component<OverviewWorkloadStat
     );
   }
 }
+
+export const OverviewWorkloadStatus = withInjectables<Dependencies, OverviewWorkloadStatusProps>(NonInjectedOverviewWorkloadStatus, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+  }),
+});

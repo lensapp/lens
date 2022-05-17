@@ -3,46 +3,34 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { noop } from "lodash/fp";
-import { action, computed, observable, makeObservable } from "mobx";
+import { action, observable } from "mobx";
 import type { ForwardedPort } from "../port-forward-item";
 
-interface PortForwardDialogOpenOptions {
+export interface PortForwardDialogOpenOptions {
+  openInBrowser: boolean;
+  onClose: () => void;
+}
+
+export interface PortForwardDialogData {
+  portForward: ForwardedPort;
+  useHttps: boolean;
   openInBrowser: boolean;
   onClose: () => void;
 }
 
 export class PortForwardDialogModel {
-  portForward: ForwardedPort = null;
-  useHttps = false;
-  openInBrowser = false;
-  onClose = noop;
+  readonly data = observable.box<PortForwardDialogData | undefined>();
 
-  constructor() {
-    makeObservable(this, {
-      isOpen: computed,
-      portForward: observable,
-      useHttps: observable,
-      openInBrowser: observable,
-
-      open: action,
-      close: action,
+  open = action((portForward: ForwardedPort, options?: PortForwardDialogOpenOptions) => {
+    this.data.set({
+      onClose: options?.onClose ?? noop,
+      openInBrowser: options?.openInBrowser ?? false,
+      portForward,
+      useHttps: portForward.protocol === "https",
     });
-  }
+  });
 
-  get isOpen() {
-    return !!this.portForward;
-  }
-
-  open = (portForward: ForwardedPort, options: PortForwardDialogOpenOptions = { openInBrowser: false, onClose: noop }) => {
-    this.portForward = portForward;
-    this.useHttps = portForward.protocol === "https";
-    this.openInBrowser = options.openInBrowser;
-    this.onClose = options.onClose;
-  };
-
-  close = () => {
-    this.portForward = null;
-    this.useHttps = false;
-    this.openInBrowser = false;
-  };
+  close = action(() => {
+    this.data.set(undefined);
+  });
 }

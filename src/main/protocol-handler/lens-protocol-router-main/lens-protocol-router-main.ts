@@ -85,7 +85,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
         await this._routeToExtension(url);
       }
     } catch (error) {
-      broadcastMessage(ProtocolHandlerInvalid, error.toString(), rawUrl);
+      broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
 
       if (error instanceof proto.RoutingError) {
         logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { url: error.url });
@@ -119,7 +119,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return "";
   }
 
-  protected _routeToInternal(url: URLParse<Record<string, string>>): RouteAttempt {
+  protected _routeToInternal(url: URLParse<Record<string, string | undefined>>): RouteAttempt {
     const rawUrl = url.toString(); // for sending to renderer
     const attempt = super._routeToInternal(url);
 
@@ -128,7 +128,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return attempt;
   }
 
-  protected async _routeToExtension(url: URLParse<Record<string, string>>): Promise<RouteAttempt> {
+  protected async _routeToExtension(url: URLParse<Record<string, string | undefined>>): Promise<RouteAttempt> {
     const rawUrl = url.toString(); // for sending to renderer
 
     /**

@@ -3,36 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable } from "@ogre-tools/injectable";
 import { apiPrefix } from "../../../common/vars";
-import type { Route } from "../../router/router";
-import { routeInjectionToken } from "../../router/router.injectable";
-import type { MetricProviderInfo } from "../../../common/k8s-api/endpoints/metrics.api";
+import { getRouteInjectable } from "../../router/router.injectable";
+import { PrometheusProviderRegistry } from "../../prometheus";
+import { route } from "../../router/route";
 import prometheusProviderRegistryInjectable from "../../prometheus/prometheus-provider-registry.injectable";
 
-const getMetricProvidersRouteInjectable = getInjectable({
+const getMetricProvidersRouteInjectable = getRouteInjectable({
   id: "get-metric-providers-route",
 
-  instantiate: (di): Route<MetricProviderInfo[]> => {
+  instantiate: () => {
     const prometheusProviderRegistry = di.inject(prometheusProviderRegistryInjectable);
 
-    return {
+    return route({
       method: "get",
       path: `${apiPrefix}/metrics/providers`,
-
-      handler: () => {
-        const providers: MetricProviderInfo[] = [];
-
-        for (const { name, id, isConfigurable } of prometheusProviderRegistry.providers.values()) {
-          providers.push({ name, id, isConfigurable });
-        }
-
-        return { response: providers };
-      },
-    };
-  },
-
-  injectionToken: routeInjectionToken,
+    })(() => ({
+      response: Array.from(
+        prometheusProviderRegistry
+          .providers
+          .values(),
+        ({ name, id, isConfigurable }) => ({ name, id, isConfigurable }),
+      ),
+    }));
+  }
 });
 
 export default getMetricProvidersRouteInjectable;

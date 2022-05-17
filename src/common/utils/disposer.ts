@@ -11,7 +11,7 @@ interface Extendable<T> {
 
 export type ExtendableDisposer = Disposer & Extendable<Disposer>;
 
-export function disposer(...args: Disposer[]): ExtendableDisposer {
+export function disposer(...args: (Disposer | undefined | null)[]): ExtendableDisposer {
   const res = () => {
     args.forEach(dispose => dispose?.());
     args.length = 0;

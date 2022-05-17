@@ -9,7 +9,7 @@
  * @param channel The current channel that did not have a new version associated with it
  * @returns The channel name of the next release version
  */
-export function nextUpdateChannel(defaultChannel: string, channel: string): string {
+export function nextUpdateChannel(defaultChannel: string, channel: string | null): string {
   switch (channel) {
     case "alpha":
       return "beta";

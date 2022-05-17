@@ -19,14 +19,19 @@ export const setLegacyGlobalDiForExtensionApi = (
 };
 
 export const getLegacyGlobalDiForExtensionApi = () => {
-  const globalDis = [...legacyGlobalDis.values()];
-
-  if (globalDis.length > 1) {
+  if (legacyGlobalDis.size > 1) {
     throw new Error("Tried to get DI container using legacy globals where there is multiple containers available.");
   }
 
-  return globalDis[0];
+  const [di] = [...legacyGlobalDis.values()];
+
+  if (!di) {
+    throw new Error("Tried to get DI container using legacy globals where there is no containers available.");
+  }
+
+  return di;
 };
 
-export const getEnvironmentSpecificLegacyGlobalDiForExtensionApi = (environment: Environments) =>
-  legacyGlobalDis.get(environment);
+export function getEnvironmentSpecificLegacyGlobalDiForExtensionApi(environment: Environments) {
+  return legacyGlobalDis.get(environment);
+}

@@ -13,7 +13,7 @@ const config: MutationObserverInit = {
 };
 
 export function useMutationObserver(
-  root: Element,
+  root: Element | undefined | null,
   callback: MutationCallback,
   options: MutationObserverInit = config,
 ) {

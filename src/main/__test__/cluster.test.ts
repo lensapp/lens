@@ -2,31 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    printf: jest.fn(),
-    splat: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue(logger),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
 
 jest.mock("../../common/ipc");
 jest.mock("request");
@@ -42,6 +17,8 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
+import type { ClusterContextHandler } from "../context-handler/context-handler";
+import { parse } from "url";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 
@@ -51,7 +28,7 @@ describe("create clusters", () => {
   let cluster: Cluster;
   let createCluster: (model: ClusterModel) => Cluster;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -84,9 +61,17 @@ describe("create clusters", () => {
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
-    di.override(createContextHandlerInjectable, () => () => {
-      throw new Error("you should never come here");
-    });
+    di.override(createContextHandlerInjectable, () => (cluster) => ({
+      restartServer: jest.fn(),
+      stopServer: jest.fn(),
+      clusterUrl: parse(cluster.apiUrl),
+      getApiTarget: jest.fn(),
+      getPrometheusDetails: jest.fn(),
+      resolveAuthProxyCa: jest.fn(),
+      resolveAuthProxyUrl: jest.fn(),
+      setupPrometheus: jest.fn(),
+      ensureServer: jest.fn(),
+    } as ClusterContextHandler));
 
     createCluster = di.inject(createClusterInjectionToken);
 
@@ -100,6 +85,7 @@ describe("create clusters", () => {
   });
 
   afterEach(() => {
+    cluster.disconnect();
     mockFs.restore();
   });
 
@@ -121,11 +107,6 @@ describe("create clusters", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
     });
-
-    cluster.contextHandler = {
-      ensureServer: jest.fn(),
-      stopServer: jest.fn(),
-    } as any;
 
     jest.spyOn(cluster, "reconnect");
     jest.spyOn(cluster, "refreshConnectionStatus");

@@ -27,16 +27,17 @@ exports[`welcome - navigation using application menu when navigating to welcome 
           style="width: 320px;"
         >
           <h2>
-            Welcome to 
-            OpenLens
-             5!
+            Welcome to OpenLens 5!
           </h2>
           <p>
-            To get you started we have auto-detected your clusters in your kubeconfig file and added them to the catalog, your centralized view for managing all your cloud-native resources.
-            <br />
-            <br />
-            If you have any questions or feedback, please join our
+            To get you started we have auto-detected your clusters in your
              
+            kubeconfig file and added them to the catalog, your centralized
+             
+            view for managing all your cloud-native resources.
+            <br />
+            <br />
+            If you have any questions or feedback, please join our 
             <a
               class="link"
               href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"

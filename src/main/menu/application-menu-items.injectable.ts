@@ -26,7 +26,7 @@ import applicationWindowInjectable from "../start-main-application/lens-window/a
 import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 
-function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
+function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
 }
 
@@ -146,19 +146,14 @@ const applicationMenuItemsInjectable = getInjectable({
               },
             },
           ]),
-
           { type: "separator" },
-
-          ...(isMac
-            ? ([
-              {
-                role: "close",
-                label: "Close Window",
-                accelerator: "Shift+Cmd+W",
-              },
-            ] as MenuItemConstructorOptions[])
-            : []),
-
+          ...ignoreIf(!isMac, [
+            {
+              role: "close",
+              label: "Close Window",
+              accelerator: "Shift+Cmd+W",
+            },
+          ]),
           ...ignoreIf(isMac, [
             {
               label: "Exit",
@@ -315,7 +310,9 @@ const applicationMenuItemsInjectable = getInjectable({
 
       // Modify menu from extensions-api
       for (const menuItem of electronMenuItems.get()) {
-        if (!appMenu.has(menuItem.parentId)) {
+        const parentMenu = appMenu.get(menuItem.parentId);
+
+        if (!parentMenu) {
           logger.error(
             `[MENU]: cannot register menu item for parentId=${menuItem.parentId}, parent item doesn't exist`,
             { menuItem },
@@ -324,7 +321,7 @@ const applicationMenuItemsInjectable = getInjectable({
           continue;
         }
 
-        appMenu.get(menuItem.parentId).submenu.push(menuItem);
+        (parentMenu.submenu ??= []).push(menuItem);
       }
 
       if (!isMac) {

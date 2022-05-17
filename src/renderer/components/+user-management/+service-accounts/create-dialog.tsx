@@ -18,7 +18,7 @@ import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { serviceAccountsStore } from "./store";
+import { serviceAccountStore } from "./legacy-store";
 
 export interface CreateServiceAccountDialogProps extends Partial<DialogProps> {
 }
@@ -47,13 +47,13 @@ export class CreateServiceAccountDialog extends React.Component<CreateServiceAcc
     const { name, namespace } = this;
 
     try {
-      const serviceAccount = await serviceAccountsStore.create({ namespace, name });
+      const serviceAccount = await serviceAccountStore.create({ namespace, name });
 
       this.name = "";
       showDetails(serviceAccount.selfLink);
       CreateServiceAccountDialog.close();
     } catch (err) {
-      Notifications.error(err);
+      Notifications.checkedError(err, "Unknown error occured while creating service account");
     }
   };
 
@@ -78,14 +78,15 @@ export class CreateServiceAccountDialog extends React.Component<CreateServiceAcc
               placeholder="Enter a name"
               trim
               validators={systemName}
-              value={name} onChange={v => this.name = v.toLowerCase()}
+              value={name}
+              onChange={v => this.name = v.toLowerCase()}
             />
             <SubTitle title="Namespace" />
             <NamespaceSelect
               id="create-dialog-namespace-select-input"
               themeName="light"
               value={namespace}
-              onChange={({ value }) => this.namespace = value}
+              onChange={option => this.namespace = option?.value ?? "default"}
             />
           </WizardStep>
         </Wizard>

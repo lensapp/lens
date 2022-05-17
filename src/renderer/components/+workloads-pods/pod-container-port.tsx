@@ -7,7 +7,7 @@ import "./pod-container-port.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { Pod } from "../../../common/k8s-api/endpoints";
+import type { ContainerPort, Pod } from "../../../common/k8s-api/endpoints";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
@@ -24,11 +24,7 @@ import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error
 
 export interface PodContainerPortProps {
   pod: Pod;
-  port: {
-    name?: string;
-    containerPort: number;
-    protocol: string;
-  };
+  port: ContainerPort;
 }
 
 interface Dependencies {
@@ -64,20 +60,22 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
   @action
   async checkExistingPortForwarding() {
     const { pod, port } = this.props;
-    let portForward: ForwardedPort = {
-      kind: "pod",
-      name: pod.getName(),
-      namespace: pod.getNs(),
-      port: port.containerPort,
-      forwardPort: this.forwardPort,
-    };
+    let portForward: ForwardedPort | undefined;
 
     try {
-      portForward = await this.portForwardStore.getPortForward(portForward);
+      portForward = await this.portForwardStore.getPortForward({
+        kind: "pod",
+        name: pod.getName(),
+        namespace: pod.getNs(),
+        port: port.containerPort,
+        forwardPort: this.forwardPort,
+      });
     } catch (error) {
       this.isPortForwarded = false;
       this.isActive = false;
+    }
 
+    if (!portForward) {
       return;
     }
 
@@ -180,7 +178,11 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {text}
         </span>
-        <Button primary onClick={portForwardAction}> {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."} </Button>
+        <Button primary onClick={portForwardAction}> 
+          {" "}
+          {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."}
+          {" "}
+        </Button>
         {this.waiting && (
           <Spinner />
         )}

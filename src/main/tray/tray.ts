@@ -17,7 +17,7 @@ import type { TrayMenuRegistration } from "./tray-menu-registration";
 const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
-export let tray: Tray;
+export let tray: Tray | null = null;
 
 export function initTray(
   trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
@@ -44,7 +44,7 @@ export function initTray(
       try {
         const menu = createTrayMenu(toJS(trayMenuItems.get()), navigateToPreferences, stopServicesAndExitApp, isAutoUpdateEnabled, showApplicationWindow, showAbout);
 
-        tray.setContextMenu(menu);
+        tray?.setContextMenu(menu);
       } catch (error) {
         logger.error(`${TRAY_LOG_PREFIX}: building failed`, { error });
       }
@@ -61,7 +61,7 @@ function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron
     ...trayItem,
     submenu: trayItem.submenu ? trayItem.submenu.map(getMenuItemConstructorOptions) : undefined,
     click: trayItem.click ? () => {
-      trayItem.click(trayItem);
+      trayItem.click?.(trayItem);
     } : undefined,
   };
 }

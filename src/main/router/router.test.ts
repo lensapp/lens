@@ -5,7 +5,7 @@
 
 import routerInjectable, { routeInjectionToken } from "./router.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { Router, RouteHandler, Route } from "./router";
+import type { Router } from "./router";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Request } from "mock-http";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -18,7 +18,7 @@ import directoryForUserDataInjectable from "../../common/app-paths/directory-for
 
 describe("router", () => {
   let router: Router;
-  let routeHandlerMock: AsyncFnMock<RouteHandler<any>>;
+  let routeHandlerMock: AsyncFnMock<RouteHandler<any, string>>;
 
   beforeEach(async () => {
     routeHandlerMock = asyncFn();
@@ -37,7 +37,7 @@ describe("router", () => {
         method: "get",
         path: "/some-path",
         handler: routeHandlerMock,
-      } as Route<any>),
+      } as Route<any, string>),
 
       injectionToken: routeInjectionToken,
     });
@@ -54,7 +54,7 @@ describe("router", () => {
   describe("when navigating to the route", () => {
     let actualPromise: Promise<boolean>;
     let clusterStub: Cluster;
-    let requestStub: Request;
+    let requestStub: SetRequired<Request, "url" | "method">;
     let responseStub: any;
 
     beforeEach(() => {
@@ -64,7 +64,7 @@ describe("router", () => {
         headers: {
           "content-type": "application/json",
         },
-      });
+      }) as SetRequired<Request, "url" | "method">;
 
       responseStub = { end: jest.fn(), setHeader: jest.fn(), write: jest.fn(), statusCode: undefined };
 

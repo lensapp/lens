@@ -9,12 +9,16 @@ interface Dependencies {
   app: App;
 }
 
-export const getElectronAppPath =
-  ({ app }: Dependencies) =>
-    (name: PathName) : string | null => {
-      try {
-        return app.getPath(name);
-      } catch (e) {
-        return "";
-      }
-    };
+export type GetElectronAppPath = (name: PathName) => string;
+
+export const getElectronAppPath = ({
+  app,
+}: Dependencies): GetElectronAppPath => (
+  (name) => {
+    try {
+      return app.getPath(name);
+    } catch (e) {
+      return "";
+    }
+  }
+);

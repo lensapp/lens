@@ -21,7 +21,7 @@ import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize
 
 export interface HotbarIconProps extends AvatarProps {
   uid: string;
-  source: string;
+  source?: string;
   material?: string;
   onMenuOpen?: () => void;
   active?: boolean;
@@ -51,12 +51,16 @@ const NonInjectedHotbarIcon = observer(({
 
   return (
     <div className={cssNames(styles.HotbarIcon, className, { [styles.contextMenuAvailable]: menuItems.length > 0 })}>
-      {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
+      {tooltip && (
+        <Tooltip targetId={id}>
+          {tooltip}
+        </Tooltip>
+      )}
       <Avatar
         {...rest}
         id={id}
         title={title}
-        colorHash={`${title}-${source}`}
+        colorHash={source ? `${title}-${source}` : title}
         className={cssNames(styles.avatar, { [styles.active]: active, [styles.hasImage]: !!src })}
         disabled={disabled}
         size={size}
@@ -76,7 +80,8 @@ const NonInjectedHotbarIcon = observer(({
           onMenuOpen?.();
           toggleMenu();
         }}
-        close={() => toggleMenu()}>
+        close={() => toggleMenu()}
+      >
         {
           menuItems
             .map(normalizeMenuItem)

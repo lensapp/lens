@@ -32,7 +32,7 @@ compile-dev: node_modules
 ci-validate-dev: binaries/client build-extensions compile-dev
 
 .PHONY: dev
-dev: binaries/client build/tray/trayIconTemplate.png build-extensions
+dev: binaries/client build-extensions
 	rm -rf static/build/
 	yarn dev
 
@@ -53,7 +53,7 @@ integration: build
 	yarn integration
 
 .PHONY: build
-build: node_modules binaries/client build/tray/trayIconTemplate.png
+build: node_modules binaries/client
 	yarn run npm:fix-build-version
 	$(MAKE) build-extensions -B
 	yarn run compile
@@ -63,15 +63,16 @@ ifeq "$(DETECTED_OS)" "Windows"
 endif
 	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
 
+.PHONY: update-extension-locks
+update-extension-locks:
+	$(foreach dir, $(extensions), (cd $(dir) && rm package-lock.json && ../../node_modules/.bin/npm install --package-lock-only);)
+
 .NOTPARALLEL: $(extension_node_modules)
 $(extension_node_modules): node_modules
 	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
 $(extension_dists): src/extensions/npm/extensions/dist $(extension_node_modules)
 	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
-
-build/tray/trayIconTemplate.png: node_modules
-	yarn ts-node ./build/generate-tray-icons.ts
 
 .PHONY: clean-old-extensions
 clean-old-extensions:
@@ -84,19 +85,17 @@ build-extensions: node_modules clean-old-extensions $(extension_dists)
 test-extensions: $(extension_node_modules)
 	$(foreach dir, $(extensions), (cd $(dir) && npm run test || exit $?);)
 
-.PHONY: copy-extension-themes
-copy-extension-themes:
-	mkdir -p src/extensions/npm/extensions/dist/src/renderer/themes/
-	cp $(wildcard src/renderer/themes/*.json) src/extensions/npm/extensions/dist/src/renderer/themes/
-
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
 
-src/extensions/npm/extensions/dist: node_modules
+src/extensions/npm/extensions/dist: src/extensions/npm/extensions/node_modules
 	yarn compile:extension-types
 
+src/extensions/npm/extensions/node_modules: src/extensions/npm/extensions/package.json
+	cd src/extensions/npm/extensions/ && ../../../../node_modules/.bin/npm install --no-audit --no-fund
+
 .PHONY: build-npm
-build-npm: build-extension-types copy-extension-themes src/extensions/npm/extensions/__mocks__
+build-npm: build-extension-types src/extensions/npm/extensions/__mocks__
 	yarn npm:fix-package-version
 
 .PHONY: build-extension-types
@@ -129,7 +128,6 @@ clean: clean-npm clean-extensions
 	rm -rf binaries/client
 	rm -rf dist
 	rm -rf static/build
-	rm -rf build/tray
 	rm -rf node_modules
 	rm -rf site
 	rm -rf docs/extensions/api

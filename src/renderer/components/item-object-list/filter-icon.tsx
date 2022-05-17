@@ -6,7 +6,7 @@
 import React from "react";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
-import { FilterType } from "./page-filters.store";
+import { FilterType } from "./page-filters/store";
 
 export interface FilterIconProps extends Partial<IconProps> {
   type: FilterType;
@@ -17,9 +17,21 @@ export function FilterIcon(props: FilterIconProps) {
 
   switch (type) {
     case FilterType.SEARCH:
-      return <Icon small material="search" {...iconProps}/>;
+      return (
+        <Icon
+          small
+          material="search"
+          {...iconProps}
+        />
+      );
 
     default:
-      return <Icon small material="filter_list" {...iconProps}/>;
+      return (
+        <Icon
+          small
+          material="filter_list"
+          {...iconProps}
+        />
+      );
   }
 }

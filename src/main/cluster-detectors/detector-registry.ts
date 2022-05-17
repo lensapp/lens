@@ -13,12 +13,14 @@ interface Dependencies {
   k8sRequest: K8sRequest;
 }
 
+export type DetectorConstructor = new (cluster: Cluster) => BaseClusterDetector;
+
 export class DetectorRegistry {
   constructor(private dependencies: Dependencies) {}
 
-  registry = observable.array<typeof BaseClusterDetector>([], { deep: false });
+  registry = observable.array<DetectorConstructor>([], { deep: false });
 
-  add(detectorClass: typeof BaseClusterDetector): this {
+  add(detectorClass: DetectorConstructor): this {
     this.registry.push(detectorClass);
 
     return this;

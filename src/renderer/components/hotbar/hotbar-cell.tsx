@@ -19,7 +19,7 @@ export function HotbarCell({ innerRef, children, className, ...rest }: HotbarCel
   const [animating, setAnimating] = useState(false);
   const onAnimationEnd = () => { setAnimating(false); };
   const onClick = () => {
-    setAnimating(!className.includes("isDraggingOver"));
+    setAnimating(!className?.includes("isDraggingOver"));
   };
 
   return (

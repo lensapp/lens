@@ -12,7 +12,7 @@ const allowedResourcesInjectable = getInjectable({
   instantiate: (di) => {
     const cluster = di.inject(hostedClusterInjectable);
 
-    return computed(() => new Set(cluster.allowedResources), {
+    return computed(() => new Set(cluster?.allowedResources), {
       // This needs to be here so that during refresh changes are only propogated when necessary
       equals: (cur, prev) => comparer.structural(cur, prev),
     });

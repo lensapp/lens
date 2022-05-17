@@ -56,24 +56,24 @@ export interface ResizingAnchorProps {
   getCurrentExtent: () => number;
 
   disabled?: boolean;
-  placement?: ResizeSide;
-  growthDirection?: ResizeGrowthDirection;
+  placement: ResizeSide;
+  growthDirection: ResizeGrowthDirection;
 
   // Ability to restrict which mouse buttons are allowed to resize this component
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
   onlyButtons?: number;
 
   // onStart is called when the ResizeAnchor is first clicked (mouse down)
-  onStart?: () => void;
+  onStart: () => void;
 
   // onEnd is called when the ResizeAnchor is released (mouse up)
-  onEnd?: () => void;
+  onEnd: () => void;
 
   /**
    * onDrag is called whenever there is a mousemove event. All calls will be
    * bounded by matching `onStart` and `onEnd` calls.
    */
-  onDrag?: (newExtent: number) => void;
+  onDrag: (newExtent: number) => void;
 
   // onDoubleClick is called when the the ResizeAnchor is double clicked
   onDoubleClick?: () => void;
@@ -81,8 +81,8 @@ export interface ResizingAnchorProps {
   /**
    * The following two extents represent the max and min values set to `onDrag`
    */
-  maxExtent?: number;
-  minExtent?: number;
+  maxExtent: number;
+  minExtent: number;
 
   /**
    * The following events are triggered with respect to the above values.
@@ -272,15 +272,15 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
     onDrag(boundedExtent);
 
     if (previousExtent <= minExtent && minExtent <= unboundedExtent) {
-      onMinExtentExceed();
+      onMinExtentExceed?.();
     } else if (previousExtent >= minExtent && minExtent >= unboundedExtent) {
-      onMinExtentSubceed();
+      onMinExtentSubceed?.();
     }
 
     if (previousExtent <= maxExtent && maxExtent <= unboundedExtent) {
-      onMaxExtentExceed();
+      onMaxExtentExceed?.();
     } else if (previousExtent >= maxExtent && maxExtent >= unboundedExtent) {
-      onMaxExtentSubceed();
+      onMaxExtentSubceed?.();
     }
   }, 100);
 
@@ -298,11 +298,13 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
   render() {
     const { disabled, direction, placement, onDoubleClick } = this.props;
 
-    return <div
-      ref={this.ref}
-      className={cssNames("ResizingAnchor", direction, placement, { disabled, resizing: this.isDragging, wasDragging: this.wasDragging })}
-      onMouseDown={this.onDragInit}
-      onDoubleClick={onDoubleClick}
-    />;
+    return (
+      <div
+        ref={this.ref}
+        className={cssNames("ResizingAnchor", direction, placement, { disabled, resizing: this.isDragging, wasDragging: this.wasDragging })}
+        onMouseDown={this.onDragInit}
+        onDoubleClick={onDoubleClick}
+      />
+    );
   }
 }

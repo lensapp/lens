@@ -30,7 +30,11 @@ export function DrawerItem({
   }
 
   return (
-    <div {...elemProps} className={cssNames("DrawerItem", className, { labelsOnly })} title={title}>
+    <div
+      {...elemProps}
+      className={cssNames("DrawerItem", className, { labelsOnly })}
+      title={title}
+    >
       <span className="name">{name}</span>
       <span className="value">{displayBooleans(renderBoolean, children)}</span>
     </div>

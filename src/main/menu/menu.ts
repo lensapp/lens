@@ -30,9 +30,7 @@ export const showAbout = ({ showMessagePopup }: Dependencies) => async () => {
   );
 };
 
-export function buildMenu(
-  applicationMenuItems: MenuItemOpts[],
-) {
+export function buildMenu(applicationMenuItems: MenuItemOpts[]) {
   Menu.setApplicationMenu(
     Menu.buildFromTemplate(applicationMenuItems),
   );

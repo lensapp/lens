@@ -3,12 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import kubernetesClusterCategoryInjectable from "../../common/catalog/categories/kubernetes-cluster.injectable";
+import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+
 export {
   KubernetesCluster,
-  kubernetesClusterCategory,
   GeneralEntity,
   WebLink,
 } from "../../common/catalog-entities";
+
+export const kubernetesClusterCategory = asLegacyGlobalForExtensionApi(kubernetesClusterCategoryInjectable);
 
 export type {
   KubernetesClusterPrometheusMetrics,

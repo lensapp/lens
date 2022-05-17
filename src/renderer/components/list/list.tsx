@@ -9,15 +9,16 @@ import { SearchInput } from "../input";
 
 import type { UseTableOptions } from "react-table";
 import { ReactTable } from "../table/react-table";
-export type SearchFilter = (item: object) => string | number;
 
-export interface ListProps extends UseTableOptions<any> {
-  items: object[];
-  filters: SearchFilter[];
+export type SearchFilter<T> = (item: T) => string | number;
+
+export interface ListProps<T> extends UseTableOptions<any> {
+  items: T[];
+  filters: SearchFilter<T>[];
   title?: React.ReactNode;
 }
 
-export function List({ columns, data, title, items, filters }: ListProps) {
+export function List<T>({ columns, data, title, items, filters }: ListProps<T>) {
   const [search, setSearch] = useState<string>("");
   const query = search.toLowerCase();
 

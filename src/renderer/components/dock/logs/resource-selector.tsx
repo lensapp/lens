@@ -12,17 +12,11 @@ import { Badge } from "../../badge";
 import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import type { LogTabViewModel } from "./logs-view-model";
-import type { IPodContainer, Pod } from "../../../../common/k8s-api/endpoints";
+import type { PodContainer, Pod } from "../../../../common/k8s-api/endpoints";
+import type { SingleValue } from "react-select";
 
 export interface LogResourceSelectorProps {
   model: LogTabViewModel;
-}
-
-function getSelectOptions(containers: IPodContainer[]): SelectOption<string>[] {
-  return containers.map(container => ({
-    value: container.name,
-    label: container.name,
-  }));
 }
 
 export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps) => {
@@ -40,68 +34,85 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     return null;
   }
 
-  const onContainerChange = (option: SelectOption<string>) => {
+  const podOptions = pods.map(pod => ({
+    value: pod,
+    label: pod.getName(),
+  }));
+  const allContainers = pod.getAllContainers();
+  const container = allContainers.find(container => container.name === selectedContainer) ?? null;
+  const onContainerChange = (option: SingleValue<SelectOption<PodContainer>>) => {
+    if (!option) {
+      return;
+    }
+
     model.updateLogTabData({
-      selectedContainer: option.value,
+      selectedContainer: option.value.name,
     });
     model.reloadLogs();
   };
 
-  const onPodChange = ({ value }: SelectOption<Pod>) => {
+  const onPodChange = (option: SingleValue<SelectOption<Pod>>) => {
+    if (!option) {
+      return;
+    }
+
     model.updateLogTabData({
-      selectedPodId: value.getId(),
-      selectedContainer: value.getAllContainers()[0]?.name,
+      selectedPodId: option.value.getId(),
+      selectedContainer: option.value.getAllContainers()[0]?.name,
     });
-    model.renameTab(`Pod ${value.getName()}`);
+    model.renameTab(`Pod ${option.value.getName()}`);
     model.reloadLogs();
   };
 
   const containerSelectOptions = [
     {
       label: "Containers",
-      options: getSelectOptions(pod.getContainers()),
+      options: pod.getContainers().map(container => ({
+        value: container,
+        label: container.name,
+      })),
     },
     {
       label: "Init Containers",
-      options: getSelectOptions(pod.getInitContainers()),
+      options: pod.getInitContainers().map(container => ({
+        value: container,
+        label: container.name,
+      })),
     },
   ];
 
-  const podSelectOptions = pods.map(pod => ({
-    label: pod.getName(),
-    value: pod,
-  }));
-
   return (
     <div className="LogResourceSelector flex gaps align-center">
-      <span>Namespace</span> <Badge data-testid="namespace-badge" label={pod.getNs()}/>
+      <span>Namespace</span>
+      {" "}
+      <Badge data-testid="namespace-badge" label={pod.getNs()} />
       {
         owner && (
           <>
-            <span>Owner</span> <Badge data-testid="namespace-badge" label={`${owner.kind} ${owner.name}`}/>
+            <span>Owner</span>
+            {" "}
+            <Badge data-testid="namespace-badge" label={`${owner.kind} ${owner.name}`} />
           </>
         )
       }
       <span>Pod</span>
       <Select
-        id="pod-selection-input"
-        options={podSelectOptions}
-        value={podSelectOptions.find(opt => opt.value === pod)}
-        formatOptionLabel={option => option.label}
+        options={podOptions}
+        value={pod}
+        isClearable={false}
         onChange={onPodChange}
-        autoConvertOptions={false}
         className="pod-selector"
         menuClass="pod-selector-menu"
       />
       <span>Container</span>
-      <Select
+      <Select<PodContainer, SelectOption<PodContainer>, false>
         id="container-selector-input"
         options={containerSelectOptions}
-        value={{ label: selectedContainer, value: selectedContainer }}
+        value={container}
         onChange={onContainerChange}
-        autoConvertOptions={false}
         className="container-selector"
         menuClass="container-selector-menu"
+        controlShouldRenderValue
       />
     </div>
   );

@@ -27,7 +27,7 @@ const NonInjectedOverviewStatuses = observer(
           <div className="workload" key={workload.resourceName}>
             <div className="title">
               <a onClick={workload.open}>
-                {workload.title} ({workload.amountOfItems.get()})
+                {`${workload.title} (${workload.amountOfItems.get()})`}
               </a>
             </div>
 

@@ -11,23 +11,31 @@ import { computed, makeObservable } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { nodesStore } from "../+nodes/nodes.store";
-import { eventStore } from "../+events/event.store";
 import { cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
-import { ThemeStore } from "../../theme.store";
-import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ThemeStore } from "../../themes/store";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectAge } from "../kube-object/age";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
+import type { NodeStore } from "../+nodes/store";
+import type { EventStore } from "../+events/store";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import eventStoreInjectable from "../+events/store.injectable";
+import nodeStoreInjectable from "../+nodes/store.injectable";
+import type { PageParam } from "../../navigation";
+import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
+import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
+import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
 
 export interface ClusterIssuesProps {
   className?: string;
 }
 
-interface IWarning extends ItemObject {
+interface Warning extends ItemObject {
   kind: string;
-  message: string;
+  message: string | undefined;
   selfLink: string;
   renderAge: () => React.ReactElement;
   ageMs: number;
@@ -39,16 +47,25 @@ enum sortBy {
   age = "age",
 }
 
+interface Dependencies {
+  themeStore: ThemeStore;
+  nodeStore: NodeStore;
+  eventStore: EventStore;
+  apiManager: ApiManager;
+  kubeSelectedUrlParam: PageParam<string>;
+  toggleKubeDetailsPane: ToggleKubeDetailsPane;
+}
+
 @observer
-export class ClusterIssues extends React.Component<ClusterIssuesProps> {
-  constructor(props: ClusterIssuesProps) {
+class NonInjectedClusterIssues extends React.Component<ClusterIssuesProps & Dependencies> {
+  constructor(props: ClusterIssuesProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  @computed get warnings(): IWarning[] {
+  @computed get warnings(): Warning[] {
     return [
-      ...nodesStore.items.flatMap(node => (
+      ...this.props.nodeStore.items.flatMap(node => (
         node.getWarningConditions()
           .map(({ message }) => ({
             selfLink: node.selfLink,
@@ -60,21 +77,27 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
             ageMs: -node.getCreationTimestamp(),
           }))
       )),
-      ...eventStore.getWarnings().map(warning => ({
+      ...this.props.eventStore.getWarnings().map(warning => ({
         getId: () => warning.involvedObject.uid,
         getName: () => warning.involvedObject.name,
         renderAge: () => <KubeObjectAge key="age" object={warning} />,
         ageMs: -warning.getCreationTimestamp(),
         message: warning.message,
         kind: warning.kind,
-        selfLink: apiManager.lookupApiLink(warning.involvedObject, warning),
+        selfLink: this.props.apiManager.lookupApiLink(warning.involvedObject, warning),
       })),
     ];
   }
 
   getTableRow = (uid: string) => {
     const { warnings } = this;
+    const { kubeSelectedUrlParam, toggleKubeDetailsPane: toggleDetails } = this.props;
     const warning = warnings.find(warn => warn.getId() == uid);
+
+    if (!warning) {
+      return undefined;
+    }
+
     const { getId, getName, message, kind, selfLink, renderAge } = warning;
 
     return (
@@ -85,7 +108,7 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
         onClick={prevDefault(() => toggleDetails(selfLink))}
       >
         <TableCell className={styles.message}>
-          {message}
+          {message ?? "<unknown>"}
         </TableCell>
         <TableCell className={styles.object}>
           {getName()}
@@ -103,7 +126,7 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
   renderContent() {
     const { warnings } = this;
 
-    if (!eventStore.isLoaded) {
+    if (!this.props.eventStore.isLoaded) {
       return (
         <Spinner center/>
       );
@@ -112,7 +135,12 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
     if (!warnings.length) {
       return (
         <div className={cssNames(styles.noIssues, "flex column box grow gaps align-center justify-center")}>
-          <Icon className={styles.Icon} material="check" big sticker/>
+          <Icon
+            className={styles.Icon}
+            material="check"
+            big
+            sticker
+          />
           <p className={styles.title}>No issues found</p>
           <p>Everything is fine in the Cluster</p>
         </div>
@@ -122,7 +150,8 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
     return (
       <>
         <SubHeader className={styles.SubHeader}>
-          <Icon material="error_outline"/> Warnings: {warnings.length}
+          <Icon material="error_outline"/>
+          {` Warnings: ${warnings.length}`}
         </SubHeader>
         <Table
           tableId="cluster_issues"
@@ -137,7 +166,7 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
           sortByDefault={{ sortBy: sortBy.object, orderBy: "asc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          className={cssNames("box grow", ThemeStore.getInstance().activeTheme.type)}
+          className={cssNames("box grow", this.props.themeStore.activeTheme.type)}
         >
           <TableHead nowrap>
             <TableCell className="message">Message</TableCell>
@@ -158,3 +187,15 @@ export class ClusterIssues extends React.Component<ClusterIssuesProps> {
     );
   }
 }
+
+export const ClusterIssues = withInjectables<Dependencies, ClusterIssuesProps>(NonInjectedClusterIssues, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+    apiManager: di.inject(apiManagerInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+    nodeStore: di.inject(nodeStoreInjectable),
+    kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
+    toggleKubeDetailsPane: di.inject(toggleKubeDetailsPaneInjectable),
+  }),
+});

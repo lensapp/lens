@@ -9,8 +9,10 @@ import * as yaml from "js-yaml";
 import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
-import { iter, sortCharts } from "../../common/utils";
+import { iter, put, sortCharts } from "../../common/utils";
 import { execHelm } from "./exec";
+import type { SetRequired } from "type-fest";
+import { assert } from "console";
 
 interface ChartCacheEntry {
   data: Buffer;
@@ -23,9 +25,15 @@ export interface HelmCacheFile {
 }
 
 export class HelmChartManager {
-  static #cache = new Map<string, ChartCacheEntry>();
+  static readonly #cache = new Map<string, ChartCacheEntry>();
 
-  private constructor(protected repo: HelmRepo) {}
+  protected readonly repo: SetRequired<HelmRepo, "cacheFilePath">;
+
+  private constructor(repo: HelmRepo) {
+    assert(repo.cacheFilePath, "CacheFilePath must be provided on the helm repo");
+
+    this.repo = repo as SetRequired<HelmRepo, "cacheFilePath">;
+  }
 
   static forRepo(repo: HelmRepo) {
     return new this(repo);
@@ -76,25 +84,30 @@ export class HelmChartManager {
 
     const normalized = normalizeHelmCharts(this.repo.name, data.entries);
 
-    HelmChartManager.#cache.set(this.repo.name, {
-      data: v8.serialize(normalized),
-      mtimeMs: cacheFileStats.mtimeMs,
-    });
+    return put(
+      HelmChartManager.#cache,
+      this.repo.name,
+      {
+        data: v8.serialize(normalized),
+        mtimeMs: cacheFileStats.mtimeMs,
+      },
+    );
   }
 
   protected async cachedYaml(): Promise<RepoHelmChartList> {
-    if (!HelmChartManager.#cache.has(this.repo.name)) {
-      await this.updateYamlCache();
+    let cacheEntry = HelmChartManager.#cache.get(this.repo.name);
+
+    if (!cacheEntry) {
+      cacheEntry = await this.updateYamlCache();
     } else {
       const newStats = await fs.promises.stat(this.repo.cacheFilePath);
-      const cacheEntry = HelmChartManager.#cache.get(this.repo.name);
 
       if (cacheEntry.mtimeMs < newStats.mtimeMs) {
-        await this.updateYamlCache();
+        cacheEntry = await this.updateYamlCache();
       }
     }
 
-    return v8.deserialize(HelmChartManager.#cache.get(this.repo.name).data);
+    return v8.deserialize(cacheEntry.data);
   }
 }
 

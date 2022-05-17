@@ -18,8 +18,8 @@ import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
+import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";
@@ -29,6 +29,8 @@ import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectab
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
+import hotbarStoreInjectable from "../common/hotbars/store.injectable";
+import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import hotbarStoreInjectable from "../common/hotbar-store.injectable";
 import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
@@ -79,9 +81,11 @@ import getElectronThemeInjectable from "./electron-app/features/get-electron-the
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 
-export const getDiForUnitTesting = (
-  { doGeneralOverrides } = { doGeneralOverrides: false },
-) => {
+export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
+  const {
+    doGeneralOverrides = false,
+  } = opts;
+
   const di = createContainer();
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
@@ -99,6 +103,12 @@ export const getDiForUnitTesting = (
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
+    di.override(userStoreInjectable, () => ({ startMainReactions: () => {} }) as UserStore);
+    di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
+    di.override(clusterStoreInjectable, () => ({ getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
+    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
+
     overrideOperatingSystem(di);
     overrideRunnablesHavingSideEffects(di);
     overrideElectronFeatures(di);
@@ -120,17 +130,6 @@ export const getDiForUnitTesting = (
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
-
-    di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
-
-    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
-    di.override(userStoreInjectable, () => ({ startMainReactions: () => {} }) as UserStore);
-
     di.override(appNameInjectable, () => "some-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
@@ -144,7 +143,7 @@ export const getDiForUnitTesting = (
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
         stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
         on: jest.fn(),
-      } as any;
+      } as never;
     });
 
     di.override(writeJsonFileInjectable, () => () => {
@@ -162,13 +161,14 @@ export const getDiForUnitTesting = (
     di.override(loggerInjectable, () => ({
       warn: noop,
       debug: noop,
-      error: (message: string, ...args: any) => console.error(message, ...args),
+      error: noop,
       info: noop,
+      silly: noop,
     }));
   }
 
   return di;
-};
+}
 
 const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),

@@ -17,7 +17,7 @@ import type { PortForwardStore } from "./port-forward-store/port-forward-store";
 import { openPortForward } from "./port-forward-utils";
 import { Checkbox } from "../components/checkbox";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
+import type { PortForwardDialogData, PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
 import portForwardDialogModelInjectable from "./port-forward-dialog-model/port-forward-dialog-model.injectable";
 import logger from "../../common/logger";
 import portForwardStoreInjectable from "./port-forward-store/port-forward-store.injectable";
@@ -47,8 +47,8 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
     return this.props.portForwardStore;
   }
 
-  onOpen = async () => {
-    this.currentPort = +this.props.model.portForward.forwardPort;
+  onOpen = async (data: PortForwardDialogData) => {
+    this.currentPort = +data.portForward.forwardPort;
     this.desiredPort = this.currentPort;
   };
 
@@ -56,15 +56,15 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
     this.desiredPort = Number(value);
   };
 
-  startPortForward = async () => {
-    let { portForward } = this.props.model;
+  startPortForward = async (data: PortForwardDialogData) => {
+    let { portForward } = data;
     const { currentPort, desiredPort } = this;
 
     try {
       // determine how many port-forwards already exist
       const { length } = this.portForwardStore.getPortForwards();
 
-      portForward.protocol = this.props.model.useHttps ? "https" : "http";
+      portForward.protocol = data.useHttps ? "https" : "http";
 
       if (currentPort) {
         const wasRunning = portForward.status === "Active";
@@ -88,7 +88,7 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
         }
       }
 
-      if (portForward.status === "Active" && this.props.model.openInBrowser) {
+      if (portForward.status === "Active" && data.openInBrowser) {
         openPortForward(portForward);
       }
     } catch (error) {
@@ -98,67 +98,70 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
     }
   };
 
-  renderContents() {
+  renderContents(data: PortForwardDialogData) {
     return (
-      <>
-        <div className="flex column gaps align-left">
-          <div className="input-container flex align-center">
-            <div className="current-port" data-testid="current-port">
-              Local port to forward from:
+      <Wizard
+        header={(
+          <h5>
+            {"Port Forwarding for "}
+            <span>{data.portForward.name}</span>
+          </h5>
+        )}
+        done={this.props.model.close}
+      >
+        <WizardStep
+          contentClass="flex gaps column"
+          next={() => this.startPortForward(data)}
+          nextLabel={this.currentPort === 0 ? "Start" : "Modify"}
+        >
+          <div className="flex column gaps align-left">
+            <div className="input-container flex align-center">
+              <div className="current-port" data-testid="current-port">
+                Local port to forward from:
+              </div>
+              <Input
+                className="portInput"
+                type="number"
+                min="0"
+                max="65535"
+                value={this.desiredPort === 0 ? "" : String(this.desiredPort)}
+                placeholder={"Random"}
+                onChange={this.changePort}
+              />
             </div>
-            <Input className="portInput"
-              type="number"
-              min="0"
-              max="65535"
-              value={this.desiredPort === 0 ? "" : String(this.desiredPort)}
-              placeholder={"Random"}
-              onChange={this.changePort}
+            <Checkbox
+              data-testid="port-forward-https"
+              label="https"
+              value={data.useHttps}
+              onChange={value => data.useHttps = value}
+            />
+            <Checkbox
+              data-testid="port-forward-open"
+              label="Open in Browser"
+              value={data.openInBrowser}
+              onChange={value => data.openInBrowser = value}
             />
           </div>
-          <Checkbox
-            data-testid="port-forward-https"
-            label="https"
-            value={this.props.model.useHttps}
-            onChange={value => this.props.model.useHttps = value}
-          />
-          <Checkbox
-            data-testid="port-forward-open"
-            label="Open in Browser"
-            value={this.props.model.openInBrowser}
-            onChange={value => this.props.model.openInBrowser = value}
-          />
-        </div>
-      </>
+        </WizardStep>
+      </Wizard>
     );
   }
 
   render() {
     const { className, portForwardStore, model, ...dialogProps } = this.props;
-    const resourceName = this.props.model.portForward?.name ?? "";
-    const header = (
-      <h5>
-        Port Forwarding for <span>{resourceName}</span>
-      </h5>
-    );
+    const data = model.data.get();
+    const isOpen = Boolean(data);
 
     return (
       <Dialog
         {...dialogProps}
-        isOpen={this.props.model.isOpen}
+        isOpen={isOpen}
         className={cssNames("PortForwardDialog", className)}
-        onOpen={this.onOpen}
-        onClose={model.onClose}
+        onOpen={data && (() => this.onOpen(data))}
+        onClose={data?.onClose}
         close={this.props.model.close}
       >
-        <Wizard header={header} done={this.props.model.close}>
-          <WizardStep
-            contentClass="flex gaps column"
-            next={this.startPortForward}
-            nextLabel={this.currentPort === 0 ? "Start" : "Modify"}
-          >
-            {this.renderContents()}
-          </WizardStep>
-        </Wizard>
+        {data && this.renderContents(data)}
       </Dialog>
     );
   }

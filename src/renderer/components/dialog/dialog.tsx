@@ -11,7 +11,9 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
 import { Animate } from "../animate";
 import { cssNames, noop, stopPropagation } from "../../utils";
-import { navigation } from "../../navigation";
+import type { ObservableHistory } from "mobx-observable-history";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 
 // todo: refactor + handle animation-end in props.onClose()?
 
@@ -26,18 +28,23 @@ export interface DialogProps {
   pinned?: boolean;
   animated?: boolean;
   "data-testid"?: string;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 interface DialogState {
   isOpen: boolean;
 }
 
-@observer
-export class Dialog extends React.PureComponent<DialogProps, DialogState> {
-  private contentElem: HTMLElement;
-  ref = React.createRef<HTMLDivElement>();
+interface Dependencies {
+  navigation: ObservableHistory<unknown>;
+}
 
-  static defaultProps: DialogProps = {
+@observer
+class NonInjectedDialog extends React.PureComponent<DialogProps & Dependencies & typeof NonInjectedDialog.defaultProps, DialogState> {
+  private readonly contentElem = React.createRef<HTMLDivElement>();
+  private readonly ref = React.createRef<HTMLDivElement>();
+
+  static defaultProps = {
     isOpen: false,
     open: noop,
     close: noop,
@@ -49,10 +56,10 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   public state: DialogState = {
-    isOpen: this.props.isOpen,
+    isOpen: this.props.isOpen ?? false,
   };
 
-  get elem(): HTMLElement {
+  get elem() {
     return this.ref.current;
   }
 
@@ -66,7 +73,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     }
 
     disposeOnUnmount(this, [
-      reaction(() => navigation.toString(), () => this.close()),
+      reaction(() => this.props.navigation.toString(), () => this.close()),
     ]);
   }
 
@@ -74,7 +81,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     const { isOpen } = this.props;
 
     if (isOpen !== prevProps.isOpen) {
-      this.toggle(isOpen);
+      this.toggle(isOpen ?? false);
     }
   }
 
@@ -90,17 +97,17 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   open() {
     requestAnimationFrame(this.onOpen); // wait for render(), bind close-event to this.elem
     this.setState({ isOpen: true });
-    this.props.open();
+    this.props.open?.();
   }
 
   close() {
     this.onClose(); // must be first to get access to dialog's content from outside
     this.setState({ isOpen: false });
-    this.props.close();
+    this.props.close?.();
   }
 
   onOpen = () => {
-    this.props.onOpen();
+    this.props.onOpen?.();
 
     if (!this.props.pinned) {
       if (this.elem) this.elem.addEventListener("click", this.onClickOutside);
@@ -110,7 +117,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   onClose = () => {
-    this.props.onClose();
+    this.props.onClose?.();
 
     if (!this.props.pinned) {
       if (this.elem) this.elem.removeEventListener("click", this.onClickOutside);
@@ -130,7 +137,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   onClickOutside = (evt: MouseEvent) => {
     const target = evt.target as HTMLElement;
 
-    if (!this.contentElem.contains(target)) {
+    if (!this.contentElem.current?.contains(target)) {
       this.close();
       evt.stopPropagation();
     }
@@ -148,7 +155,10 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
         ref={this.ref}
         data-testid={testId}
       >
-        <div className="box" ref={e => this.contentElem = e}>
+        <div
+          className="box"
+          ref={this.contentElem}
+        >
           {this.props.children}
         </div>
       </div>
@@ -164,6 +174,13 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
       return null;
     }
 
-    return createPortal(dialog, document.body) as React.ReactPortal;
+    return createPortal(dialog, document.body);
   }
 }
+
+export const Dialog = withInjectables<Dependencies, DialogProps>((props) => <NonInjectedDialog {...props} />, {
+  getProps: (di, props) => ({
+    ...props,
+    navigation: di.inject(observableHistoryInjectable),
+  }),
+});

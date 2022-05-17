@@ -8,9 +8,10 @@ import { action, observable, makeObservable } from "mobx";
 import { autoBind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import type { SetRequired } from "type-fest";
 
 export type NotificationId = string | number;
-export type NotificationMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;
+export type NotificationMessage = string | React.ReactElement | React.ReactElement[] | JsonApiErrorParsed | Error;
 
 export enum NotificationStatus {
   OK = "ok",
@@ -27,7 +28,7 @@ export interface Notification {
 }
 
 export class NotificationsStore {
-  public notifications = observable.array<Notification>([], { deep: false });
+  public notifications = observable.array<SetRequired<Notification, "id">>([], { deep: false });
 
   protected autoHideTimers = new Map<NotificationId, number>();
 
@@ -36,8 +37,8 @@ export class NotificationsStore {
     autoBind(this);
   }
 
-  getById(id: NotificationId): Notification | null {
-    return this.notifications.find(item => item.id === id) ?? null;
+  getById(id: NotificationId) {
+    return this.notifications.find(item => item.id === id);
   }
 
   addAutoHideTimer(id: NotificationId) {
@@ -61,10 +62,12 @@ export class NotificationsStore {
   }
 
   @action
-  add(notification: Notification): () => void {
-    const id = notification.id ?? (
-      notification.id = uniqueId("notification_")
-    );
+  add(rawNotification: Notification): () => void {
+    const notification = {
+      id: uniqueId("notification_"),
+      ...rawNotification,
+    };
+    const id = notification.id;
     const index = this.notifications.findIndex(item => item.id === id);
 
     if (index > -1) {
@@ -80,7 +83,12 @@ export class NotificationsStore {
   @action
   remove(id: NotificationId) {
     this.removeAutoHideTimer(id);
-    this.notifications.remove(this.getById(id));
+
+    const notification = this.getById(id);
+
+    if (notification) {
+      this.notifications.remove(notification);
+    }
   }
 }
 

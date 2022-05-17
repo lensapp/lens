@@ -8,22 +8,26 @@ import "./pods.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { podsStore } from "./pods.store";
-import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { Pod } from "../../../common/k8s-api/endpoints";
-import { nodesApi } from "../../../common/k8s-api/endpoints";
+import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
-import { cssNames, getConvertedParts, stopPropagation } from "../../utils";
-import toPairs from "lodash/toPairs";
+import { cssNames, getConvertedParts, object, stopPropagation } from "../../utils";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
-import { getDetailsUrl } from "../kube-detail-params";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import type { EventStore } from "../+events/store";
+import type { PodStore } from "./store";
+import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
+import eventStoreInjectable from "../+events/store.injectable";
+import podStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -37,13 +41,44 @@ enum columnId {
   status = "status",
 }
 
-@observer
-export class Pods extends React.Component {
-  renderContainersStatus(pod: Pod) {
-    return pod.getContainerStatuses().map(containerStatus => {
-      const { name, state, ready } = containerStatus;
+interface Dependencies {
+  getDetailsUrl: GetDetailsUrl;
+  apiManager: ApiManager;
+  eventStore: EventStore;
+  podStore: PodStore;
+  nodeApi: NodeApi;
+}
 
-      return (
+@observer
+class NonInjectedPods extends React.Component<Dependencies> {
+  renderState<T extends string>(name: string, ready: boolean, key: string, data: Partial<Record<T, string | number>> | undefined) {
+    return data && (
+      <>
+        <div className="title">
+          {name}
+          {" "}
+          <span className="text-secondary">
+            {key}
+            {ready ? ", ready" : ""}
+          </span>
+        </div>
+        {object.entries(data).map(([name, value]) => (
+          <div key={name} className="flex gaps align-center">
+            <div className="name">
+              {startCase(name)}
+            </div>
+            <div className="value">
+              {value}
+            </div>
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  renderContainersStatus(pod: Pod) {
+    return pod.getContainerStatuses()
+      .map(({ name, state = {}, ready }) => (
         <Fragment key={name}>
           <StatusBrick
             className={cssNames(state, { ready })}
@@ -51,32 +86,27 @@ export class Pods extends React.Component {
               formatters: {
                 tableView: true,
               },
-              children: Object.keys(state).map((status: keyof typeof state) => (
-                <Fragment key={status}>
-                  <div className="title">
-                    {name} <span className="text-secondary">({status}{ready ? ", ready" : ""})</span>
-                  </div>
-                  {toPairs(state[status]).map(([name, value]) => (
-                    <div key={name} className="flex gaps align-center">
-                      <div className="name">{startCase(name)}</div>
-                      <div className="value">{value}</div>
-                    </div>
-                  ))}
-                </Fragment>
-              )),
+              children: (
+                <>
+                  {this.renderState(name, ready, "running", state.running)}
+                  {this.renderState(name, ready, "waiting", state.waiting)}
+                  {this.renderState(name, ready, "terminated", state.terminated)}
+                </>
+              ),
             }}
           />
         </Fragment>
-      );
-    });
+      ));
   }
 
   render() {
+    const { apiManager, getDetailsUrl, podStore, eventStore, nodeApi } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
           className="Pods"
-          store={podsStore}
+          store={podStore}
           dependentStores={[eventStore]} // status icon component uses event store
           tableId = "workloads_pods"
           isConfigurable
@@ -94,7 +124,7 @@ export class Pods extends React.Component {
           searchFilters={[
             pod => pod.getSearchFields(),
             pod => pod.getStatusMessage(),
-            pod => pod.status.podIP,
+            pod => pod.status?.podIP,
             pod => pod.getNodeName(),
           ]}
           renderHeaderTitle="Pods"
@@ -111,7 +141,13 @@ export class Pods extends React.Component {
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
           renderTableContents={pod => [
-            <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} expandable={false} />,
+            <Badge
+              flat
+              key="name"
+              label={pod.getName()}
+              tooltip={pod.getName()}
+              expandable={false}
+            />,
             <KubeObjectStatusIcon key="icon" object={pod} />,
             pod.getNs(),
             this.renderContainersStatus(pod),
@@ -121,19 +157,31 @@ export class Pods extends React.Component {
               const detailsLink = getDetailsUrl(apiManager.lookupApiLink(ref, pod));
 
               return (
-                <Badge flat key={name} className="owner" tooltip={name}>
+                <Badge
+                  flat
+                  key={name}
+                  className="owner"
+                  tooltip={name}
+                >
                   <Link to={detailsLink} onClick={stopPropagation}>
                     {kind}
                   </Link>
                 </Badge>
               );
             }),
-            pod.getNodeName() ?
-              <Badge flat key="node" className="node" tooltip={pod.getNodeName()} expandable={false}>
-                <Link to={getDetailsUrl(nodesApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
+            pod.getNodeName() ? (
+              <Badge
+                flat
+                key="node"
+                className="node"
+                tooltip={pod.getNodeName()}
+                expandable={false}
+              >
+                <Link to={getDetailsUrl(nodeApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
                   {pod.getNodeName()}
                 </Link>
               </Badge>
+            )
               : "",
             pod.getQosClass(),
             <KubeObjectAge key="age" object={pod} />,
@@ -144,3 +192,14 @@ export class Pods extends React.Component {
     );
   }
 }
+
+export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
+  getProps: (di, props) => ({
+    ...props,
+    apiManager: di.inject(apiManagerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    nodeApi: di.inject(nodeApiInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});

@@ -23,13 +23,17 @@ const addSyncEntriesInjectable = getInjectable({
         await getAllEntries(filePaths, logger),
       );
 
-      Notifications.ok(
+      Notifications.ok((
         <div>
-          <p>Selected items has been added to Kubeconfig Sync.</p><br/>
-          <p>Check the <a style={{ textDecoration: "underline" }} onClick={navigateToKubernetesPreferences}>Preferences</a>{" "}
-          to see full list.</p>
-        </div>,
-      );
+          <p>Selected items has been added to Kubeconfig Sync.</p>
+          <br/>
+          <p>
+            {"Check the "}
+            <a style={{ textDecoration: "underline" }} onClick={navigateToKubernetesPreferences}>Preferences</a>
+            {" to see full list."}
+          </p>
+        </div>
+      ));
     };
   },
 });

@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { LensExtension } from "./lens-extension";
+import { LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
 import type { MenuRegistration } from "../main/menu/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
+import type { LensMainExtensionDependencies } from "./lens-extension-set-dependencies";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import catalogEntityRegistryInjectable from "../main/catalog/catalog-entity-registry.injectable";
 import navigateForExtensionInjectable from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
 
-export class LensMainExtension extends LensExtension {
+export class LensMainExtension extends LensExtension<LensMainExtensionDependencies> {
   appMenus: MenuRegistration[] = [];
   trayMenus: TrayMenuRegistration[] = [];
 
@@ -41,18 +41,10 @@ export class LensMainExtension extends LensExtension {
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
-
-    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
+    this[lensExtensionDependencies].entityRegistry.addObservableSource(`${this.name}:${id}`, source);
   }
 
   removeCatalogSource(id: string) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
-
-    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
+    this[lensExtensionDependencies].entityRegistry.removeSource(`${this.name}:${id}`);
   }
 }

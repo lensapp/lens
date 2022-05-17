@@ -8,7 +8,7 @@ import mockFs from "mock-fs";
 import path from "path";
 import fse from "fs-extra";
 import type { Cluster } from "../cluster/cluster";
-import { ClusterStore } from "../cluster-store/cluster-store";
+import type { ClusterStore } from "../cluster-store/cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
@@ -20,6 +20,7 @@ import directoryForUserDataInjectable from "../app-paths/directory-for-user-data
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
+import assert from "assert";
 import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
 
 console = new Console(stdout, stderr);
@@ -144,6 +145,8 @@ describe("cluster-store", () => {
       it("adds new cluster to store", async () => {
         const storedCluster = clusterStore.getById("foo");
 
+        assert(storedCluster);
+
         expect(storedCluster.id).toBe("foo");
         expect(storedCluster.preferences.terminalCWD).toBe("/some-directory-for-user-data");
         expect(storedCluster.preferences.icon).toBe(
@@ -194,7 +197,7 @@ describe("cluster-store", () => {
   });
 
   describe("config with existing clusters", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const mockOpts = {
         "temp-kube-config": kubeconfig,
         "some-directory-for-user-data": {
@@ -245,6 +248,8 @@ describe("cluster-store", () => {
     it("allows to retrieve a cluster", () => {
       const storedCluster = clusterStore.getById("cluster1");
 
+      assert(storedCluster);
+
       expect(storedCluster.id).toBe("cluster1");
       expect(storedCluster.preferences.terminalCWD).toBe("/foo");
     });
@@ -262,7 +267,7 @@ describe("cluster-store", () => {
   });
 
   describe("config with invalid cluster kubeconfig", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const invalidKubeconfig = `
 apiVersion: v1
 clusters:
@@ -282,8 +287,6 @@ users:
   user:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
-
-      ClusterStore.resetInstance();
 
       const mockOpts = {
         "invalid-kube-config": invalidKubeconfig,
@@ -334,8 +337,7 @@ users:
   });
 
   describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
-    beforeEach(async () => {
-      ClusterStore.resetInstance();
+    beforeEach(() => {
       const mockOpts = {
         "some-directory-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({
@@ -379,6 +381,7 @@ users:
     it("migrates to modern format with icon not in file", async () => {
       const { icon } = clusterStore.clustersList[0].preferences;
 
+      assert(icon);
       expect(icon.startsWith("data:;base64,")).toBe(true);
     });
   });

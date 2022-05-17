@@ -74,7 +74,9 @@ export const attemptInstall =
           <div className="flex column gaps">
             <b>Extension Install Collision:</b>
             <p>
-            The <em>{name}</em> extension is currently {curState.toLowerCase()}.
+              {"The "}
+              <em>{name}</em>
+              {` extension is currently ${curState.toLowerCase()}.`}
             </p>
             <p>Will not proceed with this current install request.</p>
           </div>,
@@ -92,21 +94,20 @@ export const attemptInstall =
           <div className="InstallingExtensionNotification flex gaps align-center">
             <div className="flex column gaps">
               <p>
-              Install extension{" "}
-                <b>
-                  {name}@{version}
-                </b>
-              ?
+                {"Install extension "}
+                <b>{`${name}@${version}`}</b>
+                ?
               </p>
               <p>
-              Description: <em>{description}</em>
+                {"Description: "}
+                <em>{description}</em>
               </p>
               <div
                 className="remove-folder-warning"
                 onClick={() => shell.openPath(extensionFolder)}
               >
-                <b>Warning:</b> {name}@{oldVersion} will be removed before
-              installation.
+                <b>Warning:</b>
+                {` ${name}@${oldVersion} will be removed before installation.`}
               </div>
             </div>
             <Button

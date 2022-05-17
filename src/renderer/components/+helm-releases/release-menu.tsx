@@ -12,8 +12,9 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createUpgradeChartTabInjectable from "../dock/upgrade-chart/create-upgrade-chart-tab.injectable";
-import releaseRollbackDialogModelInjectable from "./release-rollback-dialog-model/release-rollback-dialog-model.injectable";
 import deleteReleaseInjectable from "./delete-release/delete-release.injectable";
+import type { OpenHelmReleaseRollbackDialog } from "./dialog/open.injectable";
+import openHelmReleaseRollbackDialogInjectable from "./dialog/open.injectable";
 
 export interface HelmReleaseMenuProps extends MenuActionsProps {
   release: HelmRelease;
@@ -23,7 +24,7 @@ export interface HelmReleaseMenuProps extends MenuActionsProps {
 interface Dependencies {
   deleteRelease: (release: HelmRelease) => Promise<any>;
   createUpgradeChartTab: (release: HelmRelease) => void;
-  openRollbackDialog: (release: HelmRelease) => void;
+  openRollbackDialog: OpenHelmReleaseRollbackDialog;
 }
 
 class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & Dependencies> {
@@ -52,12 +53,20 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
       <>
         {hasRollback && (
           <MenuItem onClick={this.rollback}>
-            <Icon material="history" interactive={toolbar} tooltip="Rollback"/>
+            <Icon
+              material="history"
+              interactive={toolbar}
+              tooltip="Rollback"
+            />
             <span className="title">Rollback</span>
           </MenuItem>
         )}
         <MenuItem onClick={this.upgrade}>
-          <Icon material="refresh" interactive={toolbar} tooltip="Upgrade"/>
+          <Icon
+            material="refresh"
+            interactive={toolbar}
+            tooltip="Upgrade"
+          />
           <span className="title">Upgrade</span>
         </MenuItem>
       </>
@@ -72,7 +81,13 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
         {...menuProps}
         className={cssNames("HelmReleaseMenu", className)}
         removeAction={this.remove}
-        removeConfirmationMessage={() => <p>Remove Helm Release <b>{release.name}</b>?</p>}
+        removeConfirmationMessage={() => (
+          <p>
+            Remove Helm Release
+            <b>{release.name}</b>
+            ?
+          </p>
+        )}
       >
         {this.renderContent()}
       </MenuActions>
@@ -80,16 +95,11 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
   }
 }
 
-export const HelmReleaseMenu = withInjectables<Dependencies, HelmReleaseMenuProps>(
-  NonInjectedHelmReleaseMenu,
-
-  {
-    getProps: (di, props) => ({
-      deleteRelease: di.inject(deleteReleaseInjectable),
-      createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
-      openRollbackDialog: di.inject(releaseRollbackDialogModelInjectable).open,
-
-      ...props,
-    }),
-  },
-);
+export const HelmReleaseMenu = withInjectables<Dependencies, HelmReleaseMenuProps>(NonInjectedHelmReleaseMenu, {
+  getProps: (di, props) => ({
+    ...props,
+    deleteRelease: di.inject(deleteReleaseInjectable),
+    createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
+    openRollbackDialog: di.inject(openHelmReleaseRollbackDialogInjectable),
+  }),
+});

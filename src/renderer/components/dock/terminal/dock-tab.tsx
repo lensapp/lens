@@ -34,22 +34,36 @@ class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> exte
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.isDisconnected === true, () => {
-        this.props.dockStore.closeTab(this.tabId);
-      }),
+      reaction(() => this.isDisconnected, this.close),
     ]);
   }
 
-  get tabId() {
-    return this.props.value.id;
+  private close() {
+    const { tabId } = this;
+
+    if (tabId) {
+      this.props.dockStore.closeTab(tabId);
+    }
   }
 
-  get isDisconnected() {
-    return this.props.terminalStore.isDisconnected(this.tabId);
+  private get tabId() {
+    return this.props.value?.id;
   }
 
-  reconnect() {
-    this.props.terminalStore.reconnect(this.tabId);
+  private get isDisconnected() {
+    const { tabId } = this;
+
+    return tabId
+      ? this.props.terminalStore.isDisconnected(tabId)
+      : false;
+  }
+
+  private reconnect() {
+    const { tabId } = this;
+
+    if (tabId) {
+      this.props.terminalStore.reconnect(tabId);
+    }
   }
 
   render() {

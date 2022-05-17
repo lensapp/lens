@@ -32,9 +32,7 @@ describe("<Welcome/>", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-
     render = renderFor(di);
-
     welcomeBannersStub = [];
 
     di.override(rendererExtensionsInjectable, () =>
@@ -100,7 +98,7 @@ class TestExtension extends LensRendererExtension {
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: id, version: "some-version" },
+      manifest: { name: id, version: "some-version", engines: { lens: "^5.5.0" }},
       manifestPath: "irrelevant",
     });
 

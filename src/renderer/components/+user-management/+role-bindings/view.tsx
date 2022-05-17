@@ -9,10 +9,10 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { RoleBindingDialog } from "./dialog";
-import { roleBindingsStore } from "./store";
-import { rolesStore } from "../+roles/store";
-import { clusterRolesStore } from "../+cluster-roles/store";
-import { serviceAccountsStore } from "../+service-accounts/store";
+import { roleBindingStore } from "./legacy-store";
+import { roleStore } from "../+roles/legacy-store";
+import { clusterRoleStore } from "../+cluster-roles/legacy-store";
+import { serviceAccountStore } from "../+service-accounts/legacy-store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 
@@ -32,8 +32,8 @@ export class RoleBindings extends React.Component {
           isConfigurable
           tableId="access_role_bindings"
           className="RoleBindings"
-          store={roleBindingsStore}
-          dependentStores={[rolesStore, clusterRolesStore, serviceAccountsStore]}
+          store={roleBindingStore}
+          dependentStores={[roleStore, clusterRoleStore, serviceAccountStore]}
           sortingCallbacks={{
             [columnId.name]: binding => binding.getName(),
             [columnId.namespace]: binding => binding.getNs(),

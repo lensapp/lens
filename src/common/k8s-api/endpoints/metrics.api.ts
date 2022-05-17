@@ -9,18 +9,18 @@ import moment from "moment";
 import { apiBase } from "../index";
 import type { IMetricsQuery } from "../../../main/routes/metrics/metrics-query";
 
-export interface IMetrics {
+export interface MetricData {
   status: string;
   data: {
     resultType: string;
-    result: IMetricsResult[];
+    result: MetricResult[];
   };
 }
 
-export interface IMetricsResult {
+export interface MetricResult {
   metric: {
-    [name: string]: string;
-    instance: string;
+    [name: string]: string | undefined;
+    instance?: string;
     node?: string;
     pod?: string;
     kubernetes?: string;
@@ -44,7 +44,7 @@ export interface IMetricsReqParams {
   namespace?: string;             // rbac-proxy validation param
 }
 
-export interface IResourceMetrics<T extends IMetrics> {
+export interface IResourceMetrics<T extends MetricData> {
   [metric: string]: T;
   cpuUsage: T;
   memoryUsage: T;
@@ -56,7 +56,7 @@ export interface IResourceMetrics<T extends IMetrics> {
 }
 
 export const metricsApi = {
-  async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
+  async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: MetricData } : MetricData> {
     const { range = 3600, step = 60, namespace } = reqParams;
     let { start, end } = reqParams;
 
@@ -82,7 +82,7 @@ export const metricsApi = {
   },
 };
 
-export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
+export function normalizeMetrics(metrics: MetricData | undefined | null, frames = 60): MetricData {
   if (!metrics?.data?.result) {
     return {
       data: {
@@ -90,7 +90,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
         result: [{
           metric: {},
           values: [],
-        } as IMetricsResult],
+        }],
       },
       status: "",
     };
@@ -131,17 +131,17 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
     result.push({
       metric: {},
       values: [],
-    } as IMetricsResult);
+    } as MetricResult);
   }
 
   return metrics;
 }
 
-export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
+export function isMetricsEmpty(metrics: Partial<Record<string, MetricData>>) {
   return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | undefined {
+export function getItemMetrics(metrics: Partial<Record<string, MetricData>> | null | undefined, itemName: string): Partial<Record<string, MetricData>> | undefined {
   if (!metrics) {
     return undefined;
   }
@@ -152,23 +152,24 @@ export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: stri
     if (!metrics[metric]?.data?.result) {
       continue;
     }
-    const results = metrics[metric].data.result;
-    const result = results.find(res => Object.values(res.metric)[0] == itemName);
+    const results = metrics[metric]?.data.result;
+    const result = results?.find(res => Object.values(res.metric)[0] == itemName);
 
-    itemMetrics[metric].data.result = result ? [result] : [];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    itemMetrics[metric]!.data.result = result ? [result] : [];
   }
 
   return itemMetrics;
 }
 
-export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
+export function getMetricLastPoints<T extends Partial<Record<string, MetricData>>>(metrics: T): Record<keyof T, number> {
   const result: Partial<{ [metric: string]: number }> = {};
 
   Object.keys(metrics).forEach(metricName => {
     try {
       const metric = metrics[metricName];
 
-      if (metric.data.result.length) {
+      if (metric?.data.result.length) {
         result[metricName] = +metric.data.result[0].values.slice(-1)[0][1];
       }
     } catch {
@@ -178,5 +179,5 @@ export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
     return result;
   }, {});
 
-  return result;
+  return result as Record<keyof T, number>;
 }

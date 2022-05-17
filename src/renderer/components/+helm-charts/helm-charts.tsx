@@ -42,9 +42,14 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
   }
 
   get selectedChart() {
-    const { chartName, repo } = this.props.routeParameters;
+    const chartName = this.props.routeParameters.chartName.get();
+    const repo = this.props.routeParameters.repo.get();
 
-    return helmChartStore.getByName(chartName.get(), repo.get());
+    if (!chartName || !repo) {
+      return undefined;
+    }
+
+    return helmChartStore.getByName(chartName, repo);
   }
 
   onDetails = (chart: HelmChart) => {
@@ -55,7 +60,7 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
     }
   };
 
-  showDetails = (chart: HelmChart) => {
+  showDetails = (chart: HelmChart | null) => {
     if (!chart) {
       this.props.navigateToHelmCharts();
     }

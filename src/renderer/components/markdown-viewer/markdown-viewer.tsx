@@ -14,7 +14,7 @@ import { cssNames } from "../../utils";
 
 DOMPurify.addHook("afterSanitizeAttributes", function (node) {
   // Set all elements owning target to target=_blank
-  if ("target" in node as any as HTMLElement) {
+  if ("target" in node) {
     node.setAttribute("target", "_blank");
   }
 });

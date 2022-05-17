@@ -2,32 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { apiManager } from "../../../../common/k8s-api/api-manager";
-import type { Role } from "../../../../common/k8s-api/endpoints";
-import { roleApi } from "../../../../common/k8s-api/endpoints";
+import type { Role, RoleApi, RoleData } from "../../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../../utils";
 
-export class RolesStore extends KubeObjectStore<Role> {
-  api = roleApi;
-
-  constructor() {
-    super();
-    autoBind(this);
-  }
-
+export class RoleStore extends KubeObjectStore<Role, RoleApi, RoleData> {
   protected sortItems(items: Role[]) {
     return super.sortItems(items, [
       role => role.kind,
       role => role.getName(),
     ]);
   }
-
-  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<Role>) {
-    return roleApi.create(params, data);
-  }
 }
-
-export const rolesStore = new RolesStore();
-
-apiManager.registerStore(rolesStore);

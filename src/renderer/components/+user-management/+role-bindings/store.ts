@@ -3,16 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { apiManager } from "../../../../common/k8s-api/api-manager";
-import type { RoleBinding, RoleBindingSubject } from "../../../../common/k8s-api/endpoints";
-import { roleBindingApi } from "../../../../common/k8s-api/endpoints";
+import type { RoleBinding, RoleBindingApi, RoleBindingData } from "../../../../common/k8s-api/endpoints";
+import type { Subject } from "../../../../common/k8s-api/endpoints/types/subject";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { HashSet } from "../../../utils";
-import { hashRoleBindingSubject } from "./hashers";
+import { hashSubject } from "../hashers";
 
-export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
-  api = roleBindingApi;
-
+export class RoleBindingStore extends KubeObjectStore<RoleBinding, RoleBindingApi, RoleBindingData> {
   protected sortItems(items: RoleBinding[]) {
     return super.sortItems(items, [
       roleBinding => roleBinding.kind,
@@ -20,19 +17,15 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     ]);
   }
 
-  protected async createItem(params: { name: string; namespace: string }, data?: Partial<RoleBinding>) {
-    return roleBindingApi.create(params, data);
-  }
-
-  async updateSubjects(roleBinding: RoleBinding, subjects: RoleBindingSubject[]) {
+  async updateSubjects(roleBinding: RoleBinding, subjects: Subject[]) {
     return this.update(roleBinding, {
       roleRef: roleBinding.roleRef,
       subjects,
     });
   }
 
-  async removeSubjects(roleBinding: RoleBinding, subjectsToRemove: Iterable<RoleBindingSubject>) {
-    const currentSubjects = new HashSet(roleBinding.getSubjects(), hashRoleBindingSubject);
+  async removeSubjects(roleBinding: RoleBinding, subjectsToRemove: Iterable<Subject>) {
+    const currentSubjects = new HashSet(roleBinding.getSubjects(), hashSubject);
 
     for (const subject of subjectsToRemove) {
       currentSubjects.delete(subject);
@@ -41,7 +34,3 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     return this.updateSubjects(roleBinding, currentSubjects.toJSON());
   }
 }
-
-export const roleBindingsStore = new RoleBindingsStore();
-
-apiManager.registerStore(roleBindingsStore);

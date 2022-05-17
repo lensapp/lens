@@ -9,9 +9,9 @@ import {
 
 import helmRepoManagerInjectable from "./helm-repo-manager.injectable";
 
-export type HelmEnv = Record<string, string> & {
-  HELM_REPOSITORY_CACHE?: string;
-  HELM_REPOSITORY_CONFIG?: string;
+export type HelmEnv = Partial<Record<string, string>> & {
+  HELM_REPOSITORY_CACHE: string;
+  HELM_REPOSITORY_CONFIG: string;
 };
 
 export interface HelmRepoConfig {

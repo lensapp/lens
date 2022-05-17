@@ -9,7 +9,7 @@ import { stdout, stderr } from "process";
 
 console = new Console(stdout, stderr);
 
-let ext: LensExtension = null;
+let ext: LensExtension;
 
 describe("lens extension", () => {
   beforeEach(async () => {
@@ -17,6 +17,7 @@ describe("lens extension", () => {
       manifest: {
         name: "foo-bar",
         version: "0.1.1",
+        engines: { lens: "^5.5.0" },
       },
       id: "/this/is/fake/package.json",
       absolutePath: "/absolute/fake/",

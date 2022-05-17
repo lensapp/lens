@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DockTabStorageState } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
-import type { StorageHelper } from "../../../utils";
 import type { TabId } from "../dock/store";
 import { logTabDataValidator } from "./log-tab-data.validator";
+import type { CreateStorage } from "../../../utils/create-storage/create-storage";
 
 export interface LogTabOwnerRef {
   /**
@@ -58,7 +57,7 @@ export interface LogTabData {
 }
 
 interface Dependencies {
-  createStorage: <T>(storageKey: string, options: DockTabStorageState<T>) => StorageHelper<DockTabStorageState<T>>;
+  createStorage: CreateStorage;
 }
 
 export class LogTabStore extends DockTabStore<LogTabData> {

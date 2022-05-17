@@ -30,9 +30,9 @@ interface TestStoreModel {
 }
 
 class TestStore extends BaseStore<TestStoreModel> {
-  @observable a: string;
-  @observable b: string;
-  @observable c: string;
+  @observable a = "";
+  @observable b = "";
+  @observable c = "";
 
   constructor() {
     super({
@@ -88,7 +88,6 @@ describe("BaseStore", () => {
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
 
-    store = undefined;
     TestStore.resetInstance();
 
     const mockOpts = {

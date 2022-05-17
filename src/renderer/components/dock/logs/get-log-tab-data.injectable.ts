@@ -12,7 +12,7 @@ const getLogTabDataInjectable = getInjectable({
   instantiate: (di) => {
     const logTabStore = di.inject(logTabStoreInjectable);
 
-    return (tabId: string): LogTabData => logTabStore.getData(tabId);
+    return (tabId: string): LogTabData | undefined => logTabStore.getData(tabId);
   },
 });
 

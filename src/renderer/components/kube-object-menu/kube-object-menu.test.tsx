@@ -14,21 +14,24 @@ import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 import clusterInjectable from "./dependencies/cluster.injectable";
-import hideDetailsInjectable from "./dependencies/hide-details.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import apiManagerInjectable from "./dependencies/api-manager.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectMenu } from "./index";
 import type { KubeObjectMenuRegistration } from "./kube-object-menu-registration";
 import { computed } from "mobx";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
+import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../tooltip");
+jest.mock("../tooltip/tooltip");
+jest.mock("../tooltip/withTooltip", () => ({
+  withTooltip: (target: any) => target,
+}));
 
 // TODO: make `animated={false}` not required to make tests deterministic
 
@@ -42,7 +45,7 @@ class SomeTestExtension extends LensRendererExtension {
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: "some-id", version: "some-version" },
+      manifest: { name: "some-id", version: "some-version", engines: { lens: "^5.5.0" }},
       manifestPath: "irrelevant",
     });
 
@@ -55,9 +58,8 @@ describe("kube-object-menu", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    const MenuItemComponent: React.FC = () => <li>Some menu item</li>;
-
-    const kubeObjectMenuItems = [
+    const MenuItemComponent = () => <li>Some menu item</li>;
+    const someTestExtension = new SomeTestExtension([
       {
         apiVersions: ["some-api-version"],
         kind: "some-kind",
@@ -75,9 +77,7 @@ describe("kube-object-menu", () => {
         kind: "some-unrelated-kind",
         components: { MenuItem: MenuItemComponent },
       },
-    ];
-
-    const someTestExtension = new SomeTestExtension(kubeObjectMenuItems);
+    ]);
 
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
@@ -99,7 +99,7 @@ describe("kube-object-menu", () => {
       apiManagerInjectable,
       () =>
         ({
-          getStore: (api) => void api,
+          getStore: (api: any) => void api,
         } as ApiManager),
     );
 
@@ -112,13 +112,13 @@ describe("kube-object-menu", () => {
     di.override(clusterInjectable, () => null);
 
     expect(() => {
-      render(<KubeObjectMenu object={null} toolbar={true} />);
+      render(<KubeObjectMenu object={null as never} toolbar={true} />);
     }).not.toThrow();
   });
 
   it("given no kube object, renders", () => {
     const { baseElement } = render(
-      <KubeObjectMenu object={null} toolbar={true} />,
+      <KubeObjectMenu object={null as never} toolbar={true} />,
     );
 
     expect(baseElement).toMatchSnapshot();
@@ -137,6 +137,7 @@ describe("kube-object-menu", () => {
           name: "some-name",
           resourceVersion: "some-resource-version",
           namespace: "some-namespace",
+          selfLink: "/foo",
         },
       });
 
@@ -210,6 +211,7 @@ describe("kube-object-menu", () => {
           name: "some-name",
           resourceVersion: "some-resource-version",
           namespace: "some-namespace",
+          selfLink: "/foo",
         },
       });
 
@@ -247,6 +249,7 @@ describe("kube-object-menu", () => {
           name: "some-name",
           resourceVersion: "some-resource-version",
           namespace: undefined,
+          selfLink: "/foo",
         },
       });
 

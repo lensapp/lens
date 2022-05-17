@@ -3,26 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { Route } from "../../../router/router";
 import { helmService } from "../../../helm/helm-service";
-import { routeInjectionToken } from "../../../router/router.injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import { getRouteInjectable } from "../../../router/router.injectable";
+import Joi from "joi";
+import { payloadValidatedClusterRoute } from "../../../router/route";
 
-const rollbackReleaseRouteInjectable = getInjectable({
+interface RollbackReleasePayload {
+  revision: number;
+}
+
+const rollbackReleasePayloadValidator = Joi.object<RollbackReleasePayload, true, RollbackReleasePayload>({
+  revision: Joi
+    .number()
+    .required(),
+});
+
+const rollbackReleaseRouteInjectable = getRouteInjectable({
   id: "rollback-release-route",
 
-  instantiate: (): Route<void> => ({
+  instantiate: () => payloadValidatedClusterRoute({
     method: "put",
     path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback`,
-
-    handler: async (request) => {
-      const { cluster, params, payload } = request;
-
-      await helmService.rollback(cluster, params.release, params.namespace, payload.revision);
-    },
+    payloadValidator: rollbackReleasePayloadValidator,
+  })(async ({ cluster, params: { release, namespace }, payload }) => {
+    await helmService.rollback(cluster, release, namespace, payload.revision);
   }),
-
-  injectionToken: routeInjectionToken,
 });
 
 export default rollbackReleaseRouteInjectable;

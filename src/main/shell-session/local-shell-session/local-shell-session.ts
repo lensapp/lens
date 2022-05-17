@@ -15,7 +15,7 @@ import { baseBinariesDir } from "../../../common/vars";
 export class LocalShellSession extends ShellSession {
   ShellType = "shell";
 
-  constructor(protected shellEnvModify: (clusterId: ClusterId, env: Record<string, string>) => Record<string, string>, kubectl: Kubectl, websocket: WebSocket, cluster: Cluster, terminalId: string) {
+  constructor(protected shellEnvModify: (clusterId: ClusterId, env: Record<string, string | undefined>) => Record<string, string | undefined>, kubectl: Kubectl, websocket: WebSocket, cluster: Cluster, terminalId: string) {
     super(kubectl, websocket, cluster, terminalId);
   }
 
@@ -34,9 +34,14 @@ export class LocalShellSession extends ShellSession {
     env = this.shellEnvModify(this.cluster.id, env);
 
     const shell = env.PTYSHELL;
+
+    if (!shell) {
+      throw new Error("PTYSHELL is not defined with the environment");
+    }
+
     const args = await this.getShellArgs(shell);
 
-    await this.openShellProcess(env.PTYSHELL, args, env);
+    await this.openShellProcess(shell, args, env);
   }
 
   protected async getShellArgs(shell: string): Promise<string[]> {

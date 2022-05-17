@@ -8,7 +8,6 @@ locales/**/**.js
 lens.log
 static/build
 static/types
-build/tray/
 binaries/client/
 binaries/server/
 src/extensions/*/*.js

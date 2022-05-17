@@ -6,7 +6,7 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { Switch } from "..";
+import { Switch } from "../switch";
 
 describe("<Switch/>", () => {
   it("renders w/o errors", () => {
@@ -47,5 +47,25 @@ describe("<Switch/>", () => {
     fireEvent.click(switcher);
 
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it("returns true checked attribute in a onChange callback", () => {
+    const onClick = jest.fn();
+    const { getByTestId } = render(<Switch onChange={onClick} checked={true}/>);
+    const switcher = getByTestId("switch");
+
+    fireEvent.click(switcher);
+
+    expect(onClick).toHaveBeenCalledWith(false, expect.any(Object));
+  });
+
+  it("returns false checked attribute in a onChange callback", () => {
+    const onClick = jest.fn();
+    const { getByTestId } = render(<Switch onChange={onClick}/>);
+    const switcher = getByTestId("switch");
+
+    fireEvent.click(switcher);
+
+    expect(onClick).toHaveBeenCalledWith(true, expect.any(Object));
   });
 });

@@ -21,38 +21,41 @@ export interface LogsDialogProps extends DialogProps {
   logs: string;
 }
 
-export class LogsDialog extends React.Component<LogsDialogProps> {
-  public logsElem: HTMLElement;
-
-  copyToClipboard = () => {
-    clipboard.writeText(this.props.logs);
-    Notifications.ok(`Logs copied to clipboard.`);
-  };
-
-  render() {
-    const { title, logs, ...dialogProps } = this.props;
-    const header = <h5>{title}</h5>;
-    const customButtons = (
-      <div className="buttons flex gaps align-center justify-space-between">
-        <Button plain onClick={this.copyToClipboard}>
-          <Icon material="assignment"/> Copy to clipboard
-        </Button>
-        <Button plain onClick={dialogProps.close}>
-          Close
-        </Button>
-      </div>
-    );
-
-    return (
-      <Dialog {...dialogProps} className="LogsDialog">
-        <Wizard header={header} done={dialogProps.close}>
-          <WizardStep scrollable={false} customButtons={customButtons}>
-            <code className="block" ref={e => this.logsElem = e}>
-              {logs || "There are no logs available."}
-            </code>
-          </WizardStep>
-        </Wizard>
-      </Dialog>
-    );
-  }
+export function LogsDialog({ title, logs, ...dialogProps }: LogsDialogProps) {
+  return (
+    <Dialog
+      {...dialogProps}
+      className="LogsDialog"
+    >
+      <Wizard
+        header={<h5>{title}</h5>}
+        done={dialogProps.close}
+      >
+        <WizardStep
+          scrollable={false}
+          customButtons={(
+            <div className="buttons flex gaps align-center justify-space-between">
+              <Button
+                plain
+                onClick={() => {
+                  clipboard.writeText(logs);
+                  Notifications.ok(`Logs copied to clipboard.`);
+                }}
+              >
+                <Icon material="assignment"/>
+                {" Copy to clipboard"}
+              </Button>
+              <Button plain onClick={dialogProps.close}>
+                Close
+              </Button>
+            </div>
+          )}
+        >
+          <code className="block">
+            {logs || "There are no logs available."}
+          </code>
+        </WizardStep>
+      </Wizard>
+    </Dialog>
+  );
 }

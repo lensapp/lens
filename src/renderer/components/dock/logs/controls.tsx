@@ -25,8 +25,9 @@ interface Dependencies {
 
 const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependencies & LogControlsProps) => {
   const tabData = model.logTabData.get();
+  const pod = model.pod.get();
 
-  if (!tabData) {
+  if (!tabData || !pod) {
     return null;
   }
 
@@ -44,7 +45,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependen
   };
 
   const downloadLogs = () => {
-    const fileName = model.pod.get().getName();
+    const fileName = pod.getName();
     const logsToDownload: string[] = showTimestamps
       ? model.logs.get()
       : model.logsWithoutTimestamps.get();
@@ -57,7 +58,8 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependen
       <div className="time-range">
         {since && (
           <span>
-            Logs from{" "}
+            Logs from
+            {" "}
             <b>{new Date(since).toLocaleString()}</b>
           </span>
         )}

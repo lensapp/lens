@@ -9,12 +9,12 @@ import capitalize from "lodash/capitalize";
 import { apiBase } from "../index";
 import { helmChartStore } from "../../../renderer/components/+helm-charts/helm-chart.store";
 import type { ItemObject } from "../../item.store";
-import { KubeObject } from "../kube-object";
 import type { JsonApiData } from "../json-api";
 import { buildURLPositional } from "../../utils/buildUrl";
 import type { KubeJsonApiData } from "../kube-json-api";
 
-interface IReleasePayload {
+export interface HelmReleaseDetails {
+  resources: KubeJsonApiData[];
   name: string;
   namespace: string;
   version: string;
@@ -30,15 +30,7 @@ interface IReleasePayload {
   };
 }
 
-interface IReleaseRawDetails extends IReleasePayload {
-  resources: KubeJsonApiData[];
-}
-
-export interface IReleaseDetails extends IReleasePayload {
-  resources: KubeObject[];
-}
-
-export interface IReleaseCreatePayload {
+export interface HelmReleaseCreatePayload {
   name?: string;
   repo: string;
   chart: string;
@@ -47,19 +39,19 @@ export interface IReleaseCreatePayload {
   values: string;
 }
 
-export interface IReleaseUpdatePayload {
+export interface HelmReleaseUpdatePayload {
   repo: string;
   chart: string;
   version: string;
   values: string;
 }
 
-export interface IReleaseUpdateDetails {
+export interface HelmReleaseUpdateDetails {
   log: string;
-  release: IReleaseDetails;
+  release: HelmReleaseDetails;
 }
 
-export interface IReleaseRevision {
+export interface HelmReleaseRevision {
   revision: number;
   updated: string;
   status: string;
@@ -85,18 +77,13 @@ export async function listReleases(namespace?: string): Promise<HelmRelease[]> {
   return releases.map(toHelmRelease);
 }
 
-export async function getRelease(name: string, namespace: string): Promise<IReleaseDetails> {
+export async function getRelease(name: string, namespace: string): Promise<HelmReleaseDetails> {
   const path = endpoint({ name, namespace });
-  const { resources: rawResources, ...details } = await apiBase.get<IReleaseRawDetails>(path);
-  const resources = rawResources.map(KubeObject.create);
 
-  return {
-    ...details,
-    resources,
-  };
+  return apiBase.get(path);
 }
 
-export async function createRelease(payload: IReleaseCreatePayload): Promise<IReleaseUpdateDetails> {
+export async function createRelease(payload: HelmReleaseCreatePayload): Promise<HelmReleaseUpdateDetails> {
   const { repo, chart: rawChart, values: rawValues, ...data } = payload;
   const chart = `${repo}/${rawChart}`;
   const values = yaml.load(rawValues);
@@ -110,7 +97,7 @@ export async function createRelease(payload: IReleaseCreatePayload): Promise<IRe
   });
 }
 
-export async function updateRelease(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
+export async function updateRelease(name: string, namespace: string, payload: HelmReleaseUpdatePayload): Promise<HelmReleaseUpdateDetails> {
   const { repo, chart: rawChart, values: rawValues, ...data } = payload;
   const chart = `${repo}/${rawChart}`;
   const values = yaml.load(rawValues);
@@ -137,7 +124,7 @@ export async function getReleaseValues(name: string, namespace: string, all?: bo
   return apiBase.get<string>(path);
 }
 
-export async function getReleaseHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
+export async function getReleaseHistory(name: string, namespace: string): Promise<HelmReleaseRevision[]> {
   const route = "history";
   const path = endpoint({ name, namespace, route });
 

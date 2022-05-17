@@ -13,19 +13,12 @@ import { ConfirmDialog } from "../../components/confirm-dialog";
 import { CommandContainer } from "../../components/command-palette/command-container";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
-import { ClusterFrameHandler } from "../../components/cluster-manager/lens-views";
 
 injectSystemCAs();
 
 @observer
 export class RootFrame extends React.Component {
   static displayName = "RootFrame";
-
-  constructor(props: any) {
-    super(props);
-
-    ClusterFrameHandler.createInstance();
-  }
 
   componentDidMount() {
     ipcRenderer.send(IpcRendererNavigationEvents.LOADED);

@@ -14,6 +14,8 @@ describe("computeRuleDeclarations", () => {
         name: "foo",
         resourceVersion: "1",
         uid: "bar",
+        namespace: "default",
+        selfLink: "/apis/networking.k8s.io/v1/ingresses/default/foo",
       },
     });
 
@@ -21,6 +23,7 @@ describe("computeRuleDeclarations", () => {
       host: "foo.bar",
       http: {
         paths: [{
+          pathType: "Exact",
           backend: {
             service: {
               name: "my-service",
@@ -44,6 +47,8 @@ describe("computeRuleDeclarations", () => {
         name: "foo",
         resourceVersion: "1",
         uid: "bar",
+        namespace: "default",
+        selfLink: "/apis/networking.k8s.io/v1/ingresses/default/foo",
       },
     });
 
@@ -55,6 +60,7 @@ describe("computeRuleDeclarations", () => {
       host: "foo.bar",
       http: {
         paths: [{
+          pathType: "Exact",
           backend: {
             service: {
               name: "my-service",
@@ -78,6 +84,8 @@ describe("computeRuleDeclarations", () => {
         name: "foo",
         resourceVersion: "1",
         uid: "bar",
+        namespace: "default",
+        selfLink: "/apis/networking.k8s.io/v1/ingresses/default/foo",
       },
     });
 
@@ -91,6 +99,7 @@ describe("computeRuleDeclarations", () => {
       host: "foo.bar",
       http: {
         paths: [{
+          pathType: "Exact",
           backend: {
             service: {
               name: "my-service",

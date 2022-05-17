@@ -7,6 +7,7 @@
 import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
+import type { ThemeId } from "../renderer/themes/store";
 import { lazyInitialized } from "./utils/lazy-initialized";
 
 /**
@@ -52,7 +53,7 @@ export const productName = packageInfo.productName;
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
 
 export const publicPath = "/build/" as string;
-export const defaultTheme = "lens-dark" as string;
+export const defaultThemeId: ThemeId = "lens-dark";
 export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";
 export const defaultEditorFontFamily = "RobotoMono";
@@ -129,8 +130,8 @@ export const kubectlBinaryName = getBinaryName("kubectl");
 export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
 
 // Apis
-export const apiPrefix = "/api" as string; // local router apis
-export const apiKubePrefix = "/api-kube" as string; // k8s cluster apis
+export const apiPrefix = "/api"; // local router apis
+export const apiKubePrefix = "/api-kube"; // k8s cluster apis
 
 // Links
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as string;

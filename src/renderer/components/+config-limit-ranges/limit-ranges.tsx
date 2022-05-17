@@ -7,7 +7,7 @@ import "./limit-ranges.scss";
 
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { limitRangeStore } from "./limit-ranges.store";
+import { limitRangeStore } from "./legacy-store";
 import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";

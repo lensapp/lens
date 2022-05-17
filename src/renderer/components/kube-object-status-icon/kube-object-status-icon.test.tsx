@@ -8,7 +8,7 @@ import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { computed } from "mobx";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import { KubeObjectStatusLevel } from "../../../extensions/renderer-api/kube-object-status";
+import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { KubeObjectStatusIcon } from "./kube-object-status-icon";
 import React from "react";
@@ -232,6 +232,7 @@ const getKubeObjectStub = (kind: string, apiVersion: string) => KubeObject.creat
     name: "some-name",
     resourceVersion: "some-resource-version",
     namespace: "some-namespace",
+    selfLink: "/foo",
   },
 });
 
@@ -253,7 +254,7 @@ class SomeTestExtension extends LensRendererExtension {
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: "some-id", version: "some-version" },
+      manifest: { name: "some-id", version: "some-version", engines: { lens: "^5.5.0" }},
       manifestPath: "irrelevant",
     });
 

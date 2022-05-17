@@ -8,9 +8,9 @@ import "./statefulsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { statefulSetStore } from "./statefulset.store";
-import { eventStore } from "../+events/event.store";
+import { podStore } from "../+workloads-pods/legacy-store";
+import { statefulSetStore } from "./legacy-store";
+import { eventStore } from "../+events/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -27,7 +27,7 @@ enum columnId {
 @observer
 export class StatefulSets extends React.Component {
   renderPods(statefulSet: StatefulSet) {
-    const { readyReplicas, currentReplicas } = statefulSet.status;
+    const { readyReplicas, currentReplicas } = statefulSet.status ?? {};
 
     return `${readyReplicas || 0}/${currentReplicas || 0}`;
   }
@@ -38,8 +38,9 @@ export class StatefulSets extends React.Component {
         <KubeObjectListLayout
           isConfigurable
           tableId="workload_statefulsets"
-          className="StatefulSets" store={statefulSetStore}
-          dependentStores={[podsStore, eventStore]} // status icon component uses event store, details component uses podStore
+          className="StatefulSets"
+          store={statefulSetStore}
+          dependentStores={[podStore, eventStore]} // status icon component uses event store, details component uses podStore
           sortingCallbacks={{
             [columnId.name]: statefulSet => statefulSet.getName(),
             [columnId.namespace]: statefulSet => statefulSet.getNs(),
@@ -63,7 +64,7 @@ export class StatefulSets extends React.Component {
             statefulSet.getNs(),
             this.renderPods(statefulSet),
             statefulSet.getReplicas(),
-            <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
+            <KubeObjectStatusIcon key="icon" object={statefulSet} />,
             <KubeObjectAge key="age" object={statefulSet} />,
           ]}
         />

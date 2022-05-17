@@ -10,11 +10,11 @@ import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
 import { Switch } from "../switch";
 import { Select } from "../select";
-import type { ThemeStore } from "../../theme.store";
+import type { ThemeStore } from "../../themes/store";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import themeStoreInjectable from "../../theme-store.injectable";
+import themeStoreInjectable from "../../themes/store.injectable";
 import defaultShellInjectable from "./default-shell.injectable";
 
 interface Dependencies {
@@ -23,7 +23,22 @@ interface Dependencies {
   defaultShell: string;
 }
 
-const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: Dependencies) => {
+const NonInjectedTerminal = observer(({
+  userStore,
+  themeStore,
+  defaultShell,
+}: Dependencies) => {
+  const themeOptions = [
+    {
+      value: "", // TODO: replace with a sentinal value that isn't string (and serialize it differently)
+      label: "Match Lens Theme",
+    },
+    ...Array.from(themeStore.themes, ([themeId, { name }]) => ({
+      value: themeId,
+      label: name,
+    })),
+  ];
+
   return (
     <Preferences data-testid="terminal-preferences-page">
       <section>
@@ -54,12 +69,9 @@ const NonInjectedTerminal = observer(({ userStore, themeStore, defaultShell }: D
           <Select
             id="terminal-theme-input"
             themeName="lens"
-            options={[
-              { label: "Match theme", value: "" },
-              ...themeStore.themeOptions,
-            ]}
+            options={themeOptions}
             value={userStore.terminalTheme}
-            onChange={({ value }) => userStore.terminalTheme = value}
+            onChange={option => userStore.terminalTheme = option?.value ?? ""}
           />
         </section>
 

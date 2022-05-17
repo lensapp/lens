@@ -4,16 +4,17 @@
  */
 
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
-export interface IComponentStatusCondition {
+export interface ComponentStatusCondition {
   type: string;
   status: string;
   message: string;
 }
 
 export interface ComponentStatus {
-  conditions: IComponentStatusCondition[];
+  conditions: ComponentStatusCondition[];
 }
 
 export class ComponentStatus extends KubeObject {
@@ -26,6 +27,11 @@ export class ComponentStatus extends KubeObject {
   }
 }
 
-export const componentStatusApi = new KubeApi({
-  objectConstructor: ComponentStatus,
-});
+export class ComponentStatusApi extends KubeApi<ComponentStatus> {
+  constructor(opts: DerivedKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: ComponentStatus,
+    });
+  }
+}

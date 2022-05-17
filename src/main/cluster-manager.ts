@@ -9,10 +9,10 @@ import { action, makeObservable, observable, observe, reaction, toJS } from "mob
 import type { Cluster } from "../common/cluster/cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { getClusterIdFromHost } from "../common/utils";
-import type { CatalogEntityRegistry } from "./catalog";
+import { getClusterIdFromHost, isErrnoException } from "../common/utils";
+import type { catalogEntityRegistry } from "./catalog";
 import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
-import { KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
+import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 import type { ClusterStore } from "../common/cluster-store/cluster-store";
@@ -52,12 +52,12 @@ export class ClusterManager {
     );
 
     reaction(
-      () => this.dependencies.catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster) as KubernetesCluster[],
+      () => this.dependencies.catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
       entities => this.syncClustersFromCatalog(entities),
     );
 
     reaction(() => [
-      this.dependencies.catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster),
+      this.dependencies.catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
       this.visibleCluster,
     ] as const, ([entities, visibleCluster]) => {
       for (const entity of entities) {
@@ -71,7 +71,7 @@ export class ClusterManager {
 
     observe(this.deleting, change => {
       if (change.type === "add") {
-        this.updateEntityStatus(this.dependencies.catalogEntityRegistry.getById(change.newValue));
+        this.updateEntityStatus(this.dependencies.catalogEntityRegistry.findById(change.newValue) as KubernetesCluster);
       }
     });
 
@@ -200,7 +200,7 @@ export class ClusterManager {
            */
           this.dependencies.store.addCluster(model);
         } catch (error) {
-          if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
+          if (isErrnoException(error) && error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
             logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
           } else {
             logger.error(`${logPrefix} failed to add cluster: ${error}`, model);
@@ -210,7 +210,7 @@ export class ClusterManager {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
 
-        if (entity.spec.accessibleNamespace) {
+        if (entity.spec.accessibleNamespaces) {
           cluster.accessibleNamespaces = entity.spec.accessibleNamespaces;
         }
 
@@ -261,9 +261,13 @@ export class ClusterManager {
     });
   }
 
-  getClusterForRequest = (req: http.IncomingMessage): Cluster => {
+  getClusterForRequest(req: http.IncomingMessage): Cluster | undefined {
+    if (!req.headers.host) {
+      return undefined;
+    }
+
     // lens-server is connecting to 127.0.0.1:<port>/<uid>
-    if (req.headers.host.startsWith("127.0.0.1")) {
+    if (req.url && req.headers.host.startsWith("127.0.0.1")) {
       const clusterId = req.url.split("/")[1];
       const cluster = this.dependencies.store.getById(clusterId);
 

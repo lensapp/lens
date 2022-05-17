@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import packageInfo from "../package.json";
-import { type WriteStream } from "fs";
 import type { FileHandle } from "fs/promises";
 import { open } from "fs/promises";
+import type { WriteStream } from "fs-extra";
 import { constants, ensureDir, unlink } from "fs-extra";
 import path from "path";
 import fetch from "node-fetch";
@@ -17,6 +17,7 @@ import AbortController from "abort-controller";
 import { extract } from "tar-stream";
 import gunzip from "gunzip-maybe";
 import { getBinaryName, normalizedPlatform } from "../src/common/vars";
+import { isErrnoException } from "../src/common/utils";
 
 const pipeline = promisify(_pipeline);
 
@@ -44,6 +45,10 @@ abstract class BinaryDownloader {
   }
 
   async ensureBinary(): Promise<void> {
+    if (process.env.LENS_SKIP_DOWNLOAD_BINARIES === "true") {
+      return;
+    }
+
     const controller = new AbortController();
     const stream = await fetch(this.url, {
       timeout: 15 * 60 * 1000, // 15min
@@ -51,7 +56,7 @@ abstract class BinaryDownloader {
     });
     const total = Number(stream.headers.get("content-length"));
     const bar = this.bar;
-    let fileHandle: FileHandle;
+    let fileHandle: FileHandle | undefined = undefined;
 
     if (isNaN(total)) {
       throw new Error("no content-length header was present");
@@ -66,7 +71,7 @@ abstract class BinaryDownloader {
        * This is necessary because for some reason `createWriteStream({ flags: "wx" })`
        * was throwing someplace else and not here
        */
-      fileHandle = await open(this.target, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL);
+      const handle = fileHandle = await open(this.target, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL);
 
       await pipeline(
         stream.body,
@@ -79,7 +84,7 @@ abstract class BinaryDownloader {
         }),
         ...this.getTransformStreams(new Writable({
           write(chunk, encoding, cb) {
-            fileHandle.write(chunk)
+            handle.write(chunk)
               .then(() => cb())
               .catch(cb);
           },
@@ -90,7 +95,7 @@ abstract class BinaryDownloader {
     } catch (error) {
       await fileHandle?.close();
 
-      if (error.code === "EEXIST") {
+      if (isErrnoException(error) && error.code === "EEXIST") {
         bar.increment(total); // mark as finished
         controller.abort(); // stop trying to download
       } else {
