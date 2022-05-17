@@ -5,7 +5,7 @@
 
 import { render } from "@testing-library/react";
 import React from "react";
-import { UpdateButton } from "..";
+import { UpdateButton } from "../update-button";
 import "@testing-library/jest-dom/extend-expect";
 
 const update = jest.fn();
