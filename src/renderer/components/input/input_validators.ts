@@ -4,7 +4,7 @@
  */
 
 import type { InputProps } from "./input";
-import type { ReactNode } from "react";
+import type React from "react";
 import fse from "fs-extra";
 import { TypedRegEx } from "typed-regex";
 
@@ -19,10 +19,10 @@ export type InputValidation<IsAsync extends boolean, RequireProps extends boolea
     : (value: string, props?: InputProps) => InputValidationResult<IsAsync>
 );
 
-export type SyncValidationMessageBuilder<RequireProps extends boolean> = (
+export type SyncValidationMessage<RequireProps extends boolean> = React.ReactNode | (
   RequireProps extends true
-    ? (value: string, props: InputProps) => ReactNode
-    : (value: string, props?: InputProps) => ReactNode
+    ? (value: string, props: InputProps) => React.ReactNode
+    : (value: string, props?: InputProps) => React.ReactNode
 );
 
 export type InputValidator<IsAsync extends boolean = boolean, RequireProps extends boolean = boolean> = {
@@ -34,7 +34,7 @@ export type InputValidator<IsAsync extends boolean = boolean, RequireProps exten
   IsAsync extends false
     ? {
       validate: InputValidation<false, RequireProps>;
-      message: ReactNode | SyncValidationMessageBuilder<RequireProps>;
+      message: SyncValidationMessage<RequireProps>;
       debounce?: undefined;
     }
     : {
@@ -43,22 +43,20 @@ export type InputValidator<IsAsync extends boolean = boolean, RequireProps exten
        * or if that is not provided then the message will retrived from the rejected with value
        */
       validate: InputValidation<true, RequireProps>;
-      message?: ReactNode | SyncValidationMessageBuilder<RequireProps>;
+      message?: SyncValidationMessage<RequireProps>;
       debounce: number;
     }
   );
 
-export function asyncInputValidator(validator: InputValidator<true, false>): InputValidator<true, false>;
-export function asyncInputValidator<RequireProps extends boolean>(validator: InputValidator<true, RequireProps>): InputValidator<true, RequireProps>;
-
-export function asyncInputValidator<RequireProps extends boolean>(validator: InputValidator<true, RequireProps>): InputValidator<true, RequireProps> {
+export function asyncInputValidator(validator: InputValidator<true, false>): InputValidator<true, false> {
   return validator;
 }
 
-export function inputValidator(validator: InputValidator<false, false>): InputValidator<false, false>;
-export function inputValidator<RequireProps extends boolean>(validator: InputValidator<false, RequireProps>): InputValidator<false, RequireProps>;
+export function inputValidator(validator: InputValidator<false, false>): InputValidator<false, false> {
+  return validator;
+}
 
-export function inputValidator<RequireProps extends boolean>(validator: InputValidator<false, RequireProps>): InputValidator<false, RequireProps> {
+export function inputValidatorWithRequiredProps(validator: InputValidator<false, true>): InputValidator<false, true> {
   return validator;
 }
 
@@ -74,7 +72,7 @@ export const isEmail = inputValidator({
   validate: value => !!value.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
 });
 
-export const isNumber = inputValidator<true>({
+export const isNumber = inputValidatorWithRequiredProps({
   condition: ({ type }) => type === "number",
   message(value, { min, max }) {
     const minMax: string = [
@@ -133,18 +131,16 @@ export const isPath = asyncInputValidator({
   },
 });
 
-export const minLength = inputValidator<true>({
+export const minLength = inputValidatorWithRequiredProps({
   condition: ({ minLength }) => !!minLength,
   message: (value, { minLength }) => `Minimum length is ${minLength}`,
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  validate: (value, { minLength }) => value.length >= minLength!,
+  validate: (value, { minLength = 0 }) => value.length >= minLength,
 });
 
-export const maxLength = inputValidator<true>({
+export const maxLength = inputValidatorWithRequiredProps({
   condition: ({ maxLength }) => !!maxLength,
   message: (value, { maxLength }) => `Maximum length is ${maxLength}`,
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  validate: (value, { maxLength }) => value.length <= maxLength!,
+  validate: (value, { maxLength = 0 }) => value.length <= maxLength,
 });
 
 const systemNameMatcher = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;

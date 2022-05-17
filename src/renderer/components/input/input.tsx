@@ -12,22 +12,23 @@ import { Icon } from "../icon";
 import type { TooltipProps } from "../tooltip";
 import { Tooltip } from "../tooltip";
 import * as Validators from "./input_validators";
-import type { InputValidator, InputValidation, InputValidationResult, SyncValidationMessageBuilder } from "./input_validators";
+import type { InputValidator, InputValidation, InputValidationResult, SyncValidationMessage } from "./input_validators";
 import uniqueId from "lodash/uniqueId";
 import { debounce } from "lodash";
 
-const { conditionalValidators, asyncInputValidator, inputValidator, ...InputValidators } = Validators;
+const { conditionalValidators, asyncInputValidator, inputValidator, inputValidatorWithRequiredProps, ...InputValidators } = Validators;
 
 export {
   InputValidators,
   asyncInputValidator,
   inputValidator,
+  inputValidatorWithRequiredProps,
 };
 export type {
   InputValidator,
   InputValidation,
   InputValidationResult,
-  SyncValidationMessageBuilder,
+  SyncValidationMessage,
 };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
