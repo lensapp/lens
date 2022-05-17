@@ -8,9 +8,6 @@ import type { ReactNode } from "react";
 import fse from "fs-extra";
 import { TypedRegEx } from "typed-regex";
 
-export class AsyncInputValidationError extends Error {
-}
-
 export type InputValidationResult<IsAsync extends boolean> =
   IsAsync extends true
     ? Promise<void>
@@ -42,12 +39,11 @@ export type InputValidator<IsAsync extends boolean = boolean, RequireProps exten
     }
     : {
       /**
-       * If asyncronous then the rejection message is the error message
-       *
-       * This function MUST reject with an instance of {@link AsyncInputValidationError}
+       * The validation message maybe either specified from the `message` field (higher priority)
+       * or if that is not provided then the message will retrived from the rejected with value
        */
       validate: InputValidation<true, RequireProps>;
-      message?: undefined;
+      message?: ReactNode | SyncValidationMessageBuilder<RequireProps>;
       debounce: number;
     }
   );
@@ -131,10 +127,8 @@ export const isPath = asyncInputValidator({
   debounce: 100,
   condition: ({ type }) => type === "text",
   validate: async value => {
-    try {
-      await fse.pathExists(value);
-    } catch {
-      throw new AsyncInputValidationError(`${value} is not a valid file path`);
+    if (!await fse.pathExists(value)) {
+      throw new Error(`"${value}" is not a valid file path`);
     }
   },
 });

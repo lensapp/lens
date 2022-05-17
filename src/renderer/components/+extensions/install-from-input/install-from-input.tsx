@@ -14,7 +14,6 @@ import { readFileNotify } from "../read-file-notify/read-file-notify";
 import type { InstallRequest } from "../attempt-install/install-request";
 import type { ExtensionInfo } from "../attempt-install-by-info.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import { AsyncInputValidationError } from "../../input/input_validators";
 
 export type InstallFromInput = (input: string) => Promise<void>;
 
@@ -51,16 +50,12 @@ export const installFromInput = ({
 
         return await attemptInstall({ fileName, dataP: readFileNotify(input) });
       } catch (error) {
-        if (error instanceof AsyncInputValidationError) {
-          const extNameCaptures = InputValidators.isExtensionNameInstallRegex.captures(input);
+        const extNameCaptures = InputValidators.isExtensionNameInstallRegex.captures(input);
 
-          if (extNameCaptures) {
-            const { name, version } = extNameCaptures;
+        if (extNameCaptures) {
+          const { name, version } = extNameCaptures;
 
-            return await attemptInstallByInfo({ name, version });
-          }
-        } else {
-          throw error;
+          return await attemptInstallByInfo({ name, version });
         }
       }
 

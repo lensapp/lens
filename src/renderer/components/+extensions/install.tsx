@@ -9,14 +9,12 @@ import { prevDefault } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
-import { Input, InputValidators } from "../input";
+import { asyncInputValidator, Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import extensionInstallationStateStoreInjectable
-  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { inputValidator } from "../input/input_validators";
 
 export interface InstallProps {
   installPath: string;
@@ -30,17 +28,22 @@ interface Dependencies {
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
-const installInputValidators = [
-  InputValidators.isUrl,
-  InputValidators.isPath,
-  InputValidators.isExtensionNameInstall,
-];
+const installInputValidator = asyncInputValidator({
+  validate: async (value) => {
+    if (
+      InputValidators.isUrl.validate(value)
+      || InputValidators.isExtensionNameInstall.validate(value)
+    ) {
+      return;
+    }
 
-const installInputValidator = inputValidator({
-  message: "Invalid URL, absolute path, or extension name",
-  validate: (value: string, props) => (
-    installInputValidators.some(({ validate }) => validate(value, props))
-  ),
+    try {
+      return await InputValidators.isPath.validate(value);
+    } catch {
+      throw new Error("Invalid URL, absolute path, or extension name");
+    }
+  },
+  debounce: InputValidators.isPath.debounce,
 });
 
 const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({

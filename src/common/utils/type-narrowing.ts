@@ -137,6 +137,14 @@ export function hasDefiniteField<Field extends keyof T, T>(field: Field): (val: 
   return (val): val is T & { [f in Field]-?: NonNullable<T[Field]> } => val[field] != null;
 }
 
+export function isPromiseSettledRejected<T>(result: PromiseSettledResult<T>): result is PromiseRejectedResult {
+  return result.status === "rejected";
+}
+
+export function isPromiseSettledFulfilled<T>(result: PromiseSettledResult<T>): result is PromiseFulfilledResult<T> {
+  return result.status === "fulfilled";
+}
+
 export function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
   return isObject(error)
     && hasOptionalTypedProperty(error, "code", isString)
