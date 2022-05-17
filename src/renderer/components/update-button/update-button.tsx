@@ -8,7 +8,6 @@ import styles from "./styles.module.scss";
 import type { HTMLAttributes } from "react";
 import React, { useState } from "react";
 import { Menu, MenuItem } from "../menu";
-import { noop } from "lodash";
 import { cssNames } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
@@ -22,13 +21,6 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
   const buttonId = id ?? "update-lens-button";
   const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
-
-  const onKeyDown = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (evt.code == "Space") {
-      evt.preventDefault();
-      toggle();
-    }
-  };
 
   const toggle = () => {
     setOpened(!opened);
@@ -47,8 +39,6 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
           [styles.warningHigh]: warningLevel === "high",
           [styles.warningMedium]: warningLevel === "medium",
         })}
-        onClick={toggle}
-        onKeyDown={onKeyDown}
       >
         Update
         <Icon material="arrow_drop_down" className={styles.icon}/>
@@ -58,7 +48,7 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
         htmlFor={buttonId}
         isOpen={opened}
         close={toggle}
-        open={noop}
+        open={toggle}
       >
         <MenuItem icon={menuIconProps} onClick={update} data-testid="update-lens-menu-item">
           Relaunch to Update Lens
