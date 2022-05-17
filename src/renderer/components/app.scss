@@ -9,7 +9,6 @@
 
 @import "~flex.box";
 @import "../themes/theme-vars";
-@import "./fonts";
 
 :root {
   --unit: 8px;
@@ -17,7 +16,8 @@
   --margin: var(--unit);
   --border-radius: 3px;
   --font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  --font-monospace: Lucida Console, Monaco, Consolas, monospace;
+  --font-monospace: Lucida Console, Monaco, Consolas, monospace; // some defaults
+  --font-terminal: var(--font-monospace); // overridden in terminal.ts
   --font-size-small: calc(1.5 * var(--unit));
   --font-size: calc(1.75 * var(--unit));
   --font-size-big: calc(2 * var(--unit));
@@ -224,6 +224,19 @@ a {
     > * + * {
       margin-top: var(--flow-space);
     }
+  }
+}
+
+// import and preload all bundled fonts
+@import "fonts";
+
+#fonts-preloading {
+  > .icons {
+    @include font-preload("Material Icons");
+  }
+
+  > .terminal {
+    @include font-preload("RobotoMono");
   }
 }
 

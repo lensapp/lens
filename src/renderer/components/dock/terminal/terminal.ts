@@ -64,16 +64,26 @@ export class Terminal {
     }
   }
 
-  constructor(protected readonly dependencies: TerminalDependencies, { tabId, api }: TerminalArguments) {
+  get fontFamily() {
+    return this.dependencies.terminalConfig.get().fontFamily;
+  }
+
+  get fontSize() {
+    return this.dependencies.terminalConfig.get().fontSize;
+  }
+
+  constructor(protected readonly dependencies: TerminalDependencies, {
+    tabId,
+    api
+  }: TerminalArguments) {
     this.tabId = tabId;
     this.api = api;
-    const { fontSize, fontFamily } = this.dependencies.terminalConfig.get();
 
     this.xterm = new XTerm({
       cursorBlink: true,
       cursorStyle: "bar",
-      fontSize,
-      fontFamily,
+      fontSize: this.fontSize,
+      fontFamily: this.fontFamily,
     });
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
@@ -100,12 +110,8 @@ export class Terminal {
       }, {
         fireImmediately: true,
       }),
-      reaction(() => this.dependencies.terminalConfig.get().fontSize, this.setFontSize, {
-        fireImmediately: true,
-      }),
-      reaction(() => this.dependencies.terminalConfig.get().fontFamily, this.setFontFamily, {
-        fireImmediately: true,
-      }),
+      reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true, }),
+      reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true, }),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
@@ -201,8 +207,11 @@ export class Terminal {
     this.xterm.options.fontSize = size;
   };
 
-  setFontFamily = (family: string) => {
-    this.xterm.options.fontFamily = family;
+  setFontFamily = (fontFamily: string) => {
+    this.xterm.options.fontFamily = fontFamily;
+
+    // provide access to current terminal-font in css in :root {}
+    document.documentElement.style.setProperty("--font-terminal", fontFamily);
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
