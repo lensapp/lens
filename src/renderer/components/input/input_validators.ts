@@ -162,7 +162,7 @@ export const systemName = inputValidator({
 
 export const accountId = inputValidator({
   message: () => `Invalid account ID`,
-  validate: (value, props) => (isEmail.validate(value, props) || systemName.validate(value, props)),
+  validate: (value) => (isEmail.validate(value) || systemName.validate(value)),
 });
 
 export const conditionalValidators = [

@@ -34,7 +34,7 @@ export const installFromInput = ({
 
     try {
       // fixme: improve error messages for non-tar-file URLs
-      if (InputValidators.isUrl.validate(input, {})) {
+      if (InputValidators.isUrl.validate(input)) {
         // install via url
         disposer = extensionInstallationStateStore.startPreInstall();
         const { promise } = downloadFile({ url: input, timeout: 10 * 60 * 1000 });
@@ -44,7 +44,7 @@ export const installFromInput = ({
       }
 
       try {
-        await InputValidators.isPath.validate(input, {});
+        await InputValidators.isPath.validate(input);
 
         // install from system path
         const fileName = path.basename(input);
