@@ -34,6 +34,7 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
     <>
       <button
         data-testid="update-button"
+        data-warning-level={warningLevel}
         id={buttonId}
         className={cssNames(styles.updateButton, {
           [styles.warningHigh]: warningLevel === "high",

@@ -51,19 +51,27 @@ describe("<UpdateButton/>", () => {
     expect(update).toHaveBeenCalled();
   });
 
-  it("should have class name with medium warning level", () => {
+  it("should have light warning level", () => {
+    const { getByTestId } = render(<UpdateButton update={update} warningLevel="light" />);
+
+    const button = getByTestId("update-button");
+
+    expect(button.dataset.warningLevel).toBe("light");
+  });
+
+  it("should have medium warning level", () => {
     const { getByTestId } = render(<UpdateButton update={update} warningLevel="medium" />);
 
     const button = getByTestId("update-button");
 
-    expect(button.className.toLowerCase().includes("medium")).toBeTruthy();
+    expect(button.dataset.warningLevel).toBe("medium");
   });
 
-  it("should have class name with high warning level", () => {
+  it("should have high warning level", () => {
     const { getByTestId } = render(<UpdateButton update={update} warningLevel="high" />);
 
     const button = getByTestId("update-button");
 
-    expect(button.className.toLowerCase().includes("high")).toBeTruthy();
+    expect(button.dataset.warningLevel).toBe("high");
   });
 });
