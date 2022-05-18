@@ -47,18 +47,14 @@ const applicationMenuItemsInjectable = getInjectable({
     const applicationWindow = di.inject(applicationWindowInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const reloadApplicationWindow = di.inject(reloadWindowInjectable, applicationWindow);
+    const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
+    const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
+    const navigateToCatalog = di.inject(navigateToCatalogInjectable);
+    const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
+    const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
+    const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
 
     return computed((): MenuItemOpts[] => {
-
-      // TODO: These injects should happen outside of the computed.
-      // TODO: Remove temporal dependencies in WindowManager to make sure timing is correct.
-      const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
-      const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
-      const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
-      const navigateToCatalog = di.inject(navigateToCatalogInjectable);
-      const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
-      const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
-
       const autoUpdateDisabled = !isAutoUpdateEnabled();
 
       logger.info(`[MENU]: autoUpdateDisabled=${autoUpdateDisabled}`);
