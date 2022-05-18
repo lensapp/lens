@@ -21,7 +21,7 @@
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
     "compile:main": "yarn run webpack --config webpack/main.ts",
     "compile:renderer": "yarn run webpack --config webpack/renderer.ts",
-    "compile:extension-types": "yarn run webpack --config webpack/extensions.ts",
+    "compile:extension-types": "yarn run tsc --project tsconfig.extension-api.json",
     "npm:fix-build-version": "yarn run ts-node build/set_build_version.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
     "build:linux": "yarn run compile && electron-builder --linux --dir",
