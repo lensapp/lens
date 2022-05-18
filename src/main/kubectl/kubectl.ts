@@ -155,7 +155,7 @@ export class Kubectl {
       try {
         const args = [
           "version",
-          "--client", "true",
+          "--client",
           "--output", "json",
         ];
         const { stdout } = await promiseExecFile(path, args);
