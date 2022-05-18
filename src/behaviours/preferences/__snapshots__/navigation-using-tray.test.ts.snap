@@ -119,7 +119,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
               >
                 <span
                   class="css-1f43avz-a11yText-A11yText"
-                  id="react-select-2-live-region"
+                  id="react-select-theme-input-live-region"
                 />
                 <span
                   aria-atomic="false"
@@ -135,7 +135,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                   >
                     <div
                       class="Select__placeholder css-14el2xx-placeholder"
-                      id="react-select-2-placeholder"
+                      id="react-select-theme-input-placeholder"
                     >
                       Select...
                     </div>
@@ -145,7 +145,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="react-select-2-placeholder"
+                        aria-describedby="react-select-theme-input-placeholder"
                         aria-expanded="false"
                         aria-haspopup="true"
                         autocapitalize="none"
@@ -204,7 +204,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
               >
                 <span
                   class="css-1f43avz-a11yText-A11yText"
-                  id="react-select-3-live-region"
+                  id="react-select-extension-install-registry-input-live-region"
                 />
                 <span
                   aria-atomic="false"
@@ -220,7 +220,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                   >
                     <div
                       class="Select__placeholder css-14el2xx-placeholder"
-                      id="react-select-3-placeholder"
+                      id="react-select-extension-install-registry-input-placeholder"
                     >
                       Select...
                     </div>
@@ -230,7 +230,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="react-select-3-placeholder"
+                        aria-describedby="react-select-extension-install-registry-input-placeholder"
                         aria-expanded="false"
                         aria-haspopup="true"
                         autocapitalize="none"
@@ -276,17 +276,12 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
               <p
                 class="mt-4 mb-5 leading-relaxed"
               >
-                This setting is to change the registry URL for installing extensions by name.
-                 
-                If you are unable to access the default registry (
-                https://registry.npmjs.org
-                )
-                 
-                you can change it in your 
+                This setting is to change the registry URL for installing extensions by name. 
+                If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
                 <b>
                   .npmrc
                 </b>
-                 file or in the input below.
+                 file or in the input below.
               </p>
               <div
                 class="Input theme round black disabled invalid"
@@ -344,7 +339,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
               >
                 <span
                   class="css-1f43avz-a11yText-A11yText"
-                  id="react-select-4-live-region"
+                  id="react-select-update-channel-input-live-region"
                 />
                 <span
                   aria-atomic="false"
@@ -360,7 +355,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                   >
                     <div
                       class="Select__placeholder css-14el2xx-placeholder"
-                      id="react-select-4-placeholder"
+                      id="react-select-update-channel-input-placeholder"
                     >
                       Select...
                     </div>
@@ -370,7 +365,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="react-select-4-placeholder"
+                        aria-describedby="react-select-update-channel-input-placeholder"
                         aria-expanded="false"
                         aria-haspopup="true"
                         autocapitalize="none"
@@ -429,7 +424,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
               >
                 <span
                   class="css-1f43avz-a11yText-A11yText"
-                  id="react-select-5-live-region"
+                  id="react-select-timezone-input-live-region"
                 />
                 <span
                   aria-atomic="false"
@@ -445,7 +440,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                   >
                     <div
                       class="Select__placeholder css-14el2xx-placeholder"
-                      id="react-select-5-placeholder"
+                      id="react-select-timezone-input-placeholder"
                     >
                       Select...
                     </div>
@@ -455,7 +450,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="react-select-5-placeholder"
+                        aria-describedby="react-select-timezone-input-placeholder"
                         aria-expanded="false"
                         aria-haspopup="true"
                         autocapitalize="none"
