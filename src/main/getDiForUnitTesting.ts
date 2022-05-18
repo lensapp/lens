@@ -81,6 +81,7 @@ import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-
 import publishIsConfiguredInjectable from "./update-app/publish-is-configured.injectable";
 import checkForPlatformUpdatesInjectable from "./update-app/check-for-platform-updates/check-for-platform-updates.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
+import downloadPlatformUpdateInjectable from "./update-app/download-platform-update/download-platform-update.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -105,7 +106,7 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
 
   if (doGeneralOverrides) {
     di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
-    di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" } }) as UserStore);
+    di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
     di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
@@ -224,6 +225,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
   di.override(quitAndInstallUpdateInjectable, () => () => {});
   di.override(setUpdateOnQuitInjectable, () => () => {});
+  di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
 
   di.override(checkForPlatformUpdatesInjectable, () => () => {
     throw new Error("Tried to check for platform updates without explicit override.");
