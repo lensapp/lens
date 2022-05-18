@@ -8,7 +8,7 @@ import type { LensMainExtension } from "../../../extensions/lens-main-extension"
 
 export interface TrayMenuItem {
   id: string;
-  parentId: string;
+  parentId: string | null;
   orderNumber: number;
   enabled: IComputedValue<boolean>;
   visible: IComputedValue<boolean>;
