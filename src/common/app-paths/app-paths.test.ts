@@ -2,27 +2,27 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainer } from "@ogre-tools/injectable";
 import type { AppPaths } from "./app-path-injection-token";
 import { appPathsInjectionToken } from "./app-path-injection-token";
 import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-path/get-electron-app-path.injectable";
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import type { PathName } from "./app-path-names";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import appNameInjectable from "../../main/app-paths/app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "../../main/app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
+import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("app-paths", () => {
-  let mainDi: DiContainer;
+  let applicationBuilder: ApplicationBuilder;
   let rendererDi: DiContainer;
-  let runSetups: () => Promise<void[]>;
+  let mainDi: DiContainer;
 
   beforeEach(() => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+    applicationBuilder = getApplicationBuilder();
 
-    mainDi = dis.mainDi;
-    rendererDi = dis.rendererDi;
-    runSetups = dis.runSetups;
+    rendererDi = applicationBuilder.dis.rendererDi;
+    mainDi = applicationBuilder.dis.mainDi;
 
     const defaultAppPathsStub: AppPaths = {
       appData: "some-app-data",
@@ -40,30 +40,32 @@ describe("app-paths", () => {
       recent: "some-recent",
       temp: "some-temp",
       videos: "some-videos",
-      userData: "some-irrelevant",
+      userData: "some-irrelevant-user-data",
     };
 
-    mainDi.override(
-      getElectronAppPathInjectable,
-      () =>
-        (key: PathName): string | null =>
-          defaultAppPathsStub[key],
-    );
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      mainDi.override(
+        getElectronAppPathInjectable,
+        () =>
+          (key: PathName): string | null =>
+            defaultAppPathsStub[key],
+      );
 
-    mainDi.override(
-      setElectronAppPathInjectable,
-      () =>
-        (key: PathName, path: string): void => {
-          defaultAppPathsStub[key] = path;
-        },
-    );
+      mainDi.override(
+        setElectronAppPathInjectable,
+        () =>
+          (key: PathName, path: string): void => {
+            defaultAppPathsStub[key] = path;
+          },
+      );
 
-    mainDi.override(appNameInjectable, () => "some-app-name");
+      mainDi.override(appNameInjectable, () => "some-app-name");
+    });
   });
 
   describe("normally", () => {
     beforeEach(async () => {
-      await runSetups();
+      await applicationBuilder.render();
     });
 
     it("given in renderer, when injecting app paths, returns application specific app paths", () => {
@@ -115,12 +117,14 @@ describe("app-paths", () => {
 
   describe("when running integration tests", () => {
     beforeEach(async () => {
-      mainDi.override(
-        directoryForIntegrationTestingInjectable,
-        () => "some-integration-testing-app-data",
-      );
+      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+        mainDi.override(
+          directoryForIntegrationTestingInjectable,
+          () => "some-integration-testing-app-data",
+        );
+      });
 
-      await runSetups();
+      await applicationBuilder.render();
     });
 
     it("given in renderer, when injecting path for app data, has integration specific app data path", () => {

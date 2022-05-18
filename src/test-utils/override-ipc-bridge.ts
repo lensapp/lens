@@ -8,9 +8,10 @@ import getValueFromRegisteredChannelInjectable from "../renderer/app-paths/get-v
 import registerChannelInjectable from "../main/app-paths/register-channel/register-channel.injectable";
 import asyncFn from "@async-fn/jest";
 import registerIpcChannelListenerInjectable from "../renderer/app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
-import windowManagerInjectable from "../main/window-manager.injectable";
-import type { SendToViewArgs, WindowManager } from "../main/window-manager";
-import { appNavigationIpcChannel } from "../common/front-end-routing/navigation-ipc-channel";
+import type { SendToViewArgs } from "../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import sendToChannelInElectronBrowserWindowInjectable from "../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
+import { isEmpty } from "lodash/fp";
+
 
 export const overrideIpcBridge = ({
   rendererDi,
@@ -68,7 +69,10 @@ export const overrideIpcBridge = ({
     mainIpcRegistrations.set(channel, callback);
   });
 
-  const rendererIpcFakeHandles = new Map<string, ((...args: any[]) => void)[]>();
+  const rendererIpcFakeHandles = new Map<
+    string,
+    ((...args: any[]) => void)[]
+  >();
 
   rendererDi.override(
     registerIpcChannelListenerInjectable,
@@ -81,20 +85,20 @@ export const overrideIpcBridge = ({
   );
 
   mainDi.override(
-    windowManagerInjectable,
-    () => {
-      const sendToView = ({ channel: channelName, data }: SendToViewArgs) => {
-        const handles = rendererIpcFakeHandles.get(channelName);
+    sendToChannelInElectronBrowserWindowInjectable,
+    () =>
+      (browserWindow, { channel: channelName, data = [] }: SendToViewArgs) => {
+        const handles = rendererIpcFakeHandles.get(channelName) || [];
 
-        handles?.forEach(handle => handle(...data ?? []));
-      };
-      const navigate: WindowManager["navigate"] = async (url) => {
-        sendToView({ channel: appNavigationIpcChannel.name, data: [url] });
-      };
+        if (isEmpty(handles)) {
+          throw new Error(
+            `Tried to send message to channel "${channelName}" but there where no listeners. Current channels with listeners: "${[
+              ...rendererIpcFakeHandles.keys(),
+            ].join('", "')}"`,
+          );
+        }
 
-      return {
-        navigate,
-      } as WindowManager;
-    },
+        handles.forEach((handle) => handle(...data));
+      },
   );
 };

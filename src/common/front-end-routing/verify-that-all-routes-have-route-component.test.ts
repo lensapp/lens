@@ -11,7 +11,7 @@ import type { ClusterStore } from "../cluster-store/cluster-store";
 import { pipeline } from "@ogre-tools/fp";
 
 describe("verify-that-all-routes-have-component", () => {
-  it("verify that routes have route component", async () => {
+  it("verify that routes have route component", () => {
     const rendererDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
     rendererDi.override(clusterStoreInjectable, () => ({

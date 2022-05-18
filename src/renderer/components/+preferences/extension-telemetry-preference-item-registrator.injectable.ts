@@ -44,7 +44,7 @@ const extensionTelemetryPreferenceItemRegistratorInjectable = getInjectable({
           }),
         );
 
-        injectables.forEach(di.register);
+        di.register(...injectables);
 
         return;
       },

@@ -50,6 +50,7 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
     removeConfirmationMessage: "Remove item?",
   };
 
+  // TODO: Make deterministic
   public id = uniqueId("menu_actions_");
 
   @observable isOpen = !!this.props.toolbar;

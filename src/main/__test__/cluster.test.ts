@@ -19,6 +19,8 @@ import listNamespacesInjectable from "../../common/cluster/list-namespaces.injec
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import { parse } from "url";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -26,7 +28,7 @@ describe("create clusters", () => {
   let cluster: Cluster;
   let createCluster: (model: ClusterModel) => Cluster;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -55,8 +57,8 @@ describe("create clusters", () => {
       }),
     });
 
-    await di.runSetups();
-
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => (cluster) => ({

@@ -8,6 +8,7 @@ import { CatalogEntityRegistry } from "./entity-registry";
 
 const catalogEntityRegistryInjectable = getInjectable({
   id: "catalog-entity-registry",
+
   instantiate: (di) => new CatalogEntityRegistry({
     hasCategoryForEntity: di.inject(hasCategoryForEntityInjectable),
   }),

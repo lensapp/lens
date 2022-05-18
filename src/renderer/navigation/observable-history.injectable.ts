@@ -10,6 +10,7 @@ import historyInjectable from "./history.injectable";
 
 const observableHistoryInjectable = getInjectable({
   id: "observable-history",
+
   instantiate: (di) => {
     const history = di.inject(historyInjectable);
     const logger = di.inject(loggerInjectable);

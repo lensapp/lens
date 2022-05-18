@@ -6,10 +6,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
-import type { UserStore } from "../../common/user-store";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - navigation using application menu", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -17,20 +13,6 @@ describe("preferences - navigation using application menu", () => {
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
-
-    applicationBuilder.beforeSetups(({ rendererDi, mainDi }) => {
-      mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
-
-      const userStoreStub = {
-        extensionRegistryUrl: { customUrl: "some-custom-url" },
-      } as unknown as UserStore;
-
-      rendererDi.override(userStoreInjectable, () => userStoreStub);
-      rendererDi.override(ipcRendererInjectable, () => ({
-        on: jest.fn(),
-        invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
-      } as never));
-    });
 
     rendered = await applicationBuilder.render();
   });
@@ -46,8 +28,8 @@ describe("preferences - navigation using application menu", () => {
   });
 
   describe("when navigating to preferences using application menu", () => {
-    beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.preferences");
+    beforeEach(async () => {
+      await applicationBuilder.applicationMenu.click("root.preferences");
     });
 
     it("renders", () => {

@@ -10,16 +10,16 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync/manager";
 import mockFs from "mock-fs";
 import fs from "fs";
-import { ClusterManager } from "../../cluster-manager";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import getConfigurationFileModelInjectable
-  from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import clusterManagerInjectable from "../../cluster-manager.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -45,12 +45,8 @@ describe("kubeconfig-sync.source tests", () => {
 
     mockFs();
 
-    await di.runSetups();
-
-    computeDiff = computeDiffFor({
-      directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
-      createCluster: di.inject(createClusterInjectionToken),
-    });
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 
     di.override(clusterStoreInjectable, () =>
       ClusterStore.createInstance({ createCluster: () => null as never }),
@@ -59,14 +55,17 @@ describe("kubeconfig-sync.source tests", () => {
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
 
-    di.inject(clusterStoreInjectable);
+    computeDiff = computeDiffFor({
+      directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
+      createCluster: di.inject(createClusterInjectionToken),
+      clusterManager: di.inject(clusterManagerInjectable),
+    });
 
-    ClusterManager.createInstance();
+    di.inject(clusterStoreInjectable);
   });
 
   afterEach(() => {
     mockFs.restore();
-    ClusterManager.resetInstance();
     ClusterStore.resetInstance();
   });
 

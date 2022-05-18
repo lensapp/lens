@@ -5,13 +5,14 @@
 
 import { UserStore } from "../../common/user-store";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
-import type { PrometheusService } from "../prometheus";
-import { PrometheusProvider, PrometheusProviderRegistry } from "../prometheus";
+import type { PrometheusService, PrometheusProviderRegistry } from "../prometheus";
+import { PrometheusProvider } from "../prometheus";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import prometheusProviderRegistryInjectable from "../prometheus/prometheus-provider-registry.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -74,8 +75,9 @@ const clusterStub = {
 
 describe("ContextHandler", () => {
   let createContextHandler: (cluster: Cluster) => ClusterContextHandler | undefined;
+  let prometheusProviderRegistry: PrometheusProviderRegistry;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs({
@@ -84,15 +86,12 @@ describe("ContextHandler", () => {
 
     di.override(createKubeAuthProxyInjectable, () => ({} as any));
 
-    await di.runSetups();
+    prometheusProviderRegistry = di.inject(prometheusProviderRegistryInjectable);
 
     createContextHandler = di.inject(createContextHandlerInjectable);
-
-    PrometheusProviderRegistry.createInstance();
   });
 
   afterEach(() => {
-    PrometheusProviderRegistry.resetInstance();
     UserStore.resetInstance();
     mockFs.restore();
   });
@@ -104,17 +103,16 @@ describe("ContextHandler", () => {
       [0, 2],
       [0, 3],
     ])("should throw from %d success(es) after %d failure(s)", async (successes, failures) => {
-      const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
 
       for (let i = 0; i < failures; i += 1) {
         const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
 
-        reg.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
       }
 
       for (let i = 0; i < successes; i += 1) {
-        reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
       expect(() => {
@@ -135,17 +133,16 @@ describe("ContextHandler", () => {
       [2, 2],
       [2, 3],
     ])("should pick the first provider of %d success(es) after %d failure(s)", async (successes, failures) => {
-      const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
 
       for (let i = 0; i < failures; i += 1) {
         const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
 
-        reg.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
       }
 
       for (let i = 0; i < successes; i += 1) {
-        reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
       // TODO: Unit test shouldn't access protected or private methods
@@ -166,17 +163,16 @@ describe("ContextHandler", () => {
       [2, 2],
       [2, 3],
     ])("should pick the first provider of %d success(es) before %d failure(s)", async (successes, failures) => {
-      const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
 
       for (let i = 0; i < successes; i += 1) {
-        reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
       for (let i = 0; i < failures; i += 1) {
         const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
 
-        reg.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
       }
 
       // TODO: Unit test shouldn't access protected or private methods
@@ -197,23 +193,22 @@ describe("ContextHandler", () => {
       [2, 2],
       [2, 3],
     ])("should pick the first provider of %d success(es) between %d failure(s)", async (successes, failures) => {
-      const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
       const beforeSuccesses = Math.floor(successes / 2);
       const afterSuccesses = successes - beforeSuccesses;
 
       for (let i = 0; i < beforeSuccesses; i += 1) {
-        reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
       for (let i = 0; i < failures; i += 1) {
         const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
 
-        reg.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
       }
 
       for (let i = 0; i < afterSuccesses; i += 1) {
-        reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
       }
 
       // TODO: Unit test shouldn't access protected or private methods
@@ -225,12 +220,11 @@ describe("ContextHandler", () => {
     });
 
     it("shouldn't pick the second provider of 2 success(es) after 1 failure(s)", async () => {
-      const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
 
-      reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Failure));
-      reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-      reg.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+      prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Failure));
+      prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
+      prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
 
       // TODO: Unit test shouldn't access protected or private methods
       const contextHandler = createContextHandler(clusterStub) as unknown as { getPrometheusService(): Promise<PrometheusService> };

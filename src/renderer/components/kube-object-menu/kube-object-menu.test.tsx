@@ -57,7 +57,7 @@ describe("kube-object-menu", () => {
   let di: DiContainer;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const MenuItemComponent = () => <li>Some menu item</li>;
     const someTestExtension = new SomeTestExtension([
       {

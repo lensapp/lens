@@ -1,0 +1,458 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`helm-charts - navigation to Helm charts when navigating to Helm charts renders 1`] = `
+<div>
+  <div
+    class="flex flex-col"
+    data-testid="cluster-sidebar"
+  >
+    <div
+      class="SidebarCluster"
+    >
+      <div
+        class="Avatar rounded loadingAvatar"
+        style="width: 40px; height: 40px;"
+      >
+        ??
+      </div>
+      <div
+        class="loadingClusterName"
+      />
+    </div>
+    <div
+      class="sidebarNav sidebar-active-status"
+    >
+      <div
+        class="SidebarItem"
+        data-id-test="workloads"
+        data-is-active-test="false"
+        data-test-id="workloads"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-workloads"
+          href="/"
+        >
+          <i
+            class="Icon svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Workloads
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="config"
+        data-is-active-test="false"
+        data-test-id="config"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-config"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="list"
+            >
+              list
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Config
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="network"
+        data-is-active-test="false"
+        data-test-id="network"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-network"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="device_hub"
+            >
+              device_hub
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Network
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="storage"
+        data-is-active-test="false"
+        data-test-id="storage"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-storage"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="storage"
+            >
+              storage
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Storage
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="helm"
+        data-is-active-test="true"
+        data-test-id="helm"
+        data-testid="sidebar-item"
+      >
+        <a
+          aria-current="page"
+          class="nav-item flex gaps align-center expandable active"
+          data-testid="sidebar-item-link-for-helm"
+          href="/"
+        >
+          <i
+            class="Icon svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Helm
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="user-management"
+        data-is-active-test="false"
+        data-test-id="user-management"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center"
+          data-testid="sidebar-item-link-for-user-management"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="security"
+            >
+              security
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Access Control
+          </span>
+        </a>
+      </div>
+      <div
+        class="SidebarItem"
+        data-id-test="custom-resources"
+        data-is-active-test="false"
+        data-test-id="custom-resources"
+        data-testid="sidebar-item"
+      >
+        <a
+          class="nav-item flex gaps align-center expandable"
+          data-testid="sidebar-item-link-for-custom-resources"
+          href="/"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="extension"
+            >
+              extension
+            </span>
+          </i>
+          <span
+            class="link-text box grow"
+          >
+            Custom Resources
+          </span>
+          <i
+            class="Icon expand-icon box right material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="keyboard_arrow_down"
+            >
+              keyboard_arrow_down
+            </span>
+          </i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    class="TabLayout"
+    data-testid="tab-layout"
+  >
+    <div
+      class="Tabs center scrollable"
+    >
+      <div
+        class="Tab flex gaps align-center active"
+        data-is-active-test="true"
+        data-testid="tab-link-for-charts"
+        role="tab"
+        tabindex="0"
+      >
+        <div
+          class="label"
+        >
+          Charts
+        </div>
+      </div>
+      <div
+        class="Tab flex gaps align-center"
+        data-is-active-test="false"
+        data-testid="tab-link-for-releases"
+        role="tab"
+        tabindex="0"
+      >
+        <div
+          class="label"
+        >
+          Releases
+        </div>
+      </div>
+    </div>
+    <main>
+      <div
+        data-testid="page-for-helm-charts"
+        style="display: none;"
+      />
+      <div
+        class="ItemListLayout flex column HelmCharts"
+      >
+        <div
+          class="header flex gaps align-center"
+        >
+          <div
+            class="Input SearchInput focused"
+          >
+            <label
+              class="input-area flex gaps align-center"
+              id=""
+            >
+              <input
+                class="input box grow"
+                placeholder="Search Helm Charts..."
+                spellcheck="false"
+                value=""
+              />
+              <i
+                class="Icon material focusable small"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="search"
+                >
+                  search
+                </span>
+              </i>
+            </label>
+            <div
+              class="input-info flex gaps"
+            />
+          </div>
+        </div>
+        <div
+          class="items box grow flex column"
+        >
+          <div
+            class="Table flex column HelmCharts box grow dark selectable scrollable sortable autoSize virtual"
+          >
+            <div
+              class="TableHead sticky nowrap topLine"
+            >
+              <div
+                class="TableCell icon nowrap"
+              >
+                <div
+                  class="content"
+                />
+              </div>
+              <div
+                class="TableCell name nowrap sorting"
+                id="name"
+              >
+                <div
+                  class="content"
+                >
+                  Name
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell description nowrap"
+                id="description"
+              >
+                <div
+                  class="content"
+                >
+                  Description
+                </div>
+              </div>
+              <div
+                class="TableCell version nowrap"
+                id="version"
+              >
+                <div
+                  class="content"
+                >
+                  Version
+                </div>
+              </div>
+              <div
+                class="TableCell app-version nowrap"
+                id="app-version"
+              >
+                <div
+                  class="content"
+                >
+                  App Version
+                </div>
+              </div>
+              <div
+                class="TableCell repository nowrap sorting"
+                id="repo"
+              >
+                <div
+                  class="content"
+                >
+                  Repository
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell menu nowrap"
+              >
+                <div
+                  class="content"
+                >
+                  <i
+                    class="Icon material interactive focusable"
+                    id="menu_actions_17"
+                    tabindex="0"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="more_vert"
+                    >
+                      more_vert
+                    </span>
+                  </i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Spinner singleColor center"
+            />
+          </div>
+          <div
+            class="AddRemoveButtons flex gaps"
+          />
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+`;

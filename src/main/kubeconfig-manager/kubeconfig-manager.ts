@@ -9,8 +9,6 @@ import type { ClusterContextHandler } from "../context-handler/context-handler";
 import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../../common/kube-helpers";
-import logger from "../logger";
-import { LensProxy } from "../lens-proxy";
 import { isErrnoException } from "../../common/utils";
 import type { PartialDeep } from "type-fest";
 import type { Logger } from "../../common/logger";
@@ -18,6 +16,7 @@ import type { Logger } from "../../common/logger";
 export interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
   readonly logger: Logger;
+  lensProxyPort: { get: () => number };
 }
 
 export class KubeconfigManager {
@@ -60,7 +59,7 @@ export class KubeconfigManager {
       return;
     }
 
-    logger.info(`[KUBECONFIG-MANAGER]: Deleting temporary kubeconfig: ${this.tempFilePath}`);
+    this.dependencies.logger.info(`[KUBECONFIG-MANAGER]: Deleting temporary kubeconfig: ${this.tempFilePath}`);
 
     try {
       await fs.unlink(this.tempFilePath);
@@ -84,7 +83,7 @@ export class KubeconfigManager {
   }
 
   get resolveProxyUrl() {
-    return `http://127.0.0.1:${LensProxy.getInstance().port}/${this.cluster.id}`;
+    return `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
   }
 
   /**
@@ -124,7 +123,7 @@ export class KubeconfigManager {
 
     await fs.ensureDir(path.dirname(tempFile));
     await fs.writeFile(tempFile, configYaml, { mode: 0o600 });
-    logger.debug(`[KUBECONFIG-MANAGER]: Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
+    this.dependencies.logger.debug(`[KUBECONFIG-MANAGER]: Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;
   }

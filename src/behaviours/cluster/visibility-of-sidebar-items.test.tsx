@@ -25,7 +25,7 @@ describe("cluster - visibility of sidebar items", () => {
 
     applicationBuilder.setEnvironmentToClusterFrame();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.register(testRouteInjectable);
       rendererDi.register(testRouteComponentInjectable);
       rendererDi.register(testSidebarItemsInjectable);

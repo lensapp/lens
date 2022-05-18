@@ -11,6 +11,7 @@ import type { CatalogEntityRegistry as MainCatalogEntityRegistry } from "../main
 import type { CatalogEntityRegistry as RendererCatalogEntityRegistry } from "../renderer/api/catalog/entity/registry";
 import type { GetExtensionPageParameters } from "../renderer/routes/get-extension-page-parameters.injectable";
 import type { FileSystemProvisionerStore } from "./extension-loader/file-system-provisioner-store/file-system-provisioner-store";
+import type { NavigateForExtension } from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
 
 export interface LensExtensionDependencies {
   readonly fileSystemProvisionerStore: FileSystemProvisionerStore;
@@ -18,6 +19,7 @@ export interface LensExtensionDependencies {
 
 export interface LensMainExtensionDependencies extends LensExtensionDependencies {
   readonly entityRegistry: MainCatalogEntityRegistry;
+  readonly navigate: NavigateForExtension;
 }
 
 export interface LensRendererExtensionDependencies extends LensExtensionDependencies {

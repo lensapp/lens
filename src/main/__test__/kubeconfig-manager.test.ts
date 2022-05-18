@@ -2,7 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import mockFs from "mock-fs";
@@ -20,6 +19,7 @@ import { parse } from "url";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
 import assert from "assert";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -33,6 +33,7 @@ describe("kubeconfig manager tests", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     loggerMock = {
       warn: jest.fn(),
@@ -67,8 +68,6 @@ describe("kubeconfig manager tests", () => {
         preferences: {},
       }),
     });
-
-    await di.runSetups();
 
     di.override(createContextHandlerInjectable, () => (cluster) => ({
       restartServer: jest.fn(),

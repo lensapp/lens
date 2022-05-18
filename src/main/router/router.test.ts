@@ -9,37 +9,28 @@ import type { Router } from "./router";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Request } from "mock-http";
 import { getInjectable } from "@ogre-tools/injectable";
+import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
-import type { MockInstance } from "jest-mock";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import type { Route } from "./route";
 import type { SetRequired } from "type-fest";
-import type { Route, RouteHandler } from "./route";
-
-type AsyncFnMock<
-  TToBeMocked extends (...args: any[]) => any,
-  TArguments extends Parameters<TToBeMocked> = Parameters<TToBeMocked>,
-  TResolve extends Awaited<ReturnType<TToBeMocked>> = Awaited<ReturnType<TToBeMocked>>,
-> = MockInstance<(...args: TArguments) => Promise<TResolve>, TArguments> & {
-  resolve: (resolvedValue: TResolve) => Promise<void>;
-  reject: (rejectValue?: any) => Promise<void>;
-} & ((...args: TArguments) => Promise<TResolve>);
 
 describe("router", () => {
   let router: Router;
-  let routeHandlerMock: AsyncFnMock<RouteHandler<any, string>>;
+  let routeHandlerMock: AsyncFnMock<() => any>;
 
   beforeEach(async () => {
-    routeHandlerMock = asyncFn() as AsyncFnMock<RouteHandler<any, string>>;
+    routeHandlerMock = asyncFn();
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({ payload: "some-payload" }));
-
-    await di.runSetups();
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     const injectable = getInjectable({
       id: "some-route",

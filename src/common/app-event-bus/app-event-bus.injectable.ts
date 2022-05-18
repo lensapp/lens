@@ -8,6 +8,7 @@ import { appEventBus } from "./event-bus";
 const appEventBusInjectable = getInjectable({
   id: "app-event-bus",
   instantiate: () => appEventBus,
+  causesSideEffects: true,
 });
 
 export default appEventBusInjectable;

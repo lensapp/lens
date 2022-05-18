@@ -30,7 +30,7 @@ describe("<Welcome/>", () => {
   let di: DiContainer;
   let welcomeBannersStub: WelcomeBannerRegistration[];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
     render = renderFor(di);
     welcomeBannersStub = [];

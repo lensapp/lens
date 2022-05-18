@@ -9,6 +9,7 @@ import { lensExtensionDependencies } from "../../extensions/lens-extension";
 import type { LensMainExtensionDependencies } from "../../extensions/lens-extension-set-dependencies";
 import type { LensMainExtension } from "../../extensions/lens-main-extension";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
+import navigateForExtensionInjectable from "../start-main-application/lens-window/navigate-for-extension.injectable";
 
 const createExtensionInstanceInjectable = getInjectable({
   id: "create-extension-instance",
@@ -16,6 +17,7 @@ const createExtensionInstanceInjectable = getInjectable({
     const deps: LensMainExtensionDependencies = {
       fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
       entityRegistry: di.inject(catalogEntityRegistryInjectable),
+      navigate: di.inject(navigateForExtensionInjectable),
     };
 
     return (ExtensionClass, extension) => {

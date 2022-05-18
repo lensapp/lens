@@ -33,5 +33,11 @@ export const getLegacyGlobalDiForExtensionApi = () => {
 };
 
 export function getEnvironmentSpecificLegacyGlobalDiForExtensionApi(environment: Environments) {
-  return legacyGlobalDis.get(environment);
+  const di = legacyGlobalDis.get(environment);
+
+  if (!di) {
+    throw new Error("Tried to get DI container using legacy globals in environment which doesn't exist");
+  }
+
+  return di;
 }

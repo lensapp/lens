@@ -10,21 +10,48 @@ import packageInfo from "../../package.json";
 import type { ThemeId } from "../renderer/themes/store";
 import { lazyInitialized } from "./utils/lazy-initialized";
 
+/**
+ * @deprecated Switch to using isMacInjectable
+ */
 export const isMac = process.platform === "darwin";
+
+/**
+ * @deprecated Switch to using isWindowsInjectable
+ */
 export const isWindows = process.platform === "win32";
+
+/**
+ * @deprecated Switch to using isLinuxInjectable
+ */
 export const isLinux = process.platform === "linux";
+
 export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
 export const isSnap = !!process.env.SNAP;
-export const isProduction = process.env.NODE_ENV === "production";
+
+/**
+ * @deprecated Switch to using isTestEnvInjectable
+ */
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
+
+/**
+ * @deprecated Switch to using isProductionInjectable
+ */
+export const isProduction = process.env.NODE_ENV === "production";
+
+/**
+ * @deprecated Switch to using isDevelopmentInjectable
+ */
 export const isDevelopment = !isTestEnv && !isProduction;
+
 export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
 
-export const integrationTestingArg = "--integration-testing";
-export const isIntegrationTesting = process.argv.includes(integrationTestingArg);
-
 export const productName = packageInfo.productName;
+
+/**
+ * @deprecated Switch to using appNameInjectable
+ */
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
+
 export const publicPath = "/build/" as string;
 export const defaultThemeId: ThemeId = "lens-dark";
 export const defaultFontSize = 12;
@@ -101,12 +128,6 @@ export const kubectlBinaryName = getBinaryName("kubectl");
  * @deprecated for being explicit side effect.
  */
 export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
-export const staticFilesDirectory = path.resolve(
-  !isProduction
-    ? process.cwd()
-    : process.resourcesPath,
-  "static",
-);
 
 // Apis
 export const apiPrefix = "/api"; // local router apis

@@ -10,6 +10,7 @@ export type HasCategoryForEntity = (data: CatalogEntityData & CatalogEntityKindD
 
 const hasCategoryForEntityInjectable = getInjectable({
   id: "has-category-for-entity",
+
   instantiate: (di): HasCategoryForEntity => {
     const registry = di.inject(catalogCategoryRegistryInjectable);
 

@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainerForInstantiate } from "@ogre-tools/injectable";
+import type { DiContainerForInjection } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
@@ -35,7 +35,7 @@ const extensionRouteRegistratorInjectable = getInjectable({
         ...extension.clusterPages.map(toRouteInjectable(true)),
       ].flat();
 
-      routeInjectables.forEach(di.register as never);
+      di.register(...routeInjectables);
     };
   },
 
@@ -46,7 +46,7 @@ export default extensionRouteRegistratorInjectable;
 
 const toRouteInjectableFor =
   (
-    di: DiContainerForInstantiate,
+    di: DiContainerForInjection,
     extension: LensRendererExtension,
     extensionInstallationCount: number,
   ) =>

@@ -19,7 +19,7 @@ describe("cluster - order of sidebar items", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.register(testSidebarItemsInjectable);
     });
   });

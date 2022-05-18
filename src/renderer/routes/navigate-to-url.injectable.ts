@@ -7,14 +7,15 @@ import observableHistoryInjectable from "../navigation/observable-history.inject
 import { runInAction } from "mobx";
 import type { NavigateToUrl } from "../../common/front-end-routing/navigate-to-url-injection-token";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
-import { broadcastMessage } from "../../common/ipc";
 import { IpcRendererNavigationEvents } from "../navigation/events";
+import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 
 const navigateToUrlInjectable = getInjectable({
   id: "navigate-to-url",
 
   instantiate: (di): NavigateToUrl => {
     const observableHistory = di.inject(observableHistoryInjectable);
+    const broadcastMessage = di.inject(broadcastMessageInjectable);
 
     return (url, options = {}): void => {
       if (options.forceRootFrame) {

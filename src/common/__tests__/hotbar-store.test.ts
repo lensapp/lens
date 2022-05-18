@@ -18,8 +18,7 @@ import hasCategoryForEntityInjectable from "../catalog/has-category-for-entity.i
 import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 import loggerInjectable from "../logger.injectable";
 import type { Logger } from "../logger";
-
-console.log("I am here as reminder against mockfs (and to fix console logging)");
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -101,6 +100,8 @@ describe("HotbarStore", () => {
 
     di.override(loggerInjectable, () => loggerMock);
 
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
 
@@ -121,12 +122,12 @@ describe("HotbarStore", () => {
   });
 
   describe("given no previous data in store, running all migrations", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       mockFs();
 
-      await di.runSetups();
-
       hotbarStore = di.inject(hotbarStoreInjectable);
+
+      hotbarStore.load();
     });
 
     describe("load", () => {
@@ -283,9 +284,9 @@ describe("HotbarStore", () => {
   });
 
   describe("given data from 5.0.0-beta.3 and version being 5.0.0-beta.10", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const configurationToBeMigrated = {
-        "some-electron-app-path-for-user-data": {
+        "some-directory-for-user-data": {
           "lens-hotbar-store.json": JSON.stringify({
             __internal__: {
               migrations: {
@@ -350,9 +351,9 @@ describe("HotbarStore", () => {
 
       di.override(appVersionInjectable, () => "5.0.0-beta.10");
 
-      await di.runSetups();
-
       hotbarStore = di.inject(hotbarStoreInjectable);
+
+      hotbarStore.load();
     });
 
     it("allows to retrieve a hotbar", () => {

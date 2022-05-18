@@ -30,7 +30,7 @@ describe("<Select />", () => {
   let di: DiContainer;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
     render = renderFor(di);
 

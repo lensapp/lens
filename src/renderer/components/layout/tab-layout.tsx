@@ -45,7 +45,7 @@ export const TabLayout = observer(({ className, contentClass, tabs = [], childre
               key={url}
               label={title}
               value={url}
-              active={!!matchPath(currentLocation, { path: routePath, exact })} 
+              active={!!matchPath(currentLocation, { path: routePath, exact })}
             />
           ))}
         </Tabs>
