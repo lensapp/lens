@@ -43,7 +43,6 @@ import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
-import themeStoreInjectable from "./themes/store.injectable";
 import notificationListenerInjectable from "./components/notifications/notification-listener.injectable";
 import { notificationChannel } from "../common/notification/notification-channel";
 
@@ -134,14 +133,6 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
       error: noop,
       info: noop,
       silly: noop,
-    }));
-
-    di.override(themeStoreInjectable, () => ({
-      activeTheme: {
-        type: "some-active-theme-type",
-      },
-
-      themeOptions: [],
     }));
   }
 
