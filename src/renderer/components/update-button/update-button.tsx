@@ -50,6 +50,7 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
         isOpen={opened}
         close={toggle}
         open={toggle}
+        aria-expanded={opened}
       >
         <MenuItem
           icon={menuIconProps}

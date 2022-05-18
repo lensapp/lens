@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { render } from "@testing-library/react";
+import { render, act } from "@testing-library/react";
 import React from "react";
 import { UpdateButton } from "../update-button";
 import "@testing-library/jest-dom/extend-expect";
@@ -27,12 +27,12 @@ describe("<UpdateButton/>", () => {
     expect(getByTestId("update-button")).toMatchSnapshot();
   });
 
-  it("should open menu when clicked", () => {
+  it("should open menu when clicked", async () => {
     const { getByTestId } = render(<UpdateButton update={update} warningLevel="light" />);
 
     const button = getByTestId("update-button");
 
-    button.click();
+    act(() => button.click());
 
     expect(getByTestId("update-lens-menu-item")).toBeInTheDocument();
   });
@@ -42,7 +42,7 @@ describe("<UpdateButton/>", () => {
 
     const button = getByTestId("update-button");
 
-    button.click();
+    act(() => button.click());
 
     const menuItem = getByTestId("update-lens-menu-item");
 
