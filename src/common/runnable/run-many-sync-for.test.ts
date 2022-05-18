@@ -2,13 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import {
-  createContainer,
-  getInjectable,
-  getInjectionToken,
-} from "@ogre-tools/injectable";
-
+import { createContainer, getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import type { RunnableSync } from "./run-many-sync-for";
 import { runManySyncFor } from "./run-many-sync-for";
 
