@@ -4,7 +4,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autoBind, cpuUnitsToNumber, iter, unitsToBytes } from "../../../renderer/utils";
+import { autoBind, cpuUnitsToNumber, isObject, iter, unitsToBytes } from "../../../renderer/utils";
 import type { IMetrics } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
@@ -142,6 +142,17 @@ function* getTrueConditionTypes(conditions: IterableIterator<NodeCondition> | It
 }
 
 /**
+ * These role label prefixs are the ones that are for master nodes
+ *
+ * The `master` label has been deprecated in Kubernetes 1.20, and will be removed in 1.25 so we
+ * have to also use the newer `control-plane` label
+ */
+const masterNodeLabels = [
+  "master",
+  "control-plane",
+];
+
+/**
  * This regex is used in the `getRoleLabels()` method bellow, but placed here
  * as factoring out regexes is best practice.
  */
@@ -172,14 +183,18 @@ export class Node extends KubeObject {
     return this.spec.taints || [];
   }
 
-  getRoleLabels(): string {
+  isMasterNode(): boolean {
+    return this.getRoleLabelItems()
+      .some(roleLabel => masterNodeLabels.includes(roleLabel));
+  }
+
+  getRoleLabelItems(): string[] {
     const { labels } = this.metadata;
-
-    if (!labels || typeof labels !== "object") {
-      return "";
-    }
-
     const roleLabels: string[] = [];
+
+    if (!isObject(labels)) {
+      return roleLabels;
+    }
 
     for (const labelKey of Object.keys(labels)) {
       const match = nodeRoleLabelKeyMatcher.exec(labelKey);
@@ -197,7 +212,11 @@ export class Node extends KubeObject {
       roleLabels.push(labels["node.kubernetes.io/role"]);
     }
 
-    return roleLabels.join(", ");
+    return roleLabels;
+  }
+
+  getRoleLabels(): string {
+    return this.getRoleLabelItems().join(", ");
   }
 
   getCpuCapacity() {
