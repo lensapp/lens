@@ -34,7 +34,7 @@ import userStoreInjectable from "../common/user-store/user-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
 import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
-import { Router } from "react-router-dom";
+import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import themeStoreInjectable from "./themes/store.injectable";
 import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
@@ -178,9 +178,11 @@ export async function bootstrap(di: DiContainer) {
     });
   }
 
+  const history = di.inject(historyInjectable);
+
   render(
     <DiContextProvider value={{ di }}>
-      <Router history={di.inject(historyInjectable)}>
+      <Router history={history}>
         {DefaultProps(App)}
       </Router>
     </DiContextProvider>,

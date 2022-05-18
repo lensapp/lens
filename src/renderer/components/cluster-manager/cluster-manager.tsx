@@ -6,7 +6,7 @@
 import "./cluster-manager.scss";
 
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect } from "react-router";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { StatusBar } from "../status-bar/status-bar";
 import { HotbarMenu } from "../hotbar/hotbar-menu";

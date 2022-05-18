@@ -7,7 +7,7 @@ import "./tab-layout.scss";
 
 import type { ReactNode } from "react";
 import React from "react";
-import { matchPath, Redirect, Route, Switch } from "react-router-dom";
+import { matchPath, Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
 import type { IClassName } from "../../utils";
 import { cssNames } from "../../utils";
@@ -45,7 +45,7 @@ export const TabLayout = observer(({ className, contentClass, tabs = [], childre
               key={url}
               label={title}
               value={url}
-              active={!!matchPath(currentLocation, { path: routePath, exact })} 
+              active={!!matchPath(currentLocation, { path: routePath, exact })}
             />
           ))}
         </Tabs>

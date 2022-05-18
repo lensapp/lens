@@ -227,6 +227,7 @@
     "got": "^11.8.3",
     "grapheme-splitter": "^1.0.4",
     "handlebars": "^4.7.7",
+    "history": "^4.10.1",
     "http-proxy": "^1.18.1",
     "immer": "^9.0.12",
     "joi": "^17.6.0",

@@ -10,7 +10,7 @@ import type { IObservableArray } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
 import React from "react";
-import { Router } from "react-router-dom";
+import { Router } from "react-router";
 import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
@@ -323,7 +323,7 @@ export const getApplicationBuilder = () => {
       await startFrame();
 
       const render = renderFor(rendererDi);
-      const history = rendererDi.inject(historyInjectable) as any;
+      const history = rendererDi.inject(historyInjectable);
       const currentRouteComponent = rendererDi.inject(currentRouteComponentInjectable);
 
       for (const callback of beforeRenderCallbacks) {
