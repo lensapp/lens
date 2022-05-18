@@ -27,13 +27,13 @@ describe("runManySyncFor", () => {
 
       const someInjectable = getInjectable({
         id: "some-injectable",
-        instantiate: () => ({ run: runMock }),
+        instantiate: () => ({ run: () => runMock("some-call") }),
         injectionToken: someInjectionTokenForRunnables,
       });
 
       const someOtherInjectable = getInjectable({
         id: "some-other-injectable",
-        instantiate: () => ({ run: runMock }),
+        instantiate: () => ({ run: () => runMock("some-other-call") }),
         injectionToken: someInjectionTokenForRunnables,
       });
 
@@ -45,7 +45,10 @@ describe("runManySyncFor", () => {
     });
 
     it("runs all runnables at the same time", () => {
-      expect(runMock).toHaveBeenCalledTimes(2);
+      expect(runMock.mock.calls).toEqual([
+        ["some-call"],
+        ["some-other-call"],
+      ]);
     });
   });
 

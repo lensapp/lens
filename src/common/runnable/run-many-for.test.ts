@@ -17,7 +17,7 @@ import { getPromiseStatus } from "../test-utils/get-promise-status";
 
 describe("runManyFor", () => {
   describe("given no hierarchy, when running many", () => {
-    let runMock: AsyncFnMock<() => Promise<void>>;
+    let runMock: AsyncFnMock<(...args: unknown[]) => Promise<void>>;
     let actualPromise: Promise<void>;
 
     beforeEach(() => {
@@ -31,13 +31,13 @@ describe("runManyFor", () => {
 
       const someInjectable = getInjectable({
         id: "some-injectable",
-        instantiate: () => ({ run: runMock }),
+        instantiate: () => ({ run: () => runMock("some-call") }),
         injectionToken: someInjectionTokenForRunnables,
       });
 
       const someOtherInjectable = getInjectable({
         id: "some-other-injectable",
-        instantiate: () => ({ run: runMock }),
+        instantiate: () => ({ run: () => runMock("some-other-call") }),
         injectionToken: someInjectionTokenForRunnables,
       });
 
@@ -49,7 +49,10 @@ describe("runManyFor", () => {
     });
 
     it("runs all runnables at the same time", () => {
-      expect(runMock).toHaveBeenCalledTimes(2);
+      expect(runMock.mock.calls).toEqual([
+        ["some-call"],
+        ["some-other-call"],
+      ]);
     });
 
     it("does not resolve yet", async () => {
