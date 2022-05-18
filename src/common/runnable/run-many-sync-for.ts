@@ -7,8 +7,9 @@ import type {
   DiContainerForInjection,
   InjectionToken,
 } from "@ogre-tools/injectable";
-import { filter, map } from "lodash/fp";
+import { filter, forEach, map, tap } from "lodash/fp";
 import type { Runnable } from "./run-many-for";
+import { throwWithIncorrectHierarchyFor } from "./throw-with-incorrect-hierarchy-for";
 
 export interface RunnableSync<TParameter = void> {
   run: RunSync<TParameter>;
@@ -25,11 +26,15 @@ export function runManySyncFor(di: DiContainerForInjection): RunManySync {
   return (injectionToken) => async (parameter) => {
     const allRunnables = di.injectMany(injectionToken);
 
+    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor(allRunnables);
+
     const recursedRun = (
       runAfterRunnable: RunnableSync<any> | undefined = undefined,
     ) =>
       pipeline(
         allRunnables,
+
+        tap(runnables => forEach(throwWithIncorrectHierarchy, runnables)),
 
         filter((runnable) => runnable.runAfter === runAfterRunnable),
 

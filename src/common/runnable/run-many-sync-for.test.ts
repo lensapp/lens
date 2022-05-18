@@ -104,6 +104,51 @@ describe("runManySyncFor", () => {
     });
   });
 
+  it("given invalid hierarchy, when running runnables, throws", () => {
+    const rootDi = createContainer();
+
+    const runMock = jest.fn();
+
+    const someInjectionToken = getInjectionToken<RunnableSync>({
+      id: "some-injection-token",
+    });
+
+    const someOtherInjectionToken = getInjectionToken<RunnableSync>({
+      id: "some-other-injection-token",
+    });
+
+    const someInjectable = getInjectable({
+      id: "some-runnable-1",
+
+      instantiate: (di) => ({
+        run: () => runMock("some-runnable-1"),
+        runAfter: di.inject(someOtherInjectable),
+      }),
+
+      injectionToken: someInjectionToken,
+    });
+
+    const someOtherInjectable = getInjectable({
+      id: "some-runnable-2",
+
+      instantiate: () => ({
+        run: () => runMock("some-runnable-2"),
+      }),
+
+      injectionToken: someOtherInjectionToken,
+    });
+
+    rootDi.register(someInjectable, someOtherInjectable);
+
+    const runMany = runManySyncFor(rootDi)(
+      someInjectionToken,
+    );
+
+    return expect(() => runMany()).rejects.toThrow(
+      "Tried to run runnable after other runnable which does not same injection token.",
+    );
+  });
+
   describe("when running many with parameter", () => {
     let runMock: jest.Mock<(arg: string, arg2: string) => void>;
 

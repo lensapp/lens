@@ -5,6 +5,8 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 
+
+
 import {
   createContainer,
   getInjectable,
@@ -173,6 +175,51 @@ describe("runManyFor", () => {
         });
       });
     });
+  });
+
+  it("given invalid hierarchy, when running runnables, throws", () => {
+    const rootDi = createContainer();
+
+    const runMock = asyncFn<(...args: unknown[]) => void>();
+
+    const someInjectionToken = getInjectionToken<Runnable>({
+      id: "some-injection-token",
+    });
+
+    const someOtherInjectionToken = getInjectionToken<Runnable>({
+      id: "some-other-injection-token",
+    });
+
+    const someInjectable = getInjectable({
+      id: "some-runnable-1",
+
+      instantiate: (di) => ({
+        run: () => runMock("some-runnable-1"),
+        runAfter: di.inject(someOtherInjectable),
+      }),
+
+      injectionToken: someInjectionToken,
+    });
+
+    const someOtherInjectable = getInjectable({
+      id: "some-runnable-2",
+
+      instantiate: () => ({
+        run: () => runMock("some-runnable-2"),
+      }),
+
+      injectionToken: someOtherInjectionToken,
+    });
+
+    rootDi.register(someInjectable, someOtherInjectable);
+
+    const runMany = runManyFor(rootDi)(
+      someInjectionToken,
+    );
+
+    return expect(() => runMany()).rejects.toThrow(
+      "Tried to run runnable after other runnable which does not same injection token.",
+    );
   });
 
   describe("when running many with parameter", () => {
