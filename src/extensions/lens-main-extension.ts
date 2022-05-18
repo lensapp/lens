@@ -10,8 +10,6 @@ import type { MenuRegistration } from "../main/menu/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
 import type { LensMainExtensionDependencies } from "./lens-extension-set-dependencies";
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import navigateForExtensionInjectable from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
 
 export class LensMainExtension extends LensExtension<LensMainExtensionDependencies> {
   appMenus: MenuRegistration[] = [];
@@ -33,11 +31,7 @@ export class LensMainExtension extends LensExtension<LensMainExtensionDependenci
   terminalShellEnvModifier?: ShellEnvModifier;
 
   async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
-
-    const navigate = di.inject(navigateForExtensionInjectable);
-
-    return navigate(this.id, pageId, params, frameId);
+    await this[lensExtensionDependencies].navigate(this.id, pageId, params, frameId);
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
