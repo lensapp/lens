@@ -16,10 +16,11 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import getConfigurationFileModelInjectable
-  from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import kubectlBinaryNameInjectable from "../../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../../kubectl/normalized-arch.injectable";
+import normalizedPlatformInjectable from "../../../common/vars/normalized-platform.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -46,6 +47,10 @@ describe("kubeconfig-sync.source tests", () => {
     mockFs();
 
     await di.runSetups();
+
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     computeDiff = computeDiffFor({
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),

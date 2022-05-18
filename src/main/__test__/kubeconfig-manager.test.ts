@@ -43,18 +43,24 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
   let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
-  let di: DiContainer; 
+  let di: DiContainer;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     mockFs({
       "minikube-config.yml": JSON.stringify({

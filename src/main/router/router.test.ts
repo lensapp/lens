@@ -14,6 +14,9 @@ import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 describe("router", () => {
   let router: Router;
@@ -27,6 +30,9 @@ describe("router", () => {
     mockFs();
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({ payload: "some-payload" }));
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     await di.runSetups();
 
