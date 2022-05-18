@@ -102,7 +102,7 @@ const staticFileRouteInjectable = getRouteInjectable({
           readFileBuffer,
           getAbsolutePath,
           joinPaths,
-          staticFilesDirectory
+          staticFilesDirectory,
         }),
     );
   },

@@ -48,7 +48,7 @@ const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[],
   }
 
   return Promise.all(queries.map(loadMetric));
-}
+};
 
 const addMetricsRouteInjectable = getRouteInjectable({
   id: "add-metrics-route",
