@@ -22,35 +22,27 @@ const applicationWindowInjectable = getInjectable({
     const applicationName = di.inject(appNameInjectable);
     const appEventBus = di.inject(appEventBusInjectable);
     const ipcMain = di.inject(ipcMainInjectable);
-
-    const lensProxyPort = di.inject(
-      lensProxyPortInjectable,
-    );
-
-    const getContentUrl = () => `http://localhost:${lensProxyPort.get()}`;
+    const lensProxyPort = di.inject(lensProxyPortInjectable);
 
     return createLensWindow({
       id: "only-application-window",
       title: applicationName,
       defaultHeight: 900,
       defaultWidth: 1440,
-      getContentUrl,
+      getContentUrl: () => `http://localhost:${lensProxyPort.get()}`,
       resizable: true,
       windowFrameUtilitiesAreShown: isMac,
+      titleBarStyle: isMac ? "hiddenInset" : "hidden",
       centered: false,
-
       onFocus: () => {
         appEventBus.emit({ name: "app", action: "focus" });
       },
-
       onBlur: () => {
         appEventBus.emit({ name: "app", action: "blur" });
       },
-
       onDomReady: () => {
         appEventBus.emit({ name: "app", action: "dom-ready" });
       },
-
       beforeOpen: async () => {
         const viewHasLoaded = new Promise<void>((resolve) => {
           ipcMain.once(bundledExtensionsLoaded, () => resolve());

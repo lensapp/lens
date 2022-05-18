@@ -14,15 +14,11 @@ interface WindowStateConfiguration {
 const applicationWindowStateInjectable = getInjectable({
   id: "application-window-state",
 
-  instantiate: (
-    di,
-    { id, defaultHeight, defaultWidth }: WindowStateConfiguration,
-  ) =>
-    windowStateKeeper({
-      defaultHeight,
-      defaultWidth,
-      file: `window-state-for-${id}.json`,
-    }),
+  instantiate: (di, { id, defaultHeight, defaultWidth }) => windowStateKeeper({
+    defaultHeight,
+    defaultWidth,
+    file: `window-state-for-${id}.json`,
+  }),
 
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, { id }: WindowStateConfiguration) => id,
