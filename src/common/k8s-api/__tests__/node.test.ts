@@ -8,7 +8,61 @@ import { Node } from "../endpoints";
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-describe("Nodes tests", () => {
+describe("Node tests", () => {
+  describe("isMasterNode()", () => {
+    it("given a master node labelled before kubernetes 1.20, should return true", () => {
+      const node = new Node({
+        apiVersion: "foo",
+        kind: "Node",
+        metadata: {
+          name: "bar",
+          resourceVersion: "1",
+          uid: "bat",
+          labels: {
+            "node-role.kubernetes.io/master": "NoSchedule",
+          },
+          selfLink: "/api/v1/nodes/bar",
+        },
+      });
+
+      expect(node.isMasterNode()).toBe(true);
+    });
+
+    it("given a master node labelled after kubernetes 1.20, should return true", () => {
+      const node = new Node({
+        apiVersion: "foo",
+        kind: "Node",
+        metadata: {
+          name: "bar",
+          resourceVersion: "1",
+          uid: "bat",
+          labels: {
+            "node-role.kubernetes.io/control-plane": "NoSchedule",
+          },
+          selfLink: "/api/v1/nodes/bar",
+        },
+      });
+
+      expect(node.isMasterNode()).toBe(true);
+    });
+
+    it("given a non master node, should return false", () => {
+      const node = new Node({
+        apiVersion: "foo",
+        kind: "Node",
+        metadata: {
+          name: "bar",
+          resourceVersion: "1",
+          uid: "bat",
+          labels: {},
+          selfLink: "/api/v1/nodes/bar",
+        },
+      });
+
+      expect(node.isMasterNode()).toBe(false);
+    });
+  });
+
   describe("getRoleLabels()", () => {
     it("should return empty string if labels is not present", () => {
       const node = new Node({
