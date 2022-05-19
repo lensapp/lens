@@ -84,8 +84,8 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import downloadPlatformUpdateInjectable from "./update-app/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
-import startCheckingForUpdatesInjectable
-  from "./update-app/periodical-check-for-updates/start-checking-for-updates.injectable";
+import startCheckingForUpdatesInjectable from "./update-app/periodical-check-for-updates/start-checking-for-updates.injectable";
+import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -124,6 +124,7 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
     di.override(commandLineArgumentsInjectable, () => []);
 
     di.override(productNameInjectable, () => "some-product-name");
+    di.override(appVersionInjectable, () => "1.0.0");
 
     di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
 

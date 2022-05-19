@@ -8,7 +8,7 @@ import type { UpdateChannel } from "../update-channels";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { UpdateCheckResult } from "electron-updater";
 
-export type CheckForPlatformUpdates = (updateChannel: UpdateChannel) => Promise<{ updateWasDiscovered: boolean; version?: string }>;
+export type CheckForPlatformUpdates = (updateChannel: UpdateChannel, opts: { allowDowngrade: boolean }) => Promise<{ updateWasDiscovered: boolean; version?: string }>;
 
 const checkForPlatformUpdatesInjectable = getInjectable({
   id: "check-for-platform-updates",
@@ -17,10 +17,10 @@ const checkForPlatformUpdatesInjectable = getInjectable({
     const electronUpdater = di.inject(electronUpdaterInjectable);
     const logger = di.inject(loggerInjectable);
 
-    return async (updateChannel) => {
+    return async (updateChannel, { allowDowngrade }) => {
       electronUpdater.channel = updateChannel.id;
       electronUpdater.autoDownload = false;
-      electronUpdater.allowDowngrade = false;
+      electronUpdater.allowDowngrade = allowDowngrade;
 
       let result: UpdateCheckResult;
 
