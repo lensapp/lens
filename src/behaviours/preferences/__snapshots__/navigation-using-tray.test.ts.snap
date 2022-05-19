@@ -2,7 +2,11 @@
 
 exports[`show-about-using-tray renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
@@ -532,6 +536,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
   </div>
 </body>
 `;

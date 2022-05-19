@@ -2,54 +2,90 @@
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download fails renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds when user answers not to install the update renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds when user answers to install the update renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when new update is discovered when download succeeds when user disregards the question and installs the update using tray renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;
 
 exports[`installing update using tray given no update is already downloaded, and "latest" update channel is selected, when started when user checks for updates using tray when no new update is discovered renders 1`] = `
 <body>
-  <div />
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
 </body>
 `;

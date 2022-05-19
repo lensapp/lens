@@ -525,6 +525,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1065,6 +1068,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1239,5 +1245,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

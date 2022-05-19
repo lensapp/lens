@@ -185,6 +185,9 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -713,6 +716,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1253,6 +1259,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1429,6 +1438,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1568,5 +1580,8 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

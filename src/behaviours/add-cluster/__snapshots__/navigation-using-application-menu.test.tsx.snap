@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`add-cluster - navigation using application menu renders 1`] = `<div />`;
+exports[`add-cluster - navigation using application menu renders 1`] = `
+<div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
 
 exports[`add-cluster - navigation using application menu when navigating to add cluster using application menu renders 1`] = `
 <div>
@@ -85,5 +91,8 @@ exports[`add-cluster - navigation using application menu when navigating to add 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

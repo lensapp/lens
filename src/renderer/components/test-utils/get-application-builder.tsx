@@ -44,10 +44,10 @@ import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
-import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
+import { Notifications } from "../notifications/notifications";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -395,6 +395,8 @@ export const getApplicationBuilder = () => {
               return <Component />;
             }}
           </Observer>
+
+          <Notifications />
         </Router>,
       );
 

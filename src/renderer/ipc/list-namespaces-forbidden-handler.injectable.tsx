@@ -5,17 +5,19 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { ListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
-import { Notifications, notificationsStore } from "../components/notifications";
+import { Notifications } from "../components/notifications";
 import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { Button } from "../components/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";
+import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
 
 const listNamespacesForbiddenHandlerInjectable = getInjectable({
   id: "list-namespaces-forbidden-handler",
 
   instantiate: (di) => {
     const navigateToEntitySettings = di.inject(navigateToEntitySettingsInjectable);
+    const notificationsStore = di.inject(notificationsStoreInjectable);
 
     const notificationLastDisplayedAt = new Map<string, number>();
     const intervalBetweenNotifications = 1000 * 60; // 60s

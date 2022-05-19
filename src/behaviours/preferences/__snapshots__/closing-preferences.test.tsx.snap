@@ -537,6 +537,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -679,6 +682,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -687,6 +693,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   <div>
     Some front page
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -695,6 +704,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   <div>
     Some front page
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1235,6 +1247,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1377,6 +1392,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1519,6 +1537,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1661,5 +1682,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

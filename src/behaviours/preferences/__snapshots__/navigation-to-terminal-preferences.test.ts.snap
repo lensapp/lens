@@ -525,6 +525,9 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -845,5 +848,8 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

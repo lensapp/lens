@@ -525,6 +525,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -935,5 +938,8 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
