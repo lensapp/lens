@@ -7,7 +7,6 @@ import { computed } from "mobx";
 import updatingIsEnabledInjectable from "./updating-is-enabled.injectable";
 import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-item-injection-token";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
-import showNotificationInjectable from "../show-notification/show-notification.injectable";
 import askBooleanInjectable from "../ask-boolean/ask-boolean.injectable";
 import quitAndInstallUpdateInjectable from "../electron-app/features/quit-and-install-update.injectable";
 import discoveredUpdateVersionInjectable from "../../common/application-update/discovered-update-version/discovered-update-version.injectable";
@@ -16,6 +15,9 @@ import updatesAreBeingDiscoveredInjectable from "../../common/application-update
 import checkForUpdatesInjectable from "./check-for-updates/check-for-updates.injectable";
 import downloadUpdateInjectable from "./download-update/download-update.injectable";
 import progressOfUpdateDownloadInjectable from "../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
+import assert from "assert";
+import { sendToAgnosticChannelInjectionToken } from "../../common/channel/send-to-agnostic-channel-injection-token";
+import applicationUpdateStatusChannelInjectable from "../../common/application-update/application-update-status-channel.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
@@ -24,7 +26,6 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const progressOfUpdateDownload = di.inject(progressOfUpdateDownloadInjectable);
-    const showNotification = di.inject(showNotificationInjectable);
     const askBoolean = di.inject(askBooleanInjectable);
     const quitAndInstallUpdate = di.inject(quitAndInstallUpdateInjectable);
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
@@ -32,6 +33,8 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const checkForUpdates = di.inject(checkForUpdatesInjectable);
     const downloadUpdate = di.inject(downloadUpdateInjectable);
+    const sendToAgnosticChannel = di.inject(sendToAgnosticChannelInjectionToken);
+    const applicationUpdateStatusChannel = di.inject(applicationUpdateStatusChannelInjectable);
 
     return {
       id: "check-for-updates",
@@ -40,7 +43,11 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
       label: computed(() => {
         if (downloadingUpdateState.value.get()) {
-          return `Downloading update ${discoveredVersionState.value.get().version} (${progressOfUpdateDownload.value.get()}%)...`;
+          const discoveredVersion = discoveredVersionState.value.get();
+
+          assert(discoveredVersion);
+
+          return `Downloading update ${discoveredVersion.version} (${progressOfUpdateDownload.value.get()}%)...`;
         }
 
         if (checkingForUpdatesState.value.get()) {
@@ -58,13 +65,13 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
         const { updateWasDiscovered, version } = await checkForUpdates();
 
         if (updateWasDiscovered) {
-          showNotification(`Download for version ${version} started...`);
+          sendToAgnosticChannel(applicationUpdateStatusChannel, { eventId: "download-for-update-started", version });
 
           // Note: intentional orphan promise to make download happen in the background
           downloadUpdate().then(async ({ downloadWasSuccessful }) => {
 
             if (!downloadWasSuccessful) {
-              showNotification(`Download for update failed`);
+              sendToAgnosticChannel(applicationUpdateStatusChannel, { eventId: "download-for-update-failed" });
 
               return;
             }

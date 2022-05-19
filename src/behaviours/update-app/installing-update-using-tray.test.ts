@@ -23,6 +23,7 @@ import showApplicationWindowInjectable from "../../main/start-main-application/l
 import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
 import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 import progressOfUpdateDownloadInjectable from "../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
+import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 
 describe("installing update using tray", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -31,20 +32,22 @@ describe("installing update using tray", () => {
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
   let showApplicationWindowMock: jest.Mock;
-  let showNotificationMock: jest.Mock;
+  let showInfoNotificationMock: jest.Mock;
   let askBooleanMock: AsyncFnMock<AskBoolean>;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
       quitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
       showApplicationWindowMock = jest.fn();
-      showNotificationMock = jest.fn(() => () => {});
+      showInfoNotificationMock = jest.fn(() => () => {});
       askBooleanMock = asyncFn();
+
+      rendererDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
 
       mainDi.override(askBooleanInjectable, () => askBooleanMock);
       mainDi.override(showApplicationWindowInjectable, () => showApplicationWindowMock);
@@ -103,8 +106,8 @@ describe("installing update using tray", () => {
         expect(showApplicationWindowMock).not.toHaveBeenCalled();
       });
 
-      xit("notifies the user that checking for updates is happening", () => {
-        expect(showNotificationMock).toHaveBeenCalledWith("Checking for updates...");
+      it("notifies the user that checking for updates is happening", () => {
+        expect(showInfoNotificationMock).toHaveBeenCalledWith("Checking for updates...");
       });
 
       it("user cannot check for updates again", () => {
@@ -129,7 +132,7 @@ describe("installing update using tray", () => {
 
       describe("when no new update is discovered", () => {
         beforeEach(async () => {
-          showNotificationMock.mockClear();
+          showInfoNotificationMock.mockClear();
 
           await checkForPlatformUpdatesMock.resolve({
             updateWasDiscovered: false,
@@ -142,8 +145,8 @@ describe("installing update using tray", () => {
           expect(showApplicationWindowMock).toHaveBeenCalled();
         });
 
-        xit("notifies the user", () => {
-          expect(showNotificationMock).toHaveBeenCalledWith("No new updates available");
+        it("notifies the user", () => {
+          expect(showInfoNotificationMock).toHaveBeenCalledWith("No new updates available");
         });
 
         it("does not start downloading update", () => {
@@ -189,8 +192,8 @@ describe("installing update using tray", () => {
           expect(downloadPlatformUpdateMock).toHaveBeenCalled();
         });
 
-        xit("notifies the user that download is happening", () => {
-          expect(showNotificationMock).toHaveBeenCalledWith("Download for version some-version started...");
+        it("notifies the user that download is happening", () => {
+          expect(showInfoNotificationMock).toHaveBeenCalledWith("Download for version some-version started...");
         });
 
         it("user cannot check for updates again yet", () => {
@@ -246,8 +249,8 @@ describe("installing update using tray", () => {
             ).toBe(true);
           });
 
-          xit("notifies the user about failed download", () => {
-            expect(showNotificationMock).toHaveBeenCalledWith("Failed to download update");
+          it("notifies the user about failed download", () => {
+            expect(showInfoNotificationMock).toHaveBeenCalledWith("Download of update failed");
           });
 
           it("name of tray item for checking updates no longer indicates that downloading is happening", () => {
@@ -400,6 +403,7 @@ describe("installing update using tray", () => {
 
         await checkForPlatformUpdatesMock.resolve({
           updateWasDiscovered: true,
+          version: "some-version",
         });
 
         expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
@@ -425,6 +429,7 @@ describe("installing update using tray", () => {
 
           await checkForPlatformUpdatesMock.resolve({
             updateWasDiscovered: true,
+            version: "some-version",
           });
 
           expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
@@ -450,6 +455,7 @@ describe("installing update using tray", () => {
 
             await checkForPlatformUpdatesMock.resolve({
               updateWasDiscovered: true,
+              version: "some-version",
             });
 
             expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
