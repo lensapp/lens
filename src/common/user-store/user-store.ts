@@ -4,7 +4,7 @@
  */
 
 import { app } from "electron";
-import semver, { SemVer } from "semver";
+import semver from "semver";
 import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
@@ -98,10 +98,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   @computed get resolvedShell(): string | undefined {
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
-  }
-
-  @computed get isAllowedToDowngrade() {
-    return new SemVer(getAppVersion()).prerelease[0] !== this.updateChannel;
   }
 
   startMainReactions() {
