@@ -123,7 +123,7 @@ export const overrideIpcBridge = ({
   );
 
   rendererDi.override(sendToMainInjectable, () => (channelId, message) => {
-    const handles = mainIpcFakeHandles.get(channelId);
+    const handles = mainIpcFakeHandles.get(channelId) || [];
 
     if (isEmpty(handles)) {
       throw new Error(
