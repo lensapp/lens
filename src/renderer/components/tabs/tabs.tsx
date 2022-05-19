@@ -9,7 +9,7 @@ import React from "react";
 import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 const TabsContext = React.createContext<TabsContextValue>({});
 
@@ -157,7 +157,7 @@ export const Tab = withInjectables<Dependencies, TabProps>(
 
   {
     getProps: (di, props) => ({
-      capture: di.inject(trackWithIdInjectable),
+      capture: di.inject(captureWithIdInjectable),
       ...props,
     }),
   },

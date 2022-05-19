@@ -9,7 +9,7 @@ import type { HTMLAttributes } from "react";
 import React from "react";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import trackWithIdInjectable from "../../telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 export interface CloseButtonProps extends HTMLAttributes<HTMLDivElement> {
 }
@@ -26,7 +26,7 @@ function NonInjectedCloseButton(props: CloseButtonProps & Dependencies) {
       {...rest}
       onClick={(e) => {
         capture(`${window.location.pathname}`, "Close Button Click");
-        props?.onClick(e);
+        props?.onClick?.(e);
       }}>
       <div
         className={styles.closeButton}
@@ -47,7 +47,7 @@ export const CloseButton = withInjectables<Dependencies, CloseButtonProps>(
 
   {
     getProps: (di, props) => ({
-      capture: di.inject(trackWithIdInjectable),
+      capture: di.inject(captureWithIdInjectable),
       ...props,
     }),
   },

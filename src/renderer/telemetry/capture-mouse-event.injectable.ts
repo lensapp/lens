@@ -37,12 +37,11 @@ function getEventName(el: HTMLElement) {
   return eventName;
 }
 
-function trackEventName(eventBus: EventEmitter<[AppEvent]>, event: React.MouseEvent) {
+function captureMouseEvent(eventBus: EventEmitter<[AppEvent]>, event: React.MouseEvent) {
   const name = getEventName(event.target as HTMLElement);
   const action = capitalize(event.type);
 
-  console.log("track event name");
-  console.log(`${action} ${name}`);
+  console.log(`[captureMouseEvent]: ${action} ${name}`);
 
   eventBus.emit({
     destination: "MixPanel",
@@ -51,13 +50,13 @@ function trackEventName(eventBus: EventEmitter<[AppEvent]>, event: React.MouseEv
   });
 }
 
-const trackEventInjectable = getInjectable({
-  id: "track-mouse-event",
+const captureMouseEventInjectable = getInjectable({
+  id: "capture-mouse-event",
   instantiate: (di) => {
     return (event: React.MouseEvent) => {
-      return trackEventName(di.inject(appEventBusInjectable), event);
+      return captureMouseEvent(di.inject(appEventBusInjectable), event);
     };
   },
 });
 
-export default trackEventInjectable;
+export default captureMouseEventInjectable;

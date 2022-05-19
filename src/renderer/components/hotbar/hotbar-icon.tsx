@@ -18,7 +18,7 @@ import { Tooltip } from "../tooltip";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
-import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 export interface HotbarIconProps extends AvatarProps {
   uid: string;
@@ -107,6 +107,6 @@ export const HotbarIcon = withInjectables<Dependencies, HotbarIconProps>(NonInje
   getProps: (di, props) => ({
     ...props,
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
-    capture: di.inject(trackWithIdInjectable),
+    capture: di.inject(captureWithIdInjectable),
   }),
 });

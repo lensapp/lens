@@ -12,10 +12,10 @@ function getNameFromId(id: string) {
   return id.split(/[/,-,--]/).filter(Boolean).map((part) => `${part[0].toUpperCase()+part.substring(1)}`).join("");
 }
 
-function trackWithId(eventBus: EventEmitter<[AppEvent]>, id: string, action: string) {
+function captureWithId(eventBus: EventEmitter<[AppEvent]>, id: string, action: string) {
   const target = getNameFromId(id);
 
-  console.log(`[trackWithId]: ${name}`);
+  console.log(`[captureWithId]: ${target}`);
 
   eventBus.emit({
     name: target,
@@ -24,13 +24,13 @@ function trackWithId(eventBus: EventEmitter<[AppEvent]>, id: string, action: str
   });
 }
 
-const trackWithIdInjectable = getInjectable({
-  id: "track-with-id",
+const captureWithIdInjectable = getInjectable({
+  id: "capture-with-id",
   instantiate: (di) => {
     return (id: string, action: string) => {
-      return trackWithId(di.inject(appEventBusInjectable), id, action);
+      return captureWithId(di.inject(appEventBusInjectable), id, action);
     };
   },
 });
 
-export default trackWithIdInjectable;
+export default captureWithIdInjectable;

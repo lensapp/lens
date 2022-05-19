@@ -9,7 +9,7 @@ import type { ChangeEvent, HTMLProps } from "react";
 import React from "react";
 import { cssNames } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import trackWithIdInjectable from "../../telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 export interface SwitchProps extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {
   onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
@@ -29,7 +29,10 @@ function NonInjectedSwitch({ children, disabled, onChange, captureChange, ...pro
         disabled={disabled}
         onChange={(event) =>{
           onChange?.(event.target.checked, event);
-          captureChange(children.toString(), `Switch ${props.checked ? "On" : "Off"}`);
+
+          if (children) {
+            captureChange(children.toString(), `Switch ${props.checked ? "On" : "Off"}`);
+          }
         }}
         {...props}
       />
@@ -42,7 +45,7 @@ export const Switch = withInjectables<Dependencies, SwitchProps>(
 
   {
     getProps: (di, props) => ({
-      captureChange: di.inject(trackWithIdInjectable),
+      captureChange: di.inject(captureWithIdInjectable),
       ...props,
     }),
   },

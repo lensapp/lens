@@ -12,7 +12,7 @@ import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "../error-boundary";
 import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 interface Dependencies {
   captureClick: (id: string, action: string) => void;
@@ -44,7 +44,9 @@ const NonInjectedTabLayout = observer(
               return (
                 <Tab
                   onClick={() => {
-                    captureClick(registration.title.toString(), "Tab Click");
+                    if (registration.title) {
+                      captureClick(registration.title.toString(), "Tab Click");
+                    }
                     registration.onClick();
                   }}
                   key={registration.id}
@@ -73,7 +75,7 @@ export const TabLayout = withInjectables<Dependencies, TabLayoutProps>(
 
   {
     getProps: (di, props) => ({
-      captureClick: di.inject(trackWithIdInjectable),
+      captureClick: di.inject(captureWithIdInjectable),
       ...props,
     }),
   },

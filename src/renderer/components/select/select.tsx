@@ -12,12 +12,12 @@ import type { ObservableSet } from "mobx";
 import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import ReactSelect, { components, createFilter } from "react-select";
-import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from "react-select";
+import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue, OnChangeValue, ActionMeta } from "react-select";
 import type { ThemeStore } from "../../themes/store";
 import { autoBind, cssNames } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
-import trackWithIdInjectable from "../../telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 const { Menu } = components;
 
@@ -230,12 +230,12 @@ class NonInjectedSelect<
         onKeyDown={this.onKeyDown}
         className={cssNames("Select", this.themeClass, className)}
         classNamePrefix="Select"
-        onChange={action(() => {
+        onChange={action((newValue: OnChangeValue<Option, IsMulti>, actionMeta: ActionMeta<Option>) => {
           if (inputId) {
             props.capture(inputId, "Select Change");
           }
 
-          onChange();
+          return onChange?.(newValue, actionMeta);
         })} // This is done so that all changes are actionable
         components={{
           ...components,
@@ -257,7 +257,7 @@ export const Select = withInjectables<Dependencies, SelectProps<unknown, SelectO
   getProps: (di, props) => ({
     ...props,
     themeStore: di.inject(themeStoreInjectable),
-    capture: di.inject(trackWithIdInjectable),
+    capture: di.inject(captureWithIdInjectable),
   }),
 }) as <
   Value,

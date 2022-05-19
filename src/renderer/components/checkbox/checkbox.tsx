@@ -8,7 +8,7 @@ import React from "react";
 import type { SingleOrMany } from "../../utils";
 import { cssNames, noop } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import trackWithIdInjectable from "../../telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 export interface CheckboxProps {
   className?: string;
@@ -58,7 +58,7 @@ export const Checkbox = withInjectables<Dependencies, CheckboxProps>(
 
   {
     getProps: (di, props) => ({
-      captureClick: di.inject(trackWithIdInjectable),
+      captureClick: di.inject(captureWithIdInjectable),
       ...props,
     }),
   },

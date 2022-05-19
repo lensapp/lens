@@ -14,7 +14,7 @@ import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import isEqual from "lodash/isEqual";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 export const MenuContext = React.createContext<MenuContextValue | null>(null);
 export type MenuContextValue = Menu;
@@ -436,7 +436,7 @@ class NonInjectedMenuItem extends React.Component<MenuItemProps & Dependencies> 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     onClick!(evt);
 
-    const name = this.elem.querySelectorAll(".title")[0]?.textContent;
+    const name = this.elem?.querySelectorAll(".title")[0]?.textContent;
 
     if (name) {
       const id = `${window.location.pathname.split("/").pop()} ${name}`;
@@ -493,7 +493,7 @@ export const MenuItem = withInjectables<Dependencies, MenuItemProps>(
 
   {
     getProps: (di, props) => ({
-      captureClick: di.inject(trackWithIdInjectable),
+      captureClick: di.inject(captureWithIdInjectable),
       ...props,
     }),
   },

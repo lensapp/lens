@@ -16,7 +16,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 import sidebarStorageInjectable from "./sidebar-storage/sidebar-storage.injectable";
 import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
-import trackWithIdInjectable from "../../../renderer/telemetry/track-with-id.injectable";
+import captureWithIdInjectable from "../../telemetry/capture-with-id.injectable";
 
 interface Dependencies {
   sidebarStorage: StorageLayer<SidebarStorageState>;
@@ -98,7 +98,9 @@ class NonInjectedSidebarItem extends React.Component<
             event.preventDefault();
             event.stopPropagation();
 
-            this.props.capture(this.registration.title.toString(), "Click Side Bar Item");
+            if (this.registration.title) {
+              this.props.capture(this.registration.title.toString(), "Click Side Bar Item");
+            }
 
             if (this.isExpandable) {
               this.toggleExpand();
@@ -129,7 +131,7 @@ export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(NonIn
   getProps: (di, props) => ({
     ...props,
     sidebarStorage: di.inject(sidebarStorageInjectable),
-    capture: di.inject(trackWithIdInjectable),
+    capture: di.inject(captureWithIdInjectable),
   }),
 });
 
