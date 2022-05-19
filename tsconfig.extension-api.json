@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "jsx": "react",
     "target": "ES2019",
-    "module": "ESNext",
+    "module": "CommonJS",
     "lib": [
       "ESNext",
       "DOM",
@@ -33,10 +33,10 @@
         "name": "typescript-plugin-css-modules"
       }
     ],
-    "emitDeclarationOnly": true,
     "noEmitOnError": true,
     "declaration": true,
     "declarationDir": "./src/extensions/npm/extensions/dist",
+    "outDir": "./src/extensions/npm/extensions/dist"
   },
   "include": [
     "types/*.d.ts",
