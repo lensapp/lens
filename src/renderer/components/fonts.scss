@@ -16,44 +16,44 @@
 // Terminal fonts (monospaced)
 // Source: https://fonts.google.com/?category=Monospace
 @font-face {
-  font-family: "Anonymous Pro", monospace;
+  font-family: "Anonymous Pro";
   src: local("Anonymous Pro"), url("../fonts/AnonymousPro-Regular.ttf") format("truetype");
   font-display: block;
 }
 
 @font-face {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "IBM Plex Mono";
   src: local("IBM Plex Mono"), url("../fonts/IBMPlexMono-Regular.ttf") format("truetype");
   font-display: block;
 }
 
 @font-face {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono";
   src: local("JetBrains Mono"), url("../fonts/JetBrainsMono-Regular.ttf") format("truetype");
   font-display: block;
 }
 
 @font-face {
-  font-family: "Red Hat Mono", monospace;
+  font-family: "Red Hat Mono";
   src: local("Red Hat Mono"), url("../fonts/RedHatMono-Regular.ttf") format("truetype");
   font-display: block;
 }
 
 
 @font-face {
-  font-family: "Source Code Pro", monospace;
+  font-family: "Source Code Pro";
   src: local("Source Code Pro"), url("../fonts/SourceCodePro-Regular.ttf") format("truetype");
   font-display: block;
 }
 
 @font-face {
-  font-family: "Space Mono", monospace;
+  font-family: "Space Mono";
   src: local("Space Mono"), url("../fonts/SpaceMono-Regular.ttf") format("truetype");
   font-display: block;
 }
 
 @font-face {
-  font-family: "Ubuntu Mono", monospace;
+  font-family: "Ubuntu Mono";
   src: local("Ubuntu Mono"), url("../fonts/UbuntuMono-Regular.ttf") format("truetype");
   font-display: block;
 }
@@ -62,7 +62,7 @@
 // RobotoMono Windows Compatible for using in terminal
 // https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/RobotoMono
 @font-face {
-  font-family: "RobotoMono", monospace;
+  font-family: "RobotoMono";
   src: local("RobotoMono"), url("../fonts/roboto-mono-nerd.ttf") format("truetype");
   font-display: block;
 }

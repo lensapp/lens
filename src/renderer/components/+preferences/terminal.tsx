@@ -23,11 +23,12 @@ interface Dependencies {
   defaultShell: string;
 }
 
-const NonInjectedTerminal = observer(({
-  userStore,
-  themeStore,
-  defaultShell,
-}: Dependencies) => {
+const NonInjectedTerminal = observer((
+  {
+    userStore,
+    themeStore,
+    defaultShell,
+  }: Dependencies) => {
   const themeOptions = [
     {
       value: "", // TODO: replace with a sentinal value that isn't string (and serialize it differently)
@@ -37,6 +38,12 @@ const NonInjectedTerminal = observer(({
       value: themeId,
       label: name,
     })),
+  ];
+
+  // fonts must be declared in `fonts.scss` and at `template.html` (if early-preloading required)
+  const supportedCustomFonts = [
+    "RobotoMono", "Anonymous Pro", "IBM Plex Mono", "JetBrains Mono", "Red Hat Mono",
+    "Source Code Pro", "Space Mono", "Ubuntu Mono",
   ];
 
   return (
@@ -88,11 +95,11 @@ const NonInjectedTerminal = observer(({
         </section>
         <section>
           <SubTitle title="Font family" />
-          <Input
-            theme="round-black"
-            type="text"
+          <Select
+            themeName="lens"
             value={userStore.terminalConfig.fontFamily}
-            onChange={(value) => userStore.terminalConfig.fontFamily = value}
+            options={supportedCustomFonts}
+            onChange={opt => userStore.terminalConfig.fontFamily = opt?.value ?? supportedCustomFonts[0]}
           />
         </section>
       </section>

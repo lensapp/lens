@@ -74,7 +74,7 @@ export class Terminal {
 
   constructor(protected readonly dependencies: TerminalDependencies, {
     tabId,
-    api
+    api,
   }: TerminalArguments) {
     this.tabId = tabId;
     this.api = api;
@@ -110,8 +110,8 @@ export class Terminal {
       }, {
         fireImmediately: true,
       }),
-      reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true, }),
-      reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true, }),
+      reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true }),
+      reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true }),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
@@ -203,14 +203,18 @@ export class Terminal {
     }
   };
 
-  setFontSize = (size: number) => {
-    this.xterm.options.fontSize = size;
+  setFontSize = (fontSize: number) => {
+    logger.info(`[TERMINAL]: set fontSize to ${fontSize}`);
+
+    this.xterm.options.fontSize = fontSize;
   };
 
   setFontFamily = (fontFamily: string) => {
+    logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
+
     this.xterm.options.fontFamily = fontFamily;
 
-    // provide access to current terminal-font in css in :root {}
+    // provide css-variable within `:root {}`
     document.documentElement.style.setProperty("--font-terminal", fontFamily);
   };
 
