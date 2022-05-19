@@ -9,6 +9,57 @@ import { Node } from "../endpoints";
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 describe("Nodes tests", () => {
+  describe("isMasterNode()", () => {
+    it("given a master node labelled before kubernetes 1.20, should return true", () => {
+      const node = new Node({
+        apiVersion: "foo",
+        kind: "Node",
+        metadata: {
+          name: "bar",
+          resourceVersion: "1",
+          uid: "bat",
+          labels: {
+            "node-role.kubernetes.io/master": "NoSchedule",
+          },
+        },
+      });
+
+      expect(node.isMasterNode()).toBe(true);
+    });
+
+    it("given a master node labelled after kubernetes 1.20, should return true", () => {
+      const node = new Node({
+        apiVersion: "foo",
+        kind: "Node",
+        metadata: {
+          name: "bar",
+          resourceVersion: "1",
+          uid: "bat",
+          labels: {
+            "node-role.kubernetes.io/control-plane": "NoSchedule",
+          },
+        },
+      });
+
+      expect(node.isMasterNode()).toBe(true);
+    });
+
+    it("given a non master node, should return false", () => {
+      const node = new Node({
+        apiVersion: "foo",
+        kind: "Node",
+        metadata: {
+          name: "bar",
+          resourceVersion: "1",
+          uid: "bat",
+          labels: {},
+        },
+      });
+
+      expect(node.isMasterNode()).toBe(false);
+    });
+  });
+
   describe("getRoleLabels()", () => {
     it("should return empty string if labels is not present", () => {
       const node = new Node({
