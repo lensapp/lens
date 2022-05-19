@@ -7,17 +7,20 @@ import type { CheckForPlatformUpdates } from "../check-for-platform-updates/chec
 import checkForPlatformUpdatesInjectable from "../check-for-platform-updates/check-for-platform-updates.injectable";
 import type { UpdateChannel } from "../update-channels";
 import selectedUpdateChannelInjectable from "../selected-update-channel.injectable";
-import showNotificationInjectable from "../../show-notification/show-notification.injectable";
 import updatesAreBeingDiscoveredInjectable from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
 import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import { runInAction } from "mobx";
+import assert from "assert";
+import applicationUpdateStatusChannelInjectable from "../../../common/application-update/application-update-status-channel.injectable";
+import { sendToAgnosticChannelInjectionToken } from "../../../common/channel/send-to-agnostic-channel-injection-token";
 
 const checkForUpdatesInjectable = getInjectable({
   id: "check-for-updates",
 
   instantiate: (di) => {
     const selectedUpdateChannel = di.inject(selectedUpdateChannelInjectable);
-    const showNotification = di.inject(showNotificationInjectable);
+    const sendToAgnosticChannel = di.inject(sendToAgnosticChannelInjectionToken);
+    const applicationUpdateStatusChannel = di.inject(applicationUpdateStatusChannelInjectable);
 
     const checkForPlatformUpdates = di.inject(
       checkForPlatformUpdatesInjectable,
@@ -37,19 +40,24 @@ const checkForUpdatesInjectable = getInjectable({
       const checkForUpdatesStartingFromChannel =
         checkForUpdatesStartingFromChannelFor(checkForPlatformUpdates);
 
-      showNotification("Checking for updates...");
+      sendToAgnosticChannel(applicationUpdateStatusChannel, { eventId: "checking-for-updates" });
 
       const { updateWasDiscovered, version, actualUpdateChannel } =
         await checkForUpdatesStartingFromChannel(selectedUpdateChannel.value.get());
 
       if (!updateWasDiscovered) {
-        showNotification("No new updates available");
+        sendToAgnosticChannel(applicationUpdateStatusChannel, { eventId: "no-updates-available" });
       }
 
       runInAction(() => {
         if (!updateWasDiscovered) {
           discoveredVersionState.set(null);
         } else {
+
+          // TODO: Unacceptable damage caused by strict mode
+          assert(version);
+          assert(actualUpdateChannel);
+
           discoveredVersionState.set({
             version,
             updateChannel: actualUpdateChannel,
