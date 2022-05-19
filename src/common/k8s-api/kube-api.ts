@@ -312,12 +312,13 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
  * @deprecated In the new extension API, don't expose `KubeApi`'s constructor
  */
 function legacyRegisterApi(api: KubeApi<any, any>): void {
-  const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
-
-  if (di) {
+  try {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
     const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
 
     autoRegistrationEmitter.emit("kubeApi", api);
+  } catch {
+    // ignore error
   }
 }
 
