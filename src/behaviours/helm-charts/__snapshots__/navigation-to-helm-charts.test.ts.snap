@@ -454,5 +454,8 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
       </div>
     </main>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

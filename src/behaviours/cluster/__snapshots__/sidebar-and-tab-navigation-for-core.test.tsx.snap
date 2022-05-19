@@ -293,6 +293,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -589,6 +592,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -909,6 +915,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1234,6 +1243,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
   <div
     data-testid="some-child-page"
   />
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1533,6 +1545,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
   </div>
   <div
     data-testid="some-child-page"
+  />
+  <div
+    class="Notifications flex column align-flex-end"
   />
 </div>
 `;
@@ -1854,6 +1869,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -2150,5 +2168,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

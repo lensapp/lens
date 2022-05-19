@@ -199,6 +199,9 @@ exports[`preferences - navigation to application preferences given in some child
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -727,5 +730,8 @@ exports[`preferences - navigation to application preferences given in some child
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

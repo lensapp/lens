@@ -8,7 +8,7 @@ import type { IpcRendererEvent } from "electron";
 import { ipcRenderer } from "electron";
 import type { UpdateAvailableFromMain, BackchannelArg } from "../../common/ipc";
 import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, ipcRendererOn, AutoUpdateChecking, AutoUpdateNoUpdateAvailable } from "../../common/ipc";
-import { Notifications, notificationsStore } from "../components/notifications";
+import { Notifications } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
 import { defaultHotbarCells } from "../../common/hotbars/types";
@@ -16,7 +16,6 @@ import { type ListNamespaceForbiddenArgs, clusterListNamespaceForbiddenChannel, 
 import { hotbarTooManyItemsChannel } from "../../common/ipc/hotbar";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
-  notificationsStore.remove(notificationId);
   ipcRenderer.send(backchannel, data);
 }
 
