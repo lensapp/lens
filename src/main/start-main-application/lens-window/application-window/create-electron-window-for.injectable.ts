@@ -5,14 +5,15 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
-import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import { BrowserWindow } from "electron";
 import { openBrowser } from "../../../../common/utils";
 import type { SendToViewArgs } from "./lens-window-injection-token";
 import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
 import type { LensWindow } from "./create-lens-window.injectable";
 
-interface ElectronWindowConfiguration {
+export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
+
+export interface ElectronWindowConfiguration {
   id: string;
   title: string;
   defaultHeight: number;
@@ -21,7 +22,7 @@ interface ElectronWindowConfiguration {
   resizable: boolean;
   windowFrameUtilitiesAreShown: boolean;
   centered: boolean;
-
+  titleBarStyle?: ElectronWindowTitleBarStyle;
   beforeOpen?: () => Promise<void>;
   onClose: () => void;
   onFocus?: () => void;
@@ -29,18 +30,17 @@ interface ElectronWindowConfiguration {
   onDomReady?: () => void;
 }
 
+export type CreateElectronWindow = () => Promise<LensWindow>;
+export type CreateElectronWindowFor = (config: ElectronWindowConfiguration) => CreateElectronWindow;
+
 const createElectronWindowFor = getInjectable({
   id: "create-electron-window-for",
 
-  instantiate: (di) => {
+  instantiate: (di): CreateElectronWindowFor => {
     const logger = di.inject(loggerInjectable);
-    const isMac = di.inject(isMacInjectable);
+    const sendToChannelInLensWindow = di.inject(sendToChannelInElectronBrowserWindowInjectable);
 
-    const sendToChannelInLensWindow = di.inject(
-      sendToChannelInElectronBrowserWindowInjectable,
-    );
-
-    return (configuration: ElectronWindowConfiguration) => async (): Promise<LensWindow> => {
+    return (configuration) => async () => {
       const applicationWindowState = di.inject(
         applicationWindowStateInjectable,
         {
@@ -64,9 +64,8 @@ const createElectronWindowFor = getInjectable({
         show: false,
         minWidth: 700, // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
-        titleBarStyle: isMac ? "hiddenInset" : "hidden",
+        titleBarStyle: configuration.titleBarStyle,
         backgroundColor: "#1e2124",
-
         webPreferences: {
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
@@ -162,20 +161,15 @@ const createElectronWindowFor = getInjectable({
 
       const contentUrl = configuration.getContentUrl();
 
-      logger.info(
-        `[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from url: ${contentUrl}...`,
-      );
+      logger.info(`[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from url: ${contentUrl}...`);
 
       await browserWindow.loadURL(contentUrl);
-
       await configuration.beforeOpen?.();
 
       return {
         show: () => browserWindow.show(),
         close: () => browserWindow.close(),
-
-        send: (args: SendToViewArgs) =>
-          sendToChannelInLensWindow(browserWindow, args),
+        send: (args: SendToViewArgs) => sendToChannelInLensWindow(browserWindow, args),
       };
     };
   },

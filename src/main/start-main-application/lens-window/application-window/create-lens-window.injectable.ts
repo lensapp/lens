@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { SendToViewArgs } from "./lens-window-injection-token";
+import type { ElectronWindowTitleBarStyle } from "./create-electron-window-for.injectable";
 import createElectronWindowForInjectable from "./create-electron-window-for.injectable";
 
 export interface LensWindow {
@@ -21,7 +22,7 @@ interface LensWindowConfiguration {
   resizable: boolean;
   windowFrameUtilitiesAreShown: boolean;
   centered: boolean;
-
+  titleBarStyle?: ElectronWindowTitleBarStyle;
   beforeOpen?: () => Promise<void>;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -31,59 +32,44 @@ interface LensWindowConfiguration {
 const createLensWindowInjectable = getInjectable({
   id: "create-lens-window",
 
-  instantiate:
-    (di) =>
-      (configuration: LensWindowConfiguration) => {
-        let browserWindow: LensWindow | undefined;
+  instantiate: (di) => {
+    const createElectronWindowFor = di.inject(createElectronWindowForInjectable);
 
-        const createElectronWindow = di.inject(createElectronWindowForInjectable)(
-          {
-            id: configuration.id,
-            title: configuration.title,
-            defaultHeight: configuration.defaultHeight,
-            defaultWidth: configuration.defaultWidth,
-            getContentUrl: configuration.getContentUrl,
-            resizable: configuration.resizable,
-            windowFrameUtilitiesAreShown: configuration.windowFrameUtilitiesAreShown,
-            centered: configuration.centered,
-            onFocus: configuration.onFocus,
-            onBlur: configuration.onBlur,
-            onDomReady: configuration.onDomReady,
-            beforeOpen: configuration.beforeOpen,
+    return (configuration: LensWindowConfiguration) => {
+      let browserWindow: LensWindow | undefined;
 
-            onClose: () => {
-              browserWindow = undefined;
-            },
-          },
-        );
+      const createElectronWindow = createElectronWindowFor(Object.assign(
+        {
+          onClose: () => browserWindow = undefined,
+        },
+        configuration,
+      ));
 
-        return {
-          get visible() {
-            return !!browserWindow;
-          },
+      return {
+        get visible() {
+          return !!browserWindow;
+        },
+        show: async () => {
+          if (!browserWindow) {
+            browserWindow = await createElectronWindow();
+          }
 
-          show: async () => {
-            if (!browserWindow) {
-              browserWindow = await createElectronWindow();
-            }
+          browserWindow.show();
+        },
+        close: () => {
+          browserWindow?.close();
+          browserWindow = undefined;
+        },
+        send: async (args: SendToViewArgs) => {
+          if (!browserWindow) {
+            browserWindow = await createElectronWindow();
+          }
 
-            browserWindow.show();
-          },
-
-          close: () => {
-            browserWindow?.close();
-            browserWindow = undefined;
-          },
-
-          send: async (args: SendToViewArgs) => {
-            if (!browserWindow) {
-              browserWindow = await createElectronWindow();
-            }
-
-            return browserWindow.send(args);
-          },
-        };
-      },
+          return browserWindow.send(args);
+        },
+      };
+    };
+  },
 });
 
 export default createLensWindowInjectable;
