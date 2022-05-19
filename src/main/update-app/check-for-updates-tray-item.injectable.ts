@@ -76,7 +76,11 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
               return;
             }
 
-            const userWantsToInstallUpdate = await askBoolean(`Do you want to install update ${version}?`);
+            const userWantsToInstallUpdate = await askBoolean({
+              id: "install-update",
+              title: "Update available",
+              question: `Version ${version} of Lens IDE is available and ready to be installed. Would you like to update now?`,
+            });
 
             if (userWantsToInstallUpdate) {
               quitAndInstallUpdate();

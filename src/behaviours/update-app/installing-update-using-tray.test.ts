@@ -300,7 +300,12 @@ describe("installing update using tray", () => {
           });
 
           it("asks user to install update immediately", () => {
-            expect(askBooleanMock).toHaveBeenCalledWith("Do you want to install update some-version?");
+            expect(askBooleanMock).toHaveBeenCalledWith({
+              id: "install-update",
+              title: "Update Available",
+              question:
+                "Version some-version of Lens IDE is available and ready to be installed. Would you like to update now?",
+            });
           });
 
           describe("when user answers to install the update", () => {
