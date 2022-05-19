@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { UpdateChannel } from "../update-channels";
 import checkForPlatformUpdatesInjectable from "../check-for-platform-updates/check-for-platform-updates.injectable";
+import updateCanBeDowngradedInjectable from "./update-can-be-downgraded.injectable";
 
 interface CheckForUpdatesFromChannelResult {
   updateWasDiscovered: boolean;
@@ -20,10 +21,14 @@ const checkForUpdatesStartingFromChannelInjectable = getInjectable({
       checkForPlatformUpdatesInjectable,
     );
 
+    const updateCanBeDowngraded = di.inject(updateCanBeDowngradedInjectable);
+
     const _recursiveCheck = async (
       updateChannel: UpdateChannel,
     ): Promise<CheckForUpdatesFromChannelResult> => {
-      const result = await checkForPlatformUpdates(updateChannel);
+      const result = await checkForPlatformUpdates(updateChannel, {
+        allowDowngrade: updateCanBeDowngraded.get(),
+      });
 
       if (result.updateWasDiscovered) {
         return {

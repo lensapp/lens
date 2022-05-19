@@ -93,6 +93,7 @@ describe("installing update", () => {
       it('checks for updates from "latest" update channel', () => {
         expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
           updateChannels.latest,
+          { allowDowngrade: true },
         );
       });
 
@@ -247,6 +248,7 @@ describe("installing update", () => {
 
             expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
               updateChannels.beta,
+              { allowDowngrade: true },
             );
           });
         });
@@ -272,6 +274,7 @@ describe("installing update", () => {
       it('checks updates from update channel "alpha"', () => {
         expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
           updateChannels.alpha,
+          { allowDowngrade: true },
         );
       });
 
@@ -298,6 +301,7 @@ describe("installing update", () => {
         it('checks updates from update channel "beta"', () => {
           expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
             updateChannels.beta,
+            { allowDowngrade: true },
           );
         });
 
@@ -324,6 +328,7 @@ describe("installing update", () => {
           it('finally checks updates from update channel "latest"', () => {
             expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
               updateChannels.latest,
+              { allowDowngrade: true },
             );
           });
 

@@ -52,7 +52,7 @@ describe("check-for-platform-updates", () => {
         moreStableUpdateChannel: null,
       };
 
-      actualPromise = checkForPlatformUpdates(testUpdateChannel);
+      actualPromise = checkForPlatformUpdates(testUpdateChannel, { allowDowngrade: true });
     });
 
     it("sets update channel", () => {
@@ -60,7 +60,7 @@ describe("check-for-platform-updates", () => {
     });
 
     it("sets flag for allowing downgrade", () => {
-      expect(electronUpdaterFake.allowDowngrade).toBe(false);
+      expect(electronUpdaterFake.allowDowngrade).toBe(true);
     });
 
     it("disables auto downloading for being controlled", () => {
