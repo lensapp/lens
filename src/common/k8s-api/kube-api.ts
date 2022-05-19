@@ -313,6 +313,16 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
  */
 function legacyRegisterApi(api: KubeApi<any, any>): void {
   try {
+    /**
+     * This function throws if called in `main`, so the `try..catch` is to make sure that doesn't
+     * leak.
+     *
+     * However, we need this code to be run in `renderer` so that the auto registering of `KubeApi`
+     * instances still works. That auto registering never worked or was applicable in `main` because
+     * there is no "single cluster" on `main`.
+     *
+     * TODO: rearchitect this design pattern in the new extension API
+     */
     const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
     const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
 
