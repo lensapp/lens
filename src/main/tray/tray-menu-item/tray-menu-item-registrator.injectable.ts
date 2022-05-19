@@ -16,11 +16,13 @@ import type { TrayMenuRegistration } from "../tray-menu-registration";
 const trayMenuItemRegistratorInjectable = getInjectable({
   id: "tray-menu-item-registrator",
 
-  instantiate: (di) => (extension: LensMainExtension, installationCounter) => {
-    pipeline(
-      extension.trayMenus,
+  instantiate: (di) => (extension, installationCounter) => {
+    const mainExtension = extension as LensMainExtension;
 
-      flatMap(toItemInjectablesFor(extension, installationCounter)),
+    pipeline(
+      mainExtension.trayMenus,
+
+      flatMap(toItemInjectablesFor(mainExtension, installationCounter)),
 
       (injectables) => di.register(...injectables),
     );
@@ -34,7 +36,7 @@ export default trayMenuItemRegistratorInjectable;
 
 const toItemInjectablesFor = (extension: LensMainExtension, installationCounter: number) => {
   const _toItemInjectables = (parentId: string | null) => (registration: TrayMenuRegistration): Injectable<TrayMenuItem, TrayMenuItem, void>[] => {
-    const trayItemId = registration.id || kebabCase(registration.label);
+    const trayItemId = registration.id || kebabCase(registration.label || "");
     const id = `${trayItemId}-tray-menu-item-for-extension-${extension.sanitizedExtensionId}-instance-${installationCounter}`;
 
     const parentInjectable = getInjectable({
@@ -47,14 +49,14 @@ const toItemInjectablesFor = (extension: LensMainExtension, installationCounter:
 
         separator: registration.type === "separator",
 
-        label: computed(() => registration.label),
+        label: computed(() => registration.label || ""),
         tooltip: registration.toolTip,
 
         click: () => {
           registration.click?.(registration);
         },
 
-        enabled: computed(() => registration.enabled),
+        enabled: computed(() => !!registration.enabled),
         visible: computed(() => true),
       }),
 

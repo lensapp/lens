@@ -82,7 +82,7 @@ const convertToElectronMenuTemplate = (trayMenuItems: TrayMenuItem[]) => {
 
           return {
             id: trayMenuItem.id,
-            label: trayMenuItem.label.get(),
+            label: trayMenuItem.label?.get(),
             enabled: trayMenuItem.enabled.get(),
             toolTip: trayMenuItem.tooltip,
 

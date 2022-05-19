@@ -27,7 +27,11 @@ const watchIfUpdateShouldHappenOnQuitInjectable = getInjectable({
 
         const updateIsDiscoveredFromChannel = discoveredVersion?.updateChannel;
 
-        const updateOnQuit = sufficientlyStableUpdateChannels.includes(updateIsDiscoveredFromChannel);
+        const updateOnQuit = updateIsDiscoveredFromChannel
+          ? sufficientlyStableUpdateChannels.includes(
+            updateIsDiscoveredFromChannel,
+          )
+          : false;
 
         setUpdateOnQuit(updateOnQuit);
       }),
