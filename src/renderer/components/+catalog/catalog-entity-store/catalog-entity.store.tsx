@@ -12,9 +12,12 @@ import type { Disposer } from "../../../../common/utils";
 import { disposer } from "../../../../common/utils";
 import type { ItemListStore } from "../../item-object-list";
 
+type EntityRegistry = Pick<CatalogEntityRegistry, "getItemsForCategory" | "filteredItems" | "onRun">;
+type CatalogRegistry = Pick<CatalogCategoryRegistry, "items">;
+
 interface Dependencies {
-  entityRegistry: CatalogEntityRegistry;
-  catalogRegistry: CatalogCategoryRegistry;
+  entityRegistry: EntityRegistry;
+  catalogRegistry: CatalogRegistry;
 }
 
 export type CatalogEntityStore = ItemListStore<CatalogEntity, false> & {
@@ -71,7 +74,7 @@ export function catalogEntityStore({
     ),
     onRun: entity => entityRegistry.onRun(entity),
     failedLoading: false,
-    getTotalCount: () => entityRegistry.filteredItems.length,
+    getTotalCount: () => entities.get().length,
     isLoaded: true,
     isSelected: (item) => item.getId() === selectedItemId.get(),
     isSelectedAll: () => false,
