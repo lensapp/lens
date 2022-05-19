@@ -7,7 +7,7 @@ import type { Channel } from "./channel-injection-token";
 
 export type SendToAgnosticChannel = <TChannel extends Channel<unknown>>(
   channel: TChannel,
-  message: TChannel["_messageTemplate"]
+  message?: TChannel["_messageTemplate"]
 ) => void;
 
 export const sendToAgnosticChannelInjectionToken =

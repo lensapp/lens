@@ -48,6 +48,7 @@ import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-i
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 import { Notifications } from "../notifications/notifications";
+import notifyThatRootFrameIsRenderedInjectable from "../../frames/root-frame/notify-that-root-frame-is-rendered.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -89,6 +90,7 @@ interface DiContainers {
 
 interface Environment {
   renderSidebar: () => React.ReactNode;
+  beforeRender: () => void;
   onAllowKubeResource: () => void;
 }
 
@@ -119,6 +121,12 @@ export const getApplicationBuilder = () => {
     application: {
       renderSidebar: () => null,
 
+      beforeRender: () => {
+        const nofifyThatRootFrameIsRendered = rendererDi.inject(notifyThatRootFrameIsRenderedInjectable);
+
+        nofifyThatRootFrameIsRendered();
+      },
+
       onAllowKubeResource: () => {
         throw new Error(
           "Tried to allow kube resource when environment is not cluster frame.",
@@ -128,6 +136,7 @@ export const getApplicationBuilder = () => {
 
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
+      beforeRender: () => {},
       onAllowKubeResource: () => {},
     } as Environment,
   };
@@ -379,6 +388,8 @@ export const getApplicationBuilder = () => {
       for (const callback of beforeRenderCallbacks) {
         await callback(dis);
       }
+
+      environment.beforeRender();
 
       rendered = render(
         <Router history={history}>
