@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { checkForUpdates } from "../app-updater";
 import { docsUrl, productName, supportUrl } from "../../common/vars";
 import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
@@ -25,6 +24,7 @@ import showAboutInjectable from "./show-about.injectable";
 import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
 import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
+import checkForUpdatesInjectable from "../update-app/check-for-updates/check-for-updates.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
@@ -53,6 +53,7 @@ const applicationMenuItemsInjectable = getInjectable({
     const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
     const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
+    const checkForUpdates = di.inject(checkForUpdatesInjectable);
 
     logger.info(`[MENU]: autoUpdateEnabled=${updatingIsEnabled}`);
 
