@@ -82,6 +82,8 @@ import checkForPlatformUpdatesInjectable from "./update-app/check-for-platform-u
 import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 import downloadPlatformUpdateInjectable from "./update-app/download-platform-update/download-platform-update.injectable";
+import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
+import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -188,6 +190,8 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     setupSystemCaInjectable,
     setupListenerForCurrentClusterFrameInjectable,
     setupRunnablesAfterWindowIsOpenedInjectable,
+    startCatalogSyncInjectable,
+    startKubeConfigSyncInjectable,
   ].forEach((injectable) => {
     di.override(injectable, () => ({ run: () => {} }));
   });
