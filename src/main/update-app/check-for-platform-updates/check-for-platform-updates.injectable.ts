@@ -20,6 +20,7 @@ const checkForPlatformUpdatesInjectable = getInjectable({
     return async (updateChannel) => {
       electronUpdater.channel = updateChannel.id;
       electronUpdater.autoDownload = false;
+      electronUpdater.allowDowngrade = false;
 
       let result: UpdateCheckResult;
 

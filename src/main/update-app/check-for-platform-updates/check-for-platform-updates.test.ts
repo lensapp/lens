@@ -28,6 +28,7 @@ describe("check-for-platform-updates", () => {
     electronUpdaterFake = {
       channel: undefined,
       autoDownload: undefined,
+      allowDowngrade: undefined,
 
       checkForUpdates: checkForUpdatesMock,
     } as unknown as AppUpdater;
@@ -56,6 +57,10 @@ describe("check-for-platform-updates", () => {
 
     it("sets update channel", () => {
       expect(electronUpdaterFake.channel).toBe("some-update-channel");
+    });
+
+    it("sets flag for allowing downgrade", () => {
+      expect(electronUpdaterFake.allowDowngrade).toBe(false);
     });
 
     it("disables auto downloading for being controlled", () => {
