@@ -7,7 +7,7 @@ import type { Channel } from "./channel-injection-token";
 
 export interface ChannelListener<TChannel extends Channel<any>> {
   channel: TChannel;
-  handler: (value: TChannel["_template"]) => void;
+  handler: (value: TChannel["_messageTemplate"]) => void;
 }
 
 export const channelListenerInjectionToken = getInjectionToken<ChannelListener<Channel<any>>>(
