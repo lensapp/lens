@@ -84,5 +84,4 @@ describe("downgrading version update", () => {
       expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(expect.any(Object), { allowDowngrade: downgradeIsAllowed });
     });
   });
-
 });
