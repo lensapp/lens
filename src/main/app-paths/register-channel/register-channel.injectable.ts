@@ -6,6 +6,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import ipcMainInjectable from "./ipc-main/ipc-main.injectable";
 import { registerChannel } from "./register-channel";
 
+/**
+ * @deprecated Switch to using channelListenerInjectionToken
+ */
 const registerChannelInjectable = getInjectable({
   id: "register-channel",
 

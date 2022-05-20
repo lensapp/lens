@@ -26,7 +26,6 @@ import appVersionInjectable from "../../../common/get-configuration-file-model/a
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import { computed } from "mobx";
-import ipcRendererInjectable from "../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 
 mockWindow();
@@ -107,10 +106,6 @@ describe("<Catalog />", () => {
     catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
     di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
-    di.override(ipcRendererInjectable, () => ({
-      on: jest.fn(),
-      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
-    } as never));
 
     emitEvent = jest.fn();
 

@@ -7,12 +7,11 @@ import glob from "glob";
 import { memoize, noop } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
+import getValueFromChannelInjectable from "./channel/get-value-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import { createMemoryHistory } from "history";
-import registerIpcChannelListenerInjectable from "./app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
-import focusWindowInjectable from "./ipc-channel-listeners/focus-window.injectable";
+import focusWindowInjectable from "./navigation/focus-window.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
@@ -38,7 +37,7 @@ import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
-import ipcRendererInjectable from "./app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
+import ipcRendererInjectable from "./channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable } from "mobx";
@@ -119,8 +118,7 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
 
     di.override(apiManagerInjectable, () => new ApiManager());
 
-    di.override(getValueFromRegisteredChannelInjectable, () => () => Promise.resolve(undefined as never));
-    di.override(registerIpcChannelListenerInjectable, () => () => undefined);
+    di.override(getValueFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
     overrideFsWithFakes(di);
 
