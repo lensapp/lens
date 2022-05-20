@@ -12,6 +12,7 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import { channelListenerInjectionToken } from "./channel-listener-injection-token";
 import createLensWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { Channel } from "./channel-injection-token";
+import closeAllWindowsInjectable from "../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 
 type TestChannel = Channel<string>;
 
@@ -55,6 +56,10 @@ describe("channel", () => {
       );
 
       await applicationBuilder.render();
+
+      const closeAllWindows = mainDi.inject(closeAllWindowsInjectable);
+
+      closeAllWindows();
     });
 
     describe("given window is shown", () => {
