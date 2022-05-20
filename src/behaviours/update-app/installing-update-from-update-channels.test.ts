@@ -23,6 +23,8 @@ import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
 import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 import checkForUpdatesInjectable from "../../main/update-app/check-for-updates/check-for-updates.injectable";
+import appVersionInjectable
+  from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 
 describe("installing update from update channels", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -69,7 +71,7 @@ describe("installing update from update channels", () => {
     });
   });
 
-  describe("when started", () => {
+  describe("given no update channel selection is stored, when started", () => {
     let rendered: RenderResult;
     let checkForUpdates: () => Promise<void>;
 
@@ -298,5 +300,89 @@ describe("installing update from update channels", () => {
         });
       });
     });
+  });
+
+  it("given valid update channel selection is stored, when checking for updates, checks for updates from the update channel", async () => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      // TODO: Switch to more natural way of setting initial value
+      // TODO: UserStore is currently responsible for getting and setting initial value
+      const selectedUpdateChannel = mainDi.inject(selectedUpdateChannelInjectable);
+
+      selectedUpdateChannel.setValue(updateChannels.beta.id);
+    });
+
+    await applicationBuilder.render();
+
+    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+
+    checkForUpdates();
+
+    expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.beta, expect.any(Object));
+  });
+
+  it("given invalid update channel selection is stored, when checking for updates, checks for updates from the update channel", async () => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      // TODO: Switch to more natural way of setting initial value
+      // TODO: UserStore is currently responsible for getting and setting initial value
+      const selectedUpdateChannel = mainDi.inject(selectedUpdateChannelInjectable);
+
+      selectedUpdateChannel.setValue("something-invalid" as UpdateChannelId);
+    });
+
+    await applicationBuilder.render();
+
+    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+
+    checkForUpdates();
+
+    expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.latest, expect.any(Object));
+  });
+
+  it('given no update channel selection is stored and currently using alpha release, when checking for updates, checks for updates from "alpha" channel', async () => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      mainDi.override(appVersionInjectable, () => "1.0.0-alpha");
+    });
+
+    await applicationBuilder.render();
+
+    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+
+    checkForUpdates();
+
+    expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.alpha, expect.any(Object));
+  });
+
+  it('given no update channel selection is stored and currently using beta release, when checking for updates, checks for updates from "beta" channel', async () => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      mainDi.override(appVersionInjectable, () => "1.0.0-beta");
+    });
+
+    await applicationBuilder.render();
+
+    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+
+    checkForUpdates();
+
+    expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.beta, expect.any(Object));
+  });
+
+  it("given update channel selection is stored and currently using prerelease, when checking for updates, checks for updates from stored channel", async () => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      mainDi.override(appVersionInjectable, () => "1.0.0-alpha");
+
+      // TODO: Switch to more natural way of setting initial value
+      // TODO: UserStore is currently responsible for getting and setting initial value
+      const selectedUpdateChannel = mainDi.inject(selectedUpdateChannelInjectable);
+
+      selectedUpdateChannel.setValue(updateChannels.beta.id);
+    });
+
+    await applicationBuilder.render();
+
+    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+
+    checkForUpdates();
+
+    expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.beta, expect.any(Object));
   });
 });
