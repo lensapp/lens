@@ -24,9 +24,9 @@ const alphaChannel: UpdateChannel = {
 };
 
 export const updateChannels: Record<UpdateChannelId, UpdateChannel> = {
-  alpha: alphaChannel,
-  beta: betaChannel,
   latest: latestChannel,
+  beta: betaChannel,
+  alpha: alphaChannel,
 };
 
 export interface UpdateChannel {

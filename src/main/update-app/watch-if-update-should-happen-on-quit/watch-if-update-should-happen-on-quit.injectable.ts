@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { autorun } from "mobx";
 import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
 import setUpdateOnQuitInjectable from "../../electron-app/features/set-update-on-quit.injectable";
-import selectedUpdateChannelInjectable from "../selected-update-channel.injectable";
-import type { UpdateChannel } from "../update-channels";
+import selectedUpdateChannelInjectable from "../../../common/application-update/selected-update-channel/selected-update-channel.injectable";
+import type { UpdateChannel } from "../../../common/application-update/update-channels";
 import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 
 const watchIfUpdateShouldHappenOnQuitInjectable = getInjectable({

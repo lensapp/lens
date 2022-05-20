@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronUpdaterInjectable from "../../electron-app/features/electron-updater.injectable";
-import type { UpdateChannel } from "../update-channels";
+import type { UpdateChannel } from "../../../common/application-update/update-channels";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { UpdateCheckResult } from "electron-updater";
 

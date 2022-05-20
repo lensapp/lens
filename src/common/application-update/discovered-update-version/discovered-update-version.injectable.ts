@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import createSyncBoxInjectable from "../../sync-box/create-sync-box.injectable";
-import type { UpdateChannel } from "../../../main/update-app/update-channels";
+import type { UpdateChannel } from "../update-channels";
 
 const discoveredUpdateVersionInjectable = getInjectable({
   id: "discovered-update-version",

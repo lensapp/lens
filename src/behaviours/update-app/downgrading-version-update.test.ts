@@ -11,10 +11,10 @@ import asyncFn from "@async-fn/jest";
 import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForUpdatesInjectable from "../../main/update-app/check-for-updates/check-for-updates.injectable";
-import selectedUpdateChannelInjectable from "../../main/update-app/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
-import { updateChannels } from "../../main/update-app/update-channels";
+import { updateChannels } from "../../common/application-update/update-channels";
 
 describe("downgrading version update", () => {
   let applicationBuilder: ApplicationBuilder;
