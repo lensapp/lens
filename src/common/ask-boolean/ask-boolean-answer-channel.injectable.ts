@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Channel } from "../channel/channel-injection-token";
 import { channelInjectionToken } from "../channel/channel-injection-token";
 
-type AskBooleanAnswerChannel = Channel<{ id: string; value: boolean }>;
+type AskBooleanAnswerChannel = Channel<{ id: string; value: boolean }, never>;
 
 const askBooleanAnswerChannelInjectable = getInjectable({
   id: "ask-boolean-answer-channel",

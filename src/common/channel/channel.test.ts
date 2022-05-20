@@ -14,7 +14,7 @@ import createLensWindowInjectable from "../../main/start-main-application/lens-w
 import type { Channel } from "./channel-injection-token";
 import closeAllWindowsInjectable from "../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 
-type TestChannel = Channel<string>;
+type TestChannel = Channel<string, never>;
 
 describe("channel", () => {
   describe("messaging from main to renderer, given listener for channel in a window and application has started", () => {
