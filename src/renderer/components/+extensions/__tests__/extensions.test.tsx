@@ -7,7 +7,6 @@ import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
-import { UserStore } from "../../../../common/user-store";
 import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { ConfirmDialog } from "../../confirm-dialog";
@@ -96,13 +95,10 @@ describe("Extensions", () => {
     });
 
     extensionDiscovery.uninstallExtension = jest.fn(() => Promise.resolve());
-
-    UserStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    UserStore.resetInstance();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
