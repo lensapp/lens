@@ -187,7 +187,8 @@ describe("installing update", () => {
               id: "install-update",
               title: "Update Available",
               question:
-                "Version some-version of Lens IDE is available and ready to be installed. Would you like to update now?",
+                "Version some-version of Lens IDE is available and ready to be installed. Would you like to update now?\n\n" +
+                "Lens should restart automatically, if it doesn't please restart manually. Installed extensions might require updating.",
             });
           });
 
