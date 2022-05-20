@@ -43,6 +43,7 @@ import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
+import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -74,6 +75,8 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
+
+    di.override(appVersionInjectable, () => "1.0.0");
 
     di.override(historyInjectable, () => createMemoryHistory());
 
