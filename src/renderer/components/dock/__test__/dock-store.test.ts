@@ -5,7 +5,6 @@
 
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
-import ipcRendererInjectable from "../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DockStore, DockTab } from "../dock/store";
 import { TabKind } from "../dock/store";
@@ -26,10 +25,6 @@ describe("DockStore", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");
-    di.override(ipcRendererInjectable, () => ({
-      on: jest.fn(),
-      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
-    } as never));
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     dockStore = di.inject(dockStoreInjectable);

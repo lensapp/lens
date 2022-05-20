@@ -3,17 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { Channel } from "../common/ipc-channel/channel";
-import getValueFromRegisteredChannelInjectable from "../renderer/app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
+import getValueFromChannelInjectable from "../renderer/channel/get-value-from-channel.injectable";
 import registerChannelInjectable from "../main/app-paths/register-channel/register-channel.injectable";
 import asyncFn from "@async-fn/jest";
-import registerIpcChannelListenerInjectable from "../renderer/app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
 import type { SendToViewArgs } from "../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import sendToChannelInElectronBrowserWindowInjectable from "../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import { isEmpty } from "lodash/fp";
 import enlistChannelListenerInjectableInRenderer from "../renderer/channel/channel-listeners/enlist-channel-listener.injectable";
 import enlistChannelListenerInjectableInMain from "../main/channel/channel-listeners/enlist-channel-listener.injectable";
 import sendToMainInjectable from "../renderer/channel/send-to-main.injectable";
+import type { Channel } from "../common/channel/channel-injection-token";
 
 export const overrideIpcBridge = ({
   rendererDi,
@@ -23,43 +22,48 @@ export const overrideIpcBridge = ({
   mainDi: DiContainer;
 }) => {
   const fakeChannelMap = new Map<
-    Channel<any>,
+    string,
     { promise: Promise<any>; resolve: (arg0: any) => Promise<void> }
   >();
 
   const mainIpcRegistrations = {
-    set: <TChannel extends Channel<TInstance>, TInstance>(
-      key: TChannel,
-      callback: () => TChannel["_template"],
+    set: <TChannel extends Channel<unknown, unknown>>(
+      channel: TChannel,
+      callback: () => TChannel["_messageTemplate"],
     ) => {
-      if (!fakeChannelMap.has(key)) {
+      const id = channel.id;
+
+      if (!fakeChannelMap.has(id)) {
         const mockInstance = asyncFn();
 
-        fakeChannelMap.set(key, {
+        fakeChannelMap.set(id, {
           promise: mockInstance(),
           resolve: mockInstance.resolve,
         });
       }
 
-      return fakeChannelMap.get(key)?.resolve(callback);
+      return fakeChannelMap.get(id)?.resolve(callback);
     },
 
-    get: <TChannel extends Channel<TInstance>, TInstance>(key: TChannel) => {
-      if (!fakeChannelMap.has(key)) {
+    get: <TChannel extends Channel<unknown, unknown>>(channel: TChannel) => {
+      const id = channel.id;
+
+      if (!fakeChannelMap.has(id)) {
         const mockInstance = asyncFn();
 
-        fakeChannelMap.set(key, {
+        fakeChannelMap.set(id, {
           promise: mockInstance(),
           resolve: mockInstance.resolve,
         });
       }
 
-      return fakeChannelMap.get(key)?.promise;
+      return fakeChannelMap.get(id)?.promise;
     },
   };
 
+  // TODO: Consolidate to using mainIpcFakeHandles
   rendererDi.override(
-    getValueFromRegisteredChannelInjectable,
+    getValueFromChannelInjectable,
     () => async (channel) => {
       const callback = await mainIpcRegistrations.get(channel);
 
@@ -75,16 +79,6 @@ export const overrideIpcBridge = ({
     string,
     ((...args: any[]) => void)[]
   >();
-
-  rendererDi.override(
-    registerIpcChannelListenerInjectable,
-    () =>
-      ({ channel, handle }) => {
-        const existingHandles = rendererIpcFakeHandles.get(channel.name) || [];
-
-        rendererIpcFakeHandles.set(channel.name, [...existingHandles, handle]);
-      },
-  );
 
   mainDi.override(
     sendToChannelInElectronBrowserWindowInjectable,

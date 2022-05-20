@@ -13,7 +13,6 @@ import { renderFor } from "../../../test-utils/renderFor";
 import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../../../stores-apis-can-be-created.injectable";
-import ipcRendererInjectable from "../../../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("RoleBindingDialog tests", () => {
   let render: DiRender;
@@ -23,10 +22,6 @@ describe("RoleBindingDialog tests", () => {
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    di.override(ipcRendererInjectable, () => ({
-      on: jest.fn(),
-      invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
-    } as never));
 
     render = renderFor(di);
 

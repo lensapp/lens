@@ -10,7 +10,7 @@ import extensionsStoreInjectable from "../../extensions/extensions-store/extensi
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import type { FileSystemProvisionerStore } from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
-import focusWindowInjectable from "../../renderer/ipc-channel-listeners/focus-window.injectable";
+import focusWindowInjectable from "../../renderer/navigation/focus-window.injectable";
 
 // TODO: Make components free of side effects by making them deterministic
 jest.mock("../../renderer/components/input/input");
