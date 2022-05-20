@@ -7,22 +7,22 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import quitAndInstallUpdateInjectable from "../../main/electron-app/features/quit-and-install-update.injectable";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/update-app/publish-is-configured.injectable";
-import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
-import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
+import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
+import type { CheckForPlatformUpdates } from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
+import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { UpdateChannel, UpdateChannelId } from "../../common/application-update/update-channels";
 import { updateChannels } from "../../common/application-update/update-channels";
-import type { DownloadPlatformUpdate } from "../../main/update-app/download-platform-update/download-platform-update.injectable";
-import downloadPlatformUpdateInjectable from "../../main/update-app/download-platform-update/download-platform-update.injectable";
+import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
+import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
 import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
-import checkForUpdatesInjectable from "../../main/update-app/check-for-updates/check-for-updates.injectable";
+import checkForUpdatesInjectable from "../../main/application-update/check-for-updates/check-for-updates.injectable";
 import appVersionInjectable
   from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 

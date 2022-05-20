@@ -6,12 +6,12 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/update-app/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import checkForUpdatesInjectable from "../../main/update-app/check-for-updates/check-for-updates.injectable";
+import checkForUpdatesInjectable from "../../main/application-update/check-for-updates/check-for-updates.injectable";
 import startCheckingForUpdatesInjectable
-  from "../../main/update-app/periodical-check-for-updates/start-checking-for-updates.injectable";
+  from "../../main/application-update/periodical-check-for-updates/start-checking-for-updates.injectable";
 
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 

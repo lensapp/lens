@@ -78,13 +78,13 @@ import platformInjectable from "../common/vars/platform.injectable";
 import productNameInjectable from "./app-paths/app-name/product-name.injectable";
 import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "./update-app/publish-is-configured.injectable";
-import checkForPlatformUpdatesInjectable from "./update-app/check-for-platform-updates/check-for-platform-updates.injectable";
+import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
+import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
-import downloadPlatformUpdateInjectable from "./update-app/download-platform-update/download-platform-update.injectable";
+import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
-import startCheckingForUpdatesInjectable from "./update-app/periodical-check-for-updates/start-checking-for-updates.injectable";
+import startCheckingForUpdatesInjectable from "./application-update/periodical-check-for-updates/start-checking-for-updates.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
