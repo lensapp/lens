@@ -21,7 +21,7 @@ jest.mock("electron", () => ({
   },
 }));
 
-import { UserStore } from "../user-store";
+import type { UserStore } from "../user-store";
 import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
@@ -49,14 +49,15 @@ describe("user store tests", () => {
 
     di.override(writeFileInjectable, () => () => Promise.resolve());
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    di.override(userStoreInjectable, () => UserStore.createInstance());
-
     di.permitSideEffects(getConfigurationFileModelInjectable);
+
     di.permitSideEffects(appVersionInjectable);
+    di.permitSideEffects(userStoreInjectable);
+
+    di.unoverride(userStoreInjectable);
   });
 
   afterEach(() => {
-    UserStore.resetInstance();
     mockFs.restore();
   });
 
@@ -125,6 +126,8 @@ describe("user store tests", () => {
           },
         },
       });
+
+      di.override(appVersionInjectable, () => "10.0.0");
 
       userStore = di.inject(userStoreInjectable);
     });
