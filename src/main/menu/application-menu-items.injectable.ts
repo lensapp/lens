@@ -11,7 +11,7 @@ import { webContents } from "electron";
 import loggerInjectable from "../../common/logger.injectable";
 import appNameInjectable from "../app-paths/app-name/app-name.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
-import updatingIsEnabledInjectable from "../update-app/updating-is-enabled.injectable";
+import updatingIsEnabledInjectable from "../application-update/updating-is-enabled.injectable";
 import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import navigateToExtensionsInjectable from "../../common/front-end-routing/routes/extensions/navigate-to-extensions.injectable";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -24,7 +24,7 @@ import showAboutInjectable from "./show-about.injectable";
 import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
 import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
-import checkForUpdatesInjectable from "../update-app/check-for-updates/check-for-updates.injectable";
+import checkForUpdatesInjectable from "../application-update/check-for-updates/check-for-updates.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;

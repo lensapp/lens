@@ -6,13 +6,13 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/update-app/publish-is-configured.injectable";
-import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
-import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
+import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
+import type { CheckForPlatformUpdates } from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
+import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { DownloadPlatformUpdate } from "../../main/update-app/download-platform-update/download-platform-update.injectable";
-import downloadPlatformUpdateInjectable from "../../main/update-app/download-platform-update/download-platform-update.injectable";
+import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
+import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import showApplicationWindowInjectable from "../../main/start-main-application/lens-window/show-application-window.injectable";
 import progressOfUpdateDownloadInjectable from "../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 
