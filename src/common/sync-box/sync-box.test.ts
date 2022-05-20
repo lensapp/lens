@@ -6,47 +6,99 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { observe, runInAction } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { SyncBox } from "./create-sync-box.injectable";
 import createSyncBoxInjectable from "./create-sync-box.injectable";
-import applicationWindowInjectable from "../../main/start-main-application/lens-window/application-window/application-window.injectable";
+import { flushPromises } from "../test-utils/flush-promises";
+import type { SyncBox } from "./sync-box-injection-token";
 
 describe("sync-box", () => {
-  let syncBoxInMain: SyncBox<string>;
-  let syncBoxInRenderer: SyncBox<string>;
   let applicationBuilder: ApplicationBuilder;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    const someInjectable = getInjectable({
-      id: "some-injectable",
-
-      instantiate: (di) => {
-        const createSyncBox = di.inject(createSyncBoxInjectable);
-
-        return createSyncBox<string>("some-state");
-      },
-    });
-
     applicationBuilder.dis.mainDi.register(someInjectable);
     applicationBuilder.dis.rendererDi.register(someInjectable);
-
-    syncBoxInMain = applicationBuilder.dis.mainDi.inject(someInjectable);
-    syncBoxInRenderer = applicationBuilder.dis.rendererDi.inject(someInjectable);
   });
 
-  describe("when application starts", () => {
-    beforeEach(() => {
+  describe("given application is started, when value is set in main", () => {
+    let valueInMain: string;
+    let syncBoxInMain: SyncBox<string>;
 
+    beforeEach(async () => {
+      syncBoxInMain = applicationBuilder.dis.mainDi.inject(someInjectable);
+      // await applicationBuilder.start();
+
+      observe(syncBoxInMain.value, ({ newValue }) => {
+        valueInMain = newValue as string;
+      }, true);
+
+      runInAction(() => {
+        syncBoxInMain.set("some-value-from-main");
+      });
     });
 
-    it("", () => {
-
+    it("knows value in main", () => {
+      expect(valueInMain).toBe("some-value-from-main");
     });
 
     describe("when window starts", () => {
-      it("", () => {
+      let valueInRenderer: string;
+      let syncBoxInRenderer: SyncBox<string>;
 
+      beforeEach(() => {
+        // applicationBuilder.
+
+        syncBoxInRenderer = applicationBuilder.dis.rendererDi.inject(someInjectable);
+
+        observe(syncBoxInRenderer.value, ({ newValue }) => {
+          valueInRenderer = newValue as string;
+        }, true);
+      });
+
+      it("does not have the initial value yet", () => {
+        expect(valueInRenderer).toBe(undefined);
+      });
+
+      describe("when getting initial value resolves", () => {
+        beforeEach(async () => {
+          await flushPromises();
+        });
+
+        it("has value in renderer", () => {
+          expect(valueInRenderer).toBe("some-value-from-main");
+        });
+
+        describe("when value is set from renderer", () => {
+          beforeEach(() => {
+            runInAction(() => {
+              syncBoxInRenderer.set("some-value-from-renderer");
+            });
+          });
+
+          it("has value in main", () => {
+            expect(valueInMain).toBe("some-value-from-renderer");
+          });
+
+          it("has value in renderer", () => {
+            expect(valueInRenderer).toBe("some-value-from-renderer");
+          });
+        });
+      });
+
+      describe("when value is set from renderer before getting initial value from main resolves", () => {
+        beforeEach(() => {
+          runInAction(() => {
+            syncBoxInRenderer.set("some-value-from-renderer");
+          });
+        });
+
+        it("has value in main", () => {
+          expect(valueInMain).toBe("some-value-from-renderer");
+        });
+
+        it("has value in renderer", () => {
+          expect(valueInRenderer).toBe("some-value-from-renderer");
+        });
       });
     });
   });
@@ -54,15 +106,14 @@ describe("sync-box", () => {
   describe("when application starts with a window", () => {
     let valueInRenderer: string;
     let valueInMain: string;
+    let syncBoxInMain: SyncBox<string>;
+    let syncBoxInRenderer: SyncBox<string>;
 
     beforeEach(async () => {
+      syncBoxInMain = applicationBuilder.dis.mainDi.inject(someInjectable);
+      syncBoxInRenderer = applicationBuilder.dis.rendererDi.inject(someInjectable);
+
       await applicationBuilder.render();
-
-      const applicationWindow = applicationBuilder.dis.mainDi.inject(
-        applicationWindowInjectable,
-      );
-
-      await applicationWindow.show();
 
       observe(syncBoxInRenderer.value, ({ newValue }) => {
         valueInRenderer = newValue as string;
@@ -73,11 +124,11 @@ describe("sync-box", () => {
       }, true);
     });
 
-    it("does not know default value in main", () => {
+    it("does not know initial value in main", () => {
       expect(valueInMain).toBeUndefined();
     });
 
-    it("does not know default value in renderer", () => {
+    it("does not know initial value in renderer", () => {
       expect(valueInRenderer).toBeUndefined();
     });
 
@@ -113,4 +164,14 @@ describe("sync-box", () => {
       });
     });
   });
+});
+
+const someInjectable = getInjectable({
+  id: "some-injectable",
+
+  instantiate: (di) => {
+    const createSyncBox = di.inject(createSyncBoxInjectable);
+
+    return createSyncBox<string>("some-state");
+  },
 });

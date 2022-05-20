@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import createSyncBoxInjectable from "../../sync-box/create-sync-box.injectable";
+import { syncBoxInjectionToken } from "../../sync-box/sync-box-injection-token";
 
 const progressOfUpdateDownloadInjectable = getInjectable({
   id: "progress-of-update-download-state",
@@ -13,6 +14,8 @@ const progressOfUpdateDownloadInjectable = getInjectable({
 
     return createSyncBox<number>("progress-of-update-download");
   },
+
+  injectionToken: syncBoxInjectionToken,
 });
 
 export default progressOfUpdateDownloadInjectable;

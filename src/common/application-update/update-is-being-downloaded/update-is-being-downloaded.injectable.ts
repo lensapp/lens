@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import createSyncBoxInjectable from "../../sync-box/create-sync-box.injectable";
+import { syncBoxInjectionToken } from "../../sync-box/sync-box-injection-token";
 
 const updateIsBeingDownloadedInjectable = getInjectable({
   id: "update-is-being-downloaded",
@@ -13,6 +14,8 @@ const updateIsBeingDownloadedInjectable = getInjectable({
 
     return createSyncBox<boolean>("update-is-being-downloaded");
   },
+
+  injectionToken: syncBoxInjectionToken,
 });
 
 export default updateIsBeingDownloadedInjectable;

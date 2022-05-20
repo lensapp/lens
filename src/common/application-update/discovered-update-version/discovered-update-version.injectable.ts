@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import createSyncBoxInjectable from "../../sync-box/create-sync-box.injectable";
 import type { UpdateChannel } from "../update-channels";
+import { syncBoxInjectionToken } from "../../sync-box/sync-box-injection-token";
 
 const discoveredUpdateVersionInjectable = getInjectable({
   id: "discovered-update-version",
@@ -16,6 +17,8 @@ const discoveredUpdateVersionInjectable = getInjectable({
       "discovered-update-version",
     );
   },
+
+  injectionToken: syncBoxInjectionToken,
 });
 
 export default discoveredUpdateVersionInjectable;
