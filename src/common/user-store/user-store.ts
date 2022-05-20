@@ -15,15 +15,22 @@ import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
+import type { SelectedUpdateChannel } from "../application-update/selected-update-channel/selected-update-channel.injectable";
+import type { UpdateChannelId } from "../application-update/update-channels";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
   preferences: UserPreferencesModel;
 }
 
+interface Dependencies {
+  selectedUpdateChannel: SelectedUpdateChannel;
+}
+
 export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {
   readonly displayName = "UserStore";
-  constructor() {
+
+  constructor(private dependencies: Dependencies) {
     super({
       configName: "lens-user-store",
       migrations,
@@ -63,7 +70,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable kubectlBinariesPath!: StoreType<typeof DESCRIPTORS["kubectlBinariesPath"]>;
   @observable terminalCopyOnSelect!: StoreType<typeof DESCRIPTORS["terminalCopyOnSelect"]>;
   @observable terminalConfig!: StoreType<typeof DESCRIPTORS["terminalConfig"]>;
-  @observable updateChannel!: StoreType<typeof DESCRIPTORS["updateChannel"]>;
   @observable extensionRegistryUrl!: StoreType<typeof DESCRIPTORS["extensionRegistryUrl"]>;
 
   /**
@@ -171,6 +177,11 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         this[key] = newVal;
       }
     }
+
+    // TODO: Switch to action-based saving instead saving stores by reaction
+    if (preferences?.updateChannel) {
+      this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as UpdateChannelId);
+    }
   }
 
   toJSON(): UserStoreModel {
@@ -181,7 +192,12 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
     return toJS({
       lastSeenAppVersion: this.lastSeenAppVersion,
-      preferences,
+
+      preferences: {
+        ...preferences,
+
+        updateChannel: this.dependencies.selectedUpdateChannel.value.get().id,
+      },
     });
   }
 }

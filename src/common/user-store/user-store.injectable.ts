@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { ipcMain } from "electron";
 import userStoreFileNameMigrationInjectable from "./file-name-migration.injectable";
 import { UserStore } from "./user-store";
+import selectedUpdateChannelInjectable from "../application-update/selected-update-channel/selected-update-channel.injectable";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",
@@ -17,7 +18,9 @@ const userStoreInjectable = getInjectable({
       di.inject(userStoreFileNameMigrationInjectable);
     }
 
-    return UserStore.createInstance();
+    return UserStore.createInstance({
+      selectedUpdateChannel: di.inject(selectedUpdateChannelInjectable),
+    });
   },
 
   causesSideEffects: true,
