@@ -7,7 +7,7 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
       class="Notifications flex column align-flex-end"
     >
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
@@ -75,7 +75,7 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
         </div>
       </div>
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
@@ -154,7 +154,7 @@ exports[`ask-boolean given started when asking multiple questions when answering
       class="Notifications flex column align-flex-end"
     >
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
@@ -233,7 +233,7 @@ exports[`ask-boolean given started when asking question renders 1`] = `
       class="Notifications flex column align-flex-end"
     >
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div

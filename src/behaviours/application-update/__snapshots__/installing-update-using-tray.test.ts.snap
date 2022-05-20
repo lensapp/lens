@@ -17,7 +17,7 @@ exports[`installing update using tray when started when user checks for updates 
       class="Notifications flex column align-flex-end"
     >
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
@@ -239,7 +239,7 @@ exports[`installing update using tray when started when user checks for updates 
         </div>
       </div>
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
@@ -370,7 +370,7 @@ exports[`installing update using tray when started when user checks for updates 
         </div>
       </div>
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
@@ -451,7 +451,7 @@ exports[`installing update using tray when started when user checks for updates 
       class="Notifications flex column align-flex-end"
     >
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
@@ -491,7 +491,7 @@ exports[`installing update using tray when started when user checks for updates 
         </div>
       </div>
       <div
-        class="Animate opacity notification flex info"
+        class="Animate opacity notification flex info enter"
         style="--enter-duration: 100ms; --leave-duration: 100ms;"
       >
         <div
