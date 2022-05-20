@@ -6,6 +6,7 @@
 export * from "./aggregation-rule";
 export * from "./capabilities";
 export * from "./container";
+export * from "./container-port";
 export * from "./env-from-source";
 export * from "./env-source";
 export * from "./env-var-key-selector";

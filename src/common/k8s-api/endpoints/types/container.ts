@@ -98,7 +98,7 @@ export interface Container {
 
   readinessProbe?: Probe;
   resources?: ResourceRequirements;
-  securityContext: SecurityContext;
+  securityContext?: SecurityContext;
   startupProbe?: Probe;
 
   /**

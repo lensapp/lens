@@ -22,7 +22,7 @@ export const dockerPod = new Pod({
       {
         name: "docker-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
     ],
     serviceAccountName: "dummy",
@@ -66,24 +66,24 @@ export const deploymentPod1 = new Pod({
       {
         name: "init-node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
       {
         name: "init-node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
     ],
     containers: [
       {
         name: "node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
       {
         name: "node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
     ],
     serviceAccountName: "dummy",
@@ -127,24 +127,24 @@ export const deploymentPod2 = new Pod({
       {
         name: "init-node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
       {
         name: "init-node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
     ],
     containers: [
       {
         name: "node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
       {
         name: "node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
     ],
     serviceAccountName: "dummy",
@@ -188,12 +188,12 @@ export const deploymentPod3 = new Pod({
       {
         name: "node-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
       {
         name: "node-exporter-1",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "IfNotPresent",
       },
     ],
     serviceAccountName: "dummy",

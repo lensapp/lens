@@ -16,6 +16,7 @@ import { isDefined } from "../../utils";
 import type { PodSecurityContext } from "./types/pod-security-context";
 import type { Probe } from "./types/probe";
 import type { Container } from "./types/container";
+import type { ObjectFieldSelector, ResourceFieldSelector } from "./types";
 
 export class PodApi extends KubeApi<Pod> {
   constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
@@ -373,17 +374,6 @@ export interface ConfigMapProjection {
   name: string;
   items?: KeyToPath[];
   optional?: boolean;
-}
-
-export interface ObjectFieldSelector {
-  fieldPath: string;
-  apiVersion?: string;
-}
-
-export interface ResourceFieldSelector {
-  resource: string;
-  containerName?: string;
-  divisor?: string;
 }
 
 export interface DownwardAPIVolumeFile {
