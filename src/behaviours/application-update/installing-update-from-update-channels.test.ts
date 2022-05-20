@@ -71,7 +71,7 @@ describe("installing update from update channels", () => {
     });
   });
 
-  describe("given no update channel selection is stored, when started", () => {
+  describe("when started", () => {
     let rendered: RenderResult;
     let checkForUpdates: () => Promise<void>;
 
@@ -83,50 +83,6 @@ describe("installing update from update channels", () => {
 
     it("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();
-    });
-
-    describe("when user checks for updates", () => {
-      let checkForUpdatesPromise: Promise<void>;
-
-      beforeEach(async () => {
-        checkForUpdatesPromise = checkForUpdates();
-      });
-
-      it('checks for updates from "latest" update channel by default', () => {
-        expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
-          updateChannels.latest,
-          { allowDowngrade: true },
-        );
-      });
-
-      it("renders", () => {
-        expect(rendered.baseElement).toMatchSnapshot();
-      });
-
-      describe("when new update is discovered", () => {
-        beforeEach(async () => {
-          await checkForPlatformUpdatesMock.resolve({
-            updateWasDiscovered: true,
-            version: "some-version",
-          });
-
-          await checkForUpdatesPromise;
-        });
-
-        it("renders", () => {
-          expect(rendered.baseElement).toMatchSnapshot();
-        });
-
-        describe("when download succeeds", () => {
-          beforeEach(async () => {
-            await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
-          });
-
-          it("renders", () => {
-            expect(rendered.baseElement).toMatchSnapshot();
-          });
-        });
-      });
     });
 
     describe('given update channel "alpha" is selected, when checking for updates', () => {
@@ -307,6 +263,23 @@ describe("installing update from update channels", () => {
     checkForUpdates();
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.latest, expect.any(Object));
+  });
+
+  it('given no update channel selection is stored and currently using stable release, when user checks for updates, checks for updates from "latest" update channel by default', async () => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      mainDi.override(appVersionInjectable, () => "1.0.0");
+    });
+
+    await applicationBuilder.render();
+
+    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+
+    checkForUpdates();
+
+    expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
+      updateChannels.latest,
+      { allowDowngrade: true },
+    );
   });
 
   it('given no update channel selection is stored and currently using alpha release, when checking for updates, checks for updates from "alpha" channel', async () => {
