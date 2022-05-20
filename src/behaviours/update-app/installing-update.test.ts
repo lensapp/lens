@@ -12,12 +12,8 @@ import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-pl
 import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { UpdateChannel, UpdateChannelId } from "../../common/application-update/update-channels";
-import { updateChannels } from "../../common/application-update/update-channels";
 import type { DownloadPlatformUpdate } from "../../main/update-app/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/update-app/download-platform-update/download-platform-update.injectable";
-import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
-import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
 import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
@@ -69,7 +65,7 @@ describe("installing update", () => {
     });
   });
 
-  describe('given no update is already downloaded, and "latest" update channel is selected, when started', () => {
+  describe("when started", () => {
     let rendered: RenderResult;
     let checkForUpdates: () => Promise<void>;
 
@@ -90,9 +86,9 @@ describe("installing update", () => {
         checkForUpdatesPromise = checkForUpdates();
       });
 
-      it('checks for updates from "latest" update channel', () => {
+      it("checks for updates", () => {
         expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
-          updateChannels.latest,
+          expect.any(Object),
           { allowDowngrade: true },
         );
       });
@@ -220,178 +216,6 @@ describe("installing update", () => {
 
             it("does not quit application and install the update", () => {
               expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
-            });
-          });
-        });
-
-        describe("when user changes update channel to other channel instead of just installing", () => {
-          beforeEach(() => {
-            const selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
-              selectedUpdateChannelInjectable,
-            );
-
-            selectedUpdateChannel.setValue(updateChannels.beta.id);
-          });
-
-          it("user cannot install existing update for being from wrong update channel", () => {});
-
-          describe("when user installs an update", () => {
-            beforeEach(() => {});
-
-            it('still installs the update from "latest" update channel', () => {});
-          });
-
-          it("when checking updates again, checks for updates from the other update channel", async () => {
-            checkForPlatformUpdatesMock.mockClear();
-
-            checkForUpdates();
-
-            expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
-              updateChannels.beta,
-              { allowDowngrade: true },
-            );
-          });
-        });
-      });
-    });
-
-    describe('given update channel "alpha" is selected, when checking for updates', () => {
-      let selectedUpdateChannel: {
-        value: IComputedValue<UpdateChannel>;
-        setValue: (channelId: UpdateChannelId) => void;
-      };
-
-      beforeEach(() => {
-        selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
-          selectedUpdateChannelInjectable,
-        );
-
-        selectedUpdateChannel.setValue(updateChannels.alpha.id);
-
-        checkForUpdates();
-      });
-
-      it('checks updates from update channel "alpha"', () => {
-        expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
-          updateChannels.alpha,
-          { allowDowngrade: true },
-        );
-      });
-
-      it("when update is discovered, does not check update from other update channels", async () => {
-        checkForPlatformUpdatesMock.mockClear();
-
-        await checkForPlatformUpdatesMock.resolve({
-          updateWasDiscovered: true,
-          version: "some-version",
-        });
-
-        expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
-      });
-
-      describe("when no update is discovered", () => {
-        beforeEach(async () => {
-          checkForPlatformUpdatesMock.mockClear();
-
-          await checkForPlatformUpdatesMock.resolve({
-            updateWasDiscovered: false,
-          });
-        });
-
-        it('checks updates from update channel "beta"', () => {
-          expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
-            updateChannels.beta,
-            { allowDowngrade: true },
-          );
-        });
-
-        it("when update is discovered, does not check update from other update channels", async () => {
-          checkForPlatformUpdatesMock.mockClear();
-
-          await checkForPlatformUpdatesMock.resolve({
-            updateWasDiscovered: true,
-            version: "some-version",
-          });
-
-          expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
-        });
-
-        describe("when no update is discovered again", () => {
-          beforeEach(async () => {
-            checkForPlatformUpdatesMock.mockClear();
-
-            await checkForPlatformUpdatesMock.resolve({
-              updateWasDiscovered: false,
-            });
-          });
-
-          it('finally checks updates from update channel "latest"', () => {
-            expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
-              updateChannels.latest,
-              { allowDowngrade: true },
-            );
-          });
-
-          it("when update is discovered, does not check update from other update channels", async () => {
-            checkForPlatformUpdatesMock.mockClear();
-
-            await checkForPlatformUpdatesMock.resolve({
-              updateWasDiscovered: true,
-              version: "some-version",
-            });
-
-            expect(checkForPlatformUpdatesMock).not.toHaveBeenCalled();
-          });
-        });
-      });
-    });
-
-    describe('given update channel "beta" is selected', () => {
-      let selectedUpdateChannel: {
-        value: IComputedValue<UpdateChannel>;
-        setValue: (channelId: UpdateChannelId) => void;
-      };
-
-      beforeEach(() => {
-        selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
-          selectedUpdateChannelInjectable,
-        );
-
-        selectedUpdateChannel.setValue(updateChannels.beta.id);
-      });
-
-      describe("when checking for updates", () => {
-        beforeEach(() => {
-          checkForUpdates();
-        });
-
-        describe('when update from "beta" channel is discovered', () => {
-          beforeEach(async () => {
-            await checkForPlatformUpdatesMock.resolve({
-              updateWasDiscovered: true,
-              version: "some-beta-version",
-            });
-          });
-
-          describe("when update is downloaded", () => {
-            beforeEach(async () => {
-              await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
-            });
-
-            it("when user would close the application, installs the update", () => {
-              expect(setUpdateOnQuitMock).toHaveBeenLastCalledWith(true);
-            });
-
-            it('given user changes update channel to "latest", when user would close the application, does not install the update for not being stable enough', () => {
-              selectedUpdateChannel.setValue(updateChannels.latest.id);
-
-              expect(setUpdateOnQuitMock).toHaveBeenLastCalledWith(false);
-            });
-
-            it('given user changes update channel to "alpha", when user would close the application, installs the update for being stable enough', () => {
-              selectedUpdateChannel.setValue(updateChannels.alpha.id);
-
-              expect(setUpdateOnQuitMock).toHaveBeenLastCalledWith(false);
             });
           });
         });
