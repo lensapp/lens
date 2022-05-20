@@ -46,7 +46,6 @@ import { mock } from "jest-mock-extended";
 import { waitUntilUsed } from "tcp-port-used";
 import type { Readable } from "stream";
 import { EventEmitter } from "stream";
-import { UserStore } from "../../common/user-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import mockFs from "mock-fs";
@@ -120,12 +119,9 @@ describe("kube auth proxy tests", () => {
     createCluster = di.inject(createClusterInjectionToken);
 
     createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
-
-    UserStore.createInstance();
   });
 
   afterEach(() => {
-    UserStore.resetInstance();
     mockFs.restore();
   });
 
