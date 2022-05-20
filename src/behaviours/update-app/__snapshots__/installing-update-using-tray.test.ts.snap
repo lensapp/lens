@@ -399,6 +399,8 @@ exports[`installing update using tray given no update is already downloaded, and
             </b>
             <p>
               Version some-version of Lens IDE is available and ready to be installed. Would you like to update now?
+
+Lens should restart automatically, if it doesn't please restart manually. Installed extensions might require updating.
             </p>
             <div
               class="flex gaps row align-left box grow"
