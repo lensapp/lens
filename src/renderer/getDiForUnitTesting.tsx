@@ -43,6 +43,7 @@ import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.inject
 import { observable } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import provideInitialValuesForSyncBoxesInjectable from "./sync-box/provide-initial-values-for-sync-boxes.injectable";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -101,6 +102,7 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
     di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
 
     di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
+    di.override(provideInitialValuesForSyncBoxesInjectable, () => ({ run: () => {} }));
 
     di.override(defaultShellInjectable, () => "some-default-shell");
 
