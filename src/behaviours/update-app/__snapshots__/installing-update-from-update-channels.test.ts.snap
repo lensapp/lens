@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`installing update from update channels when started renders 1`] = `
+exports[`installing update from update channels given no update channel selection is stored, when started renders 1`] = `
 <body>
   <div>
     <div
@@ -10,7 +10,7 @@ exports[`installing update from update channels when started renders 1`] = `
 </body>
 `;
 
-exports[`installing update from update channels when started when user checks for updates renders 1`] = `
+exports[`installing update from update channels given no update channel selection is stored, when started when user checks for updates renders 1`] = `
 <body>
   <div>
     <div
@@ -20,7 +20,7 @@ exports[`installing update from update channels when started when user checks fo
 </body>
 `;
 
-exports[`installing update from update channels when started when user checks for updates when new update is discovered renders 1`] = `
+exports[`installing update from update channels given no update channel selection is stored, when started when user checks for updates when new update is discovered renders 1`] = `
 <body>
   <div>
     <div
@@ -30,7 +30,7 @@ exports[`installing update from update channels when started when user checks fo
 </body>
 `;
 
-exports[`installing update from update channels when started when user checks for updates when new update is discovered when download succeeds renders 1`] = `
+exports[`installing update from update channels given no update channel selection is stored, when started when user checks for updates when new update is discovered when download succeeds renders 1`] = `
 <body>
   <div>
     <div
