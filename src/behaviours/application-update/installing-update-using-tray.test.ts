@@ -47,7 +47,7 @@ describe("installing update using tray", () => {
     });
   });
 
-  describe('given no update is already downloaded, and "latest" update channel is selected, when started', () => {
+  describe("when started", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
