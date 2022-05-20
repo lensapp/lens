@@ -6,10 +6,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import extensionsStoreInjectable from "../../extensions/extensions-store/extensions-store.injectable";
-import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import focusWindowInjectable from "../../renderer/navigation/focus-window.injectable";
 
 // TODO: Make components free of side effects by making them deterministic
@@ -22,9 +18,6 @@ describe("extensions - navigation using application menu", () => {
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(extensionsStoreInjectable, () => ({}) as unknown as ExtensionsStore);
-      rendererDi.override(fileSystemProvisionerStoreInjectable, () => ({}) as unknown as FileSystemProvisionerStore);
-
       focusWindowMock = jest.fn();
 
       rendererDi.override(focusWindowInjectable, () => focusWindowMock);
