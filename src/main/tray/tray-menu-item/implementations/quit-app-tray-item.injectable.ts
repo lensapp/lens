@@ -20,7 +20,6 @@ const quitAppTrayItemInjectable = getInjectable({
       label: computed(() => "Quit App"),
       enabled: computed(() => true),
       visible: computed(() => true),
-      separated: true,
 
       click: () => {
         stopServicesAndExitApp();
