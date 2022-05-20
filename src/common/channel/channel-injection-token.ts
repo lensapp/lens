@@ -5,11 +5,12 @@
 
 import { getInjectionToken } from "@ogre-tools/injectable";
 
-export interface Channel<MessageTemplate> {
+export interface Channel<MessageTemplate, ReturnTemplate> {
   id: string;
   _messageTemplate?: MessageTemplate;
+  _returnTemplate?: ReturnTemplate;
 }
 
-export const channelInjectionToken = getInjectionToken<Channel<any>>({
+export const channelInjectionToken = getInjectionToken<Channel<any, any>>({
   id: "channel",
 });

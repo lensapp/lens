@@ -5,7 +5,7 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Channel } from "./channel-injection-token";
 
-export type SendToAgnosticChannel = <TChannel extends Channel<unknown>>(
+export type SendToAgnosticChannel = <TChannel extends Channel<unknown, unknown>>(
   channel: TChannel,
   message?: TChannel["_messageTemplate"]
 ) => void;

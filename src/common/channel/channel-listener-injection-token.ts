@@ -5,12 +5,12 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Channel } from "./channel-injection-token";
 
-export interface ChannelListener<TChannel extends Channel<any>> {
+export interface ChannelListener<TChannel extends Channel<any, any>> {
   channel: TChannel;
-  handler: (value: TChannel["_messageTemplate"]) => void;
+  handler: (value: TChannel["_messageTemplate"]) => TChannel["_returnTemplate"];
 }
 
-export const channelListenerInjectionToken = getInjectionToken<ChannelListener<Channel<any>>>(
+export const channelListenerInjectionToken = getInjectionToken<ChannelListener<Channel<any, any>>>(
   {
     id: "channel-listener",
   },
