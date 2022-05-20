@@ -12,11 +12,11 @@ import type { CheckForPlatformUpdates } from "../../main/update-app/check-for-pl
 import checkForPlatformUpdatesInjectable from "../../main/update-app/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { UpdateChannel, UpdateChannelId } from "../../main/update-app/update-channels";
-import { updateChannels } from "../../main/update-app/update-channels";
+import type { UpdateChannel, UpdateChannelId } from "../../common/application-update/update-channels";
+import { updateChannels } from "../../common/application-update/update-channels";
 import type { DownloadPlatformUpdate } from "../../main/update-app/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/update-app/download-platform-update/download-platform-update.injectable";
-import selectedUpdateChannelInjectable from "../../main/update-app/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";

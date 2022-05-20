@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { UpdateChannel } from "../update-channels";
+import type { UpdateChannel } from "../../../common/application-update/update-channels";
 import checkForPlatformUpdatesInjectable from "../check-for-platform-updates/check-for-platform-updates.injectable";
 import updateCanBeDowngradedInjectable from "./update-can-be-downgraded.injectable";
 
