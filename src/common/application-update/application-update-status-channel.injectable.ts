@@ -13,7 +13,7 @@ export type ApplicationUpdateStatusEventId =
       | "download-for-update-failed";
 
 export interface ApplicationUpdateStatusChannelMessage { eventId: ApplicationUpdateStatusEventId; version?: string }
-export type ApplicationUpdateStatusChannel = Channel<ApplicationUpdateStatusChannelMessage>;
+export type ApplicationUpdateStatusChannel = Channel<ApplicationUpdateStatusChannelMessage, never>;
 
 const applicationUpdateStatusChannelInjectable = getInjectable({
   id: "application-update-status-channel",
