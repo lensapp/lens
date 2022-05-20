@@ -12,6 +12,7 @@
 @import "./fonts";
 
 :root {
+  --flex-gap: #{$padding};
   --unit: 8px;
   --padding: var(--unit);
   --margin: var(--unit);
@@ -64,16 +65,12 @@
   color: var(--textColorAccent);
 }
 
-html {
-  font-size: 62.5%; // 1 rem == 10px
-  color: var(--textColorPrimary);
-  background-color: var(--mainBackground);
-  --flex-gap: #{$padding};
-}
-
 html, body {
   height: 100%;
   overflow: hidden;
+  color: var(--textColorPrimary);
+  background-color: var(--mainBackground);
+  font: var(--font-size) var(--font-main);
 }
 
 #terminal-init {
@@ -92,10 +89,6 @@ html, body {
   > * {
     height: inherit;
   }
-}
-
-body {
-  font: $font-size $font-main;
 }
 
 fieldset {

@@ -72,6 +72,10 @@ export class Terminal {
     return this.dependencies.terminalConfig.get().fontSize;
   }
 
+  get theme(): Record<string/*paramName*/, string/*color*/> {
+    return this.dependencies.themeStore.xtermColors;
+  }
+
   constructor(protected readonly dependencies: TerminalDependencies, {
     tabId,
     api,
@@ -105,9 +109,7 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposer.push(
-      reaction(() => this.dependencies.themeStore.xtermColors, colors => {
-        this.xterm?.setOption("theme", colors);
-      }, {
+      reaction(() => this.theme, colors => this.xterm.setOption("theme", colors), {
         fireImmediately: true,
       }),
       reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true }),
@@ -126,15 +128,14 @@ export class Terminal {
   }
 
   fit = () => {
-    // Since this function is debounced we need to read this value as late as possible
-    if (!this.xterm) {
-      return;
-    }
-
     try {
-      this.fitAddon.fit();
-      const { cols, rows } = this.xterm;
+      const { cols, rows } = this.fitAddon.proposeDimensions();
 
+      // attempt to resize/fit terminal when it's not visible in DOM will crash with exception
+      // see: https://github.com/xtermjs/xterm.js/issues/3118
+      if (isNaN(cols) || isNaN(rows)) return;
+
+      this.fitAddon.fit();
       this.api.sendTerminalSize(cols, rows);
     } catch (error) {
       // see https://github.com/lensapp/lens/issues/1891
