@@ -125,35 +125,6 @@ describe("installing update from update channels", () => {
           it("renders", () => {
             expect(rendered.baseElement).toMatchSnapshot();
           });
-
-          describe("when user changes update channel to other channel instead of just installing", () => {
-            beforeEach(() => {
-              const selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
-                selectedUpdateChannelInjectable,
-              );
-
-              selectedUpdateChannel.setValue(updateChannels.beta.id);
-            });
-
-            it("user cannot install existing update for being from wrong update channel", () => {});
-
-            describe("when user installs an update", () => {
-              beforeEach(() => {});
-
-              it('still installs the update from "latest" update channel', () => {});
-            });
-
-            it("when checking updates again, checks for updates from the other update channel", async () => {
-              checkForPlatformUpdatesMock.mockClear();
-
-              checkForUpdates();
-
-              expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
-                updateChannels.beta,
-                { allowDowngrade: true },
-              );
-            });
-          });
         });
       });
     });
