@@ -44,6 +44,7 @@ import { observable } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import provideInitialValuesForSyncBoxesInjectable from "./sync-box/provide-initial-values-for-sync-boxes.injectable";
+import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -79,6 +80,8 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
     di.override(appVersionInjectable, () => "1.0.0");
 
     di.override(historyInjectable, () => createMemoryHistory());
+
+    di.override(requestAnimationFrameInjectable, () => (callback) => callback());
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
