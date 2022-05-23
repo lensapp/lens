@@ -14,6 +14,7 @@ import { CommandContainer } from "../../components/command-palette/command-conta
 import { withInjectables } from "@ogre-tools/injectable-react";
 import broadcastThatRootFrameIsRenderedInjectable from "./broadcast-that-root-frame-is-rendered.injectable";
 
+// Todo: remove import-time side-effect.
 injectSystemCAs();
 
 interface Dependencies {
