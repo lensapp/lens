@@ -86,6 +86,7 @@ import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
 import startCheckingForUpdatesInjectable from "./application-update/periodical-check-for-updates/start-checking-for-updates.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -109,6 +110,7 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
