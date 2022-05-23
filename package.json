@@ -282,7 +282,7 @@
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@sentry/types": "^6.19.7",
     "@testing-library/dom": "^7.31.2",
     "@testing-library/jest-dom": "^5.16.4",
