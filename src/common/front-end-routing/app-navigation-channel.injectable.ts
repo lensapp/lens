@@ -7,7 +7,7 @@ import type { Channel } from "../channel/channel-injection-token";
 import { channelInjectionToken } from "../channel/channel-injection-token";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 
-export type AppNavigationChannel = Channel<string, never>;
+export type AppNavigationChannel = Channel<string>;
 
 const appNavigationChannelInjectable = getInjectable({
   id: "app-navigation-channel",

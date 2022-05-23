@@ -7,7 +7,7 @@ import type { Channel } from "../channel/channel-injection-token";
 import { channelInjectionToken } from "../channel/channel-injection-token";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 
-export type ClusterFrameNavigationChannel = Channel<string, never>;
+export type ClusterFrameNavigationChannel = Channel<string>;
 
 const clusterFrameNavigationChannelInjectable = getInjectable({
   id: "cluster-frame-navigation-channel",

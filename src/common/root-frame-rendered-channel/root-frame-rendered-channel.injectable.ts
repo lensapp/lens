@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Channel } from "../channel/channel-injection-token";
 import { channelInjectionToken } from "../channel/channel-injection-token";
 
-export type RootFrameRenderedChannel = Channel<void, never>;
+export type RootFrameRenderedChannel = Channel;
 
 const rootFrameRenderedChannelInjectable = getInjectable({
   id: "root-frame-rendered-channel",
