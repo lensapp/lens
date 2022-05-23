@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`selection of update stability when started renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;

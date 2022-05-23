@@ -29,8 +29,6 @@ const askBooleanInjectable = getInjectable({
 
       const returnValuePromise = di.inject(askBooleanPromiseInjectable, id);
 
-      returnValuePromise.clear();
-
       await sendToChannel(askBooleanChannel, { id, title, question });
 
       return await returnValuePromise.promise;

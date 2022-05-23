@@ -11,21 +11,17 @@ const askBooleanPromiseInjectable = getInjectable({
     void questionId;
 
     let resolve: (value: boolean) => void;
-    let _promise: Promise<boolean>;
+
+    const promise = new Promise<boolean>(_resolve => {
+      resolve = _resolve;
+    });
 
     return ({
-      get promise() {
-        return _promise;
-      },
-
-      clear: () => {
-        _promise = new Promise(_resolve => {
-          resolve = _resolve;
-        });
-      },
+      promise,
 
       resolve: (value: boolean) => {
-        resolve(value); },
+        resolve(value);
+      },
     });
   },
 
