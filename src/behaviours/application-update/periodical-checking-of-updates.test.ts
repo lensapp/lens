@@ -86,8 +86,8 @@ describe("periodical checking of updates", () => {
       expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
 
-    it("when enough time passes for checking updates again, still does not check for updates", () => {
-      jest.advanceTimersByTime(ENOUGH_TIME);
+    it("when time passes, never checks for updates", () => {
+      jest.runOnlyPendingTimers();
 
       expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
@@ -107,8 +107,8 @@ describe("periodical checking of updates", () => {
       expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
 
-    it("when enough time passes for checking updates again, still does not check for updates", () => {
-      jest.advanceTimersByTime(ENOUGH_TIME);
+    it("when time passes, never checks for updates", () => {
+      jest.runOnlyPendingTimers();
 
       expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
