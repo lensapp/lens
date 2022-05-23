@@ -24,7 +24,7 @@ import showAboutInjectable from "./show-about.injectable";
 import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
 import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
-import checkForUpdatesInjectable from "../application-update/check-for-updates/check-for-updates.injectable";
+import processCheckingForUpdatesInjectable from "../application-update/check-for-updates/process-checking-for-updates.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
@@ -53,7 +53,7 @@ const applicationMenuItemsInjectable = getInjectable({
     const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
     const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
-    const checkForUpdates = di.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
 
     logger.info(`[MENU]: autoUpdateEnabled=${updatingIsEnabled}`);
 
@@ -73,7 +73,7 @@ const applicationMenuItemsInjectable = getInjectable({
             {
               label: "Check for updates",
               click() {
-                checkForUpdates().then(() => showApplicationWindow());
+                processCheckingForUpdates().then(() => showApplicationWindow());
               },
             },
           ]),
@@ -285,7 +285,7 @@ const applicationMenuItemsInjectable = getInjectable({
               {
                 label: "Check for updates",
                 click() {
-                  checkForUpdates().then(() =>
+                  processCheckingForUpdates().then(() =>
                     showApplicationWindow(),
                   );
                 },

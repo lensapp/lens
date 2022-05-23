@@ -18,7 +18,7 @@ import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-upda
 import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
 import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
-import checkForUpdatesInjectable from "../../main/application-update/check-for-updates/check-for-updates.injectable";
+import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 
 describe("installing update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -67,12 +67,12 @@ describe("installing update", () => {
 
   describe("when started", () => {
     let rendered: RenderResult;
-    let checkForUpdates: () => Promise<void>;
+    let processCheckingForUpdates: () => Promise<void>;
 
     beforeEach(async () => {
       rendered = await applicationBuilder.render();
 
-      checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
     });
 
     it("renders", () => {
@@ -80,10 +80,10 @@ describe("installing update", () => {
     });
 
     describe("when user checks for updates", () => {
-      let checkForUpdatesPromise: Promise<void>;
+      let processCheckingForUpdatesPromise: Promise<void>;
 
       beforeEach(async () => {
-        checkForUpdatesPromise = checkForUpdates();
+        processCheckingForUpdatesPromise = processCheckingForUpdates();
       });
 
       it("checks for updates", () => {
@@ -109,7 +109,7 @@ describe("installing update", () => {
             updateWasDiscovered: false,
           });
 
-          await checkForUpdatesPromise;
+          await processCheckingForUpdatesPromise;
         });
 
         it("notifies the user", () => {
@@ -132,7 +132,7 @@ describe("installing update", () => {
             version: "some-version",
           });
 
-          await checkForUpdatesPromise;
+          await processCheckingForUpdatesPromise;
         });
 
         it("starts downloading the update", () => {
