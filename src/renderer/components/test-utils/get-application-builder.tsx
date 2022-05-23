@@ -48,7 +48,7 @@ import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-i
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 import { Notifications } from "../notifications/notifications";
-import notifyThatRootFrameIsRenderedInjectable from "../../frames/root-frame/notify-that-root-frame-is-rendered.injectable";
+import broadcastThatRootFrameIsRenderedInjectable from "../../frames/root-frame/broadcast-that-root-frame-is-rendered.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -122,7 +122,7 @@ export const getApplicationBuilder = () => {
       renderSidebar: () => null,
 
       beforeRender: () => {
-        const nofifyThatRootFrameIsRendered = rendererDi.inject(notifyThatRootFrameIsRenderedInjectable);
+        const nofifyThatRootFrameIsRendered = rendererDi.inject(broadcastThatRootFrameIsRenderedInjectable);
 
         nofifyThatRootFrameIsRendered();
       },

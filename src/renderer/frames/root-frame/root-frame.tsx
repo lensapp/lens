@@ -12,12 +12,12 @@ import { Notifications } from "../../components/notifications";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { CommandContainer } from "../../components/command-palette/command-container";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import notifyThatRootFrameIsRenderedInjectable from "./notify-that-root-frame-is-rendered.injectable";
+import broadcastThatRootFrameIsRenderedInjectable from "./broadcast-that-root-frame-is-rendered.injectable";
 
 injectSystemCAs();
 
 interface Dependencies {
-  notifyThatRootFrameIsRendered: () => void;
+  broadcastThatRootFrameIsRendered: () => void;
 }
 
 @observer
@@ -25,7 +25,7 @@ class NonInjectedRootFrame extends React.Component<Dependencies> {
   static displayName = "RootFrame";
 
   componentDidMount() {
-    this.props.notifyThatRootFrameIsRendered();
+    this.props.broadcastThatRootFrameIsRendered();
   }
 
   render() {
@@ -47,7 +47,7 @@ export const RootFrame = withInjectables<Dependencies>(
 
   {
     getProps: (di, props) => ({
-      notifyThatRootFrameIsRendered: di.inject(notifyThatRootFrameIsRenderedInjectable),
+      broadcastThatRootFrameIsRendered: di.inject(broadcastThatRootFrameIsRenderedInjectable),
       ...props,
     }),
   },
