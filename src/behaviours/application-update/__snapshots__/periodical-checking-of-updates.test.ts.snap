@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`checking for updates automatically given updater is enabled and configuration exists, when started renders 1`] = `
+exports[`periodical checking of updates given updater is enabled and configuration exists, when started renders 1`] = `
 <body>
   <div>
     <div

@@ -14,7 +14,7 @@ import startCheckingForUpdatesInjectable from "../../main/application-update/per
 
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 
-describe("checking for updates automatically", () => {
+describe("periodical checking of updates", () => {
   let applicationBuilder: ApplicationBuilder;
   let processCheckingForUpdatesMock: AsyncFnMock<() => Promise<void>>;
 
