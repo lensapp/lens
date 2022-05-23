@@ -9,7 +9,7 @@ import askBooleanQuestionChannelInjectable from "../../common/ask-boolean/ask-bo
 import showInfoNotificationInjectable from "../components/notifications/show-info-notification.injectable";
 import { Button } from "../components/button";
 import React from "react";
-import { sendToAgnosticChannelInjectionToken } from "../../common/channel/send-to-agnostic-channel-injection-token";
+import { sendToChannelInjectionToken } from "../../common/channel/send-to-channel-injection-token";
 import askBooleanAnswerChannelInjectable from "../../common/ask-boolean/ask-boolean-answer-channel.injectable";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
 
@@ -19,12 +19,12 @@ const askBooleanQuestionChannelListenerInjectable = getInjectable({
   instantiate: (di) => {
     const questionChannel = di.inject(askBooleanQuestionChannelInjectable);
     const showInfoNotification = di.inject(showInfoNotificationInjectable);
-    const sendToAgnosticChannel = di.inject(sendToAgnosticChannelInjectionToken);
+    const sendToChannel = di.inject(sendToChannelInjectionToken);
     const answerChannel = di.inject(askBooleanAnswerChannelInjectable);
     const notificationsStore = di.inject(notificationsStoreInjectable);
 
     const sendAnswerFor = (id: string) => (value: boolean) => {
-      sendToAgnosticChannel(answerChannel, { id, value });
+      sendToChannel(answerChannel, { id, value });
     };
 
     const closeNotification = (notificationId: string) => {
