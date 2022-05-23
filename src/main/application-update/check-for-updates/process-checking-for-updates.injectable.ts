@@ -77,7 +77,6 @@ const processCheckingForUpdatesInjectable = getInjectable({
         }
 
         const userWantsToInstallUpdate = await askBoolean({
-          id: "install-update",
           title: "Update Available",
 
           question: `Version ${version} of Lens IDE is available and ready to be installed. Would you like to update now?\n\n` +

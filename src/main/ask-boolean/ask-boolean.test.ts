@@ -9,6 +9,7 @@ import askBooleanInjectable from "./ask-boolean.injectable";
 import { getPromiseStatus } from "../../common/test-utils/get-promise-status";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
+import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
 
 describe("ask-boolean", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -16,6 +17,13 @@ describe("ask-boolean", () => {
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
+
+    const getRandomIdFake = jest
+      .fn()
+      .mockReturnValueOnce("some-random-id-1")
+      .mockReturnValueOnce("some-random-id-2");
+
+    applicationBuilder.dis.mainDi.override(getRandomIdInjectable, () => getRandomIdFake);
 
     askBoolean = applicationBuilder.dis.mainDi.inject(askBooleanInjectable);
   });
@@ -32,7 +40,6 @@ describe("ask-boolean", () => {
 
       beforeEach(() => {
         actualPromise = askBoolean({
-          id: "some-question-id",
           title: "some-title",
           question: "Some question",
         });
@@ -49,14 +56,14 @@ describe("ask-boolean", () => {
       });
 
       it("shows notification", () => {
-        const notification = rendered.getByTestId("ask-boolean-some-question-id");
+        const notification = rendered.getByTestId("ask-boolean-some-random-id-1");
 
         expect(notification).not.toBeUndefined();
       });
 
       describe('when user answers "yes"', () => {
         beforeEach(() => {
-          const button = rendered.getByTestId("ask-boolean-some-question-id-button-yes");
+          const button = rendered.getByTestId("ask-boolean-some-random-id-1-button-yes");
 
           fireEvent.click(button);
         });
@@ -66,7 +73,7 @@ describe("ask-boolean", () => {
         });
 
         it("does not show notification anymore", () => {
-          const notification = rendered.queryByTestId("ask-boolean-some-question-id");
+          const notification = rendered.queryByTestId("ask-boolean-some-random-id-1");
 
           expect(notification).toBeNull();
         });
@@ -80,7 +87,7 @@ describe("ask-boolean", () => {
 
       describe('when user answers "no"', () => {
         beforeEach(() => {
-          const button = rendered.getByTestId("ask-boolean-some-question-id-button-no");
+          const button = rendered.getByTestId("ask-boolean-some-random-id-1-button-no");
 
           fireEvent.click(button);
         });
@@ -90,7 +97,7 @@ describe("ask-boolean", () => {
         });
 
         it("does not show notification anymore", () => {
-          const notification = rendered.queryByTestId("ask-boolean-some-question-id");
+          const notification = rendered.queryByTestId("ask-boolean-some-random-id-1");
 
           expect(notification).toBeNull();
         });
@@ -104,7 +111,7 @@ describe("ask-boolean", () => {
 
       describe("when user closes notification without answering the question", () => {
         beforeEach(() => {
-          const button = rendered.getByTestId("close-notification-for-ask-boolean-for-some-question-id");
+          const button = rendered.getByTestId("close-notification-for-ask-boolean-for-some-random-id-1");
 
           fireEvent.click(button);
         });
@@ -114,7 +121,7 @@ describe("ask-boolean", () => {
         });
 
         it("does not show notification anymore", () => {
-          const notification = rendered.queryByTestId("ask-boolean-some-question-id");
+          const notification = rendered.queryByTestId("ask-boolean-some-random-id-1");
 
           expect(notification).toBeNull();
         });
@@ -133,13 +140,11 @@ describe("ask-boolean", () => {
 
       beforeEach(() => {
         firstQuestionPromise = askBoolean({
-          id: "some-question-id",
           title: "some-title",
           question: "Some question",
         });
 
         secondQuestionPromise = askBoolean({
-          id: "some-other-question-id",
           title: "some-other-title",
           question: "Some other question",
         });
@@ -150,20 +155,20 @@ describe("ask-boolean", () => {
       });
 
       it("shows notification for first question", () => {
-        const notification = rendered.getByTestId("ask-boolean-some-question-id");
+        const notification = rendered.getByTestId("ask-boolean-some-random-id-1");
 
         expect(notification).not.toBeUndefined();
       });
 
       it("shows notification for second question", () => {
-        const notification = rendered.getByTestId("ask-boolean-some-other-question-id");
+        const notification = rendered.getByTestId("ask-boolean-some-random-id-2");
 
         expect(notification).not.toBeUndefined();
       });
 
       describe("when answering to first question", () => {
         beforeEach(() => {
-          const button = rendered.getByTestId("ask-boolean-some-question-id-button-no");
+          const button = rendered.getByTestId("ask-boolean-some-random-id-1-button-no");
 
           fireEvent.click(button);
         });
@@ -173,13 +178,13 @@ describe("ask-boolean", () => {
         });
 
         it("does not show notification for first question anymore", () => {
-          const notification = rendered.queryByTestId("ask-boolean-some-question-id");
+          const notification = rendered.queryByTestId("ask-boolean-some-random-id-1");
 
           expect(notification).toBeNull();
         });
 
         it("still shows notification for second question", () => {
-          const notification = rendered.getByTestId("ask-boolean-some-other-question-id");
+          const notification = rendered.getByTestId("ask-boolean-some-random-id-2");
 
           expect(notification).not.toBeUndefined();
         });

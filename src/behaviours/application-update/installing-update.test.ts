@@ -184,7 +184,6 @@ describe("installing update", () => {
 
           it("asks user to install update immediately", () => {
             expect(askBooleanMock).toHaveBeenCalledWith({
-              id: "install-update",
               title: "Update Available",
               question:
                 "Version some-version of Lens IDE is available and ready to be installed. Would you like to update now?\n\n" +

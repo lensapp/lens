@@ -29,7 +29,7 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
         >
           <div
             class="flex column gaps"
-            data-testid="ask-boolean-some-question-id"
+            data-testid="ask-boolean-some-random-id-1"
           >
             <b>
               some-title
@@ -42,14 +42,14 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
             >
               <button
                 class="Button light"
-                data-testid="ask-boolean-some-question-id-button-yes"
+                data-testid="ask-boolean-some-random-id-1-button-yes"
                 type="button"
               >
                 Yes
               </button>
               <button
                 class="Button active outlined"
-                data-testid="ask-boolean-some-question-id-button-no"
+                data-testid="ask-boolean-some-random-id-1-button-no"
                 type="button"
               >
                 No
@@ -62,7 +62,7 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-ask-boolean-for-some-question-id"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-1"
             tabindex="0"
           >
             <span
@@ -97,7 +97,7 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
         >
           <div
             class="flex column gaps"
-            data-testid="ask-boolean-some-other-question-id"
+            data-testid="ask-boolean-some-random-id-2"
           >
             <b>
               some-other-title
@@ -110,14 +110,14 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
             >
               <button
                 class="Button light"
-                data-testid="ask-boolean-some-other-question-id-button-yes"
+                data-testid="ask-boolean-some-random-id-2-button-yes"
                 type="button"
               >
                 Yes
               </button>
               <button
                 class="Button active outlined"
-                data-testid="ask-boolean-some-other-question-id-button-no"
+                data-testid="ask-boolean-some-random-id-2-button-no"
                 type="button"
               >
                 No
@@ -130,7 +130,7 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-ask-boolean-for-some-other-question-id"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-2"
             tabindex="0"
           >
             <span
@@ -176,7 +176,7 @@ exports[`ask-boolean given started when asking multiple questions when answering
         >
           <div
             class="flex column gaps"
-            data-testid="ask-boolean-some-other-question-id"
+            data-testid="ask-boolean-some-random-id-2"
           >
             <b>
               some-other-title
@@ -189,14 +189,14 @@ exports[`ask-boolean given started when asking multiple questions when answering
             >
               <button
                 class="Button light"
-                data-testid="ask-boolean-some-other-question-id-button-yes"
+                data-testid="ask-boolean-some-random-id-2-button-yes"
                 type="button"
               >
                 Yes
               </button>
               <button
                 class="Button active outlined"
-                data-testid="ask-boolean-some-other-question-id-button-no"
+                data-testid="ask-boolean-some-random-id-2-button-no"
                 type="button"
               >
                 No
@@ -209,7 +209,7 @@ exports[`ask-boolean given started when asking multiple questions when answering
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-ask-boolean-for-some-other-question-id"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-2"
             tabindex="0"
           >
             <span
@@ -255,7 +255,7 @@ exports[`ask-boolean given started when asking question renders 1`] = `
         >
           <div
             class="flex column gaps"
-            data-testid="ask-boolean-some-question-id"
+            data-testid="ask-boolean-some-random-id-1"
           >
             <b>
               some-title
@@ -268,14 +268,14 @@ exports[`ask-boolean given started when asking question renders 1`] = `
             >
               <button
                 class="Button light"
-                data-testid="ask-boolean-some-question-id-button-yes"
+                data-testid="ask-boolean-some-random-id-1-button-yes"
                 type="button"
               >
                 Yes
               </button>
               <button
                 class="Button active outlined"
-                data-testid="ask-boolean-some-question-id-button-no"
+                data-testid="ask-boolean-some-random-id-1-button-no"
                 type="button"
               >
                 No
@@ -288,7 +288,7 @@ exports[`ask-boolean given started when asking question renders 1`] = `
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-ask-boolean-for-some-question-id"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-1"
             tabindex="0"
           >
             <span
