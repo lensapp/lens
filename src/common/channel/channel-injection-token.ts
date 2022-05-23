@@ -5,7 +5,7 @@
 
 import { getInjectionToken } from "@ogre-tools/injectable";
 
-export interface Channel<MessageTemplate, ReturnTemplate> {
+export interface Channel<MessageTemplate = void, ReturnTemplate = void> {
   id: string;
   _messageTemplate?: MessageTemplate;
   _returnTemplate?: ReturnTemplate;

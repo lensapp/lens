@@ -7,7 +7,7 @@ import type { Channel } from "../channel/channel-injection-token";
 import { channelInjectionToken } from "../channel/channel-injection-token";
 
 export interface AskBooleanQuestionParameters { id: string; title: string; question: string }
-export type AskBooleanQuestionChannel = Channel<AskBooleanQuestionParameters, never>;
+export type AskBooleanQuestionChannel = Channel<AskBooleanQuestionParameters>;
 
 const askBooleanQuestionChannelInjectable = getInjectable({
   id: "ask-boolean-question-channel",
