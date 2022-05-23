@@ -45,6 +45,7 @@ import defaultShellInjectable from "./components/+preferences/default-shell.inje
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import provideInitialValuesForSyncBoxesInjectable from "./sync-box/provide-initial-values-for-sync-boxes.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
+import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 
 export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   const {
@@ -67,6 +68,7 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(isMacInjectable, () => true);
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
