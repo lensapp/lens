@@ -392,7 +392,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <div
             class="flex column gaps"
-            data-testid="ask-boolean-install-update"
+            data-testid="ask-boolean-some-irrelevant-random-id"
           >
             <b>
               Update Available
@@ -407,14 +407,14 @@ Lens should restart automatically, if it doesn't please restart manually. Instal
             >
               <button
                 class="Button light"
-                data-testid="ask-boolean-install-update-button-yes"
+                data-testid="ask-boolean-some-irrelevant-random-id-button-yes"
                 type="button"
               >
                 Yes
               </button>
               <button
                 class="Button active outlined"
-                data-testid="ask-boolean-install-update-button-no"
+                data-testid="ask-boolean-some-irrelevant-random-id-button-no"
                 type="button"
               >
                 No
@@ -427,7 +427,7 @@ Lens should restart automatically, if it doesn't please restart manually. Instal
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-ask-boolean-for-install-update"
+            data-testid="close-notification-for-ask-boolean-for-some-irrelevant-random-id"
             tabindex="0"
           >
             <span
