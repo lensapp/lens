@@ -25,7 +25,7 @@ import showInfoNotificationInjectable from "../../renderer/components/notificati
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 
-describe("installing update from update channels", () => {
+describe("selection of update stability", () => {
   let applicationBuilder: ApplicationBuilder;
   let quitAndInstallUpdateMock: jest.Mock;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
