@@ -7,20 +7,20 @@ import { channelListenerInjectionToken } from "../../common/channel/channel-list
 import askBooleanAnswerChannelInjectable from "../../common/ask-boolean/ask-boolean-answer-channel.injectable";
 import askBooleanPromiseInjectable from "./ask-boolean-promise.injectable";
 
-const askBooleanReturnValueListenerInjectable = getInjectable({
-  id: "ask-boolean-return-value-listener",
+const askBooleanAnswerChannelListenerInjectable = getInjectable({
+  id: "ask-boolean-answer-channel-listener",
 
   instantiate: (di) => ({
     channel: di.inject(askBooleanAnswerChannelInjectable),
 
     handler: ({ id, value }) => {
-      const returnValuePromise = di.inject(askBooleanPromiseInjectable, id);
+      const answerPromise = di.inject(askBooleanPromiseInjectable, id);
 
-      returnValuePromise.resolve(value);
+      answerPromise.resolve(value);
     },
   }),
 
   injectionToken: channelListenerInjectionToken,
 });
 
-export default askBooleanReturnValueListenerInjectable;
+export default askBooleanAnswerChannelListenerInjectable;
