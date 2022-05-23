@@ -9,15 +9,14 @@ import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/
 import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import checkForUpdatesInjectable from "../../main/application-update/check-for-updates/check-for-updates.injectable";
-import startCheckingForUpdatesInjectable
-  from "../../main/application-update/periodical-check-for-updates/start-checking-for-updates.injectable";
+import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
+import startCheckingForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/start-checking-for-updates.injectable";
 
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 
 describe("checking for updates automatically", () => {
   let applicationBuilder: ApplicationBuilder;
-  let checkForUpdatesMock: AsyncFnMock<() => Promise<void>>;
+  let processCheckingForUpdatesMock: AsyncFnMock<() => Promise<void>>;
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -27,11 +26,11 @@ describe("checking for updates automatically", () => {
     applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       mainDi.unoverride(startCheckingForUpdatesInjectable);
 
-      checkForUpdatesMock = asyncFn();
+      processCheckingForUpdatesMock = asyncFn();
 
       mainDi.override(
-        checkForUpdatesInjectable,
-        () => checkForUpdatesMock,
+        processCheckingForUpdatesInjectable,
+        () => processCheckingForUpdatesMock,
       );
     });
   });
@@ -53,23 +52,23 @@ describe("checking for updates automatically", () => {
     });
 
     it("checks for updates", () => {
-      expect(checkForUpdatesMock).toHaveBeenCalled();
+      expect(processCheckingForUpdatesMock).toHaveBeenCalled();
     });
 
     it("when just not enough time passes, does not check for updates again automatically yet", () => {
-      checkForUpdatesMock.mockClear();
+      processCheckingForUpdatesMock.mockClear();
 
       jest.advanceTimersByTime(ENOUGH_TIME - 1);
 
-      expect(checkForUpdatesMock).not.toHaveBeenCalled();
+      expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
 
     it("when just enough time passes, checks for updates again automatically", () => {
-      checkForUpdatesMock.mockClear();
+      processCheckingForUpdatesMock.mockClear();
 
       jest.advanceTimersByTime(ENOUGH_TIME);
 
-      expect(checkForUpdatesMock).toHaveBeenCalled();
+      expect(processCheckingForUpdatesMock).toHaveBeenCalled();
     });
   });
 
@@ -84,13 +83,13 @@ describe("checking for updates automatically", () => {
     });
 
     it("does not check for updates", () => {
-      expect(checkForUpdatesMock).not.toHaveBeenCalled();
+      expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
 
     it("when enough time passes for checking updates again, still does not check for updates", () => {
       jest.advanceTimersByTime(ENOUGH_TIME);
 
-      expect(checkForUpdatesMock).not.toHaveBeenCalled();
+      expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
   });
 
@@ -105,13 +104,13 @@ describe("checking for updates automatically", () => {
     });
 
     it("does not check for updates", () => {
-      expect(checkForUpdatesMock).not.toHaveBeenCalled();
+      expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
 
     it("when enough time passes for checking updates again, still does not check for updates", () => {
       jest.advanceTimersByTime(ENOUGH_TIME);
 
-      expect(checkForUpdatesMock).not.toHaveBeenCalled();
+      expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
   });
 });

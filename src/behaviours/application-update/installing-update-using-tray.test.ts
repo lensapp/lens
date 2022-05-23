@@ -63,10 +63,10 @@ describe("installing update using tray", () => {
     });
 
     describe("when user checks for updates using tray", () => {
-      let checkForUpdatesPromise: Promise<void>;
+      let processCheckingForUpdatesPromise: Promise<void>;
 
       beforeEach(async () => {
-        checkForUpdatesPromise =
+        processCheckingForUpdatesPromise =
           applicationBuilder.tray.click("check-for-updates");
       });
 
@@ -100,7 +100,7 @@ describe("installing update using tray", () => {
             updateWasDiscovered: false,
           });
 
-          await checkForUpdatesPromise;
+          await processCheckingForUpdatesPromise;
         });
 
         it("shows application window", () => {
@@ -135,7 +135,7 @@ describe("installing update using tray", () => {
             version: "some-version",
           });
 
-          await checkForUpdatesPromise;
+          await processCheckingForUpdatesPromise;
         });
 
         it("shows application window", () => {

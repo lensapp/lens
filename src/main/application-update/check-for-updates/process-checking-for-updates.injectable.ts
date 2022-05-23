@@ -14,8 +14,8 @@ import downloadUpdateInjectable from "../download-update/download-update.injecta
 import broadcastChangeInUpdatingStatusInjectable from "./broadcast-change-in-updating-status.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates-starting-from-channel.injectable";
 
-const checkForUpdatesInjectable = getInjectable({
-  id: "check-for-updates",
+const processCheckingForUpdatesInjectable = getInjectable({
+  id: "process-checking-for-updates",
 
   instantiate: (di) => {
     const askBoolean = di.inject(askBooleanInjectable);
@@ -92,4 +92,4 @@ const checkForUpdatesInjectable = getInjectable({
   },
 });
 
-export default checkForUpdatesInjectable;
+export default processCheckingForUpdatesInjectable;

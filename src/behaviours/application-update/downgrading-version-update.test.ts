@@ -10,7 +10,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { CheckForPlatformUpdates } from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import checkForUpdatesInjectable from "../../main/application-update/check-for-updates/check-for-updates.injectable";
+import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
@@ -77,9 +77,9 @@ describe("downgrading version update", () => {
 
       selectedUpdateChannel.setValue(updateChannel.id);
 
-      const checkForUpdates = mainDi.inject(checkForUpdatesInjectable);
+      const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
-      checkForUpdates();
+      processCheckingForUpdates();
 
       expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(expect.any(Object), { allowDowngrade: downgradeIsAllowed });
     });

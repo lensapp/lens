@@ -22,9 +22,8 @@ import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-upda
 import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
 import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
-import checkForUpdatesInjectable from "../../main/application-update/check-for-updates/check-for-updates.injectable";
-import appVersionInjectable
-  from "../../common/get-configuration-file-model/app-version/app-version.injectable";
+import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
+import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 
 describe("installing update from update channels", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -73,12 +72,12 @@ describe("installing update from update channels", () => {
 
   describe("when started", () => {
     let rendered: RenderResult;
-    let checkForUpdates: () => Promise<void>;
+    let processCheckingForUpdates: () => Promise<void>;
 
     beforeEach(async () => {
       rendered = await applicationBuilder.render();
 
-      checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
     });
 
     it("renders", () => {
@@ -98,7 +97,7 @@ describe("installing update from update channels", () => {
 
         selectedUpdateChannel.setValue(updateChannels.alpha.id);
 
-        checkForUpdates();
+        processCheckingForUpdates();
       });
 
       it('checks updates from update channel "alpha"', () => {
@@ -192,7 +191,7 @@ describe("installing update from update channels", () => {
 
       describe("when checking for updates", () => {
         beforeEach(() => {
-          checkForUpdates();
+          processCheckingForUpdates();
         });
 
         describe('when update from "beta" channel is discovered', () => {
@@ -240,9 +239,9 @@ describe("installing update from update channels", () => {
 
     await applicationBuilder.render();
 
-    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
 
-    checkForUpdates();
+    processCheckingForUpdates();
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.beta, expect.any(Object));
   });
@@ -258,9 +257,9 @@ describe("installing update from update channels", () => {
 
     await applicationBuilder.render();
 
-    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
 
-    checkForUpdates();
+    processCheckingForUpdates();
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.latest, expect.any(Object));
   });
@@ -272,9 +271,9 @@ describe("installing update from update channels", () => {
 
     await applicationBuilder.render();
 
-    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
 
-    checkForUpdates();
+    processCheckingForUpdates();
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
       updateChannels.latest,
@@ -289,9 +288,9 @@ describe("installing update from update channels", () => {
 
     await applicationBuilder.render();
 
-    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
 
-    checkForUpdates();
+    processCheckingForUpdates();
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.alpha, expect.any(Object));
   });
@@ -303,9 +302,9 @@ describe("installing update from update channels", () => {
 
     await applicationBuilder.render();
 
-    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
 
-    checkForUpdates();
+    processCheckingForUpdates();
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.beta, expect.any(Object));
   });
@@ -323,9 +322,9 @@ describe("installing update from update channels", () => {
 
     await applicationBuilder.render();
 
-    const checkForUpdates = applicationBuilder.dis.mainDi.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
 
-    checkForUpdates();
+    processCheckingForUpdates();
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(updateChannels.beta, expect.any(Object));
   });

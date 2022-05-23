@@ -12,7 +12,7 @@ import updateIsBeingDownloadedInjectable from "../../common/application-update/u
 import updatesAreBeingDiscoveredInjectable from "../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
 import progressOfUpdateDownloadInjectable from "../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 import assert from "assert";
-import checkForUpdatesInjectable from "./check-for-updates/check-for-updates.injectable";
+import processCheckingForUpdatesInjectable from "./check-for-updates/process-checking-for-updates.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
@@ -24,7 +24,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const downloadingUpdateState = di.inject(updateIsBeingDownloadedInjectable);
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
-    const checkForUpdates = di.inject(checkForUpdatesInjectable);
+    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
 
     return {
       id: "check-for-updates",
@@ -52,7 +52,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
       visible: computed(() => updatingIsEnabled),
 
       click: async () => {
-        await checkForUpdates();
+        await processCheckingForUpdates();
 
         await showApplicationWindow();
       },
