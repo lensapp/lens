@@ -11,13 +11,18 @@ import { Menu, MenuItem } from "../menu";
 import { cssNames } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import appUpdateWarningInjectable from "../../app-freshness/app-update-warning.injectable";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
-  warningLevel?: "light" | "medium" | "high";
   update: () => void;
 }
 
-export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
+interface Dependencies {
+  warningLevel?: "light" | "medium" | "high" | "";
+}
+
+export function NonInjectedUpdateButton({ warningLevel, update, id }: UpdateButtonProps & Dependencies) {
   const buttonId = id ?? "update-lens-button";
   const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
@@ -62,3 +67,14 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
     </>
   );
 }
+
+export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(NonInjectedUpdateButton, {
+  getProps: (di, props) => {
+    const store = di.inject(appUpdateWarningInjectable);
+
+    return {
+      ...props,
+      warningLevel: store.warningLevel,
+    };
+  },
+});
