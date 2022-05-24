@@ -13,6 +13,9 @@ import updatesAreBeingDiscoveredInjectable from "../../common/application-update
 import progressOfUpdateDownloadInjectable from "../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 import assert from "assert";
 import processCheckingForUpdatesInjectable from "./check-for-updates/process-checking-for-updates.injectable";
+import { withErrorSuppression } from "../../common/utils/with-error-suppression/with-error-suppression";
+import { pipeline } from "@ogre-tools/fp";
+import withErrorLoggingInjectable from "../../common/utils/with-error-logging/with-error-logging.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
@@ -25,6 +28,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const downloadingUpdateState = di.inject(updateIsBeingDownloadedInjectable);
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
+    const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
 
     return {
       id: "check-for-updates",
@@ -51,11 +55,19 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
       visible: computed(() => updatingIsEnabled),
 
-      click: async () => {
-        await processCheckingForUpdates();
+      click: pipeline(
+        async () => {
+          await processCheckingForUpdates();
 
-        await showApplicationWindow();
-      },
+          await showApplicationWindow();
+        },
+
+        withErrorLoggingFor(() => "[TRAY]: Checking for updates failed."),
+
+        // TODO: Find out how to improve typing so that instead of
+        // x => withErrorSuppression(x) there could only be withErrorSuppression
+        (x) => withErrorSuppression(x),
+      ),
     };
   },
 
