@@ -82,14 +82,7 @@ const toTrayMenuOptions = (trayMenuItems: TrayMenuItem[]) => {
                 submenu: _toTrayMenuOptions(trayMenuItem.id),
 
                 click: () => {
-                  try {
-                    trayMenuItem.click?.();
-                  } catch (error) {
-                    logger.error(
-                      `${TRAY_LOG_PREFIX}: clicking item "${trayMenuItem.id} failed."`,
-                      { error },
-                    );
-                  }
+                  trayMenuItem.click?.();
                 },
               }
               : {
