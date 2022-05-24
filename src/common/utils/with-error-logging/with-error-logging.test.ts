@@ -204,7 +204,7 @@ describe("with-error-logging", () => {
           expect(loggerStub.error).not.toHaveBeenCalled();
         });
 
-        it("resolves with the value", async () => {
+        it("resolves without value", async () => {
           const returnValue = await returnValuePromise;
 
           expect(returnValue).toBeUndefined();
