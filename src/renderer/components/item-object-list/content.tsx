@@ -24,10 +24,11 @@ import type { ThemeStore } from "../../themes/store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
-import { UserStore } from "../../../common/user-store";
+import type { UserStore } from "../../../common/user-store";
 import type { ItemListStore } from "./list-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import pageFiltersStoreInjectable from "./page-filters/store.injectable";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
@@ -69,6 +70,7 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
 
 interface Dependencies {
   themeStore: ThemeStore;
+  userStore: UserStore;
   pageFiltersStore: PageFiltersStore;
   openConfirmDialog: OpenConfirmDialog;
 }
@@ -333,7 +335,7 @@ class NonInjectedItemListLayoutContent<
   showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
     const { tableId, isConfigurable } = this.props;
 
-    return !isConfigurable || !tableId || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
+    return !isConfigurable || !tableId || !this.props.userStore.isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
   renderColumnVisibilityMenu() {
@@ -356,7 +358,7 @@ class NonInjectedItemListLayoutContent<
                     value={this.showColumn(cellProps)}
                     onChange={(
                       tableId
-                        ? (() => cellProps.id && UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id))
+                        ? (() => cellProps.id && this.props.userStore.toggleTableColumnVisibility(tableId, cellProps.id))
                         : undefined
                     )}
                   />
@@ -373,6 +375,7 @@ export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayou
   getProps: (di, props) => ({
     ...props,
     themeStore: di.inject(themeStoreInjectable),
+    userStore: di.inject(userStoreInjectable),
     pageFiltersStore: di.inject(pageFiltersStoreInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
   }),

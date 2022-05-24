@@ -9,7 +9,6 @@ import { extensionRegistratorInjectionToken } from "../../../extensions/extensio
 import type { IObservableArray } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
-import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 import React from "react";
 import { Router } from "react-router";
 import { Observer } from "mobx-react";
@@ -18,7 +17,6 @@ import allowedResourcesInjectable from "../../../common/cluster-store/allowed-re
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { Sidebar } from "../layout/sidebar";
 import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -34,6 +32,18 @@ import type { MenuItemOpts } from "../../../main/menu/application-menu-items.inj
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
 import type { MenuItem, MenuItemConstructorOptions } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
+import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
+import startFrameInjectable from "../../start-frame/start-frame.injectable";
+import { flushPromises } from "../../../common/test-utils/flush-promises";
+import type { NamespaceStore } from "../+namespaces/store";
+import namespaceStoreInjectable from "../+namespaces/store.injectable";
+import historyInjectable from "../../navigation/history.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -42,12 +52,12 @@ export interface ApplicationBuilder {
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
   addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
-  beforeSetups: (callback: Callback) => ApplicationBuilder;
+  beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
 
   applicationMenu: {
-    click: (path: string) => void;
+    click: (path: string) => Promise<void>;
   };
 
   preferences: {
@@ -56,6 +66,10 @@ export interface ApplicationBuilder {
     navigation: {
       click: (id: string) => void;
     };
+  };
+
+  helmCharts: {
+    navigate: () => void;
   };
 }
 
@@ -70,13 +84,14 @@ interface Environment {
 }
 
 export const getApplicationBuilder = () => {
-  const { rendererDi, mainDi, runSetups } = getDisForUnitTesting({
+  const { rendererDi, mainDi } = getDisForUnitTesting({
     doGeneralOverrides: true,
   });
 
   const dis = { rendererDi, mainDi };
 
   const clusterStoreStub = {
+    provideInitialFromMain: () => {},
     getById: (): null => null,
   } as unknown as ClusterStore;
 
@@ -84,7 +99,7 @@ export const getApplicationBuilder = () => {
   rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
   mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
 
-  const beforeSetupsCallbacks: Callback[] = [];
+  const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeRenderCallbacks: Callback[] = [];
 
   const extensionsState = observable.array<LensRendererExtension>();
@@ -130,7 +145,7 @@ export const getApplicationBuilder = () => {
     dis,
 
     applicationMenu: {
-      click: (path: string) => {
+      click: async (path: string) => {
         const applicationMenuItems = mainDi.inject(
           applicationMenuItemsInjectable,
         );
@@ -160,6 +175,8 @@ export const getApplicationBuilder = () => {
           undefined,
           {},
         );
+
+        await flushPromises();
       },
     },
 
@@ -199,6 +216,14 @@ export const getApplicationBuilder = () => {
       },
     },
 
+    helmCharts: {
+      navigate: () => {
+        const navigateToHelmCharts = rendererDi.inject(navigateToHelmChartsInjectable);
+
+        navigateToHelmCharts();
+      },
+    },
+
     setEnvironmentToClusterFrame: () => {
       environment = environments.clusterFrame;
 
@@ -208,10 +233,28 @@ export const getApplicationBuilder = () => {
         computed(() => new Set([...allowedResourcesState])),
       );
 
-      rendererDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/irrelevant",
+      const clusterStub = {
+        accessibleNamespaces: [],
+      } as unknown as Cluster;
+
+      const namespaceStoreStub = {
+        contextNamespaces: [],
+      } as unknown as NamespaceStore;
+
+      const clusterFrameContextFake = new ClusterFrameContext(
+        clusterStub,
+
+        {
+          namespaceStore: namespaceStoreStub,
+        },
       );
+
+      rendererDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
+      rendererDi.override(hostedClusterInjectable, () => clusterStub);
+      rendererDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
+
+      // Todo: get rid of global state.
+      KubeObjectStore.defaultContext.set(clusterFrameContextFake);
 
       return builder;
     },
@@ -254,8 +297,8 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    beforeSetups(callback: (dis: DiContainers) => void) {
-      beforeSetupsCallbacks.push(callback);
+    beforeApplicationStart(callback: (dis: DiContainers) => void) {
+      beforeApplicationStartCallbacks.push(callback);
 
       return builder;
     },
@@ -267,14 +310,20 @@ export const getApplicationBuilder = () => {
     },
 
     async render() {
-      for (const callback of beforeSetupsCallbacks) {
+      for (const callback of beforeApplicationStartCallbacks) {
         await callback(dis);
       }
 
-      await runSetups();
+      const startMainApplication = mainDi.inject(startMainApplicationInjectable);
+
+      await startMainApplication();
+
+      const startFrame = rendererDi.inject(startFrameInjectable);
+
+      await startFrame();
 
       const render = renderFor(rendererDi);
-      const history = rendererDi.inject(observableHistoryInjectable);
+      const history = rendererDi.inject(historyInjectable);
       const currentRouteComponent = rendererDi.inject(currentRouteComponentInjectable);
 
       for (const callback of beforeRenderCallbacks) {

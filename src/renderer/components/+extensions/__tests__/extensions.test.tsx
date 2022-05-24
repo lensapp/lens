@@ -58,7 +58,7 @@ describe("Extensions", () => {
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
@@ -70,8 +70,6 @@ describe("Extensions", () => {
     mockFs({
       "some-directory-for-user-data": {},
     });
-
-    await di.runSetups();
 
     render = renderFor(di);
 

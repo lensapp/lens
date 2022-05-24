@@ -9,52 +9,55 @@ import { action, makeObservable, observable, observe, reaction, toJS } from "mob
 import type { Cluster } from "../common/cluster/cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { getClusterIdFromHost, isErrnoException, Singleton } from "../common/utils";
-import { catalogEntityRegistry } from "./catalog";
+import { getClusterIdFromHost, isErrnoException } from "../common/utils";
 import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
-import { ClusterStore } from "../common/cluster-store/cluster-store";
+import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { ClusterId } from "../common/cluster-types";
+import type { CatalogEntityRegistry } from "./catalog";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
 const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKubernetesClusterStatus));
 
-export class ClusterManager extends Singleton {
-  private store = ClusterStore.getInstance();
+interface Dependencies {
+  store: ClusterStore;
+  catalogEntityRegistry: CatalogEntityRegistry;
+}
+
+export class ClusterManager {
   deleting = observable.set<ClusterId>();
 
   @observable visibleCluster: ClusterId | undefined = undefined;
 
-  constructor() {
-    super();
+  constructor(private dependencies: Dependencies) {
     makeObservable(this);
   }
 
   init = once(() => {
     // reacting to every cluster's state change and total amount of items
     reaction(
-      () => this.store.clustersList.map(c => c.getState()),
-      () => this.updateCatalog(this.store.clustersList),
+      () => this.dependencies.store.clustersList.map(c => c.getState()),
+      () => this.updateCatalog(this.dependencies.store.clustersList),
       { fireImmediately: false },
     );
 
     // reacting to every cluster's preferences change and total amount of items
     reaction(
-      () => this.store.clustersList.map(c => toJS(c.preferences)),
-      () => this.updateCatalog(this.store.clustersList),
+      () => this.dependencies.store.clustersList.map(c => toJS(c.preferences)),
+      () => this.updateCatalog(this.dependencies.store.clustersList),
       { fireImmediately: false },
     );
 
     reaction(
-      () => catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
+      () => this.dependencies.catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
       entities => this.syncClustersFromCatalog(entities),
     );
 
     reaction(() => [
-      catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
+      this.dependencies.catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
       this.visibleCluster,
     ] as const, ([entities, visibleCluster]) => {
       for (const entity of entities) {
@@ -68,7 +71,7 @@ export class ClusterManager extends Singleton {
 
     observe(this.deleting, change => {
       if (change.type === "add") {
-        this.updateEntityStatus(catalogEntityRegistry.findById(change.newValue) as KubernetesCluster);
+        this.updateEntityStatus(this.dependencies.catalogEntityRegistry.findById(change.newValue) as KubernetesCluster);
       }
     });
 
@@ -86,13 +89,13 @@ export class ClusterManager extends Singleton {
   }
 
   protected updateEntityFromCluster(cluster: Cluster) {
-    const index = catalogEntityRegistry.items.findIndex((entity) => entity.getId() === cluster.id);
+    const index = this.dependencies.catalogEntityRegistry.items.findIndex((entity) => entity.getId() === cluster.id);
 
     if (index === -1) {
       return;
     }
 
-    const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
+    const entity = this.dependencies.catalogEntityRegistry.items[index] as KubernetesCluster;
 
     this.updateEntityStatus(entity, cluster);
 
@@ -133,7 +136,7 @@ export class ClusterManager extends Singleton {
       cluster.preferences.icon = undefined;
     }
 
-    catalogEntityRegistry.items.splice(index, 1, entity);
+    this.dependencies.catalogEntityRegistry.items.splice(index, 1, entity);
   }
 
   @action
@@ -180,7 +183,7 @@ export class ClusterManager extends Singleton {
   @action
   protected syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
-      const cluster = this.store.getById(entity.getId());
+      const cluster = this.dependencies.store.getById(entity.getId());
 
       if (!cluster) {
         const model = {
@@ -195,7 +198,7 @@ export class ClusterManager extends Singleton {
            * Add the bare minimum of data to ClusterStore. And especially no
            * preferences, as those might be configured by the entity's source
            */
-          this.store.addCluster(model);
+          this.dependencies.store.addCluster(model);
         } catch (error) {
           if (isErrnoException(error) && error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
             logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
@@ -234,7 +237,7 @@ export class ClusterManager extends Singleton {
 
   protected onNetworkOffline = () => {
     logger.info(`${logPrefix} network is offline`);
-    this.store.clustersList.forEach((cluster) => {
+    this.dependencies.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false;
         cluster.accessible = false;
@@ -245,7 +248,7 @@ export class ClusterManager extends Singleton {
 
   protected onNetworkOnline = () => {
     logger.info(`${logPrefix} network is online`);
-    this.store.clustersList.forEach((cluster) => {
+    this.dependencies.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e);
       }
@@ -253,12 +256,12 @@ export class ClusterManager extends Singleton {
   };
 
   stop() {
-    this.store.clusters.forEach((cluster: Cluster) => {
+    this.dependencies.store.clusters.forEach((cluster: Cluster) => {
       cluster.disconnect();
     });
   }
 
-  getClusterForRequest(req: http.IncomingMessage): Cluster | undefined {
+  getClusterForRequest = (req: http.IncomingMessage): Cluster | undefined => {
     if (!req.headers.host) {
       return undefined;
     }
@@ -266,7 +269,7 @@ export class ClusterManager extends Singleton {
     // lens-server is connecting to 127.0.0.1:<port>/<uid>
     if (req.url && req.headers.host.startsWith("127.0.0.1")) {
       const clusterId = req.url.split("/")[1];
-      const cluster = this.store.getById(clusterId);
+      const cluster = this.dependencies.store.getById(clusterId);
 
       if (cluster) {
         // we need to swap path prefix so that request is proxied to kube api
@@ -276,8 +279,8 @@ export class ClusterManager extends Singleton {
       return cluster;
     }
 
-    return this.store.getById(getClusterIdFromHost(req.headers.host));
-  }
+    return this.dependencies.store.getById(getClusterIdFromHost(req.headers.host));
+  };
 }
 
 export function catalogEntityFromCluster(cluster: Cluster) {

@@ -6,7 +6,7 @@ import type { SupportedFileExtension } from "../router/router-content-types";
 import { contentTypes } from "../router/router-content-types";
 import logger from "../logger";
 import { getRouteInjectable } from "../router/router.injectable";
-import { appName, publicPath, staticFilesDirectory } from "../../common/vars";
+import { appName, publicPath } from "../../common/vars";
 import path from "path";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
@@ -18,24 +18,25 @@ import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import { webpackDevServerPort } from "../../../webpack/vars";
 import type { LensApiRequest, RouteResponse } from "../router/route";
 import { route } from "../router/route";
+import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 
 interface ProductionDependencies {
   readFileBuffer: (path: string) => Promise<Buffer>;
   getAbsolutePath: GetAbsolutePath;
   joinPaths: JoinPaths;
+  staticFilesDirectory: string;
 }
 
 const handleStaticFileInProduction =
-  ({ readFileBuffer, getAbsolutePath, joinPaths }: ProductionDependencies) =>
+  ({ readFileBuffer, getAbsolutePath, joinPaths, staticFilesDirectory }: ProductionDependencies) =>
     async ({ params }: LensApiRequest<"/{path*}">): Promise<RouteResponse<Buffer>> => {
-      const staticPath = getAbsolutePath(staticFilesDirectory);
       let filePath = params.path;
 
       for (let retryCount = 0; retryCount < 5; retryCount += 1) {
-        const asset = joinPaths(staticPath, filePath);
+        const asset = joinPaths(staticFilesDirectory, filePath);
         const normalizedFilePath = getAbsolutePath(asset);
 
-        if (!normalizedFilePath.startsWith(staticPath)) {
+        if (!normalizedFilePath.startsWith(staticFilesDirectory)) {
           return { statusCode: 404 };
         }
 
@@ -84,6 +85,10 @@ const staticFileRouteInjectable = getRouteInjectable({
 
   instantiate: (di) => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
+    const readFileBuffer = di.inject(readFileBufferInjectable);
+    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
+    const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
 
     return route({
       method: "get",
@@ -94,9 +99,10 @@ const staticFileRouteInjectable = getRouteInjectable({
           proxy: httpProxy.createProxy(),
         })
         : handleStaticFileInProduction({
-          readFileBuffer: di.inject(readFileBufferInjectable),
-          getAbsolutePath: di.inject(getAbsolutePathInjectable),
-          joinPaths: di.inject(joinPathsInjectable),
+          readFileBuffer,
+          getAbsolutePath,
+          joinPaths,
+          staticFilesDirectory,
         }),
     );
   },

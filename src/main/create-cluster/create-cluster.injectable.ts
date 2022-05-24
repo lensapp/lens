@@ -13,6 +13,8 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import loggerInjectable from "../../common/logger.injectable";
+import detectorRegistryInjectable from "../cluster-detectors/detector-registry.injectable";
+import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -26,6 +28,8 @@ const createClusterInjectable = getInjectable({
       createAuthorizationReview: di.inject(authorizationReviewInjectable),
       createListNamespaces: di.inject(listNamespacesInjectable),
       logger: di.inject(loggerInjectable),
+      detectorRegistry: di.inject(detectorRegistryInjectable),
+      createVersionDetector: di.inject(createVersionDetectorInjectable),
     };
 
     return (model) => new Cluster(dependencies, model);

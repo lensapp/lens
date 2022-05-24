@@ -37,7 +37,7 @@ const tolerations: Toleration[] =[
 describe("<PodTolerations />", () => {
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForLensLocalStorageInjectable, () => "some-directory-for-lens-local-storage" );

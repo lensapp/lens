@@ -13,7 +13,7 @@ const navigateToRouteInjectable = getInjectable({
   instantiate: (di) => {
     const navigateToUrl = di.inject(navigateToUrlInjectionToken);
 
-    return (route, options) => {
+    return async (route, options) => {
       const url = buildURL(route.path, {
         // TODO: enhance typing
         params: options?.parameters as any,
@@ -21,7 +21,7 @@ const navigateToRouteInjectable = getInjectable({
         fragment: options?.fragment,
       });
 
-      navigateToUrl(url, options);
+      await navigateToUrl(url, options);
     };
   },
 

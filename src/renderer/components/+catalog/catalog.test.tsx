@@ -28,6 +28,7 @@ import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.i
 import { computed } from "mobx";
 import ipcRendererInjectable from "../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 import { UserStore } from "../../../common/user-store";
+import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -88,14 +89,15 @@ describe("<Catalog />", () => {
   let catalogEntityItem: MockCatalogEntity;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    di.override(broadcastMessageInjectable, () => async () => {});
+
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
-
-    await di.runSetups();
 
     mockFs();
     CatalogEntityDetailRegistry.createInstance();

@@ -23,10 +23,8 @@ const mockFetch = fetch as FetchMock;
 describe("forRemoteCluster", () => {
   let apiManager: jest.Mocked<ApiManager>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    await di.runSetups();
 
     apiManager = new ApiManager() as jest.Mocked<ApiManager>;
 
@@ -87,10 +85,8 @@ describe("KubeApi", () => {
   let request: KubeJsonApi;
   let apiManager: jest.Mocked<ApiManager>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    await di.runSetups();
 
     request = new KubeJsonApi({
       serverAddress: `http://127.0.0.1:9999`,

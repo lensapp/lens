@@ -10,8 +10,6 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import currentPathInjectable from "../../renderer/routes/current-path.injectable";
 import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
 import { computed } from "mobx";
-import type { UserStore } from "../../common/user-store";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import { preferenceNavigationItemInjectionToken } from "../../renderer/components/+preferences/preferences-navigation/preference-navigation-items.injectable";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
 import { Preferences } from "../../renderer/components/+preferences";
@@ -24,7 +22,6 @@ import { createObservableHistory } from "mobx-observable-history";
 import navigateToPreferenceTabInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab.injectable";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
-import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - closing-preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -32,22 +29,12 @@ describe("preferences - closing-preferences", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.register(testPreferencesRouteInjectable);
       rendererDi.register(testPreferencesRouteComponentInjectable);
       rendererDi.register(testFrontPageRouteInjectable);
       rendererDi.register(testFrontPageRouteComponentInjectable);
       rendererDi.register(testNavigationItemInjectable);
-
-      const userStoreStub = {
-        extensionRegistryUrl: { customUrl: "some-custom-url" },
-      } as unknown as UserStore;
-
-      rendererDi.override(userStoreInjectable, () => userStoreStub);
-      rendererDi.override(ipcRendererInjectable, () => ({
-        on: jest.fn(),
-        invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
-      } as never));
 
       rendererDi.override(navigateToFrontPageInjectable, (di) => {
         const navigateToRoute = di.inject(navigateToRouteInjectionToken);
@@ -65,7 +52,7 @@ describe("preferences - closing-preferences", () => {
     let rendererDi: DiContainer;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/some-test-path"],
@@ -138,7 +125,7 @@ describe("preferences - closing-preferences", () => {
     let rendererDi: DiContainer;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/preferences/app"],

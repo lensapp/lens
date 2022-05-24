@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import electronAppInjectable from "./electron-app/electron-app.injectable";
+import electronAppInjectable from "../../electron-app/electron-app.injectable";
 import getElectronAppPathInjectable from "./get-electron-app-path.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { App } from "electron";
@@ -13,7 +13,7 @@ import { joinPathsFake } from "../../../common/test-utils/join-paths-fake";
 describe("get-electron-app-path", () => {
   let getElectronAppPath: (name: string) => string;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: false });
 
     const appStub = {
@@ -34,8 +34,6 @@ describe("get-electron-app-path", () => {
     di.override(electronAppInjectable, () => appStub);
     di.override(registerChannelInjectable, () => () => undefined);
     di.override(joinPathsInjectable, () => joinPathsFake);
-
-    await di.runSetups();
 
     getElectronAppPath = di.inject(getElectronAppPathInjectable) as (name: string) => string;
   });

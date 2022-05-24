@@ -33,7 +33,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
     applicationBuilder.setEnvironmentToClusterFrame();
 
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",

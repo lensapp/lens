@@ -36,7 +36,8 @@ describe("cluster - sidebar and tab navigation for core", () => {
     rendererDi = applicationBuilder.dis.rendererDi;
 
     applicationBuilder.setEnvironmentToClusterFrame();
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
+
+    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
@@ -46,7 +47,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
   describe("given core registrations", () => {
     beforeEach(() => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.register(testRouteInjectable);
         rendererDi.register(testRouteComponentInjectable);
         rendererDi.register(testSidebarItemsInjectable);
@@ -102,6 +103,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
             },
           );
         });
+
         applicationBuilder.beforeRender(async ({ rendererDi }) => {
           const sidebarStorage = rendererDi.inject(sidebarStorageInjectable);
 
@@ -326,7 +328,7 @@ const testSidebarItemsInjectable = getInjectable({
   injectionToken: sidebarItemsInjectionToken,
 });
 
-const  testRouteInjectable = getInjectable({
+const testRouteInjectable = getInjectable({
   id: "some-route-injectable-id",
 
   instantiate: () => ({

@@ -9,10 +9,13 @@ import { createClusterInjectionToken } from "../cluster/create-cluster-injection
 const clusterStoreInjectable = getInjectable({
   id: "cluster-store",
 
-  instantiate: (di) =>
-    ClusterStore.createInstance({
+  instantiate: (di) => {
+    ClusterStore.resetInstance();
+
+    return ClusterStore.createInstance({
       createCluster: di.inject(createClusterInjectionToken),
-    }),
+    });
+  },
 
   causesSideEffects: true,
 });

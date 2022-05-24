@@ -26,10 +26,8 @@ jest.mock("electron", () => ({
 describe("static-file-route", () => {
   let handleStaticFileRoute: Route<Buffer, "/{path*}">;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    await di.runSetups();
 
     handleStaticFileRoute = di.inject(staticFileRouteInjectable);
   });

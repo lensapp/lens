@@ -41,11 +41,15 @@ autoUpdater.logger = {
   debug: message => logger.debug(`[AUTO-UPDATE]: electron-updater: %s`, message),
 };
 
+interface Dependencies {
+  isAutoUpdateEnabled: () => boolean;
+}
+
 /**
  * starts the automatic update checking
  * @param interval milliseconds between interval to check on, defaults to 2h
  */
-export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 2): void {
+export const startUpdateChecking = ({ isAutoUpdateEnabled } : Dependencies) => once(function (interval = 1000 * 60 * 60 * 2): void {
   if (!isAutoUpdateEnabled() || isTestEnv) {
     return;
   }

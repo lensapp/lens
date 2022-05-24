@@ -60,12 +60,10 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
 describe("LogSearch tests", () => {
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     render = renderFor(di);
-
-    await di.runSetups();
   });
 
   it("renders w/o errors", () => {

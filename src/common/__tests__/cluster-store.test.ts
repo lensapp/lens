@@ -8,7 +8,7 @@ import mockFs from "mock-fs";
 import path from "path";
 import fse from "fs-extra";
 import type { Cluster } from "../cluster/cluster";
-import { ClusterStore } from "../cluster-store/cluster-store";
+import type { ClusterStore } from "../cluster-store/cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
@@ -21,6 +21,7 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
+import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -81,15 +82,14 @@ describe("cluster-store", () => {
 
     mockFs();
 
-    mainDi.override(clusterStoreInjectable, (di) => ClusterStore.createInstance({ createCluster: di.inject(createClusterInjectionToken) }));
     mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    mainDi.override(directoryForTempInjectable, () => "some-temp-directory");
 
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
+    mainDi.permitSideEffects(clusterStoreInjectable);
 
-    await mainDi.runSetups();
-
-    createCluster = mainDi.inject(createClusterInjectionToken);
+    mainDi.unoverride(clusterStoreInjectable);
   });
 
   afterEach(() => {
@@ -104,10 +104,6 @@ describe("cluster-store", () => {
         getCustomKubeConfigDirectoryInjectable,
       );
 
-      // TODO: Remove these by removing Singleton base-class from BaseStore
-      ClusterStore.getInstance(false)?.unregisterIpcListener();
-      ClusterStore.resetInstance();
-
       const mockOpts = {
         "some-directory-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({}),
@@ -116,7 +112,11 @@ describe("cluster-store", () => {
 
       mockFs(mockOpts);
 
+      createCluster = mainDi.inject(createClusterInjectionToken);
+
       clusterStore = mainDi.inject(clusterStoreInjectable);
+
+      clusterStore.unregisterIpcListener();
     });
 
     afterEach(() => {
@@ -198,8 +198,6 @@ describe("cluster-store", () => {
 
   describe("config with existing clusters", () => {
     beforeEach(() => {
-      ClusterStore.resetInstance();
-
       const mockOpts = {
         "temp-kube-config": kubeconfig,
         "some-directory-for-user-data": {
@@ -237,6 +235,8 @@ describe("cluster-store", () => {
       };
 
       mockFs(mockOpts);
+
+      createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
     });
@@ -288,8 +288,6 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
-      ClusterStore.resetInstance();
-
       const mockOpts = {
         "invalid-kube-config": invalidKubeconfig,
         "valid-kube-config": kubeconfig,
@@ -322,6 +320,8 @@ users:
 
       mockFs(mockOpts);
 
+      createCluster = mainDi.inject(createClusterInjectionToken);
+
       clusterStore = mainDi.inject(clusterStoreInjectable);
     });
 
@@ -338,7 +338,6 @@ users:
 
   describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     beforeEach(() => {
-      ClusterStore.resetInstance();
       const mockOpts = {
         "some-directory-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({
@@ -363,6 +362,8 @@ users:
       };
 
       mockFs(mockOpts);
+
+      createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
     });

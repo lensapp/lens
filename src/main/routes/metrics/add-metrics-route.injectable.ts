@@ -9,16 +9,17 @@ import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import { ClusterMetadataKey } from "../../../common/cluster-types";
 import logger from "../../logger";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { getMetrics } from "../../k8s-request";
 import type { IMetricsQuery } from "./metrics-query";
 import { clusterRoute } from "../../router/route";
 import { isObject } from "lodash";
 import { isRequestError } from "../../../common/utils";
+import type { GetMetrics } from "../../get-metrics.injectable";
+import getMetricsInjectable from "../../get-metrics.injectable";
 
 // This is used for backoff retry tracking.
 const ATTEMPTS = [false, false, false, false, true];
 
-async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> {
+const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> => {
   const queries = promQueries.map(p => p.trim());
   const loaders = new Map<string, Promise<any>>();
 
@@ -47,15 +48,18 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   }
 
   return Promise.all(queries.map(loadMetric));
-}
+};
 
 const addMetricsRouteInjectable = getRouteInjectable({
   id: "add-metrics-route",
 
-  instantiate: () => clusterRoute({
+  instantiate: (di) => clusterRoute({
     method: "post",
     path: `${apiPrefix}/metrics`,
   })(async ({ cluster, payload, query }) => {
+    const getMetrics = di.inject(getMetricsInjectable);
+    const loadMetrics = loadMetricsFor(getMetrics);
+
     const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 

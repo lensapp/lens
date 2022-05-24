@@ -9,7 +9,7 @@ import type { IComputedValue } from "mobx";
 import { computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
-import type { ClusterFrameHandler } from "./lens-views";
+import type { ClusterFrameHandler } from "./cluster-frame-handler";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { requestClusterActivation } from "../../ipc";
@@ -17,7 +17,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import clusterViewRouteParametersInjectable from "./cluster-view-route-parameters.injectable";
-import clusterFramesInjectable from "./lens-views.injectable";
+import clusterFrameHandlerInjectable from "./cluster-frame-handler.injectable";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
@@ -107,7 +107,7 @@ export const ClusterView = withInjectables<Dependencies>(NonInjectedClusterView,
   getProps: (di) => ({
     clusterId: di.inject(clusterViewRouteParametersInjectable).clusterId,
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
-    clusterFrames: di.inject(clusterFramesInjectable),
+    clusterFrames: di.inject(clusterFrameHandlerInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
   }),
 });

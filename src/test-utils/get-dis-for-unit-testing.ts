@@ -19,6 +19,5 @@ export const getDisForUnitTesting = (opts?: GetDiForUnitTestingOptions) => {
   return {
     rendererDi,
     mainDi,
-    runSetups: () => Promise.all([rendererDi.runSetups(), mainDi.runSetups()]),
   };
 };

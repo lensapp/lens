@@ -49,15 +49,13 @@ const mockedFse = fse as jest.Mocked<typeof fse>;
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
 
     mockFs();
-
-    await di.runSetups();
 
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
   });

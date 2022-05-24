@@ -8,29 +8,14 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import type { UserStore } from "../../common/user-store";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import navigateToTelemetryPreferencesInjectable from "../../common/front-end-routing/routes/preferences/telemetry/navigate-to-telemetry-preferences.injectable";
 import sentryDnsUrlInjectable from "../../renderer/components/+preferences/sentry-dns-url.injectable";
-import ipcRendererInjectable from "../../renderer/app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
 
 describe("preferences - navigation to telemetry preferences", () => {
   let applicationBuilder: ApplicationBuilder;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
-
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
-      const userStoreStub = {
-        extensionRegistryUrl: { customUrl: "some-custom-url" },
-      } as unknown as UserStore;
-
-      rendererDi.override(userStoreInjectable, () => userStoreStub);
-      rendererDi.override(ipcRendererInjectable, () => ({
-        on: jest.fn(),
-        invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
-      } as never));
-    });
   });
 
   describe("given in preferences, when rendered", () => {
@@ -134,7 +119,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(sentryDnsUrlInjectable, () => "some-sentry-dns-url");
       });
 
@@ -164,7 +149,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.override(sentryDnsUrlInjectable, () => null);
       });
 

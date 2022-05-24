@@ -20,6 +20,7 @@ import { LensExtension } from "../../../extensions/lens-extension";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 jest.mock("../../../common/ipc");
 
@@ -46,7 +47,7 @@ describe("protocol router tests", () => {
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
 
-    await di.runSetups();
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     extensionInstances = di.inject(extensionInstancesInjectable);
     extensionsStore = di.inject(extensionsStoreInjectable);

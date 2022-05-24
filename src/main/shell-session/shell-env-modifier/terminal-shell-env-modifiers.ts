@@ -8,13 +8,14 @@ import { computed } from "mobx";
 import type { ClusterId } from "../../../common/cluster-types";
 import { isDefined } from "../../../common/utils";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
-import { catalogEntityRegistry } from "../../catalog";
+import type { CatalogEntityRegistry } from "../../catalog";
 
 interface Dependencies {
   extensions: IComputedValue<LensMainExtension[]>;
+  catalogEntityRegistry: CatalogEntityRegistry;
 }
 
-export const terminalShellEnvModify = ({ extensions }: Dependencies) =>
+export const terminalShellEnvModify = ({ extensions, catalogEntityRegistry }: Dependencies) =>
   (clusterId: ClusterId, env: Record<string, string | undefined>) => {
     const terminalShellEnvModifiers = computed(() => (
       extensions.get()

@@ -5,24 +5,27 @@
 
 import { apiPrefix } from "../../../common/vars";
 import { getRouteInjectable } from "../../router/router.injectable";
-import { PrometheusProviderRegistry } from "../../prometheus";
 import { route } from "../../router/route";
+import prometheusProviderRegistryInjectable from "../../prometheus/prometheus-provider-registry.injectable";
 
 const getMetricProvidersRouteInjectable = getRouteInjectable({
   id: "get-metric-providers-route",
 
-  instantiate: () => route({
-    method: "get",
-    path: `${apiPrefix}/metrics/providers`,
-  })(() => ({
-    response: Array.from(
-      PrometheusProviderRegistry
-        .getInstance()
-        .providers
-        .values(),
-      ({ name, id, isConfigurable }) => ({ name, id, isConfigurable }),
-    ),
-  })),
+  instantiate: (di) => {
+    const prometheusProviderRegistry = di.inject(prometheusProviderRegistryInjectable);
+
+    return route({
+      method: "get",
+      path: `${apiPrefix}/metrics/providers`,
+    })(() => ({
+      response: Array.from(
+        prometheusProviderRegistry
+          .providers
+          .values(),
+        ({ name, id, isConfigurable }) => ({ name, id, isConfigurable }),
+      ),
+    }));
+  },
 });
 
 export default getMetricProvidersRouteInjectable;

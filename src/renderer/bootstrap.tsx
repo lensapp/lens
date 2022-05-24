@@ -46,6 +46,8 @@ import { init } from "@sentry/electron/renderer";
 import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
 import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 import assert from "assert";
+import { beforeFrameStartsInjectionToken } from "./before-frame-starts/before-frame-starts-injection-token";
+import { runManyFor } from "../common/runnable/run-many-for";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -66,7 +68,9 @@ export async function bootstrap(di: DiContainer) {
     initializeSentryReporting(init);
   }
 
-  await di.runSetups();
+  const beforeFrameStarts = runManyFor(di)(beforeFrameStartsInjectionToken);
+
+  await beforeFrameStarts();
 
   // TODO: Consolidate import time side-effect to setup time
   bindEvents();
@@ -136,7 +140,7 @@ export async function bootstrap(di: DiContainer) {
   await clusterStore.loadInitialOnRenderer();
 
   // HotbarStore depends on: ClusterStore
-  di.inject(hotbarStoreInjectable);
+  di.inject(hotbarStoreInjectable).load();
 
   // ThemeStore depends on: UserStore
   // TODO: Remove temporal dependencies
@@ -174,9 +178,11 @@ export async function bootstrap(di: DiContainer) {
     });
   }
 
+  const history = di.inject(historyInjectable);
+
   render(
     <DiContextProvider value={{ di }}>
-      <Router history={di.inject(historyInjectable)}>
+      <Router history={history}>
         {DefaultProps(App)}
       </Router>
     </DiContextProvider>,

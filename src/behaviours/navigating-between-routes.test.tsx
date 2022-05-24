@@ -31,7 +31,7 @@ describe("navigating between routes", () => {
 
   describe("given route without path parameters", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.register(testRouteWithoutPathParametersInjectable);
         rendererDi.register(testRouteWithoutPathParametersComponentInjectable);
       });
@@ -102,7 +102,7 @@ describe("navigating between routes", () => {
   describe("given route with optional path parameters", () => {
     beforeEach(async () => {
 
-      applicationBuilder.beforeSetups(({ rendererDi }) => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.register(routeWithOptionalPathParametersInjectable);
         rendererDi.register(routeWithOptionalPathParametersComponentInjectable);
       });

@@ -17,7 +17,8 @@ import { bytesToUnits, getOrInsertWith, iter, noop } from "../../../common/utils
 import logger from "../../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
-import { catalogEntityFromCluster, ClusterManager } from "../../cluster-manager";
+import type { ClusterManager } from "../../cluster-manager";
+import { catalogEntityFromCluster } from "../../cluster-manager";
 import { UserStore } from "../../../common/user-store";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { createHash } from "crypto";
@@ -51,9 +52,10 @@ const ignoreGlobs = [
 const folderSyncMaxAllowedFileReadSize = 2 * 1024 * 1024; // 2 MiB
 const fileSyncMaxAllowedFileReadSize = 16 * folderSyncMaxAllowedFileReadSize; // 32 MiB
 
-interface Dependencies {
+interface KubeconfigSyncManagerDependencies {
   readonly directoryForKubeConfigs: string;
   readonly entityRegistry: CatalogEntityRegistry;
+  readonly clusterManager: ClusterManager;
   createCluster: (model: ClusterModel) => Cluster;
 }
 
@@ -64,7 +66,7 @@ export class KubeconfigSyncManager {
   protected syncing = false;
   protected syncListDisposer?: Disposer;
 
-  constructor(protected readonly dependencies: Dependencies) {
+  constructor(protected readonly dependencies: KubeconfigSyncManagerDependencies) {
     makeObservable(this);
   }
 
@@ -165,8 +167,14 @@ export function configToModels(rootConfig: KubeConfig, filePath: string): Update
 type RootSourceValue = [Cluster, CatalogEntity];
 type RootSource = ObservableMap<string, RootSourceValue>;
 
+interface ComputeDiffDependencies {
+  directoryForKubeConfigs: string;
+  createCluster: (model: ClusterModel) => Cluster;
+  clusterManager: ClusterManager;
+}
+
 // exported for testing
-export const computeDiff = ({ directoryForKubeConfigs, createCluster }: Pick<Dependencies, "createCluster" | "directoryForKubeConfigs">) => (contents: string, source: RootSource, filePath: string): void => {
+export const computeDiff = ({ directoryForKubeConfigs, createCluster, clusterManager }: ComputeDiffDependencies) => (contents: string, source: RootSource, filePath: string): void => {
   runInAction(() => {
     try {
       const { config, error } = loadConfigFromString(contents);
@@ -186,7 +194,7 @@ export const computeDiff = ({ directoryForKubeConfigs, createCluster }: Pick<Dep
         // remove and disconnect clusters that were removed from the config
         if (!model) {
           // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
-          ClusterManager.getInstance().deleting.delete(value[0].id);
+          clusterManager.deleting.delete(value[0].id);
 
           value[0].disconnect();
           source.delete(contextName);
@@ -241,7 +249,7 @@ interface DiffChangedConfigArgs {
   maxAllowedFileReadSize: number;
 }
 
-const diffChangedConfigFor = (dependencies: Dependencies) => ({ filePath, source, stats, maxAllowedFileReadSize }: DiffChangedConfigArgs): Disposer => {
+const diffChangedConfigFor = (dependencies: ComputeDiffDependencies) => ({ filePath, source, stats, maxAllowedFileReadSize }: DiffChangedConfigArgs): Disposer => {
   logger.debug(`${logPrefix} file changed`, { filePath });
 
   if (stats.size >= maxAllowedFileReadSize) {
@@ -297,7 +305,7 @@ const diffChangedConfigFor = (dependencies: Dependencies) => ({ filePath, source
   return cleanup;
 };
 
-const watchFileChanges = (filePath: string, dependencies: Dependencies): [IComputedValue<CatalogEntity[]>, Disposer] => {
+const watchFileChanges = (filePath: string, dependencies: ComputeDiffDependencies): [IComputedValue<CatalogEntity[]>, Disposer] => {
   const rootSource = observable.map<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
 

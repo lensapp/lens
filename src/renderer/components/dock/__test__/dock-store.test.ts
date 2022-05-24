@@ -22,7 +22,7 @@ const initialTabs: DockTab[] = [
 describe("DockStore", () => {
   let dockStore: DockStore;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");

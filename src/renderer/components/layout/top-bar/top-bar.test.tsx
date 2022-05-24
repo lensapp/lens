@@ -76,14 +76,12 @@ describe("<TopBar/>", () => {
   let di: DiContainer;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
-    await di.runSetups();
 
     render = renderFor(di);
   });

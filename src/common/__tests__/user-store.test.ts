@@ -33,10 +33,8 @@ import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import getConfigurationFileModelInjectable
-  from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -44,7 +42,7 @@ describe("user store tests", () => {
   let userStore: UserStore;
   let di: DiContainer;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
@@ -55,8 +53,6 @@ describe("user store tests", () => {
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
-
-    await di.runSetups();
   });
 
   afterEach(() => {

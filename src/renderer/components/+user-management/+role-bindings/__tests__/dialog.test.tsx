@@ -18,7 +18,7 @@ import ipcRendererInjectable from "../../../../app-paths/get-value-from-register
 describe("RoleBindingDialog tests", () => {
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
@@ -27,8 +27,6 @@ describe("RoleBindingDialog tests", () => {
       on: jest.fn(),
       invoke: jest.fn(), // TODO: replace with proper mocking via the IPC bridge
     } as never));
-
-    await di.runSetups();
 
     render = renderFor(di);
 

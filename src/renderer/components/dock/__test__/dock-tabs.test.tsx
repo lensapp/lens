@@ -91,8 +91,6 @@ describe("<DockTabs />", () => {
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
 
-    await di.runSetups();
-
     dockStore = di.inject(dockStoreInjectable);
 
     await dockStore.whenReady;
