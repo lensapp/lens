@@ -11,8 +11,9 @@ const sendToMainInjectable = getInjectable({
   instantiate: (di) => {
     const ipcRenderer = di.inject(ipcRendererInjectable);
 
+    // TODO: Figure out way to improve typing in internals
     return (channelId: string, message: any) => {
-      ipcRenderer.send(channelId, message);
+      ipcRenderer.send(channelId, ...(message ? [message] : []));
     };
   },
 });

@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Channel } from "../channel/channel-injection-token";
-import { channelInjectionToken } from "../channel/channel-injection-token";
+import type { MessageChannel } from "../channel/message-channel-injection-token";
+import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
 
 export interface AskBooleanQuestionParameters { id: string; title: string; question: string }
-export type AskBooleanQuestionChannel = Channel<AskBooleanQuestionParameters>;
+export type AskBooleanQuestionChannel = MessageChannel<AskBooleanQuestionParameters>;
 
 const askBooleanQuestionChannelInjectable = getInjectable({
   id: "ask-boolean-question-channel",
@@ -16,7 +16,7 @@ const askBooleanQuestionChannelInjectable = getInjectable({
     id: "ask-boolean-question",
   }),
 
-  injectionToken: channelInjectionToken,
+  injectionToken: messageChannelInjectionToken,
 });
 
 export default askBooleanQuestionChannelInjectable;

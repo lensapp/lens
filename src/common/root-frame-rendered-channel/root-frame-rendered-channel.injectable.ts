@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Channel } from "../channel/channel-injection-token";
-import { channelInjectionToken } from "../channel/channel-injection-token";
+import type { MessageChannel } from "../channel/message-channel-injection-token";
+import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
 
-export type RootFrameRenderedChannel = Channel;
+export type RootFrameRenderedChannel = MessageChannel;
 
 const rootFrameRenderedChannelInjectable = getInjectable({
   id: "root-frame-rendered-channel",
@@ -15,7 +15,7 @@ const rootFrameRenderedChannelInjectable = getInjectable({
     id: "root-frame-rendered",
   }),
 
-  injectionToken: channelInjectionToken,
+  injectionToken: messageChannelInjectionToken,
 });
 
 export default rootFrameRenderedChannelInjectable;

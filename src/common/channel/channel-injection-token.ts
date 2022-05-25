@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectionToken } from "@ogre-tools/injectable";
 
 export interface Channel<MessageTemplate = void, ReturnTemplate = void> {
   id: string;
@@ -11,6 +10,3 @@ export interface Channel<MessageTemplate = void, ReturnTemplate = void> {
   _returnTemplate?: ReturnTemplate;
 }
 
-export const channelInjectionToken = getInjectionToken<Channel<any, any>>({
-  id: "channel",
-});

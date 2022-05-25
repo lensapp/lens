@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { channelListenerInjectionToken } from "../../../../common/channel/channel-listener-injection-token";
 import rootFrameRenderedChannelInjectable from "../../../../common/root-frame-rendered-channel/root-frame-rendered-channel.injectable";
 import { runManyFor } from "../../../../common/runnable/run-many-for";
 import { afterRootFrameIsReadyInjectionToken } from "../../runnable-tokens/after-root-frame-is-ready-injection-token";
+import { messageChannelListenerInjectionToken } from "../../../../common/channel/message-channel-listener-injection-token";
 
 const rootFrameRenderedChannelListenerInjectable = getInjectable({
   id: "root-frame-rendered-channel-listener",
@@ -29,7 +29,7 @@ const rootFrameRenderedChannelListenerInjectable = getInjectable({
     };
   },
 
-  injectionToken: channelListenerInjectionToken,
+  injectionToken: messageChannelListenerInjectionToken,
 });
 
 export default rootFrameRenderedChannelListenerInjectable;

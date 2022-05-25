@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { sendToChannelInjectionToken } from "../../common/channel/send-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
 import askBooleanQuestionChannelInjectable from "../../common/ask-boolean/ask-boolean-question-channel.injectable";
 import askBooleanPromiseInjectable from "./ask-boolean-promise.injectable";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
@@ -20,7 +20,7 @@ const askBooleanInjectable = getInjectable({
   id: "ask-boolean",
 
   instantiate: (di): AskBoolean => {
-    const sendToChannel = di.inject(sendToChannelInjectionToken);
+    const messageToChannel = di.inject(messageToChannelInjectionToken);
     const askBooleanChannel = di.inject(askBooleanQuestionChannelInjectable);
     const getRandomId = di.inject(getRandomIdInjectable);
 
@@ -29,7 +29,7 @@ const askBooleanInjectable = getInjectable({
 
       const returnValuePromise = di.inject(askBooleanPromiseInjectable, id);
 
-      await sendToChannel(askBooleanChannel, { id, title, question });
+      await messageToChannel(askBooleanChannel, { id, title, question });
 
       return await returnValuePromise.promise;
     };

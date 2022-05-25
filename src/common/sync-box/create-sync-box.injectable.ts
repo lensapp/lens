@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import syncBoxChannelInjectable from "./sync-box-channel.injectable";
-import { sendToChannelInjectionToken } from "../channel/send-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../channel/message-to-channel-injection-token";
 import syncBoxStateInjectable from "./sync-box-state.injectable";
 import type { SyncBox } from "./sync-box-injection-token";
 
@@ -14,7 +14,7 @@ const createSyncBoxInjectable = getInjectable({
 
   instantiate: (di) => {
     const syncBoxChannel = di.inject(syncBoxChannelInjectable);
-    const sendToChannel = di.inject(sendToChannelInjectionToken);
+    const messageToChannel = di.inject(messageToChannelInjectionToken);
     const getSyncBoxState = (id: string) => di.inject(syncBoxStateInjectable, id);
 
     return <TData>(id: string, initialValue: TData): SyncBox<TData> => {
@@ -30,7 +30,7 @@ const createSyncBoxInjectable = getInjectable({
         set: (value) => {
           state.set(value);
 
-          sendToChannel(syncBoxChannel, { id, value });
+          messageToChannel(syncBoxChannel, { id, value });
         },
       };
     };

@@ -7,7 +7,7 @@ import glob from "glob";
 import { memoize, noop } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import getValueFromChannelInjectable from "./channel/get-value-from-channel.injectable";
+import requestFromChannelInjectable from "./channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import { createMemoryHistory } from "history";
@@ -31,7 +31,6 @@ import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
-import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import historyInjectable from "./navigation/history.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
@@ -47,7 +46,7 @@ import provideInitialValuesForSyncBoxesInjectable from "./sync-box/provide-initi
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 
-export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
+export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
     doGeneralOverrides = false,
   } = opts;
@@ -125,7 +124,7 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
 
     di.override(apiManagerInjectable, () => new ApiManager());
 
-    di.override(getValueFromChannelInjectable, () => () => Promise.resolve(undefined as never));
+    di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
     overrideFsWithFakes(di);
 

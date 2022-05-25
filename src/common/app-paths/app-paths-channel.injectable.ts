@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Channel } from "../channel/channel-injection-token";
-import { channelInjectionToken } from "../channel/channel-injection-token";
 import type { AppPaths } from "./app-path-injection-token";
+import type { RequestChannel } from "../channel/request-channel-injection-token";
+import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
 
-export type AppPathsChannel = Channel<AppPaths, AppPaths>;
+export type AppPathsChannel = RequestChannel<void, AppPaths>;
 
 const appPathsChannelInjectable = getInjectable({
   id: "app-paths-channel",
@@ -16,7 +16,7 @@ const appPathsChannelInjectable = getInjectable({
     id: "app-paths",
   }),
 
-  injectionToken: channelInjectionToken,
+  injectionToken: messageChannelInjectionToken,
 });
 
 export default appPathsChannelInjectable;

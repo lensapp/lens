@@ -3,14 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { channelListenerInjectionToken } from "../../common/channel/channel-listener-injection-token";
+import type { AskBooleanAnswerChannel } from "../../common/ask-boolean/ask-boolean-answer-channel.injectable";
 import askBooleanAnswerChannelInjectable from "../../common/ask-boolean/ask-boolean-answer-channel.injectable";
 import askBooleanPromiseInjectable from "./ask-boolean-promise.injectable";
+import type { MessageChannelListener } from "../../common/channel/message-channel-listener-injection-token";
+import { messageChannelListenerInjectionToken } from "../../common/channel/message-channel-listener-injection-token";
+
 
 const askBooleanAnswerChannelListenerInjectable = getInjectable({
   id: "ask-boolean-answer-channel-listener",
 
-  instantiate: (di) => ({
+  instantiate: (di): MessageChannelListener<AskBooleanAnswerChannel> => ({
     channel: di.inject(askBooleanAnswerChannelInjectable),
 
     handler: ({ id, value }) => {
@@ -20,7 +23,7 @@ const askBooleanAnswerChannelListenerInjectable = getInjectable({
     },
   }),
 
-  injectionToken: channelListenerInjectionToken,
+  injectionToken: messageChannelListenerInjectionToken,
 });
 
 export default askBooleanAnswerChannelListenerInjectable;

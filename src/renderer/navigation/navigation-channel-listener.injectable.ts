@@ -3,14 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { channelListenerInjectionToken } from "../../common/channel/channel-listener-injection-token";
-
-
 import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
 import appNavigationChannelInjectable from "../../common/front-end-routing/app-navigation-channel.injectable";
 import clusterFrameNavigationChannelInjectable from "../../common/front-end-routing/cluster-frame-navigation-channel.injectable";
 import focusWindowInjectable from "./focus-window.injectable";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
+import { messageChannelListenerInjectionToken } from "../../common/channel/message-channel-listener-injection-token";
 
 const navigationChannelListenerInjectable = getInjectable({
   id: "navigation-channel-listener",
@@ -36,7 +34,7 @@ const navigationChannelListenerInjectable = getInjectable({
       },
     };
   },
-  injectionToken: channelListenerInjectionToken,
+  injectionToken: messageChannelListenerInjectionToken,
 });
 
 export default navigationChannelListenerInjectable;

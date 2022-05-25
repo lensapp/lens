@@ -3,19 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { channelListenerInjectionToken } from "../../common/channel/channel-listener-injection-token";
-import type { ApplicationUpdateStatusEventId } from "../../common/application-update/application-update-status-channel.injectable";
+import type { ApplicationUpdateStatusChannel, ApplicationUpdateStatusEventId } from "../../common/application-update/application-update-status-channel.injectable";
 import applicationUpdateStatusChannelInjectable from "../../common/application-update/application-update-status-channel.injectable";
 import showInfoNotificationInjectable from "../components/notifications/show-info-notification.injectable";
+import type { MessageChannelListener } from "../../common/channel/message-channel-listener-injection-token";
+import { messageChannelListenerInjectionToken } from "../../common/channel/message-channel-listener-injection-token";
 
 const applicationUpdateStatusListenerInjectable = getInjectable({
   id: "application-update-status-listener",
 
-  instantiate: (di) => {
+  instantiate: (di): MessageChannelListener<ApplicationUpdateStatusChannel> => {
     const channel = di.inject(applicationUpdateStatusChannelInjectable);
     const showInfoNotification = di.inject(showInfoNotificationInjectable);
 
-    const eventHandlers: Record<ApplicationUpdateStatusEventId, { handle: (version: string) => void }> = {
+    const eventHandlers: Record<ApplicationUpdateStatusEventId, { handle: (version?: string) => void }> = {
       "checking-for-updates": {
         handle: () => {
           showInfoNotification("Checking for updates...");
@@ -44,13 +45,13 @@ const applicationUpdateStatusListenerInjectable = getInjectable({
     return {
       channel,
 
-      handler: ({ eventId, version }: { eventId: ApplicationUpdateStatusEventId; version: string }) => {
+      handler: ({ eventId, version }) => {
         eventHandlers[eventId].handle(version);
       },
     };
   },
 
-  injectionToken: channelListenerInjectionToken,
+  injectionToken: messageChannelListenerInjectionToken,
 });
 
 export default applicationUpdateStatusListenerInjectable;
