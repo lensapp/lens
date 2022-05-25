@@ -301,6 +301,9 @@ export interface UpdateChannelInfo {
 }
 
 export const updateChannels = readonly(new Map<string, UpdateChannelInfo>([
+  ["none", {
+    label: "Do Not Update",
+  }],
   ["latest", {
     label: "Stable",
   }],
@@ -311,7 +314,8 @@ export const updateChannels = readonly(new Map<string, UpdateChannelInfo>([
     label: "Alpha",
   }],
 ]));
-export const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
+// export const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
+export const defaultUpdateChannel = "none";
 
 const updateChannel: PreferenceDescription<string> = {
   fromStore(val) {
