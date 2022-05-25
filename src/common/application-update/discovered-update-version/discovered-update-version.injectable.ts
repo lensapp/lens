@@ -13,9 +13,13 @@ const discoveredUpdateVersionInjectable = getInjectable({
   instantiate: (di) => {
     const createSyncBox = di.inject(createSyncBoxInjectable);
 
-    return createSyncBox<{ version: string; updateChannel: UpdateChannel } | null>(
-      "discovered-update-version",
-    );
+    return createSyncBox<
+      | { version: string; updateChannel: UpdateChannel }
+      | null
+      >(
+        "discovered-update-version",
+        null,
+      );
   },
 
   injectionToken: syncBoxInjectionToken,
