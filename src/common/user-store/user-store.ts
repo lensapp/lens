@@ -101,7 +101,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @computed get isAllowedToDowngrade() {
-    return new SemVer(getAppVersion()).prerelease[0] !== this.updateChannel;
+    return true;
   }
 
   startMainReactions() {
