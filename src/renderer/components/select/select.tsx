@@ -22,7 +22,7 @@ const { Menu } = components;
 
 export interface SelectOption<Value> {
   value: Value;
-  label: string;
+  label: React.ReactNode;
   isDisabled?: boolean;
   isSelected?: boolean;
 }

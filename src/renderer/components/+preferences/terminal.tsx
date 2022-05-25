@@ -4,18 +4,20 @@
  */
 
 import React from "react";
+import { action } from "mobx";
 import { observer } from "mobx-react";
 import type { UserStore } from "../../../common/user-store";
 import { SubTitle } from "../layout/sub-title";
 import { Input, InputValidators } from "../input";
 import { Switch } from "../switch";
-import { Select } from "../select";
+import { Select, type SelectOption } from "../select";
 import type { ThemeStore } from "../../themes/store";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import themeStoreInjectable from "../../themes/store.injectable";
 import defaultShellInjectable from "./default-shell.injectable";
+import logger from "../../../common/logger";
 
 interface Dependencies {
   userStore: UserStore;
@@ -41,10 +43,24 @@ const NonInjectedTerminal = observer((
   ];
 
   // fonts must be declared in `fonts.scss` and at `template.html` (if early-preloading required)
-  const supportedCustomFonts = [
+  const supportedCustomFonts: SelectOption<string>[] = [
     "RobotoMono", "Anonymous Pro", "IBM Plex Mono", "JetBrains Mono", "Red Hat Mono",
     "Source Code Pro", "Space Mono", "Ubuntu Mono",
-  ];
+  ].map(customFont => {
+    const { fontFamily, fontSize } = userStore.terminalConfig;
+
+    return {
+      label: <span style={{ fontFamily: customFont, fontSize }}>{customFont}</span>,
+      value: customFont,
+      isSelected: fontFamily === customFont,
+    };
+  });
+
+  const onFontFamilyChange = action(({ value: fontFamily }: SelectOption<string>) => {
+    logger.info(`setting terminal font to ${fontFamily}`);
+
+    userStore.terminalConfig.fontFamily = fontFamily; // save to external storage
+  });
 
   return (
     <Preferences data-testid="terminal-preferences-page">
@@ -97,9 +113,10 @@ const NonInjectedTerminal = observer((
           <SubTitle title="Font family" />
           <Select
             themeName="lens"
+            controlShouldRenderValue
             value={userStore.terminalConfig.fontFamily}
             options={supportedCustomFonts}
-            onChange={opt => userStore.terminalConfig.fontFamily = opt?.value ?? supportedCustomFonts[0]}
+            onChange={onFontFamilyChange as any}
           />
         </section>
       </section>
