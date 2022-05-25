@@ -30,7 +30,7 @@ interface Dependencies {
 export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {
   readonly displayName = "UserStore";
 
-  constructor(private dependencies: Dependencies) {
+  constructor(private readonly dependencies: Dependencies) {
     super({
       configName: "lens-user-store",
       migrations,
