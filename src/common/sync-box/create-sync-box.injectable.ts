@@ -17,8 +17,10 @@ const createSyncBoxInjectable = getInjectable({
     const sendToChannel = di.inject(sendToChannelInjectionToken);
     const getSyncBoxState = (id: string) => di.inject(syncBoxStateInjectable, id);
 
-    return <TData>(id: string): SyncBox<TData> => {
+    return <TData>(id: string, initialValue: TData): SyncBox<TData> => {
       const state = getSyncBoxState(id);
+
+      state.set(initialValue);
 
       return {
         id,

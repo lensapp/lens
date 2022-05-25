@@ -126,12 +126,12 @@ describe("sync-box", () => {
       }, true);
     });
 
-    it("does not know initial value in main", () => {
-      expect(valueInMain).toBeUndefined();
+    it("knows initial value in main", () => {
+      expect(valueInMain).toBe("some-initial-value");
     });
 
-    it("does not know initial value in renderer", () => {
-      expect(valueInRenderer).toBeUndefined();
+    it("knows initial value in renderer", () => {
+      expect(valueInRenderer).toBe("some-initial-value");
     });
 
     describe("when value is set from main", () => {
@@ -174,6 +174,6 @@ const someInjectable = getInjectable({
   instantiate: (di) => {
     const createSyncBox = di.inject(createSyncBoxInjectable);
 
-    return createSyncBox<string>("some-state");
+    return createSyncBox("some-sync-box", "some-initial-value");
   },
 });

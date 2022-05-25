@@ -12,7 +12,7 @@ const progressOfUpdateDownloadInjectable = getInjectable({
   instantiate: (di) => {
     const createSyncBox = di.inject(createSyncBoxInjectable);
 
-    return createSyncBox<number>("progress-of-update-download");
+    return createSyncBox("progress-of-update-download", 0);
   },
 
   injectionToken: syncBoxInjectionToken,
