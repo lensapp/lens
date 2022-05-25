@@ -369,7 +369,7 @@ users:
 
       mockFs(mockOpts);
 
-      mainDi.override(appVersionInjectable, () => "3.7.0");
+      mainDi.override(appVersionInjectable, () => "3.6.0");
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 
