@@ -18,7 +18,8 @@ import { UserStore } from "../common/user-store";
 let installVersion: undefined | string;
 
 export function isAutoUpdateEnabled() {
-  return autoUpdater.isUpdaterActive() && isPublishConfigured;
+  //return autoUpdater.isUpdaterActive() && isPublishConfigured;
+  return false;
 }
 
 function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: UpdateAvailableToBackchannel) {
