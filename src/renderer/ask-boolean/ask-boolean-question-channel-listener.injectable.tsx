@@ -3,28 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { channelListenerInjectionToken } from "../../common/channel/channel-listener-injection-token";
-import type { AskBooleanQuestionParameters } from "../../common/ask-boolean/ask-boolean-question-channel.injectable";
+import type { AskBooleanQuestionChannel } from "../../common/ask-boolean/ask-boolean-question-channel.injectable";
 import askBooleanQuestionChannelInjectable from "../../common/ask-boolean/ask-boolean-question-channel.injectable";
 import showInfoNotificationInjectable from "../components/notifications/show-info-notification.injectable";
 import { Button } from "../components/button";
 import React from "react";
-import { sendToChannelInjectionToken } from "../../common/channel/send-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
 import askBooleanAnswerChannelInjectable from "../../common/ask-boolean/ask-boolean-answer-channel.injectable";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
+import type { MessageChannelListener } from "../../common/channel/message-channel-listener-injection-token";
+import { messageChannelListenerInjectionToken } from "../../common/channel/message-channel-listener-injection-token";
 
 const askBooleanQuestionChannelListenerInjectable = getInjectable({
   id: "ask-boolean-question-channel-listener",
 
-  instantiate: (di) => {
+  instantiate: (di): MessageChannelListener<AskBooleanQuestionChannel> => {
     const questionChannel = di.inject(askBooleanQuestionChannelInjectable);
     const showInfoNotification = di.inject(showInfoNotificationInjectable);
-    const sendToChannel = di.inject(sendToChannelInjectionToken);
+    const messageToChannel = di.inject(messageToChannelInjectionToken);
     const answerChannel = di.inject(askBooleanAnswerChannelInjectable);
     const notificationsStore = di.inject(notificationsStoreInjectable);
 
     const sendAnswerFor = (id: string) => (value: boolean) => {
-      sendToChannel(answerChannel, { id, value });
+      messageToChannel(answerChannel, { id, value });
     };
 
     const closeNotification = (notificationId: string) => {
@@ -39,7 +40,7 @@ const askBooleanQuestionChannelListenerInjectable = getInjectable({
     return {
       channel: questionChannel,
 
-      handler: ({ id: questionId, title, question }: AskBooleanQuestionParameters) => {
+      handler: ({ id: questionId, title, question }) => {
         const notificationId = `ask-boolean-for-${questionId}`;
 
         const sendAnswer = sendAnswerFor(questionId);
@@ -64,7 +65,7 @@ const askBooleanQuestionChannelListenerInjectable = getInjectable({
     };
   },
 
-  injectionToken: channelListenerInjectionToken,
+  injectionToken: messageChannelListenerInjectionToken,
 });
 
 export default askBooleanQuestionChannelListenerInjectable;

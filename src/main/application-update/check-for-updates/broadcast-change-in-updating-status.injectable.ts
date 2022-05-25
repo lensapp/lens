@@ -4,18 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ApplicationUpdateStatusChannelMessage } from "../../../common/application-update/application-update-status-channel.injectable";
-import { sendToChannelInjectionToken } from "../../../common/channel/send-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../../common/channel/message-to-channel-injection-token";
 import applicationUpdateStatusChannelInjectable from "../../../common/application-update/application-update-status-channel.injectable";
 
 const broadcastChangeInUpdatingStatusInjectable = getInjectable({
   id: "broadcast-change-in-updating-status",
 
   instantiate: (di) => {
-    const sendToChannel = di.inject(sendToChannelInjectionToken);
+    const messageToChannel = di.inject(messageToChannelInjectionToken);
     const applicationUpdateStatusChannel = di.inject(applicationUpdateStatusChannelInjectable);
 
     return (data: ApplicationUpdateStatusChannelMessage) => {
-      sendToChannel(applicationUpdateStatusChannel, data);
+      messageToChannel(applicationUpdateStatusChannel, data);
     };
   },
 });

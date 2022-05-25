@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Channel } from "../channel/channel-injection-token";
-import { channelInjectionToken } from "../channel/channel-injection-token";
+import type { MessageChannel } from "../channel/message-channel-injection-token";
+import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
 
-export type SyncBoxChannel = Channel<{ id: string; value: unknown }>;
+export type SyncBoxChannel = MessageChannel<{ id: string; value: any }>;
 
 const syncBoxChannelInjectable = getInjectable({
   id: "sync-box-channel",
@@ -15,7 +15,7 @@ const syncBoxChannelInjectable = getInjectable({
     id: "sync-box-channel",
   }),
 
-  injectionToken: channelInjectionToken,
+  injectionToken: messageChannelInjectionToken,
 });
 
 export default syncBoxChannelInjectable;

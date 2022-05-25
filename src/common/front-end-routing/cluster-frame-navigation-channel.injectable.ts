@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Channel } from "../channel/channel-injection-token";
-import { channelInjectionToken } from "../channel/channel-injection-token";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
+import type { MessageChannel } from "../channel/message-channel-injection-token";
+import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
 
-export type ClusterFrameNavigationChannel = Channel<string>;
+export type ClusterFrameNavigationChannel = MessageChannel<string>;
 
 const clusterFrameNavigationChannelInjectable = getInjectable({
   id: "cluster-frame-navigation-channel",
@@ -16,7 +16,7 @@ const clusterFrameNavigationChannelInjectable = getInjectable({
     id: IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER,
   }),
 
-  injectionToken: channelInjectionToken,
+  injectionToken: messageChannelInjectionToken,
 });
 
 export default clusterFrameNavigationChannelInjectable;

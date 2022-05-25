@@ -18,7 +18,6 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
 import { Sidebar } from "../layout/sidebar";
-import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
 import type { DiContainer } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
@@ -49,6 +48,9 @@ import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tr
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 import { Notifications } from "../notifications/notifications";
 import broadcastThatRootFrameIsRenderedInjectable from "../../frames/root-frame/broadcast-that-root-frame-is-rendered.injectable";
+import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
+import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -95,9 +97,17 @@ interface Environment {
 }
 
 export const getApplicationBuilder = () => {
-  const { rendererDi, mainDi } = getDisForUnitTesting({
+  const mainDi = getMainDi({
     doGeneralOverrides: true,
   });
+
+  const overrideChannelsForWindow = overrideChannels(mainDi);
+
+  const rendererDi = getRendererDi({
+    doGeneralOverrides: true,
+  });
+
+  overrideChannelsForWindow(rendererDi);
 
   const dis = { rendererDi, mainDi };
 
@@ -162,7 +172,7 @@ export const getApplicationBuilder = () => {
     start: () => {},
     stop: () => {},
 
-    setMenuItems:   (items) => {
+    setMenuItems: (items) => {
       trayMenuItemsStateFake = items;
     },
   }));

@@ -9,7 +9,6 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
-import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
@@ -29,7 +28,6 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
-import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
@@ -66,7 +64,7 @@ import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { observable } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
-import ipcMainInjectable from "./app-paths/register-channel/ipc-main/ipc-main.injectable";
+import ipcMainInjectable from "./channel/ipc-main/ipc-main.injectable";
 import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
@@ -86,10 +84,9 @@ import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import periodicalCheckForUpdatesInjectable
-  from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 
-export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
+export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
     doGeneralOverrides = false,
   } = opts;
@@ -142,7 +139,6 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
     di.override(appNameInjectable, () => "some-app-name");
-    di.override(registerChannelInjectable, () => () => undefined);
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });

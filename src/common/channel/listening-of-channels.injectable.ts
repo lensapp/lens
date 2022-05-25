@@ -4,23 +4,26 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { getStartableStoppable } from "../utils/get-startable-stoppable";
-import { channelListenerInjectionToken } from "./channel-listener-injection-token";
-import { enlistChannelListenerInjectionToken } from "./enlist-channel-listener-injection-token";
 import { disposer } from "../utils";
+import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
+import { requestChannelListenerInjectionToken } from "./request-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "./enlist-message-channel-listener-injection-token";
+import { enlistRequestChannelListenerInjectionToken } from "./enlist-request-channel-listener-injection-token";
 
 const listeningOfChannelsInjectable = getInjectable({
   id: "listening-of-channels",
 
   instantiate: (di) => {
-    const enlistChannelListener = di.inject(enlistChannelListenerInjectionToken);
-    const channelListeners = di.injectMany(channelListenerInjectionToken);
+    const enlistMessageChannelListener = di.inject(enlistMessageChannelListenerInjectionToken);
+    const enlistRequestChannelListener = di.inject(enlistRequestChannelListenerInjectionToken);
+    const messageChannelListeners = di.injectMany(messageChannelListenerInjectionToken);
+    const requestChannelListeners = di.injectMany(requestChannelListenerInjectionToken);
 
     return getStartableStoppable("listening-of-channels", () => {
-      const disposers = channelListeners.map(({ channel, handler }) =>
-        enlistChannelListener(channel, handler),
-      );
+      const messageChannelDisposers = messageChannelListeners.map(enlistMessageChannelListener);
+      const requestChannelDisposers = requestChannelListeners.map(enlistRequestChannelListener);
 
-      return disposer(...disposers);
+      return disposer(...messageChannelDisposers, ...requestChannelDisposers);
     });
   },
 });
