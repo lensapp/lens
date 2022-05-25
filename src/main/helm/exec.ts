@@ -23,7 +23,7 @@ export async function execHelm(args: string[], { encoding, ...rest }: BaseEncodi
   try {
     const opts = { ...options };
 
-    opts.env ??= process.env;
+    opts.env ??= { ...process.env };
 
     if (!opts.env.HTTPS_PROXY && UserStore.getInstance().httpsProxy) {
       opts.env.HTTPS_PROXY = UserStore.getInstance().httpsProxy;
