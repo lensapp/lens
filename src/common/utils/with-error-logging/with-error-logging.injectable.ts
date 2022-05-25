@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../logger.injectable";
+import { isPromise } from "../is-promise/is-promise";
 
 export type WithErrorLoggingFor = (
   getErrorMessage: (error: unknown) => string
@@ -44,7 +45,3 @@ const withErrorLoggingInjectable = getInjectable({
 });
 
 export default withErrorLoggingInjectable;
-
-function isPromise(reference: any): reference is Promise<any> {
-  return !!reference?.then;
-}
