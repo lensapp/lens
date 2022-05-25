@@ -3,20 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import ipcRendererInjectable from "../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
+import appPublishDateInjectable from "./app-publish-date.injectable";
 import { AppUpdateWarning } from "./app-update-warning";
 
 const appUpdateWarningInjectable = getInjectable({
   id: "app-update-warning",
 
-  instantiate: () => {
+  instantiate: (di) => {
     AppUpdateWarning.resetInstance();
 
     return AppUpdateWarning.createInstance({
-      releaseDate: "Wed, 04 May 2022 02:35:00 +0300",
+      releaseDate: di.inject(appPublishDateInjectable),
+      ipcRenderer: di.inject(ipcRendererInjectable),
     });
   },
-
-  causesSideEffects: true,
 });
 
 export default appUpdateWarningInjectable;
