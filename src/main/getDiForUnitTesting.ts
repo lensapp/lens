@@ -84,9 +84,10 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
-import startCheckingForUpdatesInjectable from "./application-update/periodical-check-for-updates/start-checking-for-updates.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
+import periodicalCheckForUpdatesInjectable
+  from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -135,7 +136,7 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
 
     di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
 
-    di.override(startCheckingForUpdatesInjectable, () => ({ run: () => {} }));
+    di.override(periodicalCheckForUpdatesInjectable, () => ({ start: () => {}, stop: () => {}, started: false }));
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());

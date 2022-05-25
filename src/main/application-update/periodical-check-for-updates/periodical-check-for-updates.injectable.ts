@@ -28,6 +28,8 @@ const periodicalCheckForUpdatesInjectable = getInjectable({
       };
     });
   },
+
+  causesSideEffects: true,
 });
 
 export default periodicalCheckForUpdatesInjectable;

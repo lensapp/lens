@@ -10,7 +10,7 @@ import publishIsConfiguredInjectable from "../../main/application-update/publish
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import startCheckingForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/start-checking-for-updates.injectable";
+import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 
@@ -24,7 +24,8 @@ describe("periodical checking of updates", () => {
     applicationBuilder = getApplicationBuilder();
 
     applicationBuilder.beforeApplicationStart(({ mainDi }) => {
-      mainDi.unoverride(startCheckingForUpdatesInjectable);
+      mainDi.unoverride(periodicalCheckForUpdatesInjectable);
+      mainDi.permitSideEffects(periodicalCheckForUpdatesInjectable);
 
       processCheckingForUpdatesMock = asyncFn();
 
