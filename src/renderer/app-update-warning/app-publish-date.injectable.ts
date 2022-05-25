@@ -4,12 +4,14 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
+import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
+import { appPublishDate } from "./app-publish-date";
 
 const appPublishDateInjectable = getInjectable({
   id: "app-publish-date",
 
-  instantiate: () => {
-    return "Wed, 04 May 2022 02:35:00 +0300";
+  instantiate: (di) => {
+    return appPublishDate(di.inject(appVersionInjectable));
   },
 });
 
