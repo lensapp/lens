@@ -71,7 +71,28 @@ export interface BaseIconProps {
   material?: string;
 
   /**
-   * Either an SVG data URL or one of the following strings
+   * Either an SVG XML or one of the following names
+   * - configuration
+   * - crane
+   * - group
+   * - helm
+   * - install
+   * - kube
+   * - lens-logo
+   * - license
+   * - logo-lens
+   * - logout
+   * - nodes
+   * - push_off
+   * - push_pin
+   * - spinner
+   * - ssh
+   * - storage
+   * - terminal
+   * - user
+   * - users
+   * - wheel
+   * - workloads
    */
   svg?: string;
 
