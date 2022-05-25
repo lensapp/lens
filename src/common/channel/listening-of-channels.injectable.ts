@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { getStartableStoppable } from "../utils/get-startable-stoppable";
 import { channelListenerInjectionToken } from "./channel-listener-injection-token";
 import { enlistChannelListenerInjectionToken } from "./enlist-channel-listener-injection-token";
+import { disposer } from "../utils";
 
 const listeningOfChannelsInjectable = getInjectable({
   id: "listening-of-channels",
@@ -19,11 +20,7 @@ const listeningOfChannelsInjectable = getInjectable({
         enlistChannelListener(channel, handler),
       );
 
-      return () => {
-        disposers.forEach((disposer) => {
-          disposer();
-        });
-      };
+      return disposer(...disposers);
     });
   },
 });
