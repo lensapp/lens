@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../logger.injectable";
 
 export type WithErrorLoggingFor = (
-  getErrorMessage: (error: Error) => string
+  getErrorMessage: (error: unknown) => string
 ) => <T extends (...args: any[]) => any>(
   toBeDecorated: T
 ) => (...args: Parameters<T>) => ReturnType<T>;
@@ -24,14 +24,19 @@ const withErrorLoggingInjectable = getInjectable({
             const returnValue = toBeDecorated(...args);
 
             if (isPromise(returnValue)) {
-              returnValue.catch((e: Error) => {
-                logger.error(getErrorMessage(e as Error), e);
+              returnValue.catch((e) => {
+                const errorMessage = getErrorMessage(e);
+
+                logger.error(errorMessage, e);
               });
             }
 
             return returnValue;
           } catch (e) {
-            logger.error(getErrorMessage(e as Error), e);
+            const errorMessage = getErrorMessage(e);
+
+            logger.error(errorMessage, e);
+
             throw e;
           }
         };
