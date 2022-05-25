@@ -12,7 +12,7 @@ import { cssNames } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import appUpdateWarningInjectable from "../../app-freshness/app-update-warning.injectable";
+import appUpdateWarningInjectable from "../../app-update-warning/app-update-warning.injectable";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
   update: () => void;

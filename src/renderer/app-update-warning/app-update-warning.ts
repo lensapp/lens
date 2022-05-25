@@ -4,12 +4,14 @@
  */
 import { computed, makeObservable, observable } from "mobx";
 import type { UpdateAvailableFromMain } from "../../common/ipc";
-import { ipcRendererOn, UpdateAvailableChannel } from "../../common/ipc";
+import { UpdateAvailableChannel } from "../../common/ipc";
 import { Singleton } from "../utils";
 import moment from "moment";
+import type { IpcRenderer } from "electron";
 
 interface Dependencies {
-  releaseDate: string;
+  readonly releaseDate: string;
+  readonly ipcRenderer: IpcRenderer;
 }
 
 export class AppUpdateWarning extends Singleton {
@@ -19,15 +21,26 @@ export class AppUpdateWarning extends Singleton {
     super();
     makeObservable(this);
 
-    ipcRendererOn(UpdateAvailableChannel, (event, ...[, updateInfo]: UpdateAvailableFromMain) => {
-      this.updateReleaseDate = updateInfo.releaseDate;
+    dependencies.ipcRenderer.on(UpdateAvailableChannel, (event, ...[, updateInfo]: UpdateAvailableFromMain) => {
+      this.downloadedUpdateDate = updateInfo?.releaseDate;
     });
+  }
+
+  set downloadedUpdateDate(date: string) {
+    this.updateReleaseDate = date;
   }
 
   @computed
   get warningLevel(): "high" | "medium" | "light" | "" {
-    const update = moment(this.updateReleaseDate);
-    const release = moment(this.dependencies.releaseDate);
+    const { updateReleaseDate, dependencies } = this;
+    const { releaseDate } = dependencies;
+
+    if (!updateReleaseDate || !releaseDate) {
+      return "";
+    }
+
+    const update = moment(updateReleaseDate);
+    const release = moment(releaseDate);
 
     const duration = moment.duration(update.diff(release));
     const days = duration.asDays();
