@@ -48,7 +48,6 @@ describe("preferences - navigation to telemetry preferences", () => {
     describe("when extension with telemetry preference items gets enabled", () => {
       beforeEach(() => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-
         const testExtensionWithTelemetryPreferenceItems = getRendererExtensionFake(extensionStubWithTelemetryPreferenceItems);
 
         applicationBuilder.addExtensions(
@@ -93,7 +92,6 @@ describe("preferences - navigation to telemetry preferences", () => {
 
     it("given extensions but no telemetry preference items, does not show link for telemetry preferences", () => {
       const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-
       const testExtensionWithTelemetryPreferenceItems = getRendererExtensionFake({
         id: "some-test-extension-id",
         name: "some-test-extension-name",

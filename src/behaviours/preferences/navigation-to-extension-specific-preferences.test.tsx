@@ -46,7 +46,6 @@ describe("preferences - navigation to extension specific preferences", () => {
     describe("when extension with specific preferences is enabled", () => {
       beforeEach(() => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
 
         applicationBuilder.addExtensions(testExtension);
@@ -96,7 +95,6 @@ describe("preferences - navigation to extension specific preferences", () => {
 const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
   id: "some-extension-id",
   name: "some-extension-name",
-
   appPreferences: [
     {
       title: "Some preference item",
