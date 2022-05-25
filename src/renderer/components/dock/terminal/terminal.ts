@@ -208,12 +208,14 @@ export class Terminal {
     logger.info(`[TERMINAL]: set fontSize to ${fontSize}`);
 
     this.xterm.options.fontSize = fontSize;
+    this.fit();
   };
 
   setFontFamily = (fontFamily: string) => {
     logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
 
     this.xterm.options.fontFamily = fontFamily;
+    this.fit();
 
     // provide css-variable within `:root {}`
     document.documentElement.style.setProperty("--font-terminal", fontFamily);
