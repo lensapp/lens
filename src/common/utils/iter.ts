@@ -233,3 +233,18 @@ export function every<T>(src: Iterable<T>, fn: (val: T) => any): boolean {
 
   return true;
 }
+
+/**
+ * Takes two iterators and creates a new iterator over both in sequence.
+ * @param first The first iterable to iterate over
+ * @param second The second iterable to iterate over
+ */
+export function* chain<T>(first: Iterable<T>, second: Iterable<T>): Iterable<T> {
+  for (const item of first) {
+    yield item;
+  }
+
+  for (const item of second) {
+    yield item;
+  }
+}
