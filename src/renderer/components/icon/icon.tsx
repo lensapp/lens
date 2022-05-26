@@ -13,7 +13,57 @@ import { autoBind, cssNames } from "../../utils";
 import type { TooltipDecoratorProps } from "../tooltip";
 import { withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
-import { decode } from "../../../common/utils/base64";
+import Configuration from "./configuration.svg";
+import Crane from "./crane.svg";
+import Group from "./group.svg";
+import Helm from "./helm.svg";
+import Install from "./install.svg";
+import Kube from "./kube.svg";
+import LensLogo from "./lens-logo.svg";
+import License from "./license.svg";
+import LogoLens from "./logo-lens.svg";
+import Logout from "./logout.svg";
+import Nodes from "./nodes.svg";
+import PushOff from "./push_off.svg";
+import PushPin from "./push_pin.svg";
+import Spinner from "./spinner.svg";
+import Ssh from "./ssh.svg";
+import Storage from "./storage.svg";
+import Terminal from "./terminal.svg";
+import User from "./user.svg";
+import Users from "./users.svg";
+import Wheel from "./wheel.svg";
+import Workloads from "./workloads.svg";
+
+/**
+ * Mapping between the local file names and the svgs
+ *
+ * Because we only really want a fixed list of bundled icons, this is safer so that consumers of
+ * `<Icon>` cannot pass in a `../some/path`.
+ */
+const localSvgIcons = new Map([
+  ["configuration", Configuration],
+  ["crane", Crane],
+  ["group", Group],
+  ["helm", Helm],
+  ["install", Install],
+  ["kube", Kube],
+  ["lens-logo", LensLogo],
+  ["license", License],
+  ["logo-lens", LogoLens],
+  ["logout", Logout],
+  ["nodes", Nodes],
+  ["push_off", PushOff],
+  ["push_pin", PushPin],
+  ["spinner", Spinner],
+  ["ssh", Ssh],
+  ["storage", Storage],
+  ["terminal", Terminal],
+  ["user", User],
+  ["users", Users],
+  ["wheel", Wheel],
+  ["workloads", Workloads],
+]);
 
 export interface BaseIconProps {
    /**
@@ -22,7 +72,28 @@ export interface BaseIconProps {
   material?: string;
 
   /**
-   * Either an SVG data URL or one of the following strings
+   * Either an SVG XML or one of the following names
+   * - configuration
+   * - crane
+   * - group
+   * - helm
+   * - install
+   * - kube
+   * - lens-logo
+   * - license
+   * - logo-lens
+   * - logout
+   * - nodes
+   * - push_off
+   * - push_pin
+   * - spinner
+   * - ssh
+   * - storage
+   * - terminal
+   * - user
+   * - users
+   * - wheel
+   * - workloads
    */
   svg?: string;
 
@@ -87,7 +158,8 @@ export class Icon extends React.PureComponent<IconProps> {
   };
 
   static isSvg(content: string) {
-    return String(content).includes("svg+xml"); // data-url for raw svg-icon
+    // source code of the asset
+    return String(content).includes("<svg");
   }
 
   constructor(props: IconProps) {
@@ -155,12 +227,16 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render as inline svg-icon
     if (typeof svg === "string") {
-      const dataUrlPrefix = "data:image/svg+xml;base64,";
-      const svgIconDataUrl = svg.startsWith(dataUrlPrefix) ? svg : require(`./${svg}.svg`);
-      const svgIconText = typeof svgIconDataUrl == "string" // decode xml from data-url
-        ? decode(svgIconDataUrl.replace(dataUrlPrefix, "")) : "";
+      const svgIconText = Icon.isSvg(svg)
+        ? svg
+        : localSvgIcons.get(svg) ?? "";
 
-      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }} />;
+      iconContent = (
+        <span
+          className="icon"
+          dangerouslySetInnerHTML={{ __html: svgIconText }}
+        />
+      );
     }
 
     // render as material-icon
