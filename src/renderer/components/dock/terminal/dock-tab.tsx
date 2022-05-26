@@ -77,12 +77,7 @@ class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> exte
       <DockTab
         {...tabProps}
         className={className}
-        icon={(
-          <Icon
-            svg="terminal"
-            smallest
-          />
-        )}
+        icon={<Icon material="terminal" />}
         moreActions={this.isDisconnected && (
           <Icon
             small
