@@ -13,7 +13,7 @@ interface Dependencies {
 
 export class AppUpdateWarning extends Singleton {
   @observable warningLevel: "high" | "medium" | "light" | "" = "";
-  @observable private updateAvailableDate: Date | null = null;
+  @observable private updateAvailableDate: Date | null = this.getDateFromSessionStorage();
   private interval: NodeJS.Timeout | null = null;
 
   constructor(dependencies: Dependencies) {
@@ -27,9 +27,28 @@ export class AppUpdateWarning extends Singleton {
     });
   }
 
+  saveDateToSessionStorage() {
+    if (this.updateAvailableDate) {
+      window.sessionStorage.setItem("when-update-available", this.updateAvailableDate.toISOString());
+    }
+  }
+
+  getDateFromSessionStorage() {
+    const value = window.sessionStorage.getItem("when-update-available");
+
+    if (!value) {
+      return null;
+    }
+
+    const date = new Date(value);
+
+    return isNaN(date.getTime()) ? null : date;
+  }
+
   setUpdateAvailableDate() {
     if (!this.updateAvailableDate) {
       this.updateAvailableDate = new Date();
+      this.saveDateToSessionStorage();
     }
   }
 
