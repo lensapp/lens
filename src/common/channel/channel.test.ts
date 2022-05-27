@@ -13,13 +13,21 @@ import createLensWindowInjectable from "../../main/start-main-application/lens-w
 import closeAllWindowsInjectable from "../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
 import type { MessageChannel } from "./message-channel-injection-token";
+import type { RequestFromChannel } from "./request-from-channel-injection-token";
+import { requestFromChannelInjectionToken } from "./request-from-channel-injection-token";
+import type { RequestChannel } from "./request-channel-injection-token";
+import { requestChannelListenerInjectionToken } from "./request-channel-listener-injection-token";
+import type { AsyncFnMock } from "@async-fn/jest";
+import asyncFn from "@async-fn/jest";
+import { getPromiseStatus } from "../test-utils/get-promise-status";
 
-type TestChannel = MessageChannel<string>;
+type TestMessageChannel = MessageChannel<string>;
+type TestRequestChannel = RequestChannel<string, string>;
 
 describe("channel", () => {
   describe("messaging from main to renderer, given listener for channel in a window and application has started", () => {
-    let testChannel: TestChannel;
-    let testListenerInWindowMock: jest.Mock;
+    let testMessageChannel: TestMessageChannel;
+    let messageListenerInWindowMock: jest.Mock;
     let mainDi: DiContainer;
     let messageToChannel: MessageToChannel;
 
@@ -29,15 +37,15 @@ describe("channel", () => {
       mainDi = applicationBuilder.dis.mainDi;
       const rendererDi = applicationBuilder.dis.rendererDi;
 
-      testListenerInWindowMock = jest.fn();
+      messageListenerInWindowMock = jest.fn();
 
       const testChannelListenerInTestWindowInjectable = getInjectable({
         id: "test-channel-listener-in-test-window",
 
         instantiate: (di) => ({
-          channel: di.inject(testChannelInjectable),
+          channel: di.inject(testMessageChannelInjectable),
 
-          handler: testListenerInWindowMock,
+          handler: messageListenerInWindowMock,
         }),
 
         injectionToken: messageChannelListenerInjectionToken,
@@ -46,10 +54,10 @@ describe("channel", () => {
       rendererDi.register(testChannelListenerInTestWindowInjectable);
 
       // Notice how test channel has presence in both DIs, being from common
-      mainDi.register(testChannelInjectable);
-      rendererDi.register(testChannelInjectable);
+      mainDi.register(testMessageChannelInjectable);
+      rendererDi.register(testMessageChannelInjectable);
 
-      testChannel = mainDi.inject(testChannelInjectable);
+      testMessageChannel = mainDi.inject(testMessageChannelInjectable);
 
       messageToChannel = mainDi.inject(
         messageToChannelInjectionToken,
@@ -72,17 +80,17 @@ describe("channel", () => {
       });
 
       it("when sending message, triggers listener in window", () => {
-        messageToChannel(testChannel, "some-message");
+        messageToChannel(testMessageChannel, "some-message");
 
-        expect(testListenerInWindowMock).toHaveBeenCalledWith("some-message");
+        expect(messageListenerInWindowMock).toHaveBeenCalledWith("some-message");
       });
 
       it("given window is hidden, when sending message, does not trigger listener in window", () => {
         someWindowFake.close();
 
-        messageToChannel(testChannel, "some-message");
+        messageToChannel(testMessageChannel, "some-message");
 
-        expect(testListenerInWindowMock).not.toHaveBeenCalled();
+        expect(messageListenerInWindowMock).not.toHaveBeenCalled();
       });
     });
 
@@ -93,9 +101,9 @@ describe("channel", () => {
       await someWindowFake.show();
       await someOtherWindowFake.show();
 
-      messageToChannel(testChannel, "some-message");
+      messageToChannel(testMessageChannel, "some-message");
 
-      expect(testListenerInWindowMock.mock.calls).toEqual([
+      expect(messageListenerInWindowMock.mock.calls).toEqual([
         ["some-message"],
         ["some-message"],
       ]);
@@ -103,8 +111,8 @@ describe("channel", () => {
   });
 
   describe("messaging from renderer to main, given listener for channel in a main and application has started", () => {
-    let testChannel: TestChannel;
-    let testListenerInMainMock: jest.Mock;
+    let testMessageChannel: TestMessageChannel;
+    let messageListenerInMainMock: jest.Mock;
     let rendererDi: DiContainer;
     let mainDi: DiContainer;
     let messageToChannel: MessageToChannel;
@@ -115,15 +123,15 @@ describe("channel", () => {
       mainDi = applicationBuilder.dis.mainDi;
       rendererDi = applicationBuilder.dis.rendererDi;
 
-      testListenerInMainMock = jest.fn();
+      messageListenerInMainMock = jest.fn();
 
       const testChannelListenerInMainInjectable = getInjectable({
         id: "test-channel-listener-in-main",
 
         instantiate: (di) => ({
-          channel: di.inject(testChannelInjectable),
+          channel: di.inject(testMessageChannelInjectable),
 
-          handler: testListenerInMainMock,
+          handler: messageListenerInMainMock,
         }),
 
         injectionToken: messageChannelListenerInjectionToken,
@@ -132,10 +140,10 @@ describe("channel", () => {
       mainDi.register(testChannelListenerInMainInjectable);
 
       // Notice how test channel has presence in both DIs, being from common
-      mainDi.register(testChannelInjectable);
-      rendererDi.register(testChannelInjectable);
+      mainDi.register(testMessageChannelInjectable);
+      rendererDi.register(testMessageChannelInjectable);
 
-      testChannel = rendererDi.inject(testChannelInjectable);
+      testMessageChannel = rendererDi.inject(testMessageChannelInjectable);
 
       messageToChannel = rendererDi.inject(
         messageToChannelInjectionToken,
@@ -145,23 +153,96 @@ describe("channel", () => {
     });
 
     it("when sending message, triggers listener in main", () => {
-      messageToChannel(testChannel, "some-message");
+      messageToChannel(testMessageChannel, "some-message");
 
-      expect(testListenerInMainMock).toHaveBeenCalledWith("some-message");
+      expect(messageListenerInMainMock).toHaveBeenCalledWith("some-message");
+    });
+  });
+
+  describe("requesting from main in renderer, given listener for channel in a main and application has started", () => {
+    let testRequestChannel: TestRequestChannel;
+    let requestListenerInMainMock: AsyncFnMock<(arg: string) => string>;
+    let rendererDi: DiContainer;
+    let mainDi: DiContainer;
+    let requestFromChannel: RequestFromChannel;
+
+    beforeEach(async () => {
+      const applicationBuilder = getApplicationBuilder();
+
+      mainDi = applicationBuilder.dis.mainDi;
+      rendererDi = applicationBuilder.dis.rendererDi;
+
+      requestListenerInMainMock = asyncFn();
+
+      const testChannelListenerInMainInjectable = getInjectable({
+        id: "test-channel-listener-in-main",
+
+        instantiate: (di) => ({
+          channel: di.inject(testRequestChannelInjectable),
+
+          handler: requestListenerInMainMock,
+        }),
+
+        injectionToken: requestChannelListenerInjectionToken,
+      });
+
+      mainDi.register(testChannelListenerInMainInjectable);
+
+      // Notice how test channel has presence in both DIs, being from common
+      mainDi.register(testRequestChannelInjectable);
+      rendererDi.register(testRequestChannelInjectable);
+
+      testRequestChannel = rendererDi.inject(testRequestChannelInjectable);
+
+      requestFromChannel = rendererDi.inject(
+        requestFromChannelInjectionToken,
+      );
+
+      await applicationBuilder.render();
+    });
+
+    describe("when requesting from channel", () => {
+      let actualPromise: Promise<string>;
+
+      beforeEach(() => {
+        actualPromise = requestFromChannel(testRequestChannel, "some-request");
+      });
+
+      it("triggers listener in main", () => {
+        expect(requestListenerInMainMock).toHaveBeenCalledWith("some-request");
+      });
+
+      it("does not resolve yet", async () => {
+        const promiseStatus = await getPromiseStatus(actualPromise);
+
+        expect(promiseStatus.fulfilled).toBe(false);
+      });
+
+      it("when main resolves with response, resolves with response", async () => {
+        await requestListenerInMainMock.resolve("some-response");
+
+        const actual = await actualPromise;
+
+        expect(actual).toBe("some-response");
+      });
     });
   });
 });
 
-const testChannelInjectable = getInjectable({
-  id: "some-test-channel",
+const testMessageChannelInjectable = getInjectable({
+  id: "some-message-test-channel",
 
-  instantiate: () => {
-    const channelId = "some-channel-id";
+  instantiate: (): TestMessageChannel => ({
+    id: "some-message-channel-id",
+  }),
+});
 
-    return {
-      id: channelId,
-    };
-  },
+const testRequestChannelInjectable = getInjectable({
+  id: "some-request-test-channel",
+
+  instantiate: (): TestRequestChannel => ({
+    id: "some-request-channel-id",
+  }),
 });
 
 const createTestWindow = (di: DiContainer, id: string) => {
