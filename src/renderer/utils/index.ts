@@ -9,7 +9,6 @@ export * from "../../common/event-emitter";
 
 export * from "./cssNames";
 export * from "./cssVar";
-export * from "./display-booleans";
 export * from "./display-mode";
 export * from "./interval";
 export * from "./isMiddleClick";

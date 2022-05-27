@@ -8,7 +8,7 @@ import type { TableSortBy, TableSortParams } from "./table";
 
 import type { ReactNode } from "react";
 import React from "react";
-import { autoBind, cssNames, displayBooleans } from "../../utils";
+import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 
@@ -44,11 +44,6 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
    * mark checkbox as checked or not
    */
   isChecked?: boolean;
-
-  /**
-   * show "true" or "false" for all of the children elements are "typeof boolean"
-   */
-  renderBoolean?: boolean;
 
   /**
    * column name, must be same as key in sortable object <Table sortable={}/>
@@ -136,7 +131,6 @@ export class TableCell extends React.Component<TableCellProps> {
       _nowrap,
       children,
       title,
-      renderBoolean: displayBoolean = false,
       showWithColumn,
       ...cellProps
     } = this.props;
@@ -147,7 +141,7 @@ export class TableCell extends React.Component<TableCellProps> {
       nowrap: _nowrap,
       sorting: _sort && typeof sortBy === "string",
     });
-    const content = displayBooleans(displayBoolean, title || children);
+    const content = title || children;
 
     return (
       <div
