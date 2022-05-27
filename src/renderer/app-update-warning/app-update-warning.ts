@@ -2,61 +2,122 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { computed, makeObservable, observable } from "mobx";
-import type { UpdateAvailableFromMain } from "../../common/ipc";
+import { makeObservable, observable } from "mobx";
 import { UpdateAvailableChannel } from "../../common/ipc";
 import { Singleton } from "../utils";
-import moment from "moment";
 import type { IpcRenderer } from "electron";
 
 interface Dependencies {
-  readonly releaseDate: string;
   readonly ipcRenderer: IpcRenderer;
 }
 
 export class AppUpdateWarning extends Singleton {
-  @observable updateReleaseDate = "";
+  @observable warningLevel: "high" | "medium" | "light" | "" = "";
+  @observable private updateAvailableDate: Date | null = null;
+  private interval: NodeJS.Timeout | null = null;
 
-  constructor(private dependencies: Dependencies) {
+  constructor(dependencies: Dependencies) {
     super();
     makeObservable(this);
 
-    dependencies.ipcRenderer.on(UpdateAvailableChannel, (event, ...[, updateInfo]: UpdateAvailableFromMain) => {
-      this.downloadedUpdateDate = updateInfo?.releaseDate;
+    dependencies.ipcRenderer.on(UpdateAvailableChannel, () => {
+      this.setUpdateAvailableDate();
+      this.setWarningLevel();
+      this.startRefreshLevelInterval();
     });
   }
 
-  set downloadedUpdateDate(date: string) {
-    this.updateReleaseDate = date;
+  setUpdateAvailableDate() {
+    if (!this.updateAvailableDate) {
+      this.updateAvailableDate = new Date();
+    }
   }
 
-  @computed
-  get warningLevel(): "high" | "medium" | "light" | "" {
-    const { updateReleaseDate, dependencies } = this;
-    const { releaseDate } = dependencies;
+  private startRefreshLevelInterval() {
+    if (!this.interval) {
+      this.interval = setInterval(() => {
+        this.setWarningLevel();
+      }, 1000 * 60); // Once a day
+    }
+  }
 
-    if (!updateReleaseDate || !releaseDate) {
-      return "";
+  private stopRefreshLevelInterval() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
+
+  private get daysAfterUpdateAvailable() {
+    if (!this.updateAvailableDate) {
+      return 0;
     }
 
-    const update = moment(updateReleaseDate);
-    const release = moment(releaseDate);
+    const today = new Date();
+    const elapsedTime = today.getTime() - this.updateAvailableDate.getTime();
+    const elapsedDays = elapsedTime / (1000 * 60 * 60 * 24);
 
-    const duration = moment.duration(update.diff(release));
-    const days = duration.asDays();
+    return elapsedDays;
+  }
 
-    if (days >= 27) {
-      return "high";
+  get minutesAfterUpdateAvailable() {
+    if (!this.updateAvailableDate) {
+      return 0;
     }
 
-    if (days >= 25 && days < 27) {
-      return "medium";
-    }
+    const today = new Date();
+    const elapsedTime = today.getTime() - this.updateAvailableDate.getTime();
+    const elapsedMinutes = Math.floor(elapsedTime / (1000 * 60));
 
-    if (days >= 20 && days < 25) {
-      return "light";
-    }
+    return elapsedMinutes;
+  }
 
-    return "";
+  // private setHighWarningLevel(elapsedDays: number) {
+  //   if (elapsedDays >= 25) {
+  //     this.warningLevel = "high";
+  //   }
+  // }
+
+  // private setMediumWarningLevel(elapsedDays: number) {
+  //   if (elapsedDays >= 20 && elapsedDays < 25) {
+  //     this.warningLevel = "medium";
+  //   }
+  // }
+
+  // private setLightWarningLevel(elapsedDays: number) {
+  //   if (elapsedDays < 20) {
+  //     this.warningLevel = "light";
+  //   }
+  // }
+
+  private setHighWarningLevel(elapsedDays: number) {
+    if (elapsedDays >= 6) {
+      this.warningLevel = "high";
+    }
+  }
+
+  private setMediumWarningLevel(elapsedDays: number) {
+    if (elapsedDays >= 2 && elapsedDays < 4) {
+      this.warningLevel = "medium";
+    }
+  }
+
+  private setLightWarningLevel(elapsedDays: number) {
+    if (elapsedDays < 2) {
+      this.warningLevel = "light";
+    }
+  }
+
+  private setWarningLevel() {
+    const days = this.minutesAfterUpdateAvailable;
+
+    this.setHighWarningLevel(days);
+    this.setMediumWarningLevel(days);
+    this.setLightWarningLevel(days);
+  }
+
+  reset() {
+    this.warningLevel = "";
+    this.updateAvailableDate = null;
+    this.stopRefreshLevelInterval();
   }
 }
