@@ -12,17 +12,19 @@ import { cssNames } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import appUpdateWarningInjectable from "../../app-update-warning/app-update-warning.injectable";
+import { observer } from "mobx-react";
+import appUpdateWarningLevelInjectable from "../../app-update-warning/app-update-warning-level.injectable";
+import type { IComputedValue } from "mobx";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
   update: () => void;
 }
 
 interface Dependencies {
-  warningLevel?: "light" | "medium" | "high" | "";
+  warningLevel?: IComputedValue<"light" | "medium" | "high" | "">;
 }
 
-export function NonInjectedUpdateButton({ warningLevel, update, id }: UpdateButtonProps & Dependencies) {
+export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: UpdateButtonProps & Dependencies) => {
   const buttonId = id ?? "update-lens-button";
   const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
@@ -42,8 +44,8 @@ export function NonInjectedUpdateButton({ warningLevel, update, id }: UpdateButt
         data-warning-level={warningLevel}
         id={buttonId}
         className={cssNames(styles.updateButton, {
-          [styles.warningHigh]: warningLevel === "high",
-          [styles.warningMedium]: warningLevel === "medium",
+          [styles.warningHigh]: warningLevel.get() === "high",
+          [styles.warningMedium]: warningLevel.get() === "medium",
         })}
       >
         Update
@@ -66,15 +68,13 @@ export function NonInjectedUpdateButton({ warningLevel, update, id }: UpdateButt
       </Menu>
     </>
   );
-}
+});
 
 export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(NonInjectedUpdateButton, {
   getProps: (di, props) => {
-    const store = di.inject(appUpdateWarningInjectable);
-
     return {
       ...props,
-      warningLevel: store.warningLevel,
+      warningLevel: di.inject(appUpdateWarningLevelInjectable),
     };
   },
 });
