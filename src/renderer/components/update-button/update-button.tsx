@@ -15,13 +15,14 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import appUpdateWarningLevelInjectable from "../../app-update-warning/app-update-warning-level.injectable";
 import type { IComputedValue } from "mobx";
+import updateAppInjectable from "./update-app.injectable";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
-  update: () => void;
 }
 
 interface Dependencies {
   warningLevel?: IComputedValue<"light" | "medium" | "high" | "">;
+  update: () => void;
 }
 
 export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: UpdateButtonProps & Dependencies) => {
@@ -33,7 +34,7 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
     setOpened(!opened);
   };
 
-  if (!warningLevel) {
+  if (!warningLevel || !warningLevel.get()) {
     return null;
   }
 
@@ -41,7 +42,7 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
     <>
       <button
         data-testid="update-button"
-        data-warning-level={warningLevel}
+        data-warning-level={warningLevel.get()}
         id={buttonId}
         className={cssNames(styles.updateButton, {
           [styles.warningHigh]: warningLevel.get() === "high",
@@ -75,6 +76,7 @@ export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(Non
     return {
       ...props,
       warningLevel: di.inject(appUpdateWarningLevelInjectable),
+      update: di.inject(updateAppInjectable),
     };
   },
 });

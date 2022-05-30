@@ -130,7 +130,7 @@ const NonInjectedTopBar = observer(({
           onClick={goForward}
           disabled={!nextEnabled.get()}
         />
-        <UpdateButton update={noop} />
+        <UpdateButton />
       </div>
       <div className={styles.items}>
         {renderRegisteredItems(items.get())}
