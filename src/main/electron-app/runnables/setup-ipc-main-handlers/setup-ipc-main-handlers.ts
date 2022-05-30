@@ -9,7 +9,7 @@ import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHand
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../../common/app-event-bus/event-bus";
-import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
+import { AutoUpdateQuitAndInstalledChannel, broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster-manager";
@@ -24,6 +24,7 @@ import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
 import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
 import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
+import { quitAndInstallUpdate } from "../../../app-updater";
 
 interface Dependencies {
   directoryForLensLocalStorage: string;
@@ -169,6 +170,10 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
 
   ipcMainHandle(getNativeThemeChannel, () => {
     return operatingSystemTheme.get();
+  });
+
+  ipcMainOn(AutoUpdateQuitAndInstalledChannel, () => {
+    quitAndInstallUpdate();
   });
 
   clusterStore.provideInitialFromMain();
