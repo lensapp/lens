@@ -12,7 +12,7 @@ import sendToMainInjectable from "../../renderer/channel/send-to-main.injectable
 export const overrideMessagingFromWindowToMain = (mainDi: DiContainer) => {
   const messageChannelListenerFakesForMain = new Map<
     string,
-    Set<MessageChannelListener<MessageChannel<unknown>>>
+    Set<MessageChannelListener<MessageChannel<any>>>
   >();
 
   mainDi.override(
@@ -33,13 +33,13 @@ export const overrideMessagingFromWindowToMain = (mainDi: DiContainer) => {
 
       // TODO: Figure out typing
       listeners.add(
-        listener as unknown as MessageChannelListener<MessageChannel<unknown>>,
+        listener as unknown as MessageChannelListener<MessageChannel<any>>,
       );
 
       return () => {
         // TODO: Figure out typing
         listeners.delete(
-          listener as unknown as MessageChannelListener<MessageChannel<unknown>>,
+          listener as unknown as MessageChannelListener<MessageChannel<any>>,
         );
       };
     },

@@ -17,7 +17,7 @@ const messageToChannelInjectable = getInjectable({
 
     // TODO: Figure out way to improve typing in internals
     // Notice that this should be injected using "messageToChannelInjectionToken" which is typed correctly.
-    return (channel: MessageChannel<unknown>, message?: unknown) => {
+    return (channel: MessageChannel<any>, message?: unknown) => {
       const visibleWindows = pipeline(
         getAllLensWindows(),
         filter((lensWindow) => !!lensWindow.visible),
