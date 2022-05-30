@@ -341,7 +341,7 @@
     "@types/uuid": "^8.3.4",
     "@types/webpack": "^5.28.0",
     "@types/webpack-dev-server": "^4.7.2",
-    "@types/webpack-env": "^1.16.4",
+    "@types/webpack-env": "^1.17.0",
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.17.0",
