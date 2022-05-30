@@ -404,7 +404,7 @@
     "ts-jest": "26.5.6",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
-    "type-fest": "^2.12.2",
+    "type-fest": "^2.13.0",
     "typed-emitter": "^1.4.0",
     "typedoc": "0.22.15",
     "typedoc-plugin-markdown": "^3.11.12",
