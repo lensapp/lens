@@ -7,6 +7,7 @@ import downloadPlatformUpdateInjectable from "../download-platform-update/downlo
 import updateIsBeingDownloadedInjectable from "../../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
 import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import { action, runInAction } from "mobx";
+import type { ProgressOfDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 import progressOfUpdateDownloadInjectable from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 
 const downloadUpdateInjectable = getInjectable({
@@ -18,13 +19,13 @@ const downloadUpdateInjectable = getInjectable({
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const progressOfUpdateDownload = di.inject(progressOfUpdateDownloadInjectable);
 
-    const updateDownloadProgress = action((percentage: number) => {
-      progressOfUpdateDownload.set(percentage);
+    const updateDownloadProgress = action((progressOfDownload: ProgressOfDownload) => {
+      progressOfUpdateDownload.set(progressOfDownload);
     });
 
     return async () => {
       runInAction(() => {
-        progressOfUpdateDownload.set(0);
+        progressOfUpdateDownload.set({ percentage: 0 });
         downloadingUpdateState.set(true);
       });
 

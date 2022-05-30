@@ -6,9 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import electronUpdaterInjectable from "../../electron-app/features/electron-updater.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { ProgressInfo } from "electron-updater";
+import type { ProgressOfDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 
 export type DownloadPlatformUpdate = (
-  onDownloadProgress: (percentage: number) => void
+  onDownloadProgress: (arg: ProgressOfDownload) => void
 ) => Promise<{ downloadWasSuccessful: boolean }>;
 
 const downloadPlatformUpdateInjectable = getInjectable({
@@ -19,9 +20,10 @@ const downloadPlatformUpdateInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
 
     return async (onDownloadProgress) => {
-      onDownloadProgress(0);
+      onDownloadProgress({ percentage: 0 });
 
-      const updateDownloadProgress = ({ percent }: ProgressInfo) => onDownloadProgress(percent);
+      const updateDownloadProgress = ({ percent: percentage }: ProgressInfo) =>
+        onDownloadProgress({ percentage });
 
       electronUpdater.on("download-progress", updateDownloadProgress);
 
