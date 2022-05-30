@@ -25,7 +25,7 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
   if (arg.doUpdate) {
     if (arg.now) {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
-      autoUpdater.quitAndInstall(true, true);
+      quitAndInstallUpdate();
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
     }
@@ -130,4 +130,8 @@ export async function checkForUpdates(): Promise<void> {
   } catch (error) {
     logger.error(`${AutoUpdateLogPrefix}: failed with an error`, error);
   }
+}
+
+export function quitAndInstallUpdate() {
+  autoUpdater.quitAndInstall(true, true);
 }
