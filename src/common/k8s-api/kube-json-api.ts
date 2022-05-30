@@ -43,6 +43,7 @@ export interface KubeJsonApiData extends JsonApiData {
   kind: string;
   apiVersion: string;
   metadata: KubeJsonApiMetadata;
+  spec?: unknown;
 }
 
 export interface KubeJsonApiError extends JsonApiError {
