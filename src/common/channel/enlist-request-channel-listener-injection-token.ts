@@ -7,7 +7,7 @@ import type { RequestChannel } from "./request-channel-injection-token";
 import type { RequestChannelListener } from "./request-channel-listener-injection-token";
 
 export type EnlistRequestChannelListener = <
-  TChannel extends RequestChannel<unknown, unknown>,
+  TChannel extends RequestChannel<any, any>,
 >(listener: RequestChannelListener<TChannel>) => () => void;
 
 export const enlistRequestChannelListenerInjectionToken =

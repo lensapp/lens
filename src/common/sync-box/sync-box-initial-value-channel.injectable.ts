@@ -8,7 +8,7 @@ import { requestChannelInjectionToken } from "../channel/request-channel-injecti
 
 export type SyncBoxInitialValueChannel = RequestChannel<
   void,
-  { id: string; value: unknown }[]
+  { id: string; value: any }[]
 >;
 
 const syncBoxInitialValueChannelInjectable = getInjectable({

@@ -7,7 +7,7 @@ import type { SetRequired } from "type-fest";
 import type { RequestChannel } from "./request-channel-injection-token";
 
 export type RequestFromChannel = <
-  TChannel extends RequestChannel<unknown, unknown>,
+  TChannel extends RequestChannel<any, any>,
 >(
   channel: TChannel,
   ...request: TChannel["_requestSignature"] extends void
