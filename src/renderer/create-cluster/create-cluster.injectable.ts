@@ -28,7 +28,7 @@ const createClusterInjectable = getInjectable({
       createVersionDetector: () => { throw new Error("Tried to access back-end feature in front-end."); },
     };
 
-    return (model) => new Cluster(dependencies, model);
+    return (model, configData) => new Cluster(dependencies, model, configData);
   },
 
   injectionToken: createClusterInjectionToken,

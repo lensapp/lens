@@ -41,7 +41,7 @@ function getContexts(config: KubeConfig): Map<string, Option> {
     splitConfig(config)
       .map(({ config, error }) => [config.currentContext, {
         config,
-        error,
+        error: error?.toString(),
       }]),
   );
 }

@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+
 /**
  * JSON serializable metadata type
  */
@@ -65,6 +66,15 @@ export interface ClusterModel {
    * Labels for the catalog entity
    */
   labels?: Record<string, string>;
+}
+
+/**
+ * This data is retreived from the kubeconfig file before calling the cluster constructor.
+ *
+ * That is done to remove the external dependency on the construction of Cluster instances.
+ */
+export interface ClusterConfigData {
+  clusterServerUrl: string;
 }
 
 /**
