@@ -166,11 +166,7 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
                 closeOnScroll={false}
               >
                 <MenuItem className="create-terminal-tab" onClick={() => this.props.createTerminalTab()}>
-                  <Icon
-                    small
-                    svg="terminal"
-                    size={15} 
-                  />
+                  <Icon small material="terminal" />
                   Terminal session
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => this.props.createResourceTab()}>
