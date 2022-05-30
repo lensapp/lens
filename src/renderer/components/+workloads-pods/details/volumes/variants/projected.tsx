@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { displayMode } from "../../../../../utils";
 import { DrawerItem, DrawerTitle } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 
@@ -12,7 +13,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
     <>
       {typeof defaultMode === "number" && (
         <DrawerItem name="Default Mount Mode">
-          {`0o${defaultMode.toString(8)}`}
+          {displayMode(defaultMode)}
         </DrawerItem>
       )}
       <DrawerItem name="Sources">
@@ -31,7 +32,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                         <li key={key}>
                           {`${key}⇢${path}`}
                           {typeof mode === "number" && (
-                            ` (0o${mode.toString(8)})`
+                            ` (${displayMode(mode)})`
                           )}
                         </li>
                       ))}
