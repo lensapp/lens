@@ -43,8 +43,6 @@ export const isProduction = process.env.NODE_ENV === "production";
  */
 export const isDevelopment = !isTestEnv && !isProduction;
 
-export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
-
 export const productName = packageInfo.productName;
 
 /**
