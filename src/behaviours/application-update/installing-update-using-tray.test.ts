@@ -159,7 +159,7 @@ describe("installing update using tray", () => {
             progressOfUpdateDownloadInjectable,
           );
 
-          progressOfUpdateDownload.set(42);
+          progressOfUpdateDownload.set({ percentage: 42 });
 
           expect(
             applicationBuilder.tray.get("check-for-updates")?.label?.get(),

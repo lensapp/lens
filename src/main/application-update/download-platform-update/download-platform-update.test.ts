@@ -4,6 +4,7 @@
  */
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import electronUpdaterInjectable from "../../electron-app/features/electron-updater.injectable";
+import type { DownloadPlatformUpdate } from "./download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "./download-platform-update.injectable";
 import type { AppUpdater } from "electron-updater";
 import type { AsyncFnMock } from "@async-fn/jest";
@@ -14,7 +15,7 @@ import loggerInjectable from "../../../common/logger.injectable";
 import type { Logger } from "../../../common/logger";
 
 describe("download-platform-update", () => {
-  let downloadPlatformUpdate: (onDownloadProgress: (percentage: number) => void) => Promise<{ downloadWasSuccessful: boolean }>;
+  let downloadPlatformUpdate: DownloadPlatformUpdate;
   let downloadUpdateMock: AsyncFnMock<() => void>;
   let electronUpdaterFake: AppUpdater;
   let electronUpdaterOnMock: jest.Mock;
@@ -68,7 +69,7 @@ describe("download-platform-update", () => {
     });
 
     it("starts progress of download from 0", () => {
-      expect(onDownloadProgressMock).toHaveBeenCalledWith(0);
+      expect(onDownloadProgressMock).toHaveBeenCalledWith({ percentage: 0 });
     });
 
     describe("when downloading progresses", () => {
@@ -89,7 +90,7 @@ describe("download-platform-update", () => {
       });
 
       it("updates progress of the download", () => {
-        expect(onDownloadProgressMock).toHaveBeenCalledWith(42);
+        expect(onDownloadProgressMock).toHaveBeenCalledWith({ percentage: 42 });
       });
 
       describe("when downloading resolves", () => {
@@ -119,7 +120,7 @@ describe("download-platform-update", () => {
         it("when starting download again, resets progress of download", () => {
           downloadPlatformUpdate(onDownloadProgressMock);
 
-          expect(onDownloadProgressMock).toHaveBeenCalledWith(0);
+          expect(onDownloadProgressMock).toHaveBeenCalledWith({ percentage: 0 });
         });
       });
 
