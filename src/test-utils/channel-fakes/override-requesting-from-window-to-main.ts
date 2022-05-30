@@ -11,7 +11,7 @@ import requestFromChannelInjectable from "../../renderer/channel/request-from-ch
 export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
   const requestChannelListenerFakesForMain = new Map<
       string,
-      RequestChannelListener<RequestChannel<unknown, unknown>>
+      RequestChannelListener<RequestChannel<any, any>>
     >();
 
   mainDi.override(
@@ -27,9 +27,9 @@ export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
       requestChannelListenerFakesForMain.set(
         listener.channel.id,
 
-          // TODO: Figure out typingo
+          // TODO: Figure out typing
           listener as unknown as RequestChannelListener<
-            RequestChannel<unknown, unknown>
+            RequestChannel<any, any>
           >,
       );
 

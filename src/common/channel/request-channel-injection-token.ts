@@ -4,8 +4,12 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { JsonValue } from "type-fest";
 
-export interface RequestChannel<Request = void, Response = void> {
+export interface RequestChannel<
+  Request extends JsonValue | void = void,
+  Response extends JsonValue | void = void,
+> {
   id: string;
   _requestSignature?: Request;
   _responseSignature?: Response;
