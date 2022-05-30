@@ -68,6 +68,7 @@ exports[`<CephFs /> should render 'false' for Readonly when false is provided 1`
     </span>
     <span
       class="value"
+      data-testid="cephfs-readonly"
     >
       false
     </span>
@@ -143,6 +144,7 @@ exports[`<CephFs /> should render 'false' for Readonly when not provided 1`] = `
     </span>
     <span
       class="value"
+      data-testid="cephfs-readonly"
     >
       false
     </span>
@@ -218,6 +220,7 @@ exports[`<CephFs /> should render 'true' for Readonly when true is provided 1`] 
     </span>
     <span
       class="value"
+      data-testid="cephfs-readonly"
     >
       true
     </span>

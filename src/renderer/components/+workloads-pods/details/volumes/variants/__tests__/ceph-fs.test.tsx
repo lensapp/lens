@@ -41,7 +41,7 @@ describe("<CephFs />", () => {
     ));
 
     expect(result.container).toMatchSnapshot();
-    expect(result.getByTestId("cephfs-readonly").innerText).toBe("false");
+    expect(result.getByTestId("cephfs-readonly").innerHTML).toBe("false");
   });
 
   it("should render 'false' for Readonly when false is provided", () => {
@@ -76,7 +76,7 @@ describe("<CephFs />", () => {
     ));
 
     expect(result.container).toMatchSnapshot();
-    expect(result.getByTestId("cephfs-readonly").innerText).toBe("false");
+    expect(result.getByTestId("cephfs-readonly").innerHTML).toBe("false");
   });
 
   it("should render 'true' for Readonly when true is provided", () => {
@@ -111,6 +111,6 @@ describe("<CephFs />", () => {
     ));
 
     expect(result.container).toMatchSnapshot();
-    expect(result.getByTestId("cephfs-readonly").innerText).toBe("true");
+    expect(result.getByTestId("cephfs-readonly").innerHTML).toBe("true");
   });
 });

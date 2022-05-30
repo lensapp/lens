@@ -38,7 +38,7 @@ export function DrawerItem({
       title={title}
     >
       <span className="name">{name}</span>
-      <span className="value" data-testId={valueTestId}>{displayBooleans(renderBoolean, children)}</span>
+      <span className="value" data-testid={valueTestId}>{displayBooleans(renderBoolean, children)}</span>
     </div>
   );
 }
