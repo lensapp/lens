@@ -72,6 +72,9 @@
       "<rootDir>/src/jest.setup.ts",
       "jest-canvas-mock"
     ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/jest-after-env.setup.ts"
+    ],
     "globals": {
       "ts-jest": {
         "isolatedModules": true

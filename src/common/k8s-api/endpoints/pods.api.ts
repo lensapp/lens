@@ -279,8 +279,10 @@ export interface CephfsSource {
   secretRef?: SecretReference;
   /**
    * Whether the filesystem is used as readOnly.
+   *
+   * @default false
    */
-  readOnly: boolean;
+  readOnly?: boolean;
 }
 
 export interface CinderSource {
