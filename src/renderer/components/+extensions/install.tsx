@@ -9,12 +9,13 @@ import { prevDefault } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
-import { asyncInputValidator, Input, InputValidators } from "../input";
+import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import { unionInputValidatorsAsync } from "../input/input_validators";
 
 export interface InstallProps {
   installPath: string;
@@ -28,23 +29,14 @@ interface Dependencies {
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
-const installInputValidator = asyncInputValidator({
-  validate: async (value) => {
-    if (
-      InputValidators.isUrl.validate(value)
-      || InputValidators.isExtensionNameInstall.validate(value)
-    ) {
-      return;
-    }
-
-    try {
-      return await InputValidators.isPath.validate(value);
-    } catch {
-      throw new Error("Invalid URL, absolute path, or extension name");
-    }
+const installInputValidator = unionInputValidatorsAsync(
+  {
+    message: "Invalid URL, absolute path, or extension name",
   },
-  debounce: InputValidators.isPath.debounce,
-});
+  InputValidators.isUrl,
+  InputValidators.isExtensionNameInstall,
+  InputValidators.isPath,
+);
 
 const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
   installPath,

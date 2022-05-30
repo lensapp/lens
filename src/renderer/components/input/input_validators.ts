@@ -7,6 +7,7 @@ import type { InputProps } from "./input";
 import type React from "react";
 import fse from "fs-extra";
 import { TypedRegEx } from "typed-regex";
+import type { SetRequired } from "type-fest";
 
 export type InputValidationResult<IsAsync extends boolean> =
   IsAsync extends true
@@ -48,6 +49,10 @@ export type InputValidator<IsAsync extends boolean = boolean, RequireProps exten
     }
   );
 
+export function isAsyncValidator<RequireProps extends boolean>(validator: InputValidator<boolean, RequireProps>): validator is InputValidator<true, RequireProps> {
+  return typeof validator.debounce === "number";
+}
+
 export function asyncInputValidator(validator: InputValidator<true, false>): InputValidator<true, false> {
   return validator;
 }
@@ -58,6 +63,64 @@ export function inputValidator(validator: InputValidator<false, false>): InputVa
 
 export function inputValidatorWithRequiredProps(validator: InputValidator<false, true>): InputValidator<false, true> {
   return validator;
+}
+
+/**
+ * Create a new input validator from a list of syncronous input validators. Will match as valid if
+ * one of the input validators matches the input
+ */
+export function unionInputValidators(
+  baseValidator: Pick<InputValidator<false, false>, "condition" | "message">,
+  ...validators: InputValidator<false, false>[]
+): InputValidator<false, false> {
+  return inputValidator({
+    ...baseValidator,
+    validate: (value, props) => validators.some(validator => validator.validate(value, props)),
+  });
+}
+
+/**
+ * Create a new input validator from a list of syncronous or async input validators. Will match as
+ * valid if one of the input validators matches the input
+ */
+export function unionInputValidatorsAsync(
+  baseValidator: SetRequired<Pick<InputValidator<boolean, false>, "condition" | "message">, "message">,
+  ...validators: InputValidator<boolean, false>[]
+): InputValidator<true, false> {
+  const longestDebounce = Math.max(
+    ...validators
+      .filter(isAsyncValidator)
+      .map(validator => validator.debounce),
+    0,
+  );
+
+  return asyncInputValidator({
+    debounce: longestDebounce,
+    validate: async (value, props) => {
+      for (const validator of validators) {
+        if (isAsyncValidator(validator)) {
+          try {
+            await validator.validate(value, props);
+
+            return;
+          } catch {
+            // Do nothing
+          }
+        } else {
+          if (validator.validate(value, props)) {
+            return;
+          }
+        }
+      }
+
+      /**
+       * If no validator returns `true` then mark as invalid by throwing. The message will be
+       * obtained from the `message` field.
+       */
+      throw {};
+    },
+    ...baseValidator,
+  });
 }
 
 export const isRequired = inputValidator({

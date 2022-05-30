@@ -16,13 +16,23 @@ import type { InputValidator, InputValidation, InputValidationResult, SyncValida
 import uniqueId from "lodash/uniqueId";
 import { debounce } from "lodash";
 
-const { conditionalValidators, asyncInputValidator, inputValidator, inputValidatorWithRequiredProps, ...InputValidators } = Validators;
+const {
+  conditionalValidators,
+  asyncInputValidator,
+  inputValidator,
+  inputValidatorWithRequiredProps,
+  isAsyncValidator,
+  unionInputValidatorsAsync,
+  ...InputValidators
+} = Validators;
 
 export {
   InputValidators,
   asyncInputValidator,
   inputValidator,
   inputValidatorWithRequiredProps,
+  isAsyncValidator,
+  unionInputValidatorsAsync,
 };
 export type {
   InputValidator,
@@ -86,10 +96,6 @@ const defaultProps: Partial<InputProps> = {
   validators: [],
   blurOnEnter: true,
 };
-
-function isAsyncValidator<RequireProps extends boolean>(validator: InputValidator<boolean, RequireProps>): validator is InputValidator<true, RequireProps> {
-  return typeof validator.debounce === "number";
-}
 
 export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
