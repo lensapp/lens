@@ -20,7 +20,7 @@ function captureWithId(eventBus: EventEmitter<[AppEvent]>, id: string, action: s
   eventBus.emit({
     name: target,
     action,
-    destination: "MixPanel",
+    destination: "AutoCapture",
   });
 }
 

@@ -39,14 +39,11 @@ function getEventName(el: HTMLElement) {
 
 function captureMouseEvent(eventBus: EventEmitter<[AppEvent]>, event: React.MouseEvent) {
   const name = getEventName(event.target as HTMLElement);
-  const action = capitalize(event.type);
-
-  console.log(`[captureMouseEvent]: ${action} ${name}`);
 
   eventBus.emit({
-    destination: "MixPanel",
     name,
     action: capitalize(event.type),
+    destination: "AutoCapture",
   });
 }
 
