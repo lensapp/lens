@@ -445,46 +445,62 @@ export interface PortworxVolumeSource {
   readOnly?: boolean;
 }
 
+export interface KeyToPath {
+  key: string;
+  path: string;
+  mode?: number;
+}
+
+export interface ConfigMapProjection {
+  name: string;
+  items?: KeyToPath[];
+  optional?: boolean;
+}
+
+export interface ObjectFieldSelector {
+  fieldPath: string;
+  apiVersion?: string;
+}
+
+export interface ResourceFieldSelector {
+  resource: string;
+  containerName?: string;
+  divisor?: string;
+}
+
+export interface DownwardAPIVolumeFile {
+  path: string;
+  fieldRef?: ObjectFieldSelector;
+  resourceFieldRef?: ResourceFieldSelector;
+  mode?: number;
+}
+
+export interface DownwardAPIProjection {
+  items?: DownwardAPIVolumeFile[];
+}
+
+export interface SecretProjection {
+  name: string;
+  items?: KeyToPath[];
+  optional?: boolean;
+}
+
+export interface ServiceAccountTokenProjection {
+  audience?: string;
+  expirationSeconds?: number;
+  path: string;
+}
+
+export interface VolumeProjection {
+  secret?: SecretProjection;
+  downwardAPI?: DownwardAPIProjection;
+  configMap?: ConfigMapProjection;
+  serviceAccountToken?: ServiceAccountTokenProjection;
+}
+
 export interface ProjectedSource {
-  sources: {
-    secret?: {
-      name: string;
-      items?: {
-        key: string;
-        path: string;
-        mode?: number;
-      }[];
-    };
-    downwardAPI?: {
-      items?: {
-        path: string;
-        fieldRef?: {
-          fieldPath: string;
-          apiVersion?: string;
-        };
-        resourceFieldRef?: {
-          resource: string;
-          containerName?: string;
-        };
-        mode?: number;
-      }[];
-    };
-    configMap?: {
-      name: string;
-      items?: {
-        key: string;
-        path: string;
-        mode?: number;
-      }[];
-      optional?: boolean;
-    };
-    serviceAccountToken?: {
-      audience?: string;
-      expirationSeconds?: number;
-      path: string;
-    };
-  }[];
-  defaultMode: number;
+  sources?: VolumeProjection[];
+  defaultMode?: number;
 }
 
 export interface QuobyteSource {
