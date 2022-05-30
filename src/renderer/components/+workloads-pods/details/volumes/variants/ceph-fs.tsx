@@ -39,7 +39,7 @@ export const CephFs: VolumeVariantComponent<"cephfs"> = (
             </DrawerItem>
           )
       }
-      <DrawerItem name="Readonly" valueTestId="cephfs-readonly">
+      <DrawerItem name="Readonly" data-testid="cephfs-readonly">
         {readOnly.toString()}
       </DrawerItem>
     </>
