@@ -4,8 +4,9 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { JsonValue } from "type-fest";
 
-export interface MessageChannel<Message = void> {
+export interface MessageChannel<Message extends JsonValue | void = void> {
   id: string;
   _messageSignature?: Message;
 }

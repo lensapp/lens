@@ -13,7 +13,7 @@ import assert from "assert";
 export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
   const messageChannelListenerFakesForRenderer = new Map<
     string,
-    Set<MessageChannelListener<MessageChannel<unknown>>>
+    Set<MessageChannelListener<MessageChannel<any>>>
   >();
 
   mainDi.override(
@@ -73,14 +73,14 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
 
         // TODO: Figure out typing
         listeners.add(
-          listener as unknown as MessageChannelListener<MessageChannel<unknown>>,
+          listener as unknown as MessageChannelListener<MessageChannel<any>>,
         );
 
         return () => {
           // TODO: Figure out typing
           listeners.delete(
             listener as unknown as MessageChannelListener<
-              MessageChannel<unknown>
+              MessageChannel<any>
             >,
           );
         };

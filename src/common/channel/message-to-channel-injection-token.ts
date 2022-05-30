@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { SetRequired } from "type-fest";
 import type { MessageChannel } from "./message-channel-injection-token";
 
 export interface MessageToChannel {
@@ -10,9 +11,9 @@ export interface MessageToChannel {
     channel: TChannel,
   ): void;
 
-  <TChannel extends MessageChannel<TMessage>, TMessage>(
+  <TChannel extends MessageChannel<any>>(
     channel: TChannel,
-    message: TMessage
+    message: SetRequired<TChannel, "_messageSignature">["_messageSignature"],
   ): void;
 }
 
