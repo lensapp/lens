@@ -13,6 +13,7 @@ export interface DrawerItemProps extends React.HTMLAttributes<HTMLDivElement> {
   labelsOnly?: boolean;
   hidden?: boolean;
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
+  valueTestId?: string;
 }
 
 export function DrawerItem({
@@ -23,6 +24,7 @@ export function DrawerItem({
   hidden = false,
   className,
   renderBoolean,
+  valueTestId,
   ...elemProps
 }: DrawerItemProps) {
   if (hidden) {
@@ -36,7 +38,7 @@ export function DrawerItem({
       title={title}
     >
       <span className="name">{name}</span>
-      <span className="value">{displayBooleans(renderBoolean, children)}</span>
+      <span className="value" data-testId={valueTestId}>{displayBooleans(renderBoolean, children)}</span>
     </div>
   );
 }
