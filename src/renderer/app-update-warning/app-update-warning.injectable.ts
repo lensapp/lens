@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import ipcRendererInjectable from "../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
+import sessionStorageInjectable from "../utils/session-storage.injectable";
 import { AppUpdateWarning } from "./app-update-warning";
 
 const appUpdateWarningInjectable = getInjectable({
@@ -12,6 +13,7 @@ const appUpdateWarningInjectable = getInjectable({
   instantiate: (di) => {
     return AppUpdateWarning.createInstance({
       ipcRenderer: di.inject(ipcRendererInjectable),
+      sessionStorage: di.inject(sessionStorageInjectable),
     });
   },
 });

@@ -9,14 +9,17 @@ import type { IpcRenderer } from "electron";
 
 interface Dependencies {
   readonly ipcRenderer: IpcRenderer;
+  readonly sessionStorage: Storage;
 }
+
+const onceADay = 1000 * 60 * 60 * 24;
 
 export class AppUpdateWarning extends Singleton {
   @observable warningLevel: "high" | "medium" | "light" | "" = "";
   @observable private updateAvailableDate: Date | null = this.getDateFromSessionStorage();
   private interval: NodeJS.Timeout | null = null;
 
-  constructor(dependencies: Dependencies) {
+  constructor(private dependencies: Dependencies) {
     super();
     makeObservable(this);
 
@@ -29,12 +32,12 @@ export class AppUpdateWarning extends Singleton {
 
   saveDateToSessionStorage() {
     if (this.updateAvailableDate) {
-      window.sessionStorage.setItem("when-update-available", this.updateAvailableDate.toISOString());
+      this.dependencies.sessionStorage.setItem("when-update-available", this.updateAvailableDate.toISOString());
     }
   }
 
   getDateFromSessionStorage() {
-    const value = window.sessionStorage.getItem("when-update-available");
+    const value = this.dependencies.sessionStorage.getItem("when-update-available");
 
     if (!value) {
       return null;
@@ -56,7 +59,7 @@ export class AppUpdateWarning extends Singleton {
     if (!this.interval) {
       this.interval = setInterval(() => {
         this.setWarningLevel();
-      }, 1000 * 60); // Once a day
+      }, onceADay);
     }
   }
 
@@ -73,61 +76,31 @@ export class AppUpdateWarning extends Singleton {
 
     const today = new Date();
     const elapsedTime = today.getTime() - this.updateAvailableDate.getTime();
-    const elapsedDays = elapsedTime / (1000 * 60 * 60 * 24);
+    const elapsedDays = elapsedTime / (onceADay);
 
     return elapsedDays;
   }
 
-  get minutesAfterUpdateAvailable() {
-    if (!this.updateAvailableDate) {
-      return 0;
-    }
-
-    const today = new Date();
-    const elapsedTime = today.getTime() - this.updateAvailableDate.getTime();
-    const elapsedMinutes = Math.floor(elapsedTime / (1000 * 60));
-
-    return elapsedMinutes;
-  }
-
-  // private setHighWarningLevel(elapsedDays: number) {
-  //   if (elapsedDays >= 25) {
-  //     this.warningLevel = "high";
-  //   }
-  // }
-
-  // private setMediumWarningLevel(elapsedDays: number) {
-  //   if (elapsedDays >= 20 && elapsedDays < 25) {
-  //     this.warningLevel = "medium";
-  //   }
-  // }
-
-  // private setLightWarningLevel(elapsedDays: number) {
-  //   if (elapsedDays < 20) {
-  //     this.warningLevel = "light";
-  //   }
-  // }
-
   private setHighWarningLevel(elapsedDays: number) {
-    if (elapsedDays >= 6) {
+    if (elapsedDays >= 25) {
       this.warningLevel = "high";
     }
   }
 
   private setMediumWarningLevel(elapsedDays: number) {
-    if (elapsedDays >= 2 && elapsedDays < 4) {
+    if (elapsedDays >= 20 && elapsedDays < 25) {
       this.warningLevel = "medium";
     }
   }
 
   private setLightWarningLevel(elapsedDays: number) {
-    if (elapsedDays < 2) {
+    if (elapsedDays < 20) {
       this.warningLevel = "light";
     }
   }
 
   private setWarningLevel() {
-    const days = this.minutesAfterUpdateAvailable;
+    const days = this.daysAfterUpdateAvailable;
 
     this.setHighWarningLevel(days);
     this.setMediumWarningLevel(days);
