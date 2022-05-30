@@ -3,32 +3,48 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { render, act } from "@testing-library/react";
+import { act } from "@testing-library/react";
 import React from "react";
 import { UpdateButton } from "../update-button";
 import "@testing-library/jest-dom/extend-expect";
-
-const update = jest.fn();
+import type { DiContainer } from "@ogre-tools/injectable";
+import appUpdateWarningLevelInjectable from "../../../app-update-warning/app-update-warning-level.injectable";
+import { computed } from "mobx";
+import { DiRender, renderFor } from "../../test-utils/renderFor";
+import updateAppInjectable from "../update-app.injectable";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 
 describe("<UpdateButton/>", () => {
+  let di: DiContainer;
+  let render: DiRender;
+
   beforeEach(() => {
-    update.mockClear();
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(updateAppInjectable, jest.fn);
+    di.override(appUpdateWarningLevelInjectable, () => computed(() => ""));
+
+    render = renderFor(di);
   });
 
   it("should not render if no warning level prop passed", () => {
-    const { queryByTestId } = render(<UpdateButton update={update} />);
+    const { queryByTestId } = render(<UpdateButton />);
 
     expect(queryByTestId("update-button")).not.toBeInTheDocument();
   });
 
   it("should render if warning level prop passed", () => {
-    const { getByTestId } = render(<UpdateButton update={update} warningLevel="light" />);
+    di.override(appUpdateWarningLevelInjectable, () => computed(() => "light"));
+
+    const { getByTestId } = render(<UpdateButton />);
 
     expect(getByTestId("update-button")).toMatchSnapshot();
   });
 
   it("should open menu when clicked", async () => {
-    const { getByTestId } = render(<UpdateButton update={update} warningLevel="light" />);
+    di.override(appUpdateWarningLevelInjectable, () => computed(() => "light"));
+
+    const { getByTestId } = render(<UpdateButton />);
 
     const button = getByTestId("update-button");
 
@@ -38,7 +54,11 @@ describe("<UpdateButton/>", () => {
   });
 
   it("should call update function when menu item clicked", () => {
-    const { getByTestId } = render(<UpdateButton update={update} warningLevel="light" />);
+    const update = jest.fn();
+    di.override(appUpdateWarningLevelInjectable, () => computed(() => "light"));
+    di.override(updateAppInjectable, update);
+
+    const { getByTestId } = render(<UpdateButton />);
 
     const button = getByTestId("update-button");
 
@@ -52,7 +72,9 @@ describe("<UpdateButton/>", () => {
   });
 
   it("should have light warning level", () => {
-    const { getByTestId } = render(<UpdateButton update={update} warningLevel="light" />);
+    di.override(appUpdateWarningLevelInjectable, () => computed(() => "light"));
+
+    const { getByTestId } = render(<UpdateButton />);
 
     const button = getByTestId("update-button");
 
@@ -60,7 +82,9 @@ describe("<UpdateButton/>", () => {
   });
 
   it("should have medium warning level", () => {
-    const { getByTestId } = render(<UpdateButton update={update} warningLevel="medium" />);
+    di.override(appUpdateWarningLevelInjectable, () => computed(() => "medium"));
+
+    const { getByTestId } = render(<UpdateButton />);
 
     const button = getByTestId("update-button");
 
@@ -68,7 +92,9 @@ describe("<UpdateButton/>", () => {
   });
 
   it("should have high warning level", () => {
-    const { getByTestId } = render(<UpdateButton update={update} warningLevel="high" />);
+    di.override(appUpdateWarningLevelInjectable, () => computed(() => "high"));
+
+    const { getByTestId } = render(<UpdateButton />);
 
     const button = getByTestId("update-button");
 
