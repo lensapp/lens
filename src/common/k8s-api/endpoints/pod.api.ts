@@ -485,7 +485,7 @@ export interface SecretProjection {
   optional?: boolean;
 }
 
-export interface ServiceAccountTokenProjectio {
+export interface ServiceAccountTokenProjection {
   audience?: string;
   expirationSeconds?: number;
   path: string;
@@ -495,7 +495,7 @@ export interface VolumeProjection {
   secret?: SecretProjection;
   downwardAPI?: DownwardAPIProjection;
   configMap?: ConfigMapProjection;
-  serviceAccountToken?: ServiceAccountTokenProjectio;
+  serviceAccountToken?: ServiceAccountTokenProjection;
 }
 
 export interface ProjectedSource {
