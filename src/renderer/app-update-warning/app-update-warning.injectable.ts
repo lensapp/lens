@@ -11,6 +11,8 @@ const appUpdateWarningInjectable = getInjectable({
   id: "app-update-warning",
 
   instantiate: (di) => {
+    AppUpdateWarning.resetInstance();
+    
     return AppUpdateWarning.createInstance({
       ipcRenderer: di.inject(ipcRendererInjectable),
       sessionStorage: di.inject(sessionStorageInjectable),

@@ -32,13 +32,14 @@ describe("app-update-warning", () => {
       removeItem: jest.fn(),
       clear: jest.fn(),
     }) as never);
-
-    appUpdateWarning = di.inject(appUpdateWarningInjectable);
-
-    appUpdateWarning.init();
   });
 
-  describe("given AppUpdateWarning with update date set", () => {
+  describe("given AppUpdateWarning with update date set throught the event", () => {
+    beforeEach(() => {
+      appUpdateWarning = di.inject(appUpdateWarningInjectable);
+      appUpdateWarning.init();
+    });
+
     it.skip("returns light warning level when update-downloaded event received", () => {
       expect(appUpdateWarning.warningLevel).toBe("light");
     });
@@ -124,6 +125,44 @@ describe("app-update-warning", () => {
       it(`returns medium warning level if date is ${date}`, () => {
         expect(appUpdateWarning.warningLevel).toBe("high");
       });
+    });
+  });
+
+  describe("given AppUpdateWarning with warning level changing over time", () => {
+    let appUpdateWarning: AppUpdateWarning;
+
+    beforeEach(() => {
+      jest.useFakeTimers("modern");
+      jest.setSystemTime(new Date("2022-05-30T05:30:00.000Z").getTime());
+      jest.spyOn(global, "setInterval");
+
+      appUpdateWarning = di.inject(appUpdateWarningInjectable);
+      appUpdateWarning.init();
+    })
+    
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it("calls setInterval with correct arguments", () => {
+      const onceADay = 1000 * 60 * 60 * 24;
+      expect(setInterval).toHaveBeenCalledTimes(1);
+      expect(setInterval).toHaveBeenCalledWith(expect.any(Function), onceADay);
+    });
+
+    it("shows light warning level if less than 20 days passed", () => {
+      jest.advanceTimersByTime(1000 * 60 * 60 * 24 * 5);
+      expect(appUpdateWarning.warningLevel).toBe("light");
+    });
+
+    it("shows medium warning level if more than 20 days passed", () => {
+      jest.advanceTimersByTime(1000 * 60 * 60 * 24 * 21);
+      expect(appUpdateWarning.warningLevel).toBe("medium");
+    });
+
+    it("shows high warning level if more than 2 days passed", () => {
+      jest.advanceTimersByTime(1000 * 60 * 60 * 24 * 30);
+      expect(appUpdateWarning.warningLevel).toBe("high");
     });
   });
 });
