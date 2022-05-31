@@ -21,7 +21,6 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
 import { eventStore } from "../+events/legacy-store";
 import { makeObservable, observable } from "mobx";
-import isEmpty from "lodash/isEmpty";
 import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
@@ -48,7 +47,7 @@ interface UsageArgs {
 
 @observer
 export class NodesRoute extends React.Component {
-  @observable.ref metrics: Partial<NodeMetricData> = {};
+  @observable.ref metrics?: NodeMetricData;
   private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 
   constructor(props: any) {
@@ -65,7 +64,9 @@ export class NodesRoute extends React.Component {
   }
 
   getLastMetricValues(node: Node, metricNames: string[]): number[] {
-    if (isEmpty(this.metrics)) {
+    const { metrics } = this;
+
+    if (!metrics) {
       return [];
     }
 
@@ -73,7 +74,7 @@ export class NodesRoute extends React.Component {
 
     return metricNames.map(metricName => {
       try {
-        const metric = this.metrics[metricName];
+        const metric = metrics[metricName];
         const result = metric?.data.result.find(({ metric: { node, instance, kubernetes_node }}) => (
           nodeName === node
           || nodeName === instance
@@ -124,7 +125,7 @@ export class NodesRoute extends React.Component {
     return this.renderUsage({
       node,
       title: "Memory",
-      metricNames: ["workloadMemoryUsage", "memoryAllocatableCapacity"],
+      metricNames: ["memoryUsage", "memoryAllocatableCapacity"],
       formatters: [
         ([usage, capacity]) => `${(usage * 100 / capacity).toFixed(2)}%`,
         ([usage]) => bytesToUnits(usage, { precision: 3 }),
