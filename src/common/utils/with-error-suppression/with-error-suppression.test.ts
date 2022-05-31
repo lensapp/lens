@@ -58,8 +58,8 @@ describe("with-error-suppression", () => {
   });
 
   describe("given decorated async function", () => {
-    let decorated: (a: string, b: string) => Promise<void>;
-    let toBeDecorated: AsyncFnMock<typeof decorated>;
+    let decorated: (a: string, b: string) => Promise<number> | Promise<void>;
+    let toBeDecorated: AsyncFnMock<(a: string, b: string) => number>;
 
     beforeEach(() => {
       toBeDecorated = asyncFn();
@@ -68,7 +68,7 @@ describe("with-error-suppression", () => {
     });
 
     describe("when called", () => {
-      let returnValuePromise: Promise<void>;
+      let returnValuePromise: Promise<number> | Promise<void>;
 
       beforeEach(() => {
         returnValuePromise = decorated("some-parameter", "some-other-parameter");
@@ -92,12 +92,12 @@ describe("with-error-suppression", () => {
         expect(returnValue).toBeUndefined();
       });
 
-      it("when call resolves, resolves with nothing", async () => {
-        await toBeDecorated.resolve(undefined);
+      it("when call resolves, resolves with the value", async () => {
+        await toBeDecorated.resolve(42);
 
         const returnValue = await returnValuePromise;
 
-        expect(returnValue).toBeUndefined();
+        expect(returnValue).toBe(42);
       });
     });
   });
