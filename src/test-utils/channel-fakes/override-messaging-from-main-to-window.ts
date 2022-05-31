@@ -9,6 +9,7 @@ import type { SendToViewArgs } from "../../main/start-main-application/lens-wind
 import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import assert from "assert";
+import { tentativeParseJson } from "../../common/utils/tentative-parse-json";
 
 export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
   const messageChannelListenerFakesForRenderer = new Map<
@@ -47,7 +48,7 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
           );
         }
 
-        const message = data[0];
+        const message = tentativeParseJson(data[0]);
 
         listeners.forEach((listener) => listener.handler(message));
       },

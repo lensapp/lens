@@ -6,6 +6,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcMainInvokeEvent } from "electron";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
 import { enlistRequestChannelListenerInjectionToken } from "../../../common/channel/enlist-request-channel-listener-injection-token";
+import { pipeline } from "@ogre-tools/fp";
+import { tentativeParseJson } from "../../../common/utils/tentative-parse-json";
+import { tentativeStringifyJson } from "../../../common/utils/tentative-stringify-json";
 
 const enlistRequestChannelListenerInjectable = getInjectable({
   id: "enlist-request-channel-listener-for-main",
@@ -14,7 +17,8 @@ const enlistRequestChannelListenerInjectable = getInjectable({
     const ipcMain = di.inject(ipcMainInjectable);
 
     return ({ channel, handler }) => {
-      const nativeHandleCallback = (_: IpcMainInvokeEvent, message: unknown) => handler(message);
+      const nativeHandleCallback = (_: IpcMainInvokeEvent, request: unknown) =>
+        pipeline(request, tentativeParseJson, handler, tentativeStringifyJson);
 
       ipcMain.handle(channel.id, nativeHandleCallback);
 
