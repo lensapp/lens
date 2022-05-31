@@ -21,7 +21,7 @@ describe("app-update-warning", () => {
         if (event === "update-available") {
           callback();
         }
-      }
+      },
     } as never));
 
     di.override(sessionStorageInjectable, () => ({
@@ -90,7 +90,7 @@ describe("app-update-warning", () => {
 
       afterAll(() => {
         jest.useRealTimers();
-      })
+      });
 
       it(`returns light warning level if date is ${date}`, () => {
         expect(appUpdateWarning.warningLevel).toBe("light");
@@ -105,7 +105,7 @@ describe("app-update-warning", () => {
 
       afterAll(() => {
         jest.useRealTimers();
-      })
+      });
 
       it(`returns medium warning level if date is ${date}`, () => {
         expect(appUpdateWarning.warningLevel).toBe("medium");
@@ -120,7 +120,7 @@ describe("app-update-warning", () => {
 
       afterAll(() => {
         jest.useRealTimers();
-      })
+      });
 
       it(`returns medium warning level if date is ${date}`, () => {
         expect(appUpdateWarning.warningLevel).toBe("high");
@@ -138,7 +138,7 @@ describe("app-update-warning", () => {
 
       appUpdateWarning = di.inject(appUpdateWarningInjectable);
       appUpdateWarning.init();
-    })
+    });
     
     afterEach(() => {
       jest.useRealTimers();
@@ -146,6 +146,7 @@ describe("app-update-warning", () => {
 
     it("calls setInterval with correct arguments", () => {
       const onceADay = 1000 * 60 * 60 * 24;
+
       expect(setInterval).toHaveBeenCalledTimes(1);
       expect(setInterval).toHaveBeenCalledWith(expect.any(Function), onceADay);
     });

@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { AutoUpdateQuitAndInstalledChannel } from "../../../common/ipc";
+import { AutoUpdateQuitAndInstalledChannel } from "../../../common/ipc/update-available";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 
 const updateAppInjectable = getInjectable({

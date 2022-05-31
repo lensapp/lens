@@ -11,7 +11,7 @@ import { Icon } from "../../icon";
 import { observable } from "mobx";
 import { ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
-import { cssNames, noop } from "../../../utils";
+import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";

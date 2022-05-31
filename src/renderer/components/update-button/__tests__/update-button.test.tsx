@@ -10,7 +10,8 @@ import "@testing-library/jest-dom/extend-expect";
 import type { DiContainer } from "@ogre-tools/injectable";
 import appUpdateWarningLevelInjectable from "../../../app-update-warning/app-update-warning-level.injectable";
 import { computed } from "mobx";
-import { DiRender, renderFor } from "../../test-utils/renderFor";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
 import updateAppInjectable from "../update-app.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 
@@ -55,6 +56,7 @@ describe("<UpdateButton/>", () => {
 
   it("should call update function when menu item clicked", () => {
     const update = jest.fn();
+
     di.override(appUpdateWarningLevelInjectable, () => computed(() => "light"));
     di.override(updateAppInjectable, update);
 
