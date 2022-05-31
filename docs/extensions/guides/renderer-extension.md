@@ -224,7 +224,7 @@ export default class ExampleExtension extends Renderer.LensExtension {
     {
       id: "bonjour",
       components: {
-        Page: () => <ExemplePage extension={this} />,
+        Page: () => <ExamplePage extension={this} />,
       },
     },
   ];
@@ -250,7 +250,7 @@ export default class ExampleExtension extends Renderer.LensExtension {
       target: { pageId: "bonjour" },
       title: "Bonjour le monde",
       components: {
-        Icon: ExempleIcon,
+        Icon: ExampleIcon,
       },
     },
   ];
