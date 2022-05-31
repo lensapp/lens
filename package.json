@@ -359,7 +359,7 @@
     "electron-builder": "^23.0.3",
     "electron-notarize": "^0.3.0",
     "esbuild": "^0.14.38",
-    "esbuild-loader": "^2.18.0",
+    "esbuild-loader": "^2.19.0",
     "eslint": "^8.16.0",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.26.0",
