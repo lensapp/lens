@@ -76,7 +76,8 @@
       "ts-jest": {
         "isolatedModules": true
       }
-    }
+    },
+    "globalSetup": "<rootDir>/src/jest.timezone.ts"
   },
   "build": {
     "generateUpdatesFilesForAllChannels": true,
