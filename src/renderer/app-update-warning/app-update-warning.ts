@@ -24,34 +24,39 @@ export class AppUpdateWarning extends Singleton {
     makeObservable(this);
 
     dependencies.ipcRenderer.on(UpdateAvailableChannel, () => {
-      this.setUpdateAvailableDate();
-      this.setWarningLevel();
-      this.startRefreshLevelInterval();
+      this.init();
     });
   }
 
-  saveDateToSessionStorage() {
+  init() {
+    this.setUpdateAvailableDate();
+    this.saveDateToSessionStorage();
+    this.setWarningLevel();
+    this.startRefreshLevelInterval();
+  }
+
+  private saveDateToSessionStorage() {
     if (this.updateAvailableDate) {
       this.dependencies.sessionStorage.setItem("when-update-available", this.updateAvailableDate.toISOString());
     }
   }
 
-  getDateFromSessionStorage() {
+  private getDateFromSessionStorage() {
     const value = this.dependencies.sessionStorage.getItem("when-update-available");
 
     if (!value) {
       return null;
     }
-
+    
     const date = new Date(value);
-
+    
     return isNaN(date.getTime()) ? null : date;
   }
 
-  setUpdateAvailableDate() {
+  private setUpdateAvailableDate() {
     if (!this.updateAvailableDate) {
       this.updateAvailableDate = new Date();
-      this.saveDateToSessionStorage();
+      
     }
   }
 
@@ -74,8 +79,8 @@ export class AppUpdateWarning extends Singleton {
       return 0;
     }
 
-    const today = new Date();
-    const elapsedTime = today.getTime() - this.updateAvailableDate.getTime();
+    const today = Date.now();
+    const elapsedTime = today - this.updateAvailableDate.getTime();
     const elapsedDays = elapsedTime / (onceADay);
 
     return elapsedDays;
