@@ -78,12 +78,12 @@ describe("kube helpers", () => {
     describe("with default validation options", () => {
       describe("with valid kubeconfig", () => {
         it("does not return an error", () => {
-          expect(validateKubeConfig(kc, "valid")).toBeUndefined();
+          expect(validateKubeConfig(kc, "valid")).toBeDefined();
         });
       });
       describe("with invalid context object", () => {
         it("returns an error", () => {
-          expect(String(validateKubeConfig(kc, "invalid"))).toEqual(
+          expect(validateKubeConfig(kc, "invalid").error?.toString()).toEqual(
             expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'"),
           );
         });
@@ -91,7 +91,7 @@ describe("kube helpers", () => {
 
       describe("with invalid cluster object", () => {
         it("returns an error", () => {
-          expect(String(validateKubeConfig(kc, "invalidCluster"))).toEqual(
+          expect(validateKubeConfig(kc, "invalidCluster").error?.toString()).toEqual(
             expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'"),
           );
         });
@@ -99,7 +99,7 @@ describe("kube helpers", () => {
 
       describe("with invalid user object", () => {
         it("returns an error", () => {
-          expect(String(validateKubeConfig(kc, "invalidUser"))).toEqual(
+          expect(validateKubeConfig(kc, "invalidUser").error?.toString()).toEqual(
             expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'"),
           );
         });

@@ -29,7 +29,6 @@ import type { ClusterConfigData, UpdateClusterModel } from "../../../common/clus
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../catalog/entity-registry";
 import type { CreateCluster } from "../../../common/cluster/create-cluster-injection-token";
-import assert from "assert";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
@@ -152,21 +151,17 @@ export class KubeconfigSyncManager {
 export function configToModels(rootConfig: KubeConfig, filePath: string): [UpdateClusterModel, ClusterConfigData][] {
   const validConfigs: ReturnType<typeof configToModels> = [];
 
-  for (const { config, error } of splitConfig(rootConfig)) {
-    if (error) {
-      logger.debug(`${logPrefix} context failed validation: ${error}`, { context: config.currentContext, filePath });
+  for (const { config, validationResult } of splitConfig(rootConfig)) {
+    if (validationResult.error) {
+      logger.debug(`${logPrefix} context failed validation: ${validationResult.error}`, { context: config.currentContext, filePath });
     } else {
-      const cluster = config.getCluster(config.currentContext);
-
-      assert(cluster, "Config somehow passed validations but still doesn't have a cluster");
-
       validConfigs.push([
         {
           kubeConfigPath: filePath,
           contextName: config.currentContext,
         },
         {
-          clusterServerUrl: cluster.server,
+          clusterServerUrl: validationResult.cluster.server,
         },
       ]);
     }
