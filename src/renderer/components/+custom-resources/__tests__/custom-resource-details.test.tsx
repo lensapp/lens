@@ -21,50 +21,54 @@ describe("<CustomResourceDetails />", () => {
   });
 
   describe("with a CRD with a boolean field", () => {
-    const crd = new CustomResourceDefinition({
-      apiVersion: "apiextensions.k8s.io/v1",
-      kind: "CustomResourceDefinition",
-      metadata: {
-        name: "my-crd",
-        resourceVersion: "1",
-        selfLink: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/my-crd",
-        uid: "1",
-      },
-      spec: {
-        versions: [{
-          name: "v1",
-          served: true,
-          storage: true,
-          schema: {
-            openAPIV3Schema: {
-              type: "object",
-              properties: {
-                spec: {
-                  type: "object",
-                  properties: {
-                    "my-field": {
-                      type: "boolean",
+    let crd: CustomResourceDefinition;
+
+    beforeEach(() => {
+      crd = new CustomResourceDefinition({
+        apiVersion: "apiextensions.k8s.io/v1",
+        kind: "CustomResourceDefinition",
+        metadata: {
+          name: "my-crd",
+          resourceVersion: "1",
+          selfLink: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/my-crd",
+          uid: "1",
+        },
+        spec: {
+          versions: [{
+            name: "v1",
+            served: true,
+            storage: true,
+            schema: {
+              openAPIV3Schema: {
+                type: "object",
+                properties: {
+                  spec: {
+                    type: "object",
+                    properties: {
+                      "my-field": {
+                        type: "boolean",
+                      },
                     },
                   },
                 },
               },
             },
+            additionalPrinterColumns: [
+              {
+                name: "MyField",
+                jsonPath: ".spec.my-field",
+                type: "boolean",
+              },
+            ],
+          }],
+          group: "stable.lens.dev",
+          names: {
+            kind: "MyCrd",
+            plural: "my-crds",
           },
-          additionalPrinterColumns: [
-            {
-              name: "MyField",
-              jsonPath: ".spec.my-field",
-              type: "boolean",
-            },
-          ],
-        }],
-        group: "stable.lens.dev",
-        names: {
-          kind: "MyCrd",
-          plural: "my-crds",
+          scope: "Cluster",
         },
-        scope: "Cluster",
-      },
+      });
     });
 
     it("should display false in an additionalPrinterColumn as 'false'", () => {
@@ -109,50 +113,54 @@ describe("<CustomResourceDetails />", () => {
   });
 
   describe("with a CRD with a number field", () => {
-    const crd = new CustomResourceDefinition({
-      apiVersion: "apiextensions.k8s.io/v1",
-      kind: "CustomResourceDefinition",
-      metadata: {
-        name: "my-crd",
-        resourceVersion: "1",
-        selfLink: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/my-crd",
-        uid: "1",
-      },
-      spec: {
-        versions: [{
-          name: "v1",
-          served: true,
-          storage: true,
-          schema: {
-            openAPIV3Schema: {
-              type: "object",
-              properties: {
-                spec: {
-                  type: "object",
-                  properties: {
-                    "my-field": {
-                      type: "number",
+    let crd: CustomResourceDefinition;
+
+    beforeEach(() => {
+      crd = new CustomResourceDefinition({
+        apiVersion: "apiextensions.k8s.io/v1",
+        kind: "CustomResourceDefinition",
+        metadata: {
+          name: "my-crd",
+          resourceVersion: "1",
+          selfLink: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/my-crd",
+          uid: "1",
+        },
+        spec: {
+          versions: [{
+            name: "v1",
+            served: true,
+            storage: true,
+            schema: {
+              openAPIV3Schema: {
+                type: "object",
+                properties: {
+                  spec: {
+                    type: "object",
+                    properties: {
+                      "my-field": {
+                        type: "number",
+                      },
                     },
                   },
                 },
               },
             },
+            additionalPrinterColumns: [
+              {
+                name: "MyField",
+                jsonPath: ".spec.my-field",
+                type: "number",
+              },
+            ],
+          }],
+          group: "stable.lens.dev",
+          names: {
+            kind: "MyCrd",
+            plural: "my-crds",
           },
-          additionalPrinterColumns: [
-            {
-              name: "MyField",
-              jsonPath: ".spec.my-field",
-              type: "number",
-            },
-          ],
-        }],
-        group: "stable.lens.dev",
-        names: {
-          kind: "MyCrd",
-          plural: "my-crds",
+          scope: "Cluster",
         },
-        scope: "Cluster",
-      },
+      });
     });
 
     it("should display 0 in an additionalPrinterColumn as '0'", () => {
