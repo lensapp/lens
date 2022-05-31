@@ -8,6 +8,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { filter } from "lodash/fp";
 import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
 import type { MessageChannel } from "../../common/channel/message-channel-injection-token";
+import { tentativeStringifyJson } from "../../common/utils/tentative-stringify-json";
 
 const messageToChannelInjectable = getInjectable({
   id: "message-to-channel",
@@ -18,13 +19,16 @@ const messageToChannelInjectable = getInjectable({
     // TODO: Figure out way to improve typing in internals
     // Notice that this should be injected using "messageToChannelInjectionToken" which is typed correctly.
     return (channel: MessageChannel<any>, message?: unknown) => {
+      const stringifiedMessage = tentativeStringifyJson(message);
+
+
       const visibleWindows = pipeline(
         getAllLensWindows(),
         filter((lensWindow) => !!lensWindow.visible),
       );
 
       visibleWindows.forEach((lensWindow) =>
-        lensWindow.send({ channel: channel.id, data: message ? [message] : [] }),
+        lensWindow.send({ channel: channel.id, data: stringifiedMessage ? [stringifiedMessage] : [] }),
       );
     };
   },
