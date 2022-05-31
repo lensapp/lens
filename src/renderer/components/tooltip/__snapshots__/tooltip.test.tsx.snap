@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Tooltip /> does not render to DOM if not visibile 1`] = `
+<body>
+  <div>
+    <div
+      id="my-target"
+    >
+      Target Text
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> renders to DOM when forced to by visibile prop 1`] = `
+<body>
+  <div>
+    <div
+      class="Tooltip visible"
+      role="tooltip"
+    >
+      I am a tooltip
+    </div>
+    <div
+      id="my-target"
+    >
+      Target Text
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> renders to DOM when hovering over target 1`] = `
+<body>
+  <div>
+    <div
+      class="Tooltip right"
+      role="tooltip"
+      style="left: 10px; top: 0px;"
+    >
+      I am a tooltip
+    </div>
+    <div
+      id="my-target"
+    >
+      Target Text
+    </div>
+  </div>
+</body>
+`;
