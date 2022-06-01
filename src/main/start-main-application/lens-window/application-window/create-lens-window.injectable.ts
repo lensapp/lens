@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { SendToViewArgs } from "./lens-window-injection-token";
+import type { LensWindow, SendToViewArgs } from "./lens-window-injection-token";
 import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window-for.injectable";
 import createElectronWindowForInjectable from "./create-electron-window-for.injectable";
 
-export interface LensWindow {
+export interface ElectronWindow {
   show: () => void;
   close: () => void;
   send: (args: SendToViewArgs) => void;
@@ -35,8 +35,8 @@ const createLensWindowInjectable = getInjectable({
   instantiate: (di) => {
     const createElectronWindowFor = di.inject(createElectronWindowForInjectable);
 
-    return (configuration: LensWindowConfiguration) => {
-      let browserWindow: LensWindow | undefined;
+    return (configuration: LensWindowConfiguration): LensWindow => {
+      let browserWindow: ElectronWindow | undefined;
 
       const createElectronWindow = createElectronWindowFor({
         ...configuration,

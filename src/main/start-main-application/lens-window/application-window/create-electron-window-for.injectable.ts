@@ -8,7 +8,7 @@ import applicationWindowStateInjectable from "./application-window-state.injecta
 import { BrowserWindow } from "electron";
 import { openBrowser } from "../../../../common/utils";
 import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
-import type { LensWindow } from "./create-lens-window.injectable";
+import type { ElectronWindow } from "./create-lens-window.injectable";
 import type { RequireExactlyOne } from "type-fest";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
@@ -38,7 +38,7 @@ export interface ElectronWindowConfiguration {
   onDomReady?: () => void;
 }
 
-export type CreateElectronWindow = () => Promise<LensWindow>;
+export type CreateElectronWindow = () => Promise<ElectronWindow>;
 export type CreateElectronWindowFor = (config: ElectronWindowConfiguration) => CreateElectronWindow;
 
 function isFileSource(src: ContentSource): src is FileSource {
