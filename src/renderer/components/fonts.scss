@@ -3,8 +3,40 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// Material Design Icons, used primarily in icon.tsx
-// Latest: https://github.com/google/material-design-icons/tree/master/font
+// App's main font
+// Downloaded from: https://fonts.google.com/specimen/Roboto
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Light.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 300; // "light"
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-LightItalic.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 300; // "light" + italic
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Regular.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 400; // "normal"
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Bold.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 700; // "bold"
+}
+
+
+// Icon fonts, see: `icon.tsx`
+// Latest version for manual update: https://github.com/google/material-design-icons/tree/master/font
 @font-face {
   font-family: "Material Icons";
   font-style: normal;
@@ -12,6 +44,7 @@
   font-display: block;
   src: url("../fonts/MaterialIcons-Regular.ttf") format("truetype");
 }
+
 
 // Terminal fonts (monospaced)
 // Source: https://fonts.google.com/?category=Monospace
@@ -63,6 +96,6 @@
 // https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/RobotoMono
 @font-face {
   font-family: "RobotoMono";
-  src: local("RobotoMono"), url("../fonts/roboto-mono-nerd.ttf") format("truetype");
+  src: local("RobotoMono"), url("../fonts/Roboto-Mono-nerd.ttf") format("truetype");
   font-display: block;
 }

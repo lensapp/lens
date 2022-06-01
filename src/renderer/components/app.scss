@@ -70,7 +70,8 @@ html, body {
   overflow: hidden;
   color: var(--textColorPrimary);
   background-color: var(--mainBackground);
-  font: var(--font-size) var(--font-main);
+  font-size: var(--font-size);
+  font-family: var(--font-main);
 }
 
 #terminal-init {
