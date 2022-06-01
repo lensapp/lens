@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
+import type { RenderResult } from "@testing-library/react";
 import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -125,7 +126,7 @@ describe("kube-object-menu", () => {
   });
 
   describe("given kube object", () => {
-    let baseElement: Element;
+    let result: RenderResult;
     let removeActionMock: AsyncFnMock<() => void>;
 
     beforeEach(async () => {
@@ -142,8 +143,7 @@ describe("kube-object-menu", () => {
       });
 
       removeActionMock = asyncFn();
-
-      ({ baseElement } = render(
+      result = render((
         <div>
           <ConfirmDialog animated={false} />
 
@@ -152,16 +152,58 @@ describe("kube-object-menu", () => {
             toolbar={true}
             removeAction={removeActionMock}
           />
-        </div>,
+        </div>
       ));
     });
 
     it("renders", () => {
-      expect(baseElement).toMatchSnapshot();
+      expect(result.baseElement).toMatchSnapshot();
     });
 
     it("does not open a confirmation dialog yet", () => {
       expect(screen.queryByTestId("confirmation-dialog")).toBeNull();
+    });
+
+    describe("when rerendered with different kube object", () => {
+      beforeEach(() => {
+        const newObjectStub = KubeObject.create({
+          apiVersion: "some-other-api-version",
+          kind: "some-other-kind",
+          metadata: {
+            uid: "some-other-uid",
+            name: "some-other-name",
+            resourceVersion: "some-other-resource-version",
+            namespace: "some-other-namespace",
+          },
+        });
+
+        result.rerender(
+          <div>
+            <ConfirmDialog animated={false} />
+
+            <KubeObjectMenu
+              object={newObjectStub}
+              toolbar={true}
+              removeAction={removeActionMock}
+            />
+          </div>,
+        );
+      });
+
+      it("renders", () => {
+        expect(result.baseElement).toMatchSnapshot();
+      });
+
+      describe("when removing new kube object", () => {
+        beforeEach(async () => {
+          userEvent.click(await screen.findByTestId("menu-action-delete"));
+        });
+
+        it("renders", async () => {
+          await screen.findByTestId("confirmation-dialog");
+          expect(result.baseElement).toMatchSnapshot();
+        });
+      });
     });
 
     describe("when removing kube object", () => {
@@ -171,7 +213,7 @@ describe("kube-object-menu", () => {
 
       it("renders", async () => {
         await screen.findByTestId("confirmation-dialog");
-        expect(baseElement).toMatchSnapshot();
+        expect(result.baseElement).toMatchSnapshot();
       });
 
       describe("when remove is confirmed", () => {
