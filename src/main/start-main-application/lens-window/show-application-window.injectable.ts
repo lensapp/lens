@@ -17,7 +17,7 @@ const showApplicationWindowInjectable = getInjectable({
     );
 
     return async () => {
-      if (applicationWindow.visible) {
+      if (applicationWindow.visible || splashWindow.visible) {
         return;
       }
 

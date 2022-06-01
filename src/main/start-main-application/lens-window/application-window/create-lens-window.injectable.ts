@@ -13,7 +13,7 @@ export interface ElectronWindow {
   send: (args: SendToViewArgs) => void;
 }
 
-interface LensWindowConfiguration {
+export interface LensWindowConfiguration {
   id: string;
   title: string;
   defaultHeight: number;
@@ -47,6 +47,8 @@ const createLensWindowInjectable = getInjectable({
       ));
 
       return {
+        id: configuration.id,
+
         get visible() {
           return !!browserWindow;
         },
