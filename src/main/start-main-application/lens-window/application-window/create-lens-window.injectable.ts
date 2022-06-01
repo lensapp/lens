@@ -46,6 +46,8 @@ const createLensWindowInjectable = getInjectable({
         configuration,
       ));
 
+      let windowIsOpening = false;
+
       return {
         id: configuration.id,
 
@@ -53,12 +55,18 @@ const createLensWindowInjectable = getInjectable({
           return !!browserWindow;
         },
 
+        get opening() {
+          return windowIsOpening;
+        },
+
         show: async () => {
           if (!browserWindow) {
+            windowIsOpening = true;
             browserWindow = await createElectronWindow();
           }
 
           browserWindow.show();
+          windowIsOpening = false;
         },
 
         close: () => {
