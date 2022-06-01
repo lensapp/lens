@@ -49,6 +49,12 @@ interface Dependencies {
 class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component<KubeObjectMenuProps<Kube> & Dependencies> {
   private menuItems = observable.array<KubeObjectContextMenuItem>();
 
+  componentDidUpdate(prevProps: Readonly<KubeObjectMenuProps<Kube> & Dependencies>): void {
+    if (prevProps.object !== this.props.object && this.props.object) {
+      this.emitOnContextMenuOpen(this.props.object);
+    }
+  }
+
   private renderRemoveMessage(object: KubeObject) {
     const breadcrumbParts = [object.getNs(), object.getName()];
     const breadcrumb = breadcrumbParts.filter(identity).join("/");
