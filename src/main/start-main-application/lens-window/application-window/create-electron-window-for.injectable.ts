@@ -9,7 +9,7 @@ import { BrowserWindow } from "electron";
 import { openBrowser } from "../../../../common/utils";
 import type { SendToViewArgs } from "./lens-window-injection-token";
 import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
-import type { LensWindow } from "./create-lens-window.injectable";
+import type { ElectronWindow } from "./create-lens-window.injectable";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
 
@@ -30,7 +30,7 @@ export interface ElectronWindowConfiguration {
   onDomReady?: () => void;
 }
 
-export type CreateElectronWindow = () => Promise<LensWindow>;
+export type CreateElectronWindow = () => Promise<ElectronWindow>;
 export type CreateElectronWindowFor = (config: ElectronWindowConfiguration) => CreateElectronWindow;
 
 const createElectronWindowFor = getInjectable({
