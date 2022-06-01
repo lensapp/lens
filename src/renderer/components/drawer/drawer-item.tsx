@@ -12,6 +12,13 @@ export interface DrawerItemProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   labelsOnly?: boolean;
   hidden?: boolean;
+
+  /**
+   * @deprecated This prop is no longer used, you should stringify the booleans yourself.
+   *
+   * This was only meant to be an internal prop anyway.
+   */
+  renderBooleans?: boolean;
 }
 
 export function DrawerItem({
