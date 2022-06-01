@@ -13,6 +13,7 @@ import quitAndInstallUpdateInjectable from "../../electron-app/features/quit-and
 import downloadUpdateInjectable from "../download-update/download-update.injectable";
 import broadcastChangeInUpdatingStatusInjectable from "./broadcast-change-in-updating-status.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates-starting-from-channel.injectable";
+import withOrphanPromiseInjectable from "../../../common/utils/with-orphan-promise/with-orphan-promise";
 
 const processCheckingForUpdatesInjectable = getInjectable({
   id: "process-checking-for-updates",
@@ -26,6 +27,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const checkForUpdatesStartingFromChannel = di.inject(checkForUpdatesStartingFromChannelInjectable);
+    const withOrphanPromise = di.inject(withOrphanPromiseInjectable);
 
     return async () => {
       broadcastChangeInUpdatingStatus({ eventId: "checking-for-updates" });
@@ -66,8 +68,9 @@ const processCheckingForUpdatesInjectable = getInjectable({
         checkingForUpdatesState.set(false);
       });
 
-      // Note: intentional orphan promise to make download happen in the background
-      downloadUpdate().then(async ({ downloadWasSuccessful }) => {
+      withOrphanPromise(async () => {
+        const { downloadWasSuccessful } = await downloadUpdate();
+
         if (!downloadWasSuccessful) {
           broadcastChangeInUpdatingStatus({
             eventId: "download-for-update-failed",
@@ -86,7 +89,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
         if (userWantsToInstallUpdate) {
           quitAndInstallUpdate();
         }
-      });
+      })();
     };
   },
 });
