@@ -221,9 +221,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
         </i>
          
         <p>
-          Remove 
-          some-other-kind
-           
+          Remove some-other-kind 
           <b>
             some-other-namespace/some-other-name
           </b>
