@@ -6,7 +6,6 @@
 import React from "react";
 import { observer } from "mobx-react";
 import type { NodeStore } from "../+nodes/store";
-import { cssNames } from "../../utils";
 import { Radio, RadioGroup } from "../radio";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
 import { MetricNodeRole, MetricType } from "./cluster-overview-store/cluster-overview-store";
@@ -36,7 +35,7 @@ const NonInjectedClusterMetricSwitchers = observer(({
       <div className="box grow">
         <RadioGroup
           asButtons
-          className={cssNames("RadioGroup flex gaps")}
+          className="RadioGroup flex gaps"
           value={clusterOverviewStore.metricNodeRole}
           onChange={metric => clusterOverviewStore.metricNodeRole = metric}
         >
@@ -55,7 +54,7 @@ const NonInjectedClusterMetricSwitchers = observer(({
       <div className="box grow" style={{ textAlign: "right" }}>
         <RadioGroup
           asButtons
-          className={cssNames("RadioGroup flex gaps")}
+          className="RadioGroup flex gaps"
           value={clusterOverviewStore.metricType}
           onChange={value => clusterOverviewStore.metricType = value}
         >
