@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { SendToViewArgs } from "./lens-window-injection-token";
-import type { ElectronWindowTitleBarStyle } from "./create-electron-window-for.injectable";
+import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window-for.injectable";
 import createElectronWindowForInjectable from "./create-electron-window-for.injectable";
 
 export interface LensWindow {
@@ -13,12 +13,12 @@ export interface LensWindow {
   send: (args: SendToViewArgs) => void;
 }
 
-interface LensWindowConfiguration {
+export interface LensWindowConfiguration {
   id: string;
   title: string;
   defaultHeight: number;
   defaultWidth: number;
-  getContentUrl: () => string;
+  getContentSource: () => ContentSource;
   resizable: boolean;
   windowFrameUtilitiesAreShown: boolean;
   centered: boolean;
@@ -38,12 +38,10 @@ const createLensWindowInjectable = getInjectable({
     return (configuration: LensWindowConfiguration) => {
       let browserWindow: LensWindow | undefined;
 
-      const createElectronWindow = createElectronWindowFor(Object.assign(
-        {
-          onClose: () => browserWindow = undefined,
-        },
-        configuration,
-      ));
+      const createElectronWindow = createElectronWindowFor({
+        ...configuration,
+        onClose: () => browserWindow = undefined,
+      });
 
       return {
         get visible() {
