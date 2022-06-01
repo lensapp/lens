@@ -44,6 +44,8 @@ const createLensWindowInjectable = getInjectable({
       });
 
       return {
+        id: configuration.id,
+
         get visible() {
           return !!browserWindow;
         },
