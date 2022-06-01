@@ -11,13 +11,12 @@ import httpProxy from "http-proxy";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isIntegrationTesting, isMac, isWindows, productName, staticFilesDirectory } from "../common/vars";
+import { appName, isIntegrationTesting, isMac, isWindows, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
 import { mangleProxyEnv } from "./proxy-env";
-import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
 import { appEventBus } from "../common/app-event-bus/event-bus";
 import type { InstalledExtension } from "../extensions/extension-discovery/extension-discovery";
@@ -197,8 +196,6 @@ async function main(di: DiContainer) {
   await shellSync();
 
   powerMonitor.on("shutdown", () => app.exit());
-
-  registerFileProtocol("static", staticFilesDirectory);
 
   PrometheusProviderRegistry.createInstance();
   initializers.initPrometheusProviderRegistry();
