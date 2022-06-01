@@ -14,9 +14,10 @@ import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
-import { isMac, productName } from "../common/vars";
+import { isMac, productName, staticFilesDirectory } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { bundledExtensionsLoaded } from "../common/ipc/extension-handling";
+import path from "path";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -257,7 +258,19 @@ export class WindowManager extends Singleton {
           nativeWindowOpen: true,
         },
       });
-      await this.splashWindow.loadURL("static://splash.html");
+
+      const splashWindowFilePath = path.join(staticFilesDirectory, "splash.html");
+
+      try {
+        await this.splashWindow.loadFile(splashWindowFilePath);
+      } catch (error) {
+        if (String(error).includes("ERR_FAILED")) {
+          // Try again, from reading some issues it seems that trying again immedeiately sometimes works
+          await this.splashWindow.loadFile(splashWindowFilePath);
+        } else {
+          throw error;
+        }
+      }
     }
     this.splashWindow.show();
   }
