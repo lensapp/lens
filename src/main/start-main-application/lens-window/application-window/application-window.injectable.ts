@@ -29,7 +29,9 @@ const applicationWindowInjectable = getInjectable({
       title: applicationName,
       defaultHeight: 900,
       defaultWidth: 1440,
-      getContentUrl: () => `http://localhost:${lensProxyPort.get()}`,
+      getContentSource: () => ({
+        url: `http://localhost:${lensProxyPort.get()}`,
+      }),
       resizable: true,
       windowFrameUtilitiesAreShown: isMac,
       titleBarStyle: isMac ? "hiddenInset" : "hidden",
