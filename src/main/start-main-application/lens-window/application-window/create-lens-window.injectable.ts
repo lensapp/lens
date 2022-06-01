@@ -43,23 +43,34 @@ const createLensWindowInjectable = getInjectable({
         onClose: () => browserWindow = undefined,
       });
 
+      let windowIsOpening = false;
+
       return {
         id: configuration.id,
 
         get visible() {
           return !!browserWindow;
         },
+
+        get opening() {
+          return windowIsOpening;
+        },
+
         show: async () => {
           if (!browserWindow) {
+            windowIsOpening = true;
             browserWindow = await createElectronWindow();
           }
 
           browserWindow.show();
+          windowIsOpening = false;
         },
+
         close: () => {
           browserWindow?.close();
           browserWindow = undefined;
         },
+
         send: (args: SendToViewArgs) => {
           if (!browserWindow) {
             throw new Error(`Tried to send message to window "${configuration.id}" but the window was closed`);

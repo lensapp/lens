@@ -17,6 +17,7 @@ export interface LensWindow {
   close: () => void;
   send: (args: SendToViewArgs) => void;
   visible: boolean;
+  opening: boolean;
 }
 
 export const lensWindowInjectionToken = getInjectionToken<LensWindow>({

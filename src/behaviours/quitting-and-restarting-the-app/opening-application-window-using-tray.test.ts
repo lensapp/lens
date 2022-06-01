@@ -86,6 +86,18 @@ describe("opening application window using tray", () => {
           expectWindowsToBeOpen([]);
         });
 
+        describe("given opening of splash window has not finished yet, but another attempt to open the application is made", () => {
+          beforeEach(() => {
+            createElectronWindowMock.mockClear();
+
+            applicationBuilder.tray.click("open-app");
+          });
+
+          it("does not open any new windows", () => {
+            expect(createElectronWindowMock).not.toHaveBeenCalled();
+          });
+        });
+
         describe("when opening of splash window resolves", () => {
           beforeEach(async () => {
             await resolveOpeningOfWindow("splash");
@@ -101,7 +113,7 @@ describe("opening application window using tray", () => {
             expectWindowsToBeOpen(["only-application-window"]);
           });
 
-          describe("given opening has not finished yet, but another attempt to open the application is made", () => {
+          describe("given opening of application window has not finished yet, but another attempt to open the application is made", () => {
             beforeEach(() => {
               createElectronWindowMock.mockClear();
 
