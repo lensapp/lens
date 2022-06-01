@@ -265,6 +265,7 @@ export class WindowManager extends Singleton {
         await this.splashWindow.loadFile(splashWindowFilePath);
       } catch (error) {
         if (String(error).includes("ERR_FAILED")) {
+          logger.warn("[WINDOW-MANAGER]: failed to load splash window on first attempt, trying again...");
           // Try again, from reading some issues it seems that trying again immedeiately sometimes works
           await this.splashWindow.loadFile(splashWindowFilePath);
         } else {
