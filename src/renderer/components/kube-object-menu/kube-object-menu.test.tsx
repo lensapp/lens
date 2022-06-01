@@ -174,6 +174,7 @@ describe("kube-object-menu", () => {
             name: "some-other-name",
             resourceVersion: "some-other-resource-version",
             namespace: "some-other-namespace",
+            selfLink: "some-other-api-version/some-other-kind/some-other-namespace/some-other-name",
           },
         });
 
