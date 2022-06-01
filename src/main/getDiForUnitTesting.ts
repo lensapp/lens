@@ -242,7 +242,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
   di.override(requestSingleInstanceLockInjectable, () => () => true);
   di.override(disableHardwareAccelerationInjectable, () => () => {});
-  di.override(shouldStartHiddenInjectable, () => true);
+  di.override(shouldStartHiddenInjectable, () => false);
   di.override(showMessagePopupInjectable, () => () => {});
   di.override(waitForElectronToBeReadyInjectable, () => () => Promise.resolve());
   di.override(ipcMainInjectable, () => ({}));
