@@ -154,12 +154,12 @@ describe("installing update using tray", () => {
           ).toBe("Downloading update some-version (0%)...");
         });
 
-        it("when download progresses, percentage increases", () => {
+        it("when download progresses with decimals, percentage increases as integers", () => {
           const progressOfUpdateDownload = applicationBuilder.dis.mainDi.inject(
             progressOfUpdateDownloadInjectable,
           );
 
-          progressOfUpdateDownload.set({ percentage: 42 });
+          progressOfUpdateDownload.set({ percentage: 42.424242 });
 
           expect(
             applicationBuilder.tray.get("check-for-updates")?.label?.get(),

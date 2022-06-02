@@ -41,7 +41,9 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
           assert(discoveredVersion);
 
-          return `Downloading update ${discoveredVersion.version} (${progressOfUpdateDownload.value.get().percentage}%)...`;
+          const roundedPercentage = Math.round(progressOfUpdateDownload.value.get().percentage);
+
+          return `Downloading update ${discoveredVersion.version} (${roundedPercentage}%)...`;
         }
 
         if (checkingForUpdatesState.value.get()) {
