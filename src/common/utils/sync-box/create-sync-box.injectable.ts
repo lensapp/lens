@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import syncBoxChannelInjectable from "./sync-box-channel.injectable";
-import { messageToChannelInjectionToken } from "../channel/message-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../channel/message-to-channel-injection-token";
 import syncBoxStateInjectable from "./sync-box-state.injectable";
 import type { SyncBox } from "./sync-box-injection-token";
 

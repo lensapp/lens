@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
-import syncBoxInitialValueChannelInjectable from "../../common/sync-box/sync-box-initial-value-channel.injectable";
-import syncBoxStateInjectable from "../../common/sync-box/sync-box-state.injectable";
-import { requestFromChannelInjectionToken } from "../../common/channel/request-from-channel-injection-token";
+import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
+import syncBoxInitialValueChannelInjectable from "../../../common/utils/sync-box/sync-box-initial-value-channel.injectable";
+import syncBoxStateInjectable from "../../../common/utils/sync-box/sync-box-state.injectable";
+import { requestFromChannelInjectionToken } from "../../../common/channel/request-from-channel-injection-token";
 
 const provideInitialValuesForSyncBoxesInjectable = getInjectable({
   id: "provide-initial-values-for-sync-boxes",

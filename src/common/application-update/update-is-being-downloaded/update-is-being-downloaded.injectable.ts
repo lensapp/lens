@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import createSyncBoxInjectable from "../../sync-box/create-sync-box.injectable";
-import { syncBoxInjectionToken } from "../../sync-box/sync-box-injection-token";
+import createSyncBoxInjectable from "../../utils/sync-box/create-sync-box.injectable";
+import { syncBoxInjectionToken } from "../../utils/sync-box/sync-box-injection-token";
 
 const updateIsBeingDownloadedInjectable = getInjectable({
   id: "update-is-being-downloaded",

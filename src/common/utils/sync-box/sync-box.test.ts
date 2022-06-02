@@ -4,10 +4,10 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { observe, runInAction } from "mobx";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import createSyncBoxInjectable from "./create-sync-box.injectable";
-import { flushPromises } from "../test-utils/flush-promises";
+import { flushPromises } from "../../test-utils/flush-promises";
 import type { SyncBox } from "./sync-box-injection-token";
 
 describe("sync-box", () => {

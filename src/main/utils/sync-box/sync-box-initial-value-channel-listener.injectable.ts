@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import syncBoxInitialValueChannelInjectable from "../../common/sync-box/sync-box-initial-value-channel.injectable";
-import { syncBoxInjectionToken } from "../../common/sync-box/sync-box-injection-token";
-import { requestChannelListenerInjectionToken } from "../../common/channel/request-channel-listener-injection-token";
+import syncBoxInitialValueChannelInjectable from "../../../common/utils/sync-box/sync-box-initial-value-channel.injectable";
+import { syncBoxInjectionToken } from "../../../common/utils/sync-box/sync-box-injection-token";
+import { requestChannelListenerInjectionToken } from "../../../common/channel/request-channel-listener-injection-token";
 
 const syncBoxInitialValueChannelListenerInjectable = getInjectable({
   id: "sync-box-initial-value-channel-listener",
