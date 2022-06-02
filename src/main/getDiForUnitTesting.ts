@@ -4,7 +4,7 @@
  */
 
 import glob from "glob";
-import { kebabCase, memoize, noop } from "lodash/fp";
+import { kebabCase, memoize } from "lodash/fp";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -13,7 +13,6 @@ import registerChannelInjectable from "./app-paths/register-channel/register-cha
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
-import directoryForBundledBinariesInjectable from "../common/app-paths/directory-for-bundled-binaries/directory-for-bundled-binaries.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
@@ -76,6 +75,8 @@ import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectab
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
+import { noop } from "../renderer/utils";
+import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 
 export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   const {
@@ -126,12 +127,10 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
 
     di.override(appNameInjectable, () => "some-app-name");
     di.override(registerChannelInjectable, () => () => undefined);
-    di.override(directoryForBundledBinariesInjectable, () => "some-bin-directory");
-
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });
-
+    di.override(baseBundeledBinariesDirectoryInjectable, () => "some-bin-directory");
     di.override(spawnInjectable, () => () => {
       return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },

@@ -10,7 +10,6 @@ import logger from "../logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { getBundledKubectlVersion } from "../../common/utils/app-version";
-import { normalizedPlatform, normalizedArch, kubectlBinaryName, kubectlBinaryPath, baseBinariesDir } from "../../common/vars";
 import { SemVer } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
@@ -40,27 +39,31 @@ const kubectlMap: Map<string, string> = new Map([
 ]);
 const initScriptVersionString = "# lens-initscript v3";
 
-interface Dependencies {
-  directoryForKubectlBinaries: string;
-
-  userStore: {
-    kubectlBinariesPath?: string;
-    downloadBinariesPath?: string;
-    downloadKubectlBinaries: boolean;
-    downloadMirror: string;
+export interface KubectlDependencies {
+  readonly directoryForKubectlBinaries: string;
+  readonly normalizedDownloadPlatform: "darwin" | "linux" | "windows";
+  readonly normalizedDownloadArch: "amd64" | "arm64" | "386";
+  readonly kubectlBinaryName: string;
+  readonly bundledKubectlBinaryPath: string;
+  readonly baseBundeledBinariesDirectory: string;
+  readonly userStore: {
+    readonly kubectlBinariesPath?: string;
+    readonly downloadBinariesPath?: string;
+    readonly downloadKubectlBinaries: boolean;
+    readonly downloadMirror: string;
   };
 }
 
 export class Kubectl {
-  public kubectlVersion: string;
-  protected url: string;
-  protected path: string;
-  protected dirname: string;
+  public readonly kubectlVersion: string;
+  protected readonly url: string;
+  protected readonly path: string;
+  protected readonly dirname: string;
 
   public static readonly bundledKubectlVersion = bundledVersion;
   public static invalidBundle = false;
 
-  constructor(private dependencies: Dependencies, clusterVersion: string) {
+  constructor(protected readonly dependencies: KubectlDependencies, clusterVersion: string) {
     let version: SemVer;
 
     try {
@@ -83,13 +86,13 @@ export class Kubectl {
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
-    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${normalizedPlatform}/${normalizedArch}/${kubectlBinaryName}`;
+    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${this.dependencies.normalizedDownloadPlatform}/${this.dependencies.normalizedDownloadArch}/${this.dependencies.kubectlBinaryName}`;
     this.dirname = path.normalize(path.join(this.getDownloadDir(), this.kubectlVersion));
-    this.path = path.join(this.dirname, kubectlBinaryName);
+    this.path = path.join(this.dirname, this.dependencies.kubectlBinaryName);
   }
 
   public getBundledPath() {
-    return kubectlBinaryPath.get();
+    return this.dependencies.bundledKubectlBinaryPath;
   }
 
   public getPathFromPreferences() {
@@ -279,11 +282,10 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
+    const binariesDir = this.dependencies.baseBundeledBinariesDirectory;
     const kubectlPath = this.dependencies.userStore.downloadKubectlBinaries
       ? this.dirname
       : path.dirname(this.getPathFromPreferences());
-
-    const binariesDir = baseBinariesDir.get();
 
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
     const bashScript = [
@@ -297,7 +299,7 @@ export class Kubectl {
       "elif test -f \"$HOME/.profile\"; then",
       "  . \"$HOME/.profile\"",
       "fi",
-      `export PATH="${binariesDir}:${kubectlPath}:$PATH"`,
+      `export PATH="${kubectlPath}:${binariesDir}:$PATH"`,
       'export KUBECONFIG="$tempkubeconfig"',
       `NO_PROXY=",\${NO_PROXY:-localhost},"`,
       `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,
@@ -328,7 +330,7 @@ export class Kubectl {
       "d=\":$PATH:\"",
       `d=\${d//$p/:}`,
       `d=\${d/#:/}`,
-      `export PATH="$binariesDir:$kubectlpath:\${d/%:/}"`,
+      `export PATH="$kubectlpath:$binariesDir:\${d/%:/}"`,
       "export KUBECONFIG=\"$tempkubeconfig\"",
       `NO_PROXY=",\${NO_PROXY:-localhost},"`,
       `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,

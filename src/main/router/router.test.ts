@@ -17,6 +17,9 @@ import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Route } from "./route";
 import type { SetRequired } from "type-fest";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 describe("router", () => {
   let router: Router;
@@ -31,6 +34,9 @@ describe("router", () => {
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({ payload: "some-payload" }));
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     const injectable = getInjectable({
       id: "some-route",
