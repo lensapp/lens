@@ -10,7 +10,6 @@ import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
-import { TerminalChannels } from "../../../api/terminal-api";
 import type { ThemeStore } from "../../../themes/store";
 import { disposer } from "../../../utils";
 import { isMac } from "../../../../common/vars";
@@ -19,6 +18,7 @@ import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
 import assert from "assert";
+import { TerminalChannels } from "../../../../common/terminal/channels";
 
 export interface TerminalDependencies {
   readonly spawningPool: HTMLElement;

@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
+import { TerminalChannels } from "../../../../common/terminal/channels";
 import { waitUntilDefined } from "../../../../common/utils/wait";
 import type { TerminalApi } from "../../../api/terminal-api";
-import { TerminalChannels } from "../../../api/terminal-api";
 import { noop } from "../../../utils";
 import { Notifications } from "../../notifications";
 import selectDockTabInjectable from "../dock/select-dock-tab.injectable";
