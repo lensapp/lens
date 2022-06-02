@@ -5,14 +5,20 @@
 
 import "./drawer-item.scss";
 import React from "react";
-import { cssNames, displayBooleans } from "../../utils";
+import { cssNames } from "../../utils";
 
 export interface DrawerItemProps extends React.HTMLAttributes<HTMLDivElement> {
   name: React.ReactNode;
   title?: string;
   labelsOnly?: boolean;
   hidden?: boolean;
-  renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
+
+  /**
+   * @deprecated This prop is no longer used, you should stringify the booleans yourself.
+   *
+   * This was only meant to be an internal prop anyway.
+   */
+  renderBooleans?: boolean;
 }
 
 export function DrawerItem({
@@ -22,7 +28,6 @@ export function DrawerItem({
   children,
   hidden = false,
   className,
-  renderBoolean,
   ...elemProps
 }: DrawerItemProps) {
   if (hidden) {
@@ -36,7 +41,7 @@ export function DrawerItem({
       title={title}
     >
       <span className="name">{name}</span>
-      <span className="value">{displayBooleans(renderBoolean, children)}</span>
+      <span className="value">{children}</span>
     </div>
   );
 }
