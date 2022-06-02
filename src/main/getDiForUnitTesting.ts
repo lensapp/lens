@@ -34,7 +34,6 @@ import type { AppEvent } from "../common/app-event-bus/event-bus";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
-import registerFileProtocolInjectable from "./electron-app/features/register-file-protocol.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
@@ -255,8 +254,6 @@ const overrideElectronFeatures = (di: DiContainer) => {
   );
 
   di.override(setElectronAppPathInjectable, () => () => {});
-  di.override(registerFileProtocolInjectable, () => () => {});
-
   di.override(publishIsConfiguredInjectable, () => false);
   di.override(electronUpdaterIsActiveInjectable, () => false);
 };

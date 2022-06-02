@@ -257,7 +257,7 @@ const createTestWindow = (di: DiContainer, id: string) => {
         title: "Some test window",
         defaultHeight: 42,
         defaultWidth: 42,
-        getContentUrl: () => "some-content-url",
+        getContentSource: () => ({ url: "some-content-url" }),
         resizable: true,
         windowFrameUtilitiesAreShown: false,
         centered: false,
