@@ -10,7 +10,7 @@ import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
 import type { IClassName } from "../../utils";
 import { cssNames, autoBind } from "../../utils";
-import { observable, makeObservable, action, computed } from "mobx";
+import { observable, makeObservable, action } from "mobx";
 
 export enum TooltipPosition {
   TOP = "top",
@@ -62,10 +62,6 @@ export class Tooltip extends React.Component<TooltipProps> {
     super(props);
     makeObservable(this);
     autoBind(this);
-  }
-
-  @computed get renderToDOM() {
-    return this.props.visible ?? this.isVisible;
   }
 
   get targetElem(): HTMLElement | null {
@@ -221,11 +217,12 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    if (!this.renderToDOM) {
+    const { style, formatters, usePortal, children, visible = this.isVisible } = this.props;
+
+    if (!visible) {
       return null;
     }
 
-    const { style, formatters, usePortal, children } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
       visible: this.isContentVisible || this.props.visible,
       formatter: !!formatters,
