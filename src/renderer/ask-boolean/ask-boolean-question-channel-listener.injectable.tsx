@@ -8,11 +8,11 @@ import askBooleanQuestionChannelInjectable from "../../common/ask-boolean/ask-bo
 import showInfoNotificationInjectable from "../components/notifications/show-info-notification.injectable";
 import { Button } from "../components/button";
 import React from "react";
-import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
 import askBooleanAnswerChannelInjectable from "../../common/ask-boolean/ask-boolean-answer-channel.injectable";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
-import type { MessageChannelListener } from "../../common/channel/message-channel-listener-injection-token";
-import { messageChannelListenerInjectionToken } from "../../common/channel/message-channel-listener-injection-token";
+import type { MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
+import { messageChannelListenerInjectionToken } from "../../common/utils/channel/message-channel-listener-injection-token";
 
 const askBooleanQuestionChannelListenerInjectable = getInjectable({
   id: "ask-boolean-question-channel-listener",

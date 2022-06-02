@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getStartableStoppable } from "../utils/get-startable-stoppable";
-import { disposer } from "../utils";
+import { getStartableStoppable } from "../get-startable-stoppable";
+import { disposer } from "../index";
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
 import { requestChannelListenerInjectionToken } from "./request-channel-listener-injection-token";
 import { enlistMessageChannelListenerInjectionToken } from "./enlist-message-channel-listener-injection-token";

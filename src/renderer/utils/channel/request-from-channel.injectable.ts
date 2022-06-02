@@ -4,10 +4,10 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
-import { requestFromChannelInjectionToken } from "../../common/channel/request-from-channel-injection-token";
+import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
 import { pipeline } from "@ogre-tools/fp";
-import { tentativeStringifyJson } from "../../common/utils/tentative-stringify-json";
-import { tentativeParseJson } from "../../common/utils/tentative-parse-json";
+import { tentativeStringifyJson } from "../../../common/utils/tentative-stringify-json";
+import { tentativeParseJson } from "../../../common/utils/tentative-parse-json";
 
 const requestFromChannelInjectable = getInjectable({
   id: "request-from-channel",

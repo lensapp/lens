@@ -5,10 +5,10 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcMainInvokeEvent } from "electron";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
-import { enlistRequestChannelListenerInjectionToken } from "../../../common/channel/enlist-request-channel-listener-injection-token";
+import { enlistRequestChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-request-channel-listener-injection-token";
 import { pipeline } from "@ogre-tools/fp";
-import { tentativeParseJson } from "../../../common/utils/tentative-parse-json";
-import { tentativeStringifyJson } from "../../../common/utils/tentative-stringify-json";
+import { tentativeParseJson } from "../../../../common/utils/tentative-parse-json";
+import { tentativeStringifyJson } from "../../../../common/utils/tentative-stringify-json";
 
 const enlistRequestChannelListenerInjectable = getInjectable({
   id: "enlist-request-channel-listener-for-main",

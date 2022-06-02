@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ApplicationUpdateStatusChannelMessage } from "../../../common/application-update/application-update-status-channel.injectable";
-import { messageToChannelInjectionToken } from "../../../common/channel/message-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import applicationUpdateStatusChannelInjectable from "../../../common/application-update/application-update-status-channel.injectable";
 
 const broadcastChangeInUpdatingStatusInjectable = getInjectable({

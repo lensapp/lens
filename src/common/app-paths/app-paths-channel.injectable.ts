@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AppPaths } from "./app-path-injection-token";
-import type { RequestChannel } from "../channel/request-channel-injection-token";
-import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
+import type { RequestChannel } from "../utils/channel/request-channel-injection-token";
+import { messageChannelInjectionToken } from "../utils/channel/message-channel-injection-token";
 
 export type AppPathsChannel = RequestChannel<void, AppPaths>;
 

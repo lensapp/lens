@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { MessageChannel } from "../channel/message-channel-injection-token";
-import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
+import type { MessageChannel } from "../utils/channel/message-channel-injection-token";
+import { messageChannelInjectionToken } from "../utils/channel/message-channel-injection-token";
 
 export type RootFrameRenderedChannel = MessageChannel;
 

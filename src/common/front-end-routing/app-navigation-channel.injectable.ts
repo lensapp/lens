@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
-import type { MessageChannel } from "../channel/message-channel-injection-token";
-import { messageChannelInjectionToken } from "../channel/message-channel-injection-token";
+import type { MessageChannel } from "../utils/channel/message-channel-injection-token";
+import { messageChannelInjectionToken } from "../utils/channel/message-channel-injection-token";
 
 export type AppNavigationChannel = MessageChannel<string>;
 

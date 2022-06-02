@@ -2,21 +2,21 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import ipcRendererInjectable from "../ipc-renderer.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { IpcMainEvent } from "electron";
-import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "../../../common/channel/enlist-message-channel-listener-injection-token";
+import type { IpcRendererEvent } from "electron";
+import { enlistMessageChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-message-channel-listener-injection-token";
+import { tentativeParseJson } from "../../../../common/utils/tentative-parse-json";
 import { pipeline } from "@ogre-tools/fp";
-import { tentativeParseJson } from "../../../common/utils/tentative-parse-json";
 
 const enlistMessageChannelListenerInjectable = getInjectable({
-  id: "enlist-message-channel-listener-for-main",
+  id: "enlist-message-channel-listener-for-renderer",
 
   instantiate: (di) => {
-    const ipcMain = di.inject(ipcMainInjectable);
+    const ipcRenderer = di.inject(ipcRendererInjectable);
 
     return ({ channel, handler }) => {
-      const nativeOnCallback = (_: IpcMainEvent, message: unknown) => {
+      const nativeCallback = (_: IpcRendererEvent, message: unknown) => {
         pipeline(
           message,
           tentativeParseJson,
@@ -24,10 +24,10 @@ const enlistMessageChannelListenerInjectable = getInjectable({
         );
       };
 
-      ipcMain.on(channel.id, nativeOnCallback);
+      ipcRenderer.on(channel.id, nativeCallback);
 
       return () => {
-        ipcMain.off(channel.id, nativeOnCallback);
+        ipcRenderer.off(channel.id, nativeCallback);
       };
     };
   },

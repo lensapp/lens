@@ -2,12 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
 import type { IpcMain, IpcMainInvokeEvent } from "electron";
-import type { EnlistRequestChannelListener } from "../../../common/channel/enlist-request-channel-listener-injection-token";
-import { enlistRequestChannelListenerInjectionToken } from "../../../common/channel/enlist-request-channel-listener-injection-token";
-import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
+import type { EnlistRequestChannelListener } from "../../../../common/utils/channel/enlist-request-channel-listener-injection-token";
+import { enlistRequestChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-request-channel-listener-injection-token";
+import { getPromiseStatus } from "../../../../common/test-utils/get-promise-status";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 

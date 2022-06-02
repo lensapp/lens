@@ -64,7 +64,7 @@ import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { observable } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
-import ipcMainInjectable from "./channel/ipc-main/ipc-main.injectable";
+import ipcMainInjectable from "./utils/channel/ipc-main/ipc-main.injectable";
 import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";

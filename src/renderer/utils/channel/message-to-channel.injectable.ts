@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import sendToMainInjectable from "./send-to-main.injectable";
-import type { MessageChannel } from "../../common/channel/message-channel-injection-token";
+import type { MessageChannel } from "../../../common/utils/channel/message-channel-injection-token";
 
 const messageToChannelInjectable = getInjectable({
   id: "message-to-channel",

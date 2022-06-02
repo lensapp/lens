@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { RequestChannel } from "../../common/channel/request-channel-injection-token";
-import type { RequestChannelListener } from "../../common/channel/request-channel-listener-injection-token";
-import enlistRequestChannelListenerInjectableInMain from "../../main/channel/channel-listeners/enlist-request-channel-listener.injectable";
-import requestFromChannelInjectable from "../../renderer/channel/request-from-channel.injectable";
+import type { RequestChannel } from "../../common/utils/channel/request-channel-injection-token";
+import type { RequestChannelListener } from "../../common/utils/channel/request-channel-listener-injection-token";
+import enlistRequestChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-request-channel-listener.injectable";
+import requestFromChannelInjectable from "../../renderer/utils/channel/request-from-channel.injectable";
 
 export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
   const requestChannelListenerFakesForMain = new Map<

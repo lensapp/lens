@@ -8,7 +8,7 @@ import appNavigationChannelInjectable from "../../common/front-end-routing/app-n
 import clusterFrameNavigationChannelInjectable from "../../common/front-end-routing/cluster-frame-navigation-channel.injectable";
 import focusWindowInjectable from "./focus-window.injectable";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
-import { messageChannelListenerInjectionToken } from "../../common/channel/message-channel-listener-injection-token";
+import { messageChannelListenerInjectionToken } from "../../common/utils/channel/message-channel-listener-injection-token";
 
 const navigationChannelListenerInjectable = getInjectable({
   id: "navigation-channel-listener",

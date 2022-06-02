@@ -3,16 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { MessageChannel } from "../../common/channel/message-channel-injection-token";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import type { MessageChannel } from "../../../common/utils/channel/message-channel-injection-token";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { RequestFromChannel } from "../../common/channel/request-from-channel-injection-token";
-import { requestFromChannelInjectionToken } from "../../common/channel/request-from-channel-injection-token";
+import type { RequestFromChannel } from "../../../common/utils/channel/request-from-channel-injection-token";
+import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
 import requestFromChannelInjectable from "./request-from-channel.injectable";
-import { getPromiseStatus } from "../../common/test-utils/get-promise-status";
+import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
 
 describe("request from channel in renderer", () => {
   let requestFromChannel: RequestFromChannel;

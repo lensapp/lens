@@ -2,15 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import type { EnlistMessageChannelListener } from "../../../common/channel/enlist-message-channel-listener-injection-token";
-import { enlistMessageChannelListenerInjectionToken } from "../../../common/channel/enlist-message-channel-listener-injection-token";
-import type { IpcRendererEvent, IpcRenderer } from "electron";
-import ipcRendererInjectable from "../ipc-renderer.injectable";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
+import type { EnlistMessageChannelListener } from "../../../../common/utils/channel/enlist-message-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-message-channel-listener-injection-token";
+import type { IpcMain, IpcMainEvent } from "electron";
 
-describe("enlist message channel listener in renderer", () => {
+describe("enlist message channel listener in main", () => {
   let enlistMessageChannelListener: EnlistMessageChannelListener;
-  let ipcRendererStub: IpcRenderer;
+  let ipcMainStub: IpcMain;
   let onMock: jest.Mock;
   let offMock: jest.Mock;
 
@@ -20,12 +20,12 @@ describe("enlist message channel listener in renderer", () => {
     onMock = jest.fn();
     offMock = jest.fn();
 
-    ipcRendererStub = {
+    ipcMainStub = {
       on: onMock,
       off: offMock,
-    } as unknown as IpcRenderer;
+    } as unknown as IpcMain;
 
-    di.override(ipcRendererInjectable, () => ipcRendererStub);
+    di.override(ipcMainInjectable, () => ipcMainStub);
 
     enlistMessageChannelListener = di.inject(
       enlistMessageChannelListenerInjectionToken,
@@ -62,7 +62,7 @@ describe("enlist message channel listener in renderer", () => {
 
     describe("when message arrives", () => {
       beforeEach(() => {
-        onMock.mock.calls[0][1]({} as IpcRendererEvent, "some-message");
+        onMock.mock.calls[0][1]({} as IpcMainEvent, "some-message");
       });
 
       it("calls the handler with the message", () => {
@@ -77,19 +77,19 @@ describe("enlist message channel listener in renderer", () => {
     });
 
     it("given number as message, when message arrives, calls the handler with the message", () => {
-      onMock.mock.calls[0][1]({} as IpcRendererEvent, 42);
+      onMock.mock.calls[0][1]({} as IpcMainEvent, 42);
 
       expect(handlerMock).toHaveBeenCalledWith(42);
     });
 
     it("given boolean as message, when message arrives, calls the handler with the message", () => {
-      onMock.mock.calls[0][1]({} as IpcRendererEvent, true);
+      onMock.mock.calls[0][1]({} as IpcMainEvent, true);
 
       expect(handlerMock).toHaveBeenCalledWith(true);
     });
 
     it("given stringified object as message, when message arrives, calls the handler with the message", () => {
-      onMock.mock.calls[0][1]({} as IpcRendererEvent, JSON.stringify({ some: "object" }));
+      onMock.mock.calls[0][1]({} as IpcMainEvent, JSON.stringify({ some: "object" }));
 
       expect(handlerMock).toHaveBeenCalledWith({ some: "object" });
     });

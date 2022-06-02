@@ -4,13 +4,13 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
-import { lensWindowInjectionToken } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import { lensWindowInjectionToken } from "../../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import type { MessageToChannel } from "./message-to-channel-injection-token";
 import { messageToChannelInjectionToken } from "./message-to-channel-injection-token";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import createLensWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
-import closeAllWindowsInjectable from "../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
+import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import createLensWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
+import closeAllWindowsInjectable from "../../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
 import type { MessageChannel } from "./message-channel-injection-token";
 import type { RequestFromChannel } from "./request-from-channel-injection-token";
@@ -19,7 +19,7 @@ import type { RequestChannel } from "./request-channel-injection-token";
 import { requestChannelListenerInjectionToken } from "./request-channel-listener-injection-token";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { getPromiseStatus } from "../test-utils/get-promise-status";
+import { getPromiseStatus } from "../../test-utils/get-promise-status";
 
 type TestMessageChannel = MessageChannel<string>;
 type TestRequestChannel = RequestChannel<string, string>;

@@ -4,10 +4,10 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 import assert from "assert";
-import type { MessageChannel } from "../../common/channel/message-channel-injection-token";
-import type { MessageChannelListener } from "../../common/channel/message-channel-listener-injection-token";
-import enlistMessageChannelListenerInjectableInMain from "../../main/channel/channel-listeners/enlist-message-channel-listener.injectable";
-import sendToMainInjectable from "../../renderer/channel/send-to-main.injectable";
+import type { MessageChannel } from "../../common/utils/channel/message-channel-injection-token";
+import type { MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
+import enlistMessageChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
+import sendToMainInjectable from "../../renderer/utils/channel/send-to-main.injectable";
 
 export const overrideMessagingFromWindowToMain = (mainDi: DiContainer) => {
   const messageChannelListenerFakesForMain = new Map<

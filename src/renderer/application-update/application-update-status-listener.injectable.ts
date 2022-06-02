@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { ApplicationUpdateStatusChannel, ApplicationUpdateStatusEventId } from "../../common/application-update/application-update-status-channel.injectable";
 import applicationUpdateStatusChannelInjectable from "../../common/application-update/application-update-status-channel.injectable";
 import showInfoNotificationInjectable from "../components/notifications/show-info-notification.injectable";
-import type { MessageChannelListener } from "../../common/channel/message-channel-listener-injection-token";
-import { messageChannelListenerInjectionToken } from "../../common/channel/message-channel-listener-injection-token";
+import type { MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
+import { messageChannelListenerInjectionToken } from "../../common/utils/channel/message-channel-listener-injection-token";
 
 const applicationUpdateStatusListenerInjectable = getInjectable({
   id: "application-update-status-listener",

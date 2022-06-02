@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { JsonValue } from "type-fest";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
-import { tentativeStringifyJson } from "../../common/utils/tentative-stringify-json";
+import { tentativeStringifyJson } from "../../../common/utils/tentative-stringify-json";
 
 const sendToMainInjectable = getInjectable({
   id: "send-to-main",

@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
 import appPathsChannelInjectable from "../../common/app-paths/app-paths-channel.injectable";
-import { requestFromChannelInjectionToken } from "../../common/channel/request-from-channel-injection-token";
+import { requestFromChannelInjectionToken } from "../../common/utils/channel/request-from-channel-injection-token";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",

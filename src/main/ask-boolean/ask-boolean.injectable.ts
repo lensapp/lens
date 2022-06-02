@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
 import askBooleanQuestionChannelInjectable from "../../common/ask-boolean/ask-boolean-question-channel.injectable";
 import askBooleanPromiseInjectable from "./ask-boolean-promise.injectable";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";

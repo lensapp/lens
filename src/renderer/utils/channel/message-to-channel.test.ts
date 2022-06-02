@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { MessageToChannel } from "../../common/channel/message-to-channel-injection-token";
-import type { MessageChannel } from "../../common/channel/message-channel-injection-token";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
+import type { MessageToChannel } from "../../../common/utils/channel/message-to-channel-injection-token";
+import type { MessageChannel } from "../../../common/utils/channel/message-channel-injection-token";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { messageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 

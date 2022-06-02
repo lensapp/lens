@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { MessageToChannel } from "../../common/channel/message-to-channel-injection-token";
-import { messageToChannelInjectionToken } from "../../common/channel/message-to-channel-injection-token";
-import closeAllWindowsInjectable from "../start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
-import type { MessageChannel } from "../../common/channel/message-channel-injection-token";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import createLensWindowInjectable from "../start-main-application/lens-window/application-window/create-lens-window.injectable";
-import type { LensWindow } from "../start-main-application/lens-window/application-window/lens-window-injection-token";
-import { lensWindowInjectionToken } from "../start-main-application/lens-window/application-window/lens-window-injection-token";
+import type { MessageToChannel } from "../../../common/utils/channel/message-to-channel-injection-token";
+import { messageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
+import closeAllWindowsInjectable from "../../start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
+import type { MessageChannel } from "../../../common/utils/channel/message-channel-injection-token";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import createLensWindowInjectable from "../../start-main-application/lens-window/application-window/create-lens-window.injectable";
+import type { LensWindow } from "../../start-main-application/lens-window/application-window/lens-window-injection-token";
+import { lensWindowInjectionToken } from "../../start-main-application/lens-window/application-window/lens-window-injection-token";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import sendToChannelInElectronBrowserWindowInjectable from "../start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
+import sendToChannelInElectronBrowserWindowInjectable from "../../start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 
 describe("message to channel from main", () => {
   let messageToChannel: MessageToChannel;
