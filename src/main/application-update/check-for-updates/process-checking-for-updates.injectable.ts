@@ -13,7 +13,7 @@ import quitAndInstallUpdateInjectable from "../../electron-app/features/quit-and
 import downloadUpdateInjectable from "../download-update/download-update.injectable";
 import broadcastChangeInUpdatingStatusInjectable from "./broadcast-change-in-updating-status.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates-starting-from-channel.injectable";
-import withOrphanPromiseInjectable from "../../../common/utils/with-orphan-promise/with-orphan-promise";
+import withOrphanPromiseInjectable from "../../../common/utils/with-orphan-promise/with-orphan-promise.injectable";
 
 const processCheckingForUpdatesInjectable = getInjectable({
   id: "process-checking-for-updates",
