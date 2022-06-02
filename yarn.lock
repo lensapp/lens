@@ -9284,10 +9284,10 @@ mobx-react-lite@^3.4.0:
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.0.tgz#d59156a96889cdadad751e5e4dab95f28926dfff"
   integrity sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==
 
-mobx-react@^7.3.0:
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-7.4.0.tgz#29bbdc609c7f6c43e5af6c8e984c8b93a7fe08e8"
-  integrity sha512-gbUwaKZK09SiAleTMxNMKs1MYKTpoIEWJLTLRIR/xnALuuHET8wkL8j1nbc1/6cDkOWVyKz/ReftILx0Pdh2PQ==
+mobx-react@^7.5.0:
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-7.5.0.tgz#8da71f8d3c96409cf178112503ec50467e5cea70"
+  integrity sha512-riHu0XZJA6f64L1iXZoAaDjVt6suYoy8I2HIfuz2tX3O4FFaAe4lVA2CoObttmUQTTFPM7j3Df6T4re0cHkghQ==
   dependencies:
     mobx-react-lite "^3.4.0"
 
