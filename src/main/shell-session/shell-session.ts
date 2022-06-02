@@ -251,6 +251,9 @@ export abstract class ShellSession {
             case TerminalChannels.RESIZE:
               shellProcess.resize(message.data.width, message.data.height);
               break;
+            case TerminalChannels.PING:
+              logger.silly(`[SHELL-SESSION]: ${this.terminalId} ping!`);
+              break;
             default:
               logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
               break;

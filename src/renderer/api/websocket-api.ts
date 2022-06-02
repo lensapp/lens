@@ -31,7 +31,7 @@ interface WebsocketApiParams {
   /**
    * The message for pinging the websocket
    *
-   * @default "{type: \"type\"}"
+   * @default "{type: \"ping\"}"
    */
   pingMessage?: string;
 
