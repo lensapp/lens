@@ -7,11 +7,13 @@ import type { UpdateChannel } from "../../../common/application-update/update-ch
 import checkForPlatformUpdatesInjectable from "../check-for-platform-updates/check-for-platform-updates.injectable";
 import updateCanBeDowngradedInjectable from "./update-can-be-downgraded.injectable";
 
-interface CheckForUpdatesFromChannelResult {
-  updateWasDiscovered: boolean;
-  version?: string;
-  actualUpdateChannel?: UpdateChannel;
-}
+export type CheckForUpdatesFromChannelResult = {
+  updateWasDiscovered: false;
+} | {
+  updateWasDiscovered: true;
+  version: string;
+  actualUpdateChannel: UpdateChannel;
+};
 
 const checkForUpdatesStartingFromChannelInjectable = getInjectable({
   id: "check-for-updates-starting-from-channel",

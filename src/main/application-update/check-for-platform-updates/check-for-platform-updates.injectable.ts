@@ -8,7 +8,14 @@ import type { UpdateChannel } from "../../../common/application-update/update-ch
 import loggerInjectable from "../../../common/logger.injectable";
 import type { UpdateCheckResult } from "electron-updater";
 
-export type CheckForPlatformUpdates = (updateChannel: UpdateChannel, opts: { allowDowngrade: boolean }) => Promise<{ updateWasDiscovered: boolean; version?: string }>;
+export type CheckForUpdatesResult = {
+  updateWasDiscovered: false;
+} | {
+  updateWasDiscovered: true;
+  version: string;
+};
+
+export type CheckForPlatformUpdates = (updateChannel: UpdateChannel, opts: { allowDowngrade: boolean }) => Promise<CheckForUpdatesResult>;
 
 const checkForPlatformUpdatesInjectable = getInjectable({
   id: "check-for-platform-updates",

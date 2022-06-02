@@ -7,7 +7,6 @@ import selectedUpdateChannelInjectable from "../../../common/application-update/
 import updatesAreBeingDiscoveredInjectable from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
 import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import { runInAction } from "mobx";
-import assert from "assert";
 import askBooleanInjectable from "../../ask-boolean/ask-boolean.injectable";
 import quitAndInstallUpdateInjectable from "../../electron-app/features/quit-and-install-update.injectable";
 import downloadUpdateInjectable from "../download-update/download-update.injectable";
@@ -36,10 +35,9 @@ const processCheckingForUpdatesInjectable = getInjectable({
         checkingForUpdatesState.set(true);
       });
 
-      const { updateWasDiscovered, version, actualUpdateChannel } =
-        await checkForUpdatesStartingFromChannel(selectedUpdateChannel.value.get());
+      const result = await checkForUpdatesStartingFromChannel(selectedUpdateChannel.value.get());
 
-      if (!updateWasDiscovered) {
+      if (!result.updateWasDiscovered) {
         broadcastChangeInUpdatingStatus({ eventId: "no-updates-available" });
 
         runInAction(() => {
@@ -50,16 +48,14 @@ const processCheckingForUpdatesInjectable = getInjectable({
         return;
       }
 
+      const { version, actualUpdateChannel } = result;
+
       broadcastChangeInUpdatingStatus({
         eventId: "download-for-update-started",
         version,
       });
 
       runInAction(() => {
-        // TODO: Unacceptable damage caused by strict mode
-        assert(version);
-        assert(actualUpdateChannel);
-
         discoveredVersionState.set({
           version,
           updateChannel: actualUpdateChannel,
