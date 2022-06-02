@@ -17,8 +17,6 @@ describe("with orphan promise, when called", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.register(withOrphanPromiseInjectable);
-
     loggerStub = { error: jest.fn() } as unknown as Logger;
 
     di.override(loggerInjectable, () => loggerStub);
