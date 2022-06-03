@@ -55,7 +55,7 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable.ref elem: HTMLDivElement | null = null;
   @observable activePosition?: TooltipPosition;
-  @observable isVisible = this.props.visible ?? false;
+  @observable isVisible = false;
   @observable isContentVisible = false; // animation manager
 
   constructor(props: TooltipProps) {
@@ -217,13 +217,14 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    if (!this.isVisible) {
+    const { style, formatters, usePortal, children, visible = this.isVisible } = this.props;
+
+    if (!visible) {
       return null;
     }
 
-    const { style, formatters, usePortal, children } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      visible: this.isContentVisible,
+      visible: this.isContentVisible || this.props.visible,
       formatter: !!formatters,
     });
     const tooltip = (
