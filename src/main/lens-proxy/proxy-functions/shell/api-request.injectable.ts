@@ -21,7 +21,7 @@ const shellApiRequestInjectable = getInjectable({
 
     return ({ req, socket, head }) => {
       const cluster = getClusterForRequest(req);
-      const { searchParams } = new URL(req.url);
+      const { searchParams } = new URL(req.url, "https://127.0.0.1");
       const nodeName = searchParams.get("node") || undefined;
       const shellToken = searchParams.get("shellToken");
       const tabId = searchParams.get("id");

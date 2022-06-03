@@ -4,6 +4,7 @@
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
+
 export interface SyncBox<Value> {
   id: string;
   value: IComputedValue<Value>;

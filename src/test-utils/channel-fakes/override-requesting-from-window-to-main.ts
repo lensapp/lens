@@ -44,11 +44,12 @@ export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
       requestFromChannelInjectable,
 
       () => async (channel, ...[request]) => {
-        const requestListener = requestChannelListenerFakesForMain.get(channel.id);
+        const { id } = channel as unknown as RequestChannel<any, any>;
+        const requestListener = requestChannelListenerFakesForMain.get(id);
 
         if (!requestListener) {
           throw new Error(
-            `Tried to get value from channel "${channel.id}", but no listeners were registered`,
+            `Tried to get value from channel "${id}", but no listeners were registered`,
           );
         }
 

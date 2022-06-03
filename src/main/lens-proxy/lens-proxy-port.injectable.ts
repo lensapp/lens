@@ -22,7 +22,7 @@ const lensProxyPortInjectable = getInjectable({
       },
 
       set: (port: number) => {
-        if (port) {
+        if (portNumber) {
           throw new Error(
             "Tried to set port number for LensProxy when it has already been set.",
           );

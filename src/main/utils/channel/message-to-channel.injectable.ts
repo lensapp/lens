@@ -4,9 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { messageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
-import type { MessageChannel } from "../../../common/utils/channel/message-channel-injection-token";
-import { tentativeStringifyJson } from "../../../common/utils/tentative-stringify-json";
 import getVisibleWindowsInjectable from "../../start-main-application/lens-window/get-visible-windows.injectable";
+import type { MessageToChannel } from "../../../common/utils/channel/message-to-channel-injection-token";
 
 const messageToChannelInjectable = getInjectable({
   id: "message-to-channel",
@@ -14,15 +13,14 @@ const messageToChannelInjectable = getInjectable({
   instantiate: (di) => {
     const getVisibleWindows = di.inject(getVisibleWindowsInjectable);
 
-    // TODO: Figure out way to improve typing in internals
-    // Notice that this should be injected using "messageToChannelInjectionToken" which is typed correctly.
-    return (channel: MessageChannel<any>, message?: unknown) => {
-      const stringifiedMessage = tentativeStringifyJson(message);
-
-      getVisibleWindows().forEach((lensWindow) =>
-        lensWindow.send({ channel: channel.id, data: stringifiedMessage ? [stringifiedMessage] : [] }),
-      );
-    };
+    return ((channel, message) => {
+      for (const window of getVisibleWindows()) {
+        window.send({
+          channel: channel.id,
+          data: message !== undefined ? [message] : [],
+        });
+      }
+    }) as MessageToChannel;
   },
 
   injectionToken: messageToChannelInjectionToken,

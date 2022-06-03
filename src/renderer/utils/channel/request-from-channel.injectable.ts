@@ -5,9 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
 import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
-import { pipeline } from "@ogre-tools/fp";
-import { tentativeStringifyJson } from "../../../common/utils/tentative-stringify-json";
-import { tentativeParseJson } from "../../../common/utils/tentative-parse-json";
+import type { RequestChannel } from "../../../common/utils/channel/request-channel-injection-token";
 
 const requestFromChannelInjectable = getInjectable({
   id: "request-from-channel",
@@ -15,13 +13,11 @@ const requestFromChannelInjectable = getInjectable({
   instantiate: (di) => {
     const ipcRenderer = di.inject(ipcRendererInjectable);
 
-    return async (channel, ...[request]) =>
-      await pipeline(
-        request,
-        tentativeStringifyJson,
-        (req) => ipcRenderer.invoke(channel.id, req),
-        tentativeParseJson,
-      );
+    return async (channel, ...[request]) => {
+      const { id } = channel as unknown as RequestChannel<any, any>;
+
+      return ipcRenderer.invoke(id, request);
+    };
   },
 
   injectionToken: requestFromChannelInjectionToken,

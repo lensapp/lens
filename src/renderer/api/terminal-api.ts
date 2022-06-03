@@ -71,6 +71,8 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
       clusterId: this.dependencies.hostedClusterId,
       tabId: this.query.id,
     });
+
+    console.log("authTokenArray", authTokenArray);
     const { hostname, protocol, port } = location;
     const socketUrl = url.format({
       protocol: protocol.includes("https") ? "wss" : "ws",

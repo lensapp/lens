@@ -86,7 +86,7 @@ export class LensProxy {
           const reqHandler = isInternal ? dependencies.shellApiRequest : dependencies.kubeApiUpgradeRequest;
 
           (async () => reqHandler({ req, socket, head, cluster }))()
-            .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
+            .catch(error => logger.error(`[LENS-PROXY]: failed to handle proxy upgrade: ${error}`));
         }
       });
   }
