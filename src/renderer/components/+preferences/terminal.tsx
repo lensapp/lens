@@ -8,7 +8,7 @@ import { action } from "mobx";
 import { observer } from "mobx-react";
 import type { UserStore } from "../../../common/user-store";
 import { SubTitle } from "../layout/sub-title";
-import { Input, InputValidators } from "../input";
+import { Input } from "../input";
 import { Switch } from "../switch";
 import { Select, type SelectOption } from "../select";
 import type { ThemeStore } from "../../themes/store";
@@ -104,8 +104,8 @@ const NonInjectedTerminal = observer((
             theme="round-black"
             type="number"
             min={10}
-            validators={InputValidators.isNumber}
-            value={userStore.terminalConfig.fontSize.toString()}
+            max={50}
+            defaultValue={userStore.terminalConfig.fontSize.toString()}
             onChange={(value) => userStore.terminalConfig.fontSize = Number(value)}
           />
         </section>

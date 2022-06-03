@@ -14,7 +14,6 @@ import { Tooltip } from "../tooltip";
 import * as Validators from "./input_validators";
 import type { InputValidator } from "./input_validators";
 import isFunction from "lodash/isFunction";
-import isBoolean from "lodash/isBoolean";
 import uniqueId from "lodash/uniqueId";
 import { debounce } from "lodash";
 
@@ -24,7 +23,10 @@ export { InputValidators };
 export type { InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
-type InputElementProps = InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement> & DOMAttributes<InputElement>;
+type InputElementProps =
+  InputHTMLAttributes<HTMLInputElement>
+  & TextareaHTMLAttributes<HTMLTextAreaElement>
+  & DOMAttributes<InputElement>;
 
 export interface IconDataFnArg {
   isDirty: boolean;
@@ -173,22 +175,18 @@ export class Input extends React.Component<InputProps, State> {
             error => this.getValidatorError(value, validator) || error,
           ),
         );
-      } else {
-        if (!validator.validate(value, this.props)) {
-          errors.push(this.getValidatorError(value, validator));
-        }
       }
 
-      const result = validator.validate(value, this.props);
+      const isValid = validator.validate(value, this.props);
 
-      if (isBoolean(result) && !result) {
+      if (isValid === false) {
         errors.push(this.getValidatorError(value, validator));
-      } else if (result instanceof Promise) {
+      } else if (isValid instanceof Promise) {
         if (!validationId) {
           this.validationId = validationId = uniqueId("validation_id_");
         }
         asyncValidators.push(
-          result.then(
+          isValid.then(
             () => null, // don't consider any valid result from promise since we interested in errors only
             error => this.getValidatorError(value, validator) || error,
           ),
@@ -266,9 +264,7 @@ export class Input extends React.Component<InputProps, State> {
 
   setDirtyOnChange = debounce(() => this.setDirty(), 500);
 
-  onChange(evt: React.ChangeEvent<any>) {
-    this.props.onChange?.(evt.currentTarget.value, evt);
-    this.validate();
+  async onChange(evt: React.ChangeEvent<any>) {
     this.autoFitHeight();
     this.setDirtyOnChange();
 
@@ -276,6 +272,17 @@ export class Input extends React.Component<InputProps, State> {
     // when used @defaultValue instead of @value changing real input.value doesn't call render()
     if (this.isUncontrolled && this.showMaxLenIndicator) {
       this.forceUpdate();
+    }
+
+    const newValue = evt.currentTarget.value;
+    const eventCopy = { ...evt };
+
+    await this.validate(); // validate first
+
+    // don't propagate changes for invalid values
+    // possible only with uncontrolled components (defaultValue={} must be used instead value={})
+    if (!this.isUncontrolled || (this.isUncontrolled && this.state.valid)) {
+      this.props.onChange?.(newValue, eventCopy);
     }
   }
 
@@ -299,7 +306,7 @@ export class Input extends React.Component<InputProps, State> {
         this.setDirty();
       }
 
-      if(this.props.blurOnEnter){
+      if (this.props.blurOnEnter) {
         //pressing enter indicates that the edit is complete, we can unfocus now
         this.blur();
       }
@@ -379,7 +386,6 @@ export class Input extends React.Component<InputProps, State> {
       multiLine, showValidationLine, validators, theme, maxRows, children, showErrorsAsTooltip,
       maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight, id,
       dirty: _dirty, // excluded from passing to input-element
-      defaultValue,
       trim,
       blurOnEnter,
       ...inputProps
