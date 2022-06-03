@@ -8,10 +8,10 @@ import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import url from "url";
 import { makeObservable, observable } from "mobx";
-import { ipcRenderer } from "electron";
 import logger from "../../common/logger";
 import { once } from "lodash";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
+import type { GetShellAuthToken } from "../../common/shell-authentication/get-auth-token.injectable";
 
 enum TerminalColor {
   RED = "\u001b[31m",
@@ -38,6 +38,7 @@ export interface TerminalEvents extends WebSocketEvents {
 
 export interface TerminalApiDependencies {
   readonly hostedClusterId: string;
+  getShellAuthToken: GetShellAuthToken;
 }
 
 export class TerminalApi extends WebSocketApi<TerminalEvents> {
@@ -66,12 +67,10 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
       this.emitStatus("Connecting ...");
     }
 
-    const authTokenArray = await ipcRenderer.invoke("cluster:shell-api", this.dependencies.hostedClusterId, this.query.id);
-
-    if (!(authTokenArray instanceof Uint8Array)) {
-      throw new TypeError("ShellApi token is not a Uint8Array");
-    }
-
+    const authTokenArray = await this.dependencies.getShellAuthToken({
+      clusterId: this.dependencies.hostedClusterId,
+      tabId: this.query.id,
+    });
     const { hostname, protocol, port } = location;
     const socketUrl = url.format({
       protocol: protocol.includes("https") ? "wss" : "ws",

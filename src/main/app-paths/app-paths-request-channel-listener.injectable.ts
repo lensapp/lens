@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { RequestChannelListener } from "../../common/utils/channel/request-channel-listener-injection-token";
-import { requestChannelListenerInjectionToken } from "../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannelHandlerDescriptor } from "../../common/utils/channel/request-channel-listener-injection-token";
+import { requestChannelHandlerInjectionToken } from "../../common/utils/channel/request-channel-listener-injection-token";
 import type { AppPathsChannel } from "../../common/app-paths/app-paths-channel.injectable";
 import appPathsChannelInjectable from "../../common/app-paths/app-paths-channel.injectable";
 import appPathsInjectable from "../../common/app-paths/app-paths.injectable";
@@ -12,7 +12,7 @@ import appPathsInjectable from "../../common/app-paths/app-paths.injectable";
 const appPathsRequestChannelListenerInjectable = getInjectable({
   id: "app-paths-request-channel-listener",
 
-  instantiate: (di): RequestChannelListener<AppPathsChannel> => {
+  instantiate: (di): RequestChannelHandlerDescriptor<AppPathsChannel> => {
     const channel = di.inject(appPathsChannelInjectable);
     const appPaths = di.inject(appPathsInjectable);
 
@@ -21,7 +21,7 @@ const appPathsRequestChannelListenerInjectable = getInjectable({
       handler: () => appPaths,
     };
   },
-  injectionToken: requestChannelListenerInjectionToken,
+  injectionToken: requestChannelHandlerInjectionToken,
 });
 
 export default appPathsRequestChannelListenerInjectable;

@@ -16,7 +16,7 @@ import type { MessageChannel } from "./message-channel-injection-token";
 import type { RequestFromChannel } from "./request-from-channel-injection-token";
 import { requestFromChannelInjectionToken } from "./request-from-channel-injection-token";
 import type { RequestChannel } from "./request-channel-injection-token";
-import { requestChannelListenerInjectionToken } from "./request-channel-listener-injection-token";
+import { requestChannelHandlerInjectionToken } from "./request-channel-listener-injection-token";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "../../test-utils/get-promise-status";
@@ -183,7 +183,7 @@ describe("channel", () => {
           handler: requestListenerInMainMock,
         }),
 
-        injectionToken: requestChannelListenerInjectionToken,
+        injectionToken: requestChannelHandlerInjectionToken,
       });
 
       mainDi.register(testChannelListenerInMainInjectable);

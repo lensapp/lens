@@ -4,14 +4,14 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { RequestChannel } from "../../common/utils/channel/request-channel-injection-token";
-import type { RequestChannelListener } from "../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannelHandlerDescriptor } from "../../common/utils/channel/request-channel-listener-injection-token";
 import enlistRequestChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-request-channel-listener.injectable";
 import requestFromChannelInjectable from "../../renderer/utils/channel/request-from-channel.injectable";
 
 export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
   const requestChannelListenerFakesForMain = new Map<
       string,
-      RequestChannelListener<RequestChannel<any, any>>
+      RequestChannelHandlerDescriptor<RequestChannel<any, any>>
     >();
 
   mainDi.override(
@@ -28,7 +28,7 @@ export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
         listener.channel.id,
 
           // TODO: Figure out typing
-          listener as unknown as RequestChannelListener<
+          listener as unknown as RequestChannelHandlerDescriptor<
             RequestChannel<any, any>
           >,
       );

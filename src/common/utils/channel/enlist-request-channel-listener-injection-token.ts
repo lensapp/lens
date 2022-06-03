@@ -4,11 +4,11 @@
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { RequestChannel } from "./request-channel-injection-token";
-import type { RequestChannelListener } from "./request-channel-listener-injection-token";
+import type { RequestChannelHandlerDescriptor } from "./request-channel-listener-injection-token";
 
 export type EnlistRequestChannelListener = <
   TChannel extends RequestChannel<any, any>,
->(listener: RequestChannelListener<TChannel>) => () => void;
+>(listener: RequestChannelHandlerDescriptor<TChannel>) => () => void;
 
 export const enlistRequestChannelListenerInjectionToken =
   getInjectionToken<EnlistRequestChannelListener>({

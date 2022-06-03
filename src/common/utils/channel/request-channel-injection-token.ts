@@ -4,16 +4,18 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { JsonValue } from "type-fest";
+import type { IpcValue } from "./allowed-types";
 
 export interface RequestChannel<
-  Request extends JsonValue | void = void,
-  Response extends JsonValue | void = void,
+  Request extends IpcValue | void = void,
+  Response extends IpcValue | void = void,
 > {
-  id: string;
-  _requestSignature?: Request;
-  _responseSignature?: Response;
+  id: Request | Response extends boolean ? string : string;
 }
+
+export type ChannelRequest<Channel> = Channel extends RequestChannel<infer Request, infer Response>
+  ? (arg: Request) => Promise<Response>
+  : never;
 
 export const requestChannelInjectionToken = getInjectionToken<RequestChannel<any, any>>({
   id: "request-channel",
