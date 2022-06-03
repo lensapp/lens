@@ -26,30 +26,30 @@ describe("message to channel from renderer", () => {
     messageToChannel = di.inject(messageToChannelInjectionToken);
   });
 
-  it("given string as message, when messaging to channel, sends stringified message", () => {
+  it("given string as message, when messaging to channel, sends message", () => {
     messageToChannel(someChannel, "some-message");
 
-    expect(sendMock).toHaveBeenCalledWith("some-channel-id", '"some-message"');
+    expect(sendMock).toHaveBeenCalledWith("some-channel-id", "some-message");
   });
 
-  it("given boolean as message, when messaging to channel, sends stringified message", () => {
+  it("given boolean as message, when messaging to channel, sends message", () => {
     messageToChannel(someChannel, true);
 
-    expect(sendMock).toHaveBeenCalledWith("some-channel-id", "true");
+    expect(sendMock).toHaveBeenCalledWith("some-channel-id", true);
   });
 
-  it("given number as message, when messaging to channel, sends stringified message", () => {
+  it("given number as message, when messaging to channel, sends message", () => {
     messageToChannel(someChannel, 42);
 
-    expect(sendMock).toHaveBeenCalledWith("some-channel-id", "42");
+    expect(sendMock).toHaveBeenCalledWith("some-channel-id", 42);
   });
 
-  it("given object as message, when messaging to channel, sends stringified message", () => {
+  it("given object as message, when messaging to channel, sends message", () => {
     messageToChannel(someChannel, { some: "object" });
 
     expect(sendMock).toHaveBeenCalledWith(
       "some-channel-id",
-      JSON.stringify({ some: "object" }),
+      { some: "object" },
     );
   });
 });

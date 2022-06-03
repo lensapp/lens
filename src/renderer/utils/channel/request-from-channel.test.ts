@@ -39,10 +39,6 @@ describe("request from channel in renderer", () => {
       actualPromise = requestFromChannel(someChannel, "some-message");
     });
 
-    it("sends stringified message", () => {
-      expect(invokeMock).toHaveBeenCalledWith("some-channel-id", '"some-message"');
-    });
-
     it("does not resolve yet", async () => {
       const promiseStatus = await getPromiseStatus(actualPromise);
 
@@ -57,64 +53,45 @@ describe("request from channel in renderer", () => {
       expect(actual).toBe("some-response");
     });
 
-    it("when invoking resolves with stringified string, resolves with string", async () => {
-      await invokeMock.resolve('"some-response"');
+    it("when resolving with number, resolves with number", async () => {
+      await invokeMock.resolve(10);
 
       const actual = await actualPromise;
 
-      expect(actual).toBe("some-response");
+      expect(actual).toBe(10);
     });
 
-    it("when invoking resolves with stringified boolean, resolves with boolean", async () => {
-      await invokeMock.resolve("true");
+    it("when resolving with number 0, resolves with number 0", async () => {
+      await invokeMock.resolve(0);
+
+      const actual = await actualPromise;
+
+      expect(actual).toBe(0);
+    });
+
+    it("when resolving with true, resolves with true", async () => {
+      await invokeMock.resolve(true);
 
       const actual = await actualPromise;
 
       expect(actual).toBe(true);
     });
 
-    it("when invoking resolves with stringified number, resolves with number", async () => {
-      await invokeMock.resolve("42");
+    it("when resolving with false, resolves with false", async () => {
+      await invokeMock.resolve(false);
 
       const actual = await actualPromise;
 
-      expect(actual).toBe(42);
+      expect(actual).toBe(false);
     });
 
-    it("when invoking resolves with stringified object, resolves with object", async () => {
-      await invokeMock.resolve(JSON.stringify({ some: "object" }));
+    it("when resolving with object, resolves with object", async () => {
+      await invokeMock.resolve({ myField: true });
 
       const actual = await actualPromise;
 
-      expect(actual).toEqual({ some: "object" });
+      expect(actual).toEqual({ myField: true });
     });
-  });
-
-  it("given string as message, when messaging to channel, sends stringified message", () => {
-    requestFromChannel(someChannel, "some-message");
-
-    expect(invokeMock).toHaveBeenCalledWith("some-channel-id", '"some-message"');
-  });
-
-  it("given boolean as message, when messaging to channel, sends stringified message", () => {
-    requestFromChannel(someChannel, true);
-
-    expect(invokeMock).toHaveBeenCalledWith("some-channel-id", "true");
-  });
-
-  it("given number as message, when messaging to channel, sends stringified message", () => {
-    requestFromChannel(someChannel, 42);
-
-    expect(invokeMock).toHaveBeenCalledWith("some-channel-id", "42");
-  });
-
-  it("given object as message, when messaging to channel, sends stringified message", () => {
-    requestFromChannel(someChannel, { some: "object" });
-
-    expect(invokeMock).toHaveBeenCalledWith(
-      "some-channel-id",
-      JSON.stringify({ some: "object" }),
-    );
   });
 });
 

@@ -50,6 +50,7 @@ import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.in
 import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
 import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import randomBytesInjectable from "../../../main/utils/random-bytes.injectable";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import type { LensExtension } from "../../../extensions/lens-extension";
 
@@ -150,6 +151,21 @@ export const getApplicationBuilder = () => {
   rendererDi.override(clusterStoreInjectable, () => clusterStoreStub);
   rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
   mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
+
+  mainDi.override(randomBytesInjectable, () => {
+    let callId = 0;
+
+    return async (count) => {
+      const currentCallId = callId += 1;
+      const values = new Array(count);
+
+      for (let i = 0; i < count; i += 1) {
+        values[i] = ((i + currentCallId) << 2) ^ currentCallId;
+      }
+
+      return Buffer.from(values);
+    };
+  });
 
   const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeRenderCallbacks: Callback[] = [];

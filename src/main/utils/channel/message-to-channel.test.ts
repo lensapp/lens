@@ -57,13 +57,13 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: ['"some-message"'],
+            data: ["some-message"],
           },
         ],
       ]);
     });
 
-    it("given boolean as message, when messaging to channel, messages to window with stringified message", () => {
+    it("given boolean as message, when messaging to channel, messages to window with message", () => {
       messageToChannel(someChannel, true);
 
       expect(sendToChannelInBrowserMock.mock.calls).toEqual([
@@ -72,13 +72,13 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: ["true"],
+            data: [true],
           },
         ],
       ]);
     });
 
-    it("given number as message, when messaging to channel, messages to window with stringified message", () => {
+    it("given number as message, when messaging to channel, messages to window with message", () => {
       messageToChannel(someChannel, 42);
 
       expect(sendToChannelInBrowserMock.mock.calls).toEqual([
@@ -87,13 +87,13 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: ["42"],
+            data: [42],
           },
         ],
       ]);
     });
 
-    it("given object as message, when messaging to channel, messages to window with stringified message", () => {
+    it("given object as message, when messaging to channel, messages to window with message", () => {
       messageToChannel(someChannel, { some: "object" });
 
       expect(sendToChannelInBrowserMock.mock.calls).toEqual([
@@ -102,7 +102,7 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: [JSON.stringify({ some: "object" })],
+            data: [{ some: "object" }],
           },
         ],
       ]);
@@ -121,7 +121,7 @@ describe("message to channel from main", () => {
 
         {
           channel: "some-channel",
-          data: ['"some-message"'],
+          data: ["some-message"],
         },
       ],
 
@@ -130,7 +130,7 @@ describe("message to channel from main", () => {
 
         {
           channel: "some-channel",
-          data: ['"some-message"'],
+          data: ["some-message"],
         },
       ],
     ]);
