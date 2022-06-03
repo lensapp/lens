@@ -344,7 +344,7 @@
     "@types/webpack-env": "^1.17.0",
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.17.0",
+    "@typescript-eslint/parser": "^5.27.0",
     "ansi_up": "^5.1.0",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
