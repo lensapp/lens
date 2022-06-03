@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`preferences - navigation using application menu renders 1`] = `<div />`;
+exports[`preferences - navigation using application menu renders 1`] = `
+<div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
 
 exports[`preferences - navigation using application menu when navigating to preferences using application menu renders 1`] = `
 <div>
@@ -346,13 +352,12 @@ exports[`preferences - navigation using application menu when navigating to pref
                 class="Select__control css-1s2u09g-control"
               >
                 <div
-                  class="Select__value-container css-319lph-ValueContainer"
+                  class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
                 >
                   <div
-                    class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-update-channel-input-placeholder"
+                    class="Select__single-value css-qc6sy-singleValue"
                   >
-                    Select...
+                    Stable
                   </div>
                   <div
                     class="Select__input-container css-6j8wv5-Input"
@@ -360,7 +365,6 @@ exports[`preferences - navigation using application menu when navigating to pref
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-update-channel-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -527,5 +531,8 @@ exports[`preferences - navigation using application menu when navigating to pref
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

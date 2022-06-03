@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`installing update when started renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`installing update when started when user checks for updates renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`installing update when started when user checks for updates when new update is discovered renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`installing update when started when user checks for updates when new update is discovered when download fails renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`installing update when started when user checks for updates when new update is discovered when download succeeds renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`installing update when started when user checks for updates when new update is discovered when download succeeds when user answers not to install the update renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`installing update when started when user checks for updates when new update is discovered when download succeeds when user answers to install the update renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`installing update when started when user checks for updates when no new update is discovered renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;

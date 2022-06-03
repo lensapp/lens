@@ -8,6 +8,8 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import requestAnimationFrameInjectable from "./request-animation-frame.injectable";
 
 export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
 
@@ -21,8 +23,12 @@ export interface AnimateProps {
   children?: React.ReactNode;
 }
 
+interface Dependencies {
+  requestAnimationFrame: (callback: () => void) => void;
+}
+
 @observer
-class DefaultedAnimate extends React.Component<AnimateProps & typeof DefaultedAnimate.defaultProps> {
+class DefaultedAnimate extends React.Component<AnimateProps & Dependencies & typeof DefaultedAnimate.defaultProps> {
   static defaultProps = {
     name: "opacity",
     enter: true,
@@ -38,7 +44,7 @@ class DefaultedAnimate extends React.Component<AnimateProps & typeof DefaultedAn
     leave: false,
   };
 
-  constructor(props: AnimateProps & typeof DefaultedAnimate.defaultProps) {
+  constructor(props: AnimateProps & Dependencies & typeof DefaultedAnimate.defaultProps) {
     super(props);
     makeObservable(this);
   }
@@ -69,7 +75,8 @@ class DefaultedAnimate extends React.Component<AnimateProps & typeof DefaultedAn
 
   enter() {
     this.isVisible = true; // triggers render() to apply css-animation in existing dom
-    requestAnimationFrame(() => {
+
+    this.props.requestAnimationFrame(() => {
       this.statusClassName.enter = true;
       this.props.onEnter();
     });
@@ -115,4 +122,17 @@ class DefaultedAnimate extends React.Component<AnimateProps & typeof DefaultedAn
   }
 }
 
-export const Animate = (props: AnimateProps) => <DefaultedAnimate {...props} />;
+export const NonInjectedAnimate = (props: AnimateProps & Dependencies) => <DefaultedAnimate {...props} />;
+
+export const Animate = withInjectables<Dependencies, AnimateProps>(
+  NonInjectedAnimate,
+
+  {
+    getProps: (di, props) => ({
+      requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
+      ...props,
+    }),
+  },
+);
+
+

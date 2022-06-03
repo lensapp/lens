@@ -12,8 +12,6 @@ import appPathsStateInjectable from "../../common/app-paths/app-paths-state.inje
 import { pathNames } from "../../common/app-paths/app-path-names";
 import { fromPairs, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
-import { appPathsIpcChannel } from "../../common/app-paths/app-path-injection-token";
-import registerChannelInjectable from "./register-channel/register-channel.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import { beforeElectronIsReadyInjectionToken } from "../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 
@@ -25,7 +23,6 @@ const setupAppPathsInjectable = getInjectable({
     const appName = di.inject(appNameInjectable);
     const getAppPath = di.inject(getElectronAppPathInjectable);
     const appPathsState = di.inject(appPathsStateInjectable);
-    const registerChannel = di.inject(registerChannelInjectable);
     const directoryForIntegrationTesting = di.inject(directoryForIntegrationTestingInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
 
@@ -46,8 +43,6 @@ const setupAppPathsInjectable = getInjectable({
         ) as AppPaths;
 
         appPathsState.set(appPaths);
-
-        registerChannel(appPathsIpcChannel, () => appPaths);
       },
     };
   },

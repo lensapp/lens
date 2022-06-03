@@ -5,17 +5,12 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import defaultShellInjectable from "../../renderer/components/+preferences/default-shell.injectable";
 
 describe("preferences - navigation to terminal preferences", () => {
   let applicationBuilder: ApplicationBuilder;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
-
-    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(defaultShellInjectable, () => "some-default-shell");
-    });
   });
 
   describe("given in preferences, when rendered", () => {

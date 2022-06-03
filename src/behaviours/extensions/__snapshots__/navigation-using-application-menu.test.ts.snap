@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`extensions - navigation using application menu renders 1`] = `<div />`;
+exports[`extensions - navigation using application menu renders 1`] = `
+<div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
 
 exports[`extensions - navigation using application menu when navigating to extensions using application menu renders 1`] = `
 <div>
@@ -118,5 +124,8 @@ exports[`extensions - navigation using application menu when navigating to exten
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

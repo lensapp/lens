@@ -4,12 +4,11 @@
  */
 
 import glob from "glob";
-import { kebabCase, memoize } from "lodash/fp";
+import { kebabCase, memoize, noop } from "lodash/fp";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
-import registerChannelInjectable from "./app-paths/register-channel/register-channel.injectable";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
@@ -29,8 +28,6 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
-import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
-import isAutoUpdateEnabledInjectable from "./is-auto-update-enabled.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
 import type { AppEvent } from "../common/app-event-bus/event-bus";
@@ -45,7 +42,6 @@ import setupSentryInjectable from "./start-main-application/runnables/setup-sent
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
-import trayInjectable from "./tray/tray.injectable";
 import applicationMenuInjectable from "./menu/application-menu.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/runnables/setup-system-ca.injectable";
@@ -67,7 +63,7 @@ import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { observable } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
-import ipcMainInjectable from "./app-paths/register-channel/ipc-main/ipc-main.injectable";
+import ipcMainInjectable from "./utils/channel/ipc-main/ipc-main.injectable";
 import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
@@ -75,10 +71,21 @@ import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectab
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
-import { noop } from "../renderer/utils";
+import productNameInjectable from "./app-paths/app-name/product-name.injectable";
+import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
+import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
+import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
+import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
+import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
+import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
+import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
+import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
+import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
+import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 
-export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
+export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
     doGeneralOverrides = false,
   } = opts;
@@ -100,10 +107,11 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
-    di.override(userStoreInjectable, () => ({ startMainReactions: () => {} }) as UserStore);
+    di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
-    di.override(clusterStoreInjectable, () => ({ getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
+    di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
     overrideOperatingSystem(di);
@@ -114,19 +122,22 @@ export function getDiForUnitTesting(opts: GetDiForUnitTestingOptions = {}) {
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
 
+    di.override(productNameInjectable, () => "some-product-name");
+    di.override(appVersionInjectable, () => "1.0.0");
+
     di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
 
     di.override(stopServicesAndExitAppInjectable, () => () => {});
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
-    di.override(trayInjectable, () => ({ start: () => {}, stop: () => {} }));
     di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
+
+    di.override(periodicalCheckForUpdatesInjectable, () => ({ start: () => {}, stop: () => {}, started: false }));
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
     di.override(appNameInjectable, () => "some-app-name");
-    di.override(registerChannelInjectable, () => () => undefined);
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });
@@ -182,6 +193,8 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     setupSystemCaInjectable,
     setupListenerForCurrentClusterFrameInjectable,
     setupRunnablesAfterWindowIsOpenedInjectable,
+    startCatalogSyncInjectable,
+    startKubeConfigSyncInjectable,
   ].forEach((injectable) => {
     di.override(injectable, () => ({ run: () => {} }));
   });
@@ -215,6 +228,13 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(ipcMainInjectable, () => ({}));
   di.override(getElectronThemeInjectable, () => () => "dark");
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
+  di.override(quitAndInstallUpdateInjectable, () => () => {});
+  di.override(setUpdateOnQuitInjectable, () => () => {});
+  di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
+
+  di.override(checkForPlatformUpdatesInjectable, () => () => {
+    throw new Error("Tried to check for platform updates without explicit override.");
+  });
 
   di.override(createElectronWindowForInjectable, () => () => async () => ({
     show: () => {},
@@ -234,5 +254,6 @@ const overrideElectronFeatures = (di: DiContainer) => {
   );
 
   di.override(setElectronAppPathInjectable, () => () => {});
-  di.override(isAutoUpdateEnabledInjectable, () => () => false);
+  di.override(publishIsConfiguredInjectable, () => false);
+  di.override(electronUpdaterIsActiveInjectable, () => false);
 };

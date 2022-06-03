@@ -281,7 +281,7 @@
     "ws": "^8.5.0"
   },
   "devDependencies": {
-    "@async-fn/jest": "1.6.0",
+    "@async-fn/jest": "1.6.1",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",

@@ -29,7 +29,7 @@ const navigateInjectable = getInjectable({
         ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
         : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
 
-      await applicationWindow.send({
+      applicationWindow.send({
         channel,
         frameInfo,
         data: [url],

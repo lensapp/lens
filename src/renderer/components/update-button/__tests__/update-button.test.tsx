@@ -3,15 +3,25 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { render, act } from "@testing-library/react";
+import { act } from "@testing-library/react";
 import React from "react";
 import { UpdateButton } from "../update-button";
 import "@testing-library/jest-dom/extend-expect";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
 
 const update = jest.fn();
 
 describe("<UpdateButton/>", () => {
+  let render: DiRender;
+
   beforeEach(() => {
+
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+
     update.mockClear();
   });
 

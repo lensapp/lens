@@ -8,6 +8,9 @@ exports[`navigating between routes given route with optional path parameters whe
   "someOtherParameter": "some-other-value"
 }
   </pre>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -16,5 +19,8 @@ exports[`navigating between routes given route without path parameters when navi
   <div>
     Some component
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

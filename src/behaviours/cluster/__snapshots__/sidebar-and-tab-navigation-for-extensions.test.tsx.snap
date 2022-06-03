@@ -293,6 +293,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -589,6 +592,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -929,6 +935,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1313,6 +1322,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </main>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -1697,6 +1709,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </main>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -2036,6 +2051,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </main>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -2376,6 +2394,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -2672,5 +2693,8 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

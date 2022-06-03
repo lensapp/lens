@@ -6,14 +6,11 @@
 import moment from "moment-timezone";
 import path from "path";
 import os from "os";
-import { getAppVersion } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
-import { SemVer } from "semver";
 import { defaultThemeId, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
 import type { ObservableMap } from "mobx";
 import { observable } from "mobx";
-import { readonly } from "../utils/readonly";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -296,38 +293,6 @@ const terminalConfig: PreferenceDescription<TerminalConfig, TerminalConfig> = {
   },
 };
 
-export interface UpdateChannelInfo {
-  label: string;
-}
-
-export const updateChannels = readonly(new Map<string, UpdateChannelInfo>([
-  ["latest", {
-    label: "Stable",
-  }],
-  ["beta", {
-    label: "Beta",
-  }],
-  ["alpha", {
-    label: "Alpha",
-  }],
-]));
-export const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
-
-const updateChannel: PreferenceDescription<string> = {
-  fromStore(val) {
-    return !val || !updateChannels.has(val)
-      ? defaultUpdateChannel
-      : val;
-  },
-  toStore(val) {
-    if (!updateChannels.has(val) || val === defaultUpdateChannel) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
 export type ExtensionRegistryLocation = "default" | "npmrc" | "custom";
 
 export type ExtensionRegistry = {
@@ -365,7 +330,7 @@ export type UserStoreFlatModel = {
 
 export type UserPreferencesModel = {
   [field in keyof typeof DESCRIPTORS]: PreferencesModelType<field>;
-};
+} & { updateChannel: string };
 
 export const DESCRIPTORS = {
   httpsProxy,
@@ -385,6 +350,5 @@ export const DESCRIPTORS = {
   editorConfiguration,
   terminalCopyOnSelect,
   terminalConfig,
-  updateChannel,
   extensionRegistryUrl,
 };

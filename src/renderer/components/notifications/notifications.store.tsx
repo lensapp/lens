@@ -91,5 +91,3 @@ export class NotificationsStore {
     }
   }
 }
-
-export const notificationsStore = new NotificationsStore();
