@@ -7,18 +7,26 @@ import loggerInjectable from "../../../../common/logger.injectable";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
 import { BrowserWindow } from "electron";
 import { openBrowser } from "../../../../common/utils";
-import type { SendToViewArgs } from "./lens-window-injection-token";
 import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
 import type { LensWindow } from "./create-lens-window.injectable";
+import type { RequireExactlyOne } from "type-fest";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
+
+export interface FileSource {
+  file: string;
+}
+export interface UrlSource {
+  url: string;
+}
+export type ContentSource = RequireExactlyOne<FileSource & UrlSource>;
 
 export interface ElectronWindowConfiguration {
   id: string;
   title: string;
   defaultHeight: number;
   defaultWidth: number;
-  getContentUrl: () => string;
+  getContentSource: () => ContentSource;
   resizable: boolean;
   windowFrameUtilitiesAreShown: boolean;
   centered: boolean;
@@ -32,6 +40,10 @@ export interface ElectronWindowConfiguration {
 
 export type CreateElectronWindow = () => Promise<LensWindow>;
 export type CreateElectronWindowFor = (config: ElectronWindowConfiguration) => CreateElectronWindow;
+
+function isFileSource(src: ContentSource): src is FileSource {
+  return typeof (src as FileSource).file === "string";
+}
 
 const createElectronWindowFor = getInjectable({
   id: "create-electron-window-for",
@@ -159,17 +171,22 @@ const createElectronWindowFor = getInjectable({
           return { action: "deny" };
         });
 
-      const contentUrl = configuration.getContentUrl();
+      const contentSource = configuration.getContentSource();
 
-      logger.info(`[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from url: ${contentUrl}...`);
+      if (isFileSource(contentSource)) {
+        logger.info(`[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from file: ${contentSource.file}...`);
+        await browserWindow.loadFile(contentSource.file);
+      } else {
+        logger.info(`[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from url: ${contentSource.url}...`);
+        await browserWindow.loadURL(contentSource.url);
+      }
 
-      await browserWindow.loadURL(contentUrl);
       await configuration.beforeOpen?.();
 
       return {
         show: () => browserWindow.show(),
         close: () => browserWindow.close(),
-        send: (args: SendToViewArgs) => sendToChannelInLensWindow(browserWindow, args),
+        send: (args) => sendToChannelInLensWindow(browserWindow, args),
       };
     };
   },

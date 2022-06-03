@@ -11,7 +11,7 @@ import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
 import { delay } from "../../../../common/utils";
 import { bundledExtensionsLoaded } from "../../../../common/ipc/extension-handling";
-import ipcMainInjectable from "../../../app-paths/register-channel/ipc-main/ipc-main.injectable";
+import ipcMainInjectable from "../../../utils/channel/ipc-main/ipc-main.injectable";
 
 const applicationWindowInjectable = getInjectable({
   id: "application-window",
@@ -29,7 +29,9 @@ const applicationWindowInjectable = getInjectable({
       title: applicationName,
       defaultHeight: 900,
       defaultWidth: 1440,
-      getContentUrl: () => `http://localhost:${lensProxyPort.get()}`,
+      getContentSource: () => ({
+        url: `http://localhost:${lensProxyPort.get()}`,
+      }),
       resizable: true,
       windowFrameUtilitiesAreShown: isMac,
       titleBarStyle: isMac ? "hiddenInset" : "hidden",

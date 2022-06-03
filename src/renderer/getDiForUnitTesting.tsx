@@ -7,12 +7,11 @@ import glob from "glob";
 import { memoize, noop } from "lodash/fp";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import getValueFromRegisteredChannelInjectable from "./app-paths/get-value-from-registered-channel/get-value-from-registered-channel.injectable";
+import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import { createMemoryHistory } from "history";
-import registerIpcChannelListenerInjectable from "./app-paths/get-value-from-registered-channel/register-ipc-channel-listener.injectable";
-import focusWindowInjectable from "./ipc-channel-listeners/focus-window.injectable";
+import focusWindowInjectable from "./navigation/focus-window.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
@@ -32,19 +31,22 @@ import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
-import type { GetDiForUnitTestingOptions } from "../test-utils/get-dis-for-unit-testing";
 import historyInjectable from "./navigation/history.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
-import ipcRendererInjectable
-  from "./app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
+import ipcRendererInjectable from "./utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable } from "mobx";
+import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
+import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
+import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
+import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 
-export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
+export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
     doGeneralOverrides = false,
   } = opts;
@@ -65,6 +67,7 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(isMacInjectable, () => true);
     di.override(isWindowsInjectable, () => false);
     di.override(isLinuxInjectable, () => false);
@@ -75,7 +78,11 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
 
+    di.override(appVersionInjectable, () => "1.0.0");
+
     di.override(historyInjectable, () => createMemoryHistory());
+
+    di.override(requestAnimationFrameInjectable, () => (callback) => callback());
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
@@ -99,6 +106,9 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
     di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
 
     di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
+    di.override(provideInitialValuesForSyncBoxesInjectable, () => ({ run: () => {} }));
+
+    di.override(defaultShellInjectable, () => "some-default-shell");
 
     di.override(
       userStoreInjectable,
@@ -114,8 +124,7 @@ export const getDiForUnitTesting = (opts: GetDiForUnitTestingOptions = {}) => {
 
     di.override(apiManagerInjectable, () => new ApiManager());
 
-    di.override(getValueFromRegisteredChannelInjectable, () => () => Promise.resolve(undefined as never));
-    di.override(registerIpcChannelListenerInjectable, () => () => undefined);
+    di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
     overrideFsWithFakes(di);
 

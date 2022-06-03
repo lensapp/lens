@@ -20,6 +20,9 @@ import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
 import assert from "assert";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -34,6 +37,9 @@ describe("kubeconfig manager tests", () => {
 
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     loggerMock = {
       warn: jest.fn(),

@@ -79,7 +79,7 @@ Some of the most-important fields include:
 }
 ```
 
-## Webpack configuation
+## Webpack configuration
 
 The following webpack `externals` are provided by `Lens` and must be used (when available) to make sure that the versions used are in sync.
 

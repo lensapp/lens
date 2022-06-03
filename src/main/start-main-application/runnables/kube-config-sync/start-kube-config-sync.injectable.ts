@@ -25,6 +25,8 @@ const startKubeConfigSyncInjectable = getInjectable({
     };
   },
 
+  causesSideEffects: true,
+
   injectionToken: afterRootFrameIsReadyInjectionToken,
 });
 

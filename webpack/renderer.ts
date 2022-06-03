@@ -132,7 +132,7 @@ export function iconsAndImagesWebpackRules(): webpack.RuleSetRule[] {
   return [
     {
       test: /\.svg$/,
-      type: "asset/inline", // data:image/svg+xml;base64,...
+      type: "asset/source", // exports the source code of the asset, so we get XML
     },
     {
       test: /\.(jpg|png|ico)$/,

@@ -16,7 +16,6 @@ import { UserStore } from "../../../common/user-store";
 import type { ThemeStore } from "../../themes/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
-import logger from "../../../main/logger";
 
 export type MonacoEditorId = string;
 
@@ -65,6 +64,11 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   @observable.ref editor!: editor.IStandaloneCodeEditor;
   @observable readonly dimensions: { width?: number; height?: number } = {};
   @observable unmounting = false;
+
+  // TODO: investigate how to replace with "common/logger"
+  //  currently leads for stucking UI forever & infinite loop.
+  //  e.g. happens on tab change/create, maybe some other cases too.
+  private logger = console;
 
   constructor(props: MonacoEditorProps & Dependencies) {
     super(props);
@@ -129,7 +133,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   }
 
   protected onModelChange(model: editor.ITextModel, oldModel?: editor.ITextModel) {
-    logger.info("[MONACO]: model change", { model, oldModel }, this.logMetadata);
+    this.logger.info("[MONACO]: model change", { model, oldModel }, this.logMetadata);
 
     if (oldModel) {
       this.saveViewState(oldModel);
@@ -166,9 +170,9 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   componentDidMount() {
     try {
       this.createEditor();
-      logger.info(`[MONACO]: editor did mount`, this.logMetadata);
+      this.logger.info(`[MONACO]: editor did mount`, this.logMetadata);
     } catch (error) {
-      logger.error(`[MONACO]: mounting failed: ${error}`, this.logMetadata);
+      this.logger.error(`[MONACO]: mounting failed: ${error}`, this.logMetadata);
     }
   }
 
@@ -200,7 +204,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
       ...this.options,
     });
 
-    logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`, this.logMetadata);
+    this.logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`, this.logMetadata);
     this.validateLazy(); // validate initial value
     this.restoreViewState(this.model); // restore previous state if any
 

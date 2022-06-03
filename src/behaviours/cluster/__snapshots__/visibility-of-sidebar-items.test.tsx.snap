@@ -261,6 +261,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -573,5 +576,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

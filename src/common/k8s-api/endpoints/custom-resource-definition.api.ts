@@ -10,12 +10,14 @@ import type { BaseKubeObjectCondition, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
+import type { JSONSchemaProps } from "./types/json-schema-props";
 
 interface AdditionalPrinterColumnsCommon {
   name: string;
   type: "integer" | "number" | "string" | "boolean" | "date";
-  priority: number;
-  description: string;
+  priority?: number;
+  format?: "int32" | "int64" | "float" | "double" | "byte" | "binary" | "date" | "date-time" | "password";
+  description?: string;
 }
 
 export type AdditionalPrinterColumnsV1 = AdditionalPrinterColumnsCommon & {
@@ -26,11 +28,15 @@ type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
   JSONPath: string;
 };
 
+export interface CustomResourceValidation {
+  openAPIV3Schema?: JSONSchemaProps;
+}
+
 export interface CustomResourceDefinitionVersion {
   name: string;
   served: boolean;
   storage: boolean;
-  schema?: object; // required in v1 but not present in v1beta
+  schema?: CustomResourceValidation; // required in v1 but not present in v1beta
   additionalPrinterColumns?: AdditionalPrinterColumnsV1[];
 }
 

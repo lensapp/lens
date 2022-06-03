@@ -6,16 +6,13 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
 
 describe("welcome - navigation using application menu", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ mainDi }) => {
-      mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
-    });
+    applicationBuilder = getApplicationBuilder();
 
     rendered = await applicationBuilder.render();
   });

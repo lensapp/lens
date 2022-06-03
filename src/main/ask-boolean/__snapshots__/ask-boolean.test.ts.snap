@@ -1,0 +1,336 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ask-boolean given started when asking multiple questions renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    >
+      <div
+        class="Animate opacity notification flex info enter"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <div
+          class="box"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="info_outline"
+            >
+              info_outline
+            </span>
+          </i>
+        </div>
+        <div
+          class="message box grow"
+        >
+          <div
+            class="flex column gaps"
+            data-testid="ask-boolean-some-random-id-1"
+          >
+            <b>
+              some-title
+            </b>
+            <p>
+              Some question
+            </p>
+            <div
+              class="flex gaps row align-left box grow"
+            >
+              <button
+                class="Button light"
+                data-testid="ask-boolean-some-random-id-1-button-yes"
+                type="button"
+              >
+                Yes
+              </button>
+              <button
+                class="Button active outlined"
+                data-testid="ask-boolean-some-random-id-1-button-no"
+                type="button"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="box"
+        >
+          <i
+            class="Icon close material interactive focusable"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-1"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="Animate opacity notification flex info enter"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <div
+          class="box"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="info_outline"
+            >
+              info_outline
+            </span>
+          </i>
+        </div>
+        <div
+          class="message box grow"
+        >
+          <div
+            class="flex column gaps"
+            data-testid="ask-boolean-some-random-id-2"
+          >
+            <b>
+              some-other-title
+            </b>
+            <p>
+              Some other question
+            </p>
+            <div
+              class="flex gaps row align-left box grow"
+            >
+              <button
+                class="Button light"
+                data-testid="ask-boolean-some-random-id-2-button-yes"
+                type="button"
+              >
+                Yes
+              </button>
+              <button
+                class="Button active outlined"
+                data-testid="ask-boolean-some-random-id-2-button-no"
+                type="button"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="box"
+        >
+          <i
+            class="Icon close material interactive focusable"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-2"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`ask-boolean given started when asking multiple questions when answering to first question renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    >
+      <div
+        class="Animate opacity notification flex info enter"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <div
+          class="box"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="info_outline"
+            >
+              info_outline
+            </span>
+          </i>
+        </div>
+        <div
+          class="message box grow"
+        >
+          <div
+            class="flex column gaps"
+            data-testid="ask-boolean-some-random-id-2"
+          >
+            <b>
+              some-other-title
+            </b>
+            <p>
+              Some other question
+            </p>
+            <div
+              class="flex gaps row align-left box grow"
+            >
+              <button
+                class="Button light"
+                data-testid="ask-boolean-some-random-id-2-button-yes"
+                type="button"
+              >
+                Yes
+              </button>
+              <button
+                class="Button active outlined"
+                data-testid="ask-boolean-some-random-id-2-button-no"
+                type="button"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="box"
+        >
+          <i
+            class="Icon close material interactive focusable"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-2"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`ask-boolean given started when asking question renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    >
+      <div
+        class="Animate opacity notification flex info enter"
+        style="--enter-duration: 100ms; --leave-duration: 100ms;"
+      >
+        <div
+          class="box"
+        >
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="info_outline"
+            >
+              info_outline
+            </span>
+          </i>
+        </div>
+        <div
+          class="message box grow"
+        >
+          <div
+            class="flex column gaps"
+            data-testid="ask-boolean-some-random-id-1"
+          >
+            <b>
+              some-title
+            </b>
+            <p>
+              Some question
+            </p>
+            <div
+              class="flex gaps row align-left box grow"
+            >
+              <button
+                class="Button light"
+                data-testid="ask-boolean-some-random-id-1-button-yes"
+                type="button"
+              >
+                Yes
+              </button>
+              <button
+                class="Button active outlined"
+                data-testid="ask-boolean-some-random-id-1-button-no"
+                type="button"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="box"
+        >
+          <i
+            class="Icon close material interactive focusable"
+            data-testid="close-notification-for-ask-boolean-for-some-random-id-1"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`ask-boolean given started when asking question when user answers "no" renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`ask-boolean given started when asking question when user answers "yes" renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`ask-boolean given started when asking question when user closes notification without answering the question renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
