@@ -15,7 +15,7 @@ import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
-import { fireEvent } from "@testing-library/react";
+import { getByText, fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
 import { Sidebar } from "../layout/sidebar";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -52,6 +52,9 @@ import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTest
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
+import assert from "assert";
+import { openMenu } from "react-select-event";
+import userEvent from "@testing-library/user-event";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -84,6 +87,11 @@ export interface ApplicationBuilder {
 
   helmCharts: {
     navigate: () => void;
+  };
+
+  select: {
+    openMenu: (id: string) => void;
+    selectOption: (menuId: string, labelText: string) => void;
   };
 }
 
@@ -432,6 +440,30 @@ export const getApplicationBuilder = () => {
       );
 
       return rendered;
+    },
+
+    select: {
+      openMenu: (menuId) => {
+        const selector = rendered.container.querySelector<HTMLElement>(
+          `#${menuId}`,
+        );
+
+        assert(selector);
+
+        openMenu(selector);
+      },
+
+      selectOption: (menuId, labelText) => {
+        const menuOptions = rendered.baseElement.querySelector<HTMLElement>(
+          `.${menuId}-options`,
+        );
+
+        assert(menuOptions);
+
+        const option = getByText(menuOptions, labelText);
+
+        userEvent.click(option);
+      },
     },
   };
 
