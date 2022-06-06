@@ -14,9 +14,10 @@ export interface RemovableItemProps extends DOMAttributes<any>{
   icon?: string;
   onRemove: () => void;
   className?: string;
+  "data-testid"?: string;
 }
 
-export function RemovableItem({ icon, onRemove, children, className, ...rest }: RemovableItemProps) {
+export function RemovableItem({ icon, onRemove, children, className, "data-testid": testId, ...rest }: RemovableItemProps) {
   return (
     <div className={cssNames(styles.item, "flex gaps align-center justify-space-between", className)} {...rest}>
       {icon && (
@@ -27,6 +28,7 @@ export function RemovableItem({ icon, onRemove, children, className, ...rest }: 
         material="delete"
         onClick={onRemove}
         tooltip="Remove"
+        data-testid={testId}
       />
     </div>
   );

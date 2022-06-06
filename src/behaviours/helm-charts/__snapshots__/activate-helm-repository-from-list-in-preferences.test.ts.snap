@@ -1063,7 +1063,9 @@ exports[`activate helm repository from list in preferences when navigating to pr
                 <div
                   class="repos"
                 >
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some already active repository"
@@ -1075,6 +1077,20 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some already active repository"
+                      id="tooltip_target_25"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
                 </div>
               </div>
@@ -1626,7 +1642,9 @@ exports[`activate helm repository from list in preferences when navigating to pr
                 <div
                   class="repos"
                 >
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some already active repository"
@@ -1638,6 +1656,20 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some already active repository"
+                      id="tooltip_target_32"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
                 </div>
               </div>
@@ -2238,7 +2270,9 @@ exports[`activate helm repository from list in preferences when navigating to pr
                 <div
                   class="repos"
                 >
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some already active repository"
@@ -2250,6 +2284,20 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some already active repository"
+                      id="tooltip_target_40"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
                 </div>
               </div>
@@ -3362,7 +3410,9 @@ exports[`activate helm repository from list in preferences when navigating to pr
                 <div
                   class="repos"
                 >
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some already active repository"
@@ -3374,8 +3424,24 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some already active repository"
+                      id="tooltip_target_88"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some to be activated repository"
@@ -3387,6 +3453,20 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-other-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some to be activated repository"
+                      id="tooltip_target_89"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
                 </div>
               </div>
@@ -3938,7 +4018,9 @@ exports[`activate helm repository from list in preferences when navigating to pr
                 <div
                   class="repos"
                 >
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some already active repository"
@@ -3950,8 +4032,24 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some already active repository"
+                      id="tooltip_target_99"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some to be activated repository"
@@ -3963,6 +4061,20 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-other-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some to be activated repository"
+                      id="tooltip_target_100"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
                 </div>
               </div>
@@ -4573,7 +4685,9 @@ exports[`activate helm repository from list in preferences when navigating to pr
                 <div
                   class="repos"
                 >
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some already active repository"
@@ -4585,8 +4699,24 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some already active repository"
+                      id="tooltip_target_112"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
-                  <div>
+                  <div
+                    class="item flex gaps align-center justify-space-between mt-3"
+                  >
                     <div
                       class="repoName"
                       data-testid="helm-repository-Some to be activated repository"
@@ -4598,6 +4728,20 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     >
                       some-other-url
                     </div>
+                    <i
+                      class="Icon material interactive focusable"
+                      data-testid="deactivate-helm-repository-Some to be activated repository"
+                      id="tooltip_target_113"
+                      tabindex="0"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="delete"
+                      >
+                        delete
+                      </span>
+                      <div />
+                    </i>
                   </div>
                 </div>
               </div>

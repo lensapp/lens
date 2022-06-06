@@ -15,12 +15,15 @@ import { Spinner } from "../../../spinner";
 import type { HelmRepo } from "../../../../../common/helm-repo";
 import { Notice } from "../../../+extensions/notice";
 import { isEmpty } from "lodash/fp";
+import { RemovableItem } from "../../removable-item";
+import deactivateHelmRepositoryInjectable from "./deactivate-helm-repository.injectable";
 
 interface Dependencies {
   activeHelmRepositories: IAsyncComputed<HelmRepo[]>;
+  deactivateRepository: (repository: HelmRepo) => Promise<void>;
 }
 
-const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories }: Dependencies) => {
+const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories, deactivateRepository }: Dependencies) => {
   if (activeHelmRepositories.pending.get()) {
     return <Spinner data-testid="helm-repositories-are-loading" />;
   }
@@ -40,13 +43,18 @@ const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories }: 
   return (
     <div className={styles.repos}>
       {repositories.map((repository) => (
-        <div key={repository.name}>
+        <RemovableItem
+          key={repository.name}
+          onRemove={() => deactivateRepository(repository)}
+          className="mt-3"
+          data-testid={`deactivate-helm-repository-${repository.name}`}
+        >
           <div data-testid={`helm-repository-${repository.name}`} className={styles.repoName}>
             {repository.name}
           </div>
 
           <div className={styles.repoUrl}>{repository.url}</div>
-        </div>
+        </RemovableItem>
       ))}
     </div>
   );
@@ -59,6 +67,7 @@ export const HelmRepositories = withInjectables<Dependencies>(
   {
     getProps: (di) => ({
       activeHelmRepositories: di.inject(activeHelmRepositoriesInjectable),
+      deactivateRepository: di.inject(deactivateHelmRepositoryInjectable),
     }),
   },
 );

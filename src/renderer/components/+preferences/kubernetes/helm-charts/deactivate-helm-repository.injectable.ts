@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { HelmRepo } from "../../../../../../../common/helm-repo";
-import { requestFromChannelInjectionToken } from "../../../../../../../common/utils/channel/request-from-channel-injection-token";
-import activeHelmRepositoriesInjectable from "../../active-helm-repositories.injectable";
-import deactivateHelmRepositoryChannelInjectable from "../../../../../../../common/helm/deactivate-helm-repository-channel.injectable";
+import type { HelmRepo } from "../../../../../common/helm-repo";
+import { requestFromChannelInjectionToken } from "../../../../../common/utils/channel/request-from-channel-injection-token";
+import activeHelmRepositoriesInjectable from "./active-helm-repositories.injectable";
+import deactivateHelmRepositoryChannelInjectable from "../../../../../common/helm/deactivate-helm-repository-channel.injectable";
 
 const activatePublicHelmRepositoryInjectable = getInjectable({
   id: "deactivate-public-helm-repository",

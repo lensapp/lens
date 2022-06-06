@@ -7,7 +7,7 @@ import activateHelmRepositoryInjectable from "./activate-helm-repository.injecta
 import type { SelectOption } from "../../../../../select";
 import type { HelmRepo } from "../../../../../../../common/helm-repo";
 import type { SingleValue } from "react-select";
-import deactivateHelmRepositoryInjectable from "./deactivate-helm-repository.injectable";
+import deactivateHelmRepositoryInjectable from "../../deactivate-helm-repository.injectable";
 
 const selectHelmRepositoryInjectable = getInjectable({
   id: "select-helm-repository",
