@@ -56,6 +56,7 @@ integration: build
 build: node_modules binaries/client
 	yarn run npm:fix-build-version
 	$(MAKE) build-extensions -B
+	yarn run build:tray-icons
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
 # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
