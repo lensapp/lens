@@ -30,6 +30,7 @@ const openLocalShellSessionInjectable = getInjectable({
 
     return (args) => new LocalShellSession(deps, args).open();
   },
+  causesSideEffects: true,
 });
 
 export default openLocalShellSessionInjectable;

@@ -15,13 +15,13 @@ const listeningOfChannelsInjectable = getInjectable({
 
   instantiate: (di) => {
     const enlistMessageChannelListener = di.inject(enlistMessageChannelListenerInjectionToken);
-    const enlistRequestChannelListener = di.inject(enlistRequestChannelListenerInjectionToken);
+    const enlistRequestChannelHandler = di.inject(enlistRequestChannelListenerInjectionToken);
     const messageChannelListeners = di.injectMany(messageChannelListenerInjectionToken);
-    const requestChannelListeners = di.injectMany(requestChannelHandlerInjectionToken);
+    const requestChannelHandlers = di.injectMany(requestChannelHandlerInjectionToken);
 
     return getStartableStoppable("listening-of-channels", () => {
       const messageChannelDisposers = messageChannelListeners.map(enlistMessageChannelListener);
-      const requestChannelDisposers = requestChannelListeners.map(enlistRequestChannelListener);
+      const requestChannelDisposers = requestChannelHandlers.map(enlistRequestChannelHandler);
 
       return disposer(...messageChannelDisposers, ...requestChannelDisposers);
     });

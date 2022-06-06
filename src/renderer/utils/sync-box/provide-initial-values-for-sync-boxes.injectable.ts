@@ -20,11 +20,6 @@ const provideInitialValuesForSyncBoxesInjectable = getInjectable({
       run: async () => {
         const initialValues = await requestFromChannel(syncBoxInitialValueChannel);
 
-        console.log({
-          initialValues,
-          type: typeof initialValues,
-        });
-
         initialValues.forEach(({ id, value }) => {
           setSyncBoxState(id, value);
         });

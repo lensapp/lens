@@ -22,6 +22,7 @@ const openNodeShellSessionInjectable = getInjectable({
   id: "node-shell-session",
 
   instantiate: (): OpenNodeShellSession => (args) => new NodeShellSession(args).open(),
+  causesSideEffects: true,
 });
 
 export default openNodeShellSessionInjectable;
