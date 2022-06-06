@@ -59,15 +59,14 @@ describe("installing update using tray", () => {
     });
 
     it("user cannot install update yet", () => {
-      expect(applicationBuilder.tray.get("install-update")).toBeUndefined();
+      expect(applicationBuilder.tray.get("install-update")).toBeNull();
     });
 
     describe("when user checks for updates using tray", () => {
       let processCheckingForUpdatesPromise: Promise<void>;
 
       beforeEach(async () => {
-        processCheckingForUpdatesPromise =
-          applicationBuilder.tray.click("check-for-updates");
+        processCheckingForUpdatesPromise = applicationBuilder.tray.click("check-for-updates");
       });
 
       it("does not show application window yet", () => {
@@ -76,18 +75,18 @@ describe("installing update using tray", () => {
 
       it("user cannot check for updates again", () => {
         expect(
-          applicationBuilder.tray.get("check-for-updates")?.enabled.get(),
+          applicationBuilder.tray.get("check-for-updates")?.enabled,
         ).toBe(false);
       });
 
       it("name of tray item for checking updates indicates that checking is happening", () => {
         expect(
-          applicationBuilder.tray.get("check-for-updates")?.label?.get(),
+          applicationBuilder.tray.get("check-for-updates")?.label,
         ).toBe("Checking for updates...");
       });
 
       it("user cannot install update yet", () => {
-        expect(applicationBuilder.tray.get("install-update")).toBeUndefined();
+        expect(applicationBuilder.tray.get("install-update")).toBeNull();
       });
 
       it("renders", () => {
@@ -108,18 +107,18 @@ describe("installing update using tray", () => {
         });
 
         it("user cannot install update", () => {
-          expect(applicationBuilder.tray.get("install-update")).toBeUndefined();
+          expect(applicationBuilder.tray.get("install-update")).toBeNull();
         });
 
         it("user can check for updates again", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.enabled.get(),
+            applicationBuilder.tray.get("check-for-updates")?.enabled,
           ).toBe(true);
         });
 
         it("name of tray item for checking updates no longer indicates that checking is happening", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.label?.get(),
+            applicationBuilder.tray.get("check-for-updates")?.label,
           ).toBe("Check for updates");
         });
 
@@ -144,13 +143,13 @@ describe("installing update using tray", () => {
 
         it("user cannot check for updates again yet", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.enabled.get(),
+            applicationBuilder.tray.get("check-for-updates")?.enabled,
           ).toBe(false);
         });
 
         it("name of tray item for checking updates indicates that downloading is happening", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.label?.get(),
+            applicationBuilder.tray.get("check-for-updates")?.label,
           ).toBe("Downloading update some-version (0%)...");
         });
 
@@ -162,12 +161,12 @@ describe("installing update using tray", () => {
           progressOfUpdateDownload.set({ percentage: 42.424242 });
 
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.label?.get(),
+            applicationBuilder.tray.get("check-for-updates")?.label,
           ).toBe("Downloading update some-version (42%)...");
         });
 
         it("user still cannot install update", () => {
-          expect(applicationBuilder.tray.get("install-update")).toBeUndefined();
+          expect(applicationBuilder.tray.get("install-update")).toBeNull();
         });
 
         it("renders", () => {
@@ -182,18 +181,18 @@ describe("installing update using tray", () => {
           it("user cannot install update", () => {
             expect(
               applicationBuilder.tray.get("install-update"),
-            ).toBeUndefined();
+            ).toBeNull();
           });
 
           it("user can check for updates again", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.enabled.get(),
+              applicationBuilder.tray.get("check-for-updates")?.enabled,
             ).toBe(true);
           });
 
           it("name of tray item for checking updates no longer indicates that downloading is happening", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.label?.get(),
+              applicationBuilder.tray.get("check-for-updates")?.label,
             ).toBe("Check for updates");
           });
 
@@ -209,19 +208,19 @@ describe("installing update using tray", () => {
 
           it("user can install update", () => {
             expect(
-              applicationBuilder.tray.get("install-update")?.label?.get(),
+              applicationBuilder.tray.get("install-update")?.label,
             ).toBe("Install update some-version");
           });
 
           it("user can check for updates again", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.enabled.get(),
+              applicationBuilder.tray.get("check-for-updates")?.enabled,
             ).toBe(true);
           });
 
           it("name of tray item for checking updates no longer indicates that downloading is happening", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.label?.get(),
+              applicationBuilder.tray.get("check-for-updates")?.label,
             ).toBe("Check for updates");
           });
 

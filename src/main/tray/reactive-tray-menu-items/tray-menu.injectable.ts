@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { Menu } from "electron";
 import { computed } from "mobx";
 import trayMenuItemsInjectable from "../tray-menu-item/tray-menu-items.injectable";
+import buildMenuFromTemplateInjectable from "../../electron/build-from-template.injectable";
 import convertToElectronMenuTemplateInjectable from "./convert-to-electron-menu-template.injectable";
 
 const trayMenuInjectable = getInjectable({
@@ -13,9 +13,10 @@ const trayMenuInjectable = getInjectable({
   instantiate: (di) => {
     const trayMenuItems = di.inject(trayMenuItemsInjectable);
     const convertToElectronMenuTemplate = di.inject(convertToElectronMenuTemplateInjectable);
+    const buildMenuFromTemplate = di.inject(buildMenuFromTemplateInjectable);
 
     return computed(() => (
-      Menu.buildFromTemplate(
+      buildMenuFromTemplate(
         convertToElectronMenuTemplate(
           trayMenuItems.get(),
         ),

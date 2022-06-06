@@ -9,8 +9,8 @@ import { getStartableStoppable } from "../../../common/utils/get-startable-stopp
 import electronTrayInjectable from "../electron-tray/electron-tray.injectable";
 import trayIconPathsInjectable from "../tray-icon-path.injectable";
 
-const reactiveMenuIconInjectable = getInjectable({
-  id: "reactive-menu-icon",
+const reactiveTrayMenuIconInjectable = getInjectable({
+  id: "reactive-tray-menu-icon",
   instantiate: (di) => {
     const discoveredUpdateVersion = di.inject(discoveredUpdateVersionInjectable);
     const electronTray = di.inject(electronTrayInjectable);
@@ -20,11 +20,12 @@ const reactiveMenuIconInjectable = getInjectable({
       reaction(
         () => discoveredUpdateVersion.value.get(),
         updateVersion => {
-          if (updateVersion) {
-            electronTray.setIconPath(trayIconPaths.updateAvailable);
-          } else {
-            electronTray.setIconPath(trayIconPaths.normal);
-          }
+          void updateVersion;
+          electronTray.setIconPath(trayIconPaths.updateAvailable);
+          // if (updateVersion) {
+          // } else {
+          //   electronTray.setIconPath(trayIconPaths.normal);
+          // }
         },
         {
           fireImmediately: true,
@@ -34,4 +35,4 @@ const reactiveMenuIconInjectable = getInjectable({
   },
 });
 
-export default reactiveMenuIconInjectable;
+export default reactiveTrayMenuIconInjectable;

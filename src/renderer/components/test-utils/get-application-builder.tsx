@@ -24,12 +24,12 @@ import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter, find, map, matches } from "lodash/fp";
+import { flatMap, compact, join, get, filter, map } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
-import type { MenuItem, MenuItemConstructorOptions } from "electron";
+import type { MenuItemConstructorOptions, MenuItem, Menu } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
@@ -43,7 +43,6 @@ import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
-import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 import { Notifications } from "../notifications/notifications";
@@ -51,6 +50,7 @@ import broadcastThatRootFrameIsRenderedInjectable from "../../frames/root-frame/
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
+import buildMenuFromTemplateInjectable from "../../../main/electron/build-from-template.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -65,7 +65,7 @@ export interface ApplicationBuilder {
 
   tray: {
     click: (id: string) => Promise<void>;
-    get: (id: string) => TrayMenuItem | undefined;
+    get: (id: string) => Electron.MenuItem | null;
   };
 
   applicationMenu: {
@@ -95,6 +95,10 @@ interface Environment {
   beforeRender: () => void;
   onAllowKubeResource: () => void;
 }
+
+const getAllSubMenuItems = (item: MenuItem): MenuItem[] => {
+  return [item, ...(item.submenu?.items ?? []).flatMap(getAllSubMenuItems)];
+};
 
 export const getApplicationBuilder = () => {
   const mainDi = getMainDi({
@@ -166,15 +170,84 @@ export const getApplicationBuilder = () => {
     computed(() => []),
   );
 
-  let trayMenuItemsStateFake: TrayMenuItem[];
+  let commandId = 0;
+  const makeFakeMenuItem = (opts: MenuItemConstructorOptions, menu: Menu): MenuItem => {
+    const menuItemFake: MenuItem = {
+      accelerator: opts.accelerator,
+      checked: opts.checked ?? false,
+      click: () => opts.click?.(menuItemFake, undefined, new KeyboardEvent("fake")),
+      commandId: commandId += 1,
+      enabled: opts.enabled ?? false,
+      icon: opts.icon,
+      id: opts.id ?? "",
+      label: opts.label ?? "",
+      menu,
+      registerAccelerator: opts.registerAccelerator ?? true,
+      sharingItem: opts.sharingItem ?? {},
+      sublabel: opts.sublabel ?? "",
+      toolTip: opts.toolTip ?? "",
+      type: opts.type ?? "normal",
+      visible: opts.visible ?? true,
+      role: opts.role,
+      submenu: opts.submenu === undefined
+        ? undefined
+        : Array.isArray(opts.submenu)
+          ? makeFakeMenu(opts.submenu)
+          : opts.submenu,
+    };
+
+    return menuItemFake;
+  };
+  const makeFakeMenu = (templates: MenuItemConstructorOptions[]): Menu => {
+    const menuFake: Electron.Menu = {
+      addListener: () => {
+        throw new Error("Adding listeners is not supported currently");
+      },
+      on: () => {
+        throw new Error("Adding listeners is not supported currently");
+      },
+      once: () => {
+        throw new Error("Adding listeners is not supported currently");
+      },
+      removeListener: () => {
+        throw new Error("Removing listeners is not supported currently");
+      },
+      append: () => {
+        throw new Error("Adding new menu items is not supported currently");
+      },
+      insert: () => {
+        throw new Error("Adding new menu items is not supported currently");
+      },
+      popup: () => {
+        throw new Error("Popping up menu is not supported currently");
+      },
+      closePopup: () => {
+        throw new Error("Popping up menu is not supported currently");
+      },
+      get items() {
+        return [...menuItems];
+      },
+      getMenuItemById: (id) => menuItems
+        .flatMap(getAllSubMenuItems)
+        .find(menuItem => menuItem.id === id)
+        ?? null,
+    };
+    const menuItems = templates.map(template => makeFakeMenuItem(template, menuFake));
+
+    return menuFake;
+  };
+
+  mainDi.override(buildMenuFromTemplateInjectable, () => makeFakeMenu);
+
+  let trayMenuStateFake: Electron.Menu | undefined;
 
   mainDi.override(electronTrayInjectable, () => ({
     start: () => {},
     stop: () => {},
-
-    setMenuItems: (items) => {
-      trayMenuItemsStateFake = items;
+    setMenu: (menu) => {
+      trayMenuStateFake = menu;
     },
+    setIconPath: () => {},
   }));
 
   let allowedResourcesState: IObservableArray<KubeResource>;
@@ -221,18 +294,20 @@ export const getApplicationBuilder = () => {
 
     tray: {
       get: (id: string) => {
-        return trayMenuItemsStateFake.find(matches({ id }));
+        return trayMenuStateFake?.getMenuItemById(id) ?? null;
       },
 
       click: async (id: string) => {
-        const menuItem = pipeline(
-          trayMenuItemsStateFake,
-          find((menuItem) => menuItem.id === id),
-        );
+        if (!trayMenuStateFake) {
+          throw new Error(`Tried to click tray menu with ID ${id}, but tray menu has not been set yet`);
+        }
+
+        const menuItem = trayMenuStateFake.getMenuItemById(id);
 
         if (!menuItem) {
           const availableIds = pipeline(
-            trayMenuItemsStateFake,
+            trayMenuStateFake.items,
+            flatMap(getAllSubMenuItems),
             filter(item => !!item.click),
             map(item => item.id),
             join(", "),
