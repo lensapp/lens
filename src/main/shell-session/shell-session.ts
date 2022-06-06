@@ -16,10 +16,8 @@ import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/app-event-bus/event-bus";
 import logger from "../logger";
-import type { TerminalMessage } from "../../renderer/api/terminal-api";
-import { TerminalChannels } from "../../renderer/api/terminal-api";
-import { deserialize, serialize } from "v8";
 import { stat } from "fs/promises";
+import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 
 export class ShellOpenError extends Error {
   constructor(message: string, public cause: Error) {
@@ -163,7 +161,7 @@ export abstract class ShellSession {
   }
 
   protected send(message: TerminalMessage): void {
-    this.websocket.send(serialize(message));
+    this.websocket.send(JSON.stringify(message));
   }
 
   protected async getCwd(env: Record<string, string>): Promise<string> {
@@ -234,17 +232,19 @@ export abstract class ShellSession {
     });
 
     this.websocket
-      .on("message", (data: string | Uint8Array) => {
+      .on("message", (rawData: unknown): void => {
         if (!this.running) {
           return void logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
         }
 
-        if (typeof data === "string") {
-          return void logger.silly(`[SHELL-SESSION]: Received message from ${this.terminalId}`, { data });
+        if (!(rawData instanceof Buffer)) {
+          return void logger.error(`[SHELL-SESSION]: Received message non-buffer message.`, { rawData });
         }
 
+        const data = rawData.toString();
+
         try {
-          const message: TerminalMessage = deserialize(data);
+          const message: TerminalMessage = JSON.parse(data);
 
           switch (message.type) {
             case TerminalChannels.STDIN:
@@ -252,6 +252,9 @@ export abstract class ShellSession {
               break;
             case TerminalChannels.RESIZE:
               shellProcess.resize(message.data.width, message.data.height);
+              break;
+            case TerminalChannels.PING:
+              logger.silly(`[SHELL-SESSION]: ${this.terminalId} ping!`);
               break;
             default:
               logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
