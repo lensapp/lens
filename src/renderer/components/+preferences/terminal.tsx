@@ -72,7 +72,7 @@ const NonInjectedTerminal = observer((
           <Input
             theme="round-black"
             placeholder={defaultShell}
-            value={userStore.shell}
+            value={userStore.shell ?? ""}
             onChange={(value) => userStore.shell = value}
           />
         </section>

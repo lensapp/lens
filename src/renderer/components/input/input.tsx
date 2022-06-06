@@ -265,25 +265,24 @@ export class Input extends React.Component<InputProps, State> {
   setDirtyOnChange = debounce(() => this.setDirty(), 500);
 
   async onChange(evt: React.ChangeEvent<any>) {
-    this.autoFitHeight();
-    this.setDirtyOnChange();
-
-    // re-render component when used as uncontrolled input
-    // when used @defaultValue instead of @value changing real input.value doesn't call render()
-    if (this.isUncontrolled && this.showMaxLenIndicator) {
-      this.forceUpdate();
-    }
-
     const newValue = evt.currentTarget.value;
     const eventCopy = { ...evt };
 
-    await this.validate(); // validate first
+    this.autoFitHeight();
+    this.setDirtyOnChange();
 
-    // don't propagate changes for invalid values
-    // possible only with uncontrolled components (defaultValue={} must be used instead value={})
-    if (!this.isUncontrolled || (this.isUncontrolled && this.state.valid)) {
-      this.props.onChange?.(newValue, eventCopy);
+    // Handle uncontrolled components (`props.defaultValue` must be used instead `value`)
+    if (this.isUncontrolled) {
+      // update DOM since render() is not called on input's changes with uncontrolled inputs
+      if (this.showMaxLenIndicator) this.forceUpdate();
+
+      // don't propagate changes for invalid values
+      await this.validate();
+      if (!this.state.valid) return; // skip
     }
+
+    // emit new value update
+    this.props.onChange?.(newValue, eventCopy);
   }
 
   onKeyDown(evt: React.KeyboardEvent<InputElement>) {

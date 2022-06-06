@@ -771,6 +771,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
               >
                 <input
                   class="input box grow"
+                  max="50"
                   min="10"
                   spellcheck="false"
                   type="number"
