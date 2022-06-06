@@ -209,6 +209,7 @@ export const getApplicationBuilder = () => {
           {
             menu: null as never,
             commandId: 0,
+            userAccelerator: null,
             ...menuItem,
           } as MenuItem,
           undefined,
