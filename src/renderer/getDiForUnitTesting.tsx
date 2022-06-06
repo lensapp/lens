@@ -45,6 +45,7 @@ import appVersionInjectable from "../common/get-configuration-file-model/app-ver
 import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
+import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/activation-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -93,6 +94,10 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(broadcastMessageInjectable, () => () => {
       throw new Error("Tried to broadcast message over IPC without explicit override.");
+    });
+
+    di.override(getFilePathsInjectable, () => () => {
+      throw new Error("Tried to get file paths without explicit override.");
     });
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts

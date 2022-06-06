@@ -129,6 +129,8 @@ export interface WizardStepProps<D> extends WizardCommonProps<D> {
   skip?: boolean; // don't render the step
   scrollable?: boolean;
   children?: React.ReactNode | React.ReactNode[];
+  testIdForNext?: string;
+  testIdForPrev?: string;
 }
 
 interface WizardStepState {
@@ -214,7 +216,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
       step, isFirst, isLast, children,
       loading, customButtons, disabledNext, scrollable,
       hideNextBtn, hideBackBtn, beforeContent, afterContent, noValidate, skip, moreButtons,
-      waiting, className, contentClass, prevLabel, nextLabel,
+      waiting, className, contentClass, prevLabel, nextLabel, testIdForNext, testIdForPrev,
     } = this.props;
 
     if (skip) {
@@ -242,6 +244,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
               label={prevLabel || (isFirst?.() ? "Cancel" : "Back")}
               hidden={hideBackBtn}
               onClick={this.prev}
+              data-testid={testIdForPrev}
             />
             <Button
               primary
@@ -250,6 +253,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
               hidden={hideNextBtn}
               waiting={waiting ?? this.state.waiting}
               disabled={disabledNext}
+              data-testid={testIdForNext}
             />
           </div>
         )}
