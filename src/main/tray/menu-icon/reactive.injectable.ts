@@ -20,12 +20,11 @@ const reactiveTrayMenuIconInjectable = getInjectable({
       reaction(
         () => discoveredUpdateVersion.value.get(),
         updateVersion => {
-          void updateVersion;
-          electronTray.setIconPath(trayIconPaths.updateAvailable);
-          // if (updateVersion) {
-          // } else {
-          //   electronTray.setIconPath(trayIconPaths.normal);
-          // }
+          if (updateVersion) {
+            electronTray.setIconPath(trayIconPaths.updateAvailable);
+          } else {
+            electronTray.setIconPath(trayIconPaths.normal);
+          }
         },
         {
           fireImmediately: true,
