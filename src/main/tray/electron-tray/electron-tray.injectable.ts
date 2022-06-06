@@ -3,17 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { Menu, Tray } from "electron";
+import type { Menu } from "electron";
+import { Tray } from "electron";
 import packageJsonInjectable from "../../../common/vars/package-json.injectable";
-import logger from "../../logger";
-import { TRAY_LOG_PREFIX } from "../tray";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
-import type { TrayMenuItem } from "../tray-menu-item/tray-menu-item-injection-token";
-import { pipeline } from "@ogre-tools/fp";
-import { isEmpty, map, filter } from "lodash/fp";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import trayIconPathInjectable from "../tray-icon-path.injectable";
+import trayIconPathsInjectable from "../tray-icon-path.injectable";
+
+const TRAY_LOG_PREFIX = "[TRAY]";
 
 const electronTrayInjectable = getInjectable({
   id: "electron-tray",
@@ -23,13 +21,13 @@ const electronTrayInjectable = getInjectable({
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const isWindows = di.inject(isWindowsInjectable);
     const logger = di.inject(loggerInjectable);
-    const trayIconPath = di.inject(trayIconPathInjectable);
+    const trayIconPaths = di.inject(trayIconPathsInjectable);
 
     let tray: Tray;
 
     return {
       start: () => {
-        tray = new Tray(trayIconPath);
+        tray = new Tray(trayIconPaths.normal);
 
         tray.setToolTip(packageJson.description);
         tray.setIgnoreDoubleClickEvents(true);
@@ -41,21 +39,14 @@ const electronTrayInjectable = getInjectable({
           });
         }
       },
-
       stop: () => {
         tray.destroy();
       },
-
-      setMenuItems: (items: TrayMenuItem[]) => {
-        pipeline(
-          items,
-          convertToElectronMenuTemplate,
-          Menu.buildFromTemplate,
-
-          (template) => {
-            tray.setContextMenu(template);
-          },
-        );
+      setMenu: (menu: Menu) => {
+        tray.setContextMenu(menu);
+      },
+      setIconPath: (iconPath: string) => {
+        tray.setImage(iconPath);
       },
     };
   },
@@ -64,53 +55,3 @@ const electronTrayInjectable = getInjectable({
 });
 
 export default electronTrayInjectable;
-
-const convertToElectronMenuTemplate = (trayMenuItems: TrayMenuItem[]) => {
-  const _toTrayMenuOptions = (parentId: string | null) =>
-    pipeline(
-      trayMenuItems,
-
-      filter((item) => item.parentId === parentId),
-
-      map(
-        (trayMenuItem: TrayMenuItem): Electron.MenuItemConstructorOptions => {
-          if (trayMenuItem.separator) {
-            return { id: trayMenuItem.id, type: "separator" };
-          }
-
-          const childItems = _toTrayMenuOptions(trayMenuItem.id);
-
-          return {
-            id: trayMenuItem.id,
-            label: trayMenuItem.label?.get(),
-            enabled: trayMenuItem.enabled.get(),
-            toolTip: trayMenuItem.tooltip,
-
-            ...(isEmpty(childItems)
-              ? {
-                type: "normal",
-                submenu: _toTrayMenuOptions(trayMenuItem.id),
-
-                click: () => {
-                  try {
-                    trayMenuItem.click?.();
-                  } catch (error) {
-                    logger.error(
-                      `${TRAY_LOG_PREFIX}: clicking item "${trayMenuItem.id} failed."`,
-                      { error },
-                    );
-                  }
-                },
-              }
-              : {
-                type: "submenu",
-                submenu: _toTrayMenuOptions(trayMenuItem.id),
-              }),
-
-          };
-        },
-      ),
-    );
-
-  return _toTrayMenuOptions(null);
-};

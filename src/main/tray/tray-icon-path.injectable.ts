@@ -7,20 +7,23 @@ import getAbsolutePathInjectable from "../../common/path/get-absolute-path.injec
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 
-const trayIconPathInjectable = getInjectable({
-  id: "tray-icon-path",
+const trayIconPathsInjectable = getInjectable({
+  id: "tray-icon-paths",
 
   instantiate: (di) => {
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
-
-    return getAbsolutePath(
+    const baseIconDirectory = getAbsolutePath(
       staticFilesDirectory,
       isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-      "trayIconTemplate.png",
     );
+
+    return {
+      normal: getAbsolutePath(baseIconDirectory, "trayIconTemplate.png"),
+      updateAvailable: getAbsolutePath(baseIconDirectory, "trayIconUpdateAvailableTemplate.png"),
+    };
   },
 });
 
-export default trayIconPathInjectable;
+export default trayIconPathsInjectable;

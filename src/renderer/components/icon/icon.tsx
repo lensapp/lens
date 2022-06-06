@@ -29,6 +29,7 @@ import Spinner from "./spinner.svg";
 import Ssh from "./ssh.svg";
 import Storage from "./storage.svg";
 import Terminal from "./terminal.svg";
+import Notice from "./notice.svg";
 import User from "./user.svg";
 import Users from "./users.svg";
 import Wheel from "./wheel.svg";
@@ -58,6 +59,7 @@ const localSvgIcons = new Map([
   ["ssh", Ssh],
   ["storage", Storage],
   ["terminal", Terminal],
+  ["notice", Notice],
   ["user", User],
   ["users", Users],
   ["wheel", Wheel],
