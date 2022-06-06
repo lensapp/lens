@@ -45,7 +45,6 @@ export class ClusterFrameHandler {
 
     iframe.id = `cluster-frame-${cluster.id}`;
     iframe.name = cluster.contextName;
-    iframe.style.display = "none";
     iframe.setAttribute("src", getClusterFrameUrl(clusterId));
     iframe.addEventListener("load", action(() => {
       logger.info(`[LENS-VIEW]: frame for clusterId=${clusterId} has loaded`);
@@ -95,7 +94,7 @@ export class ClusterFrameHandler {
     ipcRenderer.send(clusterVisibilityHandler);
 
     for (const { frame: view } of this.views.values()) {
-      view.style.display = "none";
+      view.classList.add("hidden");
     }
 
     const cluster = clusterId
@@ -113,9 +112,9 @@ export class ClusterFrameHandler {
 
           return undefined;
         },
-        (view) => {
+        (view: LensView) => {
           logger.info(`[LENS-VIEW]: cluster id=${clusterId} should now be visible`);
-          view.frame.style.display = "flex";
+          view.frame.classList.remove("hidden");
           ipcRenderer.send(clusterVisibilityHandler, clusterId);
         },
       );

@@ -64,16 +64,30 @@ export class Terminal {
     }
   }
 
-  constructor(protected readonly dependencies: TerminalDependencies, { tabId, api }: TerminalArguments) {
+  get fontFamily() {
+    return this.dependencies.terminalConfig.get().fontFamily;
+  }
+
+  get fontSize() {
+    return this.dependencies.terminalConfig.get().fontSize;
+  }
+
+  get theme(): Record<string/*paramName*/, string/*color*/> {
+    return this.dependencies.themeStore.xtermColors;
+  }
+
+  constructor(protected readonly dependencies: TerminalDependencies, {
+    tabId,
+    api,
+  }: TerminalArguments) {
     this.tabId = tabId;
     this.api = api;
-    const { fontSize, fontFamily } = this.dependencies.terminalConfig.get();
 
     this.xterm = new XTerm({
       cursorBlink: true,
       cursorStyle: "bar",
-      fontSize,
-      fontFamily,
+      fontSize: this.fontSize,
+      fontFamily: this.fontFamily,
     });
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
@@ -95,17 +109,11 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposer.push(
-      reaction(() => this.dependencies.themeStore.xtermColors, colors => {
-        this.xterm?.setOption("theme", colors);
-      }, {
+      reaction(() => this.theme, colors => this.xterm.setOption("theme", colors), {
         fireImmediately: true,
       }),
-      reaction(() => this.dependencies.terminalConfig.get().fontSize, this.setFontSize, {
-        fireImmediately: true,
-      }),
-      reaction(() => this.dependencies.terminalConfig.get().fontFamily, this.setFontFamily, {
-        fireImmediately: true,
-      }),
+      reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true }),
+      reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true }),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
@@ -120,15 +128,14 @@ export class Terminal {
   }
 
   fit = () => {
-    // Since this function is debounced we need to read this value as late as possible
-    if (!this.xterm) {
-      return;
-    }
-
     try {
-      this.fitAddon.fit();
-      const { cols, rows } = this.xterm;
+      const { cols, rows } = this.fitAddon.proposeDimensions();
 
+      // attempt to resize/fit terminal when it's not visible in DOM will crash with exception
+      // see: https://github.com/xtermjs/xterm.js/issues/3118
+      if (isNaN(cols) || isNaN(rows)) return;
+
+      this.fitAddon.fit();
       this.api.sendTerminalSize(cols, rows);
     } catch (error) {
       // see https://github.com/lensapp/lens/issues/1891
@@ -197,12 +204,21 @@ export class Terminal {
     }
   };
 
-  setFontSize = (size: number) => {
-    this.xterm.options.fontSize = size;
+  setFontSize = (fontSize: number) => {
+    logger.info(`[TERMINAL]: set fontSize to ${fontSize}`);
+
+    this.xterm.options.fontSize = fontSize;
+    this.fit();
   };
 
-  setFontFamily = (family: string) => {
-    this.xterm.options.fontFamily = family;
+  setFontFamily = (fontFamily: string) => {
+    logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
+
+    this.xterm.options.fontFamily = fontFamily;
+    this.fit();
+
+    // provide css-variable within `:root {}`
+    document.documentElement.style.setProperty("--font-terminal", fontFamily);
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {

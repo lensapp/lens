@@ -3,34 +3,99 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// Custom fonts
-@import "~typeface-roboto/index.css";
+// App's main font
+// Downloaded from: https://fonts.google.com/specimen/Roboto
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Light.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 300; // "light"
+}
 
-// Material Design Icons, used primarily in icon.tsx
-// Latest: https://github.com/google/material-design-icons/tree/master/font
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-LightItalic.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 300; // "light" + italic
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Regular.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 400; // "normal"
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Bold.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 700; // "bold"
+}
+
+
+// Icon fonts, see: `icon.tsx`
+// Latest version for manual update: https://github.com/google/material-design-icons/tree/master/font
 @font-face {
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("./fonts/MaterialIcons-Regular.ttf") format("truetype");
+  src: url("../fonts/MaterialIcons-Regular.ttf") format("truetype");
+}
+
+
+// Terminal fonts (monospaced)
+// Source: https://fonts.google.com/?category=Monospace
+@font-face {
+  font-family: "Anonymous Pro";
+  src: local("Anonymous Pro"), url("../fonts/AnonymousPro-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: local("IBM Plex Mono"), url("../fonts/IBMPlexMono-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: local("JetBrains Mono"), url("../fonts/JetBrainsMono-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Red Hat Mono";
+  src: local("Red Hat Mono"), url("../fonts/RedHatMono-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+
+@font-face {
+  font-family: "Source Code Pro";
+  src: local("Source Code Pro"), url("../fonts/SourceCodePro-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  src: local("Space Mono"), url("../fonts/SpaceMono-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Ubuntu Mono";
+  src: local("Ubuntu Mono"), url("../fonts/UbuntuMono-Regular.ttf") format("truetype");
+  font-display: block;
 }
 
 // Patched RobotoMono font with icons
 // RobotoMono Windows Compatible for using in terminal
 // https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/RobotoMono
 @font-face {
-  font-family: 'RobotoMono';
+  font-family: "RobotoMono";
+  src: local("RobotoMono"), url("../fonts/Roboto-Mono-nerd.ttf") format("truetype");
   font-display: block;
-  src: local('RobotoMono'), url('./fonts/roboto-mono-nerd.ttf') format('truetype');
-}
-
-#fonts-preloading {
-  > .icons {
-    @include font-preload("Material Icons");
-  }
-
-  > .terminal {
-    @include font-preload("RobotoMono");
-  }
 }

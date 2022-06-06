@@ -35,7 +35,20 @@
     background-color: var(--mainBackground);
 
     iframe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
       flex: 1;
+
+      // when updating font settings in the "Preferences -> Terminal" cluster's iframe
+      // must be accessible in DOM (e.g. elem.getBoundingClientRect() must work)
+      &.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
     }
   }
 }

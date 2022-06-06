@@ -4,18 +4,20 @@
  */
 
 import React from "react";
+import { action } from "mobx";
 import { observer } from "mobx-react";
 import type { UserStore } from "../../../common/user-store";
 import { SubTitle } from "../layout/sub-title";
-import { Input, InputValidators } from "../input";
+import { Input } from "../input";
 import { Switch } from "../switch";
-import { Select } from "../select";
+import { Select, type SelectOption } from "../select";
 import type { ThemeStore } from "../../themes/store";
 import { Preferences } from "./preferences";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import themeStoreInjectable from "../../themes/store.injectable";
 import defaultShellInjectable from "./default-shell.injectable";
+import logger from "../../../common/logger";
 
 interface Dependencies {
   userStore: UserStore;
@@ -23,11 +25,12 @@ interface Dependencies {
   defaultShell: string;
 }
 
-const NonInjectedTerminal = observer(({
-  userStore,
-  themeStore,
-  defaultShell,
-}: Dependencies) => {
+const NonInjectedTerminal = observer((
+  {
+    userStore,
+    themeStore,
+    defaultShell,
+  }: Dependencies) => {
   const themeOptions = [
     {
       value: "", // TODO: replace with a sentinal value that isn't string (and serialize it differently)
@@ -39,6 +42,26 @@ const NonInjectedTerminal = observer(({
     })),
   ];
 
+  // fonts must be declared in `fonts.scss` and at `template.html` (if early-preloading required)
+  const supportedCustomFonts: SelectOption<string>[] = [
+    "RobotoMono", "Anonymous Pro", "IBM Plex Mono", "JetBrains Mono", "Red Hat Mono",
+    "Source Code Pro", "Space Mono", "Ubuntu Mono",
+  ].map(customFont => {
+    const { fontFamily, fontSize } = userStore.terminalConfig;
+
+    return {
+      label: <span style={{ fontFamily: customFont, fontSize }}>{customFont}</span>,
+      value: customFont,
+      isSelected: fontFamily === customFont,
+    };
+  });
+
+  const onFontFamilyChange = action(({ value: fontFamily }: SelectOption<string>) => {
+    logger.info(`setting terminal font to ${fontFamily}`);
+
+    userStore.terminalConfig.fontFamily = fontFamily; // save to external storage
+  });
+
   return (
     <Preferences data-testid="terminal-preferences-page">
       <section>
@@ -49,7 +72,7 @@ const NonInjectedTerminal = observer(({
           <Input
             theme="round-black"
             placeholder={defaultShell}
-            value={userStore.shell}
+            value={userStore.shell ?? ""}
             onChange={(value) => userStore.shell = value}
           />
         </section>
@@ -81,18 +104,19 @@ const NonInjectedTerminal = observer(({
             theme="round-black"
             type="number"
             min={10}
-            validators={InputValidators.isNumber}
-            value={userStore.terminalConfig.fontSize.toString()}
+            max={50}
+            defaultValue={userStore.terminalConfig.fontSize.toString()}
             onChange={(value) => userStore.terminalConfig.fontSize = Number(value)}
           />
         </section>
         <section>
           <SubTitle title="Font family" />
-          <Input
-            theme="round-black"
-            type="text"
+          <Select
+            themeName="lens"
+            controlShouldRenderValue
             value={userStore.terminalConfig.fontFamily}
-            onChange={(value) => userStore.terminalConfig.fontFamily = value}
+            options={supportedCustomFonts}
+            onChange={onFontFamilyChange as any}
           />
         </section>
       </section>
