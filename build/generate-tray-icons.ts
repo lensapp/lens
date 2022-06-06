@@ -33,21 +33,12 @@ function getSvgStyling(colouring: "dark" | "light"): string {
 
 async function getBaseIconTemplates() {
   const svgData = await readFile(inputFile, { encoding: "utf-8" });
+  const dom = new JSDOM(`<body>${svgData}</body>`);
+  const root = dom.window.document.body.getElementsByTagName("svg")[0];
 
-  const darkDom = new JSDOM(`<body>${svgData}</body>`);
-  const darkRoot = darkDom.window.document.body.getElementsByTagName("svg")[0];
+  root.innerHTML += getSvgStyling("light");
 
-  darkRoot.innerHTML += getSvgStyling("dark");
-
-  const lightDom = new JSDOM(`<body>${svgData}</body>`);
-  const lightRoot = lightDom.window.document.body.getElementsByTagName("svg")[0];
-
-  lightRoot.innerHTML += getSvgStyling("light");
-
-  return {
-    light: lightRoot.outerHTML,
-    dark: darkRoot.outerHTML,
-  };
+  return root.outerHTML;
 }
 
 async function generateNormalImages(template: string, size: number, name: string) {
@@ -154,21 +145,20 @@ async function generateTrayIcons() {
     console.log("Generating tray icon pngs");
     await ensureOutputFoler();
 
-    const baseTemplates = await getBaseIconTemplates();
+    const baseTemplate = await getBaseIconTemplates();
     const noticeTemplate = await getNoticeSvg();
 
     void noticeTemplate;
     void generateUpdateAvailableImages;
 
     await Promise.all([
-      generateNormalImages(baseTemplates.light, size, "trayIconDarkTemplate"),
-      // generateUpdateAvailableImages(baseTemplates.light, size, "trayIconDarkUpdateAvailableTemplate", noticeTemplate),
-      generateNormalImages(baseTemplates.dark, size, "trayIconTemplate"),
+      generateNormalImages(baseTemplate, size, "trayIconTemplate"),
+      // generateUpdateAvailableImages(baseTemplate, size, "trayIconDarkUpdateAvailableTemplate", noticeTemplate),
     ]);
 
     console.warn("Did not update:", [
-      "trayIconDarkUpdateAvailableTemplate.png",
-      "trayIconDarkUpdateAvailableTemplate@2x.png",
+      "trayIconUpdateAvailableTemplate.png",
+      "trayIconUpdateAvailableTemplate@2x.png",
     ]);
     console.log("Generated all images");
   } catch (error) {
