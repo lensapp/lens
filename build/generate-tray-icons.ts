@@ -22,7 +22,6 @@ function getSvgStyling(colouring: "dark" | "light"): string {
     <style>
       ellipse {
         stroke: ${colouring === "dark" ? "white" : "black"} !important;
-        fill: ${colouring === "dark" ? "black" : "white"} !important;
       }
       path, rect {
         fill: ${colouring === "dark" ? "white" : "black"} !important;
@@ -31,12 +30,14 @@ function getSvgStyling(colouring: "dark" | "light"): string {
   `;
 }
 
-async function getBaseIconImage() {
+type TargetSystems = "macos" | "windows-or-linux";
+
+async function getBaseIconImage(system: TargetSystems) {
   const svgData = await readFile(inputFile, { encoding: "utf-8" });
   const dom = new JSDOM(`<body>${svgData}</body>`);
   const root = dom.window.document.body.getElementsByTagName("svg")[0];
 
-  root.innerHTML += getSvgStyling("light");
+  root.innerHTML += getSvgStyling(system === "macos" ? "light" : "dark");
 
   return Buffer.from(root.outerHTML);
 }
@@ -57,8 +58,8 @@ async function generateImages(image: Buffer, size: number, name: string) {
   ]);
 }
 
-async function generateUpdateAvailableImages(baseImage: Buffer) {
-  const noticeIconImage = await getNoticeIconImage();
+async function generateUpdateAvailableImages(baseImage: Buffer, system: TargetSystems) {
+  const noticeIconImage = await getNoticeIconImage(system);
   const circleBuffer = await sharp(Buffer.from(`
     <svg viewBox="0 0 64 64">
       <circle cx="32" cy="32" r="32" fill="black" />
@@ -91,11 +92,13 @@ async function generateUpdateAvailableImages(baseImage: Buffer) {
     .toBuffer();
 }
 
-async function getNoticeIconImage() {
+async function getNoticeIconImage(system: TargetSystems) {
   const svgData = await readFile(noticeFile, { encoding: "utf-8" });
-  const noticeSvgRoot = new JSDOM(svgData).window.document.getElementsByTagName("svg")[0];
+  const root = new JSDOM(svgData).window.document.getElementsByTagName("svg")[0];
 
-  return Buffer.from(noticeSvgRoot.outerHTML);
+  root.innerHTML += getSvgStyling(system === "macos" ? "light" : "dark");
+
+  return Buffer.from(root.outerHTML);
 }
 
 async function generateTrayIcons() {
@@ -103,12 +106,19 @@ async function generateTrayIcons() {
     console.log("Generating tray icon pngs");
     await ensureOutputFoler();
 
-    const baseIconImage = await getBaseIconImage();
-    const updateAvailableImage = await generateUpdateAvailableImages(baseIconImage);
+    const baseIconTemplateImage = await getBaseIconImage("macos");
+    const updateAvailableTemplateImage = await generateUpdateAvailableImages(baseIconTemplateImage, "macos");
+    const baseIconImage = await getBaseIconImage("windows-or-linux");
+    const updateAvailableImage = await generateUpdateAvailableImages(baseIconImage, "windows-or-linux");
 
     await Promise.all([
-      generateImages(baseIconImage, size, "trayIconTemplate"),
-      generateImages(updateAvailableImage, size, "trayIconUpdateAvailableTemplate"),
+      // Templates are for macOS only
+      generateImages(baseIconTemplateImage, size, "trayIconTemplate"),
+      generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
+
+      // Non-templates are for windows and linux
+      generateImages(baseIconImage, size, "trayIcon"),
+      generateImages(updateAvailableImage, size, "trayIconUpdateAvailable"),
     ]);
 
     console.log("Generated all images");
