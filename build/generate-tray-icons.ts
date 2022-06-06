@@ -64,36 +64,78 @@ async function generateNormalImages(template: string, size: number, name: string
 }
 
 async function generateUpdateAvailableImages(template: string, size: number, name: string, noticeSvg: string) {
+  const circleSvg = new JSDOM(`
+    <body>
+      <svg viewBox="0 0 32 32">
+        <circle cx="20" cy="20" r="6" />
+      </svg>
+      <style>
+        circle {
+          fill: "black" !important;
+        }
+      </style>
+    </body>
+  `).window.document.getElementsByTagName("svg")[0];
+
+  circleSvg.innerHTML += getSvgStyling("dark");
+
+  const circleBuffer = await sharp(Buffer.from(circleSvg.outerHTML))
+    .resize({
+      width: Math.floor(size/1.5),
+      height: Math.floor(size/1.5),
+    })
+    .toBuffer();
+
+  await sharp(circleBuffer)
+    .toFile(path.join(outputFolder, "circle.png"));
+
   await Promise.all([
     sharp(Buffer.from(template))
-      .composite([{
-        input: (
-          await sharp(Buffer.from(noticeSvg))
-            .resize({
-              width: Math.floor(size/1.5),
-              height: Math.floor(size/1.5),
-            })
-            .toBuffer()
-        ),
-        top: Math.floor(size/2.5),
-        left: Math.floor(size/2.5),
-      }])
       .resize({ width: size, height: size })
+      .composite([
+        {
+          input: circleBuffer,
+          gravity: "southeast",
+          /**
+           * The `clear` blend rule is buggy and currently doesn't work
+           *
+           * https://github.com/lovell/sharp/issues/3247
+           */
+          blend: "clear",
+        },
+        {
+          input: (
+            await sharp(Buffer.from(noticeSvg))
+              .resize({
+                width: Math.floor(size/1.5),
+                height: Math.floor(size/1.5),
+              })
+              .toBuffer()
+          ),
+          gravity: "southeast",
+        },
+      ])
       .png()
       .toFile(path.join(outputFolder, `${name}.png`)),
     sharp(Buffer.from(template))
-      .composite([{
-        input: (
-          await sharp(Buffer.from(noticeSvg))
-            .resize({
-              width: Math.floor((size * 2)/1.5),
-              height: Math.floor((size * 2)/1.5),
-            })
-            .toBuffer()
-        ),
-        top: Math.floor((size * 2)/2.5),
-        left: Math.floor((size * 2)/2.5),
-      }])
+      .composite([
+        {
+          input: circleBuffer,
+          gravity: "southeast",
+          blend: "clear",
+        },
+        {
+          input: (
+            await sharp(Buffer.from(noticeSvg))
+              .resize({
+                width: Math.floor((size * 2)/1.5),
+                height: Math.floor((size * 2)/1.5),
+              })
+              .toBuffer()
+          ),
+          gravity: "southeast",
+        },
+      ])
       .resize({ width: size*2, height: size*2 })
       .png()
       .toFile(path.join(outputFolder, `${name}@2x.png`)),
@@ -103,8 +145,6 @@ async function generateUpdateAvailableImages(template: string, size: number, nam
 async function getNoticeSvg(): Promise<string> {
   const svgData = await readFile(noticeFile, { encoding: "utf-8" });
   const noticeSvgRoot = new JSDOM(svgData).window.document.getElementsByTagName("svg")[0];
-
-  noticeSvgRoot.innerHTML += getSvgStyling("dark");
 
   return noticeSvgRoot.outerHTML;
 }
@@ -117,13 +157,19 @@ async function generateTrayIcons() {
     const baseTemplates = await getBaseIconTemplates();
     const noticeTemplate = await getNoticeSvg();
 
+    void noticeTemplate;
+    void generateUpdateAvailableImages;
+
     await Promise.all([
       generateNormalImages(baseTemplates.light, size, "trayIconDarkTemplate"),
-      generateUpdateAvailableImages(baseTemplates.light, size, "trayIconDarkUpdateAvailableTemplate", noticeTemplate),
+      // generateUpdateAvailableImages(baseTemplates.light, size, "trayIconDarkUpdateAvailableTemplate", noticeTemplate),
       generateNormalImages(baseTemplates.dark, size, "trayIconTemplate"),
-      generateUpdateAvailableImages(baseTemplates.dark, size, "trayIconUpdateAvailableTemplate", noticeTemplate),
     ]);
 
+    console.warn("Did not update:", [
+      "trayIconDarkUpdateAvailableTemplate.png",
+      "trayIconDarkUpdateAvailableTemplate@2x.png",
+    ]);
     console.log("Generated all images");
   } catch (error) {
     console.error(error);
