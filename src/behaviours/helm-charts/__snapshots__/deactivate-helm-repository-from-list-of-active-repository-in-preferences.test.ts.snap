@@ -397,6 +397,12 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -962,6 +968,12 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1540,6 +1552,12 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2118,6 +2136,12 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"

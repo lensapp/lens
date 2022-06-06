@@ -397,6 +397,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -962,6 +968,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1540,6 +1552,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2171,6 +2189,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2749,6 +2773,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -3314,6 +3344,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -3920,6 +3956,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -4589,6 +4631,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -5195,6 +5243,12 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"

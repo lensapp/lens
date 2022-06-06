@@ -397,6 +397,12 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -962,6 +968,12 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1527,6 +1539,12 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2133,6 +2151,12 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2698,6 +2722,12 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -3263,6 +3293,12 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -3819,6 +3855,12 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
