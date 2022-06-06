@@ -85,6 +85,7 @@ import appVersionInjectable from "../common/get-configuration-file-model/app-ver
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import execFileInjectable from "../common/fs/exec-file.injectable";
+import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-platform-architecture.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -210,6 +211,7 @@ const overrideOperatingSystem = (di: DiContainer) => {
   di.override(platformInjectable, () => "darwin");
   di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
   di.override(joinPathsInjectable, () => joinPathsFake);
+  di.override(normalizedPlatformArchitectureInjectable, () => "arm64");
 };
 
 const overrideElectronFeatures = (di: DiContainer) => {
