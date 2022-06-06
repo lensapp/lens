@@ -153,14 +153,11 @@ export const getApplicationBuilder = () => {
   mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
 
   mainDi.override(randomBytesInjectable, () => {
-    let callId = 0;
-
     return async (count) => {
-      const currentCallId = callId += 1;
-      const values = new Array(count);
+      const values = [];
 
       for (let i = 0; i < count; i += 1) {
-        values[i] = ((i + currentCallId) << 2) ^ currentCallId;
+        values[i] = i;
       }
 
       return Buffer.from(values);
