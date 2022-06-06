@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-const bundledBinariesNormalizedArchInjectable = getInjectable({
-  id: "bundled-binaries-normalized-arch",
+const normalizedPlatformArchitectureInjectable = getInjectable({
+  id: "normalized-platform-architecture",
   instantiate: () => {
     switch (process.arch) {
       case "arm64":
@@ -24,4 +24,4 @@ const bundledBinariesNormalizedArchInjectable = getInjectable({
   causesSideEffects: true,
 });
 
-export default bundledBinariesNormalizedArchInjectable;
+export default normalizedPlatformArchitectureInjectable;
