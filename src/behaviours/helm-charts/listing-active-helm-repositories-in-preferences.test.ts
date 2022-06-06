@@ -14,6 +14,12 @@ import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
+import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+
+// TODO: Make tooltips free of side effects by making it deterministic
+jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
+  withTooltip: (target: any) => target,
+}));
 
 describe("listing active helm repositories in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -30,7 +36,8 @@ describe("listing active helm repositories in preferences", () => {
 
     loggerStub = { warn: jest.fn() } as unknown as Logger;
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+      rendererDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");

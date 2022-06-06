@@ -397,12 +397,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -511,11 +505,19 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="Spinner singleColor"
                   data-testid="helm-repositories-are-loading"
                 />
+                <div />
               </div>
             </section>
           </section>
@@ -960,12 +962,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1059,6 +1055,13 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1080,8 +1083,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some already active repository"
-                      id="tooltip_target_25"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -1089,10 +1092,10 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -1537,12 +1540,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1638,6 +1635,13 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1659,8 +1663,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some already active repository"
-                      id="tooltip_target_32"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -1668,10 +1672,10 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -2167,12 +2171,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2266,6 +2264,13 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2287,8 +2292,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some already active repository"
-                      id="tooltip_target_40"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -2296,10 +2301,10 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -2744,12 +2749,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2858,11 +2857,19 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="Spinner singleColor"
                   data-testid="helm-repositories-are-loading"
                 />
+                <div />
               </div>
             </section>
           </section>
@@ -3307,12 +3314,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -3406,6 +3407,13 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -3427,8 +3435,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some already active repository"
-                      id="tooltip_target_88"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -3436,7 +3444,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                   <div
@@ -3456,8 +3463,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some to be activated repository"
-                      id="tooltip_target_89"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -3465,10 +3472,10 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -3913,12 +3920,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -4014,6 +4015,13 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -4035,8 +4043,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some already active repository"
-                      id="tooltip_target_99"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -4044,7 +4052,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                   <div
@@ -4064,8 +4071,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some to be activated repository"
-                      id="tooltip_target_100"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -4073,10 +4080,10 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -4582,12 +4589,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -4681,6 +4682,13 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -4702,8 +4710,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some already active repository"
-                      id="tooltip_target_112"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -4711,7 +4719,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                   <div
@@ -4731,8 +4738,8 @@ exports[`activate helm repository from list in preferences when navigating to pr
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-Some to be activated repository"
-                      id="tooltip_target_113"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -4740,10 +4747,10 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -5188,12 +5195,6 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -5302,11 +5303,19 @@ exports[`activate helm repository from list in preferences when navigating to pr
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="Spinner singleColor"
                   data-testid="helm-repositories-are-loading"
                 />
+                <div />
               </div>
             </section>
           </section>

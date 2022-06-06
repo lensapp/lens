@@ -13,6 +13,12 @@ import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/ge
 import type { HelmRepo } from "../../common/helm-repo";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 
+// TODO: Make tooltips free of side effects by making it deterministic
+jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
+  withTooltip: (target: any) => target,
+}));
+
+
 describe("activate helm repository from list in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;

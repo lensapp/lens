@@ -397,12 +397,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -511,11 +505,19 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="Spinner singleColor"
                   data-testid="helm-repositories-are-loading"
                 />
+                <div />
               </div>
             </section>
           </section>
@@ -960,12 +962,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1059,6 +1055,13 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1080,8 +1083,8 @@ exports[`deactivate helm repository from list of active repositories in preferen
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-some-active-repository"
-                      id="tooltip_target_13"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -1089,10 +1092,10 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -1537,12 +1540,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1636,6 +1633,13 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="repos"
@@ -1657,8 +1661,8 @@ exports[`deactivate helm repository from list of active repositories in preferen
                     <i
                       class="Icon material interactive focusable"
                       data-testid="deactivate-helm-repository-some-active-repository"
-                      id="tooltip_target_20"
                       tabindex="0"
+                      tooltip="Remove"
                     >
                       <span
                         class="icon"
@@ -1666,10 +1670,10 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       >
                         delete
                       </span>
-                      <div />
                     </i>
                   </div>
                 </div>
+                <div />
               </div>
             </section>
           </section>
@@ -2114,12 +2118,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
                 </div>
                 <div
                   class="repos"
@@ -2228,11 +2226,19 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       </div>
                     </div>
                   </div>
+                  <button
+                    class="Button primary"
+                    data-testid="add-custom-helm-repo-button"
+                    type="button"
+                  >
+                    Add Custom Helm Repo
+                  </button>
                 </div>
                 <div
                   class="Spinner singleColor"
                   data-testid="helm-repositories-are-loading"
                 />
+                <div />
               </div>
             </section>
           </section>
