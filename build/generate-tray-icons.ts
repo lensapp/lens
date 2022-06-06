@@ -44,6 +44,7 @@ async function getBaseIconImage() {
 async function generateImage(image: Buffer, size: number, namePrefix: string) {
   sharp(image)
     .resize({ width: size, height: size })
+    .png()
     .toFile(path.join(outputFolder, `${namePrefix}.png`));
 }
 
