@@ -191,6 +191,8 @@ export class Input extends React.Component<InputProps, State> {
             return this.getValidatorError(value, validator) || (error instanceof Error ? error.message : String(error));
           }
         })());
+      } else if (!validator.validate(value, this.props)) {
+        errors.push(this.getValidatorError(value, validator));
       }
     }
 
