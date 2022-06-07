@@ -10,6 +10,7 @@ import getHelmEnvInjectable from "../../get-helm-env/get-helm-env.injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
 import { isEmpty } from "lodash/fp";
 import loggerInjectable from "../../../../common/logger.injectable";
+import type { AsyncResult } from "../../../../common/utils/async-result";
 
 interface HelmRepositoryFromYaml {
   name: string;
@@ -38,23 +39,41 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
 
     const getRepositoriesFor = getRepositoriesForFor(readYamlFile);
 
-    return async (): Promise<HelmRepo[]> => {
-      const { HELM_REPOSITORY_CONFIG: repositoryConfigFilePath, HELM_REPOSITORY_CACHE: helmRepositoryCacheDirPath } = await getHelmEnv();
+    return async (): Promise<AsyncResult<HelmRepo[]>> => {
+      const envResult = await getHelmEnv();
+
+      if (!envResult.callWasSuccessful) {
+        return {
+          callWasSuccessful: false,
+          error: `Error getting Helm configuration: ${envResult.error}`,
+        };
+      }
+
+      const {
+        HELM_REPOSITORY_CONFIG: repositoryConfigFilePath,
+        HELM_REPOSITORY_CACHE: helmRepositoryCacheDirPath,
+      } = envResult.response;
 
       if (!repositoryConfigFilePath) {
-        logger.warn("Tried to get Helm repositories, but HELM_REPOSITORY_CONFIG was not present in `$ helm env`. Behaving as if there were no repositories.");
+        const errorMessage = "Tried to get Helm repositories, but HELM_REPOSITORY_CONFIG was not present in `$ helm env`.";
 
-        return [];
+        logger.error(errorMessage);
+
+        return {
+          callWasSuccessful: false,
+          error: `Error getting Helm configuration: ${errorMessage}`,
+        };
       }
 
       if (!helmRepositoryCacheDirPath) {
-        logger.warn("Tried to get Helm repositories, but HELM_REPOSITORY_CACHE was not present in `$ helm env`. Behaving as if there were no repositories.");
+        const errorMessage = "Tried to get Helm repositories, but HELM_REPOSITORY_CACHE was not present in `$ helm env`.";
 
-        return [];
-      }
+        logger.error(errorMessage);
 
-      if (!repositoryConfigFilePath || !helmRepositoryCacheDirPath) {
-        return [];
+        return {
+          callWasSuccessful: false,
+          error: `Error getting Helm configuration: ${errorMessage}`,
+        };
       }
 
       const getRepositories = getRepositoriesFor(
@@ -62,17 +81,31 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
         helmRepositoryCacheDirPath,
       );
 
-      await execHelm("repo", "update");
+      const updateResult = await execHelm("repo", "update");
+
+      if (!updateResult.callWasSuccessful) {
+        return {
+          callWasSuccessful: false,
+          error: `Error updating Helm repositories: ${updateResult.error}`,
+        };
+      }
 
       const repositories = await getRepositories();
 
       if (isEmpty(repositories)) {
-        await execHelm("repo", "add", "bitnami", "https://charts.bitnami.com/bitnami");
+        const resultOfAddingDefaultRepository = await execHelm("repo", "add", "bitnami", "https://charts.bitnami.com/bitnami");
 
-        return await getRepositories();
+        if (!resultOfAddingDefaultRepository.callWasSuccessful) {
+          return {
+            callWasSuccessful: false,
+            error: `Error when adding default Helm repository: ${resultOfAddingDefaultRepository.error}`,
+          };
+        }
+
+        return { callWasSuccessful: true, response: await getRepositories() };
       }
 
-      return repositories;
+      return { callWasSuccessful: true, response: repositories };
     };
   },
 });
@@ -82,7 +115,7 @@ export default getActiveHelmRepositoriesInjectable;
 const getRepositoriesForFor =
   (readYamlFile: ReadYamlFile) =>
     (repositoryConfigFilePath: string, helmRepositoryCacheDirPath: string) =>
-      async () => {
+      async (): Promise<HelmRepo[]> => {
         const { repositories } = (await readYamlFile(
           repositoryConfigFilePath,
         )) as HelmRepositoriesFromYaml;

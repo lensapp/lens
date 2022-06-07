@@ -4,20 +4,39 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import requestFromChannelInjectable from "../../../../utils/channel/request-from-channel.injectable";
 import getActiveHelmRepositoriesChannelInjectable from "../../../../../common/helm/get-active-helm-repositories-channel.injectable";
+import { requestFromChannelInjectionToken } from "../../../../../common/utils/channel/request-from-channel-injection-token";
+import showErrorNotificationInjectable from "../../../notifications/show-error-notification.injectable";
+import helmRepositoriesErrorStateInjectable from "./helm-repositories-error-state.injectable";
+import { runInAction } from "mobx";
 
 const activeHelmRepositoriesInjectable = getInjectable({
   id: "active-helm-repositories",
 
   instantiate: (di) => {
-    const requestFromChannel = di.inject(requestFromChannelInjectable);
+    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
     const getHelmRepositoriesChannel = di.inject(getActiveHelmRepositoriesChannelInjectable);
+    const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const helmRepositoriesErrorState = di.inject(helmRepositoriesErrorStateInjectable);
 
-    return asyncComputed(
-      async () => await requestFromChannel(getHelmRepositoriesChannel),
-      [],
-    );
+    return asyncComputed(async () => {
+      const result = await requestFromChannel(getHelmRepositoriesChannel);
+
+      if (result.callWasSuccessful) {
+        return result.response;
+      } else {
+        showErrorNotification(result.error);
+
+        runInAction(() =>
+          helmRepositoriesErrorState.set({
+            controlsAreShown: false,
+            errorMessage: result.error,
+          }),
+        );
+
+        return [];
+      }
+    }, []);
   },
 });
 

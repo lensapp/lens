@@ -12,6 +12,11 @@ import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectabl
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm-repo";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import showSuccessNotificationInjectable
+  from "../../renderer/components/notifications/show-success-notification.injectable";
+import showErrorNotificationInjectable
+  from "../../renderer/components/notifications/show-error-notification.injectable";
+import type { AsyncResult } from "../../common/utils/async-result";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -21,11 +26,13 @@ jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
 
 describe("activate helm repository from list in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
+  let showSuccessNotificationMock: jest.Mock;
+  let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
   let execFileMock: AsyncFnMock<
     ReturnType<typeof execFileInjectable["instantiate"]>
   >;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
   let callForPublicHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
 
   beforeEach(async () => {
@@ -36,6 +43,14 @@ describe("activate helm repository from list in preferences", () => {
     callForPublicHelmRepositoriesMock = asyncFn();
 
     applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+      showSuccessNotificationMock = jest.fn();
+
+      rendererDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
+
+      showErrorNotificationMock = jest.fn();
+
+      rendererDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
+
       rendererDi.override(
         callForPublicHelmRepositoriesInjectable,
         () => callForPublicHelmRepositoriesMock,
@@ -78,9 +93,12 @@ describe("activate helm repository from list in preferences", () => {
             { name: "Some to be activated repository", url: "some-other-url" },
           ]),
 
-          getActiveHelmRepositoriesMock.resolve([
-            { name: "Some already active repository", url: "some-url" },
-          ]),
+          getActiveHelmRepositoriesMock.resolve({
+            callWasSuccessful: true,
+            response: [
+              { name: "Some already active repository", url: "some-url" },
+            ],
+          }),
         ]);
       });
 
@@ -124,6 +142,36 @@ describe("activate helm repository from list in preferences", () => {
             expect(getActiveHelmRepositoriesMock).not.toHaveBeenCalled();
           });
 
+          describe("when activation rejects", () => {
+            beforeEach(async () => {
+              await execFileMock.reject(
+                "Some error",
+              );
+            });
+
+            it("renders", () => {
+              expect(rendered.baseElement).toMatchSnapshot();
+            });
+
+            it("shows error notification", () => {
+              expect(showErrorNotificationMock).toHaveBeenCalledWith(
+                "Some error",
+              );
+            });
+
+            it("does not show success notification", () => {
+              expect(showSuccessNotificationMock).not.toHaveBeenCalled();
+            });
+
+            it("does not show dialog anymore", () => {
+              expect(rendered.queryByTestId("activate-custom-helm-repository-dialog")).not.toBeInTheDocument();
+            });
+
+            it("does not reload active repositories", () => {
+              expect(getActiveHelmRepositoriesMock).not.toHaveBeenCalled();
+            });
+          });
+
           describe("when activating resolves", () => {
             beforeEach(async () => {
               await execFileMock.resolveSpecific(
@@ -144,12 +192,21 @@ describe("activate helm repository from list in preferences", () => {
               expect(getActiveHelmRepositoriesMock).toHaveBeenCalled();
             });
 
+            it("shows success notification", () => {
+              expect(showSuccessNotificationMock).toHaveBeenCalledWith(
+                "Helm repository Some to be activated repository has been added.",
+              );
+            });
+
             describe("when active repositories resolve again", () => {
               beforeEach(async () => {
-                await getActiveHelmRepositoriesMock.resolve([
-                  { name: "Some already active repository", url: "some-url" },
-                  { name: "Some to be activated repository", url: "some-other-url" },
-                ]);
+                await getActiveHelmRepositoriesMock.resolve({
+                  callWasSuccessful: true,
+                  response: [
+                    { name: "Some already active repository", url: "some-url" },
+                    { name: "Some to be activated repository", url: "some-other-url" },
+                  ],
+                });
               });
 
               it("renders", () => {

@@ -13,8 +13,6 @@ import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { Spinner } from "../../../spinner";
 import type { HelmRepo } from "../../../../../common/helm-repo";
-import { Notice } from "../../../+extensions/notice";
-import { isEmpty } from "lodash/fp";
 import { RemovableItem } from "../../removable-item";
 import deactivateHelmRepositoryInjectable from "./deactivate-helm-repository.injectable";
 
@@ -35,18 +33,6 @@ const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories, de
   }
 
   const repositories = activeHelmRepositories.value.get();
-
-  if (isEmpty(repositories)) {
-    return (
-      <div className={styles.repos}>
-        <Notice>
-          <div className="flex-grow text-center" data-testid="no-helm-repositories">
-            The repositories have not been added yet
-          </div>
-        </Notice>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.repos}>

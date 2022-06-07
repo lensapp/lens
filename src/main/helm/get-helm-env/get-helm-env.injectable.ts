@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";
+import type { AsyncResult } from "../../../common/utils/async-result";
 
 export type HelmEnv = Record<string, string> & {
   HELM_REPOSITORY_CACHE?: string;
@@ -16,10 +17,14 @@ const getHelmEnvInjectable = getInjectable({
   instantiate: (di) => {
     const execHelm = di.inject(execHelmInjectable);
 
-    return async () => {
-      const output = await execHelm("env");
+    return async (): Promise<AsyncResult<HelmEnv>> => {
+      const result = await execHelm("env");
 
-      const lines = output.split(/\r?\n/); // split by new line feed
+      if (!result.callWasSuccessful) {
+        return { callWasSuccessful: false, error: result.error };
+      }
+
+      const lines = result.response.split(/\r?\n/); // split by new line feed
       const env: HelmEnv = {};
 
       lines.forEach((line: string) => {
@@ -30,7 +35,7 @@ const getHelmEnvInjectable = getInjectable({
         }
       });
 
-      return env;
+      return { callWasSuccessful: true, response: env };
     };
   },
 });

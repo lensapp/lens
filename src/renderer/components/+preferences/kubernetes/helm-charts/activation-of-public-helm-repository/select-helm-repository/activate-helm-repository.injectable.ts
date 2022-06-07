@@ -7,6 +7,8 @@ import activateHelmRepositoryChannelInjectable from "../../../../../../../common
 import type { HelmRepo } from "../../../../../../../common/helm-repo";
 import { requestFromChannelInjectionToken } from "../../../../../../../common/utils/channel/request-from-channel-injection-token";
 import activeHelmRepositoriesInjectable from "../../active-helm-repositories.injectable";
+import showErrorNotificationInjectable from "../../../../../notifications/show-error-notification.injectable";
+import showSuccessNotificationInjectable from "../../../../../notifications/show-success-notification.injectable";
 
 const activateHelmRepositoryInjectable = getInjectable({
   id: "activate-public-helm-repository",
@@ -15,11 +17,24 @@ const activateHelmRepositoryInjectable = getInjectable({
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
     const activateHelmRepositoryChannel = di.inject(activateHelmRepositoryChannelInjectable);
     const activeHelmRepositories = di.inject(activeHelmRepositoriesInjectable);
+    const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
     return async (repository: HelmRepo) => {
-      await requestFromChannel(activateHelmRepositoryChannel, repository);
+      const result = await requestFromChannel(
+        activateHelmRepositoryChannel,
+        repository,
+      );
 
-      activeHelmRepositories.invalidate();
+      if (result.callWasSuccessful) {
+        showSuccessNotification(
+          `Helm repository ${repository.name} has been added.`,
+        );
+
+        activeHelmRepositories.invalidate();
+      } else {
+        showErrorNotification(result.error);
+      }
     };
   },
 });

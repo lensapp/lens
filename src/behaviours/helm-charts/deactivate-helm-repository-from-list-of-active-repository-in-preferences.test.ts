@@ -13,6 +13,7 @@ import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectabl
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm-repo";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import type { AsyncResult } from "../../common/utils/async-result";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -22,7 +23,7 @@ jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
 describe("deactivate helm repository from list of active repositories in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
   let execFileMock: AsyncFnMock<
     ReturnType<typeof execFileInjectable["instantiate"]>
   >;
@@ -60,9 +61,12 @@ describe("deactivate helm repository from list of active repositories in prefere
 
     describe("when active repositories resolve", () => {
       beforeEach(async () => {
-        getActiveHelmRepositoriesMock.resolve([
-          { name: "some-active-repository", url: "some-url" },
-        ]);
+        getActiveHelmRepositoriesMock.resolve({
+          callWasSuccessful: true,
+          response: [
+            { name: "some-active-repository", url: "some-url" },
+          ],
+        });
       });
 
       it("renders", () => {

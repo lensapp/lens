@@ -3,25 +3,59 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-
 import React from "react";
 
 import { HelmRepositories } from "./helm-repositories";
 import { ActivationOfPublicHelmRepository } from "./activation-of-public-helm-repository/activation-of-public-helm-repository";
 import { ActivationOfCustomHelmRepositoryOpenButton } from "./activation-of-custom-helm-repository/activation-of-custom-helm-repository-open-button";
 import { ActivationOfCustomHelmRepositoryDialog } from "./activation-of-custom-helm-repository/activation-of-custom-helm-repository-dialog";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { HelmRepositoriesErrorState } from "./helm-repositories-error-state.injectable";
+import helmRepositoriesErrorStateInjectable from "./helm-repositories-error-state.injectable";
+import type { IObservableValue } from "mobx";
+import { observer } from "mobx-react";
+import { Notice } from "../../../+extensions/notice";
 
-export const HelmCharts = () => (
-  <div>
-    <div className="flex gaps">
-      <ActivationOfPublicHelmRepository />
+interface Dependencies {
+  helmRepositoriesErrorState: IObservableValue<HelmRepositoriesErrorState>;
+}
 
-      <ActivationOfCustomHelmRepositoryOpenButton />
-    </div>
+const NonInjectedHelmCharts = observer(
+  ({ helmRepositoriesErrorState }: Dependencies) => {
+    const state = helmRepositoriesErrorState.get();
 
-    <HelmRepositories />
+    return (
+      <div>
+        {!state.controlsAreShown && (
+          <Notice>
+            <div className="flex-grow text-center">{state.errorMessage}</div>
+          </Notice>
+        )}
 
-    <ActivationOfCustomHelmRepositoryDialog />
-  </div>
+        {state.controlsAreShown && (
+          <div data-testid="helm-controls">
+            <div className="flex gaps">
+              <ActivationOfPublicHelmRepository />
+
+              <ActivationOfCustomHelmRepositoryOpenButton />
+            </div>
+
+            <HelmRepositories />
+
+            <ActivationOfCustomHelmRepositoryDialog />
+          </div>
+        )}
+      </div>
+    );
+  },
 );
 
+export const HelmCharts = withInjectables<Dependencies>(
+  NonInjectedHelmCharts,
+
+  {
+    getProps: (di) => ({
+      helmRepositoriesErrorState: di.inject(helmRepositoriesErrorStateInjectable),
+    }),
+  },
+);

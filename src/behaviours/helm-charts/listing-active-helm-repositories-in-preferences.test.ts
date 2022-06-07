@@ -15,6 +15,8 @@ import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectabl
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import showErrorNotificationInjectable
+  from "../../renderer/components/notifications/show-error-notification.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -27,6 +29,7 @@ describe("listing active helm repositories in preferences", () => {
   let readYamlFileMock: AsyncFnMock<ReadYamlFile>;
   let execFileMock: AsyncFnMock<ReturnType<typeof execFileInjectable["instantiate"]>>;
   let loggerStub: Logger;
+  let showErrorNotificationMock: jest.Mock;
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
@@ -34,9 +37,12 @@ describe("listing active helm repositories in preferences", () => {
     readYamlFileMock = asyncFn();
     execFileMock = asyncFn();
 
-    loggerStub = { warn: jest.fn() } as unknown as Logger;
+    loggerStub = { error: jest.fn() } as unknown as Logger;
 
     applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+      showErrorNotificationMock = jest.fn();
+
+      rendererDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
       rendererDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
       mainDi.override(execFileInjectable, () => execFileMock);
@@ -77,6 +83,34 @@ describe("listing active helm repositories in preferences", () => {
       );
     });
 
+    describe("when getting configuration rejects", () => {
+      beforeEach(async () => {
+        await execFileMock.reject("some-error");
+      });
+
+      it("shows error notification", () => {
+        expect(showErrorNotificationMock).toHaveBeenCalledWith(
+          "Error getting Helm configuration: some-error",
+        );
+      });
+
+      it("removes all helm controls", () => {
+        expect(
+          rendered.queryByTestId("helm-controls"),
+        ).not.toBeInTheDocument();
+      });
+
+      it("does not show loader for repositories anymore", () => {
+        expect(
+          rendered.queryByTestId("helm-repositories-are-loading"),
+        ).not.toBeInTheDocument();
+      });
+
+      it("renders", () => {
+        expect(rendered.baseElement).toMatchSnapshot();
+      });
+    });
+
     describe("when configuration resolves without path to repository config file", () => {
       beforeEach(async () => {
         execFileMock.mockClear();
@@ -87,20 +121,22 @@ describe("listing active helm repositories in preferences", () => {
         );
       });
 
-      it("renders", () => {
-        expect(rendered.baseElement).toMatchSnapshot();
-      });
-
       it("logs error", () => {
-        expect(loggerStub.warn).toHaveBeenCalledWith(
-          "Tried to get Helm repositories, but HELM_REPOSITORY_CONFIG was not present in `$ helm env`. Behaving as if there were no repositories.",
+        expect(loggerStub.error).toHaveBeenCalledWith(
+          "Tried to get Helm repositories, but HELM_REPOSITORY_CONFIG was not present in `$ helm env`.",
         );
       });
 
-      it("shows message about no repositories found", () => {
+      it("shows error notification", () => {
+        expect(showErrorNotificationMock).toHaveBeenCalledWith(
+          "Error getting Helm configuration: Tried to get Helm repositories, but HELM_REPOSITORY_CONFIG was not present in `$ helm env`.",
+        );
+      });
+
+      it("removes all helm controls", () => {
         expect(
-          rendered.getByTestId("no-helm-repositories"),
-        ).toBeInTheDocument();
+          rendered.queryByTestId("helm-controls"),
+        ).not.toBeInTheDocument();
       });
 
       it("does not show loader for repositories anymore", () => {
@@ -109,11 +145,8 @@ describe("listing active helm repositories in preferences", () => {
         ).not.toBeInTheDocument();
       });
 
-      it("does not call for updating of repositories", () => {
-        expect(execFileMock).not.toHaveBeenCalledWith(
-          "some-helm-binary-path",
-          ["repo", "update"],
-        );
+      it("renders", () => {
+        expect(rendered.baseElement).toMatchSnapshot();
       });
     });
 
@@ -127,20 +160,22 @@ describe("listing active helm repositories in preferences", () => {
         );
       });
 
-      it("renders", () => {
-        expect(rendered.baseElement).toMatchSnapshot();
-      });
-
       it("logs error", () => {
-        expect(loggerStub.warn).toHaveBeenCalledWith(
-          "Tried to get Helm repositories, but HELM_REPOSITORY_CACHE was not present in `$ helm env`. Behaving as if there were no repositories.",
+        expect(loggerStub.error).toHaveBeenCalledWith(
+          "Tried to get Helm repositories, but HELM_REPOSITORY_CACHE was not present in `$ helm env`.",
         );
       });
 
-      it("shows message about no repositories found", () => {
+      it("shows error notification", () => {
+        expect(showErrorNotificationMock).toHaveBeenCalledWith(
+          "Error getting Helm configuration: Tried to get Helm repositories, but HELM_REPOSITORY_CACHE was not present in `$ helm env`.",
+        );
+      });
+
+      it("removes all helm controls", () => {
         expect(
-          rendered.getByTestId("no-helm-repositories"),
-        ).toBeInTheDocument();
+          rendered.queryByTestId("helm-controls"),
+        ).not.toBeInTheDocument();
       });
 
       it("does not show loader for repositories anymore", () => {
@@ -149,11 +184,8 @@ describe("listing active helm repositories in preferences", () => {
         ).not.toBeInTheDocument();
       });
 
-      it("does not call for updating of repositories", () => {
-        expect(execFileMock).not.toHaveBeenCalledWith(
-          "some-helm-binary-path",
-          ["repo", "update"],
-        );
+      it("renders", () => {
+        expect(rendered.baseElement).toMatchSnapshot();
       });
     });
 
@@ -186,6 +218,34 @@ describe("listing active helm repositories in preferences", () => {
         expect(readYamlFileMock).not.toHaveBeenCalled();
       });
 
+      describe("when updating repositories reject", () => {
+        beforeEach(async () => {
+          await execFileMock.reject("Some error");
+        });
+
+        it("shows error notification", () => {
+          expect(showErrorNotificationMock).toHaveBeenCalledWith(
+            "Error updating Helm repositories: Some error",
+          );
+        });
+
+        it("removes all helm controls", () => {
+          expect(
+            rendered.queryByTestId("helm-controls"),
+          ).not.toBeInTheDocument();
+        });
+
+        it("does not show loader for repositories anymore", () => {
+          expect(
+            rendered.queryByTestId("helm-repositories-are-loading"),
+          ).not.toBeInTheDocument();
+        });
+
+        it("renders", () => {
+          expect(rendered.baseElement).toMatchSnapshot();
+        });
+      });
+
       describe("when updating repositories resolve", () => {
         beforeEach(async () => {
           execFileMock.mockClear();
@@ -193,6 +253,12 @@ describe("listing active helm repositories in preferences", () => {
           await execFileMock.resolveSpecific(
             ["some-helm-binary-path", ["repo", "update"]],
             "",
+          );
+        });
+
+        it("loads repositories from file system", () => {
+          expect(readYamlFileMock).toHaveBeenCalledWith(
+            "some-helm-repository-config-file.yaml",
           );
         });
 
@@ -252,17 +318,39 @@ describe("listing active helm repositories in preferences", () => {
             ).toBeInTheDocument();
           });
 
-          it("does not show message about no repositories", () => {
-            expect(
-              rendered.queryByTestId("no-helm-repositories"),
-            ).not.toBeInTheDocument();
-          });
-
           it('adds "bitnami" as default repository', () => {
             expect(execFileMock).toHaveBeenCalledWith(
               "some-helm-binary-path",
               ["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"],
             );
+          });
+
+          describe("when adding default repository reject", () => {
+            beforeEach(async () => {
+              await execFileMock.reject("Some error");
+            });
+
+            it("shows error notification", () => {
+              expect(showErrorNotificationMock).toHaveBeenCalledWith(
+                "Error when adding default Helm repository: Some error",
+              );
+            });
+
+            it("removes all helm controls", () => {
+              expect(
+                rendered.queryByTestId("helm-controls"),
+              ).not.toBeInTheDocument();
+            });
+
+            it("does not show loader for repositories anymore", () => {
+              expect(
+                rendered.queryByTestId("helm-repositories-are-loading"),
+              ).not.toBeInTheDocument();
+            });
+
+            it("renders", () => {
+              expect(rendered.baseElement).toMatchSnapshot();
+            });
           });
 
           describe("when adding of default repository resolves", () => {
@@ -294,13 +382,6 @@ describe("listing active helm repositories in preferences", () => {
                 rendered.queryByTestId("helm-repositories-are-loading"),
               ).toBeInTheDocument();
             });
-
-            it("does not show message about no repositories", () => {
-              expect(
-                rendered.queryByTestId("no-helm-repositories"),
-              ).not.toBeInTheDocument();
-            });
-
 
             it("calls for repositories again", () => {
               expect(readYamlFileMock).toHaveBeenCalledWith(
@@ -341,12 +422,6 @@ describe("listing active helm repositories in preferences", () => {
                 const actual = rendered.getByTestId("helm-repository-bitnami");
 
                 expect(actual).toBeInTheDocument();
-              });
-
-              it("does not show message about no repositories", () => {
-                expect(
-                  rendered.queryByTestId("no-helm-repositories"),
-                ).not.toBeInTheDocument();
               });
             });
           });
