@@ -8,7 +8,6 @@ import type { ReadYamlFile } from "../../../../common/fs/read-yaml-file.injectab
 import readYamlFileInjectable from "../../../../common/fs/read-yaml-file.injectable";
 import getHelmEnvInjectable from "../../get-helm-env/get-helm-env.injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
-import { isEmpty } from "lodash/fp";
 import loggerInjectable from "../../../../common/logger.injectable";
 import type { AsyncResult } from "../../../../common/utils/async-result";
 
@@ -84,15 +83,13 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
       const updateResult = await execHelm("repo", "update");
 
       if (!updateResult.callWasSuccessful) {
-        return {
-          callWasSuccessful: false,
-          error: `Error updating Helm repositories: ${updateResult.error}`,
-        };
-      }
+        if (!updateResult.error.includes(internalHelmErrorForNoRepositoriesFound)) {
+          return {
+            callWasSuccessful: false,
+            error: `Error updating Helm repositories: ${updateResult.error}`,
+          };
+        }
 
-      const repositories = await getRepositories();
-
-      if (isEmpty(repositories)) {
         const resultOfAddingDefaultRepository = await execHelm("repo", "add", "bitnami", "https://charts.bitnami.com/bitnami");
 
         if (!resultOfAddingDefaultRepository.callWasSuccessful) {
@@ -101,11 +98,9 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
             error: `Error when adding default Helm repository: ${resultOfAddingDefaultRepository.error}`,
           };
         }
-
-        return { callWasSuccessful: true, response: await getRepositories() };
       }
 
-      return { callWasSuccessful: true, response: repositories };
+      return { callWasSuccessful: true, response: await getRepositories() };
     };
   },
 });
@@ -132,3 +127,5 @@ const getRepositoriesForFor =
           cacheFilePath: `${helmRepositoryCacheDirPath}/${repository.name}-index.yaml`,
         }));
       };
+
+const internalHelmErrorForNoRepositoriesFound = "no repositories found. You must add one before updating";

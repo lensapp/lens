@@ -218,7 +218,7 @@ describe("listing active helm repositories in preferences", () => {
         expect(readYamlFileMock).not.toHaveBeenCalled();
       });
 
-      describe("when updating repositories reject", () => {
+      describe("when updating repositories reject with any other error", () => {
         beforeEach(async () => {
           await execFileMock.reject("Some error");
         });
@@ -246,6 +246,134 @@ describe("listing active helm repositories in preferences", () => {
         });
       });
 
+      describe("when updating repositories reject with error about no existing repositories", () => {
+        beforeEach(async () => {
+          execFileMock.mockClear();
+
+          await execFileMock.reject(
+            "Error: no repositories found. You must add one before updating",
+          );
+        });
+
+        it("renders", () => {
+          expect(rendered.baseElement).toMatchSnapshot();
+        });
+
+        it("still shows the loader for repositories", () => {
+          expect(
+            rendered.queryByTestId("helm-repositories-are-loading"),
+          ).toBeInTheDocument();
+        });
+
+        it('adds "bitnami" as default repository', () => {
+          expect(execFileMock).toHaveBeenCalledWith(
+            "some-helm-binary-path",
+            ["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"],
+          );
+        });
+
+        describe("when adding default repository reject", () => {
+          beforeEach(async () => {
+            await execFileMock.reject("Some error");
+          });
+
+          it("shows error notification", () => {
+            expect(showErrorNotificationMock).toHaveBeenCalledWith(
+              "Error when adding default Helm repository: Some error",
+            );
+          });
+
+          it("removes all helm controls", () => {
+            expect(
+              rendered.queryByTestId("helm-controls"),
+            ).not.toBeInTheDocument();
+          });
+
+          it("does not show loader for repositories anymore", () => {
+            expect(
+              rendered.queryByTestId("helm-repositories-are-loading"),
+            ).not.toBeInTheDocument();
+          });
+
+          it("renders", () => {
+            expect(rendered.baseElement).toMatchSnapshot();
+          });
+        });
+
+        describe("when adding of default repository resolves", () => {
+          beforeEach(async () => {
+            readYamlFileMock.mockClear();
+
+            await execFileMock.resolveSpecific(
+              [
+                "some-helm-binary-path",
+
+                [
+                  "repo",
+                  "add",
+                  "bitnami",
+                  "https://charts.bitnami.com/bitnami",
+                ],
+              ],
+
+              "",
+            );
+          });
+
+          it("renders", () => {
+            expect(rendered.baseElement).toMatchSnapshot();
+          });
+
+          it("still shows the loader for repositories", () => {
+            expect(
+              rendered.queryByTestId("helm-repositories-are-loading"),
+            ).toBeInTheDocument();
+          });
+
+          it("calls for repositories again", () => {
+            expect(readYamlFileMock).toHaveBeenCalledWith(
+              "some-helm-repository-config-file.yaml",
+            );
+          });
+
+          describe("when another call for repositories resolve", () => {
+            beforeEach(async () => {
+              await readYamlFileMock.resolveSpecific(
+                ["some-helm-repository-config-file.yaml"],
+
+                {
+                  repositories: [
+                    {
+                      name: "bitnami",
+                      url: "https://charts.bitnami.com/bitnami",
+                      caFile: "irrelevant",
+                      certFile: "irrelevant",
+                      insecure_skip_tls_verify: false,
+                      keyFile: "irrelevant",
+                      pass_credentials_all: false,
+                      password: "irrelevant",
+                      username: "irrelevant",
+                    },
+                  ],
+                },
+              );
+            });
+
+            it("does not show loader for repositories anymore", () => {
+              expect(
+                rendered.queryByTestId("helm-repositories-are-loading"),
+              ).not.toBeInTheDocument();
+            });
+
+            it("shows the added repository", () => {
+              const actual = rendered.getByTestId("helm-repository-bitnami");
+
+              expect(actual).toBeInTheDocument();
+            });
+          });
+        });
+      });
+
       describe("when updating repositories resolve", () => {
         beforeEach(async () => {
           execFileMock.mockClear();
@@ -262,7 +390,7 @@ describe("listing active helm repositories in preferences", () => {
           );
         });
 
-        describe("when loading repositories resolves with existing repositories", () => {
+        describe("when repositories resolves", () => {
           beforeEach(async () => {
             execFileMock.mockClear();
 
@@ -295,135 +423,6 @@ describe("listing active helm repositories in preferences", () => {
             );
 
             expect(actual).toHaveLength(2);
-          });
-        });
-
-        describe("when loading repositories resolves with no existing repositories", () => {
-          beforeEach(async () => {
-            execFileMock.mockClear();
-
-            await readYamlFileMock.resolveSpecific(
-              ["some-helm-repository-config-file.yaml"],
-              { repositories: [] },
-            );
-          });
-
-          it("renders", () => {
-            expect(rendered.baseElement).toMatchSnapshot();
-          });
-
-          it("still shows the loader for repositories", () => {
-            expect(
-              rendered.queryByTestId("helm-repositories-are-loading"),
-            ).toBeInTheDocument();
-          });
-
-          it('adds "bitnami" as default repository', () => {
-            expect(execFileMock).toHaveBeenCalledWith(
-              "some-helm-binary-path",
-              ["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"],
-            );
-          });
-
-          describe("when adding default repository reject", () => {
-            beforeEach(async () => {
-              await execFileMock.reject("Some error");
-            });
-
-            it("shows error notification", () => {
-              expect(showErrorNotificationMock).toHaveBeenCalledWith(
-                "Error when adding default Helm repository: Some error",
-              );
-            });
-
-            it("removes all helm controls", () => {
-              expect(
-                rendered.queryByTestId("helm-controls"),
-              ).not.toBeInTheDocument();
-            });
-
-            it("does not show loader for repositories anymore", () => {
-              expect(
-                rendered.queryByTestId("helm-repositories-are-loading"),
-              ).not.toBeInTheDocument();
-            });
-
-            it("renders", () => {
-              expect(rendered.baseElement).toMatchSnapshot();
-            });
-          });
-
-          describe("when adding of default repository resolves", () => {
-            beforeEach(async () => {
-              readYamlFileMock.mockClear();
-
-              await execFileMock.resolveSpecific(
-                [
-                  "some-helm-binary-path",
-
-                  [
-                    "repo",
-                    "add",
-                    "bitnami",
-                    "https://charts.bitnami.com/bitnami",
-                  ],
-                ],
-
-                "",
-              );
-            });
-
-            it("renders", () => {
-              expect(rendered.baseElement).toMatchSnapshot();
-            });
-
-            it("still shows the loader for repositories", () => {
-              expect(
-                rendered.queryByTestId("helm-repositories-are-loading"),
-              ).toBeInTheDocument();
-            });
-
-            it("calls for repositories again", () => {
-              expect(readYamlFileMock).toHaveBeenCalledWith(
-                "some-helm-repository-config-file.yaml",
-              );
-            });
-
-            describe("when another call for repositories resolve", () => {
-              beforeEach(async () => {
-                await readYamlFileMock.resolveSpecific(
-                  ["some-helm-repository-config-file.yaml"],
-
-                  {
-                    repositories: [
-                      {
-                        name: "bitnami",
-                        url: "https://charts.bitnami.com/bitnami",
-                        caFile: "irrelevant",
-                        certFile: "irrelevant",
-                        insecure_skip_tls_verify: false,
-                        keyFile: "irrelevant",
-                        pass_credentials_all: false,
-                        password: "irrelevant",
-                        username: "irrelevant",
-                      },
-                    ],
-                  },
-                );
-              });
-
-              it("does not show loader for repositories anymore", () => {
-                expect(
-                  rendered.queryByTestId("helm-repositories-are-loading"),
-                ).not.toBeInTheDocument();
-              });
-
-              it("shows the added repository", () => {
-                const actual = rendered.getByTestId("helm-repository-bitnami");
-
-                expect(actual).toBeInTheDocument();
-              });
-            });
           });
         });
       });
