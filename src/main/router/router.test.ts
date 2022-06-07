@@ -32,7 +32,10 @@ describe("router", () => {
 
     mockFs();
 
-    di.override(parseRequestInjectable, () => () => Promise.resolve({ payload: "some-payload" }));
+    di.override(parseRequestInjectable, () => () => Promise.resolve({
+      payload: "some-payload",
+      mime: "some-mime",
+    }));
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
