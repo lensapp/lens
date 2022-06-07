@@ -36,7 +36,7 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
     const getHelmEnv = di.inject(getHelmEnvInjectable);
     const logger = di.inject(loggerInjectable);
 
-    const getRepositoriesFor = getRepositoriesForFor(readYamlFile);
+    const getRepositories = getRepositoriesFor(readYamlFile);
 
     return async (): Promise<AsyncResult<HelmRepo[]>> => {
       const envResult = await getHelmEnv();
@@ -75,11 +75,6 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
         };
       }
 
-      const getRepositories = getRepositoriesFor(
-        repositoryConfigFilePath,
-        helmRepositoryCacheDirPath,
-      );
-
       const updateResult = await execHelm("repo", "update");
 
       if (!updateResult.callWasSuccessful) {
@@ -89,7 +84,6 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
             error: `Error updating Helm repositories: ${updateResult.error}`,
           };
         }
-
         const resultOfAddingDefaultRepository = await execHelm("repo", "add", "bitnami", "https://charts.bitnami.com/bitnami");
 
         if (!resultOfAddingDefaultRepository.callWasSuccessful) {
@@ -100,32 +94,38 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
         }
       }
 
-      return { callWasSuccessful: true, response: await getRepositories() };
+      return {
+        callWasSuccessful: true,
+
+        response: await getRepositories(
+          repositoryConfigFilePath,
+          helmRepositoryCacheDirPath,
+        ),
+      };
     };
   },
 });
 
 export default getActiveHelmRepositoriesInjectable;
 
-const getRepositoriesForFor =
+const getRepositoriesFor =
   (readYamlFile: ReadYamlFile) =>
-    (repositoryConfigFilePath: string, helmRepositoryCacheDirPath: string) =>
-      async (): Promise<HelmRepo[]> => {
-        const { repositories } = (await readYamlFile(
-          repositoryConfigFilePath,
-        )) as HelmRepositoriesFromYaml;
+    async (repositoryConfigFilePath: string, helmRepositoryCacheDirPath: string): Promise<HelmRepo[]> => {
+      const { repositories } = (await readYamlFile(
+        repositoryConfigFilePath,
+      )) as HelmRepositoriesFromYaml;
 
-        return repositories.map((repository) => ({
-          name: repository.name,
-          url: repository.url,
-          caFile: repository.caFile,
-          certFile: repository.certFile,
-          insecureSkipTlsVerify: repository.insecure_skip_tls_verify,
-          keyFile: repository.keyFile,
-          username: repository.username,
-          password: repository.password,
-          cacheFilePath: `${helmRepositoryCacheDirPath}/${repository.name}-index.yaml`,
-        }));
-      };
+      return repositories.map((repository) => ({
+        name: repository.name,
+        url: repository.url,
+        caFile: repository.caFile,
+        certFile: repository.certFile,
+        insecureSkipTlsVerify: repository.insecure_skip_tls_verify,
+        keyFile: repository.keyFile,
+        username: repository.username,
+        password: repository.password,
+        cacheFilePath: `${helmRepositoryCacheDirPath}/${repository.name}-index.yaml`,
+      }));
+    };
 
 const internalHelmErrorForNoRepositoriesFound = "no repositories found. You must add one before updating";
