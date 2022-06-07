@@ -4,12 +4,21 @@
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
-import type { JsonValue } from "type-fest";
 
-export interface SyncBox<TValue extends JsonValue> {
+type AsJson<T> = T extends string | number | boolean | null
+  ? T
+  : T extends Function
+    ? never
+    : T extends Array<infer V>
+      ? AsJson<V>[]
+      : T extends object
+        ? { [K in keyof T]: AsJson<T[K]> }
+        : never;
+
+export interface SyncBox<TValue> {
   id: string;
-  value: IComputedValue<TValue>;
-  set: (value: TValue) => void;
+  value: IComputedValue<AsJson<TValue>>;
+  set: (value: AsJson<TValue>) => void;
 }
 
 export const syncBoxInjectionToken = getInjectionToken<SyncBox<any>>({

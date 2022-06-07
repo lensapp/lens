@@ -44,7 +44,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_13"
+            data-testid="close-notification-for-notification_16"
             tabindex="0"
           >
             <span
@@ -95,7 +95,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_96"
+            data-testid="close-notification-for-notification_115"
             tabindex="0"
           >
             <span
@@ -135,7 +135,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_99"
+            data-testid="close-notification-for-notification_118"
             tabindex="0"
           >
             <span
@@ -186,7 +186,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_149"
+            data-testid="close-notification-for-notification_183"
             tabindex="0"
           >
             <span
@@ -226,7 +226,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_152"
+            data-testid="close-notification-for-notification_186"
             tabindex="0"
           >
             <span
@@ -266,7 +266,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_157"
+            data-testid="close-notification-for-notification_191"
             tabindex="0"
           >
             <span
@@ -317,7 +317,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_215"
+            data-testid="close-notification-for-notification_266"
             tabindex="0"
           >
             <span
@@ -357,7 +357,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_218"
+            data-testid="close-notification-for-notification_269"
             tabindex="0"
           >
             <span
@@ -478,7 +478,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_48"
+            data-testid="close-notification-for-notification_59"
             tabindex="0"
           >
             <span
@@ -518,7 +518,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_51"
+            data-testid="close-notification-for-notification_62"
             tabindex="0"
           >
             <span

@@ -8,10 +8,15 @@ import staticFilesDirectoryInjectable from "../../common/vars/static-files-direc
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
 
+export interface TrayIconPaths {
+  normal: string;
+  updateAvailable: string;
+}
+
 const trayIconPathsInjectable = getInjectable({
   id: "tray-icon-paths",
 
-  instantiate: (di) => {
+  instantiate: (di): TrayIconPaths => {
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);

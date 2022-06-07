@@ -3,20 +3,28 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Menu } from "electron";
-import { Tray } from "electron";
+import { Menu, Tray } from "electron";
 import packageJsonInjectable from "../../../common/vars/package-json.injectable";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import trayIconPathsInjectable from "../tray-icon-path.injectable";
+import type { TrayMenuItem } from "../tray-menu-item/tray-menu-item-injection-token";
+import { convertToElectronMenuTemplate } from "../reactive-tray-menu-items/converters";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
+
+export interface ElectronTray {
+  start(): void;
+  stop(): void;
+  setMenuItems(menuItems: TrayMenuItem[]): void;
+  setIconPath(iconPath: string): void;
+}
 
 const electronTrayInjectable = getInjectable({
   id: "electron-tray",
 
-  instantiate: (di) => {
+  instantiate: (di): ElectronTray => {
     const packageJson = di.inject(packageJsonInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const isWindows = di.inject(isWindowsInjectable);
@@ -42,10 +50,13 @@ const electronTrayInjectable = getInjectable({
       stop: () => {
         tray.destroy();
       },
-      setMenu: (menu: Menu) => {
+      setMenuItems: (menuItems) => {
+        const template = convertToElectronMenuTemplate(menuItems);
+        const menu = Menu.buildFromTemplate(template);
+
         tray.setContextMenu(menu);
       },
-      setIconPath: (iconPath: string) => {
+      setIconPath: (iconPath) => {
         tray.setImage(iconPath);
       },
     };
