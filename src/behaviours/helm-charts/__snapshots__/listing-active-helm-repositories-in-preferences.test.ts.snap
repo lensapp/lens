@@ -406,9 +406,17 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   </button>
                 </div>
                 <div
-                  class="Spinner singleColor"
-                  data-testid="helm-repositories-are-loading"
-                />
+                  class="repos"
+                >
+                  <div
+                    class="pt-5 relative"
+                  >
+                    <div
+                      class="Spinner singleColor center"
+                      data-testid="helm-repositories-are-loading"
+                    />
+                  </div>
+                </div>
                 <div />
               </div>
             </section>
@@ -863,9 +871,17 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   </button>
                 </div>
                 <div
-                  class="Spinner singleColor"
-                  data-testid="helm-repositories-are-loading"
-                />
+                  class="repos"
+                >
+                  <div
+                    class="pt-5 relative"
+                  >
+                    <div
+                      class="Spinner singleColor center"
+                      data-testid="helm-repositories-are-loading"
+                    />
+                  </div>
+                </div>
                 <div />
               </div>
             </section>
@@ -1818,9 +1834,17 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   </button>
                 </div>
                 <div
-                  class="Spinner singleColor"
-                  data-testid="helm-repositories-are-loading"
-                />
+                  class="repos"
+                >
+                  <div
+                    class="pt-5 relative"
+                  >
+                    <div
+                      class="Spinner singleColor center"
+                      data-testid="helm-repositories-are-loading"
+                    />
+                  </div>
+                </div>
                 <div />
               </div>
             </section>
@@ -2275,9 +2299,17 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   </button>
                 </div>
                 <div
-                  class="Spinner singleColor"
-                  data-testid="helm-repositories-are-loading"
-                />
+                  class="repos"
+                >
+                  <div
+                    class="pt-5 relative"
+                  >
+                    <div
+                      class="Spinner singleColor center"
+                      data-testid="helm-repositories-are-loading"
+                    />
+                  </div>
+                </div>
                 <div />
               </div>
             </section>
@@ -2717,13 +2749,17 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   </button>
                 </div>
                 <div
-                  class="notice"
+                  class="repos"
                 >
                   <div
-                    class="flex-grow text-center"
-                    data-testid="no-helm-repositories"
+                    class="notice"
                   >
-                    The repositories have not been added yet
+                    <div
+                      class="flex-grow text-center"
+                      data-testid="no-helm-repositories"
+                    >
+                      The repositories have not been added yet
+                    </div>
                   </div>
                 </div>
                 <div />
@@ -3165,13 +3201,17 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   </button>
                 </div>
                 <div
-                  class="notice"
+                  class="repos"
                 >
                   <div
-                    class="flex-grow text-center"
-                    data-testid="no-helm-repositories"
+                    class="notice"
                   >
-                    The repositories have not been added yet
+                    <div
+                      class="flex-grow text-center"
+                      data-testid="no-helm-repositories"
+                    >
+                      The repositories have not been added yet
+                    </div>
                   </div>
                 </div>
                 <div />

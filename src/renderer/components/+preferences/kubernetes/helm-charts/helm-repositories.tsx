@@ -25,18 +25,26 @@ interface Dependencies {
 
 const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories, deactivateRepository }: Dependencies) => {
   if (activeHelmRepositories.pending.get()) {
-    return <Spinner data-testid="helm-repositories-are-loading" />;
+    return (
+      <div className={styles.repos}>
+        <div className="pt-5 relative">
+          <Spinner center data-testid="helm-repositories-are-loading" />
+        </div>
+      </div>
+    );
   }
 
   const repositories = activeHelmRepositories.value.get();
 
   if (isEmpty(repositories)) {
     return (
-      <Notice>
-        <div className="flex-grow text-center" data-testid="no-helm-repositories">
-          The repositories have not been added yet
-        </div>
-      </Notice>
+      <div className={styles.repos}>
+        <Notice>
+          <div className="flex-grow text-center" data-testid="no-helm-repositories">
+            The repositories have not been added yet
+          </div>
+        </Notice>
+      </div>
     );
   }
 

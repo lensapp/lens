@@ -406,9 +406,17 @@ exports[`activate custom helm repository in preferences when navigating to prefe
                   </button>
                 </div>
                 <div
-                  class="Spinner singleColor"
-                  data-testid="helm-repositories-are-loading"
-                />
+                  class="repos"
+                >
+                  <div
+                    class="pt-5 relative"
+                  >
+                    <div
+                      class="Spinner singleColor center"
+                      data-testid="helm-repositories-are-loading"
+                    />
+                  </div>
+                </div>
                 <div />
               </div>
             </section>
@@ -5637,9 +5645,17 @@ exports[`activate custom helm repository in preferences when navigating to prefe
                   </button>
                 </div>
                 <div
-                  class="Spinner singleColor"
-                  data-testid="helm-repositories-are-loading"
-                />
+                  class="repos"
+                >
+                  <div
+                    class="pt-5 relative"
+                  >
+                    <div
+                      class="Spinner singleColor center"
+                      data-testid="helm-repositories-are-loading"
+                    />
+                  </div>
+                </div>
                 <div />
               </div>
             </section>
@@ -6102,9 +6118,17 @@ exports[`activate custom helm repository in preferences when navigating to prefe
                   </button>
                 </div>
                 <div
-                  class="Spinner singleColor"
-                  data-testid="helm-repositories-are-loading"
-                />
+                  class="repos"
+                >
+                  <div
+                    class="pt-5 relative"
+                  >
+                    <div
+                      class="Spinner singleColor center"
+                      data-testid="helm-repositories-are-loading"
+                    />
+                  </div>
+                </div>
                 <div />
               </div>
             </section>
