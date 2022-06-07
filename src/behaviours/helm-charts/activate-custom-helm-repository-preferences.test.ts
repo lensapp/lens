@@ -46,6 +46,7 @@ describe("activate custom helm repository in preferences", () => {
 
       rendererDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
 
+      // TODO: Figure out how to make async validators unit testable
       rendererDi.override(isPathInjectable, () => ({ debounce: 0, validate: async () => {} }));
 
       mainDi.override(
