@@ -14,54 +14,42 @@ export type InputValidationResult<IsAsync extends boolean> =
     ? Promise<void>
     : boolean;
 
-export type InputValidation<IsAsync extends boolean, RequireProps extends boolean> = (
-  RequireProps extends true
-    ? (value: string, props: InputProps) => InputValidationResult<IsAsync>
-    : (value: string, props?: InputProps) => InputValidationResult<IsAsync>
-);
+export type InputValidation<IsAsync extends boolean> = (value: string, props?: InputProps) => InputValidationResult<IsAsync>;
 
-export type SyncValidationMessage<RequireProps extends boolean> = React.ReactNode | (
-  RequireProps extends true
-    ? (value: string, props: InputProps) => React.ReactNode
-    : (value: string, props?: InputProps) => React.ReactNode
-);
+export type SyncValidationMessage = React.ReactNode | ((value: string, props?: InputProps) => React.ReactNode);
 
-export type InputValidator<IsAsync extends boolean = boolean, RequireProps extends boolean = boolean> = {
+export type InputValidator<IsAsync extends boolean = boolean> = {
   /**
    * Filters itself based on the input props
    */
   condition?: (props: InputProps) => any;
 } & (
-  IsAsync extends false
+  IsAsync extends true
     ? {
-      validate: InputValidation<false, RequireProps>;
-      message: SyncValidationMessage<RequireProps>;
-      debounce?: undefined;
-    }
-    : {
       /**
        * The validation message maybe either specified from the `message` field (higher priority)
        * or if that is not provided then the message will retrived from the rejected with value
        */
-      validate: InputValidation<true, RequireProps>;
-      message?: SyncValidationMessage<RequireProps>;
+      validate: InputValidation<true>;
+      message?: SyncValidationMessage;
       debounce: number;
+    }
+    : {
+      validate: InputValidation<false>;
+      message: SyncValidationMessage;
+      debounce?: undefined;
     }
   );
 
-export function isAsyncValidator<RequireProps extends boolean>(validator: InputValidator<boolean, RequireProps>): validator is InputValidator<true, RequireProps> {
+export function isAsyncValidator(validator: InputValidator<boolean>): validator is InputValidator<true> {
   return typeof validator.debounce === "number";
 }
 
-export function asyncInputValidator(validator: InputValidator<true, false>): InputValidator<true, false> {
+export function asyncInputValidator(validator: InputValidator<true>): InputValidator<true> {
   return validator;
 }
 
-export function inputValidator(validator: InputValidator<false, false>): InputValidator<false, false> {
-  return validator;
-}
-
-export function inputValidatorWithRequiredProps(validator: InputValidator<false, true>): InputValidator<false, true> {
+export function inputValidator(validator: InputValidator<false>): InputValidator<false> {
   return validator;
 }
 
@@ -70,9 +58,9 @@ export function inputValidatorWithRequiredProps(validator: InputValidator<false,
  * one of the input validators matches the input
  */
 export function unionInputValidators(
-  baseValidator: Pick<InputValidator<false, false>, "condition" | "message">,
-  ...validators: InputValidator<false, false>[]
-): InputValidator<false, false> {
+  baseValidator: Pick<InputValidator<false>, "condition" | "message">,
+  ...validators: InputValidator<false>[]
+): InputValidator<false> {
   return inputValidator({
     ...baseValidator,
     validate: (value, props) => validators.some(validator => validator.validate(value, props)),
@@ -84,9 +72,9 @@ export function unionInputValidators(
  * valid if one of the input validators matches the input
  */
 export function unionInputValidatorsAsync(
-  baseValidator: SetRequired<Pick<InputValidator<boolean, false>, "condition" | "message">, "message">,
-  ...validators: InputValidator<boolean, false>[]
-): InputValidator<true, false> {
+  baseValidator: SetRequired<Pick<InputValidator<boolean>, "condition" | "message">, "message">,
+  ...validators: InputValidator<boolean>[]
+): InputValidator<true> {
   const longestDebounce = Math.max(
     ...validators
       .filter(isAsyncValidator)
@@ -117,7 +105,7 @@ export function unionInputValidatorsAsync(
        * If no validator returns `true` then mark as invalid by throwing. The message will be
        * obtained from the `message` field.
        */
-      throw {};
+      throw new Error();
     },
     ...baseValidator,
   });
@@ -135,9 +123,9 @@ export const isEmail = inputValidator({
   validate: value => !!value.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
 });
 
-export const isNumber = inputValidatorWithRequiredProps({
+export const isNumber = inputValidator({
   condition: ({ type }) => type === "number",
-  message(value, { min, max }) {
+  message(value, { min, max } = {}) {
     const minMax: string = [
       typeof min === "number" ? `min: ${min}` : undefined,
       typeof max === "number" ? `max: ${max}` : undefined,
@@ -145,7 +133,7 @@ export const isNumber = inputValidatorWithRequiredProps({
 
     return `Invalid number${minMax ? ` (${minMax})` : ""}`;
   },
-  validate: (value, { min, max }) => {
+  validate: (value, { min, max } = {}) => {
     const numVal = +value;
 
     return !(
@@ -194,16 +182,16 @@ export const isPath = asyncInputValidator({
   },
 });
 
-export const minLength = inputValidatorWithRequiredProps({
+export const minLength = inputValidator({
   condition: ({ minLength }) => !!minLength,
-  message: (value, { minLength }) => `Minimum length is ${minLength}`,
-  validate: (value, { minLength = 0 }) => value.length >= minLength,
+  message: (value, { minLength = 0 } = {}) => `Minimum length is ${minLength}`,
+  validate: (value, { minLength = 0 } = {}) => value.length >= minLength,
 });
 
-export const maxLength = inputValidatorWithRequiredProps({
+export const maxLength = inputValidator({
   condition: ({ maxLength }) => !!maxLength,
-  message: (value, { maxLength }) => `Maximum length is ${maxLength}`,
-  validate: (value, { maxLength = 0 }) => value.length <= maxLength,
+  message: (value, { maxLength = 0 } = {}) => `Maximum length is ${maxLength}`,
+  validate: (value, { maxLength = 0 } = {}) => value.length <= maxLength,
 });
 
 const systemNameMatcher = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;

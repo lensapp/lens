@@ -20,7 +20,6 @@ const {
   conditionalValidators,
   asyncInputValidator,
   inputValidator,
-  inputValidatorWithRequiredProps,
   isAsyncValidator,
   unionInputValidatorsAsync,
   ...InputValidators
@@ -30,7 +29,6 @@ export {
   InputValidators,
   asyncInputValidator,
   inputValidator,
-  inputValidatorWithRequiredProps,
   isAsyncValidator,
   unionInputValidatorsAsync,
 };
