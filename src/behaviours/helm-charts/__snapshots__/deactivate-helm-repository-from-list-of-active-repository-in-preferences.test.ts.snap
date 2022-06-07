@@ -313,7 +313,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                   >
                     <span
                       class="css-1f43avz-a11yText-A11yText"
-                      id="react-select-HelmRepoSelect-live-region"
+                      id="react-select-selection-of-active-public-helm-repository-live-region"
                     />
                     <span
                       aria-atomic="false"
@@ -329,7 +329,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       >
                         <div
                           class="Select__placeholder css-14el2xx-placeholder"
-                          id="react-select-HelmRepoSelect-placeholder"
+                          id="react-select-selection-of-active-public-helm-repository-placeholder"
                         >
                           Repositories
                         </div>
@@ -339,7 +339,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-HelmRepoSelect-placeholder"
+                            aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -347,7 +347,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                             autocorrect="off"
                             class="Select__input"
                             disabled=""
-                            id="HelmRepoSelect"
+                            id="selection-of-active-public-helm-repository"
                             role="combobox"
                             spellcheck="false"
                             style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
@@ -393,120 +393,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                               d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
                             />
                           </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
-                </div>
-                <div
-                  class="repos"
-                >
-                  <div
-                    class="pt-5 relative"
-                  >
-                    <div
-                      class="Spinner singleColor center"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  class="flex gaps"
-                >
-                  <div>
-                    <div
-                      class="Select theme-lens box grow Select--is-disabled css-3iigni-container"
-                    >
-                      <span
-                        class="css-1f43avz-a11yText-A11yText"
-                        id="react-select-selection-of-active-public-helm-repository-live-region"
-                      />
-                      <span
-                        aria-atomic="false"
-                        aria-live="polite"
-                        aria-relevant="additions text"
-                        class="css-1f43avz-a11yText-A11yText"
-                      />
-                      <div
-                        class="Select__control Select__control--is-disabled css-1insrsq-control"
-                      >
-                        <div
-                          class="Select__value-container css-319lph-ValueContainer"
-                        >
-                          <div
-                            class="Select__placeholder css-14el2xx-placeholder"
-                            id="react-select-selection-of-active-public-helm-repository-placeholder"
-                          >
-                            Repositories
-                          </div>
-                          <div
-                            class="Select__input-container css-jzldcf-Input"
-                            data-value=""
-                          >
-                            <input
-                              aria-autocomplete="list"
-                              aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              autocapitalize="none"
-                              autocomplete="off"
-                              autocorrect="off"
-                              class="Select__input"
-                              disabled=""
-                              id="selection-of-active-public-helm-repository"
-                              role="combobox"
-                              spellcheck="false"
-                              style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                              tabindex="0"
-                              type="text"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                        <div
-                          class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                        >
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__loading-indicator css-at12u2-loadingIndicator"
-                          >
-                            <span
-                              class="css-1xtdfmb-LoadingDot"
-                            />
-                            <span
-                              class="css-zoievk-LoadingDot"
-                            />
-                            <span
-                              class="css-x748d8-LoadingDot"
-                            />
-                          </div>
-                          <span
-                            class="Select__indicator-separator css-109onse-indicatorSeparator"
-                          />
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="css-tj5bde-Svg"
-                              focusable="false"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              width="20"
-                            >
-                              <path
-                                d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                              />
-                            </svg>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -880,11 +766,11 @@ exports[`deactivate helm repository from list of active repositories in preferen
                   class="flex gaps"
                 >
                   <div
-                    class="Select theme-lens box grow Select--is-disabled css-3iigni-container"
+                    class="Select theme-lens box grow css-b62m3t-container"
                   >
                     <span
                       class="css-1f43avz-a11yText-A11yText"
-                      id="react-select-HelmRepoSelect-live-region"
+                      id="react-select-selection-of-active-public-helm-repository-live-region"
                     />
                     <span
                       aria-atomic="false"
@@ -893,32 +779,31 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control Select__control--is-disabled css-1insrsq-control"
+                      class="Select__control css-1s2u09g-control"
                     >
                       <div
                         class="Select__value-container css-319lph-ValueContainer"
                       >
                         <div
                           class="Select__placeholder css-14el2xx-placeholder"
-                          id="react-select-HelmRepoSelect-placeholder"
+                          id="react-select-selection-of-active-public-helm-repository-placeholder"
                         >
                           Repositories
                         </div>
                         <div
-                          class="Select__input-container css-jzldcf-Input"
+                          class="Select__input-container css-6j8wv5-Input"
                           data-value=""
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-HelmRepoSelect-placeholder"
+                            aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
                             autocomplete="off"
                             autocorrect="off"
                             class="Select__input"
-                            disabled=""
-                            id="HelmRepoSelect"
+                            id="selection-of-active-public-helm-repository"
                             role="combobox"
                             spellcheck="false"
                             style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
@@ -931,22 +816,8 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       <div
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
-                        <div
-                          aria-hidden="true"
-                          class="Select__indicator Select__loading-indicator css-at12u2-loadingIndicator"
-                        >
-                          <span
-                            class="css-1xtdfmb-LoadingDot"
-                          />
-                          <span
-                            class="css-zoievk-LoadingDot"
-                          />
-                          <span
-                            class="css-x748d8-LoadingDot"
-                          />
-                        </div>
                         <span
-                          class="Select__indicator-separator css-109onse-indicatorSeparator"
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
@@ -964,105 +835,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                               d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
                             />
                           </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
-                </div>
-                <div
-                  class="repos"
-                >
-                  <div
-                    class="pt-5 relative"
-                  >
-                    <div
-                      class="Spinner singleColor center"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  class="flex gaps"
-                >
-                  <div>
-                    <div
-                      class="Select theme-lens box grow css-b62m3t-container"
-                    >
-                      <span
-                        class="css-1f43avz-a11yText-A11yText"
-                        id="react-select-selection-of-active-public-helm-repository-live-region"
-                      />
-                      <span
-                        aria-atomic="false"
-                        aria-live="polite"
-                        aria-relevant="additions text"
-                        class="css-1f43avz-a11yText-A11yText"
-                      />
-                      <div
-                        class="Select__control css-1s2u09g-control"
-                      >
-                        <div
-                          class="Select__value-container css-319lph-ValueContainer"
-                        >
-                          <div
-                            class="Select__placeholder css-14el2xx-placeholder"
-                            id="react-select-selection-of-active-public-helm-repository-placeholder"
-                          >
-                            Repositories
-                          </div>
-                          <div
-                            class="Select__input-container css-6j8wv5-Input"
-                            data-value=""
-                          >
-                            <input
-                              aria-autocomplete="list"
-                              aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              autocapitalize="none"
-                              autocomplete="off"
-                              autocorrect="off"
-                              class="Select__input"
-                              id="selection-of-active-public-helm-repository"
-                              role="combobox"
-                              spellcheck="false"
-                              style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                              tabindex="0"
-                              type="text"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                        <div
-                          class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                        >
-                          <span
-                            class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                          />
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="css-tj5bde-Svg"
-                              focusable="false"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              width="20"
-                            >
-                              <path
-                                d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                              />
-                            </svg>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -1464,11 +1236,11 @@ exports[`deactivate helm repository from list of active repositories in preferen
                   class="flex gaps"
                 >
                   <div
-                    class="Select theme-lens box grow Select--is-disabled css-3iigni-container"
+                    class="Select theme-lens box grow css-b62m3t-container"
                   >
                     <span
                       class="css-1f43avz-a11yText-A11yText"
-                      id="react-select-HelmRepoSelect-live-region"
+                      id="react-select-selection-of-active-public-helm-repository-live-region"
                     />
                     <span
                       aria-atomic="false"
@@ -1477,32 +1249,31 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control Select__control--is-disabled css-1insrsq-control"
+                      class="Select__control css-1s2u09g-control"
                     >
                       <div
                         class="Select__value-container css-319lph-ValueContainer"
                       >
                         <div
                           class="Select__placeholder css-14el2xx-placeholder"
-                          id="react-select-HelmRepoSelect-placeholder"
+                          id="react-select-selection-of-active-public-helm-repository-placeholder"
                         >
                           Repositories
                         </div>
                         <div
-                          class="Select__input-container css-jzldcf-Input"
+                          class="Select__input-container css-6j8wv5-Input"
                           data-value=""
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-HelmRepoSelect-placeholder"
+                            aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
                             autocomplete="off"
                             autocorrect="off"
                             class="Select__input"
-                            disabled=""
-                            id="HelmRepoSelect"
+                            id="selection-of-active-public-helm-repository"
                             role="combobox"
                             spellcheck="false"
                             style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
@@ -1515,22 +1286,8 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       <div
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
-                        <div
-                          aria-hidden="true"
-                          class="Select__indicator Select__loading-indicator css-at12u2-loadingIndicator"
-                        >
-                          <span
-                            class="css-1xtdfmb-LoadingDot"
-                          />
-                          <span
-                            class="css-zoievk-LoadingDot"
-                          />
-                          <span
-                            class="css-x748d8-LoadingDot"
-                          />
-                        </div>
                         <span
-                          class="Select__indicator-separator css-109onse-indicatorSeparator"
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
@@ -1548,105 +1305,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                               d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
                             />
                           </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
-                </div>
-                <div
-                  class="repos"
-                >
-                  <div
-                    class="pt-5 relative"
-                  >
-                    <div
-                      class="Spinner singleColor center"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  class="flex gaps"
-                >
-                  <div>
-                    <div
-                      class="Select theme-lens box grow css-b62m3t-container"
-                    >
-                      <span
-                        class="css-1f43avz-a11yText-A11yText"
-                        id="react-select-selection-of-active-public-helm-repository-live-region"
-                      />
-                      <span
-                        aria-atomic="false"
-                        aria-live="polite"
-                        aria-relevant="additions text"
-                        class="css-1f43avz-a11yText-A11yText"
-                      />
-                      <div
-                        class="Select__control css-1s2u09g-control"
-                      >
-                        <div
-                          class="Select__value-container css-319lph-ValueContainer"
-                        >
-                          <div
-                            class="Select__placeholder css-14el2xx-placeholder"
-                            id="react-select-selection-of-active-public-helm-repository-placeholder"
-                          >
-                            Repositories
-                          </div>
-                          <div
-                            class="Select__input-container css-6j8wv5-Input"
-                            data-value=""
-                          >
-                            <input
-                              aria-autocomplete="list"
-                              aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              autocapitalize="none"
-                              autocomplete="off"
-                              autocorrect="off"
-                              class="Select__input"
-                              id="selection-of-active-public-helm-repository"
-                              role="combobox"
-                              spellcheck="false"
-                              style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                              tabindex="0"
-                              type="text"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                        <div
-                          class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                        >
-                          <span
-                            class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                          />
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="css-tj5bde-Svg"
-                              focusable="false"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              width="20"
-                            >
-                              <path
-                                d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                              />
-                            </svg>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -2052,7 +1710,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                   >
                     <span
                       class="css-1f43avz-a11yText-A11yText"
-                      id="react-select-HelmRepoSelect-live-region"
+                      id="react-select-selection-of-active-public-helm-repository-live-region"
                     />
                     <span
                       aria-atomic="false"
@@ -2068,7 +1726,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                       >
                         <div
                           class="Select__placeholder css-14el2xx-placeholder"
-                          id="react-select-HelmRepoSelect-placeholder"
+                          id="react-select-selection-of-active-public-helm-repository-placeholder"
                         >
                           Repositories
                         </div>
@@ -2078,7 +1736,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-HelmRepoSelect-placeholder"
+                            aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -2086,7 +1744,7 @@ exports[`deactivate helm repository from list of active repositories in preferen
                             autocorrect="off"
                             class="Select__input"
                             disabled=""
-                            id="HelmRepoSelect"
+                            id="selection-of-active-public-helm-repository"
                             role="combobox"
                             spellcheck="false"
                             style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
@@ -2132,120 +1790,6 @@ exports[`deactivate helm repository from list of active repositories in preferen
                               d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
                             />
                           </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    class="Button primary"
-                    type="button"
-                  >
-                    Add Custom Helm Repo
-                  </button>
-                </div>
-                <div
-                  class="repos"
-                >
-                  <div
-                    class="pt-5 relative"
-                  >
-                    <div
-                      class="Spinner singleColor center"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  class="flex gaps"
-                >
-                  <div>
-                    <div
-                      class="Select theme-lens box grow Select--is-disabled css-3iigni-container"
-                    >
-                      <span
-                        class="css-1f43avz-a11yText-A11yText"
-                        id="react-select-selection-of-active-public-helm-repository-live-region"
-                      />
-                      <span
-                        aria-atomic="false"
-                        aria-live="polite"
-                        aria-relevant="additions text"
-                        class="css-1f43avz-a11yText-A11yText"
-                      />
-                      <div
-                        class="Select__control Select__control--is-disabled css-1insrsq-control"
-                      >
-                        <div
-                          class="Select__value-container css-319lph-ValueContainer"
-                        >
-                          <div
-                            class="Select__placeholder css-14el2xx-placeholder"
-                            id="react-select-selection-of-active-public-helm-repository-placeholder"
-                          >
-                            Repositories
-                          </div>
-                          <div
-                            class="Select__input-container css-jzldcf-Input"
-                            data-value=""
-                          >
-                            <input
-                              aria-autocomplete="list"
-                              aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              autocapitalize="none"
-                              autocomplete="off"
-                              autocorrect="off"
-                              class="Select__input"
-                              disabled=""
-                              id="selection-of-active-public-helm-repository"
-                              role="combobox"
-                              spellcheck="false"
-                              style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                              tabindex="0"
-                              type="text"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                        <div
-                          class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                        >
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__loading-indicator css-at12u2-loadingIndicator"
-                          >
-                            <span
-                              class="css-1xtdfmb-LoadingDot"
-                            />
-                            <span
-                              class="css-zoievk-LoadingDot"
-                            />
-                            <span
-                              class="css-x748d8-LoadingDot"
-                            />
-                          </div>
-                          <span
-                            class="Select__indicator-separator css-109onse-indicatorSeparator"
-                          />
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="css-tj5bde-Svg"
-                              focusable="false"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              width="20"
-                            >
-                              <path
-                                d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                              />
-                            </svg>
-                          </div>
                         </div>
                       </div>
                     </div>

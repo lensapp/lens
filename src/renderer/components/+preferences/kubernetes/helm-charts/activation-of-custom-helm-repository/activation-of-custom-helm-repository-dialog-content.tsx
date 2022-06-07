@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "../../../add-helm-repo-dialog.scss";
+import "./add-helm-repo-dialog.scss";
 
 import React from "react";
 import { Wizard, WizardStep } from "../../../../wizard";

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import styles from "../../helm-charts.module.scss";
+import styles from "./helm-charts.module.scss";
 
 import React from "react";
 

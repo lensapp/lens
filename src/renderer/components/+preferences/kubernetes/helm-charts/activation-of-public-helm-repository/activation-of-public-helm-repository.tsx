@@ -39,21 +39,19 @@ const NonInjectedActivationOfPublicHelmRepository = observer(({
   }));
 
   return (
-    <div>
-      <Select
-        id="selection-of-active-public-helm-repository"
-        placeholder="Repositories"
-        isLoading={valuesAreLoading}
-        isDisabled={valuesAreLoading}
-        options={repositoryOptions}
-        onChange={selectRepository}
-        value={dereferencesPublicRepositories}
-        formatOptionLabel={formatOptionLabel}
-        controlShouldRenderValue={false}
-        className="box grow"
-        themeName="lens"
-      />
-    </div>
+    <Select
+      id="selection-of-active-public-helm-repository"
+      placeholder="Repositories"
+      isLoading={valuesAreLoading}
+      isDisabled={valuesAreLoading}
+      options={repositoryOptions}
+      onChange={selectRepository}
+      value={dereferencesPublicRepositories}
+      formatOptionLabel={formatOptionLabel}
+      controlShouldRenderValue={false}
+      className="box grow"
+      themeName="lens"
+    />
   );
 });
 
