@@ -170,10 +170,7 @@ export interface IRemoteKubeApiConfig {
     clientKeyData?: string;
   };
   /**
-   * Custom instance of https.agent to use for the requests
-   * 
-   * @remarks the custom agent replaced default agent, options skipTLSVerify,
-   * clientCertificateData, clientKeyData and caData are ignored.
+   * Custom instance of https.agent
    */
   agent?: Agent;
 }
@@ -248,7 +245,7 @@ export function forRemoteCluster<
   }
 
   if (config.agent) {
-    reqInit.agent = config.agent;
+    reqInit.agent = config.agent.constructor(agentOptions);
   }
 
   const token = config.user.token;
