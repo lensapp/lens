@@ -5,7 +5,12 @@
 
 import glob from "glob";
 import { memoize, noop } from "lodash/fp";
-import { createContainer } from "@ogre-tools/injectable";
+import type {
+  DiContainer,
+  Injectable } from "@ogre-tools/injectable";
+import {
+  createContainer,
+} from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
@@ -46,6 +51,7 @@ import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/activation-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
+import callForPublicHelmRepositoriesInjectable from "./components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -92,13 +98,11 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
       on: () => {},
     }) as unknown as IpcRenderer);
 
-    di.override(broadcastMessageInjectable, () => () => {
-      throw new Error("Tried to broadcast message over IPC without explicit override.");
-    });
-
-    di.override(getFilePathsInjectable, () => () => {
-      throw new Error("Tried to get file paths without explicit override.");
-    });
+    overrideFunctionalInjectables(di, [
+      broadcastMessageInjectable,
+      getFilePathsInjectable,
+      callForPublicHelmRepositoriesInjectable,
+    ]);
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
@@ -152,3 +156,11 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
+
+const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
+  injectables.forEach(injectable => {
+    di.override(injectable, () => () => {
+      throw new Error(`Tried to run "${injectable.id}" without explicit override.`);
+    });
+  });
+};

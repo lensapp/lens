@@ -6,12 +6,14 @@
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import listHelmChartsInjectable from "../helm-service/list-helm-charts.injectable";
 import getActiveHelmRepositoriesInjectable from "../repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
+import type { AsyncResult } from "../../../common/utils/async-result";
+import type { HelmRepo } from "../../../common/helm-repo";
 
 jest.mock("../helm-chart-manager");
 
 describe("Helm Service tests", () => {
   let listHelmCharts: () => Promise<any>;
-  let getActiveHelmRepositoriesMock: jest.Mock;
+  let getActiveHelmRepositoriesMock: jest.Mock<Promise<AsyncResult<HelmRepo[]>>>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -20,6 +22,7 @@ describe("Helm Service tests", () => {
 
     di.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
 
+    di.unoverride(listHelmChartsInjectable);
     di.permitSideEffects(listHelmChartsInjectable);
 
     listHelmCharts = di.inject(listHelmChartsInjectable);
@@ -30,10 +33,16 @@ describe("Helm Service tests", () => {
   });
 
   it("list charts with deprecated entries", async () => {
-    getActiveHelmRepositoriesMock.mockReturnValue([
-      { name: "stable", url: "stableurl" },
-      { name: "experiment", url: "experimenturl" },
-    ] as any);
+    getActiveHelmRepositoriesMock.mockReturnValue(
+      Promise.resolve({
+        callWasSuccessful: true,
+
+        response: [
+          { name: "stable", url: "stableurl" },
+          { name: "experiment", url: "experimenturl" },
+        ],
+      }),
+    );
 
     const charts = await listHelmCharts();
 
@@ -135,9 +144,12 @@ describe("Helm Service tests", () => {
   });
 
   it("list charts sorted by version in descending order", async () => {
-    getActiveHelmRepositoriesMock.mockReturnValue([
-      { name: "bitnami", url: "bitnamiurl" },
-    ] as any);
+    getActiveHelmRepositoriesMock.mockReturnValue(
+      Promise.resolve({
+        callWasSuccessful: true,
+        response: [{ name: "bitnami", url: "bitnamiurl" }],
+      }),
+    );
 
     const charts = await listHelmCharts();
 
