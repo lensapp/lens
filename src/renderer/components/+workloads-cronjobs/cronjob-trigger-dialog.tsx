@@ -12,7 +12,7 @@ import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import type { CronJob } from "../../../common/k8s-api/endpoints";
-import { cronJobApi, jobApi } from "../../../common/k8s-api/endpoints";
+import { jobApi } from "../../../common/k8s-api/endpoints";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { Input } from "../input";
@@ -21,15 +21,11 @@ import { systemName, maxLength } from "../input/input_validators";
 export interface CronJobTriggerDialogProps extends Partial<DialogProps> {
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-  data: null as CronJob,
-});
+const dialogState = observable.box<CronJob | undefined>();
 
 @observer
 export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
   @observable jobName = "";
-  @observable ready = false;
 
   constructor(props: CronJobTriggerDialogProps) {
     super(props);
@@ -37,117 +33,100 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
   }
 
   static open(cronjob: CronJob) {
-    dialogState.isOpen = true;
-    dialogState.data = cronjob;
+    dialogState.set(cronjob);
   }
 
   static close() {
-    dialogState.isOpen = false;
+    dialogState.set(undefined);
   }
 
-  get cronjob() {
-    return dialogState.data;
-  }
+  onOpen = () => {
+    const cronJob = dialogState.get();
 
-  close = () => {
-    CronJobTriggerDialog.close();
-  };
-
-  onOpen = async () => {
-    const { cronjob } = this;
-
-    this.jobName = cronjob ? `${cronjob.getName()}-manual-${Math.random().toString(36).slice(2, 7)}` : "";
+    this.jobName = cronJob ? `${cronJob.getName()}-manual-${Math.random().toString(36).slice(2, 7)}` : "";
     this.jobName = this.jobName.slice(0, 63);
-    this.ready = true;
   };
 
-  onClose = () => {
-    this.ready = false;
-  };
-
-  trigger = async () => {
-    const { cronjob } = this;
-    const { close } = this;
+  async trigger(cronJob: CronJob): Promise<void> {
+    if (!cronJob.spec.jobTemplate) {
+      return void Notifications.error(`CronJob ${cronJob.getName()} has no jobTemplate`);
+    }
 
     try {
-      const cronjobDefinition = await cronJobApi.get({
-        name: cronjob.getName(),
-        namespace: cronjob.getNs(),
-      });
-
       await jobApi.create({
         name: this.jobName,
-        namespace: cronjob.getNs(),
+        namespace: cronJob.getNs(),
       }, {
-        spec: cronjobDefinition.spec.jobTemplate.spec,
+        spec: cronJob.spec.jobTemplate.spec,
         metadata: {
           annotations: { "cronjob.kubernetes.io/instantiate": "manual" },
           ownerReferences: [{
-            apiVersion: cronjob.apiVersion,
+            apiVersion: cronJob.apiVersion,
             blockOwnerDeletion: true,
             controller: true,
-            kind: cronjob.kind,
-            name: cronjob.metadata.name,
-            uid: cronjob.metadata.uid,
+            kind: cronJob.kind,
+            name: cronJob.metadata.name,
+            uid: cronJob.metadata.uid,
           }],
         },
       });
 
-      close();
+      CronJobTriggerDialog.close();
     } catch (err) {
-      Notifications.error(err);
+      Notifications.checkedError(err, "Unknown error occurred while creating job");
     }
-  };
+  }
 
-  renderContents() {
+  renderContents(cronJob: CronJob) {
     return (
-      <>
-        <div className="flex gaps">
-          Job name:
-        </div>
-        <div className="flex gaps">
-          <Input
-            required autoFocus
-            placeholder={this.jobName}
-            trim
-            validators={[systemName, maxLength]}
-            maxLength={63}
-            value={this.jobName} onChange={v => this.jobName = v.toLowerCase()}
-            className="box grow"
-          />
-        </div>
-      </>
+      <Wizard
+        header={(
+          <h5>
+            Trigger CronJob
+            <span>{cronJob.getName()}</span>
+          </h5>
+        )}
+        done={CronJobTriggerDialog.close}
+      >
+        <WizardStep
+          contentClass="flex gaps column"
+          next={() => this.trigger(cronJob)}
+          nextLabel="Trigger"
+        >
+          <div className="flex gaps">
+            Job name:
+          </div>
+          <div className="flex gaps">
+            <Input
+              required
+              autoFocus
+              placeholder={this.jobName}
+              trim
+              validators={[systemName, maxLength]}
+              maxLength={63}
+              value={this.jobName}
+              onChange={v => this.jobName = v.toLowerCase()}
+              className="box grow"
+            />
+          </div>
+        </WizardStep>
+      </Wizard>
     );
   }
 
   render() {
     const { className, ...dialogProps } = this.props;
-    const cronjobName = this.cronjob ? this.cronjob.getName() : "";
-    const header = (
-      <h5>
-        Trigger CronJob <span>{cronjobName}</span>
-      </h5>
-    );
+    const cronJob = dialogState.get();
 
     return (
       <Dialog
         {...dialogProps}
-        isOpen={dialogState.isOpen}
+        isOpen={Boolean(cronJob)}
         className={cssNames("CronJobTriggerDialog", className)}
         onOpen={this.onOpen}
-        onClose={this.onClose}
-        close={this.close}
+        close={CronJobTriggerDialog.close}
       >
-        <Wizard header={header} done={this.close}>
-          <WizardStep
-            contentClass="flex gaps column"
-            next={this.trigger}
-            nextLabel="Trigger"
-            disabledNext={!this.ready}
-          >
-            {this.renderContents()}
-          </WizardStep>
-        </Wizard>
+        {cronJob && this.renderContents(cronJob)}
       </Dialog>
     );
   }

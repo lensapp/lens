@@ -11,12 +11,12 @@ import { makeObservable, observable, reaction, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
-import { toJS } from "../../common/utils";
+import { isErrnoException, toJS } from "../../common/utils";
 import logger from "../../main/logger";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { ExtensionLoader } from "../extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
-import { isProduction, staticFilesDirectory } from "../../common/vars";
+import { isProduction } from "../../common/vars";
 import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
 import type { PackageJson } from "type-fest";
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
@@ -34,6 +34,7 @@ interface Dependencies {
   installExtension: (name: string) => Promise<void>;
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
   extensionPackageRootDirectory: string;
+  staticFilesDirectory: string;
 }
 
 export interface InstalledExtension {
@@ -81,7 +82,7 @@ interface LoadFromFolderOptions {
  * - "remove": When extension is removed. The event is of type LensExtensionId
  */
 export class ExtensionDiscovery {
-  protected bundledFolderPath: string;
+  protected bundledFolderPath!: string;
 
   private loadStarted = false;
   private extensions: Map<string, InstalledExtension> = new Map();
@@ -112,7 +113,7 @@ export class ExtensionDiscovery {
   }
 
   get inTreeFolderPath(): string {
-    return path.resolve(staticFilesDirectory, "../extensions");
+    return path.resolve(this.dependencies.staticFilesDirectory, "../extensions");
   }
 
   get nodeModulesPath(): string {
@@ -271,7 +272,13 @@ export class ExtensionDiscovery {
    * @param extensionId The ID of the extension to uninstall.
    */
   async uninstallExtension(extensionId: LensExtensionId): Promise<void> {
-    const { manifest, absolutePath } = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtension(extensionId);
+    const extension = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtension(extensionId);
+
+    if (!extension) {
+      return void logger.warn(`${logModule} could not uninstall extension, not found`, { id: extensionId });
+    }
+
+    const { manifest, absolutePath } = extension;
 
     logger.info(`${logModule} Uninstalling ${manifest.name}`);
 
@@ -369,7 +376,7 @@ export class ExtensionDiscovery {
         isCompatible,
       };
     } catch (error) {
-      if (error.code === "ENOTDIR") {
+      if (isErrnoException(error) && error.code === "ENOTDIR") {
         // ignore this error, probably from .DS_Store file
         logger.debug(`${logModule}: failed to load extension manifest through a not-dir-like at ${manifestPath}`);
       } else {
@@ -392,10 +399,12 @@ export class ExtensionDiscovery {
         try {
           await this.dependencies.installExtension(extension.absolutePath);
         } catch (error) {
-          const message = error.message || error || "unknown error";
+          const message = error instanceof Error
+            ? error.message
+            : String(error || "unknown error");
           const { name, version } = extension.manifest;
 
-          logger.error(`${logModule}: failed to install user extension ${name}@${version}`, message);
+          logger.error(`${logModule}: failed to install user extension ${name}@${version}: ${message}`);
         }
       }
     }

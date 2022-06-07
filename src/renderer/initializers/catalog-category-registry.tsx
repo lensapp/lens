@@ -3,16 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { kubernetesClusterCategory } from "../../common/catalog-entities";
+import type { KubernetesClusterCategory } from "../../common/catalog-entities";
 import { isLinux, isWindows } from "../../common/vars";
 import { PathPicker } from "../components/path-picker";
 
 interface Dependencies {
   navigateToAddCluster: () => void;
   addSyncEntries: (filePaths: string[]) => void;
+  kubernetesClusterCategory: KubernetesClusterCategory;
 }
 
-export function initCatalogCategoryRegistryEntries({ navigateToAddCluster, addSyncEntries } : Dependencies) {
+export function initCatalogCategoryRegistryEntries({
+  navigateToAddCluster,
+  addSyncEntries,
+  kubernetesClusterCategory,
+} : Dependencies) {
   kubernetesClusterCategory.on("catalogAddMenu", ctx => {
     ctx.menuItems.push(
       {

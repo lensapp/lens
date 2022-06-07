@@ -4,8 +4,7 @@
  */
 
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
-import { CatalogCategory, CatalogEntity } from "../catalog";
-import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
+import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";
 
@@ -30,11 +29,7 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
     window.open(this.spec.url, "_blank");
   }
 
-  public onSettingsOpen(): void {
-    return;
-  }
-
-  async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+  onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (this.metadata.source === "local") {
       context.menuItems.push({
         title: "Delete",
@@ -45,10 +40,6 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
         },
       });
     }
-
-    catalogCategoryRegistry
-      .getCategoryForEntity<WebLinkCategory>(this)
-      ?.emit("contextMenuOpen", this, context);
   }
 }
 
@@ -62,15 +53,10 @@ export class WebLinkCategory extends CatalogCategory {
   public spec = {
     group: "entity.k8slens.dev",
     versions: [
-      {
-        name: "v1alpha1",
-        entityClass: WebLink,
-      },
+      categoryVersion("v1alpha1", WebLink),
     ],
     names: {
       kind: "WebLink",
     },
   };
 }
-
-catalogCategoryRegistry.add(new WebLinkCategory());

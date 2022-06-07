@@ -11,7 +11,7 @@
     ],
     "moduleResolution": "Node",
     "sourceMap": true,
-    "strict": false,
+    "strict": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,

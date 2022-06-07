@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { getInjectionToken } from "@ogre-tools/injectable";
 import type { RequireAtLeastOne } from "type-fest";
 import type { KubeObject } from "../../common/k8s-api/kube-object";
 import type { BaseIconProps } from "../components/icon";
@@ -42,3 +43,7 @@ export type KubeObjectHandlerRegistration = {
   apiVersions: string[];
   kind: string;
 } & RequireAtLeastOne<KubeObjectHandlers>;
+
+export const staticKubeObjectHandlerInjectionToken = getInjectionToken<KubeObjectHandlerRegistration>({
+  id: "static-kube-object-handler-token",
+});

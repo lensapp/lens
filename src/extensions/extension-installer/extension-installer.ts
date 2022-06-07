@@ -74,7 +74,7 @@ export class ExtensionInstaller {
       });
       let stderr = "";
 
-      child.stderr.on("data", data => {
+      child.stderr?.on("data", data => {
         stderr += String(data);
       });
 

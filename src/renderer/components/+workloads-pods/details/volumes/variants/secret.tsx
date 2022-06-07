@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { secretsApi } from "../../../../../../common/k8s-api/endpoints";
+import { secretApi } from "../../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
@@ -16,7 +16,7 @@ export const Secret: VolumeVariantComponent<"secret"> = (
         pod={pod}
         title="Name"
         kubeRef={{ name: secretName }}
-        api={secretsApi}
+        api={secretApi}
       />
       <DrawerItem name="Items" hidden={items.length === 0}>
         <ul>
@@ -24,7 +24,7 @@ export const Secret: VolumeVariantComponent<"secret"> = (
         </ul>
       </DrawerItem>
       <DrawerItem name="Default File Mode">
-          0o{defaultMode.toString(8)}
+        {`0o${defaultMode.toString(8)}`}
       </DrawerItem>
       <DrawerItem name="Optional">
         {optional.toString()}

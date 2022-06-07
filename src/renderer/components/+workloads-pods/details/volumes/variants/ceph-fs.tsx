@@ -4,13 +4,13 @@
  */
 
 import React from "react";
-import { secretsApi } from "../../../../../../common/k8s-api/endpoints";
+import { secretApi } from "../../../../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
 
 export const CephFs: VolumeVariantComponent<"cephfs"> = (
-  ({ pod, variant: { monitors, path = "/", user = "admin", secretFile = "/etc/ceph/user.secret", secretRef, readOnly }}) => (
+  ({ pod, variant: { monitors, path = "/", user = "admin", secretFile = "/etc/ceph/user.secret", secretRef, readOnly = false }}) => (
     <>
       <DrawerItem name="Monitors">
         <ul>
@@ -30,7 +30,7 @@ export const CephFs: VolumeVariantComponent<"cephfs"> = (
               pod={pod}
               title="Secret"
               kubeRef={secretRef}
-              api={secretsApi}
+              api={secretApi}
             />
           )
           : (
@@ -39,7 +39,7 @@ export const CephFs: VolumeVariantComponent<"cephfs"> = (
             </DrawerItem>
           )
       }
-      <DrawerItem name="Readonly">
+      <DrawerItem name="Readonly" data-testid="cephfs-readonly">
         {readOnly.toString()}
       </DrawerItem>
     </>

@@ -21,10 +21,12 @@ export interface DrawerTitleProps {
 
 export function DrawerTitle({ className, children, size = "title" }: DrawerTitleProps) {
   return (
-    <div className={cssNames(styles.DrawerTitle, className, {
-      [styles.title]: size === "title",
-      [styles["sub-title"]]: size === "sub-title",
-    })}>
+    <div
+      className={cssNames(styles.DrawerTitle, className, {
+        [styles.title]: size === "title",
+        [styles["sub-title"]]: size === "sub-title",
+      })}
+    >
       {children}
     </div>
   );

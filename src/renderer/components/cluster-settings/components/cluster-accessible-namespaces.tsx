@@ -43,7 +43,7 @@ export class ClusterAccessibleNamespaces extends React.Component<ClusterAccessib
           inputTheme="round-black"
         />
         <small className="hint">
-        This setting is useful for manually specifying which namespaces you have access to. This is useful when you do not have permissions to list namespaces.
+          This setting is useful for manually specifying which namespaces you have access to. This is useful when you do not have permissions to list namespaces.
         </small>
       </>
     );

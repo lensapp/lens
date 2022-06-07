@@ -73,7 +73,7 @@ export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabD
         showClearIcon={true}
         contentRight={totalFinds > 0 && (
           <div className="find-count">
-            {activeFind}/{totalFinds}
+            {`${activeFind} / ${totalFinds}`}
           </div>
         )}
         onClear={onClear}

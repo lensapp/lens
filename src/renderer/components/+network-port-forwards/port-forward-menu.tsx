@@ -64,7 +64,11 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
     if (portForward.status === "Active") {
       return (
         <MenuItem onClick={() => this.portForwardStore.stop(portForward)}>
-          <Icon material="stop" tooltip="Stop port-forward" interactive={toolbar} />
+          <Icon
+            material="stop"
+            tooltip="Stop port-forward"
+            interactive={toolbar} 
+          />
           <span className="title">Stop</span>
         </MenuItem>
       );
@@ -72,7 +76,11 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
 
     return (
       <MenuItem onClick={this.startPortForwarding}>
-        <Icon material="play_arrow" tooltip="Start port-forward" interactive={toolbar} />
+        <Icon
+          material="play_arrow"
+          tooltip="Start port-forward"
+          interactive={toolbar} 
+        />
         <span className="title">Start</span>
       </MenuItem>
     );
@@ -85,14 +93,22 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
 
     return (
       <>
-        { portForward.status === "Active" &&
+        { portForward.status === "Active" && (
           <MenuItem onClick={() => openPortForward(portForward)}>
-            <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
+            <Icon
+              material="open_in_browser"
+              interactive={toolbar}
+              tooltip="Open in browser" 
+            />
             <span className="title">Open</span>
           </MenuItem>
-        }
+        )}
         <MenuItem onClick={() => this.props.openPortForwardDialog(portForward)}>
-          <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
+          <Icon
+            material="edit"
+            tooltip="Change port or protocol"
+            interactive={toolbar} 
+          />
           <span className="title">Edit</span>
         </MenuItem>
         {this.renderStartStopMenuItem()}

@@ -5,34 +5,38 @@
 
 import React from "react";
 import { ClusterRoleBindingDialog } from "../dialog";
-import { clusterRolesStore } from "../../+cluster-roles/store";
 import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
 import userEvent from "@testing-library/user-event";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
-
-jest.mock("../../+cluster-roles/store");
+import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
+import storesAndApisCanBeCreatedInjectable from "../../../../stores-apis-can-be-created.injectable";
 
 describe("ClusterRoleBindingDialog tests", () => {
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    await di.runSetups();
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     render = renderFor(di);
 
-    (clusterRolesStore as any).items = [new ClusterRole({
-      apiVersion: "rbac.authorization.k8s.io/v1",
-      kind: "ClusterRole",
-      metadata: {
-        name: "foobar",
-        resourceVersion: "1",
-        uid: "1",
-      },
-    })];
+    const store = di.inject(clusterRoleStoreInjectable);
+
+    store.items.replace([
+      new ClusterRole({
+        apiVersion: "rbac.authorization.k8s.io/v1",
+        kind: "ClusterRole",
+        metadata: {
+          name: "foobar",
+          resourceVersion: "1",
+          uid: "1",
+          selfLink: "/apis/rbac.authorization.k8s.io/v1/clusterroles/foobar",
+        },
+      }),
+    ]);
   });
 
   afterEach(() => {

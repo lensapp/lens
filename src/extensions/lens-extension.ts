@@ -4,17 +4,13 @@
  */
 
 import type { InstalledExtension } from "./extension-discovery/extension-discovery";
-import { action, observable, makeObservable, computed } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
 import type { Disposer } from "../common/utils";
 import { disposer } from "../common/utils";
-import type {
-  LensExtensionDependencies } from "./lens-extension-set-dependencies";
-import {
-  setLensExtensionDependencies,
-} from "./lens-extension-set-dependencies";
+import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -24,11 +20,21 @@ export interface LensExtensionManifest extends PackageJson {
   version: string;
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
+  /**
+   * Supported Lens version engine by extension could be defined in `manifest.engines.lens`
+   * Only MAJOR.MINOR version is taken in consideration.
+   */
+  engines: {
+    lens: string; // "semver"-package format
+    npm?: string;
+    node?: string;
+  };
 }
 
-export const Disposers = Symbol();
+export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
+export const Disposers = Symbol("disposers");
 
-export class LensExtension {
+export class LensExtension<Dependencies extends LensExtensionDependencies = LensExtensionDependencies> {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
@@ -68,11 +74,7 @@ export class LensExtension {
     return this.manifest.description;
   }
 
-  private dependencies: LensExtensionDependencies;
-
-  [setLensExtensionDependencies] = (dependencies: LensExtensionDependencies) => {
-    this.dependencies = dependencies;
-  };
+  readonly [lensExtensionDependencies]!: Dependencies;
 
   /**
    * getExtensionFileFolder returns the path to an already created folder. This
@@ -82,11 +84,11 @@ export class LensExtension {
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return this.dependencies.fileSystemProvisionerStore.requestDirectory(this.id);
+    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.id);
   }
 
   @action
-  async enable(register: (ext: LensExtension) => Promise<Disposer[]>) {
+  async enable(register: (ext: this) => Promise<Disposer[]>) {
     if (this._isEnabled) {
       return;
     }
@@ -136,11 +138,13 @@ export function sanitizeExtensionName(name: string) {
   return name.replace("@", "").replace("/", "--");
 }
 
-export const getSanitizedPath = (...parts: string[]) => parts
-  .filter(Boolean)
-  .join("/")
-  .replace(/\/+/g, "/")
-  .replace(/\/$/, ""); // normalize multi-slashes (e.g. coming from page.id)
+export function getSanitizedPath(...parts: string[]) {
+  return parts
+    .filter(Boolean)
+    .join("/")
+    .replace(/\/+/g, "/")
+    .replace(/\/$/, "");
+} // normalize multi-slashes (e.g. coming from page.id)
 
 export function extensionDisplayName(name: string, version: string) {
   return `${name}@${version}`;

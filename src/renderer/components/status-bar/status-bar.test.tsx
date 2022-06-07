@@ -26,7 +26,7 @@ class SomeTestExtension extends LensRendererExtension {
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: "some-id", version: "some-version" },
+      manifest: { name: "some-id", version: "some-version", engines: { lens: "^5.5.0" }},
       manifestPath: "irrelevant",
     });
 
@@ -39,15 +39,13 @@ describe("<StatusBar />", () => {
   let di: DiContainer;
   let statusBarItems: IObservableArray<any>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     statusBarItems = observable.array([]);
     di = getDiForUnitTesting({ doGeneralOverrides: true });
     render = renderFor(di);
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [new SomeTestExtension(statusBarItems)]));
-
-    await di.runSetups();
   });
 
   it("renders w/o errors", () => {

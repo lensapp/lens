@@ -14,7 +14,8 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
 
   instantiate:
     (di) =>
-      (extension: LensRendererExtension, extensionInstallationCount) => {
+      (ext, extensionInstallationCount) => {
+        const extension = ext as LensRendererExtension;
         const injectables = pipeline(
           extension.appPreferences,
 
@@ -43,7 +44,7 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
           }),
         );
 
-        injectables.forEach(di.register);
+        di.register(...injectables);
 
         return;
       },

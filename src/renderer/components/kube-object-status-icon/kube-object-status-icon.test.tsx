@@ -8,7 +8,7 @@ import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { computed } from "mobx";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import { KubeObjectStatusLevel } from "../../../extensions/renderer-api/kube-object-status";
+import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { KubeObjectStatusIcon } from "./kube-object-status-icon";
 import React from "react";
@@ -18,7 +18,7 @@ describe("kube-object-status-icon", () => {
   let render: DiRender;
   let kubeObjectStatusRegistrations: KubeObjectStatusRegistration[];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     // TODO: Make mocking of date in unit tests global
     global.Date.now = () => new Date("2015-10-21T07:28:00Z").getTime();
 
@@ -35,8 +35,6 @@ describe("kube-object-status-icon", () => {
     di.override(rendererExtensionsInjectable, () =>
       computed(() => [someTestExtension]),
     );
-
-    await di.runSetups();
   });
 
   it("given no statuses, when rendered, renders as empty", () => {
@@ -234,6 +232,7 @@ const getKubeObjectStub = (kind: string, apiVersion: string) => KubeObject.creat
     name: "some-name",
     resourceVersion: "some-resource-version",
     namespace: "some-namespace",
+    selfLink: "/foo",
   },
 });
 
@@ -255,7 +254,7 @@ class SomeTestExtension extends LensRendererExtension {
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: "some-id", version: "some-version" },
+      manifest: { name: "some-id", version: "some-version", engines: { lens: "^5.5.0" }},
       manifestPath: "irrelevant",
     });
 

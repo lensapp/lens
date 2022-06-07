@@ -7,8 +7,9 @@ import { getPortFrom } from "../../../utils/get-port";
 import type { ChildProcessWithoutNullStreams } from "child_process";
 import { spawn } from "child_process";
 import * as tcpPortUsed from "tcp-port-used";
+import { TypedRegEx } from "typed-regex";
 
-const internalPortRegex = /^forwarding from (?<address>.+) ->/i;
+const internalPortRegex = TypedRegEx("^forwarding from (?<address>.+) ->", "i");
 
 export interface PortForwardArgs {
   clusterId: string;
@@ -36,7 +37,7 @@ export class PortForward {
     ));
   }
 
-  public process: ChildProcessWithoutNullStreams;
+  public process?: ChildProcessWithoutNullStreams;
   public clusterId: string;
   public kind: string;
   public namespace: string;
@@ -98,6 +99,6 @@ export class PortForward {
   }
 
   public async stop() {
-    this.process.kill();
+    this.process?.kill();
   }
 }

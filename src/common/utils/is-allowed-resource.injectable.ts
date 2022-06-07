@@ -12,14 +12,14 @@ export type IsAllowedResource = (resource: KubeResource) => boolean;
 const isAllowedResourceInjectable = getInjectable({
   id: "is-allowed-resource",
 
-  instantiate: (di, resourceName: KubeResource) => {
+  instantiate: (di, resourceName: string) => {
     const allowedResources = di.inject(allowedResourcesInjectable);
 
     return computed(() => allowedResources.get().has(resourceName));
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, resource: KubeResource) => resource,
+    getInstanceKey: (di, resource: string) => resource,
   }),
 });
 

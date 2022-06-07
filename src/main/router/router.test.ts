@@ -5,7 +5,7 @@
 
 import routerInjectable, { routeInjectionToken } from "./router.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { Router, RouteHandler, Route } from "./router";
+import type { Router } from "./router";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Request } from "mock-http";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -14,10 +14,16 @@ import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import type { Route } from "./route";
+import type { SetRequired } from "type-fest";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 describe("router", () => {
   let router: Router;
-  let routeHandlerMock: AsyncFnMock<RouteHandler<any>>;
+  let routeHandlerMock: AsyncFnMock<() => any>;
 
   beforeEach(async () => {
     routeHandlerMock = asyncFn();
@@ -27,8 +33,10 @@ describe("router", () => {
     mockFs();
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({ payload: "some-payload" }));
-
-    await di.runSetups();
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     const injectable = getInjectable({
       id: "some-route",
@@ -37,7 +45,7 @@ describe("router", () => {
         method: "get",
         path: "/some-path",
         handler: routeHandlerMock,
-      } as Route<any>),
+      } as Route<any, string>),
 
       injectionToken: routeInjectionToken,
     });
@@ -54,7 +62,7 @@ describe("router", () => {
   describe("when navigating to the route", () => {
     let actualPromise: Promise<boolean>;
     let clusterStub: Cluster;
-    let requestStub: Request;
+    let requestStub: SetRequired<Request, "url" | "method">;
     let responseStub: any;
 
     beforeEach(() => {
@@ -64,7 +72,7 @@ describe("router", () => {
         headers: {
           "content-type": "application/json",
         },
-      });
+      }) as SetRequired<Request, "url" | "method">;
 
       responseStub = { end: jest.fn(), setHeader: jest.fn(), write: jest.fn(), statusCode: undefined };
 

@@ -17,4 +17,4 @@ export const asLegacyGlobalFunctionForExtensionApi = ((
     ) as unknown as (...args: any[]) => any;
 
     return injected(...args);
-  }) as Inject<false>;
+  }) as Inject;

@@ -14,7 +14,6 @@ import { Tooltip } from "../tooltip";
 import * as Validators from "./input_validators";
 import type { InputValidator } from "./input_validators";
 import isFunction from "lodash/isFunction";
-import isBoolean from "lodash/isBoolean";
 import uniqueId from "lodash/uniqueId";
 import { debounce } from "lodash";
 
@@ -24,7 +23,10 @@ export { InputValidators };
 export type { InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
-type InputElementProps = InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement> & DOMAttributes<InputElement>;
+type InputElementProps =
+  InputHTMLAttributes<HTMLInputElement>
+  & TextareaHTMLAttributes<HTMLTextAreaElement>
+  & DOMAttributes<InputElement>;
 
 export interface IconDataFnArg {
   isDirty: boolean;
@@ -53,7 +55,7 @@ export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   iconLeft?: IconData;
   iconRight?: IconData;
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
-  validators?: InputValidator | InputValidator[];
+  validators?: InputValidator<boolean> | InputValidator<boolean>[];
   blurOnEnter?: boolean;
   onChange?(value: string, evt: React.ChangeEvent<InputElement>): void;
   onSubmit?(value: string, evt: React.KeyboardEvent<InputElement>): void;
@@ -76,11 +78,15 @@ const defaultProps: Partial<InputProps> = {
   blurOnEnter: true,
 };
 
+function isAsyncValidator(validator: InputValidator<boolean>): validator is InputValidator<true> {
+  return typeof validator.debounce === "number";
+}
+
 export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
 
   public input: InputElement | null = null;
-  public validators: InputValidator[] = [];
+  public validators: InputValidator<boolean>[] = [];
 
   public state: State = {
     focused: false,
@@ -101,13 +107,11 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   setValue(value = "") {
-    if (value !== this.getValue()) {
-      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value").set;
-
-      nativeInputValueSetter.call(this.input, value);
-      const evt = new Event("input", { bubbles: true });
-
-      this.input.dispatchEvent(evt);
+    if (value !== this.getValue() && this.input) {
+      Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value")
+        ?.set
+        ?.call(this.input, value);
+      this.input.dispatchEvent(new Event("input", { bubbles: true }));
     }
   }
 
@@ -119,32 +123,34 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   focus() {
-    this.input.focus();
+    this.input?.focus();
   }
 
   blur() {
-    this.input.blur();
+    this.input?.blur();
   }
 
   select() {
-    this.input.select();
+    this.input?.select();
   }
 
   private autoFitHeight() {
-    const { multiLine, rows, maxRows } = this.props;
+    const { rows, maxRows } = this.props;
+    const textArea = this.input;
 
-    if (!multiLine) {
+    if (!(textArea instanceof HTMLTextAreaElement)) {
       return;
     }
-    const textArea = this.input;
+
     const lineHeight = parseFloat(window.getComputedStyle(textArea).lineHeight);
     const rowsCount = (this.getValue().match(/\n/g) || []).length + 1;
-    const height = lineHeight * Math.min(Math.max(rowsCount, rows), maxRows);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const height = lineHeight * Math.min(Math.max(rowsCount, rows!), maxRows!);
 
     textArea.style.height = `${height}px`;
   }
 
-  private validationId: string;
+  private validationId?: string;
 
   async validate() {
     const value = this.getValue();
@@ -158,16 +164,29 @@ export class Input extends React.Component<InputProps, State> {
         // stop validation check if there is an error already
         break;
       }
-      const result = validator.validate(value, this.props);
 
-      if (isBoolean(result) && !result) {
-        errors.push(this.getValidatorError(value, validator));
-      } else if (result instanceof Promise) {
+      if (isAsyncValidator(validator)) {
         if (!validationId) {
           this.validationId = validationId = uniqueId("validation_id_");
         }
         asyncValidators.push(
-          result.then(
+          validator.validate(value, this.props).then(
+            () => null, // don't consider any valid result from promise since we interested in errors only
+            error => this.getValidatorError(value, validator) || error,
+          ),
+        );
+      }
+
+      const isValid = validator.validate(value, this.props);
+
+      if (isValid === false) {
+        errors.push(this.getValidatorError(value, validator));
+      } else if (isValid instanceof Promise) {
+        if (!validationId) {
+          this.validationId = validationId = uniqueId("validation_id_");
+        }
+        asyncValidators.push(
+          isValid.then(
             () => null, // don't consider any valid result from promise since we interested in errors only
             error => this.getValidatorError(value, validator) || error,
           ),
@@ -188,7 +207,7 @@ export class Input extends React.Component<InputProps, State> {
       }
     }
 
-    this.input?.setCustomValidity(errors.length ? errors[0].toString() : "");
+    this.input?.setCustomValidity(errors[0]?.toString() ?? "");
   }
 
   setValidation(errors: React.ReactNode[]) {
@@ -199,24 +218,29 @@ export class Input extends React.Component<InputProps, State> {
     });
   }
 
-  private getValidatorError(value: string, { message }: InputValidator) {
+  private getValidatorError(value: string, { message }: InputValidator<boolean>) {
     if (isFunction(message)) return message(value, this.props);
 
     return message || "";
   }
 
   private setupValidators() {
-    this.validators = conditionalValidators
+    const persistentValidators = conditionalValidators
       // add conditional validators if matches input props
-      .filter(validator => validator.condition(this.props))
-      // add custom validators
-      .concat(this.props.validators)
-      // debounce async validators
-      .map(({ debounce, ...validator }) => {
-        if (debounce) validator.validate = debouncePromise(validator.validate, debounce);
+      .filter(validator => validator.condition?.(this.props));
+    const selfValidators = this.props.validators ? [this.props.validators].flat() : [];
 
-        return validator;
-      });
+    this.validators = [
+      ...persistentValidators,
+      ...selfValidators,
+    ].map((validator) => {
+      if (isAsyncValidator(validator)) {
+        validator.validate = debouncePromise(validator.validate, validator.debounce);
+      }
+
+      return validator;
+    });
+
     // run validation
     this.validate();
   }
@@ -240,17 +264,25 @@ export class Input extends React.Component<InputProps, State> {
 
   setDirtyOnChange = debounce(() => this.setDirty(), 500);
 
-  onChange(evt: React.ChangeEvent<any>) {
-    this.props.onChange?.(evt.currentTarget.value, evt);
-    this.validate();
+  async onChange(evt: React.ChangeEvent<any>) {
+    const newValue = evt.currentTarget.value;
+    const eventCopy = { ...evt };
+
     this.autoFitHeight();
     this.setDirtyOnChange();
 
-    // re-render component when used as uncontrolled input
-    // when used @defaultValue instead of @value changing real input.value doesn't call render()
-    if (this.isUncontrolled && this.showMaxLenIndicator) {
-      this.forceUpdate();
+    // Handle uncontrolled components (`props.defaultValue` must be used instead `value`)
+    if (this.isUncontrolled) {
+      // update DOM since render() is not called on input's changes with uncontrolled inputs
+      if (this.showMaxLenIndicator) this.forceUpdate();
+
+      // don't propagate changes for invalid values
+      await this.validate();
+      if (!this.state.valid) return; // skip
     }
+
+    // emit new value update
+    this.props.onChange?.(newValue, eventCopy);
   }
 
   onKeyDown(evt: React.KeyboardEvent<InputElement>) {
@@ -273,7 +305,7 @@ export class Input extends React.Component<InputProps, State> {
         this.setDirty();
       }
 
-      if(this.props.blurOnEnter){
+      if (this.props.blurOnEnter) {
         //pressing enter indicates that the edit is complete, we can unfocus now
         this.blur();
       }
@@ -353,7 +385,6 @@ export class Input extends React.Component<InputProps, State> {
       multiLine, showValidationLine, validators, theme, maxRows, children, showErrorsAsTooltip,
       maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight, id,
       dirty: _dirty, // excluded from passing to input-element
-      defaultValue,
       trim,
       blurOnEnter,
       ...inputProps
@@ -388,9 +419,9 @@ export class Input extends React.Component<InputProps, State> {
         {errors.map((error, i) => <p key={i}>{error}</p>)}
       </div>
     );
-
-    // TODO: Remove side-effect to allow deterministic unit testing
-    const componentId = id || showErrorsAsTooltip ? getRandId({ prefix: "input_tooltip_id" }) : undefined;
+    const componentId = id || showErrorsAsTooltip
+      ? getRandId({ prefix: "input_tooltip_id" })
+      : undefined;
     let tooltipError: React.ReactNode;
 
     if (showErrorsAsTooltip && showErrors) {
@@ -398,9 +429,10 @@ export class Input extends React.Component<InputProps, State> {
 
       tooltipProps.className = cssNames("InputTooltipError", tooltipProps.className);
       tooltipError = (
-        <Tooltip targetId={componentId} {...tooltipProps}>
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        <Tooltip targetId={componentId!} {...tooltipProps}>
           <div className="flex gaps align-center">
-            <Icon material="error_outline"/>
+            <Icon material="error_outline" />
             {errorsInfo}
           </div>
         </Tooltip>
@@ -412,7 +444,10 @@ export class Input extends React.Component<InputProps, State> {
         {tooltipError}
         <label className="input-area flex gaps align-center" id="">
           {this.renderIcon(iconLeft)}
-          {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
+          {multiLine
+            ? <textarea {...inputProps as never} />
+            : <input {...inputProps as never} />
+          }
           {this.renderIcon(iconRight)}
           {contentRight}
         </label>
@@ -420,7 +455,9 @@ export class Input extends React.Component<InputProps, State> {
           {!showErrorsAsTooltip && showErrors && errorsInfo}
           {this.showMaxLenIndicator && (
             <div className="maxLengthIndicator box right">
-              {this.getValue().length} / {maxLength}
+              {this.getValue().length}
+              {" / "}
+              {maxLength}
             </div>
           )}
         </div>

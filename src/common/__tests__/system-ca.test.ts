@@ -6,13 +6,14 @@ import https from "https";
 import os from "os";
 import { getMacRootCA, getWinRootCA, injectCAs, DSTRootCAX3 } from "../system-ca";
 import { dependencies, devDependencies } from "../../../package.json";
+import assert from "assert";
 
 const deps = { ...dependencies, ...devDependencies };
 
 // Skip the test if mac-ca is not installed, or os is not darwin
 (deps["mac-ca"] && os.platform().includes("darwin") ? describe: describe.skip)("inject CA for Mac", () => {
   // for reset https.globalAgent.options.ca after testing
-  let _ca: string | Buffer | (string | Buffer)[];
+  let _ca: string | Buffer | (string | Buffer)[] | undefined;
 
   beforeEach(() => {
     _ca = https.globalAgent.options.ca;
@@ -44,6 +45,7 @@ const deps = { ...dependencies, ...devDependencies };
     injectCAs(osxCAs);
     const injected = https.globalAgent.options.ca;
 
+    assert(injected);
     expect(injected.includes(DSTRootCAX3)).toBeFalsy();
   });
 });
@@ -51,7 +53,7 @@ const deps = { ...dependencies, ...devDependencies };
 // Skip the test if win-ca is not installed, or os is not win32
 (deps["win-ca"] && os.platform().includes("win32") ? describe: describe.skip)("inject CA for Windows", () => {
   // for reset https.globalAgent.options.ca after testing
-  let _ca: string | Buffer | (string | Buffer)[];
+  let _ca: string | Buffer | (string | Buffer)[] | undefined;
 
   beforeEach(() => {
     _ca = https.globalAgent.options.ca;

@@ -12,12 +12,14 @@
 @import "./fonts";
 
 :root {
+  --flex-gap: #{$padding};
   --unit: 8px;
   --padding: var(--unit);
   --margin: var(--unit);
   --border-radius: 3px;
   --font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  --font-monospace: Lucida Console, Monaco, Consolas, monospace;
+  --font-monospace: Lucida Console, Monaco, Consolas, monospace; // some defaults
+  --font-terminal: var(--font-monospace); // overridden in terminal.ts, managed by common/user-store.ts
   --font-size-small: calc(1.5 * var(--unit));
   --font-size: calc(1.75 * var(--unit));
   --font-size-big: calc(2 * var(--unit));
@@ -63,16 +65,13 @@
   color: var(--textColorAccent);
 }
 
-html {
-  font-size: 62.5%; // 1 rem == 10px
-  color: var(--textColorPrimary);
-  background-color: var(--mainBackground);
-  --flex-gap: #{$padding};
-}
-
 html, body {
   height: 100%;
   overflow: hidden;
+  color: var(--textColorPrimary);
+  background-color: var(--mainBackground);
+  font-size: var(--font-size);
+  font-family: var(--font-main);
 }
 
 #terminal-init {
@@ -91,10 +90,6 @@ html, body {
   > * {
     height: inherit;
   }
-}
-
-body {
-  font: $font-size $font-main;
 }
 
 fieldset {
@@ -223,6 +218,22 @@ a {
   &.column {
     > * + * {
       margin-top: var(--flow-space);
+    }
+  }
+}
+
+#fonts-preloading {
+  > span {
+    position: absolute;
+    visibility: hidden;
+    height: 0;
+
+    &:before {
+      width: 0;
+      display: block;
+      overflow: hidden;
+      content: "text-example"; // some text required to start applying/rendering font in document
+      font-family: inherit; // font-family must be specified via style="" (see: template.html)
     }
   }
 }

@@ -23,11 +23,6 @@ spec:
                   operator: In
                   values:
                   - linux
-              - matchExpressions:
-                - key: beta.kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics

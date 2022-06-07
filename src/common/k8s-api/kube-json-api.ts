@@ -8,6 +8,7 @@ import { JsonApi } from "./json-api";
 import type { Response } from "node-fetch";
 import { apiKubePrefix, isDebugging } from "../vars";
 import { apiBase } from "./api-base";
+import type { KubeJsonApiObjectMetadata } from "./kube-object";
 
 export interface KubeJsonApiListMetadata {
   resourceVersion: string;
@@ -21,28 +22,17 @@ export interface KubeJsonApiDataList<T = KubeJsonApiData> {
   metadata: KubeJsonApiListMetadata;
 }
 
-export interface KubeJsonApiMetadata {
-  uid: string;
-  name: string;
-  namespace?: string;
-  creationTimestamp?: string;
-  resourceVersion: string;
-  continue?: string;
-  finalizers?: string[];
-  selfLink?: string;
-  labels?: {
-    [label: string]: string;
-  };
-  annotations?: {
-    [annotation: string]: string;
-  };
-  [key: string]: any;
-}
-
-export interface KubeJsonApiData extends JsonApiData {
+export interface KubeJsonApiData<
+  Metadata extends KubeJsonApiObjectMetadata = KubeJsonApiObjectMetadata,
+  Status = unknown,
+  Spec = unknown,
+> extends JsonApiData {
   kind: string;
   apiVersion: string;
-  metadata: KubeJsonApiMetadata;
+  metadata: Metadata;
+  status?: Status;
+  spec?: Spec;
+  [otherKeys: string]: unknown;
 }
 
 export interface KubeJsonApiError extends JsonApiError {
@@ -71,7 +61,11 @@ export class KubeJsonApi extends JsonApi<KubeJsonApiData> {
     });
   }
 
-  protected parseError(error: KubeJsonApiError | any, res: Response): string[] {
+  protected parseError(error: KubeJsonApiError | string, res: Response): string[] {
+    if (typeof error === "string") {
+      return [error];
+    }
+
     const { status, reason, message } = error;
 
     if (status && reason) {

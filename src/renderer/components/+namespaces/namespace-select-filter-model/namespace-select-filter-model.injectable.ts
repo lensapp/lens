@@ -4,7 +4,7 @@
  */
 import { NamespaceSelectFilterModel } from "./namespace-select-filter-model";
 import { getInjectable } from "@ogre-tools/injectable";
-import namespaceStoreInjectable from "../namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "../store.injectable";
 
 const namespaceSelectFilterModelInjectable = getInjectable({
   id: "namespace-select-filter-model",

@@ -10,13 +10,15 @@ import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { IComputedValue } from "mobx";
 import { computed, makeObservable } from "mobx";
-import { crdStore } from "./crd.store";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { safeJSONPathValue } from "../../utils/jsonPath";
 import { TabLayout } from "../layout/tab-layout-2";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import customResourcesRouteParametersInjectable from "./custom-resources-route-parameters.injectable";
 import { KubeObjectAge } from "../kube-object/age";
+import type { CustomResourceDefinitionStore } from "./definition.store";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
 
 enum columnId {
   name = "name",
@@ -27,27 +29,29 @@ enum columnId {
 interface Dependencies {
   group: IComputedValue<string>;
   name: IComputedValue<string>;
+  apiManager: ApiManager;
+  customResourceDefinitionStore: CustomResourceDefinitionStore;
 }
 
 @observer
-class NonInjectedCrdResources extends React.Component<Dependencies> {
+class NonInjectedCustomResources extends React.Component<Dependencies> {
   constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   @computed get crd() {
-    return crdStore.getByGroup(this.props.group.get(), this.props.name.get());
+    return this.props.customResourceDefinitionStore.getByGroup(this.props.group.get(), this.props.name.get());
   }
 
   @computed get store() {
-    return apiManager.getStore(this.crd?.getResourceApiBase());
+    return this.props.apiManager.getStore(this.crd?.getResourceApiBase());
   }
 
   render() {
     const { crd, store } = this;
 
-    if (!crd) {
+    if (!crd || !store) {
       return null;
     }
 
@@ -85,7 +89,9 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
           })}
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
-            isNamespaced && { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            isNamespaced
+              ? { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace }
+              : undefined,
             ...extraColumns.map(({ name }) => ({
               title: name,
               className: name.toLowerCase(),
@@ -102,9 +108,13 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
           ]}
           failedToLoadMessage={(
             <>
-              <p>Failed to load {crd.getPluralName()}</p>
+              <p>
+                {`Failed to load ${crd.getPluralName()}`}
+              </p>
               {!version.served && (
-                <p>Prefered version ({crd.getGroup()}/{version.name}) is not served</p>
+                <p>
+                  {`Prefered version (${crd.getGroup()}/${version.name}) is not served`}
+                </p>
               )}
             </>
           )}
@@ -114,18 +124,11 @@ class NonInjectedCrdResources extends React.Component<Dependencies> {
   }
 }
 
-export const CrdResources = withInjectables<Dependencies>(
-  NonInjectedCrdResources,
-
-  {
-    getProps: (di) => {
-      const routeParameters = di.inject(customResourcesRouteParametersInjectable);
-
-      return {
-        group: routeParameters.group,
-        name: routeParameters.name,
-      };
-    },
-  },
-);
+export const CustomResources = withInjectables<Dependencies>(NonInjectedCustomResources, {
+  getProps: (di) => ({
+    ...di.inject(customResourcesRouteParametersInjectable),
+    apiManager: di.inject(apiManagerInjectable),
+    customResourceDefinitionStore: di.inject(customResourceDefinitionStoreInjectable),
+  }),
+});
 

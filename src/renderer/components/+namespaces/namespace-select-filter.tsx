@@ -7,77 +7,54 @@ import "./namespace-select-filter.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { components, type PlaceholderProps } from "react-select";
-
-import { Icon } from "../icon";
-import { NamespaceSelect } from "./namespace-select";
-import type { NamespaceStore } from "./namespace-store/namespace.store";
-
-import type { SelectOption, SelectProps } from "../select";
+import type { PlaceholderProps } from "react-select";
+import { components } from "react-select";
+import type { NamespaceStore } from "./store";
+import { Select } from "../select";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { NamespaceSelectFilterModel } from "./namespace-select-filter-model/namespace-select-filter-model";
+import type { NamespaceSelectFilterModel, NamespaceSelectFilterOption, SelectAllNamespaces } from "./namespace-select-filter-model/namespace-select-filter-model";
 import namespaceSelectFilterModelInjectable from "./namespace-select-filter-model/namespace-select-filter-model.injectable";
-import namespaceStoreInjectable from "./namespace-store/namespace-store.injectable";
+import namespaceStoreInjectable from "./store.injectable";
+
+interface NamespaceSelectFilterProps {
+  id: string;
+}
 
 interface Dependencies {
   model: NamespaceSelectFilterModel;
 }
 
-const NonInjectedNamespaceSelectFilter = observer(({ model }: SelectProps & Dependencies) => (
+const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies & NamespaceSelectFilterProps) => (
   <div
     onKeyUp={model.onKeyUp}
     onKeyDown={model.onKeyDown}
     onClick={model.onClick}
   >
-    <NamespaceSelect
-      id="namespace-select-filter-input"
+    <Select<string | SelectAllNamespaces, NamespaceSelectFilterOption, true>
+      id={id}
       isMulti={true}
-      menuIsOpen={model.menuIsOpen}
+      isClearable={false}
+      menuIsOpen={model.menuIsOpen.get()}
       components={{ Placeholder }}
-      showAllNamespacesOption={true}
       closeMenuOnSelect={false}
       controlShouldRenderValue={false}
-      placeholder={""}
       onChange={model.onChange}
       onBlur={model.reset}
-      formatOptionLabel={formatOptionLabelFor(model)}
-      className="NamespaceSelectFilter"
-      menuClass="NamespaceSelectFilterMenu"
-      sort={(left, right) =>
-        +model.selectedNames.has(right.value)
-        - +model.selectedNames.has(left.value)
-      }
-    />
+      formatOptionLabel={model.formatOptionLabel}
+      options={model.options.get()}
+      className="NamespaceSelect NamespaceSelectFilter"
+      menuClass="NamespaceSelectFilterMenu" />
   </div>
 ));
 
-
-const formatOptionLabelFor =
-  (model: NamespaceSelectFilterModel) =>
-    ({ value: namespace, label }: SelectOption) => {
-      if (namespace) {
-        const isSelected = model.isSelected(namespace);
-
-        return (
-          <div className="flex gaps align-center">
-            <Icon small material="layers" />
-            <span>{namespace}</span>
-            {isSelected && <Icon small material="check" className="box right" />}
-          </div>
-        );
-      }
-
-      return label;
-    };
-
-export const NamespaceSelectFilter = withInjectables<Dependencies, SelectProps>(NonInjectedNamespaceSelectFilter, {
+export const NamespaceSelectFilter = withInjectables<Dependencies, NamespaceSelectFilterProps>(NonInjectedNamespaceSelectFilter, {
   getProps: (di, props) => ({
     model: di.inject(namespaceSelectFilterModelInjectable),
     ...props,
   }),
 });
 
-export interface CustomPlaceholderProps extends PlaceholderProps {}
+export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, boolean> {}
 
 interface PlaceholderDependencies {
   namespaceStore: NamespaceStore;
@@ -103,8 +80,7 @@ const NonInjectedPlaceholder = observer(({ namespaceStore, ...props }: CustomPla
       {getPlaceholder()}
     </components.Placeholder>
   );
-},
-);
+});
 
 const Placeholder = withInjectables<PlaceholderDependencies, CustomPlaceholderProps>( NonInjectedPlaceholder, {
   getProps: (di, props) => ({

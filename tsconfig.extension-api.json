@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react",
+    "target": "ES2019",
+    "module": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "moduleResolution": "Node",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "importsNotUsedAsValues": "error",
+    "traceResolution": false,
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "types/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ],
+    "emitDeclarationOnly": true,
+    "noEmitOnError": true,
+    "declaration": true,
+    "declarationDir": "./src/extensions/npm/extensions/dist",
+  },
+  "include": [
+    "types/*.d.ts",
+  ],
+  "files": [
+    "./src/extensions/extension-api.ts",
+  ],
+}

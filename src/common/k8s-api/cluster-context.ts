@@ -6,7 +6,7 @@
 import type { Cluster } from "../cluster/cluster";
 
 export interface ClusterContext {
-  cluster?: Cluster;
+  cluster: Cluster;
   allNamespaces: string[]; // available / allowed namespaces from cluster.ts
   contextNamespaces: string[]; // selected by user (see: namespace-select.tsx)
   hasSelectedAll: boolean;

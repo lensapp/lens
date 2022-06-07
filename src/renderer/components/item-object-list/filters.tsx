@@ -6,9 +6,9 @@
 import "./item-list-layout.scss";
 
 import React from "react";
-import { PageFiltersList } from "./page-filters-list";
+import { PageFiltersList } from "./page-filters/list";
 import { observer } from "mobx-react";
-import type { Filter } from "./page-filters.store";
+import type { Filter } from "./page-filters/store";
 
 export interface ItemListLayoutFilterProps {
   getIsReady: () => boolean;

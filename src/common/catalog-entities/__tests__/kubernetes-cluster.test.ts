@@ -2,20 +2,30 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { kubernetesClusterCategory }  from "../kubernetes-cluster";
+
+import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
+import kubernetesClusterCategoryInjectable from "../../catalog/categories/kubernetes-cluster.injectable";
+import type { KubernetesClusterCategory } from "../kubernetes-cluster";
+
 
 describe("kubernetesClusterCategory", () => {
+  let kubernetesClusterCategory: KubernetesClusterCategory;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting();
+
+    kubernetesClusterCategory = di.inject(kubernetesClusterCategoryInjectable);
+  });
+
   describe("filteredItems", () => {
     const item1 = {
       icon: "Icon",
       title: "Title",
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       onClick: () => {},
     };
     const item2 = {
       icon: "Icon 2",
       title: "Title 2",
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       onClick: () => {},
     };
 

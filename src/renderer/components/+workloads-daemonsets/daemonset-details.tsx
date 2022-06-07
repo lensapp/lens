@@ -12,35 +12,38 @@ import { Badge } from "../badge";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { daemonSetStore } from "./daemonsets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import type { DaemonSetStore } from "./store";
+import type { PodStore } from "../+workloads-pods/store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { DaemonSet, getMetricsForDaemonSets, type IPodMetrics } from "../../../common/k8s-api/endpoints";
+import { DaemonSet, getMetricsForDaemonSets, type PodMetricData } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import type { Disposer } from "../../utils";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import daemonSetStoreInjectable from "./store.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
+  daemonSetStore: DaemonSetStore;
+  podStore: PodStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
 class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps & Dependencies> {
-  @observable metrics: IPodMetrics = null;
+  @observable metrics: PodMetricData | null = null;
 
   constructor(props: DaemonSetDetailsProps & Dependencies) {
     super(props);
@@ -53,7 +56,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
         this.metrics = null;
       }),
       this.props.subscribeStores([
-        podsStore,
+        this.props.podStore,
       ]),
     ]);
   }
@@ -65,7 +68,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
   };
 
   render() {
-    const { object: daemonSet } = this.props;
+    const { object: daemonSet, daemonSetStore, podStore, getActiveClusterEntity } = this.props;
 
     if (!daemonSet) {
       return null;
@@ -86,36 +89,38 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
 
     return (
       <div className="DaemonSetDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && podStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={daemonSet} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={daemonSet}
+            metrics={this.metrics}
           >
             <PodCharts/>
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={daemonSet}/>
-        {selectors.length > 0 &&
-        <DrawerItem name="Selector" labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
-        </DrawerItem>
-        }
-        {nodeSelector.length > 0 &&
-        <DrawerItem name="Node Selector" labelsOnly>
-          {
-            nodeSelector.map(label => (<Badge key={label} label={label}/>))
-          }
-        </DrawerItem>
-        }
-        {images.length > 0 &&
-        <DrawerItem name="Images">
-          {
-            images.map(image => <p key={image}>{image}</p>)
-          }
-        </DrawerItem>
-        }
+        {selectors.length > 0 && (
+          <DrawerItem name="Selector" labelsOnly>
+            {
+              selectors.map(label => <Badge key={label} label={label}/>)
+            }
+          </DrawerItem>
+        )}
+        {nodeSelector.length > 0 && (
+          <DrawerItem name="Node Selector" labelsOnly>
+            {
+              nodeSelector.map(label => (<Badge key={label} label={label}/>))
+            }
+          </DrawerItem>
+        )}
+        {images.length > 0 && (
+          <DrawerItem name="Images">
+            {
+              images.map(image => <p key={image}>{image}</p>)
+            }
+          </DrawerItem>
+        )}
         <DrawerItem name="Strategy Type">
           {spec.updateStrategy.type}
         </DrawerItem>
@@ -131,13 +136,12 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
   }
 }
 
-export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsProps>(
-  NonInjectedDaemonSetDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsProps>(NonInjectedDaemonSetDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    daemonSetStore: di.inject(daemonSetStoreInjectable),
+    podStore: di.inject(podStoreInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+  }),
+});

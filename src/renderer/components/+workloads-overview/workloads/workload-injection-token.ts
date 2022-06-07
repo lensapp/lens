@@ -9,7 +9,7 @@ export interface Workload {
   resourceName: string;
   open: () => void;
   amountOfItems: IComputedValue<number>;
-  status: IComputedValue<Record<string, number>>;
+  status: IComputedValue<Partial<Record<string, number>>>;
   title: string;
   orderNumber: number;
 }

@@ -39,13 +39,13 @@ export class PodDisruptionBudgetDetails extends React.Component<PodDisruptionBud
       <div className="PdbDetails">
         <KubeObjectMeta object={pdb}/>
 
-        {selectors.length > 0 &&
+        {selectors.length > 0 && (
           <DrawerItem name="Selector" labelsOnly>
             {
               selectors.map(label => <Badge key={label} label={label}/>)
             }
           </DrawerItem>
-        }
+        )}
 
         <DrawerItem name="Min Available">
           {pdb.getMinAvailable()}

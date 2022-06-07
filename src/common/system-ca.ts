@@ -85,7 +85,7 @@ export async function injectSystemCAs() {
 
       injectCAs(osxRootCAs);
     } catch (error) {
-      console.warn(`[MAC-CA]: Error injecting root CAs from MacOSX. ${error?.message}`);
+      console.warn(`[MAC-CA]: Error injecting root CAs from MacOSX. ${error}`);
     }
   }
 
@@ -96,7 +96,7 @@ export async function injectSystemCAs() {
       wincaAPI.inject("+", winRootCAs);
 
     } catch (error) {
-      console.warn(`[WIN-CA]: Error injecting root CAs from Windows. ${error?.message}`);
+      console.warn(`[WIN-CA]: Error injecting root CAs from Windows. ${error}`);
     }
   }
 }

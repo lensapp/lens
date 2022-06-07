@@ -5,32 +5,16 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import type { UserStore } from "../../common/user-store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
-import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import React from "react";
-import { getRendererExtensionFake } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import "@testing-library/jest-dom/extend-expect";
+import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 
 describe("preferences - navigation to extension specific preferences", () => {
   let applicationBuilder: ApplicationBuilder;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
-
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
-      const userStoreStub = {
-        extensionRegistryUrl: { customUrl: "some-custom-url" },
-      } as unknown as UserStore;
-
-      rendererDi.override(userStoreInjectable, () => userStoreStub);
-
-      const themeStoreStub = { themeOptions: [] } as unknown as ThemeStore;
-
-      rendererDi.override(themeStoreInjectable, () => themeStoreStub);
-    });
   });
 
   describe("given in preferences, when rendered", () => {
@@ -62,6 +46,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     describe("given multiple extensions with specific preferences, when navigating to extension specific preferences page", () => {
       beforeEach(async () => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
         const someOtherTestExtension = getRendererExtensionFake(someOtherExtensionStubWithExtensionSpecificPreferenceItems);
 
@@ -88,6 +73,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     describe("given multiple extensions with and without specific preferences, when navigating to extension specific preferences page", () => {
       beforeEach(async () => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
         const extensionWithoutPreferences = getRendererExtensionFake(extensionStubWithoutPreferences);
         const extensionWithSpecificTab = getRendererExtensionFake(extensionStubWithShowInPreferencesTab);
@@ -109,10 +95,11 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("when extension with specific preferences is enabled", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
 
-        await applicationBuilder.addExtensions(testExtension);
+        applicationBuilder.addExtensions(testExtension);
       });
 
       it("renders", () => {
@@ -168,6 +155,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     describe("given extension with registered tab", () => {
       beforeEach(async () => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
 
         await applicationBuilder.addExtensions(extension);
@@ -207,6 +195,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     describe("given extension with few registered tabs", () => {
       beforeEach(async () => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTabs);
 
         await applicationBuilder.addExtensions(extension);
@@ -223,6 +212,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     describe("given extensions with tabs having same id", () => {
       beforeEach(async () => {
+        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
         const otherExtension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
 
@@ -288,9 +278,9 @@ describe("preferences - navigation to extension specific preferences", () => {
   });
 });
 
-const extensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExtension> = {
-  id: "some-test-extension-id",
-
+const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
+  id: "some-extension-id",
+  name: "some-extension-name",
   appPreferences: [
     {
       title: "Some preference item",
@@ -315,8 +305,9 @@ const extensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExt
   ],
 };
 
-const someOtherExtensionStubWithExtensionSpecificPreferenceItems: Partial<LensRendererExtension> = {
+const someOtherExtensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
   id: "some-other-test-extension-id",
+  name: "some-other-test-extension-name",
 
   appPreferences: [
     {
@@ -331,12 +322,14 @@ const someOtherExtensionStubWithExtensionSpecificPreferenceItems: Partial<LensRe
   ],
 };
 
-const extensionStubWithoutPreferences: Partial<LensRendererExtension> = {
+const extensionStubWithoutPreferences: FakeExtensionData = {
   id: "without-preferences-id",
+  name: "without-preferences-name",
 };
 
-const extensionStubWithShowInPreferencesTab: Partial<LensRendererExtension> = {
+const extensionStubWithShowInPreferencesTab: FakeExtensionData = {
   id: "specified-preferences-page-id",
+  name: "specified-preferences-page-name",
 
   appPreferences: [
     {
@@ -352,8 +345,9 @@ const extensionStubWithShowInPreferencesTab: Partial<LensRendererExtension> = {
   ],
 };
 
-const extensionStubWithWithRegisteredTab: Partial<LensRendererExtension> = {
+const extensionStubWithWithRegisteredTab: FakeExtensionData = {
   id: "registered-tab-page-id",
+  name: "registered-tab-page-name",
 
   appPreferences: [
     {
@@ -395,8 +389,9 @@ const extensionStubWithWithRegisteredTab: Partial<LensRendererExtension> = {
   }],
 };
 
-const extensionStubWithWithRegisteredTabs: Partial<LensRendererExtension> = {
+const extensionStubWithWithRegisteredTabs: FakeExtensionData = {
   id: "hello-world-tab-page-id",
+  name: "hello-world-tab-page-name",
 
   appPreferences: [
     {
@@ -432,8 +427,9 @@ const extensionStubWithWithRegisteredTabs: Partial<LensRendererExtension> = {
   }],
 };
 
-const extensionStubWithWithSameRegisteredTab: Partial<LensRendererExtension> = {
+const extensionStubWithWithSameRegisteredTab: FakeExtensionData = {
   id: "duplicated-tab-page-id",
+  name: "duplicated-tab-page-name",
 
   appPreferences: [
     {

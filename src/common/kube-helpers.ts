@@ -11,8 +11,9 @@ import yaml from "js-yaml";
 import logger from "../main/logger";
 import type { Cluster, Context, User } from "@kubernetes/client-node/dist/config_types";
 import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
-import { resolvePath } from "./utils";
+import { isDefined, resolvePath } from "./utils";
 import Joi from "joi";
+import type { PartialDeep } from "type-fest";
 
 export const kubeConfigDefaultPath = path.join(os.homedir(), ".kube", "config");
 
@@ -92,7 +93,7 @@ interface KubeConfigOptions {
 
 interface OptionsResult {
   options: KubeConfigOptions;
-  error: Joi.ValidationError;
+  error: Joi.ValidationError | undefined;
 }
 
 function loadToOptions(rawYaml: string): OptionsResult {
@@ -135,7 +136,7 @@ export function loadFromOptions(options: KubeConfigOptions): KubeConfig {
 
 export interface ConfigResult {
   config: KubeConfig;
-  error: Joi.ValidationError;
+  error: Joi.ValidationError | undefined;
 }
 
 export function loadConfigFromString(content: string): ConfigResult {
@@ -188,38 +189,44 @@ export function splitConfig(kubeConfig: KubeConfig): SplitConfigEntry[] {
  * @param kubeConfig The kubeconfig object to format as pretty yaml
  * @returns The yaml representation of the kubeconfig object
  */
-export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
-  const clusters = kubeConfig.clusters.map(cluster => ({
-    name: cluster.name,
-    cluster: {
-      "certificate-authority-data": cluster.caData,
-      "certificate-authority": cluster.caFile,
-      server: cluster.server,
-      "insecure-skip-tls-verify": cluster.skipTLSVerify,
-    },
-  }));
-  const contexts = kubeConfig.contexts.map(context => ({
-    name: context.name,
-    context: {
-      cluster: context.cluster,
-      user: context.user,
-      namespace: context.namespace,
-    },
-  }));
-  const users = kubeConfig.users.map(user => ({
-    name: user.name,
-    user: {
-      "client-certificate-data": user.certData,
-      "client-certificate": user.certFile,
-      "client-key-data": user.keyData,
-      "client-key": user.keyFile,
-      "auth-provider": user.authProvider,
-      exec: user.exec,
-      token: user.token,
-      username: user.username,
-      password: user.password,
-    },
-  }));
+export function dumpConfigYaml(kubeConfig: PartialDeep<KubeConfig>): string {
+  const clusters = kubeConfig.clusters
+    ?.filter(isDefined)
+    .map(cluster => ({
+      name: cluster.name,
+      cluster: {
+        "certificate-authority-data": cluster.caData,
+        "certificate-authority": cluster.caFile,
+        server: cluster.server,
+        "insecure-skip-tls-verify": cluster.skipTLSVerify,
+      },
+    }));
+  const contexts = kubeConfig.contexts
+    ?.filter(isDefined)
+    .map(context => ({
+      name: context.name,
+      context: {
+        cluster: context.cluster,
+        user: context.user,
+        namespace: context.namespace,
+      },
+    }));
+  const users = kubeConfig.users
+    ?.filter(isDefined)
+    .map(user => ({
+      name: user.name,
+      user: {
+        "client-certificate-data": user.certData,
+        "client-certificate": user.certFile,
+        "client-key-data": user.keyData,
+        "client-key": user.keyFile,
+        "auth-provider": user.authProvider,
+        exec: user.exec,
+        token: user.token,
+        username: user.username,
+        password: user.password,
+      },
+    }));
   const config = {
     apiVersion: "v1",
     kind: "Config",

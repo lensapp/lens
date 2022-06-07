@@ -7,28 +7,57 @@
 import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
+import type { ThemeId } from "../renderer/themes/store";
 import { lazyInitialized } from "./utils/lazy-initialized";
 
+/**
+ * @deprecated Switch to using isMacInjectable
+ */
 export const isMac = process.platform === "darwin";
+
+/**
+ * @deprecated Switch to using isWindowsInjectable
+ */
 export const isWindows = process.platform === "win32";
+
+/**
+ * @deprecated Switch to using isLinuxInjectable
+ */
 export const isLinux = process.platform === "linux";
+
 export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
 export const isSnap = !!process.env.SNAP;
-export const isProduction = process.env.NODE_ENV === "production";
-export const isTestEnv = !!process.env.JEST_WORKER_ID;
-export const isDevelopment = !isTestEnv && !isProduction;
-export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
 
-export const integrationTestingArg = "--integration-testing";
-export const isIntegrationTesting = process.argv.includes(integrationTestingArg);
+/**
+ * @deprecated Switch to using isTestEnvInjectable
+ */
+export const isTestEnv = !!process.env.JEST_WORKER_ID;
+
+/**
+ * @deprecated Switch to using isProductionInjectable
+ */
+export const isProduction = process.env.NODE_ENV === "production";
+
+/**
+ * @deprecated Switch to using isDevelopmentInjectable
+ */
+export const isDevelopment = !isTestEnv && !isProduction;
 
 export const productName = packageInfo.productName;
+
+/**
+ * @deprecated Switch to using appNameInjectable
+ */
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
+
 export const publicPath = "/build/" as string;
-export const defaultTheme = "lens-dark" as string;
+export const defaultThemeId: ThemeId = "lens-dark";
 export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";
 export const defaultEditorFontFamily = "RobotoMono";
+/**
+ * @deprecated use `di.inject(normalizedPlatformInjectable)` instead
+ */
 export const normalizedPlatform = (() => {
   switch (process.platform) {
     case "darwin":
@@ -41,6 +70,9 @@ export const normalizedPlatform = (() => {
       throw new Error(`platform=${process.platform} is unsupported`);
   }
 })();
+/**
+ * @deprecated use `di.inject(bundledBinariesNormalizedArchInjectable)` instead
+ */
 export const normalizedArch = (() => {
   switch (process.arch) {
     case "arm64":
@@ -91,25 +123,9 @@ export const helmBinaryName = getBinaryName("helm");
  */
 export const helmBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), helmBinaryName));
 
-/**
- * @deprecated for being explicit side effect.
- */
-export const kubectlBinaryName = getBinaryName("kubectl");
-
-/**
- * @deprecated for being explicit side effect.
- */
-export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
-export const staticFilesDirectory = path.resolve(
-  !isProduction
-    ? process.cwd()
-    : process.resourcesPath,
-  "static",
-);
-
 // Apis
-export const apiPrefix = "/api" as string; // local router apis
-export const apiKubePrefix = "/api-kube" as string; // k8s cluster apis
+export const apiPrefix = "/api"; // local router apis
+export const apiKubePrefix = "/api-kube"; // k8s cluster apis
 
 // Links
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as string;

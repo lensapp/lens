@@ -6,16 +6,6 @@
 // Parse kube-api path and get api-version, group, etc.
 
 import { splitArray } from "../utils";
-import { isDebugging } from "../vars";
-import logger from "../../main/logger";
-import { inspect } from "util";
-
-export interface IKubeObjectRef {
-  kind: string;
-  apiVersion: string;
-  name: string;
-  namespace?: string;
-}
 
 export interface IKubeApiLinkRef {
   apiPrefix?: string;
@@ -32,35 +22,21 @@ export interface IKubeApiParsed extends IKubeApiLinkRef {
 }
 
 export function parseKubeApi(path: string): IKubeApiParsed {
-  if (!isDebugging) {
-    return _parseKubeApi(path);
-  }
-
-  try {
-    const res = _parseKubeApi(path);
-
-    logger.debug(`parseKubeApi(${inspect(path, false, null, false)}) -> ${inspect(res, false, null, false)}`);
-
-    return res;
-  } catch (error) {
-    logger.debug(`parseKubeApi(${inspect(path, false, null, false)}) threw: ${error}`);
-
-    throw error;
-  }
-}
-
-function _parseKubeApi(path: string): IKubeApiParsed {
   const apiPath = new URL(path, "http://localhost").pathname;
   const [, prefix, ...parts] = apiPath.split("/");
   const apiPrefix = `/${prefix}`;
   const [left, right, namespaced] = splitArray(parts, "namespaces");
-  let apiGroup, apiVersion, namespace, resource, name;
+  let apiGroup!: string;
+  let apiVersion!: string;
+  let namespace!: string;
+  let resource!: string;
+  let name!: string;
 
   if (namespaced) {
     switch (right.length) {
       case 1:
         name = right[0];
-      // fallthrough
+        // fallthrough
       case 0:
         resource = "namespaces"; // special case this due to `split` removing namespaces
         break;
@@ -69,7 +45,8 @@ function _parseKubeApi(path: string): IKubeApiParsed {
         break;
     }
 
-    apiVersion = left.pop();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    apiVersion = left.pop()!;
     apiGroup = left.join("/");
   } else {
     switch (left.length) {
@@ -79,10 +56,12 @@ function _parseKubeApi(path: string): IKubeApiParsed {
         [apiGroup, apiVersion, resource, name] = left;
         break;
       case 2:
-        resource = left.pop();
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        resource = left.pop()!;
         // fallthrough
       case 1:
-        apiVersion = left.pop();
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        apiVersion = left.pop()!;
         apiGroup = "";
         break;
       default:

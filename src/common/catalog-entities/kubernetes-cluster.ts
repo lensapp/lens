@@ -3,13 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import type { CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategorySpec } from "../catalog";
-import { CatalogEntity, CatalogCategory } from "../catalog";
+import { CatalogEntity, CatalogCategory, categoryVersion } from "../catalog/catalog-entity";
 import { ClusterStore } from "../cluster-store/cluster-store";
 import { broadcastMessage } from "../ipc";
 import { app } from "electron";
-import type { CatalogEntitySpec } from "../catalog/catalog-entity";
+import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
@@ -60,6 +59,10 @@ export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconn
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
 }
 
+export function isKubernetesCluster(item: unknown): item is KubernetesCluster {
+  return item instanceof KubernetesCluster;
+}
+
 export class KubernetesCluster<
   Metadata extends KubernetesClusterMetadata = KubernetesClusterMetadata,
   Status extends KubernetesClusterStatus = KubernetesClusterStatus,
@@ -99,7 +102,7 @@ export class KubernetesCluster<
     //
   }
 
-  async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+  onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (!this.metadata.source || this.metadata.source === "local") {
       context.menuItems.push({
         title: "Settings",
@@ -128,14 +131,10 @@ export class KubernetesCluster<
         });
         break;
     }
-
-    catalogCategoryRegistry
-      .getCategoryForEntity<KubernetesClusterCategory>(this)
-      ?.emit("contextMenuOpen", this, context);
   }
 }
 
-class KubernetesClusterCategory extends CatalogCategory {
+export class KubernetesClusterCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
@@ -145,17 +144,10 @@ class KubernetesClusterCategory extends CatalogCategory {
   public spec: CatalogCategorySpec = {
     group: "entity.k8slens.dev",
     versions: [
-      {
-        name: "v1alpha1",
-        entityClass: KubernetesCluster,
-      },
+      categoryVersion("v1alpha1", KubernetesCluster as CatalogEntityConstructor<KubernetesCluster>),
     ],
     names: {
       kind: "KubernetesCluster",
     },
   };
 }
-
-export const kubernetesClusterCategory = new KubernetesClusterCategory();
-
-catalogCategoryRegistry.add(kubernetesClusterCategory);

@@ -112,7 +112,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-2-live-region"
+                id="react-select-theme-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -128,7 +128,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-2-placeholder"
+                    id="react-select-theme-input-placeholder"
                   >
                     Select...
                   </div>
@@ -138,7 +138,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-2-placeholder"
+                      aria-describedby="react-select-theme-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -197,7 +197,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-3-live-region"
+                id="react-select-extension-install-registry-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -213,7 +213,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-3-placeholder"
+                    id="react-select-extension-install-registry-input-placeholder"
                   >
                     Select...
                   </div>
@@ -223,7 +223,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-3-placeholder"
+                      aria-describedby="react-select-extension-install-registry-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -269,17 +269,12 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             <p
               class="mt-4 mb-5 leading-relaxed"
             >
-              This setting is to change the registry URL for installing extensions by name.
-               
-              If you are unable to access the default registry (
-              https://registry.npmjs.org
-              )
-               
-              you can change it in your 
+              This setting is to change the registry URL for installing extensions by name. 
+              If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
               <b>
                 .npmrc
               </b>
-               file or in the input below.
+               file or in the input below.
             </p>
             <div
               class="Input theme round black disabled invalid"
@@ -337,7 +332,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-4-live-region"
+                id="react-select-update-channel-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -349,13 +344,12 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                 class="Select__control css-1s2u09g-control"
               >
                 <div
-                  class="Select__value-container css-319lph-ValueContainer"
+                  class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
                 >
                   <div
-                    class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-4-placeholder"
+                    class="Select__single-value css-qc6sy-singleValue"
                   >
-                    Select...
+                    Stable
                   </div>
                   <div
                     class="Select__input-container css-6j8wv5-Input"
@@ -363,7 +357,6 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-4-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -422,7 +415,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-5-live-region"
+                id="react-select-timezone-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -438,7 +431,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-5-placeholder"
+                    id="react-select-timezone-input-placeholder"
                   >
                     Select...
                   </div>
@@ -448,7 +441,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-5-placeholder"
+                      aria-describedby="react-select-timezone-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -530,6 +523,9 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -689,7 +685,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-14-live-region"
+                id="react-select-terminal-theme-input-live-region"
               />
               <span
                 aria-atomic="false"
@@ -705,7 +701,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                 >
                   <div
                     class="Select__placeholder css-14el2xx-placeholder"
-                    id="react-select-14-placeholder"
+                    id="react-select-terminal-theme-input-placeholder"
                   >
                     Select...
                   </div>
@@ -715,7 +711,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                   >
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="react-select-14-placeholder"
+                      aria-describedby="react-select-terminal-theme-input-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
@@ -775,6 +771,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
               >
                 <input
                   class="input box grow"
+                  max="50"
                   min="10"
                   spellcheck="false"
                   type="number"
@@ -794,22 +791,78 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                
             </div>
             <div
-              class="Input theme round black"
+              class="Select theme-lens css-b62m3t-container"
             >
-              <label
-                class="input-area flex gaps align-center"
-                id=""
-              >
-                <input
-                  class="input box grow"
-                  spellcheck="false"
-                  type="text"
-                  value=""
-                />
-              </label>
-              <div
-                class="input-info flex gaps"
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-2-live-region"
               />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class="Select__control css-1s2u09g-control"
+              >
+                <div
+                  class="Select__value-container css-319lph-ValueContainer"
+                >
+                  <div
+                    class="Select__placeholder css-14el2xx-placeholder"
+                    id="react-select-2-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class="Select__input-container css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-2-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class="Select__input"
+                      id="react-select-2-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </section>
@@ -850,5 +903,8 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

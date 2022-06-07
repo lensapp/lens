@@ -3,7 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export const dockerPod = {
+import { Pod } from "../../../../../common/k8s-api/endpoints";
+
+export const dockerPod = new Pod({
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -12,9 +14,10 @@ export const dockerPod = {
     creationTimestamp: "dummy",
     resourceVersion: "dummy",
     namespace: "default",
+    selfLink: "/v1/pod/default/dockerExporter",
   },
   spec: {
-    initContainers: [] as any,
+    initContainers: [],
     containers: [
       {
         name: "docker-exporter",
@@ -37,9 +40,9 @@ export const dockerPod = {
     podIP: "dummy",
     startTime: "dummy",
   },
-};
+});
 
-export const deploymentPod1 = {
+export const deploymentPod1 = new Pod({
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -48,6 +51,7 @@ export const deploymentPod1 = {
     creationTimestamp: "dummy",
     resourceVersion: "dummy",
     namespace: "default",
+    selfLink: "/v1/pod/default/deploymentPod1",
     ownerReferences: [{
       apiVersion: "v1",
       kind: "Deployment",
@@ -97,9 +101,9 @@ export const deploymentPod1 = {
     podIP: "dummy",
     startTime: "dummy",
   },
-};
+});
 
-export const deploymentPod2 = {
+export const deploymentPod2 = new Pod({
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -108,6 +112,7 @@ export const deploymentPod2 = {
     creationTimestamp: "dummy",
     resourceVersion: "dummy",
     namespace: "default",
+    selfLink: "/v1/pod/default/deploymentPod2",
     ownerReferences: [{
       apiVersion: "v1",
       kind: "Deployment",
@@ -157,9 +162,9 @@ export const deploymentPod2 = {
     podIP: "dummy",
     startTime: "dummy",
   },
-};
+});
 
-export const deploymentPod3 = {
+export const deploymentPod3 = new Pod({
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -168,6 +173,7 @@ export const deploymentPod3 = {
     creationTimestamp: "dummy",
     resourceVersion: "dummy",
     namespace: "default",
+    selfLink: "/v1/pod/default/deploymentPod3",
     ownerReferences: [{
       apiVersion: "v1",
       kind: "Deployment",
@@ -205,4 +211,4 @@ export const deploymentPod3 = {
     podIP: "dummy",
     startTime: "dummy",
   },
-};
+});

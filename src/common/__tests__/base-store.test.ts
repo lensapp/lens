@@ -30,9 +30,9 @@ interface TestStoreModel {
 }
 
 class TestStore extends BaseStore<TestStoreModel> {
-  @observable a: string;
-  @observable b: string;
-  @observable c: string;
+  @observable a = "";
+  @observable b = "";
+  @observable c = "";
 
   constructor() {
     super({
@@ -81,16 +81,13 @@ class TestStore extends BaseStore<TestStoreModel> {
 describe("BaseStore", () => {
   let store: TestStore;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
 
-    await mainDi.runSetups();
-
-    store = undefined;
     TestStore.resetInstance();
 
     const mockOpts = {

@@ -11,21 +11,20 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import hotbarStoreInjectable from "../../../../common/hotbar-store.injectable";
-import { ThemeStore } from "../../../theme.store";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { UserStore } from "../../../../common/user-store";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
-import type { HotbarStore } from "../../../../common/hotbar-store";
+import type { HotbarStore } from "../../../../common/hotbars/store";
+import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 
-const mockHotbars: { [id: string]: any } = {
+const mockHotbars: Partial<Record<string, any>> = {
   "1": {
     id: "1",
     name: "Default",
-    items: [] as any,
+    items: [],
   },
 };
 
@@ -45,6 +44,7 @@ describe("<HotbarRemoveCommand />", () => {
 
     mockFs();
 
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     di.permitSideEffects(hotbarStoreInjectable);
@@ -52,18 +52,13 @@ describe("<HotbarRemoveCommand />", () => {
     di.permitSideEffects(appVersionInjectable);
 
     render = renderFor(di);
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
   });
 
-  it("renders w/o errors", async () => {
+  it("renders w/o errors", () => {
     di.override(hotbarStoreInjectable, () => ({
       hotbars: [mockHotbars["1"]],
       getById: (id: string) => mockHotbars[id],
@@ -71,16 +66,14 @@ describe("<HotbarRemoveCommand />", () => {
       },
       hotbarIndex: () => 0,
       getDisplayLabel: () => "1: Default",
-    }) as any as HotbarStore);
-
-    await di.runSetups();
+    }) as unknown as HotbarStore);
 
     const { container } = render(<HotbarRemoveCommand />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("calls remove if you click on the entry", async () => {
+  it("calls remove if you click on the entry", () => {
     const removeMock = jest.fn();
 
     di.override(hotbarStoreInjectable, () => ({
@@ -89,9 +82,7 @@ describe("<HotbarRemoveCommand />", () => {
       remove: removeMock,
       hotbarIndex: () => 0,
       getDisplayLabel: () => "1: Default",
-    }) as any as HotbarStore);
-
-    await di.runSetups();
+    }) as unknown as HotbarStore);
 
     const { getByText } = render(
       <>

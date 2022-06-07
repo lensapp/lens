@@ -16,7 +16,7 @@ import * as uuid from "uuid";
 import { appEventBus } from "../../../common/app-event-bus/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
-import { iter } from "../../utils";
+import { isDefined, iter } from "../../utils";
 import { Button } from "../button";
 import { Notifications } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
@@ -66,7 +66,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
     return [
       ...this.errors,
       ...iter.map(this.kubeContexts.values(), ({ error }) => error),
-    ].filter(Boolean);
+    ].filter(isDefined);
   }
 
   readonly refreshContexts = debounce(action(() => {
@@ -106,8 +106,18 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
       <SettingLayout className={styles.AddClusters} data-testid="add-cluster-page">
         <h2>Add Clusters from Kubeconfig</h2>
         <p>
-          Clusters added here are <b>not</b> merged into the <code>~/.kube/config</code> file.{" "}
-          <a href={`${docsUrl}/catalog/add-clusters/`} rel="noreferrer" target="_blank">Read more about adding clusters</a>.
+          {"Clusters added here are  "}
+          <b>not</b>
+          {" merged into the "}
+          <code>~/.kube/config</code>
+          {" file. "}
+          <a
+            href={`${docsUrl}/catalog/add-clusters/`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Read more about adding clusters.
+          </a>
         </p>
         <div className="flex column">
           <MonacoEditor

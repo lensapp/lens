@@ -4,45 +4,42 @@
  */
 
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames, hasDefiniteField } from "../../utils";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
-import type { CatalogEntity, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
+import type { CatalogEntity, CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
-import { makeObservable, observable } from "mobx";
+import { observable } from "mobx";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
+import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
+import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 
-export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
-  entity: T;
+export interface CatalogEntityDrawerMenuProps<Entity extends CatalogEntity> extends MenuActionsProps {
+  entity: Entity;
 }
 
 interface Dependencies {
   normalizeMenuItem: NormalizeCatalogEntityContextMenu;
   navigate: Navigate;
+  visitEntityContextMenu: VisitEntityContextMenu;
 }
 
 @observer
 class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Component<CatalogEntityDrawerMenuProps<T> & Dependencies> {
-  @observable private contextMenu: CatalogEntityContextMenuContext;
-
-  constructor(props: CatalogEntityDrawerMenuProps<T> & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
+  private readonly menuItems = observable.array<CatalogEntityContextMenu>();
 
   componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
+    this.props.visitEntityContextMenu(this.props.entity, {
+      menuItems: this.menuItems,
       navigate: this.props.navigate,
-    };
-    this.props.entity?.onContextMenuOpen(this.contextMenu);
+    });
   }
 
   getMenuItems(entity: T): React.ReactChild[] {
@@ -50,9 +47,9 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
       return [];
     }
 
-    const items = this.contextMenu.menuItems
-      .filter(menuItem => menuItem.icon)
+    const items = this.menuItems
       .map(this.props.normalizeMenuItem)
+      .filter(hasDefiniteField("icon"))
       .map(menuItem => (
         <MenuItem key={menuItem.title} onClick={menuItem.onClick}>
           <Icon
@@ -67,8 +64,22 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
       <HotbarToggleMenuItem
         key="hotbar-toggle"
         entity={entity}
-        addContent={<Icon material="push_pin" interactive small tooltip="Add to Hotbar"/>}
-        removeContent={<Icon svg="push_off" interactive small tooltip="Remove from Hotbar"/>}
+        addContent={(
+          <Icon
+            material="push_pin"
+            interactive
+            small
+            tooltip="Add to Hotbar"
+          />
+        )}
+        removeContent={(
+          <Icon
+            svg="push_off"
+            interactive
+            small
+            tooltip="Remove from Hotbar"
+          />
+        )}
       />,
     );
 
@@ -78,7 +89,7 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
   render() {
     const { className, entity, ...menuProps } = this.props;
 
-    if (!this.contextMenu || !entity.isEnabled()) {
+    if (!this.menuItems.length || !entity.isEnabled()) {
       return null;
     }
 
@@ -97,7 +108,8 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
 export const CatalogEntityDrawerMenu = withInjectables<Dependencies, CatalogEntityDrawerMenuProps<CatalogEntity>>(NonInjectedCatalogEntityDrawerMenu, {
   getProps: (di, props) => ({
     ...props,
+    visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),
   }),
-}) as <Entity extends CatalogEntity>(props: CatalogEntityDrawerMenuProps<Entity>) => React.ReactElement;
+}) as <Entity extends CatalogEntity>(props: CatalogEntityDrawerMenuProps<Entity>) => JSX.Element;

@@ -17,7 +17,7 @@ import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { rolesStore } from "./store";
+import { roleStore } from "./legacy-store";
 
 export interface AddRoleDialogProps extends Partial<DialogProps> {
 }
@@ -49,13 +49,13 @@ export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
 
   createRole = async () => {
     try {
-      const role = await rolesStore.create({ name: this.roleName, namespace: this.namespace });
+      const role = await roleStore.create({ name: this.roleName, namespace: this.namespace });
 
       showDetails(role.selfLink);
       this.reset();
       AddRoleDialog.close();
     } catch (err) {
-      Notifications.error(err.toString());
+      Notifications.checkedError(err, "Unknown error occured while creating role");
     }
   };
 
@@ -78,7 +78,8 @@ export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
           >
             <SubTitle title="Role Name" />
             <Input
-              required autoFocus
+              required
+              autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"
               value={this.roleName}
@@ -89,7 +90,7 @@ export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
               id="add-dialog-namespace-select-input"
               themeName="light"
               value={this.namespace}
-              onChange={({ value }) => this.namespace = value}
+              onChange={option => this.namespace = option?.value ?? "default"}
             />
           </WizardStep>
         </Wizard>

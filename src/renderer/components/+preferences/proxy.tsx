@@ -41,13 +41,17 @@ const NonInjectedLensProxy = observer(({ userStore }: Dependencies) => {
 
         <section className="small">
           <SubTitle title="Certificate Trust" />
-          <Switch checked={userStore.allowUntrustedCAs}
-            onChange={() => userStore.allowUntrustedCAs = !userStore.allowUntrustedCAs}>
+          <Switch
+            checked={userStore.allowUntrustedCAs}
+            onChange={() => userStore.allowUntrustedCAs = !userStore.allowUntrustedCAs}
+          >
             Allow untrusted Certificate Authorities
           </Switch>
           <small className="hint">
-            This will make Lens to trust ANY certificate authority without any validations.{" "}
-            Needed with some corporate proxies that do certificate re-writing.{" "}
+            This will make Lens to trust ANY certificate authority without any validations.
+            {" "}
+            Needed with some corporate proxies that do certificate re-writing.
+            {" "}
             Does not affect cluster communications!
           </small>
         </section>

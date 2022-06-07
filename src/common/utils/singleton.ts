@@ -51,6 +51,8 @@ export class Singleton {
    * Default: `true`
    * @returns An instance of the child class
    */
+  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict?: true): T;
+  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict: false): T | undefined;
   static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict = true): T | undefined {
     if (!Singleton.instances.has(this) && strict) {
       throw new TypeError(`instance of ${this.name} is not created`);

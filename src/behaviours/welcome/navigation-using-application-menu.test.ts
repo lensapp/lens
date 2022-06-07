@@ -6,16 +6,13 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
 
 describe("welcome - navigation using application menu", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().beforeSetups(({ mainDi }) => {
-      mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
-    });
+    applicationBuilder = getApplicationBuilder();
 
     rendered = await applicationBuilder.render();
   });
@@ -31,8 +28,8 @@ describe("welcome - navigation using application menu", () => {
   });
 
   describe("when navigating to welcome using application menu", () => {
-    beforeEach(() => {
-      applicationBuilder.applicationMenu.click("help.welcome");
+    beforeEach(async () => {
+      await applicationBuilder.applicationMenu.click("help.welcome");
     });
 
     it("renders", () => {

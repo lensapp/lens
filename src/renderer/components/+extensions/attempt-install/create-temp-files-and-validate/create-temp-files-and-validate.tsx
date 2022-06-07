@@ -73,10 +73,13 @@ export const createTempFilesAndValidate =
         Notifications.error(
           <div className="flex column gaps">
             <p>
-            Installing <em>{fileName}</em> has failed, skipping.
+              {"Installing "}
+              <em>{fileName}</em>
+              {" has failed, skipping."}
             </p>
             <p>
-            Reason: <em>{message}</em>
+              {"Reason: "}
+              <em>{message}</em>
             </p>
           </div>,
         );

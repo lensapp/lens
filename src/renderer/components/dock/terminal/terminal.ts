@@ -4,47 +4,54 @@
  */
 
 import debounce from "lodash/debounce";
+import type { IComputedValue } from "mobx";
 import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
-import { TerminalChannels } from "../../../api/terminal-api";
-import { ThemeStore } from "../../../theme.store";
+import type { ThemeStore } from "../../../themes/store";
 import { disposer } from "../../../utils";
 import { isMac } from "../../../../common/vars";
 import { once } from "lodash";
-import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
+import assert from "assert";
+import { TerminalChannels } from "../../../../common/terminal/channels";
+
+export interface TerminalDependencies {
+  readonly spawningPool: HTMLElement;
+  readonly terminalConfig: IComputedValue<TerminalConfig>;
+  readonly terminalCopyOnSelect: IComputedValue<boolean>;
+  readonly themeStore: ThemeStore;
+}
+
+export interface TerminalArguments {
+  tabId: TabId;
+  api: TerminalApi;
+}
 
 export class Terminal {
-  private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
-
-  public static get spawningPool() {
-    return document.getElementById("terminal-init");
-  }
-
-  private xterm: XTerm | null = new XTerm({
-    cursorBlink: true,
-    cursorStyle: "bar",
-    fontSize: this.terminalConfig.fontSize,
-    fontFamily: this.terminalConfig.fontFamily,
-  });
+  private readonly xterm: XTerm;
   private readonly fitAddon = new FitAddon();
   private scrollPos = 0;
-  private disposer = disposer();
+  private readonly disposer = disposer();
+  public readonly tabId: TabId;
+  protected readonly api: TerminalApi;
 
-  get elem() {
-    return this.xterm?.element;
+  private get elem() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.xterm.element!;
   }
 
-  get viewport() {
-    return this.xterm.element.querySelector(".xterm-viewport");
+  private get viewport() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.elem.querySelector(".xterm-viewport")!;
   }
 
   attachTo(parentElem: HTMLElement) {
+    assert(this.elem, "Terminal should always be mounted somewhere");
     parentElem.appendChild(this.elem);
     this.onActivate();
   }
@@ -53,15 +60,39 @@ export class Terminal {
     const { elem } = this;
 
     if (elem) {
-      Terminal.spawningPool.appendChild(elem);
+      this.dependencies.spawningPool.appendChild(elem);
     }
   }
 
-  constructor(public tabId: TabId, protected api: TerminalApi) {
+  get fontFamily() {
+    return this.dependencies.terminalConfig.get().fontFamily;
+  }
+
+  get fontSize() {
+    return this.dependencies.terminalConfig.get().fontSize;
+  }
+
+  get theme(): Record<string/*paramName*/, string/*color*/> {
+    return this.dependencies.themeStore.xtermColors;
+  }
+
+  constructor(protected readonly dependencies: TerminalDependencies, {
+    tabId,
+    api,
+  }: TerminalArguments) {
+    this.tabId = tabId;
+    this.api = api;
+
+    this.xterm = new XTerm({
+      cursorBlink: true,
+      cursorStyle: "bar",
+      fontSize: this.fontSize,
+      fontFamily: this.fontFamily,
+    });
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
 
-    this.xterm.open(Terminal.spawningPool);
+    this.xterm.open(this.dependencies.spawningPool);
     this.xterm.registerLinkMatcher(/https?:\/\/[^\s]+/i, this.onClickLink);
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
     this.xterm.onSelectionChange(this.onSelectionChange);
@@ -78,17 +109,11 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposer.push(
-      reaction(() => ThemeStore.getInstance().xtermColors, colors => {
-        this.xterm?.setOption("theme", colors);
-      }, {
+      reaction(() => this.theme, colors => this.xterm.setOption("theme", colors), {
         fireImmediately: true,
       }),
-      reaction(() => UserStore.getInstance().terminalConfig.fontSize, this.setFontSize, {
-        fireImmediately: true,
-      }),
-      reaction(() => UserStore.getInstance().terminalConfig.fontFamily, this.setFontFamily, {
-        fireImmediately: true,
-      }),
+      reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true }),
+      reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true }),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
@@ -98,23 +123,19 @@ export class Terminal {
   }
 
   destroy() {
-    if (this.xterm) {
-      this.disposer();
-      this.xterm.dispose();
-      this.xterm = null;
-    }
+    this.disposer();
+    this.xterm.dispose();
   }
 
   fit = () => {
-    // Since this function is debounced we need to read this value as late as possible
-    if (!this.xterm) {
-      return;
-    }
-
     try {
-      this.fitAddon.fit();
-      const { cols, rows } = this.xterm;
+      const { cols, rows } = this.fitAddon.proposeDimensions();
 
+      // attempt to resize/fit terminal when it's not visible in DOM will crash with exception
+      // see: https://github.com/xtermjs/xterm.js/issues/3118
+      if (isNaN(cols) || isNaN(rows)) return;
+
+      this.fitAddon.fit();
       this.api.sendTerminalSize(cols, rows);
     } catch (error) {
       // see https://github.com/lensapp/lens/issues/1891
@@ -166,7 +187,7 @@ export class Terminal {
   onContextMenu = () => {
     if (
       // don't paste if user hasn't turned on the feature
-      UserStore.getInstance().terminalCopyOnSelect
+      this.dependencies.terminalCopyOnSelect.get()
 
       // don't paste if the clipboard doesn't have text
       && clipboard.availableFormats().includes("text/plain")
@@ -178,17 +199,26 @@ export class Terminal {
   onSelectionChange = () => {
     const selection = this.xterm.getSelection().trim();
 
-    if (UserStore.getInstance().terminalCopyOnSelect && selection) {
+    if (this.dependencies.terminalCopyOnSelect.get() && selection) {
       clipboard.writeText(selection);
     }
   };
 
-  setFontSize = (size: number) => {
-    this.xterm.options.fontSize = size;
+  setFontSize = (fontSize: number) => {
+    logger.info(`[TERMINAL]: set fontSize to ${fontSize}`);
+
+    this.xterm.options.fontSize = fontSize;
+    this.fit();
   };
 
-  setFontFamily = (family: string) => {
-    this.xterm.options.fontFamily = family;
+  setFontFamily = (fontFamily: string) => {
+    logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
+
+    this.xterm.options.fontFamily = fontFamily;
+    this.fit();
+
+    // provide css-variable within `:root {}`
+    document.documentElement.style.setProperty("--font-terminal", fontFamily);
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {

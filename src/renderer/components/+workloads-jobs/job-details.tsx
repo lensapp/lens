@@ -14,37 +14,44 @@ import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { Link } from "react-router-dom";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { jobStore } from "./job.store";
+import type { JobStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForJobs, type IPodMetrics, Job } from "../../../common/k8s-api/endpoints";
+import { getMetricsForJobs, type PodMetricData, Job } from "../../../common/k8s-api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable, reaction } from "mobx";
 import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ResourceMetrics } from "../resource-metrics";
-import { getDetailsUrl } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { Disposer } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { PodStore } from "../+workloads-pods/store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
+import jobStoreInjectable from "./store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer;
+  subscribeStores: SubscribeStores;
+  podStore: PodStore;
+  jobStore: JobStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
+  getDetailsUrl: GetDetailsUrl;
+  apiManager: ApiManager;
 }
 
 @observer
 class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependencies> {
-  @observable metrics: IPodMetrics = null;
+  @observable metrics: PodMetricData | null = null;
 
   constructor(props: JobDetailsProps & Dependencies) {
     super(props);
@@ -57,7 +64,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
         this.metrics = null;
       }),
       this.props.subscribeStores([
-        podsStore,
+        this.props.podStore,
       ]),
     ]);
   }
@@ -69,7 +76,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   };
 
   render() {
-    const { object: job } = this.props;
+    const { object: job, jobStore, getActiveClusterEntity, getDetailsUrl, apiManager } = this.props;
 
     if (!job) {
       return null;
@@ -94,7 +101,9 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
         {!isMetricHidden && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={job} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={job}
+            metrics={this.metrics}
           >
             <PodCharts />
           </ResourceMetrics>
@@ -105,39 +114,45 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
             Object.keys(selectors).map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
-        {nodeSelector.length > 0 &&
-        <DrawerItem name="Node Selector" labelsOnly>
-          {
-            nodeSelector.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
-        </DrawerItem>
-        }
-        {images.length > 0 &&
-        <DrawerItem name="Images">
-          {
-            images.map(image => <p key={image}>{image}</p>)
-          }
-        </DrawerItem>
-        }
-        {ownerRefs.length > 0 &&
-        <DrawerItem name="Controlled by">
-          {
-            ownerRefs.map(ref => {
-              const { name, kind } = ref;
-              const detailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, job));
+        {nodeSelector.length > 0 && (
+          <DrawerItem name="Node Selector" labelsOnly>
+            {
+              nodeSelector.map(label => (
+                <Badge key={label} label={label}/>
+              ))
+            }
+          </DrawerItem>
+        )}
+        {images.length > 0 && (
+          <DrawerItem name="Images">
+            {
+              images.map(image => <p key={image}>{image}</p>)
+            }
+          </DrawerItem>
+        )}
+        {ownerRefs.length > 0 && (
+          <DrawerItem name="Controlled by">
+            {
+              ownerRefs.map(ref => {
+                const { name, kind } = ref;
+                const detailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, job));
 
-              return (
-                <p key={name}>
-                  {kind} <Link to={detailsUrl}>{name}</Link>
-                </p>
-              );
-            })
-          }
-        </DrawerItem>
-        }
-        <DrawerItem name="Conditions" className="conditions" labelsOnly>
+                return (
+                  <p key={name}>
+                    {kind}
+                    {" "}
+                    <Link to={detailsUrl}>{name}</Link>
+                  </p>
+                );
+              })
+            }
+          </DrawerItem>
+        )}
+        <DrawerItem
+          name="Conditions"
+          className="conditions"
+          labelsOnly
+        >
           {condition && (
             <Badge
               className={kebabCase(condition.type)}
@@ -163,14 +178,15 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   }
 }
 
-export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(
-  NonInjectedJobDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInjectedJobDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    podStore: di.inject(podStoreInjectable),
+    jobStore: di.inject(jobStoreInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    apiManager: di.inject(apiManagerInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+  }),
+});
 

@@ -6,12 +6,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import isAutoUpdateEnabledInjectable from "../../main/is-auto-update-enabled.injectable";
-import extensionsStoreInjectable from "../../extensions/extensions-store/extensions-store.injectable";
-import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../../extensions/extension-loader/create-extension-instance/file-system-provisioner-store/file-system-provisioner-store";
-import focusWindowInjectable from "../../renderer/ipc-channel-listeners/focus-window.injectable";
+import focusWindowInjectable from "../../renderer/navigation/focus-window.injectable";
 
 // TODO: Make components free of side effects by making them deterministic
 jest.mock("../../renderer/components/input/input");
@@ -22,11 +17,7 @@ describe("extensions - navigation using application menu", () => {
   let focusWindowMock: jest.Mock;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().beforeSetups(({ mainDi, rendererDi }) => {
-      mainDi.override(isAutoUpdateEnabledInjectable, () => () => false);
-      rendererDi.override(extensionsStoreInjectable, () => ({}) as unknown as ExtensionsStore);
-      rendererDi.override(fileSystemProvisionerStoreInjectable, () => ({}) as unknown as FileSystemProvisionerStore);
-
+    applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ rendererDi }) => {
       focusWindowMock = jest.fn();
 
       rendererDi.override(focusWindowInjectable, () => focusWindowMock);
@@ -46,8 +37,8 @@ describe("extensions - navigation using application menu", () => {
   });
 
   describe("when navigating to extensions using application menu", () => {
-    beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.extensions");
+    beforeEach(async () => {
+      await applicationBuilder.applicationMenu.click("root.extensions");
     });
 
     it("focuses the window", () => {

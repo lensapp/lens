@@ -20,12 +20,12 @@ export interface RouteParams {
   /**
    * the parts of the URI query string
    */
-  search: Record<string, string>;
+  search: Record<string, string | undefined>;
 
   /**
    * the matching parts of the path. The dynamic parts of the URI path.
    */
-  pathname: Record<string, string>;
+  pathname: Record<string, string | undefined>;
 
   /**
    * if the most specific path schema that is matched does not cover the whole

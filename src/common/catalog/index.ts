@@ -4,4 +4,5 @@
  */
 
 export * from "./catalog-category-registry";
+export * from "./category-registry";
 export * from "./catalog-entity";

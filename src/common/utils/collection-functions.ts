@@ -4,6 +4,8 @@
  */
 
 import { runInAction } from "mobx";
+import { inspect } from "util";
+import { isDefined } from "./type-narrowing";
 
 /**
  * Get the value behind `key`. If it was not present, first insert `value`
@@ -17,7 +19,17 @@ export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
     map.set(key, value);
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
+}
+
+/**
+ * Updates map and returns the value that was just inserted
+ */
+export function put<K, V>(map: Map<K, V>, key: K, value: V): V {
+  map.set(key, value);
+
+  return value;
 }
 
 /**
@@ -45,7 +57,8 @@ export function getOrInsertWith<K, V>(map: Map<K, V>, key: K, builder: () => V):
     map.set(key, builder());
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
 }
 
 /**
@@ -56,7 +69,8 @@ export async function getOrInsertWithAsync<K, V>(map: Map<K, V>, key: K, asyncBu
     map.set(key, await asyncBuilder());
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
 }
 
 /**
@@ -67,7 +81,7 @@ export async function getOrInsertWithAsync<K, V>(map: Map<K, V>, key: K, asyncBu
  */
 export function strictSet<K, V>(map: Map<K, V>, key: K, val: V): typeof map {
   if (map.has(key)) {
-    throw new TypeError("Duplicate key in map");
+    throw new TypeError(`Map already contains key: ${inspect(key)}`);
   }
 
   return map.set(key, val);
@@ -80,10 +94,11 @@ export function strictSet<K, V>(map: Map<K, V>, key: K, val: V): typeof map {
  */
 export function strictGet<K, V>(map: Map<K, V>, key: K): V {
   if (!map.has(key)) {
-    throw new TypeError("key not in map");
+    throw new TypeError(`Map does not contains key: ${inspect(key)}`);
   }
 
-  return map.get(key);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return map.get(key)!;
 }
 
 /**
@@ -98,4 +113,11 @@ export function toggle<K>(set: Set<K>, key: K): void {
       set.add(key);
     }
   });
+}
+
+/**
+ * A helper function to also check for defined-ness
+ */
+export function includes<T>(src: T[], value: T | null | undefined): boolean {
+  return isDefined(value) && src.includes(value);
 }

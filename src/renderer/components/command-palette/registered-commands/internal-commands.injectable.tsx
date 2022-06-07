@@ -203,13 +203,10 @@ function getInternalCommands(dependencies: Dependencies): CommandRegistration[] 
       id: "entity.viewSettings",
       title: ({ entity }) => `${entity.kind}/${entity.getName()}: View Settings`,
       action: ({ entity }) => dependencies.navigateToEntitySettings(entity.getId()),
-      isActive: ({ entity }) => {
-        if (!entity) {
-          return false;
-        }
-
-        return dependencies.getEntitySettingItems(entity.kind, entity.apiVersion, entity.metadata.source).length > 0;
-      },
+      isActive: ({ entity }) => (
+        entity
+        && dependencies.getEntitySettingItems(entity.kind, entity.apiVersion, entity.metadata.source).length > 0
+      ),
     },
     {
       id: "cluster.openTerminal",
@@ -254,7 +251,6 @@ const internalCommandsInjectable = getInjectable({
       .getInstance()
       .getItemsForKind,
     createTerminalTab: di.inject(createTerminalTabInjectable),
-
     navigateToPreferences: di.inject(navigateToPreferencesInjectable),
     navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
     navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),

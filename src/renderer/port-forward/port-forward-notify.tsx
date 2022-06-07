@@ -5,23 +5,29 @@
 
 import React from "react";
 import { Button } from "../components/button";
-import { Notifications, notificationsStore } from "../components/notifications";
-import { getHostedClusterId } from "../utils";
+import type { NotificationsStore } from "../components/notifications";
+import { Notifications } from "../components/notifications";
 import type { NavigateToPortForwards } from "../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 
 interface AboutPortForwardingDependencies {
   navigateToPortForwards: NavigateToPortForwards;
+  hostedClusterId: string;
+  notificationsStore: NotificationsStore;
 }
 
-export const aboutPortForwarding = ({ navigateToPortForwards }: AboutPortForwardingDependencies) => () => {
-  const notificationId = `port-forward-notification-${getHostedClusterId()}`;
+export const aboutPortForwarding = ({
+  navigateToPortForwards,
+  hostedClusterId,
+  notificationsStore,
+}: AboutPortForwardingDependencies) => () => {
+  const notificationId = `port-forward-notification-${hostedClusterId}`;
 
   Notifications.info(
     (
       <div className="flex column gaps">
         <b>Port Forwarding</b>
         <p>
-            You can manage your port forwards on the Port Forwarding Page.
+          You can manage your port forwards on the Port Forwarding Page.
         </p>
         <div className="flex gaps row align-left box grow">
           <Button
@@ -45,11 +51,17 @@ export const aboutPortForwarding = ({ navigateToPortForwards }: AboutPortForward
 
 interface NotifyErrorPortForwardingDependencies {
   navigateToPortForwards: NavigateToPortForwards;
+  hostedClusterId: string;
+  notificationsStore: NotificationsStore;
 }
 
 
-export const notifyErrorPortForwarding = ({ navigateToPortForwards }: NotifyErrorPortForwardingDependencies) => (msg: string) => {
-  const notificationId = `port-forward-error-notification-${getHostedClusterId()}`;
+export const notifyErrorPortForwarding = ({
+  navigateToPortForwards,
+  hostedClusterId,
+  notificationsStore,
+}: NotifyErrorPortForwardingDependencies) => (msg: string) => {
+  const notificationId = `port-forward-error-notification-${hostedClusterId}`;
 
   Notifications.error(
     (

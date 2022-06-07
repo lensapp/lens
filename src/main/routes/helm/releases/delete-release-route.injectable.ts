@@ -3,32 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import type { Route } from "../../../router/router";
 import { helmService } from "../../../helm/helm-service";
-import { routeInjectionToken } from "../../../router/router.injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import { getRouteInjectable } from "../../../router/router.injectable";
+import { clusterRoute } from "../../../router/route";
 
-const deleteReleaseRouteInjectable = getInjectable({
+const deleteReleaseRouteInjectable = getRouteInjectable({
   id: "delete-release-route",
 
-  instantiate: (): Route<string> => ({
+  instantiate: () => clusterRoute({
     method: "delete",
     path: `${apiPrefix}/v2/releases/{namespace}/{release}`,
-
-    handler: async (request) => {
-      const { cluster, params } = request;
-
-      return {
-        response: await helmService.deleteRelease(
-          cluster,
-          params.release,
-          params.namespace,
-        ),
-      };
-    },
-  }),
-
-  injectionToken: routeInjectionToken,
+  })(async ({ cluster, params: { release, namespace }}) => ({
+    response: await helmService.deleteRelease(
+      cluster,
+      release,
+      namespace,
+    ),
+  })),
 });
 
 export default deleteReleaseRouteInjectable;

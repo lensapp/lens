@@ -5,13 +5,12 @@
 
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
-import { computed } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { broadcastMessage } from "../../../common/ipc";
 import { catalogEntityRunListener } from "../../../common/ipc/catalog";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import catalogEnitiesInjectable from "../../api/catalog/entity/entities.injectable";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import { Select } from "../select";
 
@@ -20,35 +19,37 @@ interface Dependencies {
   entities: IComputedValue<CatalogEntity[]>;
 }
 
-const NonInjectedActivateEntityCommand = observer(({ closeCommandOverlay, entities }: Dependencies) => {
-  const options = entities.get().map(entity => ({
-    label: `${entity.kind}: ${entity.getName()}`,
-    value: entity,
-  }));
-
-  const onSelect = (entity: CatalogEntity): void => {
-    broadcastMessage(catalogEntityRunListener, entity.getId());
-    closeCommandOverlay();
-  };
-
-  return (
-    <Select
-      id="activate-entity-input"
-      menuPortalTarget={null}
-      onChange={(v) => onSelect(v.value)}
-      components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-      menuIsOpen={true}
-      options={options}
-      autoFocus={true}
-      escapeClearsValue={false}
-      placeholder="Activate entity ..."
-    />
-  );
-});
+const NonInjectedActivateEntityCommand = observer(({
+  closeCommandOverlay,
+  entities,
+}: Dependencies) => (
+  <Select
+    id="activate-entity-input"
+    menuPortalTarget={null}
+    onChange={(option) => {
+      if (option) {
+        broadcastMessage(catalogEntityRunListener, option.value.getId());
+        closeCommandOverlay();
+      }
+    }}
+    components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+    menuIsOpen={true}
+    options={(
+      entities.get()
+        .map(entity => ({
+          value: entity,
+          label: `${entity.kind}: ${entity.getName()}`,
+        }))
+    )}
+    autoFocus={true}
+    escapeClearsValue={false}
+    placeholder="Activate entity ..."
+  />
+));
 
 export const ActivateEntityCommand = withInjectables<Dependencies>(NonInjectedActivateEntityCommand, {
   getProps: di => ({
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    entities: computed(() => [...catalogEntityRegistry.items]),
+    entities: di.inject(catalogEnitiesInjectable),
   }),
 });

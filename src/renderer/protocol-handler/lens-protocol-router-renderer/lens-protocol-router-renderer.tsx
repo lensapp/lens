@@ -55,12 +55,13 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
         const rendererAttempt = this._routeToInternal(new Url(rawUrl, true));
 
         if (foldAttemptResults(mainAttemptResult, rendererAttempt) === RouteAttempt.MISSING) {
-          Notifications.shortInfo(
+          Notifications.shortInfo((
             <p>
-              Unknown action <code>{rawUrl}</code>.{" "}
-              Are you on the latest version?
-            </p>,
-          );
+              {"Unknown action "}
+              <code>{rawUrl}</code>
+              {". Are you on the latest version?"}
+            </p>
+          ));
         }
       },
     });
@@ -73,21 +74,22 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
 
         switch (foldAttemptResults(mainAttemptResult, rendererAttempt)) {
           case RouteAttempt.MISSING:
-            Notifications.shortInfo(
+            Notifications.shortInfo((
               <p>
-                Unknown action <code>{rawUrl}</code>.{" "}
-                Are you on the latest version of the extension?
-              </p>,
-            );
+                {"Unknown action "}
+                <code>{rawUrl}</code>
+                {". Are you on the latest version of the extension?"}
+              </p>
+            ));
             break;
           case RouteAttempt.MISSING_EXTENSION:
-            Notifications.shortInfo(
+            Notifications.shortInfo((
               <p>
-                Missing extension for action <code>{rawUrl}</code>.{" "}
-                Not able to find extension in our known list.{" "}
-                Try installing it manually.
-              </p>,
-            );
+                {"Missing extension for action "}
+                <code>{rawUrl}</code>
+                {". Not able to find extension in our known list. Try installing it manually."}
+              </p>
+            ));
             break;
         }
       },
@@ -99,10 +101,14 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
         Notifications.error((
           <>
             <p>
-              Failed to route <code>{rawUrl}</code>.
+              {"Failed to route "}
+              <code>{rawUrl}</code>
+              .
             </p>
             <p>
-              <b>Error:</b> {error}
+              <b>Error:</b>
+              {" "}
+              {error}
             </p>
           </>
         ));

@@ -7,7 +7,8 @@ import "./welcome.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
-import Carousel from "react-material-ui-carousel";
+import type { CarouselProps } from "react-material-ui-carousel";
+import LegacyCarousel from "react-material-ui-carousel";
 import { Icon } from "../icon";
 import { productName, slackUrl } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -18,24 +19,22 @@ import type { WelcomeBannerRegistration } from "./welcome-banner-items/welcome-b
 
 export const defaultWidth = 320;
 
+// This is to fix some react 18 type errors
+const Carousel = LegacyCarousel as React.ComponentType<CarouselProps>;
+
 interface Dependencies {
   welcomeMenuItems: IComputedValue<WelcomeMenuRegistration[]>;
   welcomeBannerItems: IComputedValue<WelcomeBannerRegistration[]>;
 }
 
-const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems, welcomeBannerItems }) => {
+const NonInjectedWelcome = observer(({ welcomeMenuItems, welcomeBannerItems }: Dependencies) => {
   const welcomeBanners = welcomeBannerItems.get();
 
   // if there is banner with specified width, use it to calculate the width of the container
-  const maxWidth = welcomeBanners.reduce((acc, curr) => {
-    const currWidth = curr.width ?? 0;
-
-    if (acc > currWidth) {
-      return acc;
-    }
-
-    return currWidth;
-  }, defaultWidth);
+  const maxWidth = Math.max(
+    ...welcomeBanners.map(banner => banner.width ?? 0),
+    defaultWidth,
+  );
 
   return (
     <div className="flex justify-center Welcome align-center" data-testid="welcome-page">
@@ -74,15 +73,19 @@ const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems, welcomeB
             style={{ width: `${defaultWidth}px` }}
             data-testid="welcome-text-container"
           >
-            <h2>Welcome to {productName} 5!</h2>
+            <h2>
+              {`Welcome to ${productName} 5!`}
+            </h2>
 
             <p>
               To get you started we have auto-detected your clusters in your
+              {" "}
               kubeconfig file and added them to the catalog, your centralized
+              {" "}
               view for managing all your cloud-native resources.
               <br />
               <br />
-              If you have any questions or feedback, please join our{" "}
+              {"If you have any questions or feedback, please join our "}
               <a
                 href={slackUrl}
                 target="_blank"
@@ -120,15 +123,11 @@ const NonInjectedWelcome: React.FC<Dependencies> = ({ welcomeMenuItems, welcomeB
       </div>
     </div>
   );
-};
+});
 
-export const Welcome = withInjectables<Dependencies>(
-  observer(NonInjectedWelcome),
-
-  {
-    getProps: (di) => ({
-      welcomeMenuItems: di.inject(welcomeMenuItemsInjectable),
-      welcomeBannerItems: di.inject(welcomeBannerItemsInjectable),
-    }),
-  },
-);
+export const Welcome = withInjectables<Dependencies>(NonInjectedWelcome, {
+  getProps: (di) => ({
+    welcomeMenuItems: di.inject(welcomeMenuItemsInjectable),
+    welcomeBannerItems: di.inject(welcomeBannerItemsInjectable),
+  }),
+});

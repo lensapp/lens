@@ -59,20 +59,3 @@
     @content; // css-modules (*.module.scss)
   }
 }
-
-// Makes custom @font-family available at earlier stages.
-// Element must exist in DOM as soon as possible to initiate preloading.
-@mixin font-preload($fontFamily) {
-  position: absolute;
-  visibility: hidden;
-  height: 0;
-
-  &:before {
-    width: 0;
-    display: block;
-    overflow: hidden;
-    content: "x"; // some text required to start applying font in document
-    font-family: $fontFamily; // imported name in @font-face declaration
-    @content;
-  }
-}

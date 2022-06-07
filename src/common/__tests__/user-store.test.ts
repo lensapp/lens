@@ -21,7 +21,7 @@ jest.mock("electron", () => ({
   },
 }));
 
-import { UserStore } from "../user-store";
+import type { UserStore } from "../user-store";
 import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
@@ -30,13 +30,11 @@ import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
-import { defaultTheme } from "../vars";
+import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import getConfigurationFileModelInjectable
-  from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -44,23 +42,22 @@ describe("user store tests", () => {
   let userStore: UserStore;
   let di: DiContainer;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
-    di.override(writeFileInjectable, () => () => undefined);
+    di.override(writeFileInjectable, () => () => Promise.resolve());
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    di.override(userStoreInjectable, () => UserStore.createInstance());
-
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
 
-    await di.runSetups();
+    di.permitSideEffects(appVersionInjectable);
+    di.permitSideEffects(userStoreInjectable);
+
+    di.unoverride(userStoreInjectable);
   });
 
   afterEach(() => {
-    UserStore.resetInstance();
     mockFs.restore();
   });
 
@@ -80,7 +77,7 @@ describe("user store tests", () => {
       userStore.httpsProxy = "abcd://defg";
 
       expect(userStore.httpsProxy).toBe("abcd://defg");
-      expect(userStore.colorTheme).toBe(defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultThemeId);
 
       userStore.colorTheme = "light";
       expect(userStore.colorTheme).toBe("light");
@@ -89,7 +86,7 @@ describe("user store tests", () => {
     it("correctly resets theme to default value", async () => {
       userStore.colorTheme = "some other theme";
       userStore.resetTheme();
-      expect(userStore.colorTheme).toBe(defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultThemeId);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {
@@ -129,6 +126,8 @@ describe("user store tests", () => {
           },
         },
       });
+
+      di.override(appVersionInjectable, () => "10.0.0");
 
       userStore = di.inject(userStoreInjectable);
     });

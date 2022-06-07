@@ -14,31 +14,36 @@ import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { Tooltip } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import hotbarStoreInjectable from "../../../common/hotbar-store.injectable";
-import type { HotbarStore } from "../../../common/hotbar-store";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
+import type { HotbarStore } from "../../../common/hotbars/store";
+import { observer } from "mobx-react";
+import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
+import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 
 export interface SidebarClusterProps {
-  clusterEntity: CatalogEntity;
+  clusterEntity: CatalogEntity | null | undefined;
 }
 
 interface Dependencies {
   navigate: Navigate;
   normalizeMenuItem: NormalizeCatalogEntityContextMenu;
   hotbarStore: HotbarStore;
+  visitEntityContextMenu: VisitEntityContextMenu;
 }
 
-function NonInjectedSidebarCluster({
+const NonInjectedSidebarCluster = observer(({
   clusterEntity,
   hotbarStore,
+  visitEntityContextMenu: onContextMenuOpen,
   navigate,
   normalizeMenuItem,
-}: SidebarClusterProps & Dependencies) {
-  const [opened, setOpened] = useState(false);
+}: Dependencies & SidebarClusterProps) => {
   const [menuItems] = useState(observable.array<CatalogEntityContextMenu>());
+  const [opened, setOpened] = useState(false );
 
   if (!clusterEntity) {
     // render a Loading version of the SidebarCluster
@@ -65,7 +70,7 @@ function NonInjectedSidebarCluster({
       : () => hotbarStore.addToHotbar(clusterEntity);
 
     menuItems.replace([{ title, onClick }]);
-    clusterEntity.onContextMenuOpen({
+    onContextMenuOpen(clusterEntity, {
       menuItems,
       navigate: (url, forceMainFrame = true) => {
         if (forceMainFrame) {
@@ -114,7 +119,7 @@ function NonInjectedSidebarCluster({
       <Tooltip targetId={tooltipId}>
         {clusterEntity.getName()}
       </Tooltip>
-      <Icon material="arrow_drop_down" className={styles.dropdown}/>
+      <Icon material="arrow_drop_down" className={styles.dropdown} />
       <Menu
         usePortal
         htmlFor={id}
@@ -137,12 +142,13 @@ function NonInjectedSidebarCluster({
       </Menu>
     </div>
   );
-}
+});
 
 export const SidebarCluster = withInjectables<Dependencies, SidebarClusterProps>(NonInjectedSidebarCluster, {
   getProps: (di, props) => ({
     ...props,
     hotbarStore: di.inject(hotbarStoreInjectable),
+    visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
   }),

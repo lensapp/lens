@@ -11,24 +11,22 @@ import { ErrorBoundary } from "../../components/error-boundary";
 import { Notifications } from "../../components/notifications";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { CommandContainer } from "../../components/command-palette/command-container";
-import { ipcRenderer } from "electron";
-import { IpcRendererNavigationEvents } from "../../navigation/events";
-import { ClusterFrameHandler } from "../../components/cluster-manager/lens-views";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import broadcastThatRootFrameIsRenderedInjectable from "./broadcast-that-root-frame-is-rendered.injectable";
 
+// Todo: remove import-time side-effect.
 injectSystemCAs();
 
+interface Dependencies {
+  broadcastThatRootFrameIsRendered: () => void;
+}
+
 @observer
-export class RootFrame extends React.Component {
+class NonInjectedRootFrame extends React.Component<Dependencies> {
   static displayName = "RootFrame";
 
-  constructor(props: any) {
-    super(props);
-
-    ClusterFrameHandler.createInstance();
-  }
-
   componentDidMount() {
-    ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
+    this.props.broadcastThatRootFrameIsRendered();
   }
 
   render() {
@@ -44,3 +42,14 @@ export class RootFrame extends React.Component {
     );
   }
 }
+
+export const RootFrame = withInjectables<Dependencies>(
+  NonInjectedRootFrame,
+
+  {
+    getProps: (di, props) => ({
+      broadcastThatRootFrameIsRendered: di.inject(broadcastThatRootFrameIsRenderedInjectable),
+      ...props,
+    }),
+  },
+);

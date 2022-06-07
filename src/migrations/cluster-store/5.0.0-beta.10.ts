@@ -9,6 +9,7 @@ import type { ClusterModel } from "../../common/cluster-types";
 import type { MigrationDeclaration } from "../helpers";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { isErrnoException } from "../../common/utils";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -35,15 +36,18 @@ export default {
       const clusters: ClusterModel[] = store.get("clusters") ?? [];
 
       for (const cluster of clusters) {
-        if (cluster.workspace && workspaces.has(cluster.workspace)) {
-          cluster.labels ??= {};
-          cluster.labels.workspace = workspaces.get(cluster.workspace);
+        if (cluster.workspace) {
+          const workspace = workspaces.get(cluster.workspace);
+
+          if (workspace) {
+            (cluster.labels ??= {}).workspace = workspace;
+          }
         }
       }
 
       store.set("clusters", clusters);
     } catch (error) {
-      if (!(error.code === "ENOENT" && error.path.endsWith("lens-workspace-store.json"))) {
+      if (isErrnoException(error) && !(error.code === "ENOENT" && error.path?.endsWith("lens-workspace-store.json"))) {
         // ignore lens-workspace-store.json being missing
         throw error;
       }

@@ -7,46 +7,31 @@ import packageInfo from "../../../package.json";
 import { Menu, Tray } from "electron";
 import type { IComputedValue } from "mobx";
 import { autorun } from "mobx";
-import { showAbout } from "../menu/menu";
-import { checkForUpdates, isAutoUpdateEnabled } from "../app-updater";
-import type { WindowManager } from "../window-manager";
 import logger from "../logger";
-import { isDevelopment, isWindows, productName, staticFilesDirectory } from "../../common/vars";
-import { exitApp } from "../exit-app";
+import { isWindows } from "../../common/vars";
 import type { Disposer } from "../../common/utils";
-import { disposer, toJS } from "../../common/utils";
-import type { TrayMenuRegistration } from "./tray-menu-registration";
-import path from "path";
+import { disposer } from "../../common/utils";
+import type { TrayMenuItem } from "./tray-menu-item/tray-menu-item-injection-token";
+import { pipeline } from "@ogre-tools/fp";
+import { filter, isEmpty, map } from "lodash/fp";
 
-
-const TRAY_LOG_PREFIX = "[TRAY]";
+export const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
-export let tray: Tray;
-
-function getTrayIconPath(): string {
-  return path.resolve(
-    staticFilesDirectory,
-    isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-    "trayIconTemplate.png",
-  );
-}
+export let tray: Tray | null = null;
 
 export function initTray(
-  windowManager: WindowManager,
-  trayMenuItems: IComputedValue<TrayMenuRegistration[]>,
-  navigateToPreferences: () => void,
+  trayMenuItems: IComputedValue<TrayMenuItem[]>,
+  showApplicationWindow: () => Promise<void>,
+  trayIconPath: string,
 ): Disposer {
-  const icon = getTrayIconPath();
-
-  tray = new Tray(icon);
+  tray = new Tray(trayIconPath);
   tray.setToolTip(packageInfo.description);
   tray.setIgnoreDoubleClickEvents(true);
 
   if (isWindows) {
     tray.on("click", () => {
-      windowManager
-        .ensureMainWindow()
+      showApplicationWindow()
         .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
     });
   }
@@ -54,9 +39,11 @@ export function initTray(
   return disposer(
     autorun(() => {
       try {
-        const menu = createTrayMenu(windowManager, toJS(trayMenuItems.get()), navigateToPreferences);
+        const options = toTrayMenuOptions(trayMenuItems.get());
 
-        tray.setContextMenu(menu);
+        const menu = Menu.buildFromTemplate(options);
+
+        tray?.setContextMenu(menu);
       } catch (error) {
         logger.error(`${TRAY_LOG_PREFIX}: building failed`, { error });
       }
@@ -68,65 +55,45 @@ export function initTray(
   );
 }
 
-function getMenuItemConstructorOptions(trayItem: TrayMenuRegistration): Electron.MenuItemConstructorOptions {
-  return {
-    ...trayItem,
-    submenu: trayItem.submenu ? trayItem.submenu.map(getMenuItemConstructorOptions) : undefined,
-    click: trayItem.click ? () => {
-      trayItem.click(trayItem);
-    } : undefined,
-  };
-}
+const toTrayMenuOptions = (trayMenuItems: TrayMenuItem[]) => {
+  const _toTrayMenuOptions = (parentId: string | null) =>
+    pipeline(
+      trayMenuItems,
 
-function createTrayMenu(
-  windowManager: WindowManager,
-  extensionTrayItems: TrayMenuRegistration[],
-  navigateToPreferences: () => void,
-): Menu {
-  let template: Electron.MenuItemConstructorOptions[] = [
-    {
-      label: `Open ${productName}`,
-      click() {
-        windowManager
-          .ensureMainWindow()
-          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
-      },
-    },
-    {
-      label: "Preferences",
-      click() {
-        navigateToPreferences();
-      },
-    },
-  ];
+      filter((item) => item.parentId === parentId),
 
-  if (isAutoUpdateEnabled()) {
-    template.push({
-      label: "Check for updates",
-      click() {
-        checkForUpdates()
-          .then(() => windowManager.ensureMainWindow());
-      },
-    });
-  }
+      map(
+        (trayMenuItem: TrayMenuItem): Electron.MenuItemConstructorOptions => {
+          if (trayMenuItem.separator) {
+            return { id: trayMenuItem.id, type: "separator" };
+          }
 
-  template = template.concat(extensionTrayItems.map(getMenuItemConstructorOptions));
+          const childItems = _toTrayMenuOptions(trayMenuItem.id);
 
-  return Menu.buildFromTemplate(template.concat([
-    {
-      label: `About ${productName}`,
-      click() {
-        windowManager.ensureMainWindow()
-          .then(showAbout)
-          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to show Lens About view`, { error }));
-      },
-    },
-    { type: "separator" },
-    {
-      label: "Quit App",
-      click() {
-        exitApp();
-      },
-    },
-  ]));
-}
+          return {
+            id: trayMenuItem.id,
+            label: trayMenuItem.label?.get(),
+            enabled: trayMenuItem.enabled.get(),
+            toolTip: trayMenuItem.tooltip,
+
+            ...(isEmpty(childItems)
+              ? {
+                type: "normal",
+                submenu: _toTrayMenuOptions(trayMenuItem.id),
+
+                click: () => {
+                  trayMenuItem.click?.();
+                },
+              }
+              : {
+                type: "submenu",
+                submenu: _toTrayMenuOptions(trayMenuItem.id),
+              }),
+          };
+        },
+      ),
+    );
+
+  return _toTrayMenuOptions(null);
+};
+

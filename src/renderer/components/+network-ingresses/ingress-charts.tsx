@@ -5,23 +5,20 @@
 
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
-import type { ChartOptions, ChartPoint } from "chart.js";
-import type { IIngressMetrics, Ingress } from "../../../common/k8s-api/endpoints";
-import { BarChart, memoryOptions } from "../chart";
+import type { ChartDataSets } from "../chart";
+import { BarChart } from "../chart";
 import { normalizeMetrics, isMetricsEmpty } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import type { IResourceMetricsValue } from "../resource-metrics";
 import { ResourceMetricsContext } from "../resource-metrics";
-
-type IContext = IResourceMetricsValue<Ingress, { metrics: IIngressMetrics }>;
+import { type MetricsTab, metricTabOptions } from "../chart/options";
 
 export const IngressCharts = observer(() => {
-  const { params: { metrics }, tabId, object } = useContext<IContext>(ResourceMetricsContext);
-  const id = object.getId();
+  const { metrics, tab, object } = useContext(ResourceMetricsContext) ?? {};
 
-  if (!metrics) return null;
+  if (!metrics || !object || !tab) return null;
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
+  const id = object.getId();
   const values = Object.values(metrics)
     .map(normalizeMetrics)
     .map(({ data }) => data.result[0].values);
@@ -32,9 +29,8 @@ export const IngressCharts = observer(() => {
     responseDurationSeconds,
   ] = values;
 
-  const datasets = [
-    // Network
-    [
+  const datasets: Partial<Record<MetricsTab, ChartDataSets[]>> = {
+    Network: [
       {
         id: `${id}-bytesSentSuccess`,
         label: `Bytes sent, status 2xx`,
@@ -50,8 +46,7 @@ export const IngressCharts = observer(() => {
         data: bytesSentFailure.map(([x, y]) => ({ x, y })),
       },
     ],
-    // Duration
-    [
+    Duration: [
       {
         id: `${id}-requestDurationSeconds`,
         label: `Request`,
@@ -67,36 +62,13 @@ export const IngressCharts = observer(() => {
         data: responseDurationSeconds.map(([x, y]) => ({ x, y })),
       },
     ],
-  ];
-
-  const durationOptions: ChartOptions = {
-    scales: {
-      yAxes: [{
-        ticks: {
-          callback: value => value,
-        },
-      }],
-    },
-    tooltips: {
-      callbacks: {
-        label: ({ datasetIndex, index }, { datasets }) => {
-          const { label, data } = datasets[datasetIndex];
-          const value = data[index] as ChartPoint;
-          const chartTooltipSec = `sec`;
-
-          return `${label}: ${parseFloat(value.y as string).toFixed(3)} ${chartTooltipSec}`;
-        },
-      },
-    },
   };
-
-  const options = [memoryOptions, durationOptions];
 
   return (
     <BarChart
-      name={`${object.getName()}-metric-${tabId}`}
-      options={options[tabId]}
-      data={{ datasets: datasets[tabId] }}
+      name={`${object.getName()}-metric-${tab}`}
+      options={metricTabOptions[tab]}
+      data={{ datasets: datasets[tab] }}
     />
   );
 });

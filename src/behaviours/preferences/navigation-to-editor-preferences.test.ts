@@ -5,29 +5,12 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import type { UserStore } from "../../common/user-store";
-import themeStoreInjectable from "../../renderer/theme-store.injectable";
-import type { ThemeStore } from "../../renderer/theme.store";
 
 describe("preferences - navigation to editor preferences", () => {
   let applicationBuilder: ApplicationBuilder;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
-
-    applicationBuilder.beforeSetups(({ rendererDi }) => {
-      const userStoreStub = {
-        extensionRegistryUrl: { customUrl: "some-custom-url" },
-        editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
-      } as unknown as UserStore;
-
-      rendererDi.override(userStoreInjectable, () => userStoreStub);
-
-      const themeStoreStub = ({ themeOptions: [] }) as unknown as ThemeStore;
-
-      rendererDi.override(themeStoreInjectable, () => themeStoreStub);
-    });
   });
 
   describe("given in preferences, when rendered", () => {

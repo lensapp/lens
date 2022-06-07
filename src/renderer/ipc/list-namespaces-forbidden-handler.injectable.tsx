@@ -5,17 +5,19 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { ListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
-import { Notifications, notificationsStore } from "../components/notifications";
+import { Notifications } from "../components/notifications";
 import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { Button } from "../components/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";
+import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
 
 const listNamespacesForbiddenHandlerInjectable = getInjectable({
   id: "list-namespaces-forbidden-handler",
 
   instantiate: (di) => {
     const navigateToEntitySettings = di.inject(navigateToEntitySettingsInjectable);
+    const notificationsStore = di.inject(notificationsStoreInjectable);
 
     const notificationLastDisplayedAt = new Map<string, number>();
     const intervalBetweenNotifications = 1000 * 60; // 60s
@@ -28,7 +30,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
       const now = Date.now();
 
       if (
-        !notificationLastDisplayedAt.has(clusterId) ||
+        typeof lastDisplayedAt !== "number" ||
           now - lastDisplayedAt > intervalBetweenNotifications
       ) {
         notificationLastDisplayedAt.set(clusterId, now);
@@ -49,8 +51,9 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
           <div className="flex column gaps">
             <b>Add Accessible Namespaces</b>
             <p>
-          Cluster <b>{ClusterStore.getInstance().getById(clusterId).name}</b> does not have permissions to list namespaces.{" "}
-          Please add the namespaces you have access to.
+              {"Cluster "}
+              <b>{ClusterStore.getInstance().getById(clusterId)?.name ?? "<unknown cluster>"}</b>
+              {" does not have permissions to list namespaces. Please add the namespaces you have access to."}
             </p>
             <div className="flex gaps row align-left box grow">
               <Button

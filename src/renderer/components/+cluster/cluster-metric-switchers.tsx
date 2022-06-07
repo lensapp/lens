@@ -5,20 +5,25 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import { nodesStore } from "../+nodes/nodes.store";
+import type { NodeStore } from "../+nodes/store";
 import { cssNames } from "../../utils";
 import { Radio, RadioGroup } from "../radio";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
 import { MetricNodeRole, MetricType } from "./cluster-overview-store/cluster-overview-store";
 import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import nodeStoreInjectable from "../+nodes/store.injectable";
 
 interface Dependencies {
   clusterOverviewStore: ClusterOverviewStore;
+  nodeStore: NodeStore;
 }
 
-const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: Dependencies) => {
-  const { masterNodes, workerNodes } = nodesStore;
+const NonInjectedClusterMetricSwitchers = observer(({
+  clusterOverviewStore,
+  nodeStore,
+}: Dependencies) => {
+  const { masterNodes, workerNodes } = nodeStore;
   const metricsValues = clusterOverviewStore.getMetricsValues(clusterOverviewStore.metrics);
   const disableRoles = !masterNodes.length || !workerNodes.length;
   const disableMetrics = !metricsValues.length;
@@ -30,7 +35,7 @@ const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: De
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableRoles })}
           value={clusterOverviewStore.metricNodeRole}
-          onChange={(metric: MetricNodeRole) => clusterOverviewStore.metricNodeRole = metric}
+          onChange={metric => clusterOverviewStore.metricNodeRole = metric}
         >
           <Radio label="Master" value={MetricNodeRole.MASTER}/>
           <Radio label="Worker" value={MetricNodeRole.WORKER}/>
@@ -41,7 +46,7 @@ const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: De
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableMetrics })}
           value={clusterOverviewStore.metricType}
-          onChange={(value: MetricType) => clusterOverviewStore.metricType = value}
+          onChange={value => clusterOverviewStore.metricType = value}
         >
           <Radio label="CPU" value={MetricType.CPU}/>
           <Radio label="Memory" value={MetricType.MEMORY}/>
@@ -51,13 +56,10 @@ const NonInjectedClusterMetricSwitchers = observer(({ clusterOverviewStore }: De
   );
 });
 
-export const ClusterMetricSwitchers = withInjectables<Dependencies>(
-  NonInjectedClusterMetricSwitchers,
-
-  {
-    getProps: (di) => ({
-      clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
-    }),
-  },
-);
+export const ClusterMetricSwitchers = withInjectables<Dependencies>(NonInjectedClusterMetricSwitchers, {
+  getProps: (di) => ({
+    clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
+    nodeStore: di.inject(nodeStoreInjectable),
+  }),
+});
 

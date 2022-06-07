@@ -2,32 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
+import type { CronJobStore } from "../+workloads-cronjobs/store";
+import cronJobStoreInjectable from "../+workloads-cronjobs/store.injectable";
 import { CronJob } from "../../../common/k8s-api/endpoints";
-
-const spec = {
-  schedule: "test",
-  concurrencyPolicy: "test",
-  suspend: true,
-  jobTemplate: {
-    metadata: {},
-    spec: {
-      template: {
-        metadata: {},
-        spec: {
-          containers: [] as any,
-          restartPolicy: "restart",
-          terminationGracePeriodSeconds: 1,
-          dnsPolicy: "no",
-          hostPID: true,
-          schedulerName: "string",
-        },
-      },
-    },
-  },
-  successfulJobsHistoryLimit: 1,
-  failedJobsHistoryLimit: 1,
-};
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 
 const scheduledCronJob = new CronJob({
   apiVersion: "foo",
@@ -37,6 +16,30 @@ const scheduledCronJob = new CronJob({
     resourceVersion: "scheduledCronJob",
     uid: "scheduledCronJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1beta1/cronjobs/default/scheduledCronJob",
+  },
+  spec: {
+    schedule: "test",
+    concurrencyPolicy: "test",
+    suspend: false,
+    jobTemplate: {
+      metadata: {},
+      spec: {
+        template: {
+          metadata: {},
+          spec: {
+            containers: [],
+            restartPolicy: "restart",
+            terminationGracePeriodSeconds: 1,
+            dnsPolicy: "no",
+            hostPID: true,
+            schedulerName: "string",
+          },
+        },
+      },
+    },
+    successfulJobsHistoryLimit: 1,
+    failedJobsHistoryLimit: 1,
   },
 });
 
@@ -48,6 +51,30 @@ const suspendedCronJob = new CronJob({
     resourceVersion: "suspendedCronJob",
     uid: "suspendedCronJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1beta1/cronjobs/default/suspendedCronJob",
+  },
+  spec: {
+    schedule: "test",
+    concurrencyPolicy: "test",
+    suspend: true,
+    jobTemplate: {
+      metadata: {},
+      spec: {
+        template: {
+          metadata: {},
+          spec: {
+            containers: [],
+            restartPolicy: "restart",
+            terminationGracePeriodSeconds: 1,
+            dnsPolicy: "no",
+            hostPID: true,
+            schedulerName: "string",
+          },
+        },
+      },
+    },
+    successfulJobsHistoryLimit: 1,
+    failedJobsHistoryLimit: 1,
   },
 });
 
@@ -59,15 +86,44 @@ const otherSuspendedCronJob = new CronJob({
     resourceVersion: "otherSuspendedCronJob",
     uid: "otherSuspendedCronJob",
     namespace: "default",
+    selfLink: "/apis/batch/v1beta1/cronjobs/default/otherSuspendedCronJob",
+  },
+  spec: {
+    schedule: "test",
+    concurrencyPolicy: "test",
+    suspend: true,
+    jobTemplate: {
+      metadata: {},
+      spec: {
+        template: {
+          metadata: {},
+          spec: {
+            containers: [],
+            restartPolicy: "restart",
+            terminationGracePeriodSeconds: 1,
+            dnsPolicy: "no",
+            hostPID: true,
+            schedulerName: "string",
+          },
+        },
+      },
+    },
+    successfulJobsHistoryLimit: 1,
+    failedJobsHistoryLimit: 1,
   },
 });
 
-scheduledCronJob.spec = { ...spec };
-suspendedCronJob.spec = { ...spec };
-otherSuspendedCronJob.spec = { ...spec };
-scheduledCronJob.spec.suspend = false;
-
 describe("CronJob Store tests", () => {
+  let cronJobStore: CronJobStore;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    cronJobStore = di.inject(cronJobStoreInjectable);
+  });
+
   it("gets CronJob statuses in proper sorting order", () => {
     const statuses = Object.entries(cronJobStore.getStatuses([
       suspendedCronJob,

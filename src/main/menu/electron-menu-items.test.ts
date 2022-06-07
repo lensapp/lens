@@ -16,7 +16,7 @@ describe("electron-menu-items", () => {
   let electronMenuItems: IComputedValue<MenuRegistration[]>;
   let extensionsStub: ObservableMap<string, LensMainExtension>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     extensionsStub = new ObservableMap();
@@ -25,8 +25,6 @@ describe("electron-menu-items", () => {
       mainExtensionsInjectable,
       () => computed(() => [...extensionsStub.values()]),
     );
-
-    await di.runSetups();
 
     electronMenuItems = di.inject(electronMenuItemsInjectable);
   });
@@ -109,7 +107,7 @@ class SomeTestExtension extends LensMainExtension {
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: id, version: "some-version" },
+      manifest: { name: id, version: "some-version", engines: { lens: "^5.5.0" }},
       manifestPath: "irrelevant",
     });
 

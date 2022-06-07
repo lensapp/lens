@@ -9,11 +9,60 @@ import type { ReactNode } from "react";
 import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
-import { autoBind, cssNames } from "../../utils";
-import type { TooltipDecoratorProps } from "../tooltip";
+import { cssNames } from "../../utils";
 import { withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
-import { decode } from "../../../common/utils/base64";
+import Configuration from "./configuration.svg";
+import Crane from "./crane.svg";
+import Group from "./group.svg";
+import Helm from "./helm.svg";
+import Install from "./install.svg";
+import Kube from "./kube.svg";
+import LensLogo from "./lens-logo.svg";
+import License from "./license.svg";
+import LogoLens from "./logo-lens.svg";
+import Logout from "./logout.svg";
+import Nodes from "./nodes.svg";
+import PushOff from "./push_off.svg";
+import PushPin from "./push_pin.svg";
+import Spinner from "./spinner.svg";
+import Ssh from "./ssh.svg";
+import Storage from "./storage.svg";
+import Terminal from "./terminal.svg";
+import User from "./user.svg";
+import Users from "./users.svg";
+import Wheel from "./wheel.svg";
+import Workloads from "./workloads.svg";
+
+/**
+ * Mapping between the local file names and the svgs
+ *
+ * Because we only really want a fixed list of bundled icons, this is safer so that consumers of
+ * `<Icon>` cannot pass in a `../some/path`.
+ */
+const localSvgIcons = new Map([
+  ["configuration", Configuration],
+  ["crane", Crane],
+  ["group", Group],
+  ["helm", Helm],
+  ["install", Install],
+  ["kube", Kube],
+  ["lens-logo", LensLogo],
+  ["license", License],
+  ["logo-lens", LogoLens],
+  ["logout", Logout],
+  ["nodes", Nodes],
+  ["push_off", PushOff],
+  ["push_pin", PushPin],
+  ["spinner", Spinner],
+  ["ssh", Ssh],
+  ["storage", Storage],
+  ["terminal", Terminal],
+  ["user", User],
+  ["users", Users],
+  ["wheel", Wheel],
+  ["workloads", Workloads],
+]);
 
 export interface BaseIconProps {
    /**
@@ -22,7 +71,28 @@ export interface BaseIconProps {
   material?: string;
 
   /**
-   * Either an SVG data URL or one of the following strings
+   * Either an SVG XML or one of the following names
+   * - configuration
+   * - crane
+   * - group
+   * - helm
+   * - install
+   * - kube
+   * - lens-logo
+   * - license
+   * - logo-lens
+   * - logout
+   * - nodes
+   * - push_off
+   * - push_pin
+   * - spinner
+   * - ssh
+   * - storage
+   * - terminal
+   * - user
+   * - users
+   * - wheel
+   * - workloads
    */
   svg?: string;
 
@@ -76,121 +146,113 @@ export interface BaseIconProps {
   disabled?: boolean;
 }
 
-export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps, BaseIconProps {}
+export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {}
 
-@withTooltip
-export class Icon extends React.PureComponent<IconProps> {
-  private readonly ref = createRef<HTMLAnchorElement>();
+export function isSvg(content: string): boolean {
+  // source code of the asset
+  return String(content).includes("<svg");
+}
 
-  static defaultProps: IconProps = {
-    focusable: true,
+const RawIcon = withTooltip((props: IconProps) => {
+  const ref = createRef<HTMLAnchorElement>();
+
+  const {
+  // skip passing props to icon's html element
+    className, href, link, material, svg, size, smallest, small, big,
+    disabled, sticker, active,
+    focusable = true,
+    children,
+    interactive, onClick, onKeyDown,
+    ...elemProps
+  } = props;
+  const isInteractive = interactive ?? !!(onClick || href || link);
+
+  const boundOnClick = (event: React.MouseEvent) => {
+    if (!disabled) {
+      onClick?.(event);
+    }
   };
-
-  static isSvg(content: string) {
-    return String(content).includes("svg+xml"); // data-url for raw svg-icon
-  }
-
-  constructor(props: IconProps) {
-    super(props);
-    autoBind(this);
-  }
-
-  get isInteractive() {
-    const { interactive, onClick, href, link } = this.props;
-
-    return interactive ?? !!(onClick || href || link);
-  }
-
-  onClick(evt: React.MouseEvent) {
-    if (this.props.disabled) {
-      return;
-    }
-
-    if (this.props.onClick) {
-      this.props.onClick(evt);
-    }
-  }
-
-  onKeyDown(evt: React.KeyboardEvent<any>) {
-    switch (evt.nativeEvent.code) {
+  const boundOnKeyDown = (event: React.KeyboardEvent<any>) => {
+    switch (event.nativeEvent.code) {
       case "Space":
 
-      // fallthrough
+        // fallthrough
       case "Enter": {
-        this.ref.current?.click();
-        evt.preventDefault();
+        ref.current?.click();
+        event.preventDefault();
         break;
       }
     }
 
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(evt);
-    }
-  }
+    onKeyDown?.(event);
+  };
 
-  render() {
-    const { isInteractive } = this;
-    const {
-      // skip passing props to icon's html element
-      className, href, link, material, svg, size, smallest, small, big,
-      disabled, sticker, active, focusable, children,
-      interactive: _interactive,
-      onClick: _onClick,
-      onKeyDown: _onKeyDown,
-      ...elemProps
-    } = this.props;
+  let iconContent: ReactNode;
+  const iconProps: Partial<IconProps> = {
+    className: cssNames("Icon", className,
+      { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },
+      !size ? { smallest, small, big } : {},
+    ),
+    onClick: isInteractive ? boundOnClick : undefined,
+    onKeyDown: isInteractive ? boundOnKeyDown : undefined,
+    tabIndex: isInteractive && focusable && !disabled ? 0 : undefined,
+    style: size ? { "--size": size + (isNumber(size) ? "px" : "") } as React.CSSProperties : undefined,
+    ...elemProps,
+  };
 
-    let iconContent: ReactNode;
-    const iconProps: Partial<IconProps> = {
-      className: cssNames("Icon", className,
-        { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },
-        !size ? { smallest, small, big } : {},
-      ),
-      onClick: isInteractive ? this.onClick : undefined,
-      onKeyDown: isInteractive ? this.onKeyDown : undefined,
-      tabIndex: isInteractive && focusable && !disabled ? 0 : undefined,
-      style: size ? { "--size": size + (isNumber(size) ? "px" : "") } as React.CSSProperties : undefined,
-      ...elemProps,
-    };
+  // render as inline svg-icon
+  if (typeof svg === "string") {
+    const svgIconText = isSvg(svg)
+      ? svg
+      : localSvgIcons.get(svg) ?? "";
 
-    // render as inline svg-icon
-    if (typeof svg === "string") {
-      const dataUrlPrefix = "data:image/svg+xml;base64,";
-      const svgIconDataUrl = svg.startsWith(dataUrlPrefix) ? svg : require(`./${svg}.svg`);
-      const svgIconText = typeof svgIconDataUrl == "string" // decode xml from data-url
-        ? decode(svgIconDataUrl.replace(dataUrlPrefix, "")) : "";
-
-      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }} />;
-    }
-
-    // render as material-icon
-    if (typeof material === "string") {
-      iconContent = <span className="icon" data-icon-name={material}>{material}</span>;
-    }
-
-    // wrap icon's content passed from decorator
-    iconProps.children = (
-      <>
-        {iconContent}
-        {children}
-      </>
+    iconContent = (
+      <span
+        className="icon"
+        dangerouslySetInnerHTML={{ __html: svgIconText }}
+      />
     );
-
-    // render icon type
-    if (link) {
-      const { className, children } = iconProps;
-
-      return (
-        <NavLink className={className} to={link} ref={this.ref}>
-          {children}
-        </NavLink>
-      );
-    }
-
-    if (href) {
-      return <a {...iconProps} href={href} ref={this.ref} />;
-    }
-
-    return <i {...iconProps} ref={this.ref} />;
   }
-}
+
+  // render as material-icon
+  if (typeof material === "string") {
+    iconContent = <span className="icon" data-icon-name={material}>{material}</span>;
+  }
+
+  // wrap icon's content passed from decorator
+  iconProps.children = (
+    <>
+      {iconContent}
+      {children}
+    </>
+  );
+
+  // render icon type
+  if (link) {
+    const { className, children } = iconProps;
+
+    return (
+      <NavLink
+        className={className}
+        to={link}
+        ref={ref}
+      >
+        {children}
+      </NavLink>
+    );
+  }
+
+  if (href) {
+    return (
+      <a
+        {...iconProps}
+        href={href}
+        ref={ref}
+      />
+    );
+  }
+
+  return <i {...iconProps} ref={ref} />;
+});
+
+export const Icon = Object.assign(RawIcon, { isSvg });

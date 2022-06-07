@@ -10,6 +10,7 @@ import { cssNames } from "../../utils";
 
 export interface DrawerParamTogglerProps {
   label: string | number;
+  children: React.ReactNode | React.ReactNode[];
 }
 
 interface State {
@@ -37,7 +38,9 @@ export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps,
             <Icon material={icon}/>
           </div>
         </div>
-        <div className={cssNames("param-content", { open })}>{children}</div>
+        <div className={cssNames("param-content", { open })}>
+          {children}
+        </div>
       </div>
     );
   }

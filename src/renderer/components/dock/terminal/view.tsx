@@ -10,11 +10,13 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../../utils";
 import type { Terminal } from "./terminal";
 import type { TerminalStore } from "./store";
-import { ThemeStore } from "../../../theme.store";
+import type { ThemeStore } from "../../../themes/store";
 import type { DockTab, DockStore } from "../dock/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "../dock/store.injectable";
 import terminalStoreInjectable from "./store.injectable";
+import assert from "assert";
+import themeStoreInjectable from "../../../themes/store.injectable";
 
 export interface TerminalWindowProps {
   tab: DockTab;
@@ -23,17 +25,22 @@ export interface TerminalWindowProps {
 interface Dependencies {
   dockStore: DockStore;
   terminalStore: TerminalStore;
+  themeStore: ThemeStore;
 }
 
 @observer
 class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & Dependencies> {
-  public elem: HTMLElement;
-  public terminal: Terminal;
+  public elem: HTMLElement | null = null;
+  public terminal!: Terminal;
 
   componentDidMount() {
     this.props.terminalStore.connect(this.props.tab);
-    this.terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
-    this.terminal.attachTo(this.elem);
+    const terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
+
+    assert(terminal, "Terminal must be created for tab before mounting");
+    this.terminal = terminal;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.terminal.attachTo(this.elem!);
 
     disposeOnUnmount(this, [
       // refresh terminal available space (cols/rows) when <Dock/> resized
@@ -46,8 +53,12 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
   componentDidUpdate(): void {
     this.terminal.detach();
     this.props.terminalStore.connect(this.props.tab);
-    this.terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
-    this.terminal.attachTo(this.elem);
+    const terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
+
+    assert(terminal, "Terminal must be created for tab before mounting");
+    this.terminal = terminal;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.terminal.attachTo(this.elem!);
   }
 
   componentWillUnmount(): void {
@@ -57,7 +68,7 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
   render() {
     return (
       <div
-        className={cssNames("TerminalWindow", ThemeStore.getInstance().activeTheme.type)}
+        className={cssNames("TerminalWindow", this.props.themeStore.activeTheme.type)}
         ref={elem => this.elem = elem}
       />
     );
@@ -66,9 +77,10 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
 
 export const TerminalWindow = withInjectables<Dependencies, TerminalWindowProps>(NonInjectedTerminalWindow, {
   getProps: (di, props) => ({
+    ...props,
     dockStore: di.inject(dockStoreInjectable),
     terminalStore: di.inject(terminalStoreInjectable),
-    ...props,
+    themeStore: di.inject(themeStoreInjectable),
   }),
 });
 

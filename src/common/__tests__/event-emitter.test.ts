@@ -21,7 +21,7 @@ describe("EventEmitter", () => {
     let called = false;
     const e = new EventEmitter<[]>();
 
-    e.addListener(() => 0 as any, {});
+    e.addListener(() => 0 as never, {});
     e.addListener(() => { called = true; }, {});
     e.emit();
 

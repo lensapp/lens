@@ -6,23 +6,21 @@
 import "./crd-list.scss";
 
 import React from "react";
-import { computed, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { stopPropagation } from "../../utils";
+import { iter, stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { crdStore } from "./crd.store";
-import type { SelectOption } from "../select";
+import { customResourceDefinitionStore } from "./legacy-store";
 import { Select } from "../select";
-import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";
 import { KubeObjectAge } from "../kube-object/age";
 import { TabLayout } from "../layout/tab-layout-2";
-
-export const crdGroupsUrlParam = createPageParam<string[]>({
-  name: "groups",
-  defaultValue: [],
-});
+import type { PageParam } from "../../navigation";
+import type { CustomResourceDefinitionStore } from "./definition.store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import crdGroupsUrlParamInjectable from "./crd-groups-url-param.injectable";
+import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
 
 enum columnId {
   kind = "kind",
@@ -32,49 +30,67 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  crdGroupsUrlParam: PageParam<string[]>;
+  customResourceDefinitionStore: CustomResourceDefinitionStore;
+}
+
 @observer
-export class CustomResourceDefinitions extends React.Component {
-  constructor(props: {}) {
+class NonInjectedCustomResourceDefinitions extends React.Component<Dependencies> {
+  private readonly selectedGroups = observable.set(this.props.crdGroupsUrlParam.get());
+
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  get selectedGroups(): string[] {
-    return crdGroupsUrlParam.get();
-  }
-
   @computed get items() {
-    if (this.selectedGroups.length) {
-      return crdStore.items.filter(item => this.selectedGroups.includes(item.getGroup()));
+    if (this.selectedGroups.size) {
+      return this.props.customResourceDefinitionStore.items.filter(item => this.selectedGroups.has(item.getGroup()));
     }
 
-    return crdStore.items; // show all by default
+    return this.props.customResourceDefinitionStore.items; // show all by default
   }
 
-  toggleSelection(group: string) {
-    const groups = new Set(crdGroupsUrlParam.get());
+  @computed get groupSelectOptions() {
+    return Object.keys(this.props.customResourceDefinitionStore.groups)
+      .map(group => ({
+        value: group,
+        label: group,
+        isSelected: this.selectedGroups.has(group),
+      }));
+  }
 
-    if (groups.has(group)) {
-      groups.delete(group);
-    } else {
-      groups.add(group);
+  toggleSelection = (options: readonly ({ value: string })[]) => {
+    const groups = options.map(({ value }) => value);
+
+    this.selectedGroups.replace(groups);
+    this.props.crdGroupsUrlParam.set(groups);
+  };
+
+  private getPlaceholder() {
+    if (this.selectedGroups.size === 0)  {
+      return "All groups";
     }
-    crdGroupsUrlParam.set([...groups]);
+
+    const prefix = this.selectedGroups.size === 1
+      ? "Group"
+      : "Groups";
+
+    return `${prefix}: ${iter.join(this.selectedGroups.values(), ", ")}`;
   }
 
   render() {
-    const { items, selectedGroups } = this;
-
     return (
       <TabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="crd"
           className="CrdList"
-          store={crdStore}
-          // Don't subscribe the `crdStore` because <Sidebar> already has and is always mounted
+          store={customResourceDefinitionStore}
+          // Don't subscribe the `customResourceDefinitionStore` because <Sidebar> already has and is always mounted
           subscribeStores={false}
-          items={items}
+          items={this.items}
           sortingCallbacks={{
             [columnId.kind]: crd => crd.getResourceKind(),
             [columnId.group]: crd => crd.getGroup(),
@@ -90,42 +106,38 @@ export class CustomResourceDefinitions extends React.Component {
             crd => -crd.getCreationTimestamp(),
           ]}
           renderHeaderTitle="Custom Resources"
-          customizeHeader={({ filters, ...headerPlaceholders }) => {
-            let placeholder = <>All groups</>;
-
-            if (selectedGroups.length == 1) placeholder = <>Group: {selectedGroups[0]}</>;
-            if (selectedGroups.length >= 2) placeholder = <>Groups: {selectedGroups.join(", ")}</>;
-
-            return {
-              // todo: move to global filters
-              filters: (
-                <>
-                  {filters}
-                  <Select
-                    id="crd-input"
-                    className="group-select"
-                    placeholder={placeholder}
-                    options={Object.keys(crdStore.groups)}
-                    onChange={({ value: group }: SelectOption) => this.toggleSelection(group)}
-                    closeMenuOnSelect={false}
-                    controlShouldRenderValue={false}
-                    formatOptionLabel={({ value: group }: SelectOption) => {
-                      const isSelected = selectedGroups.includes(group);
-
-                      return (
-                        <div className="flex gaps align-center">
-                          <Icon small material="folder"/>
-                          <span>{group}</span>
-                          {isSelected && <Icon small material="check" className="box right"/>}
-                        </div>
-                      );
-                    }}
-                  />
-                </>
-              ),
-              ...headerPlaceholders,
-            };
-          }}
+          customizeHeader={({ filters, ...headerPlaceholders }) => ({
+            // todo: move to global filters
+            filters: (
+              <>
+                {filters}
+                <Select
+                  id="crd-input"
+                  className="group-select"
+                  placeholder={this.getPlaceholder()}
+                  options={this.groupSelectOptions}
+                  onChange={this.toggleSelection}
+                  closeMenuOnSelect={false}
+                  controlShouldRenderValue={false}
+                  isMulti={true}
+                  formatOptionLabel={({ value, isSelected }) => (
+                    <div className="flex gaps align-center">
+                      <Icon small material="folder" />
+                      <span>{value}</span>
+                      {isSelected && (
+                        <Icon
+                          small
+                          material="check"
+                          className="box right"
+                        />
+                      )}
+                    </div>
+                  )}
+                />
+              </>
+            ),
+            ...headerPlaceholders,
+          })}
           renderTableHeader={[
             { title: "Resource", className: "kind", sortBy: columnId.kind, id: columnId.kind },
             { title: "Group", className: "group", sortBy: columnId.group, id: columnId.group },
@@ -134,7 +146,11 @@ export class CustomResourceDefinitions extends React.Component {
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
           renderTableContents={crd => [
-            <Link key="link" to={crd.getResourceUrl()} onClick={stopPropagation}>
+            <Link
+              key="link"
+              to={crd.getResourceUrl()}
+              onClick={stopPropagation}
+            >
               {crd.getResourceKind()}
             </Link>,
             crd.getGroup(),
@@ -147,3 +163,11 @@ export class CustomResourceDefinitions extends React.Component {
     );
   }
 }
+
+export const CustomResourceDefinitions = withInjectables<Dependencies>(NonInjectedCustomResourceDefinitions, {
+  getProps: (di, props) => ({
+    ...props,
+    crdGroupsUrlParam: di.inject(crdGroupsUrlParamInjectable),
+    customResourceDefinitionStore: di.inject(customResourceDefinitionStoreInjectable),
+  }),
+});

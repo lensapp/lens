@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import catalogEntityRegistryInjectable from "../catalog/catalog-entity-registry.injectable";
+import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 import { generalCatalogEntityInjectionToken } from "../../common/catalog-entities/general-catalog-entities/general-catalog-entity-injection-token";
 import { computed } from "mobx";
 

@@ -8,6 +8,8 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import requestAnimationFrameInjectable from "./request-animation-frame.injectable";
 
 export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
 
@@ -18,11 +20,16 @@ export interface AnimateProps {
   onLeave?: () => void;
   enterDuration?: number;
   leaveDuration?: number;
+  children?: React.ReactNode;
+}
+
+interface Dependencies {
+  requestAnimationFrame: (callback: () => void) => void;
 }
 
 @observer
-export class Animate extends React.Component<AnimateProps> {
-  static defaultProps: AnimateProps = {
+class DefaultedAnimate extends React.Component<AnimateProps & Dependencies & typeof DefaultedAnimate.defaultProps> {
+  static defaultProps = {
     name: "opacity",
     enter: true,
     onEnter: noop,
@@ -37,7 +44,7 @@ export class Animate extends React.Component<AnimateProps> {
     leave: false,
   };
 
-  constructor(props: AnimateProps) {
+  constructor(props: AnimateProps & Dependencies & typeof DefaultedAnimate.defaultProps) {
     super(props);
     makeObservable(this);
   }
@@ -68,7 +75,8 @@ export class Animate extends React.Component<AnimateProps> {
 
   enter() {
     this.isVisible = true; // triggers render() to apply css-animation in existing dom
-    requestAnimationFrame(() => {
+
+    this.props.requestAnimationFrame(() => {
       this.statusClassName.enter = true;
       this.props.onEnter();
     });
@@ -113,3 +121,18 @@ export class Animate extends React.Component<AnimateProps> {
     });
   }
 }
+
+export const NonInjectedAnimate = (props: AnimateProps & Dependencies) => <DefaultedAnimate {...props} />;
+
+export const Animate = withInjectables<Dependencies, AnimateProps>(
+  NonInjectedAnimate,
+
+  {
+    getProps: (di, props) => ({
+      requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
+      ...props,
+    }),
+  },
+);
+
+

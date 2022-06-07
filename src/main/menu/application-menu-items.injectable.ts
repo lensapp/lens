@@ -3,30 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { checkForUpdates } from "../app-updater";
 import { docsUrl, productName, supportUrl } from "../../common/vars";
-import { exitApp } from "../exit-app";
 import { broadcastMessage } from "../../common/ipc";
 import { openBrowser } from "../../common/utils";
-import { showAbout } from "./menu";
-import windowManagerInjectable from "../window-manager.injectable";
 import type { MenuItemConstructorOptions } from "electron";
-import {
-  webContents,
-} from "electron";
+import { webContents } from "electron";
 import loggerInjectable from "../../common/logger.injectable";
 import appNameInjectable from "../app-paths/app-name/app-name.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
-import isAutoUpdateEnabledInjectable from "../is-auto-update-enabled.injectable";
+import updatingIsEnabledInjectable from "../application-update/updating-is-enabled.injectable";
 import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import navigateToExtensionsInjectable from "../../common/front-end-routing/routes/extensions/navigate-to-extensions.injectable";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToWelcomeInjectable from "../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 import navigateToAddClusterInjectable from "../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
+import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
 import { computed } from "mobx";
+import showAboutInjectable from "./show-about.injectable";
+import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
+import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
+import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
+import processCheckingForUpdatesInjectable from "../application-update/check-for-updates/process-checking-for-updates.injectable";
 
-function ignoreIf(check: boolean, menuItems: MenuItemConstructorOptions[]) {
+function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
 }
 
@@ -41,24 +41,23 @@ const applicationMenuItemsInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const appName = di.inject(appNameInjectable);
     const isMac = di.inject(isMacInjectable);
-    const isAutoUpdateEnabled = di.inject(isAutoUpdateEnabledInjectable);
+    const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
+    const showAbout = di.inject(showAboutInjectable);
+    const applicationWindow = di.inject(applicationWindowInjectable);
+    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
+    const reloadApplicationWindow = di.inject(reloadWindowInjectable, applicationWindow);
+    const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
+    const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
+    const navigateToCatalog = di.inject(navigateToCatalogInjectable);
+    const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
+    const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
+    const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
+    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
+
+    logger.info(`[MENU]: autoUpdateEnabled=${updatingIsEnabled}`);
 
     return computed((): MenuItemOpts[] => {
-
-      // TODO: These injects should happen outside of the computed.
-      // TODO: Remove temporal dependencies in WindowManager to make sure timing is correct.
-      const windowManager = di.inject(windowManagerInjectable);
-      const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
-      const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
-      const navigateToCatalog = di.inject(navigateToCatalogInjectable);
-      const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
-      const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
-
-      const autoUpdateDisabled = !isAutoUpdateEnabled();
-
-      logger.info(`[MENU]: autoUpdateDisabled=${autoUpdateDisabled}`);
-
       const macAppMenu: MenuItemOpts = {
         label: appName,
         id: "root",
@@ -70,11 +69,11 @@ const applicationMenuItemsInjectable = getInjectable({
               showAbout();
             },
           },
-          ...ignoreIf(autoUpdateDisabled, [
+          ...ignoreIf(!updatingIsEnabled, [
             {
               label: "Check for updates",
               click() {
-                checkForUpdates().then(() => windowManager.ensureMainWindow());
+                processCheckingForUpdates().then(() => showApplicationWindow());
               },
             },
           ]),
@@ -107,7 +106,7 @@ const applicationMenuItemsInjectable = getInjectable({
             accelerator: "Cmd+Q",
             id: "quit",
             click() {
-              exitApp();
+              stopServicesAndExitApp();
             },
           },
         ],
@@ -142,26 +141,21 @@ const applicationMenuItemsInjectable = getInjectable({
               },
             },
           ]),
-
           { type: "separator" },
-
-          ...(isMac
-            ? ([
-              {
-                role: "close",
-                label: "Close Window",
-                accelerator: "Shift+Cmd+W",
-              },
-            ] as MenuItemConstructorOptions[])
-            : []),
-
+          ...ignoreIf(!isMac, [
+            {
+              role: "close",
+              label: "Close Window",
+              accelerator: "Shift+Cmd+W",
+            },
+          ]),
           ...ignoreIf(isMac, [
             {
               label: "Exit",
               accelerator: "Alt+F4",
               id: "quit",
               click() {
-                exitApp();
+                stopServicesAndExitApp();
               },
             },
           ]),
@@ -238,7 +232,7 @@ const applicationMenuItemsInjectable = getInjectable({
             accelerator: "CmdOrCtrl+R",
             id: "reload",
             click() {
-              windowManager.reload();
+              reloadApplicationWindow();
             },
           },
           { role: "toggleDevTools" },
@@ -287,12 +281,12 @@ const applicationMenuItemsInjectable = getInjectable({
                 showAbout();
               },
             },
-            ...ignoreIf(autoUpdateDisabled, [
+            ...ignoreIf(!updatingIsEnabled, [
               {
                 label: "Check for updates",
                 click() {
-                  checkForUpdates().then(() =>
-                    windowManager.ensureMainWindow(),
+                  processCheckingForUpdates().then(() =>
+                    showApplicationWindow(),
                   );
                 },
               },
@@ -311,7 +305,9 @@ const applicationMenuItemsInjectable = getInjectable({
 
       // Modify menu from extensions-api
       for (const menuItem of electronMenuItems.get()) {
-        if (!appMenu.has(menuItem.parentId)) {
+        const parentMenu = appMenu.get(menuItem.parentId);
+
+        if (!parentMenu) {
           logger.error(
             `[MENU]: cannot register menu item for parentId=${menuItem.parentId}, parent item doesn't exist`,
             { menuItem },
@@ -320,7 +316,7 @@ const applicationMenuItemsInjectable = getInjectable({
           continue;
         }
 
-        appMenu.get(menuItem.parentId).submenu.push(menuItem);
+        (parentMenu.submenu ??= []).push(menuItem);
       }
 
       if (!isMac) {

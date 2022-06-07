@@ -9,7 +9,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
-import type { ClusterRoleBinding, ClusterRoleBindingSubject } from "../../../../common/k8s-api/endpoints";
+import type { ClusterRoleBinding } from "../../../../common/k8s-api/endpoints";
 import { autoBind, ObservableHashSet, prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
@@ -17,8 +17,8 @@ import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingsStore } from "./store";
-import { hashClusterRoleBindingSubject } from "./hashers";
+import { clusterRoleBindingStore } from "./legacy-store";
+import { hashSubject } from "../hashers";
 import type { OpenConfirmDialog } from "../../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../../confirm-dialog/open.injectable";
@@ -32,7 +32,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBindingDetailsProps & Dependencies> {
-  selectedSubjects = new ObservableHashSet<ClusterRoleBindingSubject>([], hashClusterRoleBindingSubject);
+  selectedSubjects = new ObservableHashSet([], hashSubject);
 
   constructor(props: ClusterRoleBindingDetailsProps & Dependencies) {
     super(props);
@@ -52,10 +52,14 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
     const { selectedSubjects } = this;
 
     openConfirmDialog({
-      ok: () => clusterRoleBindingsStore.removeSubjects(clusterRoleBinding, selectedSubjects),
+      ok: () => clusterRoleBindingStore.removeSubjects(clusterRoleBinding, selectedSubjects),
       labelOk: `Remove`,
       message: (
-        <p>Remove selected bindings for <b>{clusterRoleBinding.getName()}</b>?</p>
+        <p>
+          Remove selected bindings for
+          <b>{clusterRoleBinding.getName()}</b>
+          ?
+        </p>
       ),
     });
   }
@@ -121,7 +125,7 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
 
         <AddRemoveButtons
           onAdd={() => ClusterRoleBindingDialog.open(clusterRoleBinding)}
-          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : null}
+          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : undefined}
           addTooltip={`Add bindings to ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
         />

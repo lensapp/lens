@@ -4,93 +4,90 @@
  */
 
 import "./radio.scss";
-import React from "react";
-import { cssNames } from "../../utils";
-import uniqueId from "lodash/uniqueId";
+import React, { useContext, useRef } from "react";
+import type { SingleOrMany } from "../../utils";
+import { cssNames, noop } from "../../utils";
 
-// todo: refactor with contexts
-
-export interface RadioGroupProps {
-  className?: any;
-  value?: any;
+export interface RadioGroupProps<T> {
+  className?: string;
+  value?: T;
   asButtons?: boolean;
   disabled?: boolean;
-  onChange?(value: string): void;
+  onChange: (value: T) => void;
+  children: SingleOrMany<React.ReactElement<RadioProps<T>>>;
 }
 
-export class RadioGroup extends React.Component<RadioGroupProps, {}> {
-  render() {
-    const name = uniqueId("radioGroup");
-    const { value, asButtons, disabled, onChange } = this.props;
-    let { className } = this.props;
-
-    className = cssNames("RadioGroup", { buttonsView: asButtons }, className);
-    const radios = React.Children.toArray(this.props.children) as React.ReactElement<RadioProps>[];
-
-    return (
-      <div className={className}>
-        {radios.map(radio => {
-          return React.cloneElement(radio, {
-            name,
-            disabled: disabled !== undefined ? disabled : radio.props.disabled,
-            checked: radio.props.value === value,
-            onChange,
-          } as any);
-        })}
-      </div>
-    );
-  }
+interface RadioGroupContext {
+  disabled: boolean;
+  value: any | undefined;
+  onSelect: (newValue: any) => void;
 }
 
-export type RadioProps = React.HTMLProps<any> & {
-  name?: string;
-  label?: React.ReactNode | any;
-  value?: any;
-  checked?: boolean;
-  disabled?: boolean;
-  onChange?(value: React.ChangeEvent<HTMLInputElement>): void;
-};
+const radioGroupContext = React.createContext<RadioGroupContext>({
+  disabled: false,
+  value: undefined,
+  onSelect: noop,
+});
 
-export class Radio extends React.Component<RadioProps> {
-  private elem: HTMLElement;
-
-  onChange = () => {
-    const { value, onChange, checked } = this.props;
-
-    if (!checked && onChange) {
-      onChange(value);
-    }
-  };
-
-  onKeyDown = (e: React.KeyboardEvent<any>) => {
-    const SPACE_KEY = e.keyCode === 32;
-    const ENTER_KEY = e.keyCode === 13;
-
-    if (SPACE_KEY || ENTER_KEY) {
-      this.elem.click();
-      e.preventDefault();
-    }
-  };
-
-  render() {
-    const { className, label, checked, children, ...inputProps } = this.props;
-    const componentClass = cssNames("Radio flex align-center", className, {
-      checked,
-      disabled: this.props.disabled,
-    });
-
-    return (
-      <label
-        className={componentClass}
-        tabIndex={!checked ? 0 : null}
-        onKeyDown={this.onKeyDown}
-        ref={e => this.elem = e}
-      >
-        <input {...inputProps} type="radio" checked={checked} onChange={this.onChange}/>
-        <i className="tick flex center"/>
-        {label ? <div className="label">{label}</div> : null}
+export function RadioGroup<T>({
+  value,
+  asButtons,
+  disabled = false,
+  onChange,
+  className,
+  children,
+}: RadioGroupProps<T>) {
+  return (
+    <div
+      className={cssNames("RadioGroup", { buttonsView: asButtons }, className)}
+    >
+      <radioGroupContext.Provider value={{ disabled, onSelect: onChange, value }}>
         {children}
-      </label>
-    );
-  }
+      </radioGroupContext.Provider>
+    </div>
+  );
+}
+
+export interface RadioProps<T> {
+  className?: string;
+  label: React.ReactNode;
+  value: T;
+  disabled?: boolean;
+}
+
+export function Radio<T>({
+  className,
+  label,
+  value,
+  disabled = false,
+}: RadioProps<T>) {
+  const ctx = useContext(radioGroupContext);
+  const ref = useRef<HTMLLabelElement | null>(null);
+  const checked = ctx.value === value;
+
+  return (
+    <label
+      className={cssNames("Radio flex align-center", className, {
+        checked,
+        disabled: disabled || ctx.disabled,
+      })}
+      tabIndex={checked ? undefined : 0}
+      onKeyDown={event => {
+        // Spacebar or Enter key
+        if (event.key === " " || event.key === "Enter") {
+          ref.current?.click();
+          event.preventDefault();
+        }
+      }}
+      ref={ref}
+    >
+      <input
+        type="radio"
+        checked={checked}
+        onChange={() => ctx.onSelect(value)}
+      />
+      <i className="tick flex center"/>
+      {label ? <div className="label">{label}</div> : null}
+    </label>
+  );
 }

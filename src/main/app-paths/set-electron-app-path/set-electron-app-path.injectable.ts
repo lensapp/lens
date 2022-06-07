@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { PathName } from "../../../common/app-paths/app-path-names";
-import electronAppInjectable from "../get-electron-app-path/electron-app/electron-app.injectable";
+import electronAppInjectable from "../../electron-app/electron-app.injectable";
 
 const setElectronAppPathInjectable = getInjectable({
   id: "set-electron-app-path",

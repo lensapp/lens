@@ -17,46 +17,48 @@ export interface NodeDetailsResourcesProps {
   type: "allocatable" | "capacity";
 }
 
-export class NodeDetailsResources extends React.Component<NodeDetailsResourcesProps> {
-  toMi(resource: string) {
-    if (resource?.endsWith("Ki")) {
-      return `${(parseInt(resource) / 1024).toFixed(1)}Mi`;
-    }
-
-    return resource;
+function toMi(resource: string | undefined) {
+  if (resource?.endsWith("Ki")) {
+    return `${(parseInt(resource) / 1024).toFixed(1)}Mi`;
   }
 
-  render() {
-    const status = this.props.node.status;
-    const type = this.props.type;
+  return resource;
+}
 
-    if (!status) return null;
+export function NodeDetailsResources({ type, node: { status = {}}}: NodeDetailsResourcesProps) {
+  const resourceStatus = status[type];
 
-    return (
-      <div className="NodeDetailsResources flex column">
-        <Table
-          selectable
-          scrollable={false}
-        >
-          <TableHead sticky={false}>
-            <TableCell className="cpu">CPU</TableCell>
-            <TableCell className="memory">Memory</TableCell>
-            <TableCell className="ephemeral-storage">Ephemeral Storage</TableCell>
-            <TableCell className="hugepages-1Gi">Hugepages-1Gi</TableCell>
-            <TableCell className="hugepages-2Mi">Hugepages-2Mi</TableCell>
-            <TableCell className="pods">Pods</TableCell>
-          </TableHead>
-          <TableRow>
-            <TableCell className="cpu">{status[type].cpu}</TableCell>
-            <TableCell className="memory">{this.toMi(status[type].memory)}</TableCell>
-            <TableCell
-              className="ephemeral-storage">{this.toMi(status[type]["ephemeral-storage"])}</TableCell>
-            <TableCell className="hugepages-1Gi">{status[type]["hugepages-1Gi"]}</TableCell>
-            <TableCell className="hugepages-2Mi">{status[type]["hugepages-2Mi"]}</TableCell>
-            <TableCell className="pods">{status[type].pods}</TableCell>
-          </TableRow>
-        </Table>
-      </div>
-    );
+  if (!resourceStatus) {
+    return null;
   }
+
+  return (
+    <div className="NodeDetailsResources flex column">
+      <Table
+        selectable
+        scrollable={false}
+      >
+        <TableHead sticky={false}>
+          <TableCell className="cpu">CPU</TableCell>
+          <TableCell className="memory">Memory</TableCell>
+          <TableCell className="ephemeral-storage">Ephemeral Storage</TableCell>
+          <TableCell className="hugepages-1Gi">Hugepages-1Gi</TableCell>
+          <TableCell className="hugepages-2Mi">Hugepages-2Mi</TableCell>
+          <TableCell className="pods">Pods</TableCell>
+        </TableHead>
+        <TableRow>
+          <TableCell className="cpu">{resourceStatus.cpu}</TableCell>
+          <TableCell className="memory">{toMi(resourceStatus.memory)}</TableCell>
+          <TableCell
+            className="ephemeral-storage"
+          >
+            {toMi(resourceStatus["ephemeral-storage"])}
+          </TableCell>
+          <TableCell className="hugepages-1Gi">{resourceStatus["hugepages-1Gi"]}</TableCell>
+          <TableCell className="hugepages-2Mi">{resourceStatus["hugepages-2Mi"]}</TableCell>
+          <TableCell className="pods">{resourceStatus.pods}</TableCell>
+        </TableRow>
+      </Table>
+    </div>
+  );
 }

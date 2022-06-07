@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`extensions - navigation using application menu renders 1`] = `<div />`;
+exports[`extensions - navigation using application menu renders 1`] = `
+<div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
 
 exports[`extensions - navigation using application menu when navigating to extensions using application menu renders 1`] = `
 <div>
@@ -23,9 +29,7 @@ exports[`extensions - navigation using application menu when navigating to exten
             class="notice mb-14 mt-3"
           >
             <p>
-              Add new features via Lens Extensions.
-               
-              Check out 
+              Add new features via Lens Extensions. Check out the 
               <a
                 href="https://docs.k8slens.dev/main//extensions/"
                 rel="noreferrer"
@@ -33,8 +37,7 @@ exports[`extensions - navigation using application menu when navigating to exten
               >
                 docs
               </a>
-               
-              and list of 
+               and list of 
               <a
                 href="https://github.com/lensapp/lens-extensions/blob/main/README.md"
                 rel="noreferrer"
@@ -121,5 +124,8 @@ exports[`extensions - navigation using application menu when navigating to exten
       </div>
     </div>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

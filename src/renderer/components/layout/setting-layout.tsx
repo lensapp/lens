@@ -69,7 +69,7 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
 
     if (evt.code === "Escape") {
       evt.stopPropagation();
-      this.props.back(evt);
+      this.props.back?.(evt);
     }
   };
 

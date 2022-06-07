@@ -10,7 +10,7 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddRoleDialog } from "./add-dialog";
-import { rolesStore } from "./store";
+import { roleStore } from "./legacy-store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 
@@ -29,7 +29,7 @@ export class Roles extends React.Component {
           isConfigurable
           tableId="access_roles"
           className="Roles"
-          store={rolesStore}
+          store={roleStore}
           sortingCallbacks={{
             [columnId.name]: role => role.getName(),
             [columnId.namespace]: role => role.getNs(),

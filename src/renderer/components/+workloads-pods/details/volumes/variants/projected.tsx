@@ -4,18 +4,21 @@
  */
 
 import React from "react";
+import { displayMode } from "../../../../../utils";
 import { DrawerItem, DrawerTitle } from "../../../../drawer";
 import type { VolumeVariantComponent } from "../variant-helpers";
 
 export const Projected: VolumeVariantComponent<"projected"> = (
   ({ variant: { sources, defaultMode }}) => (
     <>
-      <DrawerItem name="Default Mount Mode">
-          0o{defaultMode.toString(8)}
-      </DrawerItem>
+      {typeof defaultMode === "number" && (
+        <DrawerItem name="Default Mount Mode">
+          {displayMode(defaultMode)}
+        </DrawerItem>
+      )}
       <DrawerItem name="Sources">
         {
-          sources.map(({ secret, downwardAPI, configMap, serviceAccountToken }, index) => (
+          sources?.map(({ secret, downwardAPI, configMap, serviceAccountToken }, index) => (
             <React.Fragment key={index}>
               {secret && (
                 <>
@@ -25,9 +28,12 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                   </DrawerItem>
                   <DrawerItem name="Items">
                     <ul>
-                      {secret.items?.map(({ key, path }) => (
+                      {secret.items?.map(({ key, path, mode }) => (
                         <li key={key}>
-                          {key} ⇢ {path}
+                          {`${key}⇢${path}`}
+                          {typeof mode === "number" && (
+                            ` (${displayMode(mode)})`
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -58,7 +64,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                     <ul>
                       {configMap.items?.map(({ key, path }) => (
                         <li key={key}>
-                          {key} ⇢ {path}
+                          {`${key}⇢${path}`}
                         </li>
                       ))}
                     </ul>
@@ -72,7 +78,7 @@ export const Projected: VolumeVariantComponent<"projected"> = (
                     {serviceAccountToken.audience}
                   </DrawerItem>
                   <DrawerItem name="Expiration">
-                    {String(serviceAccountToken.expirationSeconds || (60*60 /* an hour */))}s
+                    {`${serviceAccountToken.expirationSeconds ?? 60*60 /* an hour */}s`}
                   </DrawerItem>
                   <DrawerItem name="Path">
                     {serviceAccountToken.path}

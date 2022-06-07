@@ -8,8 +8,8 @@ import "./hpa.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/hpa.api";
-import { hpaStore } from "./hpa.store";
+import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
+import { horizontalPodAutoscalerStore } from "./legacy-store";
 import { Badge } from "../badge";
 import { cssNames } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -38,7 +38,13 @@ export class HorizontalPodAutoscalers extends React.Component {
 
     const metricsRemain = metrics.length > 1 ? `+${metrics.length - 1} more...` : "";
 
-    return <p>{hpa.getMetricValues(metrics[0])} {metricsRemain}</p>;
+    return (
+      <p>
+        {hpa.getMetricValues(metrics[0])}
+        {" "}
+        {metricsRemain}
+      </p>
+    );
   }
 
   render() {
@@ -48,7 +54,7 @@ export class HorizontalPodAutoscalers extends React.Component {
           isConfigurable
           tableId="configuration_hpa"
           className="HorizontalPodAutoscalers"
-          store={hpaStore}
+          store={horizontalPodAutoscalerStore}
           sortingCallbacks={{
             [columnId.name]: hpa => hpa.getName(),
             [columnId.namespace]: hpa => hpa.getNs(),

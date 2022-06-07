@@ -3,18 +3,25 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { IMetrics, IMetricsReqParams } from "./metrics.api";
+import type { MetricData, IMetricsReqParams } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class ClusterApi extends KubeApi<Cluster> {
   static kind = "Cluster";
   static namespaced = true;
+
+  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
+    super({
+      ...opts,
+      objectConstructor: Cluster,
+    });
+  }
 }
 
-export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
+export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqParams): Promise<ClusterMetricData> {
   const nodes = nodeNames.join("|");
   const opts = { category: "cluster", nodes };
 
@@ -45,20 +52,19 @@ export enum ClusterStatus {
   ERROR = "Error",
 }
 
-export interface IClusterMetrics<T = IMetrics> {
-  [metric: string]: T;
-  memoryUsage: T;
-  memoryRequests: T;
-  memoryLimits: T;
-  memoryCapacity: T;
-  cpuUsage: T;
-  cpuRequests: T;
-  cpuLimits: T;
-  cpuCapacity: T;
-  podUsage: T;
-  podCapacity: T;
-  fsSize: T;
-  fsUsage: T;
+export interface ClusterMetricData extends Partial<Record<string, MetricData>> {
+  memoryUsage: MetricData;
+  memoryRequests: MetricData;
+  memoryLimits: MetricData;
+  memoryCapacity: MetricData;
+  cpuUsage: MetricData;
+  cpuRequests: MetricData;
+  cpuLimits: MetricData;
+  cpuCapacity: MetricData;
+  podUsage: MetricData;
+  podCapacity: MetricData;
+  fsSize: MetricData;
+  fsUsage: MetricData;
 }
 
 export interface Cluster {
@@ -107,18 +113,3 @@ export class Cluster extends KubeObject {
     return ClusterStatus.ACTIVE;
   }
 }
-
-/**
- * Only available within kubernetes cluster pages
- */
-let clusterApi: ClusterApi;
-
-if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
-  clusterApi = new ClusterApi({
-    objectConstructor: Cluster,
-  });
-}
-
-export {
-  clusterApi,
-};

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { LensExtensionManifest } from "../../../../../extensions/lens-extension";
-import { listTarEntries, readFileFromTar } from "../../../../../common/utils";
+import { hasTypedProperty, isObject, isString, listTarEntries, readFileFromTar } from "../../../../../common/utils";
 import { manifestFilename } from "../../../../../extensions/extension-discovery/extension-discovery";
 import path from "path";
 
@@ -31,17 +31,21 @@ export const validatePackage = async (
     throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
   }
 
-  const manifest = await readFileFromTar<LensExtensionManifest>({
+  const manifest = await readFileFromTar({
     tarPath: filePath,
     filePath: manifestLocation,
     parseJson: true,
   });
 
-  if (!manifest.main && !manifest.renderer) {
-    throw new Error(
-      `${manifestFilename} must specify "main" and/or "renderer" fields`,
-    );
+  if (
+    isObject(manifest)
+    && (
+      hasTypedProperty(manifest, "main", isString)
+      || hasTypedProperty(manifest, "renderer", isString)
+    )
+  ) {
+    return manifest as unknown as LensExtensionManifest;
   }
 
-  return manifest;
+  throw new Error(`${manifestFilename} must specify "main" and/or "renderer" fields`);
 };
