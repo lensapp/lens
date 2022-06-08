@@ -71,7 +71,7 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
     });
 
-    describe("given multiple extensions with and without specific preferences, when navigating to extension specific preferences page", () => {
+    describe("given multiple extensions with and without specific preferences", () => {
       beforeEach(async () => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
@@ -112,7 +112,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         expect(actual).not.toBeNull();
       });
 
-      it("link doesn't have 'active' class", () => {
+      it("link should not be active", () => {
         const actual = rendered.getByTestId("tab-link-for-extension-some-test-extension-id");
 
         expect(actual).not.toHaveClass("active");
@@ -145,7 +145,7 @@ describe("preferences - navigation to extension specific preferences", () => {
           expect(actual).toBeNull();
         });
 
-        it("link does have 'active' class", () => {
+        it("link is active", () => {
           const actual = rendered.getByTestId("tab-link-for-extension-some-test-extension-id");
 
           expect(actual).toHaveClass("active");
