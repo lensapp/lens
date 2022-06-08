@@ -102,7 +102,7 @@ describe("<PreferencesNavigation />", () => {
           fromExtension: true,
         },
         {
-          id: "extension-preferences-navigation-item-lensapp-pod-menu-id",
+          id: "extension-preferences-navigation-item-lensapp-pod-menu",
           label: "lensapp-pod-menu",
           isActive: computed(() => false),
           isVisible: computed(() => true),
@@ -111,7 +111,7 @@ describe("<PreferencesNavigation />", () => {
           fromExtension: true,
         },
         {
-          id: "extension-preferences-navigation-item-metrics-plugin-id",
+          id: "extension-preferences-navigation-item-metrics-plugin",
           label: "metrics-plugin",
           isActive: computed(() => false),
           isVisible: computed(() => false),
@@ -142,12 +142,14 @@ describe("<PreferencesNavigation />", () => {
     });
 
     it("renders extension navigation items", () => {
-      const { container } = render(
+      const { getByTestId } = render(
         <PreferencesNavigation/>,
       );
 
-      expect(container).toHaveTextContent("lensapp-node-menu");
-      expect(container).toHaveTextContent("lensapp-pod-menu");
+      const nodeAppMenuItem = getByTestId("tab-link-for-extension-preferences-navigation-item-lensapp-node-menu");
+      const podMenuItem = getByTestId("tab-link-for-extension-preferences-navigation-item-lensapp-pod-menu");
+
+      expect([nodeAppMenuItem, podMenuItem]).toBeTruthy();
     });
 
     it("renders extension navigation items inside custom settings block", () => {
