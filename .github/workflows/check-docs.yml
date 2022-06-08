@@ -9,7 +9,7 @@ jobs:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'area/documentation') }}
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - name: Checkout Release from lens
         uses: actions/checkout@v2

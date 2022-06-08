@@ -52,7 +52,7 @@
     "sentryDsn": ""
   },
   "engines": {
-    "node": ">=14 <15"
+    "node": ">=16 <17"
   },
   "jest": {
     "collectCoverage": false,
@@ -250,7 +250,7 @@
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
     "node-fetch": "lensapp/node-fetch#2.x",
-    "node-pty": "^0.10.1",
+    "node-pty": "^0.11.0-beta19",
     "npm": "^6.14.17",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.2.0",
@@ -313,7 +313,7 @@
     "@types/md5-file": "^4.0.2",
     "@types/mini-css-extract-plugin": "^2.4.0",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "14.18.18",
+    "@types/node": "^16.11.38",
     "@types/node-fetch": "^2.6.1",
     "@types/npm": "^2.0.32",
     "@types/proper-lockfile": "^4.1.2",
@@ -355,7 +355,7 @@
     "css-loader": "^6.7.1",
     "deepdash": "^5.3.9",
     "dompurify": "^2.3.8",
-    "electron": "^14.2.9",
+    "electron": "^15.5.7",
     "electron-builder": "^23.0.3",
     "electron-notarize": "^0.3.0",
     "esbuild": "^0.14.38",

@@ -16,8 +16,8 @@ jobs:
       vmImage: windows-2019
     strategy:
       matrix:
-        node_14.x:
-          node_version: 14.x
+        node:
+          node_version: 16.x
     steps:
       - powershell: |
           $CI_BUILD_TAG = git describe --tags
@@ -64,8 +64,8 @@ jobs:
       vmImage: macOS-11
     strategy:
       matrix:
-        node_14.x:
-          node_version: 14.x
+        node:
+          node_version: 16.x
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
@@ -128,8 +128,8 @@ jobs:
       vmImage: ubuntu-18.04
     strategy:
       matrix:
-        node_14.x:
-          node_version: 14.x
+        node:
+          node_version: 16.x
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
