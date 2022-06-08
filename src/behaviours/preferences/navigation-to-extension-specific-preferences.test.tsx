@@ -87,7 +87,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         expect(actual).toBeNull();
       });
 
-      it("doesn't show link for preferences with 'showInPreferencesTab' param", () => {
+      it("doesn't show link for preferences intended for a specific tab", () => {
         const actual = rendered.queryByTestId("tab-link-for-extension-specified-preferences-page-id");
 
         expect(actual).toBeNull();
