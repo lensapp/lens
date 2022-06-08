@@ -17,6 +17,10 @@ const currentClusterFrameInjectable = getInjectable({
     return computed(() => {
       const clusterId = currentClusterFrameState.get();
 
+      if (!clusterId) {
+        return undefined;
+      }
+
       return clusterFrames.get(clusterId);
     });
   },

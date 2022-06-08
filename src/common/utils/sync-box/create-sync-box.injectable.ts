@@ -25,7 +25,11 @@ const createSyncBoxInjectable = getInjectable({
       return {
         id,
 
-        value: computed(() => state.get()),
+        /**
+         * SAFETY: we unconditionally set the value above and only allow `TData` with the `.set`
+         * function so this is always `TData`.
+         */
+        value: computed(() => state.get() as TData),
 
         set: (value) => {
           state.set(value);
