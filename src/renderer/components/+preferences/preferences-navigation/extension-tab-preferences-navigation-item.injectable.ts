@@ -15,12 +15,14 @@ import { pipeline } from "@ogre-tools/fp";
 import extensionPreferencesRouteInjectable from "../../../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
 import currentPathParametersInjectable from "../../../routes/current-path-parameters.injectable";
 import navigateToExtensionPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/extension/navigate-to-extension-preferences.injectable";
+import type { LensExtension } from "../../../../extensions/lens-extension";
 
 const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
   id: "extension-specific-tab-preferences-navigation-items",
 
   instantiate: (di) => {
-    return (extension: LensRendererExtension) => {
+    return (ext: LensExtension) => {
+      const extension = ext as LensRendererExtension;
       const navigateToExtensionPreferences = di.inject(
         navigateToExtensionPreferencesInjectable,
       );
@@ -41,7 +43,7 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
             instantiate: () => ({
               id,
               label: tab.title,
-              orderNumber: tab.orderNumber,
+              orderNumber: tab.orderNumber || 100,
               navigate: () => navigateToExtensionPreferences(extension.sanitizedExtensionId, tab.id),
               isVisible: computed(() => true),
               isActive,
@@ -50,7 +52,7 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
         }),
       );
 
-      injectables.forEach(di.register);
+      di.register(...injectables)
 
       return;
     };

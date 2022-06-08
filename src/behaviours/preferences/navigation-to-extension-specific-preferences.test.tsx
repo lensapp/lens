@@ -279,8 +279,8 @@ describe("preferences - navigation to extension specific preferences", () => {
 });
 
 const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
-  id: "some-extension-id",
-  name: "some-extension-name",
+  id: "some-test-extension-id",
+  name: "some-test-extension-id",
   appPreferences: [
     {
       title: "Some preference item",
@@ -307,7 +307,7 @@ const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
 
 const someOtherExtensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
   id: "some-other-test-extension-id",
-  name: "some-other-test-extension-name",
+  name: "some-other-test-extension-id",
 
   appPreferences: [
     {
@@ -324,7 +324,7 @@ const someOtherExtensionStubWithExtensionSpecificPreferenceItems: FakeExtensionD
 
 const extensionStubWithoutPreferences: FakeExtensionData = {
   id: "without-preferences-id",
-  name: "without-preferences-name",
+  name: "without-preferences-id",
 };
 
 const extensionStubWithShowInPreferencesTab: FakeExtensionData = {
@@ -347,7 +347,7 @@ const extensionStubWithShowInPreferencesTab: FakeExtensionData = {
 
 const extensionStubWithWithRegisteredTab: FakeExtensionData = {
   id: "registered-tab-page-id",
-  name: "registered-tab-page-name",
+  name: "registered-tab-page-id",
 
   appPreferences: [
     {
@@ -391,7 +391,7 @@ const extensionStubWithWithRegisteredTab: FakeExtensionData = {
 
 const extensionStubWithWithRegisteredTabs: FakeExtensionData = {
   id: "hello-world-tab-page-id",
-  name: "hello-world-tab-page-name",
+  name: "hello-world-tab-page-id",
 
   appPreferences: [
     {
@@ -429,7 +429,7 @@ const extensionStubWithWithRegisteredTabs: FakeExtensionData = {
 
 const extensionStubWithWithSameRegisteredTab: FakeExtensionData = {
   id: "duplicated-tab-page-id",
-  name: "duplicated-tab-page-name",
+  name: "duplicated-tab-page-id",
 
   appPreferences: [
     {
