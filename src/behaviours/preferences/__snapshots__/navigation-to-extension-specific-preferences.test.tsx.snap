@@ -122,7 +122,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <h2>
             registered-tab-page-id
-             preferences
+             
+            preferences
           </h2>
           <section
             class="small"
@@ -312,7 +313,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <h2>
             registered-tab-page-id
-             preferences
+             
+            preferences
           </h2>
           <section
             class="small"
@@ -502,7 +504,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <h2>
             duplicated-tab-page-id
-             preferences
+             
+            preferences
           </h2>
           <section
             class="small"
@@ -670,7 +673,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   extension
                 </span>
               </i>
-               Extensions
+               
+              Extensions
             </div>
             <div>
               <div
@@ -714,7 +718,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <h2>
             some-test-extension-id
-             preferences
+             
+            preferences
           </h2>
           <section
             class="small"
@@ -1411,7 +1416,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   extension
                 </span>
               </i>
-               Extensions
+               
+              Extensions
             </div>
             <div>
               <div
@@ -1974,7 +1980,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   extension
                 </span>
               </i>
-               Extensions
+               
+              Extensions
             </div>
             <div>
               <div
@@ -2006,7 +2013,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <h2>
             some-test-extension-id
-             preferences
+             
+            preferences
           </h2>
           <section
             class="small"
