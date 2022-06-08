@@ -143,3 +143,4 @@ export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = "https://docs.k8slens.dev/main/" as string;
 
 export const sentryDsn = packageInfo.config?.sentryDsn ?? "";
+export const contentSecurityPolicy = packageInfo.config?.contentSecurityPolicy || "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src *";
