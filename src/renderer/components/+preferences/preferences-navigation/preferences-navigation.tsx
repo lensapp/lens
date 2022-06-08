@@ -49,7 +49,13 @@ const NonInjectedPreferencesNavigation = ({
         <div data-testid="extension-settings">
           <hr/>
           <div className="header flex items-center">
-            <Icon material="extension" smallest className="mr-3"/> Extensions
+            <Icon
+              material="extension"
+              smallest
+              className="mr-3"
+            />
+            {" "}
+            Extensions
           </div>
           <div>
             {extensionNavItems.map(renderTab)}

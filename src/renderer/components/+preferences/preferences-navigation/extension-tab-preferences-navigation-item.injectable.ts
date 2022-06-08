@@ -52,7 +52,7 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
         }),
       );
 
-      di.register(...injectables)
+      di.register(...injectables);
 
       return;
     };
