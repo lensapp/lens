@@ -13,16 +13,16 @@ const sendToChannelInElectronBrowserWindowInjectable = getInjectable({
     () =>
       (
         browserWindow: BrowserWindow,
-        { channel, frameInfo, data = [] }: SendToViewArgs,
+        { channel, frameInfo, data }: SendToViewArgs,
       ) => {
         if (frameInfo) {
           browserWindow.webContents.sendToFrame(
             [frameInfo.processId, frameInfo.frameId],
             channel,
-            ...data,
+            data,
           );
         } else {
-          browserWindow.webContents.send(channel, ...data);
+          browserWindow.webContents.send(channel, data);
         }
       },
 
