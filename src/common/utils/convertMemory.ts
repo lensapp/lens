@@ -22,7 +22,7 @@ const unitRegex = /(?<value>[0-9]+(\.[0-9]*)?)(?<suffix>(B|[KMGTP]iB?))?/;
 
 type BinaryUnit = typeof magnitudes extends Map<infer Key, any> ? Key : never;
 
-export function unitsToBytes(value: string): number | bigint {
+export function unitsToBytes(value: string): number {
   const unitsMatch = value.match(unitRegex);
 
   if (!unitsMatch?.groups) {
