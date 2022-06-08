@@ -13,15 +13,14 @@ const navigateToRouteInjectable = getInjectable({
   instantiate: (di) => {
     const navigateToUrl = di.inject(navigateToUrlInjectionToken);
 
-    return async (route, options) => {
+    return (route, options) => {
       const url = buildURL(route.path, {
-        // TODO: enhance typing
-        params: options?.parameters as any,
+        params: options?.parameters,
         query: options?.query,
         fragment: options?.fragment,
       });
 
-      await navigateToUrl(url, options);
+      navigateToUrl(url, options);
     };
   },
 

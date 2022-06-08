@@ -5,10 +5,6 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Route } from "./front-end-route-injection-token";
 
-type InferParametersFrom<TRoute> = TRoute extends Route<infer TParameters>
-  ? TParameters
-  : never;
-
 type RequiredKeys<T> = Exclude<
   {
     [K in keyof T]: T extends Record<K, T[K]> ? K : never;
@@ -30,22 +26,21 @@ type ObjectContainsNoRequired<T> = T extends ObjectContainingNoRequired<T>
 // - Navigating to route without parameters, with parameters
 // - Navigating to route with required parameters, without parameters
 type Parameters<TParameters> = TParameters extends void
-  ? {}
+  ? { parameters?: never }
   : ObjectContainsNoRequired<TParameters> extends true
-  ? { parameters?: TParameters }
-  : { parameters: TParameters };
+    ? { parameters?: TParameters }
+    : { parameters: TParameters };
 
-export type NavigateToRouteOptions<TRoute> = Parameters<
-  InferParametersFrom<TRoute>
-> & {
+export type NavigateToRouteOptions<TParameter> = Parameters<TParameter> & {
   query?: Record<string, string>;
   fragment?: string;
   withoutAffectingBackButton?: boolean;
 };
 
-export type NavigateToRoute = <TRoute extends Route<unknown>>(
+export type NavigateToRoute = <TRoute extends Route<TParameter>, TParameter extends object>(
   route: TRoute,
-  options?: NavigateToRouteOptions<TRoute>) => void;
+  options?: NavigateToRouteOptions<TParameter>,
+) => void;
 
 export const navigateToRouteInjectionToken = getInjectionToken<NavigateToRoute>(
   { id: "navigate-to-route-injection-token" },

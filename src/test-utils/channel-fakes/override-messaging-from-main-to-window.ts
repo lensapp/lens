@@ -33,12 +33,6 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
           );
         }
 
-        if (data.length > 1) {
-          throw new Error(
-            `Tried to send message to channel "${channelId}" with more than one argument which is not supported in MessageChannelListener yet.`,
-          );
-        }
-
         if (listeners.size === 0) {
           throw new Error(
             `Tried to send message to channel "${channelId}" but there where no listeners. Current channels with listeners: "${[
@@ -47,7 +41,7 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
           );
         }
 
-        listeners.forEach((listener) => listener.handler(data[0]));
+        listeners.forEach((listener) => listener.handler(data));
       },
   );
 
