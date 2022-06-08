@@ -26,16 +26,17 @@ const extensionsPreferenceItemsInjectable = getInjectable({
     const extensions = di.inject(rendererExtensionsInjectable);
     const { extensionId, tabId } = pathParams.get();
     const extension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
+
+    if (!extension) {
+      return computed(() => []);
+    }
+  
     const preferences = extension.appPreferences.map(preference => ({
-      id: preference.id,
+      id: preference.id || preference.title,
       ...preference,
     }));
 
     return computed(() => {
-      if (!extension) {
-        return [];
-      }
-
       if (tabId) {
         return preferences.filter(preference => preference.showInPreferencesTab == tabId);
       }
@@ -43,7 +44,7 @@ const extensionsPreferenceItemsInjectable = getInjectable({
       return preferences.filter(preference => !preference.showInPreferencesTab);
     });
   },
-  lifecycle: lifecycleEnum.transient,
+  lifecycle: lifecycleEnum.singleton,
 });
 
 export default extensionsPreferenceItemsInjectable;
