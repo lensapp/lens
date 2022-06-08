@@ -5,7 +5,7 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 
-type AsJson<T> = T extends string | number | boolean | null
+export type AsJson<T> = T extends string | number | boolean | null
   ? T
   : T extends Function
     ? never

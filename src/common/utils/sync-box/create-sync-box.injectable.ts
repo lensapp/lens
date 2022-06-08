@@ -3,11 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { IObservableValue } from "mobx";
 import { computed } from "mobx";
 import syncBoxChannelInjectable from "./sync-box-channel.injectable";
 import { messageToChannelInjectionToken } from "../channel/message-to-channel-injection-token";
 import syncBoxStateInjectable from "./sync-box-state.injectable";
-import type { SyncBox } from "./sync-box-injection-token";
+import type { AsJson, SyncBox } from "./sync-box-injection-token";
 
 const createSyncBoxInjectable = getInjectable({
   id: "create-sync-box",
@@ -17,19 +18,15 @@ const createSyncBoxInjectable = getInjectable({
     const messageToChannel = di.inject(messageToChannelInjectionToken);
     const getSyncBoxState = (id: string) => di.inject(syncBoxStateInjectable, id);
 
-    return <TData>(id: string, initialValue: TData): SyncBox<TData> => {
-      const state = getSyncBoxState(id);
+    return <TData>(id: string, initialValue: AsJson<TData>): SyncBox<TData> => {
+      const state = getSyncBoxState(id) as IObservableValue<AsJson<TData>>;
 
       state.set(initialValue);
 
       return {
         id,
 
-        /**
-         * SAFETY: we unconditionally set the value above and only allow `TData` with the `.set`
-         * function so this is always `TData`.
-         */
-        value: computed(() => state.get() as TData),
+        value: computed(() => state.get()),
 
         set: (value) => {
           state.set(value);
