@@ -159,6 +159,7 @@ const createElectronWindowFor = getInjectable({
 
           // Always disable Node.js integration for all webviews
           webPreferences.nodeIntegration = false;
+          webPreferences.nativeWindowOpen = false;
         })
 
         .setWindowOpenHandler((details) => {
