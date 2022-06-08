@@ -24,12 +24,12 @@ import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter, find, map, matches } from "lodash/fp";
+import { flatMap, compact, join, get, filter, map, matches, find } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
-import type { MenuItem, MenuItemConstructorOptions } from "electron";
+import type { MenuItemConstructorOptions, MenuItem } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
@@ -43,7 +43,6 @@ import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
-import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 import { Notifications } from "../notifications/notifications";
@@ -51,6 +50,8 @@ import broadcastThatRootFrameIsRenderedInjectable from "../../frames/root-frame/
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
+import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
+import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -65,7 +66,8 @@ export interface ApplicationBuilder {
 
   tray: {
     click: (id: string) => Promise<void>;
-    get: (id: string) => TrayMenuItem | undefined;
+    get: (id: string) => TrayMenuItem | null;
+    getIconPath: () => string;
   };
 
   applicationMenu: {
@@ -166,14 +168,21 @@ export const getApplicationBuilder = () => {
     computed(() => []),
   );
 
+  const iconPaths = mainDi.inject(trayIconPathsInjectable);
+
   let trayMenuItemsStateFake: TrayMenuItem[];
+  let trayMenuIconPath: string;
 
   mainDi.override(electronTrayInjectable, () => ({
-    start: () => {},
+    start: () => {
+      trayMenuIconPath = iconPaths.normal;
+    },
     stop: () => {},
-
     setMenuItems: (items) => {
       trayMenuItemsStateFake = items;
+    },
+    setIconPath: (path) => {
+      trayMenuIconPath = path;
     },
   }));
 
@@ -222,9 +231,9 @@ export const getApplicationBuilder = () => {
 
     tray: {
       get: (id: string) => {
-        return trayMenuItemsStateFake.find(matches({ id }));
+        return trayMenuItemsStateFake.find(matches({ id })) ?? null;
       },
-
+      getIconPath: () => trayMenuIconPath,
       click: async (id: string) => {
         const menuItem = pipeline(
           trayMenuItemsStateFake,
