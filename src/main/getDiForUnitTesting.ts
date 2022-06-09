@@ -76,7 +76,7 @@ import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-ins
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
 import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
+import baseBundledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
@@ -172,7 +172,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });
-    di.override(baseBundeledBinariesDirectoryInjectable, () => "some-bin-directory");
+    di.override(baseBundledBinariesDirectoryInjectable, () => "some-bin-directory");
     di.override(spawnInjectable, () => () => {
       return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },

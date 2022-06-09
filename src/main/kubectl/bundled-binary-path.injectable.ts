@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import path from "path";
-import baseBundeledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
+import baseBundledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
 import kubectlBinaryNameInjectable from "./binary-name.injectable";
 
 const bundledKubectlBinaryPathInjectable = getInjectable({
   id: "bundled-kubectl-binary-path",
   instantiate: (di) => path.join(
-    di.inject(baseBundeledBinariesDirectoryInjectable),
+    di.inject(baseBundledBinariesDirectoryInjectable),
     di.inject(kubectlBinaryNameInjectable),
   ),
 });
