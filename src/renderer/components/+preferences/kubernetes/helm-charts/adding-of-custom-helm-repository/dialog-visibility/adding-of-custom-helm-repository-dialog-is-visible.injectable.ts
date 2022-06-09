@@ -5,9 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { observable } from "mobx";
 
-const activationOfCustomHelmRepositoryDialogIsVisibleInjectable = getInjectable({
-  id: "add-custom-helm-repository-dialog-is-visible",
+const addingOfCustomHelmRepositoryDialogIsVisibleInjectable = getInjectable({
+  id: "adding-of-custom-helm-repository-dialog-is-visible",
   instantiate: () => observable.box(false),
 });
 
-export default activationOfCustomHelmRepositoryDialogIsVisibleInjectable;
+export default addingOfCustomHelmRepositoryDialogIsVisibleInjectable;

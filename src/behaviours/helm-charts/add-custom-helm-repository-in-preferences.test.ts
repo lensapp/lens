@@ -12,7 +12,7 @@ import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm-repo";
-import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import isPathInjectable from "../../renderer/components/input/validators/is-path.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
@@ -23,7 +23,7 @@ jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
   withTooltip: (target: any) => target,
 }));
 
-describe("activate custom helm repository in preferences", () => {
+describe("add custom helm repository in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
@@ -106,7 +106,7 @@ describe("activate custom helm repository in preferences", () => {
 
         it("shows dialog", () => {
           expect(
-            rendered.queryByTestId("activate-custom-helm-repository-dialog"),
+            rendered.queryByTestId("add-custom-helm-repository-dialog"),
           ).toBeInTheDocument();
         });
 
@@ -120,7 +120,7 @@ describe("activate custom helm repository in preferences", () => {
 
           it("does not show dialog anymore", () => {
             expect(
-              rendered.queryByTestId("activate-custom-helm-repository-dialog"),
+              rendered.queryByTestId("add-custom-helm-repository-dialog"),
             ).not.toBeInTheDocument();
           });
         });
@@ -138,7 +138,7 @@ describe("activate custom helm repository in preferences", () => {
 
           it("does not show dialog anymore", () => {
             expect(
-              rendered.queryByTestId("activate-custom-helm-repository-dialog"),
+              rendered.queryByTestId("add-custom-helm-repository-dialog"),
             ).not.toBeInTheDocument();
           });
         });
@@ -174,7 +174,7 @@ describe("activate custom helm repository in preferences", () => {
               expect(rendered.baseElement).toMatchSnapshot();
             });
 
-            it("activates the repository", () => {
+            it("adds the repository", () => {
               expect(execFileMock).toHaveBeenCalledWith(
                 "some-helm-binary-path",
                 ["repo", "add", "some-custom-repository", "http://some.url"],
@@ -211,7 +211,7 @@ describe("activate custom helm repository in preferences", () => {
               });
 
               it("does not show dialog anymore", () => {
-                expect(rendered.queryByTestId("activate-custom-helm-repository-dialog")).not.toBeInTheDocument();
+                expect(rendered.queryByTestId("add-custom-helm-repository-dialog")).not.toBeInTheDocument();
               });
 
               it("does not reload active repositories", () => {
@@ -236,7 +236,7 @@ describe("activate custom helm repository in preferences", () => {
               });
 
               it("does not show dialog anymore", () => {
-                expect(rendered.queryByTestId("activate-custom-helm-repository-dialog")).not.toBeInTheDocument();
+                expect(rendered.queryByTestId("add-custom-helm-repository-dialog")).not.toBeInTheDocument();
               });
 
               it("reloads active repositories", () => {
@@ -349,7 +349,7 @@ describe("activate custom helm repository in preferences", () => {
                 expect(rendered.baseElement).toMatchSnapshot();
               });
 
-              it("when submitted and some time passes, activates the repository with maximal options", () => {
+              it("when submitted and some time passes, adds the repository with maximal options", () => {
                 const submitButton = rendered.getByTestId("custom-helm-repository-submit-button");
 
                 fireEvent.click(submitButton);

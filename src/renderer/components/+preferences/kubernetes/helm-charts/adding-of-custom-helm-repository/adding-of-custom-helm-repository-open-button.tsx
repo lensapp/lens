@@ -5,7 +5,7 @@
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import { Button } from "../../../../button";
-import showDialogForActivatingCustomHelmRepositoryInjectable from "./dialog-visibility/show-dialog-for-activating-custom-helm-repository.injectable";
+import showDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/show-dialog-for-adding-custom-helm-repository.injectable";
 
 interface Dependencies {
   showDialog: () => void;
@@ -20,12 +20,12 @@ const NonInjectedActivationOfCustomHelmRepositoryOpenButton = ({ showDialog }: D
   />
 );
 
-export const ActivationOfCustomHelmRepositoryOpenButton = withInjectables<Dependencies>(
+export const AddingOfCustomHelmRepositoryOpenButton = withInjectables<Dependencies>(
   NonInjectedActivationOfCustomHelmRepositoryOpenButton,
 
   {
     getProps: (di) => ({
-      showDialog: di.inject(showDialogForActivatingCustomHelmRepositoryInjectable),
+      showDialog: di.inject(showDialogForAddingCustomHelmRepositoryInjectable),
     }),
   },
 );

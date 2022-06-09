@@ -6,9 +6,9 @@
 import React from "react";
 
 import { HelmRepositories } from "./helm-repositories";
-import { ActivationOfPublicHelmRepository } from "./activation-of-public-helm-repository/activation-of-public-helm-repository";
-import { ActivationOfCustomHelmRepositoryOpenButton } from "./activation-of-custom-helm-repository/activation-of-custom-helm-repository-open-button";
-import { ActivationOfCustomHelmRepositoryDialog } from "./activation-of-custom-helm-repository/activation-of-custom-helm-repository-dialog";
+import { AddingOfPublicHelmRepository } from "./adding-of-public-helm-repository/adding-of-public-helm-repository";
+import { AddingOfCustomHelmRepositoryOpenButton } from "./adding-of-custom-helm-repository/adding-of-custom-helm-repository-open-button";
+import { AddingOfCustomHelmRepositoryDialog } from "./adding-of-custom-helm-repository/adding-of-custom-helm-repository-dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { HelmRepositoriesErrorState } from "./helm-repositories-error-state.injectable";
 import helmRepositoriesErrorStateInjectable from "./helm-repositories-error-state.injectable";
@@ -35,14 +35,14 @@ const NonInjectedHelmCharts = observer(
         {state.controlsAreShown && (
           <div data-testid="helm-controls">
             <div className="flex gaps">
-              <ActivationOfPublicHelmRepository />
+              <AddingOfPublicHelmRepository />
 
-              <ActivationOfCustomHelmRepositoryOpenButton />
+              <AddingOfCustomHelmRepositoryOpenButton />
             </div>
 
             <HelmRepositories />
 
-            <ActivationOfCustomHelmRepositoryDialog />
+            <AddingOfCustomHelmRepositoryDialog />
           </div>
         )}
       </div>

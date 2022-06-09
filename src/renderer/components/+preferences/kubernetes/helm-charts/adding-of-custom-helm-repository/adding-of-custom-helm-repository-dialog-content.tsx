@@ -16,7 +16,7 @@ import { observer } from "mobx-react";
 import type { IObservableValue } from "mobx";
 import { action } from "mobx";
 import submitCustomHelmRepositoryInjectable from "./submit-custom-helm-repository.injectable";
-import hideDialogForActivatingCustomHelmRepositoryInjectable from "./dialog-visibility/hide-dialog-for-activating-custom-helm-repository.injectable";
+import hideDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/hide-dialog-for-adding-custom-helm-repository.injectable";
 import { Button } from "../../../../button";
 import { Icon } from "../../../../icon";
 import maximalCustomHelmRepoOptionsAreShownInjectable from "./maximal-custom-helm-repo-options-are-shown.injectable";
@@ -40,7 +40,7 @@ const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({ hel
       testIdForNext="custom-helm-repository-submit-button"
       testIdForPrev="custom-helm-repository-cancel-button"
     >
-      <div className="flex column gaps" data-testid="activate-custom-helm-repository-dialog">
+      <div className="flex column gaps" data-testid="add-custom-helm-repository-dialog">
         <Input
           autoFocus
           required
@@ -134,13 +134,13 @@ const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({ hel
 
 
 
-export const ActivationOfCustomHelmRepositoryDialogContent = withInjectables<Dependencies>(
+export const AddingOfCustomHelmRepositoryDialogContent = withInjectables<Dependencies>(
   NonInjectedActivationOfCustomHelmRepositoryDialogContent,
 
   {
     getProps: (di) => ({
       helmRepo: di.inject(customHelmRepoInjectable),
-      hideDialog: di.inject(hideDialogForActivatingCustomHelmRepositoryInjectable),
+      hideDialog: di.inject(hideDialogForAddingCustomHelmRepositoryInjectable),
       submitCustomRepository: di.inject(submitCustomHelmRepositoryInjectable),
       maximalOptionsAreShown: di.inject(maximalCustomHelmRepoOptionsAreShownInjectable),
     }),

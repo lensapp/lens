@@ -6,22 +6,22 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmRepo } from "../../../../../common/helm-repo";
 import { requestFromChannelInjectionToken } from "../../../../../common/utils/channel/request-from-channel-injection-token";
 import activeHelmRepositoriesInjectable from "./active-helm-repositories.injectable";
-import deactivateHelmRepositoryChannelInjectable from "../../../../../common/helm/deactivate-helm-repository-channel.injectable";
+import removeHelmRepositoryChannelInjectable from "../../../../../common/helm/remove-helm-repository-channel.injectable";
 
-const activatePublicHelmRepositoryInjectable = getInjectable({
-  id: "deactivate-public-helm-repository",
+const removePublicHelmRepositoryInjectable = getInjectable({
+  id: "remove-public-helm-repository",
 
   instantiate: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
-    const deactivateHelmRepositoryChannel = di.inject(deactivateHelmRepositoryChannelInjectable);
+    const removeHelmRepositoryChannel = di.inject(removeHelmRepositoryChannelInjectable);
     const activeHelmRepositories = di.inject(activeHelmRepositoriesInjectable);
 
     return async (repository: HelmRepo) => {
-      await requestFromChannel(deactivateHelmRepositoryChannel, repository);
+      await requestFromChannel(removeHelmRepositoryChannel, repository);
 
       activeHelmRepositories.invalidate();
     };
   },
 });
 
-export default activatePublicHelmRepositoryInjectable;
+export default removePublicHelmRepositoryInjectable;

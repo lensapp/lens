@@ -14,14 +14,14 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { Spinner } from "../../../spinner";
 import type { HelmRepo } from "../../../../../common/helm-repo";
 import { RemovableItem } from "../../removable-item";
-import deactivateHelmRepositoryInjectable from "./deactivate-helm-repository.injectable";
+import removeHelmRepositoryInjectable from "./remove-helm-repository.injectable";
 
 interface Dependencies {
   activeHelmRepositories: IAsyncComputed<HelmRepo[]>;
-  deactivateRepository: (repository: HelmRepo) => Promise<void>;
+  removeRepository: (repository: HelmRepo) => Promise<void>;
 }
 
-const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories, deactivateRepository }: Dependencies) => {
+const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories, removeRepository }: Dependencies) => {
   if (activeHelmRepositories.pending.get()) {
     return (
       <div className={styles.repos}>
@@ -39,9 +39,9 @@ const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories, de
       {repositories.map((repository) => (
         <RemovableItem
           key={repository.name}
-          onRemove={() => deactivateRepository(repository)}
+          onRemove={() => removeRepository(repository)}
           className="mt-3"
-          data-testid={`deactivate-helm-repository-${repository.name}`}
+          data-testid={`remove-helm-repository-${repository.name}`}
         >
           <div data-testid={`helm-repository-${repository.name}`} className={styles.repoName}>
             {repository.name}
@@ -61,7 +61,7 @@ export const HelmRepositories = withInjectables<Dependencies>(
   {
     getProps: (di) => ({
       activeHelmRepositories: di.inject(activeHelmRepositoriesInjectable),
-      deactivateRepository: di.inject(deactivateHelmRepositoryInjectable),
+      removeRepository: di.inject(removeHelmRepositoryInjectable),
     }),
   },
 );

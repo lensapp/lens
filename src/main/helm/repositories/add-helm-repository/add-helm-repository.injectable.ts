@@ -7,8 +7,8 @@ import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
 import type { HelmRepo } from "../../../../common/helm-repo";
 import loggerInjectable from "../../../../common/logger.injectable";
 
-const activateHelmRepositoryInjectable = getInjectable({
-  id: "activate-helm-repository",
+const addHelmRepositoryInjectable = getInjectable({
+  id: "add-helm-repository",
 
   instantiate: (di) => {
     const execHelm = di.inject(execHelmInjectable);
@@ -59,4 +59,4 @@ const activateHelmRepositoryInjectable = getInjectable({
   },
 });
 
-export default activateHelmRepositoryInjectable;
+export default addHelmRepositoryInjectable;

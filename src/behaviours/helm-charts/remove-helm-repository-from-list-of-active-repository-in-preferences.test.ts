@@ -12,7 +12,7 @@ import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm-repo";
-import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/activation-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
 
 // TODO: Make tooltips free of side effects by making it deterministic
@@ -20,7 +20,7 @@ jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
   withTooltip: (target: any) => target,
 }));
 
-describe("deactivate helm repository from list of active repositories in preferences", () => {
+describe("remove helm repository from list of active repositories in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
@@ -73,23 +73,23 @@ describe("deactivate helm repository from list of active repositories in prefere
         expect(rendered.baseElement).toMatchSnapshot();
       });
 
-      describe("when deactivating repository", () => {
+      describe("when removing repository", () => {
         beforeEach(() => {
           execFileMock.mockClear();
           getActiveHelmRepositoriesMock.mockClear();
 
-          const deactiveButton = rendered.getByTestId(
-            "deactivate-helm-repository-some-active-repository",
+          const removeButton = rendered.getByTestId(
+            "remove-helm-repository-some-active-repository",
           );
 
-          fireEvent.click(deactiveButton);
+          fireEvent.click(removeButton);
         });
 
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
         });
 
-        it("deactivates the repository", () => {
+        it("removes the repository", () => {
           expect(execFileMock).toHaveBeenCalledWith(
             "some-helm-binary-path",
             ["repo", "remove", "some-active-repository"],
@@ -100,7 +100,7 @@ describe("deactivate helm repository from list of active repositories in prefere
           expect(getActiveHelmRepositoriesMock).not.toHaveBeenCalled();
         });
 
-        describe("when deactivating resolves", () => {
+        describe("when removing resolves", () => {
           beforeEach(async () => {
             await execFileMock.resolveSpecific(
               [

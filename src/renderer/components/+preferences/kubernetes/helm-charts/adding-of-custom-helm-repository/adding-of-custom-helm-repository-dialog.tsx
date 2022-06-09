@@ -8,11 +8,11 @@ import "./add-helm-repo-dialog.scss";
 import React from "react";
 import { Dialog } from "../../../../dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { ActivationOfCustomHelmRepositoryDialogContent } from "./activation-of-custom-helm-repository-dialog-content";
-import activationOfCustomHelmRepositoryDialogIsVisibleInjectable from "./dialog-visibility/activation-of-custom-helm-repository-dialog-is-visible.injectable";
+import { AddingOfCustomHelmRepositoryDialogContent } from "./adding-of-custom-helm-repository-dialog-content";
+import addingOfCustomHelmRepositoryDialogIsVisibleInjectable from "./dialog-visibility/adding-of-custom-helm-repository-dialog-is-visible.injectable";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
-import hideDialogForActivatingCustomHelmRepositoryInjectable from "./dialog-visibility/hide-dialog-for-activating-custom-helm-repository.injectable";
+import hideDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/hide-dialog-for-adding-custom-helm-repository.injectable";
 
 interface Dependencies {
   contentIsVisible: IObservableValue<boolean>;
@@ -29,19 +29,19 @@ const NonInjectedActivationOfCustomHelmRepositoryDialog = observer(({
       isOpen={contentIsVisible.get()}
       close={hideDialog}
     >
-      {contentIsVisible.get() && <ActivationOfCustomHelmRepositoryDialogContent />}
+      {contentIsVisible.get() && <AddingOfCustomHelmRepositoryDialogContent />}
     </Dialog>
   </div>
 ));
 
 
-export const ActivationOfCustomHelmRepositoryDialog = withInjectables<Dependencies>(
+export const AddingOfCustomHelmRepositoryDialog = withInjectables<Dependencies>(
   NonInjectedActivationOfCustomHelmRepositoryDialog,
 
   {
     getProps: (di) => ({
-      contentIsVisible: di.inject(activationOfCustomHelmRepositoryDialogIsVisibleInjectable),
-      hideDialog: di.inject(hideDialogForActivatingCustomHelmRepositoryInjectable),
+      contentIsVisible: di.inject(addingOfCustomHelmRepositoryDialogIsVisibleInjectable),
+      hideDialog: di.inject(hideDialogForAddingCustomHelmRepositoryInjectable),
     }),
   },
 );

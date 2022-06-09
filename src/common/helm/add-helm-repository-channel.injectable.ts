@@ -6,17 +6,18 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmRepo } from "../helm-repo";
 import type { RequestChannel } from "../utils/channel/request-channel-injection-token";
 import { requestChannelInjectionToken } from "../utils/channel/request-channel-injection-token";
+import type { AsyncResult } from "../utils/async-result";
 
-export type DeactivateHelmRepositoryChannel = RequestChannel<HelmRepo>;
+export type AddHelmRepositoryChannel = RequestChannel<HelmRepo, AsyncResult<string>>;
 
-const deactivateHelmRepositoryChannelInjectable = getInjectable({
-  id: "deactivate-helm-repository-channel",
+const addHelmRepositoryChannelInjectable = getInjectable({
+  id: "add-helm-repository-channel",
 
-  instantiate: (): DeactivateHelmRepositoryChannel => ({
-    id: "deactivate-helm-repository-channel",
+  instantiate: (): AddHelmRepositoryChannel => ({
+    id: "add-helm-repository-channel",
   }),
 
   injectionToken: requestChannelInjectionToken,
 });
 
-export default deactivateHelmRepositoryChannelInjectable;
+export default addHelmRepositoryChannelInjectable;

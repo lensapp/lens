@@ -3010,7 +3010,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                       <i
                         class="Icon material interactive focusable"
-                        data-testid="deactivate-helm-repository-some-repository"
+                        data-testid="remove-helm-repository-some-repository"
                         tabindex="0"
                         tooltip="Remove"
                       >
@@ -3038,7 +3038,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       </div>
                       <i
                         class="Icon material interactive focusable"
-                        data-testid="deactivate-helm-repository-some-other-repository"
+                        data-testid="remove-helm-repository-some-other-repository"
                         tabindex="0"
                         tooltip="Remove"
                       >

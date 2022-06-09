@@ -22,7 +22,7 @@ interface Dependencies {
   selectRepository: (value: SingleValue<SelectOption<HelmRepo>>) => void;
 }
 
-const NonInjectedActivationOfPublicHelmRepository = observer(({
+const NonInjectedAddingOfPublicHelmRepository = observer(({
   publicRepositories,
   activeRepositories,
   selectRepository,
@@ -55,8 +55,8 @@ const NonInjectedActivationOfPublicHelmRepository = observer(({
   );
 });
 
-export const ActivationOfPublicHelmRepository = withInjectables<Dependencies>(
-  NonInjectedActivationOfPublicHelmRepository,
+export const AddingOfPublicHelmRepository = withInjectables<Dependencies>(
+  NonInjectedAddingOfPublicHelmRepository,
 
   {
     getProps: (di) => ({
