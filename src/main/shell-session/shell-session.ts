@@ -232,19 +232,13 @@ export abstract class ShellSession {
     });
 
     this.websocket
-      .on("message", (rawData: unknown): void => {
+      .on("message", (data: unknown): void => {
         if (!this.running) {
           return void logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
         }
 
-        if (!(rawData instanceof Buffer)) {
-          return void logger.error(`[SHELL-SESSION]: Received message non-buffer message.`, { rawData });
-        }
-
-        const data = rawData.toString();
-
         try {
-          const message: TerminalMessage = JSON.parse(data);
+          const message: TerminalMessage = JSON.parse(String(data));
 
           switch (message.type) {
             case TerminalChannels.STDIN:
