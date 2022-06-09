@@ -39,7 +39,7 @@ const navigateForExtensionInjectable = getInjectable({
       applicationWindow.send({
         channel: "extension:navigate",
         frameInfo,
-        data: [extId, pageId, params],
+        data: { extId, pageId, params },
       });
     };
   },

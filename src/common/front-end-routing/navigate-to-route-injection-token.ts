@@ -37,7 +37,7 @@ export type NavigateToRouteOptions<TParameter> = Parameters<TParameter> & {
   withoutAffectingBackButton?: boolean;
 };
 
-export type NavigateToRoute = <TRoute extends Route<TParameter>, TParameter extends object>(
+export type NavigateToRoute = <TRoute extends Route<TParameter>, TParameter extends object | void>(
   route: TRoute,
   options?: NavigateToRouteOptions<TParameter>,
 ) => void;

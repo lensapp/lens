@@ -8,7 +8,7 @@ import type { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 
 export function initIpcRendererListeners(extensionLoader: ExtensionLoader) {
-  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
+  ipcRendererOn("extension:navigate", (event, { extId, pageId, params }: { extId: string; pageId: string | undefined; params: Partial<Record<string, string>> | undefined }) => {
     const ext = extensionLoader.getInstanceById(extId) as LensRendererExtension | undefined;
 
     ext?.navigate(pageId, params);

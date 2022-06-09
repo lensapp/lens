@@ -12,7 +12,7 @@ const navigateToPreferenceTabInjectable = getInjectable({
   instantiate: (di) => {
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
 
-    return (route: Route) => () => {
+    return <Parameter extends object | void>(route: Route<Parameter>) => () => {
       navigateToRoute(route, { withoutAffectingBackButton: true });
     };
   },

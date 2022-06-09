@@ -25,7 +25,7 @@ export interface LensMainExtensionDependencies extends LensExtensionDependencies
 export interface LensRendererExtensionDependencies extends LensExtensionDependencies {
   navigateToRoute: NavigateToRoute;
   getExtensionPageParameters: GetExtensionPageParameters;
-  readonly routes: IComputedValue<Route<unknown>[]>;
+  readonly routes: IComputedValue<Route<object | void>[]>;
   readonly entityRegistry: RendererCatalogEntityRegistry;
   readonly categoryRegistry: CatalogCategoryRegistry;
 }
