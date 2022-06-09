@@ -8,25 +8,39 @@ import React from "react";
 import AutoUpdateStateInjectable from "../../../common/auto-update/auto-update-state.injectable";
 import type { AutoUpdateState } from "../../../common/auto-update/auto-update-state.injectable";
 import { Spinner } from "../spinner";
+import progressOfUpdateDownloadInjectable, { ProgressOfDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
+import type { SyncBox } from "../../../common/utils/sync-box/sync-box-injection-token";
 
 interface Dependencies {
   state: AutoUpdateState;
+  progressOfUpdateDownload: SyncBox<ProgressOfDownload>;
 }
 
-const checking = () => <><Spinner/><div>{"Checking for updates"}</div></>;
+const checking = () => <><Spinner/><div>{"Checking for updates..."}</div></>;
 const available = () => <div>{"Update is available"}</div>;
+const notAvailable = () => <div>{"No new updates available"}</div>;
+const downloading = (state: AutoUpdateState, percentDone: number) => {
+  const {version } = state;
 
-const notAvailable = () => {
+  if ( percentDone === 0 ) {
+    return <><div>{`Download for version ${version} started `}</div><Spinner/></>;
+  }
 
-  return <div>{"Update is currently not available"}</div>;
+  if ( percentDone < 100 ) {
+    return <div>{`Download for version ${version} ${percentDone}%...`}</div>;
+  }
+
+  state.name = "download-succeeded";
+
+  return null;
 };
 
-const downloading = () => <div>{"Downloading update"}</div>;
 const done = () => <div>{"Done checking for updates"}</div>;
-
+const downloadFailed = (version: string | undefined) => <div>{`Download for version ${version} failed`}</div>;
+const downloadSucceeded = (version: string | undefined) => <div>{`Download for version ${version} complete`}</div>;
 const idle = () => <></>;
 
-export const NonInjectedAutoUpdateComponent = observer(({ state }: Dependencies) => {
+export const NonInjectedAutoUpdateComponent = observer(({ state, progressOfUpdateDownload }: Dependencies) => {
 
   switch(state.name) {
     case "checking":
@@ -39,13 +53,19 @@ export const NonInjectedAutoUpdateComponent = observer(({ state }: Dependencies)
       return notAvailable();
 
     case "downloading":
-      return downloading();
+      const roundedPercentage = Math.round(progressOfUpdateDownload.value.get().percentage);
+      return downloading(state, roundedPercentage);
 
     case "done":
       return done();
 
-    default:
-    case "idle":
+    case "download-failed":
+      return downloadFailed(state.version);
+
+      case "download-succeeded":
+        return downloadSucceeded(state.version);
+  
+      case "idle":
       return idle();
   }
 
@@ -54,6 +74,7 @@ export const NonInjectedAutoUpdateComponent = observer(({ state }: Dependencies)
 export const AutoUpdateComponent = withInjectables<Dependencies>(NonInjectedAutoUpdateComponent, {
   getProps: (di, props) => ({
     state: di.inject(AutoUpdateStateInjectable),
+    progressOfUpdateDownload: di.inject(progressOfUpdateDownloadInjectable),
     ...props,
   }),
 });

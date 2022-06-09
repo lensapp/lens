@@ -5,16 +5,18 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { makeObservable, observable } from "mobx";
  
-export type AutoUpdateStateName = "checking" | "available" | "not-available" | "done" | "downloading" | "idle";
+export type AutoUpdateStateName = "checking" | "available" | "not-available" | "done" | "downloading" | "download-failed" | "download-succeeded" | "idle";
+
+let timerId: NodeJS.Timeout;
 
 export class AutoUpdateState {
   @observable private _state: AutoUpdateStateName;
-  private timerId: NodeJS.Timeout;
+  @observable private _version: string | undefined = undefined;
 
   constructor(state: AutoUpdateStateName = "idle") {
     makeObservable(this);
 
-    this.name = state;
+    this._state = state;
   }
 
   get name() : AutoUpdateStateName {
@@ -27,9 +29,18 @@ export class AutoUpdateState {
     this.triggerIdle();
   }
 
+  get version() : string | undefined {
+    return this._version;
+  }
+
+  set version(version: string | undefined ) {
+    this._version = version;
+
+    this.triggerIdle();
+  }
+
   private triggerIdle(): void {
-    clearTimeout(this.timerId);
-    this.timerId = null;
+    clearTimeout(timerId);
 
     switch(this.name) {
       case "checking":
@@ -40,7 +51,9 @@ export class AutoUpdateState {
   
       case "done":
       case "not-available":
-        this.timerId = setTimeout(() => this.name = "idle", 5000);
+      case "download-failed":
+      case "download-succeeded":
+          timerId = setTimeout(() => this.name = "idle", 5000);
         break;
     }
   }
