@@ -108,7 +108,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
     if (ev.detail === 3) {
       const selection = window.getSelection();
 
-      if (selection?.anchorNode?.parentNode) {
+      if (selection?.anchorNode?.parentNode && !(selection.anchorNode instanceof HTMLLabelElement)) {
         selection.selectAllChildren(selection.anchorNode.parentNode);
       }
     }
