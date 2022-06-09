@@ -19,11 +19,11 @@ export class NodeStore extends KubeObjectStore<Node, NodeApi> {
   }
 
   @computed get masterNodes() {
-    return this.items.filter(node => node.getRoleLabels().includes("master"));
+    return this.items.filter(node => node.isMasterNode());
   }
 
   @computed get workerNodes() {
-    return this.items.filter(node => !node.getRoleLabels().includes("master"));
+    return this.items.filter(node => !node.isMasterNode());
   }
 
   getWarningsCount(): number {

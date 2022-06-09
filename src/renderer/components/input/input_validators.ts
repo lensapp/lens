@@ -8,7 +8,8 @@ import type { ReactNode } from "react";
 import fse from "fs-extra";
 import { TypedRegEx } from "typed-regex";
 
-export class AsyncInputValidationError extends Error {}
+export class AsyncInputValidationError extends Error {
+}
 
 export type InputValidator<IsAsync extends boolean> = {
   /**
@@ -32,7 +33,7 @@ export type InputValidator<IsAsync extends boolean> = {
       message?: undefined;
       debounce: number;
     }
-);
+  );
 
 export function inputValidator<IsAsync extends boolean = false>(validator: InputValidator<IsAsync>): InputValidator<IsAsync> {
   return validator;
@@ -52,7 +53,14 @@ export const isEmail = inputValidator({
 
 export const isNumber = inputValidator({
   condition: ({ type }) => type === "number",
-  message: () => `Invalid number`,
+  message(value, { min, max }) {
+    const minMax: string = [
+      typeof min === "number" ? `min: ${min}` : undefined,
+      typeof max === "number" ? `max: ${max}` : undefined,
+    ].filter(Boolean).join(", ");
+
+    return `Invalid number${minMax ? ` (${minMax})` : ""}`;
+  },
   validate: (value, { min, max }) => {
     const numVal = +value;
 

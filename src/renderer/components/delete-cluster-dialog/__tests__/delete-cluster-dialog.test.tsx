@@ -26,6 +26,9 @@ import { computed } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../../routes/route-specific-component-injection-token";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
+import normalizedPlatformInjectable from "../../../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../../../../main/kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../../../../main/kubectl/normalized-arch.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -101,8 +104,11 @@ describe("<DeleteClusterDialog />", () => {
     applicationBuilder = getApplicationBuilder();
 
     applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
-      mainDi.override(createContextHandlerInjectable, () => () => undefined as any);
-      mainDi.override(createKubeconfigManagerInjectable, () => () => undefined as any);
+      mainDi.override(createContextHandlerInjectable, () => () => undefined as never);
+      mainDi.override(createKubeconfigManagerInjectable, () => () => undefined as never);
+      mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
+      mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+      mainDi.override(normalizedPlatformInjectable, () => "darwin");
 
       rendererDi.override(hotbarStoreInjectable, () => ({}));
       rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);

@@ -12,7 +12,7 @@ import type { UserStore } from "../../../common/user-store";
 import { Input } from "../input";
 import { Switch } from "../switch";
 import moment from "moment-timezone";
-import { updateChannels, defaultExtensionRegistryUrl, defaultUpdateChannel, defaultLocaleTimezone, defaultExtensionRegistryUrlLocation } from "../../../common/user-store/preferences-helpers";
+import { defaultExtensionRegistryUrl, defaultLocaleTimezone, defaultExtensionRegistryUrlLocation } from "../../../common/user-store/preferences-helpers";
 import type { IComputedValue } from "mobx";
 import { runInAction } from "mobx";
 import { isUrl } from "../input/input_validators";
@@ -24,11 +24,17 @@ import { Preferences } from "./preferences";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import themeStoreInjectable from "../../themes/store.injectable";
 import { defaultThemeId } from "../../../common/vars";
+import { updateChannels } from "../../../common/application-update/update-channels";
+import { map, toPairs } from "lodash/fp";
+import { pipeline } from "@ogre-tools/fp";
+import type { SelectedUpdateChannel } from "../../../common/application-update/selected-update-channel/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 
 interface Dependencies {
   appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
   userStore: UserStore;
   themeStore: ThemeStore;
+  selectedUpdateChannel: SelectedUpdateChannel;
 }
 
 const timezoneOptions = moment.tz.names()
@@ -36,10 +42,16 @@ const timezoneOptions = moment.tz.names()
     value: timezone,
     label: timezone.replace("_", " "),
   }));
-const updateChannelOptions = Array.from(updateChannels, ([channel, { label }]) => ({
-  value: channel,
-  label,
-}));
+
+const updateChannelOptions = pipeline(
+  toPairs(updateChannels),
+
+  map(([, channel]) => ({
+    value: channel.id,
+    label: channel.label,
+  })),
+);
+
 const extensionInstallRegistryOptions = [
   {
     value: "default",
@@ -55,7 +67,7 @@ const extensionInstallRegistryOptions = [
   },
 ] as const;
 
-const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, userStore, themeStore }) => {
+const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, userStore, themeStore, selectedUpdateChannel }) => {
   const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
   const themeOptions = [
     {
@@ -144,8 +156,8 @@ const NonInjectedApplication: React.FC<Dependencies> = ({ appPreferenceItems, us
           <Select
             id="update-channel-input"
             options={updateChannelOptions}
-            value={userStore.updateChannel}
-            onChange={value => userStore.updateChannel = value?.value ?? defaultUpdateChannel}
+            value={selectedUpdateChannel.value.get().id}
+            onChange={(selected) => selectedUpdateChannel.setValue(selected?.value) }
             themeName="lens"
           />
         </section>
@@ -175,6 +187,7 @@ export const Application = withInjectables<Dependencies>(
       appPreferenceItems: di.inject(appPreferencesInjectable),
       userStore: di.inject(userStoreInjectable),
       themeStore: di.inject(themeStoreInjectable),
+      selectedUpdateChannel: di.inject(selectedUpdateChannelInjectable),
     }),
   },
 );

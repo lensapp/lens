@@ -43,8 +43,6 @@ export const isProduction = process.env.NODE_ENV === "production";
  */
 export const isDevelopment = !isTestEnv && !isProduction;
 
-export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
-
 export const productName = packageInfo.productName;
 
 /**
@@ -57,6 +55,9 @@ export const defaultThemeId: ThemeId = "lens-dark";
 export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";
 export const defaultEditorFontFamily = "RobotoMono";
+/**
+ * @deprecated use `di.inject(normalizedPlatformInjectable)` instead
+ */
 export const normalizedPlatform = (() => {
   switch (process.platform) {
     case "darwin":
@@ -69,6 +70,9 @@ export const normalizedPlatform = (() => {
       throw new Error(`platform=${process.platform} is unsupported`);
   }
 })();
+/**
+ * @deprecated use `di.inject(bundledBinariesNormalizedArchInjectable)` instead
+ */
 export const normalizedArch = (() => {
   switch (process.arch) {
     case "arm64":
@@ -118,16 +122,6 @@ export const helmBinaryName = getBinaryName("helm");
  * @deprecated for being explicit side effect.
  */
 export const helmBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), helmBinaryName));
-
-/**
- * @deprecated for being explicit side effect.
- */
-export const kubectlBinaryName = getBinaryName("kubectl");
-
-/**
- * @deprecated for being explicit side effect.
- */
-export const kubectlBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), kubectlBinaryName));
 
 // Apis
 export const apiPrefix = "/api"; // local router apis

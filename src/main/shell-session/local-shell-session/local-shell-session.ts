@@ -50,11 +50,11 @@ export class LocalShellSession extends ShellSession {
 
     switch(path.basename(shell)) {
       case "powershell.exe":
-        return ["-NoExit", "-command", `& {$Env:PATH="${baseBinariesDir.get()};${kubectlPathDir};$Env:PATH"}`];
+        return ["-NoExit", "-command", `& {$Env:PATH="${kubectlPathDir};${baseBinariesDir.get()};$Env:PATH"}`];
       case "bash":
         return ["--init-file", path.join(await this.kubectlBinDirP, ".bash_set_path")];
       case "fish":
-        return ["--login", "--init-command", `export PATH="${baseBinariesDir.get()}:${kubectlPathDir}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
+        return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${baseBinariesDir.get()}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
       case "zsh":
         return ["--login"];
       default:

@@ -46,8 +46,7 @@ import { init } from "@sentry/electron/renderer";
 import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
 import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 import assert from "assert";
-import { beforeFrameStartsInjectionToken } from "./before-frame-starts/before-frame-starts-injection-token";
-import { runManyFor } from "../common/runnable/run-many-for";
+import startFrameInjectable from "./start-frame/start-frame.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -68,9 +67,9 @@ export async function bootstrap(di: DiContainer) {
     initializeSentryReporting(init);
   }
 
-  const beforeFrameStarts = runManyFor(di)(beforeFrameStartsInjectionToken);
+  const startFrame = di.inject(startFrameInjectable);
 
-  await beforeFrameStarts();
+  await startFrame();
 
   // TODO: Consolidate import time side-effect to setup time
   bindEvents();

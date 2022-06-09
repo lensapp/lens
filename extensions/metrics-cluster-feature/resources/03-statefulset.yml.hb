@@ -24,11 +24,6 @@ spec:
                   operator: In
                   values:
                   - linux
-              - matchExpressions:
-                - key: beta.kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
       # <%- if config.node_selector -%>
       # nodeSelector:
       # <%- node_selector.to_h.each do |key, value| -%>

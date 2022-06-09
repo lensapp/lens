@@ -4,7 +4,6 @@
  */
 
 import fs from "fs";
-import v8 from "v8";
 import * as yaml from "js-yaml";
 import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
@@ -15,7 +14,7 @@ import type { SetRequired } from "type-fest";
 import { assert } from "console";
 
 interface ChartCacheEntry {
-  data: Buffer;
+  data: string; // serialized JSON
   mtimeMs: number;
 }
 
@@ -88,7 +87,7 @@ export class HelmChartManager {
       HelmChartManager.#cache,
       this.repo.name,
       {
-        data: v8.serialize(normalized),
+        data: JSON.stringify(normalized),
         mtimeMs: cacheFileStats.mtimeMs,
       },
     );
@@ -107,7 +106,7 @@ export class HelmChartManager {
       }
     }
 
-    return v8.deserialize(cacheEntry.data);
+    return JSON.parse(cacheEntry.data);
   }
 }
 

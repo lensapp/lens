@@ -1,12 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`navigate to extension page renders 1`] = `<div />`;
+exports[`navigate to extension page renders 1`] = `
+<div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
 
 exports[`navigate to extension page when extension navigates to child route renders 1`] = `
 <div>
   <div>
     Child page
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -31,6 +40,9 @@ exports[`navigate to extension page when extension navigates to route with param
       Some button
     </button>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -55,6 +67,9 @@ exports[`navigate to extension page when extension navigates to route without pa
       Some button
     </button>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;
 
@@ -79,5 +94,8 @@ exports[`navigate to extension page when extension navigates to route without pa
       Some button
     </button>
   </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
 </div>
 `;

@@ -25,7 +25,7 @@ export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeO
   crd: CustomResourceDefinition;
 }
 
-function convertSpecValue(value: any): any {
+function convertSpecValue(value: unknown): React.ReactNode {
   if (Array.isArray(value)) {
     return (
       <ul>
@@ -50,18 +50,22 @@ function convertSpecValue(value: any): any {
     );
   }
 
-  return value;
+  if (
+    typeof value === "boolean"
+    || typeof value === "string"
+    || typeof value === "number"
+  ) {
+    return value.toString();
+  }
+
+  return null;
 }
 
 @observer
 export class CustomResourceDetails extends React.Component<CustomResourceDetailsProps> {
   renderAdditionalColumns(resource: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
     return columns.map(({ name, jsonPath }) => (
-      <DrawerItem
-        key={name}
-        name={name}
-        renderBoolean
-      >
+      <DrawerItem key={name} name={name}>
         {convertSpecValue(JSONPath.query(resource, convertKubectlJsonPathToNodeJsonPath(jsonPath)))}
       </DrawerItem>
     ));

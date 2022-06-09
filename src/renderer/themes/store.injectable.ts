@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import ipcRendererInjectable from "../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
+import ipcRendererInjectable from "../utils/channel/ipc-renderer.injectable";
 import { ThemeStore } from "./store";
 
 const themeStoreInjectable = getInjectable({

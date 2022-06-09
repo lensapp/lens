@@ -67,7 +67,6 @@ class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> exte
   }
 
   render() {
-    const tabIcon = <Icon material="terminal"/>;
     const className = cssNames("TerminalTab", this.props.className, {
       disconnected: this.isDisconnected,
     });
@@ -78,7 +77,7 @@ class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> exte
       <DockTab
         {...tabProps}
         className={className}
-        icon={tabIcon}
+        icon={<Icon material="terminal" />}
         moreActions={this.isDisconnected && (
           <Icon
             small

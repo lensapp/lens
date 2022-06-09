@@ -13,8 +13,8 @@ import { get, once } from "lodash";
 import { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import { KubeJsonApi } from "../../../common/k8s-api/kube-json-api";
 import logger from "../../logger";
-import { TerminalChannels } from "../../../renderer/api/terminal-api";
 import type { Kubectl } from "../../kubectl/kubectl";
+import { TerminalChannels } from "../../../common/terminal/channels";
 
 export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";

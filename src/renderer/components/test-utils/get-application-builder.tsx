@@ -18,19 +18,18 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
 import { Sidebar } from "../layout/sidebar";
-import { getDisForUnitTesting } from "../../../test-utils/get-dis-for-unit-testing";
 import type { DiContainer } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter } from "lodash/fp";
+import { flatMap, compact, join, get, filter, map, matches, find } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
-import type { MenuItem, MenuItemConstructorOptions } from "electron";
+import type { MenuItemConstructorOptions, MenuItem } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
@@ -44,6 +43,15 @@ import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
+import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
+import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
+import { Notifications } from "../notifications/notifications";
+import broadcastThatRootFrameIsRenderedInjectable from "../../frames/root-frame/broadcast-that-root-frame-is-rendered.injectable";
+import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
+import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
+import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
+import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -55,6 +63,12 @@ export interface ApplicationBuilder {
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
+
+  tray: {
+    click: (id: string) => Promise<void>;
+    get: (id: string) => TrayMenuItem | null;
+    getIconPath: () => string;
+  };
 
   applicationMenu: {
     click: (path: string) => Promise<void>;
@@ -80,13 +94,22 @@ interface DiContainers {
 
 interface Environment {
   renderSidebar: () => React.ReactNode;
+  beforeRender: () => void;
   onAllowKubeResource: () => void;
 }
 
 export const getApplicationBuilder = () => {
-  const { rendererDi, mainDi } = getDisForUnitTesting({
+  const mainDi = getMainDi({
     doGeneralOverrides: true,
   });
+
+  const overrideChannelsForWindow = overrideChannels(mainDi);
+
+  const rendererDi = getRendererDi({
+    doGeneralOverrides: true,
+  });
+
+  overrideChannelsForWindow(rendererDi);
 
   const dis = { rendererDi, mainDi };
 
@@ -110,6 +133,12 @@ export const getApplicationBuilder = () => {
     application: {
       renderSidebar: () => null,
 
+      beforeRender: () => {
+        const nofifyThatRootFrameIsRendered = rendererDi.inject(broadcastThatRootFrameIsRenderedInjectable);
+
+        nofifyThatRootFrameIsRendered();
+      },
+
       onAllowKubeResource: () => {
         throw new Error(
           "Tried to allow kube resource when environment is not cluster frame.",
@@ -119,6 +148,7 @@ export const getApplicationBuilder = () => {
 
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
+      beforeRender: () => {},
       onAllowKubeResource: () => {},
     } as Environment,
   };
@@ -137,6 +167,24 @@ export const getApplicationBuilder = () => {
   mainDi.override(mainExtensionsInjectable, () =>
     computed(() => []),
   );
+
+  const iconPaths = mainDi.inject(trayIconPathsInjectable);
+
+  let trayMenuItemsStateFake: TrayMenuItem[];
+  let trayMenuIconPath: string;
+
+  mainDi.override(electronTrayInjectable, () => ({
+    start: () => {
+      trayMenuIconPath = iconPaths.normal;
+    },
+    stop: () => {},
+    setMenuItems: (items) => {
+      trayMenuItemsStateFake = items;
+    },
+    setIconPath: (path) => {
+      trayMenuIconPath = path;
+    },
+  }));
 
   let allowedResourcesState: IObservableArray<KubeResource>;
   let rendered: RenderResult;
@@ -170,6 +218,7 @@ export const getApplicationBuilder = () => {
           {
             menu: null as never,
             commandId: 0,
+            userAccelerator: null,
             ...menuItem,
           } as MenuItem,
           undefined,
@@ -177,6 +226,32 @@ export const getApplicationBuilder = () => {
         );
 
         await flushPromises();
+      },
+    },
+
+    tray: {
+      get: (id: string) => {
+        return trayMenuItemsStateFake.find(matches({ id })) ?? null;
+      },
+      getIconPath: () => trayMenuIconPath,
+      click: async (id: string) => {
+        const menuItem = pipeline(
+          trayMenuItemsStateFake,
+          find((menuItem) => menuItem.id === id),
+        );
+
+        if (!menuItem) {
+          const availableIds = pipeline(
+            trayMenuItemsStateFake,
+            filter(item => !!item.click),
+            map(item => item.id),
+            join(", "),
+          );
+
+          throw new Error(`Tried to click tray menu item with ID ${id} which does not exist. Available IDs are: "${availableIds}"`);
+        }
+
+        await menuItem.click?.();
       },
     },
 
@@ -318,6 +393,10 @@ export const getApplicationBuilder = () => {
 
       await startMainApplication();
 
+      const applicationWindow = mainDi.inject(applicationWindowInjectable);
+
+      await applicationWindow.show();
+
       const startFrame = rendererDi.inject(startFrameInjectable);
 
       await startFrame();
@@ -329,6 +408,8 @@ export const getApplicationBuilder = () => {
       for (const callback of beforeRenderCallbacks) {
         await callback(dis);
       }
+
+      environment.beforeRender();
 
       rendered = render(
         <Router history={history}>
@@ -345,6 +426,8 @@ export const getApplicationBuilder = () => {
               return <Component />;
             }}
           </Observer>
+
+          <Notifications />
         </Router>,
       );
 

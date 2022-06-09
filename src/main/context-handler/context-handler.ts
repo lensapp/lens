@@ -152,9 +152,6 @@ export class ContextHandler implements ClusterContextHandler {
 
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
     const kubeAuthProxy = await this.ensureServerHelper();
-    const ca = this.resolveAuthProxyCa();
-    const clusterPath = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
-    const apiPrefix = `${kubeAuthProxy.apiPrefix}${clusterPath}`;
     const headers: Record<string, string> = {};
 
     if (this.clusterUrl.hostname) {
@@ -166,8 +163,8 @@ export class ContextHandler implements ClusterContextHandler {
         protocol: "https:",
         host: "127.0.0.1",
         port: kubeAuthProxy.port,
-        path: apiPrefix,
-        ca,
+        path: kubeAuthProxy.apiPrefix,
+        ca: this.resolveAuthProxyCa(),
       },
       changeOrigin: true,
       timeout,

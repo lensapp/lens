@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+@import "../../components/mixins.scss";
+
 .Switch {
   --thumb-size: 2rem;
   --thumb-color: hsl(0 0% 100%);

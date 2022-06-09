@@ -3,27 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { appPathsIpcChannel } from "../../common/app-paths/app-path-injection-token";
-import getValueFromRegisteredChannelInjectable from "./get-value-from-registered-channel/get-value-from-registered-channel.injectable";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
+import appPathsChannelInjectable from "../../common/app-paths/app-paths-channel.injectable";
+import { requestFromChannelInjectionToken } from "../../common/utils/channel/request-from-channel-injection-token";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
 
-  instantiate: (di) => ({
-    run: async () => {
-      const getValueFromRegisteredChannel = di.inject(
-        getValueFromRegisteredChannelInjectable,
-      );
+  instantiate: (di) => {
+    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
+    const appPathsChannel = di.inject(appPathsChannelInjectable);
+    const appPathsState = di.inject(appPathsStateInjectable);
 
-      const syncAppPaths = await getValueFromRegisteredChannel(appPathsIpcChannel);
+    return {
+      run: async () => {
+        const appPaths = await requestFromChannel(
+          appPathsChannel,
+        );
 
-      const appPathsState = di.inject(appPathsStateInjectable);
-
-      appPathsState.set(syncAppPaths);
-    },
-  }),
+        appPathsState.set(appPaths);
+      },
+    };
+  },
 
   injectionToken: beforeFrameStartsInjectionToken,
 });

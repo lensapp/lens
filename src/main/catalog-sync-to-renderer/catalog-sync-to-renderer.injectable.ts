@@ -17,6 +17,8 @@ const catalogSyncToRendererInjectable = getInjectable({
       startCatalogSyncToRenderer(catalogEntityRegistry),
     );
   },
+
+  causesSideEffects: true,
 });
 
 export default catalogSyncToRendererInjectable;

@@ -9,6 +9,7 @@ import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
 import { isDevelopment } from "../../common/vars";
 import type { Defaulted } from "../utils";
+import { TerminalChannels, type TerminalMessage } from "../../common/terminal/channels";
 
 interface WebsocketApiParams {
   /**
@@ -30,9 +31,9 @@ interface WebsocketApiParams {
   /**
    * The message for pinging the websocket
    *
-   * @default "PING"
+   * @default "{type: \"ping\"}"
    */
-  pingMessage?: string | ArrayBufferLike | Blob | ArrayBufferView;
+  pingMessage?: string;
 
   /**
    * If set to a number > 0, then the API will ping the socket on that interval.
@@ -65,7 +66,7 @@ export interface WebSocketEvents {
 
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
   protected socket: WebSocket | null = null;
-  protected pendingCommands: (string | ArrayBufferLike | Blob | ArrayBufferView)[] = [];
+  protected pendingCommands: string[] = [];
   protected reconnectTimer?: number;
   protected pingTimer?: number;
   protected params: Defaulted<WebsocketApiParams, keyof typeof WebSocketApi["defaultParams"]>;
@@ -76,7 +77,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     logging: isDevelopment,
     reconnectDelay: 10,
     flushOnOpen: true,
-    pingMessage: "PING",
+    pingMessage: JSON.stringify({ type: TerminalChannels.PING } as TerminalMessage),
   };
 
   constructor(params: WebsocketApiParams) {
@@ -149,7 +150,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     }
   }
 
-  send(command: string | ArrayBufferLike | Blob | ArrayBufferView) {
+  send(command: string) {
     if (this.getIsConnected()) {
       this.socket.send(command);
     } else {
