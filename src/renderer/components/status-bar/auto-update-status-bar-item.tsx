@@ -8,7 +8,8 @@ import React from "react";
 import AutoUpdateStateInjectable from "../../../common/auto-update/auto-update-state.injectable";
 import type { AutoUpdateState } from "../../../common/auto-update/auto-update-state.injectable";
 import { Spinner } from "../spinner";
-import progressOfUpdateDownloadInjectable, { ProgressOfDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
+import progressOfUpdateDownloadInjectable from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
+import type { ProgressOfDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 import type { SyncBox } from "../../../common/utils/sync-box/sync-box-injection-token";
 
 interface Dependencies {
@@ -16,14 +17,24 @@ interface Dependencies {
   progressOfUpdateDownload: SyncBox<ProgressOfDownload>;
 }
 
-const checking = () => <><Spinner/><div>{"Checking for updates..."}</div></>;
+const checking = () => (
+  <>
+    <Spinner/>
+    <div>{"Checking for updates..."}</div>
+  </>
+);
 const available = () => <div>{"Update is available"}</div>;
 const notAvailable = () => <div>{"No new updates available"}</div>;
 const downloading = (state: AutoUpdateState, percentDone: number) => {
-  const {version } = state;
+  const { version } = state;
 
   if ( percentDone === 0 ) {
-    return <><div>{`Download for version ${version} started `}</div><Spinner/></>;
+    return (
+      <>
+        <div>{`Download for version ${version} started `}</div>
+        <Spinner/>
+      </>
+    );
   }
 
   if ( percentDone < 100 ) {
@@ -52,9 +63,11 @@ export const NonInjectedAutoUpdateComponent = observer(({ state, progressOfUpdat
     case "not-available":
       return notAvailable();
 
-    case "downloading":
+    case "downloading": {
       const roundedPercentage = Math.round(progressOfUpdateDownload.value.get().percentage);
+      
       return downloading(state, roundedPercentage);
+    }
 
     case "done":
       return done();
@@ -62,10 +75,10 @@ export const NonInjectedAutoUpdateComponent = observer(({ state, progressOfUpdat
     case "download-failed":
       return downloadFailed(state.version);
 
-      case "download-succeeded":
-        return downloadSucceeded(state.version);
-  
-      case "idle":
+    case "download-succeeded":
+      return downloadSucceeded(state.version);
+
+    case "idle":
       return idle();
   }
 

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { makeObservable, observable } from "mobx";
- 
+
 export type AutoUpdateStateName = "checking" | "available" | "not-available" | "done" | "downloading" | "download-failed" | "download-succeeded" | "idle";
 
 let timerId: NodeJS.Timeout;
@@ -19,7 +19,7 @@ export class AutoUpdateState {
     this._state = state;
   }
 
-  get name() : AutoUpdateStateName {
+  get name(): AutoUpdateStateName {
     return this._state;
   }
 
@@ -29,11 +29,11 @@ export class AutoUpdateState {
     this.triggerIdle();
   }
 
-  get version() : string | undefined {
+  get version(): string | undefined {
     return this._version;
   }
 
-  set version(version: string | undefined ) {
+  set version(version: string | undefined) {
     this._version = version;
 
     this.triggerIdle();
@@ -42,18 +42,18 @@ export class AutoUpdateState {
   private triggerIdle(): void {
     clearTimeout(timerId);
 
-    switch(this.name) {
+    switch (this.name) {
       case "checking":
       case "available":
       case "downloading":
       case "idle":
         break;
-  
+
       case "done":
       case "not-available":
       case "download-failed":
       case "download-succeeded":
-          timerId = setTimeout(() => this.name = "idle", 5000);
+        timerId = setTimeout(() => this.name = "idle", 5000);
         break;
     }
   }
@@ -63,5 +63,5 @@ const AutoUpdateStateInjectable = getInjectable({
   id: "auto-update-state",
   instantiate: () => new AutoUpdateState("idle"),
 });
- 
+
 export default AutoUpdateStateInjectable;
