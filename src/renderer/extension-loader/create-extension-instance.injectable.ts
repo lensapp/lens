@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Mutable } from "type-fest";
+import type { Writable } from "type-fest";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
 import { createExtensionInstanceInjectionToken } from "../../extensions/extension-loader/create-extension-instance.token";
 import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
@@ -30,7 +30,7 @@ const createExtensionInstanceInjectable = getInjectable({
     return (ExtensionClass, extension) => {
       const instance = new ExtensionClass(extension) as LensRendererExtension;
 
-      (instance as Mutable<LensRendererExtension, typeof lensExtensionDependencies>)[lensExtensionDependencies] = deps;
+      (instance as Writable<LensRendererExtension, typeof lensExtensionDependencies>)[lensExtensionDependencies] = deps;
 
       return instance;
     };
