@@ -12,8 +12,8 @@ import appUpdateWarningLevelInjectable from "../../../app-update-warning/app-upd
 import { computed } from "mobx";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import updateAppInjectable from "../update-app.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import quitAndInstallUpdateInjectable from "../../../../main/electron-app/features/quit-and-install-update.injectable";
 
 describe("<UpdateButton/>", () => {
   let di: DiContainer;
@@ -22,7 +22,6 @@ describe("<UpdateButton/>", () => {
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(updateAppInjectable, jest.fn);
     di.override(appUpdateWarningLevelInjectable, () => computed(() => ""));
 
     render = renderFor(di);
@@ -58,7 +57,7 @@ describe("<UpdateButton/>", () => {
     const update = jest.fn();
 
     di.override(appUpdateWarningLevelInjectable, () => computed(() => "light"));
-    di.override(updateAppInjectable, update);
+    di.override(quitAndInstallUpdateInjectable, update);
 
     const { getByTestId } = render(<UpdateButton />);
 

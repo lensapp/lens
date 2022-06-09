@@ -15,7 +15,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import appUpdateWarningLevelInjectable from "../../app-update-warning/app-update-warning-level.injectable";
 import type { IComputedValue } from "mobx";
-import updateAppInjectable from "./update-app.injectable";
+import quitAndInstallUpdateInjectable from "../../../main/electron-app/features/quit-and-install-update.injectable";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
 }
@@ -76,7 +76,7 @@ export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(Non
     return {
       ...props,
       warningLevel: di.inject(appUpdateWarningLevelInjectable),
-      update: di.inject(updateAppInjectable),
+      update: di.inject(quitAndInstallUpdateInjectable),
     };
   },
 });
