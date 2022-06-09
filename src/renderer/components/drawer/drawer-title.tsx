@@ -9,7 +9,12 @@ import { cssNames } from "../../utils";
 
 export interface DrawerTitleProps {
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+
+  /**
+   * @deprecated Prefer passing the value as `children`
+   */
+  title?: React.ReactNode;
 
   /**
    * Specifies how large this title is
