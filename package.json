@@ -59,8 +59,12 @@
     "collectCoverage": false,
     "verbose": true,
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.(t|j)sx?$": [
+        "@swc/jest"
+      ]
     },
+    "testEnvironment": "jsdom",
+    "resolver": "<rootDir>/src/jest-28-resolver.js",
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy",
       "\\.(svg|png|jpg|eot|woff2?|ttf)$": "<rootDir>/__mocks__/assetMock.ts"
@@ -76,11 +80,7 @@
     "setupFilesAfterEnv": [
       "<rootDir>/src/jest-after-env.setup.ts"
     ],
-    "globals": {
-      "ts-jest": {
-        "isolatedModules": true
-      }
-    }
+    "runtime": "@side/jest-runtime"
   },
   "build": {
     "generateUpdatesFilesForAllChannels": true,
@@ -208,12 +208,13 @@
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.16.3",
     "@material-ui/styles": "^4.11.5",
-    "@ogre-tools/injectable": "7.1.0",
-    "@ogre-tools/injectable-react": "7.1.0",
     "@ogre-tools/fp": "7.1.0",
+    "@ogre-tools/injectable": "7.1.0",
     "@ogre-tools/injectable-extension-for-auto-registration": "7.1.0",
+    "@ogre-tools/injectable-react": "7.1.0",
     "@sentry/electron": "^3.0.7",
     "@sentry/integrations": "^6.19.3",
+    "@side/jest-runtime": "^1.0.0",
     "@types/circular-dependency-plugin": "5.0.5",
     "abort-controller": "^3.0.0",
     "auto-bind": "^4.0.0",
@@ -288,6 +289,8 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@sentry/types": "^6.19.7",
+    "@swc/core": "^1.2.197",
+    "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^7.31.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
@@ -306,7 +309,7 @@
     "@types/gunzip-maybe": "^1.4.0",
     "@types/html-webpack-plugin": "^3.2.6",
     "@types/http-proxy": "^1.17.9",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^28.1.1",
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^16.2.14",
     "@types/lodash": "^4.14.181",
@@ -374,10 +377,11 @@
     "identity-obj-proxy": "^3.0.0",
     "ignore-loader": "^0.1.2",
     "include-media": "^1.4.9",
-    "jest": "26.6.3",
+    "jest": "^28.1.1",
     "jest-canvas-mock": "^2.3.1",
+    "jest-environment-jsdom": "^28.1.1",
     "jest-fetch-mock": "^3.0.3",
-    "jest-mock-extended": "^1.0.18",
+    "jest-mock-extended": "^2.0.6",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^2.6.0",
     "mock-http": "^1.1.0",
@@ -402,7 +406,6 @@
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.0.23",
     "tar-stream": "^2.2.0",
-    "ts-jest": "26.5.6",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "type-fest": "^2.13.0",

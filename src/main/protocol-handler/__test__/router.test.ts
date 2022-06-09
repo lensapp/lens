@@ -63,19 +63,11 @@ describe("protocol router tests", () => {
   });
 
   it("should throw on non-lens URLS", async () => {
-    try {
-      expect(await lpr.route("https://google.ca")).toBeUndefined();
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-    }
+    expect(lpr.route("https://google.ca")).rejects.toBeDefined();
   });
 
   it("should throw when host not internal or extension", async () => {
-    try {
-      expect(await lpr.route("lens://foobar")).toBeUndefined();
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-    }
+    expect(lpr.route("lens://foobar")).rejects.toBeDefined();
   });
 
   it("should not throw when has valid host", async () => {

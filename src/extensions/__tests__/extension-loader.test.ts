@@ -11,6 +11,7 @@ import { runInAction } from "mobx";
 import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import { delay } from "../../renderer/utils";
 
 console = new Console(stdout, stderr);
 
@@ -125,42 +126,39 @@ describe("ExtensionLoader", () => {
     mockFs.restore();
   });
 
-  it("renderer updates extension after ipc broadcast", async done => {
+  it("renderer updates extension after ipc broadcast", async () => {
     expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
 
     await extensionLoader.init();
+    await delay(10);
 
-    setTimeout(() => {
-      // Assert the extensions after the extension broadcast event
-      expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`
-        Map {
-          "manifest/path" => Object {
-            "absolutePath": "/test/1",
-            "id": "manifest/path",
-            "isBundled": false,
-            "isEnabled": true,
-            "manifest": Object {
-              "name": "TestExtension",
-              "version": "1.0.0",
-            },
-            "manifestPath": "manifest/path",
+    // Assert the extensions after the extension broadcast event
+    expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`
+      Map {
+        "manifest/path" => Object {
+          "absolutePath": "/test/1",
+          "id": "manifest/path",
+          "isBundled": false,
+          "isEnabled": true,
+          "manifest": Object {
+            "name": "TestExtension",
+            "version": "1.0.0",
           },
-          "manifest/path3" => Object {
-            "absolutePath": "/test/3",
-            "id": "manifest/path3",
-            "isBundled": false,
-            "isEnabled": true,
-            "manifest": Object {
-              "name": "TestExtension3",
-              "version": "3.0.0",
-            },
-            "manifestPath": "manifest/path3",
+          "manifestPath": "manifest/path",
+        },
+        "manifest/path3" => Object {
+          "absolutePath": "/test/3",
+          "id": "manifest/path3",
+          "isBundled": false,
+          "isEnabled": true,
+          "manifest": Object {
+            "name": "TestExtension3",
+            "version": "3.0.0",
           },
-        }
-      `);
-
-      done();
-    }, 10);
+          "manifestPath": "manifest/path3",
+        },
+      }
+    `);
   });
 
   it("updates ExtensionsStore after isEnabled is changed", async () => {

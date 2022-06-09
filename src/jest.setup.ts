@@ -22,6 +22,8 @@ fetchMock.enableMocks();
 // Mock __non_webpack_require__ for tests
 globalThis.__non_webpack_require__ = jest.fn();
 
+global.setImmediate = jest.useRealTimers as unknown as typeof setImmediate;
+
 process.on("unhandledRejection", (err: any) => {
   fail(err);
 });

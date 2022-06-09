@@ -79,6 +79,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   componentDidMount() {
     this.hoverTarget?.addEventListener("mouseenter", this.onEnterTarget);
     this.hoverTarget?.addEventListener("mouseleave", this.onLeaveTarget);
+    this.refreshPosition();
   }
 
   componentDidUpdate() {
@@ -110,7 +111,8 @@ export class Tooltip extends React.Component<TooltipProps> {
       return;
     }
 
-    let positions = new Set<TooltipPosition>([
+    const positions = new Set<TooltipPosition>([
+      ...[preferredPositions ?? []].flat(),
       TooltipPosition.RIGHT,
       TooltipPosition.BOTTOM,
       TooltipPosition.TOP,
@@ -120,13 +122,6 @@ export class Tooltip extends React.Component<TooltipProps> {
       TooltipPosition.BOTTOM_RIGHT,
       TooltipPosition.BOTTOM_LEFT,
     ]);
-
-    if (preferredPositions) {
-      positions = new Set([
-        ...[preferredPositions].flat(),
-        ...positions,
-      ]);
-    }
 
     // reset position first and get all possible client-rect area for tooltip element
     this.setPosition(elem, { left: 0, top: 0 });
