@@ -133,7 +133,8 @@ const relaventPrsQuery = await Promise.all(
 );
 const relaventPrs = relaventPrsQuery
   .filter(query => query.stdout)
-  .map(query => query.pr);
+  .map(query => query.pr)
+  .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"));
 
 const enhancementPrLabelName = "enhancement";
 const bugfixPrLabelName = "bug";
