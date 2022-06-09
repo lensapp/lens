@@ -11,7 +11,6 @@ const getFilePathsInjectable = getInjectable({
 
   instantiate: () => async (fileFilter: FileFilter) =>
     await requestOpenFilePickingDialog({
-      // defaultPath: this.getFilePath(type),
       properties: ["openFile", "showHiddenFiles"],
       message: `Select file`,
       buttonLabel: `Use file`,
