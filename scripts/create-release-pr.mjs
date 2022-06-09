@@ -152,11 +152,15 @@ const prBodyLines = [
   "",
 ];
 
+function getPrEntry(pr) {
+  return `- ${pr.title} (**[#${pr.number}](https://github.com/lensapp/lens/pull/${pr.number})**) https://github.com/${pr.author.login}`;
+}
+
 if (enhancementPrs.length > 0) {
   prBodyLines.push(
     "## 🚀 Features",
     "",
-    ...enhancementPrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
+    ...enhancementPrs.map(getPrEntry),
     "",
   );
 }
@@ -165,7 +169,7 @@ if (bugfixPrs.length > 0) {
   prBodyLines.push(
     "## 🐛 Bug Fixes",
     "",
-    ...bugfixPrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
+    ...bugfixPrs.map(getPrEntry),
     "",
   );
 }
@@ -174,7 +178,7 @@ if (maintenencePrs.length > 0) {
   prBodyLines.push(
     "## 🧰 Maintenance",
     "",
-    ...maintenencePrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
+    ...maintenencePrs.map(getPrEntry),
     "",
   );
 }
