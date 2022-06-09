@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { HelmRepo } from "../../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../../common/helm/helm-repo";
 import { requestFromChannelInjectionToken } from "../../../../../common/utils/channel/request-from-channel-injection-token";
 import activeHelmRepositoriesInjectable from "./active-helm-repositories.injectable";
 import removeHelmRepositoryChannelInjectable from "../../../../../common/helm/remove-helm-repository-channel.injectable";

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { sortBy } from "lodash/fp";
-import type { HelmRepo } from "../../../../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
 import { customRequestPromise } from "../../../../../../../common/request";
 
 const callForPublicHelmRepositoriesInjectable = getInjectable({

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
-import type { HelmRepo } from "../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../common/helm/helm-repo";
 import loggerInjectable from "../../../../common/logger.injectable";
 
 const addHelmRepositoryInjectable = getInjectable({

@@ -12,7 +12,7 @@ import activeHelmRepositoriesInjectable from "./active-helm-repositories.injecta
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { Spinner } from "../../../spinner";
-import type { HelmRepo } from "../../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../../common/helm/helm-repo";
 import { RemovableItem } from "../../removable-item";
 import removeHelmRepositoryInjectable from "./remove-helm-repository.injectable";
 

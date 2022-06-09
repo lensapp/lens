@@ -11,7 +11,7 @@ import { Input } from "../../../../input";
 import { systemName, isUrl } from "../../../../input/input_validators";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import customHelmRepoInjectable from "./custom-helm-repo.injectable";
-import type { HelmRepo } from "../../../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../../../common/helm/helm-repo";
 import { observer } from "mobx-react";
 import type { IObservableValue } from "mobx";
 import { action } from "mobx";

@@ -11,7 +11,7 @@ import { iter, put, sortCharts } from "../../common/utils";
 import { execHelm } from "./exec";
 import type { SetRequired } from "type-fest";
 import { assert } from "console";
-import type { HelmRepo } from "../../common/helm-repo";
+import type { HelmRepo } from "../../common/helm/helm-repo";
 
 interface ChartCacheEntry {
   data: string; // serialized JSON

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestChannel } from "../utils/channel/request-channel-injection-token";
-import type { HelmRepo } from "../helm-repo";
+import type { HelmRepo } from "./helm-repo";
 import { requestChannelInjectionToken } from "../utils/channel/request-channel-injection-token";
 import type { AsyncResult } from "../utils/async-result";
 

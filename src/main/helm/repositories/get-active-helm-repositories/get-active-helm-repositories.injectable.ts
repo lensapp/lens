@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { HelmRepo } from "../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../common/helm/helm-repo";
 import type { ReadYamlFile } from "../../../../common/fs/read-yaml-file.injectable";
 import readYamlFileInjectable from "../../../../common/fs/read-yaml-file.injectable";
 import getHelmEnvInjectable from "../../get-helm-env/get-helm-env.injectable";

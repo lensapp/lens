@@ -6,7 +6,7 @@ import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import publicHelmRepositoriesInjectable from "./public-helm-repositories/public-helm-repositories.injectable";
-import type { HelmRepo } from "../../../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../../../common/helm/helm-repo";
 import type { SelectOption } from "../../../../select";
 import { Select } from "../../../../select";
 import { Icon } from "../../../../icon";

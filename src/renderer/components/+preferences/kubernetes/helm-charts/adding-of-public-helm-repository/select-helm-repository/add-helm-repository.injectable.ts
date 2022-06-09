@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import addHelmRepositoryChannelInjectable from "../../../../../../../common/helm/add-helm-repository-channel.injectable";
-import type { HelmRepo } from "../../../../../../../common/helm-repo";
+import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
 import { requestFromChannelInjectionToken } from "../../../../../../../common/utils/channel/request-from-channel-injection-token";
 import activeHelmRepositoriesInjectable from "../../active-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../../../../notifications/show-error-notification.injectable";
