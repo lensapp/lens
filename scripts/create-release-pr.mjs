@@ -133,7 +133,8 @@ const relaventPrsQuery = await Promise.all(
 );
 const relaventPrs = relaventPrsQuery
   .filter(query => query.stdout)
-  .map(query => query.pr);
+  .map(query => query.pr)
+  .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"));
 
 const enhancementPrLabelName = "enhancement";
 const bugfixPrLabelName = "bug";
@@ -152,11 +153,15 @@ const prBodyLines = [
   "",
 ];
 
+function getPrEntry(pr) {
+  return `- ${pr.title} (**[#${pr.number}](https://github.com/lensapp/lens/pull/${pr.number})**) https://github.com/${pr.author.login}`;
+}
+
 if (enhancementPrs.length > 0) {
   prBodyLines.push(
     "## 🚀 Features",
     "",
-    ...enhancementPrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
+    ...enhancementPrs.map(getPrEntry),
     "",
   );
 }
@@ -165,7 +170,7 @@ if (bugfixPrs.length > 0) {
   prBodyLines.push(
     "## 🐛 Bug Fixes",
     "",
-    ...bugfixPrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
+    ...bugfixPrs.map(getPrEntry),
     "",
   );
 }
@@ -174,7 +179,7 @@ if (maintenencePrs.length > 0) {
   prBodyLines.push(
     "## 🧰 Maintenance",
     "",
-    ...maintenencePrs.map(pr => `- ${pr.title} (**#${pr.number}**) https://github.com/${pr.author.login}`),
+    ...maintenencePrs.map(getPrEntry),
     "",
   );
 }
