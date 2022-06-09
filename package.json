@@ -49,7 +49,8 @@
     "k8sProxyVersion": "0.2.1",
     "bundledKubectlVersion": "1.23.3",
     "bundledHelmVersion": "3.7.2",
-    "sentryDsn": ""
+    "sentryDsn": "",
+    "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src *"
   },
   "engines": {
     "node": ">=16 <17"
