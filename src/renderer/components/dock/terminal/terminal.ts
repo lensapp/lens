@@ -9,7 +9,6 @@ import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
-import { TerminalChannels } from "../../../api/terminal-api";
 import { ThemeStore } from "../../../theme.store";
 import { disposer } from "../../../utils";
 import { isMac } from "../../../../common/vars";
@@ -18,6 +17,7 @@ import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
+import { TerminalChannels } from "../../../../common/terminal/channels";
 
 export class Terminal {
   private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;

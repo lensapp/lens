@@ -4,7 +4,6 @@
  */
 
 import fs from "fs";
-import v8 from "v8";
 import * as yaml from "js-yaml";
 import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
@@ -13,7 +12,7 @@ import { iter, sortCharts } from "../../common/utils";
 import { execHelm } from "./exec";
 
 interface ChartCacheEntry {
-  data: Buffer;
+  data: string; // serialized JSON
   mtimeMs: number;
 }
 
@@ -77,7 +76,7 @@ export class HelmChartManager {
     const normalized = normalizeHelmCharts(this.repo.name, data.entries);
 
     HelmChartManager.#cache.set(this.repo.name, {
-      data: v8.serialize(normalized),
+      data: JSON.stringify(normalized),
       mtimeMs: cacheFileStats.mtimeMs,
     });
   }
@@ -94,7 +93,7 @@ export class HelmChartManager {
       }
     }
 
-    return v8.deserialize(HelmChartManager.#cache.get(this.repo.name).data);
+    return JSON.parse(HelmChartManager.#cache.get(this.repo.name).data);
   }
 }
 

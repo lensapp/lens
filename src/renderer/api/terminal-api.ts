@@ -11,31 +11,8 @@ import url from "url";
 import { makeObservable, observable } from "mobx";
 import { ipcRenderer } from "electron";
 import logger from "../../common/logger";
-import { deserialize, serialize } from "v8";
 import { once } from "lodash";
-
-export enum TerminalChannels {
-  STDIN = "stdin",
-  STDOUT = "stdout",
-  CONNECTED = "connected",
-  RESIZE = "resize",
-}
-
-export type TerminalMessage = {
-  type: TerminalChannels.STDIN;
-  data: string;
-} | {
-  type: TerminalChannels.STDOUT;
-  data: string;
-} | {
-  type: TerminalChannels.CONNECTED;
-} | {
-  type: TerminalChannels.RESIZE;
-  data: {
-    width: number;
-    height: number;
-  };
-};
+import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 
 enum TerminalColor {
   RED = "\u001b[31m",
@@ -126,11 +103,10 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     this.prependListener("connected", onReady);
 
     super.connect(socketUrl);
-    this.socket.binaryType = "arraybuffer";
   }
 
   sendMessage(message: TerminalMessage) {
-    return this.send(serialize(message));
+    return this.send(JSON.stringify(message));
   }
 
   sendTerminalSize(cols: number, rows: number) {
@@ -145,9 +121,9 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     }
   }
 
-  protected _onMessage({ data, ...evt }: MessageEvent<ArrayBuffer>): void {
+  protected _onMessage({ data, ...evt }: MessageEvent<string>): void {
     try {
-      const message: TerminalMessage = deserialize(new Uint8Array(data));
+      const message = JSON.parse(data) as TerminalMessage;
 
       switch (message.type) {
         case TerminalChannels.STDOUT:

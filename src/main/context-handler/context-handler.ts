@@ -141,17 +141,13 @@ export class ContextHandler {
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
     await this.ensureServer();
 
-    const ca = this.dependencies.authProxyCa;
-    const clusterPath = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
-    const apiPrefix = `${this.kubeAuthProxy.apiPrefix}${clusterPath}`;
-
     return {
       target: {
         protocol: "https:",
         host: "127.0.0.1",
         port: this.kubeAuthProxy.port,
-        path: apiPrefix,
-        ca,
+        path: this.kubeAuthProxy.apiPrefix,
+        ca: this.dependencies.authProxyCa,
       },
       changeOrigin: true,
       timeout,
