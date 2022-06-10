@@ -10,15 +10,9 @@ import applicationWindowInjectable from "../../main/start-main-application/lens-
 import createElectronWindowForInjectable from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-
-import type {
-  ElectronWindow,
-  LensWindowConfiguration,
-} from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
-
+import type { ElectronWindow, LensWindowConfiguration } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { flushPromises } from "../../common/test-utils/flush-promises";
-import lensProxyPortInjectable from "../../main/lens-proxy/lens-proxy-port.injectable";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
 
 describe("opening application window using tray", () => {
@@ -63,10 +57,6 @@ describe("opening application window using tray", () => {
 
           callForSplashWindowHtmlMock = asyncFn();
           callForApplicationWindowHtmlMock = asyncFn();
-
-          const lensProxyPort = mainDi.inject(lensProxyPortInjectable);
-
-          lensProxyPort.set(42);
         },
       );
 

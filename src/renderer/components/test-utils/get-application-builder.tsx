@@ -56,6 +56,7 @@ import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
 import { StatusBar } from "../status-bar/status-bar";
+import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -398,6 +399,8 @@ export const getApplicationBuilder = () => {
     },
 
     async render() {
+      mainDi.inject(lensProxyPortInjectable).set(42);
+
       for (const callback of beforeApplicationStartCallbacks) {
         await callback(dis);
       }
