@@ -13,14 +13,18 @@ const showApplicationWindowInjectable = getInjectable({
 
   instantiate: (di) => {
     const applicationWindow = di.inject(applicationWindowInjectable);
-
     const splashWindow = di.inject(splashWindowInjectable);
 
     return async () => {
+      if (applicationWindow.opening) {
+        applicationWindow.show();
+        splashWindow.close();
+
+        return;
+      }
+
       const windowIsAlreadyBeingShown = someIsTruthy([
         applicationWindow.visible,
-        applicationWindow.opening,
-        splashWindow.visible,
         splashWindow.opening,
       ]);
 
@@ -28,9 +32,9 @@ const showApplicationWindowInjectable = getInjectable({
         return;
       }
 
-      await splashWindow.show();
+      await splashWindow.open();
 
-      await applicationWindow.show();
+      await applicationWindow.open();
 
       splashWindow.close();
     };

@@ -136,6 +136,27 @@ describe("opening application window using tray", () => {
             expect(callForApplicationWindowHtmlMock).toHaveBeenCalledWith("http://localhost:42");
           });
 
+          describe("given static HTML of application window has not resolved yet, when opening from tray again", () => {
+            beforeEach(() => {
+              callForApplicationWindowHtmlMock.mockClear();
+              callForSplashWindowHtmlMock.mockClear();
+
+              applicationBuilder.tray.click("open-app");
+            });
+
+            it("does not load contents of splash window again", () => {
+              expect(callForSplashWindowHtmlMock).not.toHaveBeenCalled();
+            });
+
+            it("does not load contents of application window again", () => {
+              expect(callForApplicationWindowHtmlMock).not.toHaveBeenCalled();
+            });
+
+            it("shows just the blank application window to permit developer tool access", () => {
+              expectWindowsToBeOpen(["only-application-window"]);
+            });
+          });
+
           describe("when static HTML of application window resolves", () => {
             beforeEach(async () => {
               await callForApplicationWindowHtmlMock.resolve();

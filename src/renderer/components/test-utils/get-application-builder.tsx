@@ -408,7 +408,7 @@ export const getApplicationBuilder = () => {
 
       const applicationWindow = mainDi.inject(applicationWindowInjectable);
 
-      await applicationWindow.show();
+      await applicationWindow.open();
 
       const startFrame = rendererDi.inject(startFrameInjectable);
 

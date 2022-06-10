@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { LensWindow, SendToViewArgs } from "./lens-window-injection-token";
 import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
 import createElectronWindowForInjectable from "./create-electron-window.injectable";
+import assert from "assert";
 
 export interface ElectronWindow {
   show: () => void;
@@ -40,52 +41,62 @@ const createLensWindowInjectable = getInjectable({
     return (configuration: LensWindowConfiguration): LensWindow => {
       let browserWindow: ElectronWindow | undefined;
 
+      let windowIsShown = false;
       let windowIsOpening = false;
-      let contentIsLoading = false;
+
+      const showWindow = () => {
+        assert(browserWindow);
+
+        browserWindow.show();
+        windowIsShown = true;
+      };
 
       return {
         id: configuration.id,
 
         get visible() {
-          return !!browserWindow && !contentIsLoading;
+          return windowIsShown;
         },
 
         get opening() {
           return windowIsOpening;
         },
 
-        show: async () => {
+        open: async () => {
           if (!browserWindow) {
             windowIsOpening = true;
 
             browserWindow = createElectronWindow({
               ...configuration,
-              onClose: () => browserWindow = undefined,
+              onClose: () => {
+                browserWindow = undefined;
+                windowIsShown = false;
+              },
             });
 
-            const windowFilePath = configuration.getContentSource().file;
-            const windowUrl = configuration.getContentSource().url;
+            const { file: filePathForContent, url: urlForContent } =
+              configuration.getContentSource();
 
-            contentIsLoading = true;
-
-            if (windowFilePath) {
-              await browserWindow.loadFile(windowFilePath);
-            } else if (windowUrl) {
-              await browserWindow.loadUrl(windowUrl);
+            if (filePathForContent) {
+              await browserWindow.loadFile(filePathForContent);
+            } else if (urlForContent) {
+              await browserWindow.loadUrl(urlForContent);
             }
 
             await configuration.beforeOpen?.();
-
-            contentIsLoading = false;
           }
 
-          browserWindow.show();
+          showWindow();
+
           windowIsOpening = false;
         },
+
+        show: showWindow,
 
         close: () => {
           browserWindow?.close();
           browserWindow = undefined;
+          windowIsShown = false;
         },
 
         send: (args: SendToViewArgs) => {

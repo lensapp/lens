@@ -13,8 +13,9 @@ export interface SendToViewArgs {
 
 export interface LensWindow {
   id: string;
-  show: () => Promise<void>;
+  open: () => Promise<void>;
   close: () => void;
+  show: () => void;
   send: (args: SendToViewArgs) => void;
   visible: boolean;
   opening: boolean;

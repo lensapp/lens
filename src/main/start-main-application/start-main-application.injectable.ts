@@ -49,7 +49,7 @@ const startMainApplicationInjectable = getInjectable({
         await beforeApplicationIsLoading();
 
         if (!shouldStartHidden) {
-          await splashWindow.show();
+          await splashWindow.open();
         }
 
         await onLoadOfApplication();
@@ -60,7 +60,7 @@ const startMainApplicationInjectable = getInjectable({
           if (deepLinkUrl) {
             await openDeepLink(deepLinkUrl);
           } else {
-            await applicationWindow.show();
+            await applicationWindow.open();
           }
 
           splashWindow.close();
