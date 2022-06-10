@@ -42,7 +42,7 @@ const createLensWindowInjectable = getInjectable({
       let browserWindow: ElectronWindow | undefined;
 
       let windowIsShown = false;
-      let windowIsOpening = false;
+      let windowIsStarting = false;
 
       const showWindow = () => {
         assert(browserWindow);
@@ -54,17 +54,17 @@ const createLensWindowInjectable = getInjectable({
       return {
         id: configuration.id,
 
-        get visible() {
+        get isVisible() {
           return windowIsShown;
         },
 
-        get opening() {
-          return windowIsOpening;
+        get isStarting() {
+          return windowIsStarting;
         },
 
-        open: async () => {
+        start: async () => {
           if (!browserWindow) {
-            windowIsOpening = true;
+            windowIsStarting = true;
 
             browserWindow = createElectronWindow({
               ...configuration,
@@ -88,7 +88,7 @@ const createLensWindowInjectable = getInjectable({
 
           showWindow();
 
-          windowIsOpening = false;
+          windowIsStarting = false;
         },
 
         show: showWindow,

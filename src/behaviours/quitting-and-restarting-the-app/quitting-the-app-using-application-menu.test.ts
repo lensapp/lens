@@ -41,7 +41,7 @@ describe("quitting the app using application menu", () => {
       );
 
       expect(
-        windows.map((window) => ({ id: window.id, visible: window.visible })),
+        windows.map((window) => ({ id: window.id, visible: window.isVisible })),
       ).toEqual([
         { id: "only-application-window", visible: true },
         { id: "splash", visible: false },
@@ -59,7 +59,7 @@ describe("quitting the app using application menu", () => {
         );
 
         expect(
-          windows.map((window) => ({ id: window.id, visible: window.visible })),
+          windows.map((window) => ({ id: window.id, visible: window.isVisible })),
         ).toEqual([
           { id: "only-application-window", visible: false },
           { id: "splash", visible: false },

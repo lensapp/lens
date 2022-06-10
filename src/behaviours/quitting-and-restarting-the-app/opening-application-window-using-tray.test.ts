@@ -243,6 +243,6 @@ const expectWindowsToBeOpenFor = (di: DiContainer) => (windowIds: string[]) => {
   const windows = di.injectMany(lensWindowInjectionToken);
 
   expect(
-    windows.filter((window) => window.visible).map((window) => window.id),
+    windows.filter((window) => window.isVisible).map((window) => window.id),
   ).toEqual(windowIds);
 };

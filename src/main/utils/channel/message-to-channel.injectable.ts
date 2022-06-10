@@ -21,10 +21,9 @@ const messageToChannelInjectable = getInjectable({
     return (channel: MessageChannel<any>, message?: unknown) => {
       const stringifiedMessage = tentativeStringifyJson(message);
 
-
       const visibleWindows = pipeline(
         getAllLensWindows(),
-        filter((lensWindow) => !!lensWindow.visible),
+        filter((lensWindow) => !!lensWindow.isVisible),
       );
 
       visibleWindows.forEach((lensWindow) =>

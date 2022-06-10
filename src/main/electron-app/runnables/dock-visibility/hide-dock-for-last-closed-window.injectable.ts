@@ -20,7 +20,7 @@ const hideDockForLastClosedWindowInjectable = getInjectable({
       run: () => {
         const visibleWindows = pipeline(
           getLensWindows(),
-          filter(window => !!window.visible),
+          filter(window => !!window.isVisible),
         );
 
         if (isEmpty(visibleWindows)) {

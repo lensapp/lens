@@ -16,7 +16,7 @@ const showApplicationWindowInjectable = getInjectable({
     const splashWindow = di.inject(splashWindowInjectable);
 
     return async () => {
-      if (applicationWindow.opening) {
+      if (applicationWindow.isStarting) {
         applicationWindow.show();
         splashWindow.close();
 
@@ -24,17 +24,17 @@ const showApplicationWindowInjectable = getInjectable({
       }
 
       const windowIsAlreadyBeingShown = someIsTruthy([
-        applicationWindow.visible,
-        splashWindow.opening,
+        applicationWindow.isVisible,
+        splashWindow.isStarting,
       ]);
 
       if (windowIsAlreadyBeingShown) {
         return;
       }
 
-      await splashWindow.open();
+      await splashWindow.start();
 
-      await applicationWindow.open();
+      await applicationWindow.start();
 
       splashWindow.close();
     };

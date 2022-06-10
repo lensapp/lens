@@ -13,12 +13,12 @@ export interface SendToViewArgs {
 
 export interface LensWindow {
   id: string;
-  open: () => Promise<void>;
+  start: () => Promise<void>;
   close: () => void;
   show: () => void;
   send: (args: SendToViewArgs) => void;
-  visible: boolean;
-  opening: boolean;
+  isVisible: boolean;
+  isStarting: boolean;
 }
 
 export const lensWindowInjectionToken = getInjectionToken<LensWindow>({
