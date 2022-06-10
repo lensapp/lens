@@ -53,7 +53,8 @@ import { overrideChannels } from "../../../test-utils/channel-fakes/override-cha
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
 import type { Route } from "../../../common/front-end-routing/route-injection-token";
-import { navigateToRouteInjectionToken, NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
