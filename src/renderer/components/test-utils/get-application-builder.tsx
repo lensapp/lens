@@ -181,13 +181,13 @@ export const getApplicationBuilder = () => {
     computed(() => []),
   );
 
-  const iconPaths = mainDi.inject(trayIconPathsInjectable);
-
   let trayMenuItemsStateFake: TrayMenuItem[];
   let trayMenuIconPath: string;
 
   mainDi.override(electronTrayInjectable, () => ({
     start: () => {
+      const iconPaths = mainDi.inject(trayIconPathsInjectable);
+
       trayMenuIconPath = iconPaths.normal;
     },
     stop: () => {},

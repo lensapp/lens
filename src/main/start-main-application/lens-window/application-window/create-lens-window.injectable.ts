@@ -4,13 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { LensWindow, SendToViewArgs } from "./lens-window-injection-token";
-import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window-for.injectable";
-import createElectronWindowForInjectable from "./create-electron-window-for.injectable";
+import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
+import createElectronWindowForInjectable from "./create-electron-window.injectable";
 
 export interface ElectronWindow {
   show: () => void;
   close: () => void;
   send: (args: SendToViewArgs) => void;
+  loadFile: (filePath: string) => Promise<void>;
+  loadUrl: (url: string) => Promise<void>;
 }
 
 export interface LensWindowConfiguration {
@@ -33,23 +35,19 @@ const createLensWindowInjectable = getInjectable({
   id: "create-lens-window",
 
   instantiate: (di) => {
-    const createElectronWindowFor = di.inject(createElectronWindowForInjectable);
+    const createElectronWindow = di.inject(createElectronWindowForInjectable);
 
     return (configuration: LensWindowConfiguration): LensWindow => {
       let browserWindow: ElectronWindow | undefined;
 
-      const createElectronWindow = createElectronWindowFor({
-        ...configuration,
-        onClose: () => browserWindow = undefined,
-      });
-
       let windowIsOpening = false;
+      let contentIsLoading = false;
 
       return {
         id: configuration.id,
 
         get visible() {
-          return !!browserWindow;
+          return !!browserWindow && !contentIsLoading;
         },
 
         get opening() {
@@ -59,7 +57,26 @@ const createLensWindowInjectable = getInjectable({
         show: async () => {
           if (!browserWindow) {
             windowIsOpening = true;
-            browserWindow = await createElectronWindow();
+
+            browserWindow = createElectronWindow({
+              ...configuration,
+              onClose: () => browserWindow = undefined,
+            });
+
+            const windowFilePath = configuration.getContentSource().file;
+            const windowUrl = configuration.getContentSource().url;
+
+            contentIsLoading = true;
+
+            if (windowFilePath) {
+              await browserWindow.loadFile(windowFilePath);
+            } else if (windowUrl) {
+              await browserWindow.loadUrl(windowUrl);
+            }
+
+            await configuration.beforeOpen?.();
+
+            contentIsLoading = false;
           }
 
           browserWindow.show();

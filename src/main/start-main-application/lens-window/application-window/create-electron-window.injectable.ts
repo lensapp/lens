@@ -38,21 +38,16 @@ export interface ElectronWindowConfiguration {
   onDomReady?: () => void;
 }
 
-export type CreateElectronWindow = () => Promise<ElectronWindow>;
-export type CreateElectronWindowFor = (config: ElectronWindowConfiguration) => CreateElectronWindow;
+export type CreateElectronWindow = (config: ElectronWindowConfiguration) => ElectronWindow;
 
-function isFileSource(src: ContentSource): src is FileSource {
-  return typeof (src as FileSource).file === "string";
-}
+const createElectronWindowInjectable = getInjectable({
+  id: "create-electron-window",
 
-const createElectronWindowFor = getInjectable({
-  id: "create-electron-window-for",
-
-  instantiate: (di): CreateElectronWindowFor => {
+  instantiate: (di): CreateElectronWindow => {
     const logger = di.inject(loggerInjectable);
     const sendToChannelInLensWindow = di.inject(sendToChannelInElectronBrowserWindowInjectable);
 
-    return (configuration) => async () => {
+    return (configuration) => {
       const applicationWindowState = di.inject(
         applicationWindowStateInjectable,
         {
@@ -172,19 +167,23 @@ const createElectronWindowFor = getInjectable({
           return { action: "deny" };
         });
 
-      const contentSource = configuration.getContentSource();
-
-      if (isFileSource(contentSource)) {
-        logger.info(`[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from file: ${contentSource.file}...`);
-        await browserWindow.loadFile(contentSource.file);
-      } else {
-        logger.info(`[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from url: ${contentSource.url}...`);
-        await browserWindow.loadURL(contentSource.url);
-      }
-
-      await configuration.beforeOpen?.();
-
       return {
+        loadFile: async (filePath) => {
+          logger.info(
+            `[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from file: ${filePath}...`,
+          );
+
+          await browserWindow.loadFile(filePath);
+        },
+
+        loadUrl: async (url) => {
+          logger.info(
+            `[CREATE-ELECTRON-WINDOW]: Loading content for window "${configuration.id}" from url: ${url}...`,
+          );
+
+          await browserWindow.loadURL(url);
+        },
+
         show: () => browserWindow.show(),
         close: () => browserWindow.close(),
         send: (args) => sendToChannelInLensWindow(browserWindow, args),
@@ -195,4 +194,4 @@ const createElectronWindowFor = getInjectable({
   causesSideEffects: true,
 });
 
-export default createElectronWindowFor;
+export default createElectronWindowInjectable;
