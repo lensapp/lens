@@ -43,9 +43,9 @@ describe("message to channel from main", () => {
     expect(sendToChannelInBrowserMock).not.toHaveBeenCalled();
   });
 
-  describe("given visible window", () => {
+  describe("given started window", () => {
     beforeEach(async () => {
-      await someTestWindow.show();
+      await someTestWindow.start();
     });
 
     it("when messaging to channel, messages to window", () => {
@@ -109,9 +109,9 @@ describe("message to channel from main", () => {
     });
   });
 
-  it("given multiple visible windows, when messaging to channel, messages to window", async () => {
-    await someTestWindow.show();
-    await someOtherTestWindow.show();
+  it("given multiple started windows, when messaging to channel, messages to window", async () => {
+    await someTestWindow.start();
+    await someOtherTestWindow.start();
 
     messageToChannel(someChannel, "some-message");
 
