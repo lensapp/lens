@@ -52,6 +52,8 @@ import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTest
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
+import type { Route } from "../../../common/front-end-routing/route-injection-token";
+import { navigateToRouteInjectionToken, NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -77,6 +79,7 @@ export interface ApplicationBuilder {
   preferences: {
     close: () => void;
     navigate: () => void;
+    navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => void;
     navigation: {
       click: (id: string) => void;
     };
@@ -181,7 +184,7 @@ export const getApplicationBuilder = () => {
     setMenuItems: (items) => {
       trayMenuItemsStateFake = items;
     },
-    setIconPath: (path) => {
+    setIconPath: (path: string) => {
       trayMenuIconPath = path;
     },
   }));
@@ -266,6 +269,12 @@ export const getApplicationBuilder = () => {
         const navigateToPreferences = rendererDi.inject(navigateToPreferencesInjectable);
 
         navigateToPreferences();
+      },
+
+      navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => {
+        const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
+
+        navigateToRoute(route, params);
       },
 
       navigation: {
