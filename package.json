@@ -49,7 +49,8 @@
     "k8sProxyVersion": "0.2.1",
     "bundledKubectlVersion": "1.23.3",
     "bundledHelmVersion": "3.7.2",
-    "sentryDsn": ""
+    "sentryDsn": "",
+    "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src *"
   },
   "engines": {
     "node": ">=16 <17"
@@ -207,10 +208,10 @@
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.16.3",
     "@material-ui/styles": "^4.11.5",
-    "@ogre-tools/injectable": "7.0.0",
-    "@ogre-tools/injectable-react": "7.0.0",
-    "@ogre-tools/fp": "7.0.0",
-    "@ogre-tools/injectable-extension-for-auto-registration": "7.0.0",
+    "@ogre-tools/injectable": "7.1.0",
+    "@ogre-tools/injectable-react": "7.1.0",
+    "@ogre-tools/fp": "7.1.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "7.1.0",
     "@sentry/electron": "^3.0.7",
     "@sentry/integrations": "^6.19.3",
     "@types/circular-dependency-plugin": "5.0.5",
