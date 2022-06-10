@@ -63,6 +63,10 @@ jobs:
 
       - run: make test
         name: Run tests
+        shell: bash
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        if: runner.os == 'Linux'
 
       - run: make test-extensions
         name: Run In-tree Extension tests
