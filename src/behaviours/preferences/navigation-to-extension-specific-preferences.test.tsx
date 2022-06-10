@@ -9,6 +9,9 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
+import extensionPreferencesRouteInjectable from "../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
 
 describe("preferences - navigation to extension specific preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -276,6 +279,65 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
     });
   });
+
+  describe("when navigating to extension specific tab", () => {
+    let rendered: RenderResult;
+    let di: DiContainer;
+    
+    beforeEach(async () => {
+      di = getDiForUnitTesting({ doGeneralOverrides: true });
+      
+      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
+      const extension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
+
+      applicationBuilder.beforeRender(() => {
+        const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
+        const params = { parameters: {
+          extensionId: "duplicated-tab-page-id",
+          tabId: "metrics-extension-tab",
+        }};
+        
+        applicationBuilder.preferences.navigateTo(extensionRoute, params);
+      });
+      
+      await applicationBuilder.addExtensions(extension);
+      rendered = await applicationBuilder.render();
+    });
+
+    it("renders", () => {
+      expect(rendered.container).toMatchSnapshot();
+    });
+  });
+
+  describe("when navigating to someone else extension specific tab", () => {
+    let rendered: RenderResult;
+    let di: DiContainer;
+    
+    beforeEach(async () => {
+      di = getDiForUnitTesting({ doGeneralOverrides: true });
+      
+      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
+      const extension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
+      const extensionUsingOtherTab = getRendererExtensionFake(extensionUsingSomeoneElseTab);
+
+      applicationBuilder.beforeRender(() => {
+        const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
+        const params = { parameters: {
+          extensionId: "extension-using-someone-else-tab-id",
+          tabId: "metrics-extension-tab",
+        }};
+        
+        applicationBuilder.preferences.navigateTo(extensionRoute, params);
+      });
+      
+      await applicationBuilder.addExtensions(extension, extensionUsingOtherTab);
+      rendered = await applicationBuilder.render();
+    });
+
+    it("renders", () => {
+      expect(rendered.container).toMatchSnapshot();
+    });
+  });
 });
 
 const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
@@ -449,4 +511,22 @@ const extensionStubWithWithSameRegisteredTab: FakeExtensionData = {
     id: "metrics-extension-tab",
     orderNumber: 100,
   }],
+};
+
+const extensionUsingSomeoneElseTab: FakeExtensionData = {
+  id: "extension-using-someone-else-tab-id",
+  name: "extension-using-someone-else-tab-id",
+
+  appPreferences: [
+    {
+      title: "My preferences",
+      id: "my-preferences-item-id",
+      showInPreferencesTab: "metrics-extension-tab",
+
+      components: {
+        Hint: () => <div data-testid="my-preferences-item-hint" />,
+        Input: () => <div data-testid="my-preferences-item-input" />,
+      },
+    },
+  ],
 };

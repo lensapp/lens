@@ -2084,3 +2084,361 @@ exports[`preferences - navigation to extension specific preferences given in pre
   />
 </div>
 `;
+
+exports[`preferences - navigation to extension specific preferences when navigating to extension specific tab renders 1`] = `
+<div>
+  <div
+    class="SettingLayout showNavigation Preferences"
+    data-testid="extension-preferences-page"
+  >
+    <nav
+      class="sidebarRegion"
+    >
+      <div
+        class="sidebar"
+      >
+        <div
+          class="Tabs flex column"
+        >
+          <div
+            class="header"
+          >
+            Preferences
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-application"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              App
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-proxy"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Proxy
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-kubernetes"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Kubernetes
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-editor"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Editor
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-terminal"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Terminal
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center active"
+            data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Metrics tab
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="contentRegion"
+      id="ScrollSpyRoot"
+    >
+      <div
+        class="content"
+      >
+        <section
+          id="extensions"
+        >
+          <h2>
+            duplicated-tab-page-id
+             
+            preferences
+          </h2>
+          <section
+            class="small"
+            data-testid="extension-preference-item-for-another-metrics-preference-item-id"
+            id="another-metrics-preference-item-id"
+          >
+            <div
+              class="SubTitle"
+            >
+              Another metrics
+               
+            </div>
+            <div
+              data-testid="another-metrics-preference-item-input"
+            />
+            <div
+              class="hint"
+            >
+              <div
+                data-testid="another-metrics-preference-item-hint"
+              />
+            </div>
+          </section>
+          <hr
+            class="small"
+          />
+        </section>
+      </div>
+      <div
+        class="toolsRegion"
+      >
+        <div
+          class="fixed top-[60px]"
+        >
+          <div
+            data-testid="close-preferences"
+          >
+            <div
+              aria-label="Close"
+              class="closeButton"
+              role="button"
+            >
+              <i
+                class="Icon icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="close"
+                >
+                  close
+                </span>
+              </i>
+            </div>
+            <div
+              aria-hidden="true"
+              class="esc"
+            >
+              ESC
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences when navigating to someone else extension specific tab renders 1`] = `
+<div>
+  <div
+    class="SettingLayout showNavigation Preferences"
+    data-testid="extension-preferences-page"
+  >
+    <nav
+      class="sidebarRegion"
+    >
+      <div
+        class="sidebar"
+      >
+        <div
+          class="Tabs flex column"
+        >
+          <div
+            class="header"
+          >
+            Preferences
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-application"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              App
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-proxy"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Proxy
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-kubernetes"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Kubernetes
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-editor"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Editor
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center"
+            data-testid="tab-link-for-terminal"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Terminal
+            </div>
+          </div>
+          <div
+            class="Tab flex gaps align-center active"
+            data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="label"
+            >
+              Metrics tab
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="contentRegion"
+      id="ScrollSpyRoot"
+    >
+      <div
+        class="content"
+      >
+        <section
+          id="extensions"
+        >
+          <h2>
+            extension-using-someone-else-tab-id
+             
+            preferences
+          </h2>
+          <section
+            class="small"
+            data-testid="extension-preference-item-for-my-preferences-item-id"
+            id="my-preferences-item-id"
+          >
+            <div
+              class="SubTitle"
+            >
+              My preferences
+               
+            </div>
+            <div
+              data-testid="my-preferences-item-input"
+            />
+            <div
+              class="hint"
+            >
+              <div
+                data-testid="my-preferences-item-hint"
+              />
+            </div>
+          </section>
+          <hr
+            class="small"
+          />
+        </section>
+      </div>
+      <div
+        class="toolsRegion"
+      >
+        <div
+          class="fixed top-[60px]"
+        >
+          <div
+            data-testid="close-preferences"
+          >
+            <div
+              aria-label="Close"
+              class="closeButton"
+              role="button"
+            >
+              <i
+                class="Icon icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="close"
+                >
+                  close
+                </span>
+              </i>
+            </div>
+            <div
+              aria-hidden="true"
+              class="esc"
+            >
+              ESC
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
