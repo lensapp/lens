@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 
-const statusBarItemsInjectable = getInjectable({
-  id: "status-bar-items",
+const registeredStatusBarItemsInjectable = getInjectable({
+  id: "registered-status-bar-items",
 
   instantiate: (di) => {
     const extensions = di.inject(rendererExtensionsInjectable);
@@ -18,4 +18,4 @@ const statusBarItemsInjectable = getInjectable({
   },
 });
 
-export default statusBarItemsInjectable;
+export default registeredStatusBarItemsInjectable;

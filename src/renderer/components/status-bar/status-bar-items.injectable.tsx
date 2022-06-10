@@ -10,9 +10,10 @@ import type {
   StatusBarItemProps,
   StatusBarRegistration,
 } from "./status-bar-registration";
-import statusBarItemsInjectable from "./status-bar-items.injectable";
+import registeredStatusBarItemsInjectable from "./registered-status-bar-items.injectable";
+import { AutoUpdateComponent } from "./auto-update-status-bar-item";
 
-export interface RegisteredStatusBarItems {
+export interface StatusBarItems {
   right: React.ComponentType<StatusBarItemProps>[];
   left: React.ComponentType<StatusBarItemProps>[];
 }
@@ -21,13 +22,17 @@ interface Dependencies {
   registrations: IComputedValue<StatusBarRegistration[]>;
 }
 
-function getRegisteredStatusBarItems({ registrations }: Dependencies): IComputedValue<RegisteredStatusBarItems> {
+function getStatusBarItems({ registrations }: Dependencies): IComputedValue<StatusBarItems> {
   return computed(() => {
-    const res: RegisteredStatusBarItems = {
+    const res: StatusBarItems = {
       left: [],
       right: [],
     };
 
+    // add Lens specific components
+    res.left.push(AutoUpdateComponent);
+
+    // add extension-registered components
     for (const registration of registrations.get()) {
       if (!registration || typeof registration !== "object") {
         continue;
@@ -66,13 +71,13 @@ function getRegisteredStatusBarItems({ registrations }: Dependencies): IComputed
   });
 }
 
-const registeredStatusBarItemsInjectable = getInjectable({
-  id: "registered-status-bar-items",
+const statusBarItemsInjectable = getInjectable({
+  id: "status-bar-items",
 
-  instantiate: (di) => getRegisteredStatusBarItems({
-    registrations: di.inject(statusBarItemsInjectable),
+  instantiate: (di) => getStatusBarItems({
+    registrations: di.inject(registeredStatusBarItemsInjectable),
   }),
 
 });
 
-export default registeredStatusBarItemsInjectable;
+export default statusBarItemsInjectable;

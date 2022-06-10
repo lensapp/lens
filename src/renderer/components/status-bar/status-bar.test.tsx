@@ -12,7 +12,7 @@ import { renderFor } from "../test-utils/renderFor";
 import type { IObservableArray } from "mobx";
 import { computed, observable } from "mobx";
 import type { DiContainer } from "@ogre-tools/injectable";
-import statusBarItemsInjectable from "./status-bar-items.injectable";
+import statusBarItemsInjectable from "./registered-status-bar-items.injectable";
 import type { StatusBarRegistration } from "./status-bar-registration";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";

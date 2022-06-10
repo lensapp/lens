@@ -8,21 +8,18 @@ import styles from "./status-bar.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { RegisteredStatusBarItems } from "./registered-status-bar-items.injectable";
-import registeredStatusBarItemsInjectable from "./registered-status-bar-items.injectable";
+import type { StatusBarItems } from "./status-bar-items.injectable";
+import statusBarItemsInjectable from "./status-bar-items.injectable";
 import type { IComputedValue } from "mobx";
-import { AutoUpdateComponent } from "./auto-update-status-bar-item";
 
 export interface StatusBarProps {}
 
 interface Dependencies {
-  items: IComputedValue<RegisteredStatusBarItems>;
+  items: IComputedValue<StatusBarItems>;
 }
 
 const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps) => {
-  const { left: leftItems, right } = items.get();
-
-  const left = [AutoUpdateComponent, ...leftItems];
+  const { left, right } = items.get();
 
   return (
     <div className={styles.StatusBar}>
@@ -47,7 +44,7 @@ const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps)
 
 export const StatusBar = withInjectables<Dependencies, StatusBarProps>(NonInjectedStatusBar, {
   getProps: (di, props) => ({
-    items: di.inject(registeredStatusBarItemsInjectable),
+    items: di.inject(statusBarItemsInjectable),
     ...props,
   }),
 });
