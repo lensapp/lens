@@ -7,20 +7,37 @@ import "./input.scss";
 
 import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import React from "react";
-import { autoBind, cssNames, debouncePromise, getRandId } from "../../utils";
+import { autoBind, cssNames, debouncePromise, getRandId, isPromiseSettledFulfilled } from "../../utils";
 import { Icon } from "../icon";
 import type { TooltipProps } from "../tooltip";
 import { Tooltip } from "../tooltip";
 import * as Validators from "./input_validators";
-import type { InputValidator } from "./input_validators";
-import isFunction from "lodash/isFunction";
+import type { InputValidator, InputValidation, InputValidationResult, SyncValidationMessage } from "./input_validators";
 import uniqueId from "lodash/uniqueId";
 import { debounce } from "lodash";
 
-const { conditionalValidators, ...InputValidators } = Validators;
+const {
+  conditionalValidators,
+  asyncInputValidator,
+  inputValidator,
+  isAsyncValidator,
+  unionInputValidatorsAsync,
+  ...InputValidators
+} = Validators;
 
-export { InputValidators };
-export type { InputValidator };
+export {
+  InputValidators,
+  asyncInputValidator,
+  inputValidator,
+  isAsyncValidator,
+  unionInputValidatorsAsync,
+};
+export type {
+  InputValidator,
+  InputValidation,
+  InputValidationResult,
+  SyncValidationMessage,
+};
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps =
@@ -78,15 +95,11 @@ const defaultProps: Partial<InputProps> = {
   blurOnEnter: true,
 };
 
-function isAsyncValidator(validator: InputValidator<boolean>): validator is InputValidator<true> {
-  return typeof validator.debounce === "number";
-}
-
 export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
 
   public input: InputElement | null = null;
-  public validators: InputValidator<boolean>[] = [];
+  public validators: InputValidator[] = [];
 
   public state: State = {
     focused: false,
@@ -155,7 +168,7 @@ export class Input extends React.Component<InputProps, State> {
   async validate() {
     const value = this.getValue();
     let validationId = (this.validationId = ""); // reset every time for async validators
-    const asyncValidators: Promise<any>[] = [];
+    const asyncValidators: Promise<React.ReactNode>[] = [];
     const errors: React.ReactNode[] = [];
 
     // run validators
@@ -169,28 +182,15 @@ export class Input extends React.Component<InputProps, State> {
         if (!validationId) {
           this.validationId = validationId = uniqueId("validation_id_");
         }
-        asyncValidators.push(
-          validator.validate(value, this.props).then(
-            () => null, // don't consider any valid result from promise since we interested in errors only
-            error => this.getValidatorError(value, validator) || error,
-          ),
-        );
-      }
-
-      const isValid = validator.validate(value, this.props);
-
-      if (isValid === false) {
+        asyncValidators.push((async () => {
+          try {
+            await validator.validate(value, this.props);
+          } catch (error) {
+            return this.getValidatorError(value, validator) || (error instanceof Error ? error.message : String(error));
+          }
+        })());
+      } else if (!validator.validate(value, this.props)) {
         errors.push(this.getValidatorError(value, validator));
-      } else if (isValid instanceof Promise) {
-        if (!validationId) {
-          this.validationId = validationId = uniqueId("validation_id_");
-        }
-        asyncValidators.push(
-          isValid.then(
-            () => null, // don't consider any valid result from promise since we interested in errors only
-            error => this.getValidatorError(value, validator) || error,
-          ),
-        );
       }
     }
 
@@ -200,10 +200,15 @@ export class Input extends React.Component<InputProps, State> {
     // handle async validators result
     if (asyncValidators.length > 0) {
       this.setState({ validating: true, valid: false });
-      const asyncErrors = await Promise.all(asyncValidators);
+      const asyncErrors = await Promise.allSettled(asyncValidators);
 
       if (this.validationId === validationId) {
-        this.setValidation(errors.concat(...asyncErrors.filter(err => err)));
+        errors.push(...asyncErrors
+          .filter(isPromiseSettledFulfilled)
+          .map(res => res.value)
+          .filter(Boolean));
+
+        this.setValidation(errors);
       }
     }
 
@@ -218,10 +223,10 @@ export class Input extends React.Component<InputProps, State> {
     });
   }
 
-  private getValidatorError(value: string, { message }: InputValidator<boolean>) {
-    if (isFunction(message)) return message(value, this.props);
-
-    return message || "";
+  private getValidatorError(value: string, { message }: InputValidator) {
+    return typeof message === "function"
+      ? message(value, this.props)
+      : message;
   }
 
   private setupValidators() {

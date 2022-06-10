@@ -13,10 +13,9 @@ import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import extensionInstallationStateStoreInjectable
-  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { inputValidator } from "../input/input_validators";
+import { unionInputValidatorsAsync } from "../input/input_validators";
 
 export interface InstallProps {
   installPath: string;
@@ -30,18 +29,14 @@ interface Dependencies {
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
-const installInputValidators = [
+const installInputValidator = unionInputValidatorsAsync(
+  {
+    message: "Invalid URL, absolute path, or extension name",
+  },
   InputValidators.isUrl,
-  InputValidators.isPath,
   InputValidators.isExtensionNameInstall,
-];
-
-const installInputValidator = inputValidator({
-  message: "Invalid URL, absolute path, or extension name",
-  validate: (value: string, props) => (
-    installInputValidators.some(({ validate }) => validate(value, props))
-  ),
-});
+  InputValidators.isPath,
+);
 
 const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
   installPath,
