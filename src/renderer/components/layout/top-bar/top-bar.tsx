@@ -8,15 +8,11 @@ import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { Icon } from "../../icon";
-import { observable } from "mobx";
-import { ipcRendererOn } from "../../../../common/ipc";
 import { watchHistoryState } from "../../../remote-helpers/history-updater";
 import { cssNames, noop } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
-import { emitOpenAppMenuAsContextMenu, requestWindowAction } from "../../../ipc";
-import { WindowAction } from "../../../../common/ipc/window";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 import type { NavigateToCatalog } from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -24,6 +20,14 @@ import navigateToCatalogInjectable from "../../../../common/front-end-routing/ro
 import catalogRouteInjectable from "../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { UpdateButton } from "../../update-button";
+import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
+import topBarNextEnabledInjectable from "./next-enabled.injectable";
+import openAppContextMenuInjectable from "./open-app-context-menu.injectable";
+import goBackInjectable from "./go-back.injectable";
+import goForwardInjectable from "./go-forward.injectable";
+import closeWindowInjectable from "./close-window.injectable";
+import maximizeWindowInjectable from "./maximize-window.injectable";
+import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
 
 interface Dependencies {
   navigateToCatalog: NavigateToCatalog;
@@ -31,18 +35,15 @@ interface Dependencies {
   items: IComputedValue<TopBarRegistration[]>;
   isWindows: boolean;
   isLinux: boolean;
+  prevEnabled: IComputedValue<Boolean>;
+  nextEnabled: IComputedValue<Boolean>;
+  openAppContextMenu: () => void;
+  goBack: () => void;
+  goForward: () => void;
+  minimizeWindow: () => void;
+  toggleMaximizeWindow: () => void;
+  closeWindow: () => void;
 }
-
-const prevEnabled = observable.box(false);
-const nextEnabled = observable.box(false);
-
-ipcRendererOn("history:can-go-back", (event, state: boolean) => {
-  prevEnabled.set(state);
-});
-
-ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
-  nextEnabled.set(state);
-});
 
 const NonInjectedTopBar = observer(({
   items,
@@ -50,41 +51,25 @@ const NonInjectedTopBar = observer(({
   catalogRouteIsActive,
   isWindows,
   isLinux,
+  prevEnabled,
+  nextEnabled,
+  openAppContextMenu,
+  goBack,
+  goForward,
+  closeWindow,
+  minimizeWindow,
+  toggleMaximizeWindow,
 }: Dependencies) => {
   const elem = useRef<HTMLDivElement | null>(null);
-
-  const openAppContextMenu = () => {
-    emitOpenAppMenuAsContextMenu();
-  };
 
   const goHome = () => {
     navigateToCatalog();
   };
 
-  const goBack = () => {
-    requestWindowAction(WindowAction.GO_BACK);
-  };
-
-  const goForward = () => {
-    requestWindowAction(WindowAction.GO_FORWARD);
-  };
-
   const windowSizeToggle = (evt: React.MouseEvent) => {
     if (elem.current === evt.target) {
-      toggleMaximize();
+      toggleMaximizeWindow();
     }
-  };
-
-  const minimizeWindow = () => {
-    requestWindowAction(WindowAction.MINIMIZE);
-  };
-
-  const toggleMaximize = () => {
-    requestWindowAction(WindowAction.TOGGLE_MAXIMIZE);
-  };
-
-  const closeWindow = () => {
-    requestWindowAction(WindowAction.CLOSE);
   };
 
   useEffect(() => watchHistoryState(), []);
@@ -147,14 +132,14 @@ const NonInjectedTopBar = observer(({
                   width="10"
                   height="1"
                   x="1"
-                  y="9" 
+                  y="9"
                 />
               </svg>
             </div>
             <div
               className={styles.maximize}
               data-testid="window-maximize"
-              onClick={toggleMaximize}
+              onClick={toggleMaximizeWindow}
             >
               <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
                 <rect
@@ -163,7 +148,7 @@ const NonInjectedTopBar = observer(({
                   x="1.5"
                   y="1.5"
                   fill="none"
-                  stroke="currentColor" 
+                  stroke="currentColor"
                 />
               </svg>
             </div>
@@ -193,23 +178,23 @@ const renderRegisteredItems = (items: TopBarRegistration[]) => (
   })
 );
 
-export const TopBar = withInjectables<Dependencies>(
-  NonInjectedTopBar,
-  {
-    getProps: (di) => {
-      const catalogRoute = di.inject(catalogRouteInjectable);
-
-      return {
-        navigateToCatalog: di.inject(navigateToCatalogInjectable),
-        items: di.inject(topBarItemsInjectable),
-        isLinux: di.inject(isLinuxInjectable),
-        isWindows: di.inject(isWindowsInjectable),
-
-        catalogRouteIsActive: di.inject(
-          routeIsActiveInjectable,
-          catalogRoute,
-        ),
-      };
-    },
-  },
-);
+export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
+  getProps: (di) => ({
+    navigateToCatalog: di.inject(navigateToCatalogInjectable),
+    items: di.inject(topBarItemsInjectable),
+    isLinux: di.inject(isLinuxInjectable),
+    isWindows: di.inject(isWindowsInjectable),
+    prevEnabled: di.inject(topBarPrevEnabledInjectable),
+    nextEnabled: di.inject(topBarNextEnabledInjectable),
+    catalogRouteIsActive: di.inject(
+      routeIsActiveInjectable,
+      di.inject(catalogRouteInjectable),
+    ),
+    openAppContextMenu: di.inject(openAppContextMenuInjectable),
+    goBack: di.inject(goBackInjectable),
+    goForward: di.inject(goForwardInjectable),
+    closeWindow: di.inject(closeWindowInjectable),
+    minimizeWindow: di.inject(maximizeWindowInjectable),
+    toggleMaximizeWindow: di.inject(toggleMaximizeWindowInjectable),
+  }),
+});
