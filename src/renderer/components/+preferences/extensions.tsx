@@ -16,7 +16,7 @@ import rendererExtensionsInjectable from "../../../extensions/renderer-extension
 
 interface Dependencies {
   preferenceItems: IComputedValue<RegisteredAppPreference[]>;
-  extensionName: string;
+  extensionName: string | undefined;
 }
 
 const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies) => (
@@ -27,6 +27,9 @@ const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies)
         {" "}
         preferences
       </h2>
+      {!extensionName && (
+        <div className="flex items-center">No extension found</div>
+      )}
       {preferenceItems.get().map((preferenceItem, index) => (
         <ExtensionSettings
           key={`${preferenceItem.id}-${index}`}
@@ -49,13 +52,13 @@ export const Extensions = withInjectables<Dependencies>(
       const extensions = di.inject(rendererExtensionsInjectable);
       const extension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
 
-      if (!extension) {
-        throw new Error(`Extension ${extensionId} not found`);
-      }
+      // if (!extension) {
+      //   throw new Error(`Extension ${extensionId} not found`);
+      // }
 
       return {
         preferenceItems: di.inject(extensionsPreferenceItemsInjectable, pathParameters),
-        extensionName: extension.manifest.name,
+        extensionName: extension?.manifest.name,
       };
     },
   },
