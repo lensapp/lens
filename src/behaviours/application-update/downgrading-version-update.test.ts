@@ -22,8 +22,6 @@ describe("downgrading version update", () => {
   let mainDi: DiContainer;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-
     applicationBuilder = getApplicationBuilder();
 
     applicationBuilder.beforeApplicationStart(({ mainDi }) => {

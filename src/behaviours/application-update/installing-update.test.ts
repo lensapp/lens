@@ -4,7 +4,7 @@
  */
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import quitAndInstallUpdateInjectable from "../../main/electron-app/features/quit-and-install-update.injectable";
+import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
