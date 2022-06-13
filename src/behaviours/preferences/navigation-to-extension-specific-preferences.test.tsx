@@ -48,7 +48,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
 
-        applicationBuilder.addExtensions(testExtension);
+        applicationBuilder.extensions.renderer.enable(testExtension);
       });
 
       it("renders", () => {

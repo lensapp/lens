@@ -27,7 +27,7 @@ describe("navigate to extension page", () => {
       extensionWithPagesHavingParameters,
     );
 
-    await applicationBuilder.addExtensions(testExtension);
+    await applicationBuilder.extensions.renderer.enable(testExtension);
 
     rendered = await applicationBuilder.render();
 

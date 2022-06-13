@@ -37,7 +37,7 @@ describe("clicking tray menu item originating from extension", () => {
         trayMenus: [{ label: "some-label", click: clickMock }],
       });
 
-      await applicationBuilder.addMainExtensions(someExtension);
+      await applicationBuilder.extensions.main.enable(someExtension);
     });
 
     it("when item is clicked, triggers the click handler", () => {
@@ -84,15 +84,33 @@ describe("clicking tray menu item originating from extension", () => {
       });
     });
 
-    it("when disabling extension, does not have tray menu items", () => {
-      applicationBuilder.removeMainExtensions(someExtension);
+    describe("when disabling extension", () => {
+      beforeEach(() => {
+        applicationBuilder.extensions.main.disable(someExtension);
+      });
 
-      expect(
-        applicationBuilder.tray.get(
-          "some-label-tray-menu-item-for-extension-some-extension-id-instance-1",
-        ),
-      ).toBeNull();
+      it("does not have the tray menu item from extension", () => {
+        applicationBuilder.extensions.main.disable(someExtension);
+
+        expect(
+          applicationBuilder.tray.get(
+            "some-label-tray-menu-item-for-extension-some-extension-id-instance-1",
+          ),
+        ).toBeNull();
+      });
+
+      // Note: Motivation here is to make sure that enabling same extension does not throw
+      it("when extension is re-enabled, has the tray menu item from extension", async () => {
+        await applicationBuilder.extensions.main.enable(someExtension);
+
+        expect(
+          applicationBuilder.tray.get(
+            "some-label-tray-menu-item-for-extension-some-extension-id-instance-2",
+          ),
+        ).not.toBeNull();
+      });
     });
+
   });
 });
 

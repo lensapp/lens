@@ -6,7 +6,7 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
-import type { IObservableArray } from "mobx";
+import type { IObservableArray, ObservableSet } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
 import React from "react";
@@ -58,15 +58,29 @@ import { StatusBar } from "../status-bar/status-bar";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
+import type { LensExtension } from "../../../extensions/lens-extension";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
+
+type EnableExtensions<T> = (...extensions: T[]) => Promise<void>;
+type DisableExtensions<T> = (...extensions: T[]) => void;
 
 export interface ApplicationBuilder {
   dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
-  addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
-  addMainExtensions: (...extensions: LensMainExtension[]) => Promise<ApplicationBuilder>;
-  removeMainExtensions: (...extensions: LensMainExtension[]) => ApplicationBuilder;
+
+  extensions: {
+    renderer: {
+      enable: EnableExtensions<LensRendererExtension>;
+      disable: DisableExtensions<LensRendererExtension>;
+    };
+
+    main: {
+      enable: EnableExtensions<LensMainExtension>;
+      disable: DisableExtensions<LensMainExtension>;
+    };
+  };
+
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
@@ -139,7 +153,7 @@ export const getApplicationBuilder = () => {
   const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeRenderCallbacks: Callback[] = [];
 
-  const extensionsState = observable.array<LensRendererExtension>();
+  const rendererExtensionsState = observable.set<LensRendererExtension>();
   const mainExtensionsState = observable.set<LensMainExtension>();
 
   rendererDi.override(subscribeStoresInjectable, () => () => () => {});
@@ -179,7 +193,7 @@ export const getApplicationBuilder = () => {
   );
 
   rendererDi.override(rendererExtensionsInjectable, () =>
-    computed(() => extensionsState),
+    computed(() => [...rendererExtensionsState]),
   );
 
   mainDi.override(mainExtensionsInjectable, () =>
@@ -203,6 +217,43 @@ export const getApplicationBuilder = () => {
 
   let allowedResourcesState: IObservableArray<KubeResource>;
   let rendered: RenderResult;
+
+  const enableExtensionsFor = <T extends ObservableSet>(
+    extensionState: T,
+    di: DiContainer,
+  ) => {
+    let index = 0;
+
+    return async (...extensions: LensExtension[]) => {
+      const extensionRegistrators = di.injectMany(
+        extensionRegistratorInjectionToken,
+      );
+
+      const addAndEnableExtensions = async () => {
+        index++;
+
+        const registratorPromises = extensions.flatMap((extension) =>
+          extensionRegistrators.map((registrator) =>
+            registrator(extension, index),
+          ),
+        );
+
+        await Promise.all(registratorPromises);
+
+        runInAction(() => {
+          extensions.forEach((extension) => {
+            extensionState.add(extension);
+          });
+        });
+      };
+
+      if (rendered) {
+        await addAndEnableExtensions();
+      } else {
+        builder.beforeRender(addAndEnableExtensions);
+      }
+    };
+  };
 
   const builder: ApplicationBuilder = {
     dis,
@@ -349,70 +400,16 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    addExtensions: async (...extensions) => {
-      const extensionRegistrators = rendererDi.injectMany(
-        extensionRegistratorInjectionToken,
-      );
+    extensions: {
+      renderer: {
+        enable: enableExtensionsFor(rendererExtensionsState, rendererDi),
+        disable: disableExtensionsFor(rendererExtensionsState),
+      },
 
-      const addAndEnableExtensions = async () => {
-        const registratorPromises = extensions.flatMap((extension) =>
-          extensionRegistrators.map((registrator) => registrator(extension, 1)),
-        );
-
-        await Promise.all(registratorPromises);
-
-        runInAction(() => {
-          extensions.forEach((extension) => {
-            extensionsState.push(extension);
-          });
-        });
-      };
-
-      if (rendered) {
-        await addAndEnableExtensions();
-      } else {
-        builder.beforeRender(addAndEnableExtensions);
-      }
-
-      return builder;
-    },
-
-    addMainExtensions: async (...extensions) => {
-      const extensionRegistrators = mainDi.injectMany(
-        extensionRegistratorInjectionToken,
-      );
-
-      const addAndEnableExtensions = async () => {
-        const registratorPromises = extensions.flatMap((extension) =>
-          extensionRegistrators.map((registrator) => registrator(extension, 1)),
-        );
-
-        await Promise.all(registratorPromises);
-
-        runInAction(() => {
-          extensions.forEach((extension) => {
-            mainExtensionsState.add(extension);
-          });
-        });
-      };
-
-      if (rendered) {
-        await addAndEnableExtensions();
-      } else {
-        builder.beforeRender(addAndEnableExtensions);
-      }
-
-      return builder;
-    },
-
-    removeMainExtensions: (...extensions) => {
-      extensions.forEach(extension => {
-        runInAction(() => {
-          mainExtensionsState.delete(extension);
-        });
-      });
-
-      return builder;
+      main: {
+        enable: enableExtensionsFor(mainExtensionsState, mainDi),
+        disable: disableExtensionsFor(mainExtensionsState),
+      },
     },
 
     allowKubeResource: (resourceName) => {
@@ -536,3 +533,14 @@ function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
     ),
   ];
 }
+
+const disableExtensionsFor =
+    <T extends ObservableSet>(extensionState: T) =>
+
+    (...extensions: LensExtension[]) => {
+      extensions.forEach((extension) => {
+        runInAction(() => {
+          extensionState.delete(extension);
+        });
+      });
+    };
