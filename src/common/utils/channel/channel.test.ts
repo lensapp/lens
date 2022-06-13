@@ -94,7 +94,7 @@ describe("channel", () => {
       });
     });
 
-    it("given multiple started started windows, when sending message, triggers listeners in all windows", async () => {
+    it("given multiple started windows, when sending message, triggers listeners in all windows", async () => {
       const someWindowFake = createTestWindow(mainDi, "some-window");
       const someOtherWindowFake = createTestWindow(mainDi, "some-other-window");
 
