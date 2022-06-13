@@ -204,7 +204,7 @@ class DefaultedFilePicker extends React.Component<FilePickerProps & typeof defau
     return (
       <div className="FilePicker">
         <label className="flex gaps align-center" htmlFor="file-upload">
-          {label} 
+          {label}
           {" "}
           {this.getIconRight()}
         </label>
@@ -232,4 +232,4 @@ class DefaultedFilePicker extends React.Component<FilePickerProps & typeof defau
   }
 }
 
-export const FilePicker = (props: FilePickerProps) => <DefaultedFilePicker {...(props as never)} />;
+export const FilePicker = (props: FilePickerProps) => <DefaultedFilePicker {...(props as FilePickerProps & typeof defaultProps)} />;

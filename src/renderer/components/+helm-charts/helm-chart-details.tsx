@@ -23,6 +23,7 @@ import createInstallChartTabInjectable from "../dock/install-chart/create-instal
 import { Notifications } from "../notifications";
 import HelmLogoPlaceholder from "./helm-placeholder.svg";
 import type { SingleValue } from "react-select";
+import { AbortController } from "abort-controller";
 
 export interface HelmChartDetailsProps {
   chart: HelmChart;
