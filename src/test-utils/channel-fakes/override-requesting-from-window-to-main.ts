@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
+import { serialize } from "v8";
 import type { RequestChannel } from "../../common/utils/channel/request-channel-injection-token";
 import type { RequestChannelHandler } from "../../common/utils/channel/request-channel-listener-injection-token";
 import enlistRequestChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-request-channel-listener.injectable";
@@ -46,7 +47,15 @@ export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
           );
         }
 
-        return requestListener.handler(request);
+        const result = requestListener.handler(request);
+
+        try {
+          serialize(result);
+        } catch {
+          throw new Error(`Tried to request value from channel "${id}" but the value cannot be serialized.`);
+        }
+
+        return result;
       },
     );
   };

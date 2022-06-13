@@ -8,7 +8,8 @@ import sendToChannelInElectronBrowserWindowInjectable from "../../main/start-mai
 import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import assert from "assert";
+import { serialize } from "v8";
+import { getOrInsertSet } from "../../renderer/utils";
 
 export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
   const messageChannelListenerFakesForRenderer = new Map<
@@ -22,7 +23,7 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
     () =>
       (
         browserWindow,
-        { channel: channelId, frameInfo, data = [] }: SendToViewArgs,
+        { channel: channelId, frameInfo, data }: SendToViewArgs,
       ) => {
         const listeners =
           messageChannelListenerFakesForRenderer.get(channelId) || new Set();
@@ -41,6 +42,12 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
           );
         }
 
+        try {
+          serialize(data);
+        } catch {
+          throw new Error(`Tried to send message to channel "${channelId}" but the value cannot be serialized.`);
+        }
+
         listeners.forEach((listener) => listener.handler(data));
       },
   );
@@ -50,31 +57,12 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
       enlistMessageChannelListenerInjectableInRenderer,
 
       () => (listener) => {
-        if (!messageChannelListenerFakesForRenderer.has(listener.channel.id)) {
-          messageChannelListenerFakesForRenderer.set(
-            listener.channel.id,
-            new Set(),
-          );
-        }
+        const listeners = getOrInsertSet(messageChannelListenerFakesForRenderer, listener.channel.id);
 
-        const listeners = messageChannelListenerFakesForRenderer.get(
-          listener.channel.id,
-        );
-
-        assert(listeners);
-
-        // TODO: Figure out typing
-        listeners.add(
-          listener as unknown as MessageChannelListener<MessageChannel<any>>,
-        );
+        listeners.add(listener);
 
         return () => {
-          // TODO: Figure out typing
-          listeners.delete(
-            listener as unknown as MessageChannelListener<
-              MessageChannel<any>
-            >,
-          );
+          listeners.delete(listener);
         };
       },
     );
