@@ -6,7 +6,6 @@
 import net from "net";
 import type http from "http";
 import spdy from "spdy";
-import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix, contentSecurityPolicy } from "../../common/vars";
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
@@ -17,6 +16,8 @@ import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { GetClusterForRequest } from "./get-cluster-for-request.injectable";
+import type ProxyServer from "http-proxy";
+import type { ServerOptions } from "http-proxy";
 
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
 export type ProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
@@ -25,9 +26,9 @@ interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
   shellApiRequest: ProxyApiRequest;
   kubeApiUpgradeRequest: ProxyApiRequest;
-  router: Router;
-  proxy: httpProxy;
-  lensProxyPort: { set: (portNumber: number) => void };
+  readonly router: Router;
+  readonly proxy: ProxyServer;
+  readonly lensProxyPort: { set: (portNumber: number) => void };
 }
 
 const watchParam = "watch";
@@ -58,12 +59,12 @@ const disallowedPorts = new Set([
 ]);
 
 export class LensProxy {
-  protected proxyServer: http.Server;
+  protected readonly proxyServer: http.Server;
   protected closed = false;
-  protected retryCounters = new Map<string, number>();
+  protected readonly retryCounters = new Map<string, number>();
 
-  constructor(private dependencies: Dependencies) {
-    this.configureProxy(dependencies.proxy);
+  constructor(private readonly dependencies: Dependencies) {
+    this.configureProxy(this.dependencies.proxy);
 
     this.proxyServer = spdy.createServer({
       spdy: {
@@ -163,7 +164,7 @@ export class LensProxy {
     this.closed = true;
   }
 
-  protected configureProxy(proxy: httpProxy): httpProxy {
+  protected configureProxy(proxy: ProxyServer): ProxyServer {
     proxy.on("proxyRes", (proxyRes, req, res) => {
       const retryCounterId = this.getRequestId(req);
 
@@ -212,13 +213,15 @@ export class LensProxy {
     return proxy;
   }
 
-  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ClusterContextHandler): Promise<httpProxy.ServerOptions | void> {
+  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ClusterContextHandler): Promise<ServerOptions | undefined> {
     if (req.url?.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
 
       return contextHandler.getApiTarget(isLongRunningRequest(req.url));
     }
+
+    return undefined;
   }
 
   protected getRequestId(req: http.IncomingMessage): string {
