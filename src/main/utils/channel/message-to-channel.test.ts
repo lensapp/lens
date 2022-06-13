@@ -57,7 +57,7 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: ["some-message"],
+            data: "some-message",
           },
         ],
       ]);
@@ -72,7 +72,7 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: [true],
+            data: true,
           },
         ],
       ]);
@@ -87,7 +87,7 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: [42],
+            data: 42,
           },
         ],
       ]);
@@ -102,7 +102,7 @@ describe("message to channel from main", () => {
 
           {
             channel: "some-channel",
-            data: [{ some: "object" }],
+            data: { some: "object" },
           },
         ],
       ]);
@@ -121,7 +121,7 @@ describe("message to channel from main", () => {
 
         {
           channel: "some-channel",
-          data: ["some-message"],
+          data: "some-message",
         },
       ],
 
@@ -130,7 +130,7 @@ describe("message to channel from main", () => {
 
         {
           channel: "some-channel",
-          data: ["some-message"],
+          data: "some-message",
         },
       ],
     ]);

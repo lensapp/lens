@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { requestChannelListenerInjectionToken } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import { requestChannelHandlerInjectionToken } from "../../../../common/utils/channel/request-channel-listener-injection-token";
 import getActiveHelmRepositoriesChannelInjectable from "../../../../common/helm/get-active-helm-repositories-channel.injectable";
 import getActiveHelmRepositoriesInjectable from "./get-active-helm-repositories.injectable";
 
@@ -20,7 +20,7 @@ const getActiveHelmRepositoriesChannelListenerInjectable = getInjectable({
     };
   },
 
-  injectionToken: requestChannelListenerInjectionToken,
+  injectionToken: requestChannelHandlerInjectionToken,
 });
 
 export default getActiveHelmRepositoriesChannelListenerInjectable;

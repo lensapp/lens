@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import addHelmRepositoryChannelInjectable from "../../../../common/helm/add-helm-repository-channel.injectable";
 import addHelmRepositoryInjectable from "./add-helm-repository.injectable";
-import { requestChannelListenerInjectionToken } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import { requestChannelHandlerInjectionToken } from "../../../../common/utils/channel/request-channel-listener-injection-token";
 
 const addHelmRepositoryChannelListenerInjectable = getInjectable({
   id: "add-helm-repository-channel-listener",
@@ -20,7 +20,7 @@ const addHelmRepositoryChannelListenerInjectable = getInjectable({
     };
   },
 
-  injectionToken: requestChannelListenerInjectionToken,
+  injectionToken: requestChannelHandlerInjectionToken,
 });
 
 export default addHelmRepositoryChannelListenerInjectable;
