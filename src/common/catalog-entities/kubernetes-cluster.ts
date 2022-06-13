@@ -132,6 +132,14 @@ export class KubernetesCluster<
         break;
     }
   }
+
+  get k8sVersion() {
+    return this.metadata.kubeVersion?.replace("unknown", "") || "";
+  }
+
+  get k8sDistro() {
+    return this.metadata.distro?.replace("unknown", "") || "";
+  }
 }
 
 export class KubernetesClusterCategory extends CatalogCategory {

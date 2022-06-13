@@ -1,0 +1,18 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.statusCell {
+  max-width: 100px;
+
+  :global {
+    .connected, .available {
+      color: var(--colorSuccess);
+    }
+
+    .disconnected, .deleting, .unavailable {
+      color: var(--halfGray);
+    }
+  }
+}

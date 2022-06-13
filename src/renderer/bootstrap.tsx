@@ -42,7 +42,7 @@ import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import { bindEvents } from "./navigation/events";
 import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import { init } from "@sentry/electron/renderer";
-import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
+import kubernetesClusterCategoryInjectable from "./catalog/categories/kubernetes-cluster.injectable";
 import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";

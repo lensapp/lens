@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import kubernetesClusterCategoryInjectable from "../../catalog/categories/kubernetes-cluster.injectable";
 import type { KubernetesClusterCategory } from "../kubernetes-cluster";
 
