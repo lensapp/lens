@@ -18,6 +18,7 @@ exports[`<Tooltip /> renders to DOM when forced to by visibile prop 1`] = `
     <div
       class="Tooltip visible"
       role="tooltip"
+      style="left: 10px; top: 0px;"
     >
       I am a tooltip
     </div>
@@ -34,7 +35,7 @@ exports[`<Tooltip /> renders to DOM when hovering over target 1`] = `
 <body>
   <div>
     <div
-      class="Tooltip right"
+      class="Tooltip visible"
       role="tooltip"
       style="left: 10px; top: 0px;"
     >

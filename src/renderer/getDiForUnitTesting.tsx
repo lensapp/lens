@@ -26,9 +26,6 @@ import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
-import isMacInjectable from "../common/vars/is-mac.injectable";
-import isWindowsInjectable from "../common/vars/is-windows.injectable";
-import isLinuxInjectable from "../common/vars/is-linux.injectable";
 import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
@@ -52,6 +49,8 @@ import requestAnimationFrameInjectable from "./components/animate/request-animat
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
 import callForPublicHelmRepositoriesInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import platformInjectable from "../common/vars/platform.injectable";
+import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -75,9 +74,10 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
   if (doGeneralOverrides) {
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-    di.override(isMacInjectable, () => true);
-    di.override(isWindowsInjectable, () => false);
-    di.override(isLinuxInjectable, () => false);
+    di.override(platformInjectable, () => "darwin");
+    di.override(startTopbarStateSyncInjectable, () => ({
+      run: () => {},
+    }));
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);

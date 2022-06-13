@@ -444,8 +444,14 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
               </div>
             </div>
             <div
-              class="Spinner singleColor center"
-            />
+              class="NoItems flex box grow"
+            >
+              <div
+                class="box center"
+              >
+                Item list is empty
+              </div>
+            </div>
           </div>
           <div
             class="AddRemoveButtons flex gaps"

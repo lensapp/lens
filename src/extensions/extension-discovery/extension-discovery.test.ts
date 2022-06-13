@@ -17,6 +17,8 @@ import installExtensionInjectable
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
+import { delay } from "../../renderer/utils";
+import { observable, when } from "mobx";
 
 jest.setTimeout(60_000);
 
@@ -64,7 +66,8 @@ describe("ExtensionDiscovery", () => {
     mockFs.restore();
   });
 
-  it("emits add for added extension", async (done) => {
+  it("emits add for added extension", async () => {
+    const letTestFinish = observable.box(false);
     let addHandler!: (filePath: string) => void;
 
     mockedFse.readJson.mockImplementation((p) => {
@@ -114,13 +117,14 @@ describe("ExtensionDiscovery", () => {
         },
         manifestPath: path.normalize("some-directory-for-user-data/node_modules/my-extension/package.json"),
       });
-      done();
+      letTestFinish.set(true);
     });
 
     addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
+    await when(() => letTestFinish.get());
   });
 
-  it("doesn't emit add for added file under extension", async done => {
+  it("doesn't emit add for added file under extension", async () => {
     let addHandler!: (filePath: string) => void;
 
     const mockWatchInstance = {
@@ -146,10 +150,8 @@ describe("ExtensionDiscovery", () => {
 
     addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/node_modules/dep/package.json"));
 
-    setTimeout(() => {
-      expect(onAdd).not.toHaveBeenCalled();
-      done();
-    }, 10);
+    await delay(10);
+
+    expect(onAdd).not.toHaveBeenCalled();
   });
 });
-

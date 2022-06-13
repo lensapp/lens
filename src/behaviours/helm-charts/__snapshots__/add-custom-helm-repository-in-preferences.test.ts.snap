@@ -4518,7 +4518,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                   class="flex gaps align-center"
                 >
                   <div
-                    class="Input box grow invalid dirty validating validatingLine"
+                    class="Input box grow dirty"
                   >
                     <label
                       class="input-area flex gaps align-center"

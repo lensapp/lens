@@ -449,7 +449,7 @@ describe("KubeApi", () => {
       expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
     });
 
-    it("aborts watch using abortController", async (done) => {
+    it("aborts watch using abortController", (done) => {
       const spy = jest.spyOn(request, "getResponse");
 
       mockFetch.mockResponse(async request => {
@@ -472,10 +472,7 @@ describe("KubeApi", () => {
       });
 
       expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
-
-      await delay(100);
-
-      abortController.abort();
+      delay(100).then(() => abortController.abort());
     });
 
     describe("retries", () => {
