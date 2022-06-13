@@ -204,7 +204,7 @@
   },
   "dependencies": {
     "@astronautlabs/jsonpath": "^1.1.0",
-    "@hapi/call": "^8.0.1",
+    "@hapi/call": "^9.0.0",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.16.3",
     "@material-ui/styles": "^4.11.5",
@@ -307,6 +307,8 @@
     "@types/fs-extra": "^9.0.13",
     "@types/glob-to-regexp": "^0.4.1",
     "@types/gunzip-maybe": "^1.4.0",
+    "@types/hapi__call": "^9.0.0",
+    "@types/hapi__subtext": "^7.0.0",
     "@types/html-webpack-plugin": "^3.2.6",
     "@types/http-proxy": "^1.17.9",
     "@types/jest": "^28.1.1",
