@@ -23,7 +23,7 @@ export class PrometheusLens extends PrometheusProvider {
       case "cluster":
         switch (queryName) {
           case "memoryUsage":
-            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_name)`.replace(/_bytes/g, `_bytes{kubernetes_node=~"${opts.nodes}"}`);
+            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_node)`.replace(/_bytes/g, `_bytes{kubernetes_node=~"${opts.nodes}"}`);
           case "workloadMemoryUsage":
             return `sum(container_memory_working_set_bytes{container!="POD",container!="",instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
@@ -69,7 +69,7 @@ export class PrometheusLens extends PrometheusProvider {
           case "cpuUsage":
             return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])) by(kubernetes_node)`;
           case "cpuCapacity":
-            return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
+            return `sum(kube_node_status_capacity{resource="cpu"}) by (node)`;
           case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
