@@ -11,7 +11,7 @@ import type { AbortSignal } from "abort-controller";
  * Useful for `Promise.race()` applications.
  * @param signal The AbortController's signal to reject with
  */
-export function rejectPromiseBy(signal: AbortSignal): Promise<void> {
+export function rejectPromiseBy(signal: AbortSignal): Promise<never> {
   return new Promise((_, reject) => {
     signal.addEventListener("abort", reject);
   });

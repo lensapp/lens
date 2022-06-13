@@ -7,7 +7,7 @@ import type { ClusterContext } from "./cluster-context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import type { Disposer } from "../utils";
-import { autoBind, includes, isRequestError, noop, rejectPromiseBy } from "../utils";
+import { waitUntilDefined, autoBind, includes, isRequestError, noop, rejectPromiseBy } from "../utils";
 import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
 import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
@@ -114,7 +114,7 @@ export abstract class KubeObjectStore<
     this.bindWatchEventsUpdater();
   }
 
-  get context(): ClusterContext {
+  get context(): ClusterContext | undefined {
     return KubeObjectStore.defaultContext.get();
   }
 
@@ -259,8 +259,9 @@ export abstract class KubeObjectStore<
 
   @action
   async loadAll({ namespaces, merge = true, reqInit, onLoadFailure }: KubeObjectStoreLoadAllParams = {}): Promise<undefined | K[]> {
-    await this.contextReady;
-    namespaces ??= this.context.contextNamespaces;
+    const context = await waitUntilDefined(() => this.context);
+
+    namespaces ??= context.contextNamespaces;
     this.isLoading = true;
 
     try {
@@ -427,11 +428,17 @@ export abstract class KubeObjectStore<
 
   subscribe({ onLoadFailure, abortController = new AbortController() }: KubeObjectStoreSubscribeParams = {}): Disposer {
     if (this.api.isNamespaced) {
-      Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
-        .then(() => {
+      Promise.race([
+        rejectPromiseBy(abortController.signal),
+        Promise.all([
+          waitUntilDefined(() => this.context),
+          this.namespacesReady,
+        ] as const),
+      ])
+        .then(([context]) => {
           assert(this.loadedNamespaces);
 
-          if (this.context.cluster?.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
+          if (context.cluster?.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
             return this.watchNamespace("", abortController, { onLoadFailure });
           }
 
