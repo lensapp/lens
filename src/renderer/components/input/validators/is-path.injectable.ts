@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { AsyncInputValidationError, inputValidator } from "../input_validators";
+import { asyncInputValidator } from "../input_validators";
 import pathExistsInjectable from "../../../../common/fs/path-exists.injectable";
 
 const isPathInjectable = getInjectable({
@@ -12,17 +12,12 @@ const isPathInjectable = getInjectable({
   instantiate: (di) => {
     const pathExists = di.inject(pathExistsInjectable);
 
-    return inputValidator<true>({
+    return asyncInputValidator({
       debounce: 100,
       condition: ({ type }) => type === "text",
-
-      validate: async (value) => {
-        try {
-          await pathExists(value);
-        } catch {
-          throw new AsyncInputValidationError(
-            `${value} is not a valid file path`,
-          );
+      validate: async value => {
+        if (!await pathExists(value)) {
+          throw new Error(`"${value}" is not a valid file path`);
         }
       },
     });
