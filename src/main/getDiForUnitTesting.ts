@@ -5,7 +5,7 @@
 
 import glob from "glob";
 import { kebabCase, memoize, noop } from "lodash/fp";
-import type { DiContainer } from "@ogre-tools/injectable";
+import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
@@ -76,7 +76,7 @@ import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-ins
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
 import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
+import baseBundledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
@@ -84,6 +84,19 @@ import startKubeConfigSyncInjectable from "./start-main-application/runnables/ku
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import execFileInjectable from "../common/fs/exec-file.injectable";
+import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-platform-architecture.injectable";
+import getHelmChartInjectable from "./helm/helm-service/get-helm-chart.injectable";
+import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-values.injectable";
+import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
+import deleteHelmReleaseInjectable from "./helm/helm-service/delete-helm-release.injectable";
+import getHelmReleaseHistoryInjectable from "./helm/helm-service/get-helm-release-history.injectable";
+import getHelmReleaseInjectable from "./helm/helm-service/get-helm-release.injectable";
+import getHelmReleaseValuesInjectable from "./helm/helm-service/get-helm-release-values.injectable";
+import installHelmChartInjectable from "./helm/helm-service/install-helm-chart.injectable";
+import listHelmReleasesInjectable from "./helm/helm-service/list-helm-releases.injectable";
+import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
+import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -134,6 +147,24 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(periodicalCheckForUpdatesInjectable, () => ({ start: () => {}, stop: () => {}, started: false }));
 
+    overrideFunctionalInjectables(di, [
+      getHelmChartInjectable,
+      getHelmChartValuesInjectable,
+      listHelmChartsInjectable,
+      deleteHelmReleaseInjectable,
+      getHelmReleaseHistoryInjectable,
+      getHelmReleaseInjectable,
+      getHelmReleaseValuesInjectable,
+      installHelmChartInjectable,
+      listHelmReleasesInjectable,
+      rollbackHelmReleaseInjectable,
+      updateHelmReleaseInjectable,
+      writeJsonFileInjectable,
+      readJsonFileInjectable,
+      readFileInjectable,
+      execFileInjectable,
+    ]);
+
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
@@ -141,25 +172,13 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });
-    di.override(baseBundeledBinariesDirectoryInjectable, () => "some-bin-directory");
+    di.override(baseBundledBinariesDirectoryInjectable, () => "some-bin-directory");
     di.override(spawnInjectable, () => () => {
       return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
         stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
         on: jest.fn(),
       } as never;
-    });
-
-    di.override(writeJsonFileInjectable, () => () => {
-      throw new Error("Tried to write JSON file to file system without specifying explicit override.");
-    });
-
-    di.override(readJsonFileInjectable, () => () => {
-      throw new Error("Tried to read JSON file from file system without specifying explicit override.");
-    });
-
-    di.override(readFileInjectable, () => () => {
-      throw new Error("Tried to read file from file system without specifying explicit override.");
     });
 
     di.override(loggerInjectable, () => ({
@@ -204,6 +223,7 @@ const overrideOperatingSystem = (di: DiContainer) => {
   di.override(platformInjectable, () => "darwin");
   di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
   di.override(joinPathsInjectable, () => joinPathsFake);
+  di.override(normalizedPlatformArchitectureInjectable, () => "arm64");
 };
 
 const overrideElectronFeatures = (di: DiContainer) => {
@@ -256,4 +276,12 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(setElectronAppPathInjectable, () => () => {});
   di.override(publishIsConfiguredInjectable, () => false);
   di.override(electronUpdaterIsActiveInjectable, () => false);
+};
+
+const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
+  injectables.forEach(injectable => {
+    di.override(injectable, () => () => {
+      throw new Error(`Tried to run "${injectable.id}" without explicit override.`);
+    });
+  });
 };
