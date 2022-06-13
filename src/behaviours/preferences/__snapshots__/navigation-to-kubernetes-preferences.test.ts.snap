@@ -840,7 +840,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   class="flex gaps"
                 >
                   <div
-                    class="Select theme-lens box grow Select--is-disabled css-3iigni-container"
+                    class="Select theme-lens box grow css-b62m3t-container"
                   >
                     <span
                       class="css-1f43avz-a11yText-A11yText"
@@ -853,7 +853,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control Select__control--is-disabled css-1insrsq-control"
+                      class="Select__control css-1s2u09g-control"
                     >
                       <div
                         class="Select__value-container css-319lph-ValueContainer"
@@ -865,7 +865,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                           Repositories
                         </div>
                         <div
-                          class="Select__input-container css-jzldcf-Input"
+                          class="Select__input-container css-6j8wv5-Input"
                           data-value=""
                         >
                           <input
@@ -877,7 +877,6 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                             autocomplete="off"
                             autocorrect="off"
                             class="Select__input"
-                            disabled=""
                             id="selection-of-active-public-helm-repository"
                             role="combobox"
                             spellcheck="false"
@@ -891,22 +890,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       <div
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
-                        <div
-                          aria-hidden="true"
-                          class="Select__indicator Select__loading-indicator css-at12u2-loadingIndicator"
-                        >
-                          <span
-                            class="css-1xtdfmb-LoadingDot"
-                          />
-                          <span
-                            class="css-zoievk-LoadingDot"
-                          />
-                          <span
-                            class="css-x748d8-LoadingDot"
-                          />
-                        </div>
                         <span
-                          class="Select__indicator-separator css-109onse-indicatorSeparator"
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
@@ -938,16 +923,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                 </div>
                 <div
                   class="repos"
-                >
-                  <div
-                    class="pt-5 relative"
-                  >
-                    <div
-                      class="Spinner singleColor center"
-                      data-testid="helm-repositories-are-loading"
-                    />
-                  </div>
-                </div>
+                />
                 <div />
               </div>
             </div>
