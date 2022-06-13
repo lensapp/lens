@@ -34,7 +34,7 @@ describe("add custom helm repository in preferences", () => {
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
 
   beforeEach(async () => {
-    jest.useFakeTimers("modern");
+    jest.useFakeTimers();
 
     applicationBuilder = getApplicationBuilder();
 
