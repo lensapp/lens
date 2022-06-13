@@ -409,7 +409,7 @@
     "tailwindcss": "^3.0.23",
     "tar-stream": "^2.2.0",
     "ts-loader": "^9.2.8",
-    "ts-node": "^10.7.0",
+    "ts-node": "^10.8.1",
     "type-fest": "^2.13.0",
     "typed-emitter": "^1.4.0",
     "typedoc": "0.22.17",
