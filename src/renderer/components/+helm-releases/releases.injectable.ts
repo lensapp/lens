@@ -7,6 +7,7 @@ import { asyncComputed } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import { listReleases } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import releaseSecretsInjectable from "./release-secrets.injectable";
 
 const releasesInjectable = getInjectable({
   id: "releases",
@@ -14,9 +15,12 @@ const releasesInjectable = getInjectable({
   instantiate: (di) => {
     const clusterContext = di.inject(clusterFrameContextInjectable);
     const namespaceStore = di.inject(namespaceStoreInjectable);
+    const releaseSecrets = di.inject(releaseSecretsInjectable);
 
     return asyncComputed(async () => {
       const contextNamespaces = namespaceStore.contextNamespaces || [];
+
+      void releaseSecrets.get();
 
       const isLoadingAll =
         clusterContext.allNamespaces?.length > 1 &&
