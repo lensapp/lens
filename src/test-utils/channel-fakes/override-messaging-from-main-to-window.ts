@@ -9,7 +9,8 @@ import type { SendToViewArgs } from "../../main/start-main-application/lens-wind
 import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { serialize } from "v8";
-import { getOrInsertSet } from "../../renderer/utils";
+import { getOrInsertSet, toJS } from "../../common/utils";
+import { inspect } from "util";
 
 export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
   const messageChannelListenerFakesForRenderer = new Map<
@@ -23,7 +24,7 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
     () =>
       (
         browserWindow,
-        { channel: channelId, frameInfo, data }: SendToViewArgs,
+        { channel: channelId, frameInfo, data: rawData }: SendToViewArgs,
       ) => {
         const listeners =
           messageChannelListenerFakesForRenderer.get(channelId) || new Set();
@@ -42,10 +43,15 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
           );
         }
 
+        const data = toJS(rawData);
+
         try {
           serialize(data);
-        } catch {
-          throw new Error(`Tried to send message to channel "${channelId}" but the value cannot be serialized.`);
+        } catch (error) {
+          throw new Error(`Tried to send message to channel "${channelId}" but the value cannot be serialized: ${inspect(data, {
+            colors: true,
+            depth: Infinity,
+          })}`);
         }
 
         listeners.forEach((listener) => listener.handler(data));

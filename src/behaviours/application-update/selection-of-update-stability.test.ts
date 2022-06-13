@@ -16,6 +16,7 @@ import type { UpdateChannel, UpdateChannelId } from "../../common/application-up
 import { updateChannels } from "../../common/application-update/update-channels";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
+import type { SelectedUpdateChannel } from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
@@ -80,10 +81,7 @@ describe("selection of update stability", () => {
     });
 
     describe('given update channel "alpha" is selected, when checking for updates', () => {
-      let selectedUpdateChannel: {
-        value: IComputedValue<UpdateChannel>;
-        setValue: (channelId: UpdateChannelId) => void;
-      };
+      let selectedUpdateChannel: SelectedUpdateChannel;
 
       beforeEach(() => {
         selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(

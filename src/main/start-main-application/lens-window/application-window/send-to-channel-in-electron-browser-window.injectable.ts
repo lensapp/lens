@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { BrowserWindow } from "electron";
+import { toJS } from "../../../../common/utils";
 import type { SendToViewArgs } from "./lens-window-injection-token";
 
 const sendToChannelInElectronBrowserWindowInjectable = getInjectable({
@@ -19,10 +20,10 @@ const sendToChannelInElectronBrowserWindowInjectable = getInjectable({
           browserWindow.webContents.sendToFrame(
             [frameInfo.processId, frameInfo.frameId],
             channel,
-            data,
+            toJS(data),
           );
         } else {
-          browserWindow.webContents.send(channel, data);
+          browserWindow.webContents.send(channel, toJS(data));
         }
       },
 
