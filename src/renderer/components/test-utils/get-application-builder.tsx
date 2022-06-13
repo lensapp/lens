@@ -56,6 +56,8 @@ import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
 import { StatusBar } from "../status-bar/status-bar";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
+import type { LensMainExtension } from "../../../extensions/lens-main-extension";
+import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -63,6 +65,8 @@ export interface ApplicationBuilder {
   dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
   addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
+  addMainExtensions: (...extensions: LensMainExtension[]) => Promise<ApplicationBuilder>;
+  removeMainExtensions: (...extensions: LensMainExtension[]) => ApplicationBuilder;
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
@@ -136,6 +140,7 @@ export const getApplicationBuilder = () => {
   const beforeRenderCallbacks: Callback[] = [];
 
   const extensionsState = observable.array<LensRendererExtension>();
+  const mainExtensionsState = observable.set<LensMainExtension>();
 
   rendererDi.override(subscribeStoresInjectable, () => () => () => {});
 
@@ -178,10 +183,9 @@ export const getApplicationBuilder = () => {
   );
 
   mainDi.override(mainExtensionsInjectable, () =>
-    computed(() => []),
+    computed(() => [...mainExtensionsState]),
   );
 
-  let trayMenuItemsStateFake: TrayMenuItem[];
   let trayMenuIconPath: string;
 
   mainDi.override(electronTrayInjectable, () => ({
@@ -191,9 +195,7 @@ export const getApplicationBuilder = () => {
       trayMenuIconPath = iconPaths.normal;
     },
     stop: () => {},
-    setMenuItems: (items) => {
-      trayMenuItemsStateFake = items;
-    },
+    setMenuItems: () => {},
     setIconPath: (path) => {
       trayMenuIconPath = path;
     },
@@ -242,18 +244,20 @@ export const getApplicationBuilder = () => {
 
     tray: {
       get: (id: string) => {
-        return trayMenuItemsStateFake.find(matches({ id })) ?? null;
+        const trayMenuItems = mainDi.inject(trayMenuItemsInjectable).get();
+
+        return trayMenuItems.find(matches({ id })) ?? null;
       },
       getIconPath: () => trayMenuIconPath,
+
       click: async (id: string) => {
-        const menuItem = pipeline(
-          trayMenuItemsStateFake,
-          find((menuItem) => menuItem.id === id),
-        );
+        const trayMenuItems = mainDi.inject(trayMenuItemsInjectable).get();
+
+        const menuItem = trayMenuItems.find(matches({ id })) ?? null;
 
         if (!menuItem) {
           const availableIds = pipeline(
-            trayMenuItemsStateFake,
+            trayMenuItems,
             filter(item => !!item.click),
             map(item => item.id),
             join(", "),
@@ -369,6 +373,44 @@ export const getApplicationBuilder = () => {
       } else {
         builder.beforeRender(addAndEnableExtensions);
       }
+
+      return builder;
+    },
+
+    addMainExtensions: async (...extensions) => {
+      const extensionRegistrators = mainDi.injectMany(
+        extensionRegistratorInjectionToken,
+      );
+
+      const addAndEnableExtensions = async () => {
+        const registratorPromises = extensions.flatMap((extension) =>
+          extensionRegistrators.map((registrator) => registrator(extension, 1)),
+        );
+
+        await Promise.all(registratorPromises);
+
+        runInAction(() => {
+          extensions.forEach((extension) => {
+            mainExtensionsState.add(extension);
+          });
+        });
+      };
+
+      if (rendered) {
+        await addAndEnableExtensions();
+      } else {
+        builder.beforeRender(addAndEnableExtensions);
+      }
+
+      return builder;
+    },
+
+    removeMainExtensions: (...extensions) => {
+      extensions.forEach(extension => {
+        runInAction(() => {
+          mainExtensionsState.delete(extension);
+        });
+      });
 
       return builder;
     },
