@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { comparer, computed } from "mobx";
 import hostedClusterInjectable from "./hosted-cluster.injectable";
+import { allowedResourcesInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
 
 const allowedResourcesInjectable = getInjectable({
   id: "allowed-resources",
@@ -17,6 +18,8 @@ const allowedResourcesInjectable = getInjectable({
       equals: (cur, prev) => comparer.structural(cur, prev),
     });
   },
+
+  injectionToken: allowedResourcesInjectionToken,
 });
 
 export default allowedResourcesInjectable;

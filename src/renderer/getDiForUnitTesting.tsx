@@ -32,7 +32,7 @@ import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
-import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
 import historyInjectable from "./navigation/history.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";

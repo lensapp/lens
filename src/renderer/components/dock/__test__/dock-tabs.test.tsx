@@ -19,7 +19,7 @@ import directoryForUserDataInjectable from "../../../../common/app-paths/directo
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
-import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 
 jest.mock("electron", () => ({
   app: {

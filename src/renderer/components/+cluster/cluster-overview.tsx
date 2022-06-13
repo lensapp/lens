@@ -24,7 +24,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import type { Cluster } from "../../../common/cluster/cluster";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import assert from "assert";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";

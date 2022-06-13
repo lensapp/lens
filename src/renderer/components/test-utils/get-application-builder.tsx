@@ -13,7 +13,7 @@ import React from "react";
 import { Router } from "react-router";
 import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
+import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { getByText, fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
@@ -32,7 +32,7 @@ import applicationMenuItemsInjectable from "../../../main/menu/application-menu-
 import type { MenuItemConstructorOptions, MenuItem } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
