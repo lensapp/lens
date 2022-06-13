@@ -28,6 +28,7 @@ const startTopbarStateSyncInjectable = getInjectable({
     };
   },
   injectionToken: beforeFrameStartsInjectionToken,
+  causesSideEffects: true,
 });
 
 export default startTopbarStateSyncInjectable;

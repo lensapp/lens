@@ -54,12 +54,12 @@ describe("protocol router tests", () => {
     lpr.rendererLoaded = true;
   });
 
-  it("should throw on non-lens URLS", async () => {
+  it("should broadcast invalid protocol on non-lens URLs", async () => {
     await lpr.route("https://google.ca");
     expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInvalid, "invalid protocol", "https://google.ca");
   });
 
-  it("should throw when host not internal or extension", async () => {
+  it("should broadcast invalid host on non internal or non extension URLs", async () => {
     await lpr.route("lens://foobar");
     expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInvalid, "invalid host", "lens://foobar");
   });

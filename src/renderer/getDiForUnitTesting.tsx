@@ -50,6 +50,7 @@ import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
 import callForPublicHelmRepositoriesInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
+import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -74,6 +75,9 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
   if (doGeneralOverrides) {
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(platformInjectable, () => "darwin");
+    di.override(startTopbarStateSyncInjectable, () => ({
+      run: () => {},
+    }));
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
