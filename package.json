@@ -5,7 +5,7 @@
   "homepage": "https://github.com/lensapp/lens",
   "version": "5.6.0-alpha.0",
   "main": "static/build/main.js",
-  "copyright": "© 2021 OpenLens Authors",
+  "copyright": "© 2022 OpenLens Authors",
   "license": "MIT",
   "author": {
     "name": "OpenLens Authors",
