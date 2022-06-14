@@ -15,9 +15,7 @@ const di = getDi();
 
 const startApplication = di.inject(startMainApplicationInjectable);
 
-(async () => {
-  await startApplication();
-})();
+startApplication();
 
 /**
  * Exports for virtual package "@k8slens/extensions" for main-process.
