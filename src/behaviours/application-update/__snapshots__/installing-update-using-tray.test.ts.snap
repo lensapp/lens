@@ -4,6 +4,16 @@ exports[`installing update using tray when started renders 1`] = `
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>
@@ -13,6 +23,16 @@ exports[`installing update using tray when started renders 1`] = `
 exports[`installing update using tray when started when user checks for updates using tray renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     >
@@ -64,6 +84,16 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when new update is discovered renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     >
@@ -155,6 +185,16 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when new update is discovered when download fails renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     >
@@ -286,6 +326,16 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when new update is discovered when download succeeds renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     >
@@ -447,6 +497,16 @@ Lens should restart automatically, if it doesn't please restart manually. Instal
 exports[`installing update using tray when started when user checks for updates using tray when no new update is discovered renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     >

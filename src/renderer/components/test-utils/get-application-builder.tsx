@@ -55,6 +55,7 @@ import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectabl
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
+import { StatusBar } from "../status-bar/status-bar";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -102,6 +103,7 @@ interface DiContainers {
 
 interface Environment {
   renderSidebar: () => React.ReactNode;
+  renderStatusBar: () => React.ReactNode;
   beforeRender: () => void;
   onAllowKubeResource: () => void;
 }
@@ -141,6 +143,8 @@ export const getApplicationBuilder = () => {
     application: {
       renderSidebar: () => null,
 
+      renderStatusBar: () => <StatusBar />,
+
       beforeRender: () => {
         const nofifyThatRootFrameIsRendered = rendererDi.inject(broadcastThatRootFrameIsRenderedInjectable);
 
@@ -156,6 +160,7 @@ export const getApplicationBuilder = () => {
 
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
+      renderStatusBar: () => null,
       beforeRender: () => {},
       onAllowKubeResource: () => {},
     } as Environment,
@@ -422,6 +427,7 @@ export const getApplicationBuilder = () => {
       rendered = render(
         <Router history={history}>
           {environment.renderSidebar()}
+          {environment.renderStatusBar()}
 
           <Observer>
             {() => {

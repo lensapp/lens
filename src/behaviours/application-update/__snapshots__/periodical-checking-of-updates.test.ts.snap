@@ -4,6 +4,16 @@ exports[`periodical checking of updates given updater is enabled and configurati
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>

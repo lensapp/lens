@@ -4,6 +4,16 @@ exports[`installing update when started renders 1`] = `
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>
@@ -13,6 +23,16 @@ exports[`installing update when started renders 1`] = `
 exports[`installing update when started when user checks for updates renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -24,6 +44,16 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>
@@ -33,6 +63,16 @@ exports[`installing update when started when user checks for updates when new up
 exports[`installing update when started when user checks for updates when new update is discovered when download fails renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -44,6 +84,16 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>
@@ -53,6 +103,16 @@ exports[`installing update when started when user checks for updates when new up
 exports[`installing update when started when user checks for updates when new update is discovered when download succeeds when user answers not to install the update renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -64,6 +124,16 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>
@@ -73,6 +143,16 @@ exports[`installing update when started when user checks for updates when new up
 exports[`installing update when started when user checks for updates when no new update is discovered renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     />
