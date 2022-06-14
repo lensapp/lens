@@ -10,6 +10,7 @@ export enum TerminalChannels {
   CONNECTED = "connected",
   RESIZE = "resize",
   PING = "ping",
+  ERROR = "error",
 }
 
 export type TerminalMessage = {
@@ -28,4 +29,7 @@ export type TerminalMessage = {
   };
 } | {
   type: TerminalChannels.PING;
+} | {
+  type: TerminalChannels.ERROR;
+  data: string;
 };

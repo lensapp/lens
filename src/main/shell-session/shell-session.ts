@@ -156,23 +156,34 @@ export abstract class ShellSession {
 
   protected abstract get cwd(): string | undefined;
 
-  protected ensureShellProcess(shell: string, args: string[], env: Partial<Record<string, string>>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
-    const resume = ShellSession.processes.has(this.terminalId);
-    const shellProcess = getOrInsertWith(ShellSession.processes, this.terminalId, () => (
-      this.dependencies.spawnPty(shell, args, {
-        rows: 30,
-        cols: 80,
-        cwd,
-        env,
-        name: "xterm-256color",
-        // TODO: Something else is broken here so we need to force the use of winPty on windows
-        useConpty: false,
-      })
-    ));
+  protected ensureShellProcess(shell: string, args: string[], env: Partial<Record<string, string>>, cwd: string): { shellProcess: pty.IPty; resume: boolean } | null {
+    try {
+      const resume = ShellSession.processes.has(this.terminalId);
 
-    this.dependencies.logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
+      const shellProcess = getOrInsertWith(ShellSession.processes, this.terminalId, () => (
+        this.dependencies.spawnPty(shell, args, {
+          rows: 30,
+          cols: 80,
+          cwd,
+          env,
+          name: "xterm-256color",
+          // TODO: Something else is broken here so we need to force the use of winPty on windows
+          useConpty: false,
+        })
+      ));
 
-    return { shellProcess, resume };
+      this.dependencies.logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
+
+      return { shellProcess, resume };
+    } catch (error) {
+      this.send({
+        type: TerminalChannels.ERROR,
+        data: `Failed to start shell (${shell}): ${error}`,
+      });
+      this.dependencies.logger.warn(`[SHELL-SESSION]: Failed to start PTY for ${this.terminalId}: ${error}`, { shell });
+
+      return null;
+    }
   }
 
   constructor(protected readonly dependencies: ShellSessionDependencies, { kubectl, websocket, cluster, tabId: terminalId }: ShellSessionArgs) {
@@ -231,7 +242,13 @@ export abstract class ShellSession {
 
   protected async openShellProcess(shell: string, args: string[], env: Record<string, string | undefined>) {
     const cwd = await this.getCwd(env);
-    const { shellProcess, resume } = this.ensureShellProcess(shell, args, env, cwd);
+    const ensured = this.ensureShellProcess(shell, args, env, cwd);
+
+    if (!ensured) {
+      return;
+    }
+
+    const { shellProcess, resume } = ensured;
 
     if (resume) {
       this.send({ type: TerminalChannels.CONNECTED });

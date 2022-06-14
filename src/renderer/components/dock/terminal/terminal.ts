@@ -104,6 +104,7 @@ export class Terminal {
     this.api.once("ready", clearOnce);
     this.api.once("connected", clearOnce);
     this.api.on("data", this.onApiData);
+    this.api.on("error", this.onApiError);
     window.addEventListener("resize", this.onResize);
 
     const linkProvider = new LinkProvider(
@@ -150,6 +151,10 @@ export class Terminal {
 
   onApiData = (data: string) => {
     this.xterm.write(data);
+  };
+
+  onApiError = (data: string) => {
+    this.xterm.writeln(data);
   };
 
   onData = (data: string) => {

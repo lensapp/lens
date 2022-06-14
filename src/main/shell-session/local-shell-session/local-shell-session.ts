@@ -10,6 +10,7 @@ import type { ModifyTerminalShellEnv } from "../shell-env-modifier/modify-termin
 import type { JoinPaths } from "../../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../../common/path/get-dirname.injectable";
 import type { GetBasenameOfPath } from "../../../common/path/get-basename.injectable";
+import { TerminalChannels } from "../../../common/terminal/channels";
 
 export interface LocalShellSessionDependencies extends ShellSessionDependencies {
   readonly directoryForBinaries: string;
@@ -41,7 +42,13 @@ export class LocalShellSession extends ShellSession {
     const shell = env.PTYSHELL;
 
     if (!shell) {
-      throw new Error("PTYSHELL is not defined with the environment");
+      this.send({
+        type: TerminalChannels.ERROR,
+        data: "PTYSHELL is not defined with the environment",
+      });
+      this.dependencies.logger.warn(`[LOCAL-SHELL-SESSION]: PTYSHELL env var is not defined for ${this.terminalId}`);
+
+      return;
     }
 
     const args = await this.getShellArgs(shell);
