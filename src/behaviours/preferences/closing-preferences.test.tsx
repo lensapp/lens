@@ -8,7 +8,7 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import currentPathInjectable from "../../renderer/routes/current-path.injectable";
-import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import { computed } from "mobx";
 import { preferenceNavigationItemInjectionToken } from "../../renderer/components/+preferences/preferences-navigation/preference-navigation-items.injectable";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
@@ -202,7 +202,7 @@ const testPreferencesRouteInjectable = getInjectable({
     isEnabled: computed(() => true),
   }),
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 const testPreferencesRouteComponentInjectable = getInjectable({
@@ -225,7 +225,7 @@ const testFrontPageRouteInjectable = getInjectable({
     isEnabled: computed(() => true),
   }),
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 const testFrontPageRouteComponentInjectable = getInjectable({

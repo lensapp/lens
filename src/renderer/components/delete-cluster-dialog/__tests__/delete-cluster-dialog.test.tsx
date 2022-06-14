@@ -20,7 +20,7 @@ import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-cre
 import createKubeconfigManagerInjectable from "../../../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
 import type { ApplicationBuilder } from "../../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../test-utils/get-application-builder";
-import { routeInjectionToken } from "../../../../common/front-end-routing/route-injection-token";
+import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../../routes/route-specific-component-injection-token";
@@ -319,7 +319,7 @@ const testRouteInjectable = getInjectable({
     isEnabled: computed(() => true),
   }),
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 const testRouteComponentInjectable = getInjectable({

@@ -15,7 +15,7 @@ import { SiblingsInTabLayout } from "../components/layout/siblings-in-tab-layout
 import extensionPageParametersInjectable from "./extension-page-parameters.injectable";
 import { routeSpecificComponentInjectionToken } from "./route-specific-component-injection-token";
 import { computed } from "mobx";
-import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import { getExtensionRoutePath } from "./for-extension";
 
 const extensionRouteRegistratorInjectable = getInjectable({
@@ -62,7 +62,7 @@ const toRouteInjectableFor =
             extension,
           }),
 
-          injectionToken: routeInjectionToken,
+          injectionToken: frontEndRouteInjectionToken,
         });
 
         const normalizedParams = di.inject(extensionPageParametersInjectable, {

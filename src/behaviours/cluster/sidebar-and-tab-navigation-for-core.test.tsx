@@ -14,7 +14,7 @@ import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sid
 import { computed } from "mobx";
 import { noop } from "lodash/fp";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
-import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
@@ -337,7 +337,7 @@ const testRouteInjectable = getInjectable({
     isEnabled: computed(() => true),
   }),
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 const testRouteComponentInjectable = getInjectable({
