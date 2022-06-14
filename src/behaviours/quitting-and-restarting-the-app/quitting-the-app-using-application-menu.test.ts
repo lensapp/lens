@@ -49,8 +49,8 @@ describe("quitting the app using application menu", () => {
     });
 
     describe("when application is quit", () => {
-      beforeEach(async () => {
-        await applicationBuilder.applicationMenu.click("root.quit");
+      beforeEach(() => {
+        applicationBuilder.applicationMenu.click("root.quit");
       });
 
       it("closes all windows", () => {

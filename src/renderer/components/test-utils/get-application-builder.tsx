@@ -39,7 +39,6 @@ import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
-import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
@@ -76,7 +75,7 @@ export interface ApplicationBuilder {
   };
 
   applicationMenu: {
-    click: (path: string) => Promise<void>;
+    click: (path: string) => void;
   };
 
   preferences: {
@@ -207,7 +206,7 @@ export const getApplicationBuilder = () => {
     dis,
 
     applicationMenu: {
-      click: async (path: string) => {
+      click: (path: string) => {
         const applicationMenuItems = mainDi.inject(
           applicationMenuItemsInjectable,
         );
@@ -238,8 +237,6 @@ export const getApplicationBuilder = () => {
           undefined,
           {},
         );
-
-        await flushPromises();
       },
     },
 
