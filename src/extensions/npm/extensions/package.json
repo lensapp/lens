@@ -3,7 +3,7 @@
   "productName": "OpenLens extensions",
   "description": "OpenLens - Open Source Kubernetes IDE: extensions",
   "version": "0.0.1",
-  "copyright": "© 2021 OpenLens Authors",
+  "copyright": "© 2022 OpenLens Authors",
   "license": "MIT",
   "main": "dist/src/extensions/extension-api.js",
   "types": "dist/src/extensions/extension-api.d.ts",
