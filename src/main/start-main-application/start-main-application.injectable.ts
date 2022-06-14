@@ -43,7 +43,7 @@ const startMainApplicationInjectable = getInjectable({
       // https://github.com/electron/electron/issues/21370
       beforeElectronIsReady();
 
-      (async () => {
+      return (async () => {
         await waitForElectronToBeReady();
 
         await beforeApplicationIsLoading();
