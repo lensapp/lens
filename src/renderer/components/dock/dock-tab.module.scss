@@ -94,5 +94,5 @@
 .title {
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: 2.5rem;
+  margin-right: calc(var(--margin) * 3);
 }
