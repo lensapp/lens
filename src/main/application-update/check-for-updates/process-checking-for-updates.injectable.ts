@@ -31,11 +31,11 @@ const processCheckingForUpdatesInjectable = getInjectable({
     const withOrphanPromise = di.inject(withOrphanPromiseInjectable);
     const emitEvent = di.inject(emitEventInjectable);
 
-    return async () => {
+    return async (source: string) => {
       emitEvent({
         name: "app",
         action: "checking-for-updates",
-        params: { currentDateTime: getCurrentDateTime() },
+        params: { currentDateTime: getCurrentDateTime(), source },
       });
 
       broadcastChangeInUpdatingStatus({ eventId: "checking-for-updates" });

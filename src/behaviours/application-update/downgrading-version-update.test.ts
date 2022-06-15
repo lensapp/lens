@@ -77,7 +77,7 @@ describe("downgrading version update", () => {
 
       const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
-      processCheckingForUpdates();
+      processCheckingForUpdates("irrelevant");
 
       expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(expect.any(Object), { allowDowngrade: downgradeIsAllowed });
     });

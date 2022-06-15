@@ -67,7 +67,7 @@ describe("installing update", () => {
 
   describe("when started", () => {
     let rendered: RenderResult;
-    let processCheckingForUpdates: () => Promise<void>;
+    let processCheckingForUpdates: (source: string) => Promise<void>;
 
     beforeEach(async () => {
       rendered = await applicationBuilder.render();
@@ -83,7 +83,7 @@ describe("installing update", () => {
       let processCheckingForUpdatesPromise: Promise<void>;
 
       beforeEach(async () => {
-        processCheckingForUpdatesPromise = processCheckingForUpdates();
+        processCheckingForUpdatesPromise = processCheckingForUpdates("irrelevant");
       });
 
       it("checks for updates", () => {

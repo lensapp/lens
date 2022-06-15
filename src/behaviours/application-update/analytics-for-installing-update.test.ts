@@ -17,6 +17,7 @@ import type { DownloadPlatformUpdate } from "../../main/application-update/downl
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
+import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 
 describe("analytics for installing update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -26,6 +27,8 @@ describe("analytics for installing update", () => {
   let mainDi: DiContainer;
 
   beforeEach(async () => {
+    jest.useFakeTimers();
+
     global.Date.now = () => new Date("2015-10-21T07:28:00Z").getTime();
 
     applicationBuilder = getApplicationBuilder();
@@ -55,32 +58,70 @@ describe("analytics for installing update", () => {
     });
 
     mainDi = applicationBuilder.dis.mainDi;
-
-    await applicationBuilder.render();
   });
 
-  it("sends event to analytics about the current version", () => {
-    expect(analyticsListenerMock).toHaveBeenCalledWith({
-      name: "app",
-      action: "current-version",
+  describe("given application is started and checking updates periodically", () => {
+    beforeEach(async () => {
+      mainDi.unoverride(periodicalCheckForUpdatesInjectable);
+      mainDi.permitSideEffects(periodicalCheckForUpdatesInjectable);
 
-      params: {
-        version: "42.0.0",
-        currentDateTime: "2015-10-21T07:28:00Z",
-      },
+      await applicationBuilder.render();
+
     });
-  });
 
-  describe("when checking for updates", () => {
-    beforeEach(() => {
+    it("sends event to analytics for being checked periodically", () => {
+      expect(analyticsListenerMock).toHaveBeenCalledWith({
+        name: "app",
+        action: "checking-for-updates",
+
+        params: {
+          currentDateTime: "2015-10-21T07:28:00Z",
+          source: "periodic",
+        },
+      });
+    });
+
+    it("when enough time passes to check for updates again, sends event to analytics for being checked periodically", () => {
       analyticsListenerMock.mockClear();
 
-      const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
+      jest.advanceTimersByTime(1000 * 60 * 60 * 2);
 
-      processCheckingForUpdates();
+      expect(analyticsListenerMock).toHaveBeenCalledWith({
+        name: "app",
+        action: "checking-for-updates",
+
+        params: {
+          currentDateTime: "2015-10-21T07:28:00Z",
+          source: "periodic",
+        },
+      });
+    });
+  });
+
+  describe("when application is started", () => {
+    beforeEach(async () => {
+      analyticsListenerMock.mockClear();
+
+      await applicationBuilder.render();
     });
 
-    it("sends event to analytics about checking for updates", () => {
+    it("sends event to analytics about the current version", () => {
+      expect(analyticsListenerMock).toHaveBeenCalledWith({
+        name: "app",
+        action: "current-version",
+
+        params: {
+          version: "42.0.0",
+          currentDateTime: "2015-10-21T07:28:00Z",
+        },
+      });
+    });
+
+    it("when checking for updates using tray, sends event to analytics for being checked from tray", async () => {
+      analyticsListenerMock.mockClear();
+
+      applicationBuilder.tray.click("check-for-updates");
+
       expect(analyticsListenerMock.mock.calls).toEqual([
         [
           {
@@ -89,14 +130,40 @@ describe("analytics for installing update", () => {
 
             params: {
               currentDateTime: "2015-10-21T07:28:00Z",
+              source: "tray",
+            },
+          },
+        ],
+      ]);
+
+    });
+
+    it("when checking for updates using application menu, sends event to analytics for being checked from application menu", async () => {
+      analyticsListenerMock.mockClear();
+
+      applicationBuilder.applicationMenu.click("root.check-for-updates");
+
+      expect(analyticsListenerMock.mock.calls).toEqual([
+        [
+          {
+            name: "app",
+            action: "checking-for-updates",
+
+            params: {
+              currentDateTime: "2015-10-21T07:28:00Z",
+              source: "application-menu",
             },
           },
         ],
       ]);
     });
 
-    describe("when check for updates resolves with new update being available", () => {
+    describe("given checking for updates, when check for updates resolves with new update being available", () => {
       beforeEach(async () => {
+        const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
+
+        processCheckingForUpdates("irrelevant");
+
         analyticsListenerMock.mockClear();
 
         await checkForPlatformUpdatesMock.resolve({

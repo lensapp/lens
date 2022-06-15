@@ -16,11 +16,11 @@ const periodicalCheckForUpdatesInjectable = getInjectable({
       const TWO_HOURS = 1000 * 60 * 60 * 2;
 
       // Note: intentional orphan promise to make checking for updates happen in the background
-      processCheckingForUpdates();
+      processCheckingForUpdates("periodic");
 
       const intervalId = setInterval(() => {
         // Note: intentional orphan promise to make checking for updates happen in the background
-        processCheckingForUpdates();
+        processCheckingForUpdates("periodic");
       }, TWO_HOURS);
 
       return () => {
