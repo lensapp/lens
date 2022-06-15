@@ -3,17 +3,24 @@
 exports[`<DrawerParamToggler /> after clicking the toggle after clicking the toggle again renders 1`] = `
 <body>
   <div>
-    <div>
+    <div
+      class="DrawerParamToggler"
+    >
       <div
         class="flex gaps align-center params"
       >
-        <div>
+        <div
+          class="label"
+        >
           Foo
         </div>
         <div
+          class="link"
           data-testid="drawer-param-toggler"
         >
-          <span>
+          <span
+            class="linkText"
+          >
             Show
           </span>
           <i
@@ -36,17 +43,24 @@ exports[`<DrawerParamToggler /> after clicking the toggle after clicking the tog
 exports[`<DrawerParamToggler /> after clicking the toggle renders 1`] = `
 <body>
   <div>
-    <div>
+    <div
+      class="DrawerParamToggler"
+    >
       <div
         class="flex gaps align-center params"
       >
-        <div>
+        <div
+          class="label"
+        >
           Foo
         </div>
         <div
+          class="link"
           data-testid="drawer-param-toggler"
         >
-          <span>
+          <span
+            class="linkText"
+          >
             Hide
           </span>
           <i
@@ -61,7 +75,9 @@ exports[`<DrawerParamToggler /> after clicking the toggle renders 1`] = `
           </i>
         </div>
       </div>
-      <div>
+      <div
+        class="content"
+      >
         <div
           data-testid="drawer-child"
         />
@@ -74,17 +90,24 @@ exports[`<DrawerParamToggler /> after clicking the toggle renders 1`] = `
 exports[`<DrawerParamToggler /> renders 1`] = `
 <body>
   <div>
-    <div>
+    <div
+      class="DrawerParamToggler"
+    >
       <div
         class="flex gaps align-center params"
       >
-        <div>
+        <div
+          class="label"
+        >
           Foo
         </div>
         <div
+          class="link"
           data-testid="drawer-param-toggler"
         >
-          <span>
+          <span
+            class="linkText"
+          >
             Show
           </span>
           <i
