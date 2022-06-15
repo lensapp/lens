@@ -8,12 +8,15 @@
 }
 
 .parent {
-  @apply uppercase font-bold;
   color: var(--textColorAccent);
   font-size: small;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .catalog {
-  @apply p-5 font-bold text-2xl;
+  font-size: medium;
+  padding: var(--padding) calc(var(--padding) * 1.5);
+  font-weight: bold;
   color: var(--textColorAccent);
 }
