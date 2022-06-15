@@ -38,34 +38,36 @@ const startMainApplicationInjectable = getInjectable({
     const onLoadOfApplication = runMany(onLoadOfApplicationInjectionToken);
     const afterApplicationIsLoaded = runMany(afterApplicationIsLoadedInjectionToken);
 
-    return async () => {
+    return () => {
       // Stuff happening before application is ready needs to be synchronous because of
       // https://github.com/electron/electron/issues/21370
       beforeElectronIsReady();
 
-      await waitForElectronToBeReady();
+      return (async () => {
+        await waitForElectronToBeReady();
 
-      await beforeApplicationIsLoading();
+        await beforeApplicationIsLoading();
 
-      if (!shouldStartHidden) {
-        await splashWindow.show();
-      }
-
-      await onLoadOfApplication();
-
-      if (!shouldStartHidden) {
-        const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
-
-        if (deepLinkUrl) {
-          await openDeepLink(deepLinkUrl);
-        } else {
-          await applicationWindow.show();
+        if (!shouldStartHidden) {
+          await splashWindow.show();
         }
 
-        splashWindow.close();
-      }
+        await onLoadOfApplication();
 
-      await afterApplicationIsLoaded();
+        if (!shouldStartHidden) {
+          const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
+
+          if (deepLinkUrl) {
+            await openDeepLink(deepLinkUrl);
+          } else {
+            await applicationWindow.show();
+          }
+
+          splashWindow.close();
+        }
+
+        await afterApplicationIsLoaded();
+      })();
     };
   },
 });
