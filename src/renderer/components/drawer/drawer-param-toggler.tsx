@@ -38,9 +38,11 @@ export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps,
             <Icon material={icon}/>
           </div>
         </div>
-        <div className={cssNames("param-content", { open })}>
-          {children}
-        </div>
+        {open && (
+          <div className={cssNames("param-content", { open })}>
+            {children}
+          </div>
+        )}
       </div>
     );
   }
