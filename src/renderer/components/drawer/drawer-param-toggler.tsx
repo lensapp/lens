@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import * as styles from "./drawer-param-toggler.module.scss";
+import styles from "./drawer-param-toggler.module.scss";
 import React from "react";
 import { Icon } from "../icon";
 
