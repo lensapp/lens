@@ -4,6 +4,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -472,6 +482,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 exports[`add helm repository from list in preferences when navigating to preferences containing helm repositories when both active and public repositories resolve renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -946,6 +966,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 exports[`add helm repository from list in preferences when navigating to preferences containing helm repositories when both active and public repositories resolve when select for adding public repositories is clicked renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -1474,6 +1504,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -1947,6 +1987,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 exports[`add helm repository from list in preferences when navigating to preferences containing helm repositories when both active and public repositories resolve when select for adding public repositories is clicked when deactive public repository is selected when adding rejects renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -2422,6 +2472,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -2890,6 +2950,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 exports[`add helm repository from list in preferences when navigating to preferences containing helm repositories when both active and public repositories resolve when select for adding public repositories is clicked when deactive public repository is selected when adding resolves when active repositories resolve again renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -3392,6 +3462,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 exports[`add helm repository from list in preferences when navigating to preferences containing helm repositories when both active and public repositories resolve when select for adding public repositories is clicked when deactive public repository is selected when adding resolves when active repositories resolve again when select for selecting active repositories is clicked renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -3958,6 +4038,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -4459,6 +4549,16 @@ exports[`add helm repository from list in preferences when navigating to prefere
 exports[`add helm repository from list in preferences when navigating to preferences containing helm repositories when both active and public repositories resolve when select for adding public repositories is clicked when deactive public repository is selected when adding resolves when active repositories resolve again when select for selecting active repositories is clicked when active repository is selected when removing resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"

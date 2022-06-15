@@ -4,6 +4,16 @@ exports[`remove helm repository from list of active repositories in preferences 
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -472,6 +482,16 @@ exports[`remove helm repository from list of active repositories in preferences 
 exports[`remove helm repository from list of active repositories in preferences when navigating to preferences containing helm repositories when active repositories resolve renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -947,6 +967,16 @@ exports[`remove helm repository from list of active repositories in preferences 
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -1420,6 +1450,16 @@ exports[`remove helm repository from list of active repositories in preferences 
 exports[`remove helm repository from list of active repositories in preferences when navigating to preferences containing helm repositories when active repositories resolve when removing repository when removing resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"

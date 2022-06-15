@@ -4,6 +4,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -472,6 +482,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 exports[`listing active helm repositories in preferences when navigating to preferences containing helm repositories when configuration resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -942,6 +962,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -1302,6 +1332,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 exports[`listing active helm repositories in preferences when navigating to preferences containing helm repositories when configuration resolves when updating repositories reject with error about no existing repositories renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -1772,6 +1812,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -2132,6 +2182,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 exports[`listing active helm repositories in preferences when navigating to preferences containing helm repositories when configuration resolves when updating repositories reject with error about no existing repositories when adding of default repository resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -2601,6 +2661,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 exports[`listing active helm repositories in preferences when navigating to preferences containing helm repositories when configuration resolves when updating repositories resolve when repositories resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
@@ -3104,6 +3174,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -3465,6 +3545,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"
     >
@@ -3825,6 +3915,16 @@ exports[`listing active helm repositories in preferences when navigating to pref
 exports[`listing active helm repositories in preferences when navigating to preferences containing helm repositories when getting configuration rejects renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="SettingLayout showNavigation Preferences"
       data-testid="kubernetes-preferences-page"

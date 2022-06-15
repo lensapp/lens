@@ -2,6 +2,16 @@
 
 exports[`navigating between routes given route with optional path parameters when navigating to route with path parameters renders 1`] = `
 <div>
+  <div
+    class="StatusBar"
+  >
+    <div
+      class="leftSide"
+    />
+    <div
+      class="rightSide"
+    />
+  </div>
   <pre>
     {
   "someParameter": "some-value",
@@ -16,6 +26,16 @@ exports[`navigating between routes given route with optional path parameters whe
 
 exports[`navigating between routes given route without path parameters when navigating to route renders 1`] = `
 <div>
+  <div
+    class="StatusBar"
+  >
+    <div
+      class="leftSide"
+    />
+    <div
+      class="rightSide"
+    />
+  </div>
   <div>
     Some component
   </div>
