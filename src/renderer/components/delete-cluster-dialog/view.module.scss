@@ -1,17 +1,22 @@
 .warning {
-  @apply mt-4 flex py-4 px-6 rounded-md items-center;
+  display: flex;
+  margin-top: var(--margin);
+  padding: calc(var(--padding) * 2) calc(var(--padding) * 3);
+  border-radius: 4px;
+  align-items: center;
   background: #fad8d7;
   color: #797979;
 }
 
 .warningIcon {
-  @apply mr-5;
+  margin-right: calc(var(--margin) * 2.4);
   font-size: 26px;
 }
 
 .dialog {
   > div {
-    @apply rounded-md bg-white;
+    border-radius: 4px;
+    background-color: white;
     max-width: 600px;
     min-width: calc(45 * var(--unit));
   }
@@ -22,11 +27,14 @@
 }
 
 .dialogContent {
-  @apply p-9 leading-9;
+  padding: calc(var(--padding) * 2) calc(var(--padding) * 3);
 }
 
 .dialogButtons {
-  @apply flex justify-end p-7 rounded-md;
+  display: flex;
+  border-radius: 4px;
+  justify-content: flex-end;
+  padding: calc(var(--padding) * 2);
   background: #f4f4f4;
 
   > * {
@@ -35,7 +43,7 @@
 }
 
 .hr {
-  @apply mt-7;
+  margin-top: calc(var(--margin) * 3);
   height: 1px;
   background: #dfdfdf80;
 }
