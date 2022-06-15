@@ -84,7 +84,7 @@ describe("clicking tray menu item originating from extension", () => {
       });
     });
 
-    describe("when disabling extension", () => {
+    describe("when extension is disabled", () => {
       beforeEach(() => {
         applicationBuilder.extensions.main.disable(someExtension);
       });
