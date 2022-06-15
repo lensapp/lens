@@ -24,6 +24,10 @@ globalThis.__non_webpack_require__ = jest.fn();
 
 global.setImmediate = global.setImmediate ?? (<TArgs extends any[]>(callback: (...args: TArgs) => void, ...args: TArgs) => setTimeout(() => callback(...args), 0));
 
+global.fail = ((error = "Test failed without explicit error") => {
+  console.error(error);
+}) as any;
+
 process.on("unhandledRejection", (err: any) => {
-  fail(err);
+  global.fail(err);
 });
