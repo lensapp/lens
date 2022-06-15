@@ -39,7 +39,6 @@ import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
-import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
@@ -56,6 +55,7 @@ import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
 import { StatusBar } from "../status-bar/status-bar";
+import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -75,7 +75,7 @@ export interface ApplicationBuilder {
   };
 
   applicationMenu: {
-    click: (path: string) => Promise<void>;
+    click: (path: string) => void;
   };
 
   preferences: {
@@ -181,13 +181,13 @@ export const getApplicationBuilder = () => {
     computed(() => []),
   );
 
-  const iconPaths = mainDi.inject(trayIconPathsInjectable);
-
   let trayMenuItemsStateFake: TrayMenuItem[];
   let trayMenuIconPath: string;
 
   mainDi.override(electronTrayInjectable, () => ({
     start: () => {
+      const iconPaths = mainDi.inject(trayIconPathsInjectable);
+
       trayMenuIconPath = iconPaths.normal;
     },
     stop: () => {},
@@ -206,7 +206,7 @@ export const getApplicationBuilder = () => {
     dis,
 
     applicationMenu: {
-      click: async (path: string) => {
+      click: (path: string) => {
         const applicationMenuItems = mainDi.inject(
           applicationMenuItemsInjectable,
         );
@@ -237,8 +237,6 @@ export const getApplicationBuilder = () => {
           undefined,
           {},
         );
-
-        await flushPromises();
       },
     },
 
@@ -398,6 +396,8 @@ export const getApplicationBuilder = () => {
     },
 
     async render() {
+      mainDi.inject(lensProxyPortInjectable).set(42);
+
       for (const callback of beforeApplicationStartCallbacks) {
         await callback(dis);
       }
@@ -408,7 +408,7 @@ export const getApplicationBuilder = () => {
 
       const applicationWindow = mainDi.inject(applicationWindowInjectable);
 
-      await applicationWindow.show();
+      await applicationWindow.start();
 
       const startFrame = rendererDi.inject(startFrameInjectable);
 

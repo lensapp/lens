@@ -5,25 +5,36 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import splashWindowInjectable from "./splash-window/splash-window.injectable";
 import applicationWindowInjectable from "./application-window/application-window.injectable";
+import { identity, some } from "lodash/fp";
+const someIsTruthy = some(identity);
 
 const showApplicationWindowInjectable = getInjectable({
   id: "show-application-window",
 
   instantiate: (di) => {
     const applicationWindow = di.inject(applicationWindowInjectable);
-
-    const splashWindow = di.inject(
-      splashWindowInjectable,
-    );
+    const splashWindow = di.inject(splashWindowInjectable);
 
     return async () => {
-      if (applicationWindow.visible) {
+      if (applicationWindow.isStarting) {
+        applicationWindow.show();
+        splashWindow.close();
+
         return;
       }
 
-      await splashWindow.show();
+      const windowIsAlreadyBeingShown = someIsTruthy([
+        applicationWindow.isVisible,
+        splashWindow.isStarting,
+      ]);
 
-      await applicationWindow.show();
+      if (windowIsAlreadyBeingShown) {
+        return;
+      }
+
+      await splashWindow.start();
+
+      await applicationWindow.start();
 
       splashWindow.close();
     };

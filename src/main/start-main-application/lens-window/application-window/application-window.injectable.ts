@@ -9,9 +9,7 @@ import lensProxyPortInjectable from "../../../lens-proxy/lens-proxy-port.injecta
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
-import { delay } from "../../../../common/utils";
-import { bundledExtensionsLoaded } from "../../../../common/ipc/extension-handling";
-import ipcMainInjectable from "../../../utils/channel/ipc-main/ipc-main.injectable";
+import waitUntilBundledExtensionsAreLoadedInjectable from "./wait-until-bundled-extensions-are-loaded.injectable";
 
 const applicationWindowInjectable = getInjectable({
   id: "application-window",
@@ -21,7 +19,7 @@ const applicationWindowInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
     const applicationName = di.inject(appNameInjectable);
     const appEventBus = di.inject(appEventBusInjectable);
-    const ipcMain = di.inject(ipcMainInjectable);
+    const waitUntilBundledExtensionsAreLoaded = di.inject(waitUntilBundledExtensionsAreLoadedInjectable);
     const lensProxyPort = di.inject(lensProxyPortInjectable);
 
     return createLensWindow({
@@ -45,14 +43,7 @@ const applicationWindowInjectable = getInjectable({
       onDomReady: () => {
         appEventBus.emit({ name: "app", action: "dom-ready" });
       },
-      beforeOpen: async () => {
-        const viewHasLoaded = new Promise<void>((resolve) => {
-          ipcMain.once(bundledExtensionsLoaded, () => resolve());
-        });
-
-        await viewHasLoaded;
-        await delay(50); // wait just a bit longer to let the first round of rendering happen
-      },
+      beforeOpen: waitUntilBundledExtensionsAreLoaded,
     });
   },
 
