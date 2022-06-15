@@ -68,6 +68,9 @@
 html, body {
   height: 100%;
   overflow: hidden;
+}
+
+body {
   color: var(--textColorPrimary);
   background-color: var(--mainBackground);
   font-size: var(--font-size);

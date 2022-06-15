@@ -24,18 +24,18 @@
   -webkit-app-region: no-drag;
 
   &:first-of-type {
-    padding-left: 1.5rem;
+    padding-left: calc(var(--padding) * 2);
 
     & > *:not(:empty) {
-      margin-right: 1rem;
+      margin-right: calc(var(--padding) * 1.5);
     }
   }
 
   &:last-of-type {
-    padding-right: 1.5rem;
+    padding-right: calc(var(--padding) * 2);
 
     & > *:not(:empty) {
-      margin-left: 1rem;
+      margin-left: calc(var(--padding) * 1.5);
     }
   }
 }
@@ -64,7 +64,7 @@
 
 .windowButtons {
   display: flex;
-  margin-right: -1.5rem;
+  margin-right: calc(var(--padding) * -2);
 
   > div {
     @apply flex items-center justify-center;
@@ -82,7 +82,7 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      margin-right: 1.1rem;
+      margin-right: calc(var(--padding) * -1.5);
       color: var(--textColorAccent);
 
       svg {

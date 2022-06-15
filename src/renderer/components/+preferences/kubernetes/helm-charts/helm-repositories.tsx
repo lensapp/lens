@@ -40,14 +40,16 @@ const NonInjectedActiveHelmRepositories = observer(({ activeHelmRepositories, re
         <RemovableItem
           key={repository.name}
           onRemove={() => removeRepository(repository)}
-          className="mt-3"
+          className={styles.repo}
           data-testid={`remove-helm-repository-${repository.name}`}
         >
-          <div data-testid={`helm-repository-${repository.name}`} className={styles.repoName}>
-            {repository.name}
-          </div>
+          <div>
+            <div data-testid={`helm-repository-${repository.name}`} className={styles.repoName}>
+              {repository.name}
+            </div>
 
-          <div className={styles.repoUrl}>{repository.url}</div>
+            <div className={styles.repoUrl}>{repository.url}</div>
+          </div>
         </RemovableItem>
       ))}
     </div>

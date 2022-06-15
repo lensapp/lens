@@ -886,18 +886,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some already active repository"
-                      >
-                        Some already active repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some already active repository"
+                        >
+                          Some already active repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -1372,18 +1374,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some already active repository"
-                      >
-                        Some already active repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some already active repository"
+                        >
+                          Some already active repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -1907,18 +1911,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some already active repository"
-                      >
-                        Some already active repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some already active repository"
+                        >
+                          Some already active repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -2391,18 +2397,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some already active repository"
-                      >
-                        Some already active repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some already active repository"
+                        >
+                          Some already active repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -3354,18 +3362,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some already active repository"
-                      >
-                        Some already active repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some already active repository"
+                        >
+                          Some already active repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -3382,18 +3392,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                       </i>
                     </div>
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some to be added repository"
-                      >
-                        Some to be added repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-other-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some to be added repository"
+                        >
+                          Some to be added repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-other-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -3868,18 +3880,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some already active repository"
-                      >
-                        Some already active repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some already active repository"
+                        >
+                          Some already active repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -3896,18 +3910,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                       </i>
                     </div>
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some to be added repository"
-                      >
-                        Some to be added repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-other-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some to be added repository"
+                        >
+                          Some to be added repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-other-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -4441,18 +4457,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some already active repository"
-                      >
-                        Some already active repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some already active repository"
+                        >
+                          Some already active repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -4469,18 +4487,20 @@ exports[`add helm repository from list in preferences when navigating to prefere
                       </i>
                     </div>
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-Some to be added repository"
-                      >
-                        Some to be added repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-other-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-Some to be added repository"
+                        >
+                          Some to be added repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-other-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"

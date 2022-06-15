@@ -886,18 +886,20 @@ exports[`remove helm repository from list of active repositories in preferences 
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-some-active-repository"
-                      >
-                        some-active-repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-some-active-repository"
+                        >
+                          some-active-repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
@@ -1370,18 +1372,20 @@ exports[`remove helm repository from list of active repositories in preferences 
                     class="repos"
                   >
                     <div
-                      class="item flex gaps align-center justify-space-between mt-3"
+                      class="item flex gaps align-center justify-space-between repo"
                     >
-                      <div
-                        class="repoName"
-                        data-testid="helm-repository-some-active-repository"
-                      >
-                        some-active-repository
-                      </div>
-                      <div
-                        class="repoUrl"
-                      >
-                        some-url
+                      <div>
+                        <div
+                          class="repoName"
+                          data-testid="helm-repository-some-active-repository"
+                        >
+                          some-active-repository
+                        </div>
+                        <div
+                          class="repoUrl"
+                        >
+                          some-url
+                        </div>
                       </div>
                       <i
                         class="Icon material interactive focusable"
