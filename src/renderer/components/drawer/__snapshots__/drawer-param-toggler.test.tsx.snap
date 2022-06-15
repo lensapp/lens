@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DrawerParamToggler /> after clicking the toggle after clicking the toggle again renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="flex gaps align-center params"
+      >
+        <div>
+          Foo
+        </div>
+        <div
+          data-testid="drawer-param-toggler"
+        >
+          <span>
+            Show
+          </span>
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<DrawerParamToggler /> after clicking the toggle renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="flex gaps align-center params"
+      >
+        <div>
+          Foo
+        </div>
+        <div
+          data-testid="drawer-param-toggler"
+        >
+          <span>
+            Hide
+          </span>
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_up"
+            >
+              arrow_drop_up
+            </span>
+          </i>
+        </div>
+      </div>
+      <div>
+        <div
+          data-testid="drawer-child"
+        />
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<DrawerParamToggler /> renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="flex gaps align-center params"
+      >
+        <div>
+          Foo
+        </div>
+        <div
+          data-testid="drawer-param-toggler"
+        >
+          <span>
+            Show
+          </span>
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

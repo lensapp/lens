@@ -3,10 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./drawer-param-toggler.scss";
+import * as styles from "./drawer-param-toggler.module.scss";
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames } from "../../utils";
 
 export interface DrawerParamTogglerProps {
   label: string | number;
@@ -30,16 +29,20 @@ export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps,
     const link = open ? `Hide` : `Show`;
 
     return (
-      <div className="DrawerParamToggler">
+      <div className={styles.DrawerParamToggler}>
         <div className="flex gaps align-center params">
-          <div className="param-label">{label}</div>
-          <div className="param-link" onClick={this.toggle}>
-            <span className="param-link-text">{link}</span>
+          <div className={styles.label}>{label}</div>
+          <div
+            className={styles.link}
+            onClick={this.toggle}
+            data-testid="drawer-param-toggler"
+          >
+            <span className={styles.linkText}>{link}</span>
             <Icon material={icon}/>
           </div>
         </div>
         {open && (
-          <div className={cssNames("param-content", { open })}>
+          <div className={styles.content}>
             {children}
           </div>
         )}

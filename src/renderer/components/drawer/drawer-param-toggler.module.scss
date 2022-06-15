@@ -4,24 +4,20 @@
  */
 
 .DrawerParamToggler {
-  .param-label {
+  .label {
     flex-grow: 2
   }
 
-  .param-link {
+  .link {
     cursor: pointer;
 
-    .param-link-text {
+    .linkText {
       color: var(--blue);
       text-decoration: underline;
     }
   }
 
-  .param-content {
-    &.open {
-      display: block;
-    }
-
-    display: none;
+  .content {
+    display: block;
   }
 }
