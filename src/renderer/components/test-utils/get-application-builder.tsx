@@ -24,7 +24,7 @@ import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter, map, matches, find } from "lodash/fp";
+import { flatMap, compact, join, get, filter, map, matches } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
