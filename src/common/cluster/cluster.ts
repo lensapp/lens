@@ -25,6 +25,8 @@ import type { CanI } from "./authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
 import assert from "assert";
 import type { Logger } from "../logger";
+import type { ReadFileSync } from "../fs/read-file-sync.injectable";
+import type { EmitClusterConnectionUpdate } from "../../main/cluster/emit-connection-update.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -36,6 +38,10 @@ export interface ClusterDependencies {
   createAuthorizationReview: (config: KubeConfig) => CanI;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
+  emitClusterConnectionUpdate: EmitClusterConnectionUpdate;
+
+  // TODO: creating a Cluster should not have such wild side effects
+  readFileSync: ReadFileSync;
 }
 
 /**
@@ -625,7 +631,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const update: KubeAuthUpdate = { message, isError };
 
     this.dependencies.logger.debug(`[CLUSTER]: broadcasting connection update`, { ...update, meta: this.getMeta() });
-    broadcastMessage(`cluster:connection-update`, this.id, update);
+    this.dependencies.emitClusterConnectionUpdate({ clusterId: this.id, update });
   }
 
   protected async getAllowedNamespaces(proxyConfig: KubeConfig) {

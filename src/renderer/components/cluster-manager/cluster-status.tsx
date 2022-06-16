@@ -15,13 +15,14 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
-import { requestClusterActivation } from "../../ipc";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import type { ClusterConnectionStatus } from "./cluster-status.state.injectable";
 import clusterConnectionStatusStateInjectable from "./cluster-status.state.injectable";
+import type { RequestClusterActivation } from "../../cluster/request-activation.injectable";
+import requestClusterActivationInjectable from "../../cluster/request-activation.injectable";
 
 export interface ClusterStatusProps {
   className?: IClassName;
@@ -32,6 +33,7 @@ interface Dependencies {
   navigateToEntitySettings: NavigateToEntitySettings;
   entityRegistry: CatalogEntityRegistry;
   state: ClusterConnectionStatus;
+  requestClusterActivation: RequestClusterActivation;
 }
 
 const NonInjectedClusterStatus = observer((props: ClusterStatusProps & Dependencies) => {
@@ -41,6 +43,7 @@ const NonInjectedClusterStatus = observer((props: ClusterStatusProps & Dependenc
     state,
     className,
     entityRegistry,
+    requestClusterActivation,
   } = props;
   const entity = entityRegistry.getById(cluster.id);
   const clusterName = entity?.getName() ?? cluster.name;
@@ -52,7 +55,10 @@ const NonInjectedClusterStatus = observer((props: ClusterStatusProps & Dependenc
     });
 
     try {
-      await requestClusterActivation(cluster.id, true);
+      await requestClusterActivation({
+        clusterId: cluster.id,
+        force: true,
+      });
     } catch (error) {
       state.appendAuthUpdate({
         message: String(error),
@@ -141,5 +147,6 @@ export const ClusterStatus = withInjectables<Dependencies, ClusterStatusProps>(N
     navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
     state: di.inject(clusterConnectionStatusStateInjectable).forCluster(props.cluster.id),
+    requestClusterActivation: di.inject(requestClusterActivationInjectable),
   }),
 });

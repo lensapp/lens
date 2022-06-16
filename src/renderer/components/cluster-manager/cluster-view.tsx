@@ -12,7 +12,6 @@ import { ClusterStatus } from "./cluster-status";
 import type { ClusterFrameHandler } from "./cluster-frame-handler";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -25,6 +24,8 @@ import clusterConnectionStatusStateInjectable from "./cluster-status.state.injec
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import type { Disposer } from "../../utils";
 import { disposer } from "../../utils";
+import type { RequestClusterActivation } from "../../cluster/request-activation.injectable";
+import requestClusterActivationInjectable from "../../cluster/request-activation.injectable";
 
 interface Dependencies {
   clusterId: IComputedValue<string | undefined>;
@@ -33,6 +34,7 @@ interface Dependencies {
   entityRegistry: CatalogEntityRegistry;
   clusterConnectionStatusState: ClusterConnectionStatusState;
   clusterStore: ClusterStore;
+  requestClusterActivation: RequestClusterActivation;
 }
 
 @observer
@@ -104,7 +106,10 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
 
         this.props.clusterFrames.setVisibleCluster(clusterId);
         this.props.clusterFrames.initView(clusterId);
-        requestClusterActivation(clusterId, false); // activate and fetch cluster's state from main
+        this.props.requestClusterActivation({
+          clusterId,
+          force: false,
+        });
         this.props.entityRegistry.activeEntity = clusterId;
 
         const navigateToClusterDisposer = disposer(
@@ -160,6 +165,7 @@ export const ClusterView = withInjectables<Dependencies>(NonInjectedClusterView,
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
     clusterConnectionStatusState: di.inject(clusterConnectionStatusStateInjectable),
     clusterStore: di.inject(clusterStoreInjectable),
+    requestClusterActivation: di.inject(requestClusterActivationInjectable),
   }),
 });
 

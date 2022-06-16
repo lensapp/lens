@@ -6,6 +6,12 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { SetRequired } from "type-fest";
 import type { RequestChannel } from "./request-channel-injection-token";
 
+export type RequestFromChannelImpl<Channel> = Channel extends RequestChannel<infer Request, infer Response>
+  ? Request extends void
+    ? () => Promise<Response>
+    : (req: Request) => Promise<Response>
+  : never;
+
 export type RequestFromChannel = <
   TChannel extends RequestChannel<any, any>,
 >(

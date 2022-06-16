@@ -6,6 +6,10 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { SetRequired } from "type-fest";
 import type { MessageChannel } from "./message-channel-injection-token";
 
+export type EmitChannelMessage<Channel> = Channel extends MessageChannel<infer Message>
+  ? (message: Message) => void
+  : never;
+
 export interface MessageToChannel {
   <TChannel extends MessageChannel<TMessage>, TMessage extends void>(
     channel: TChannel,

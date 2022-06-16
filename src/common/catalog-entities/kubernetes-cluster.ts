@@ -10,8 +10,10 @@ import { broadcastMessage } from "../ipc";
 import { app } from "electron";
 import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
-import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
+import { requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import requestClusterActivationInjectable from "../../renderer/cluster/request-activation.injectable";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -63,6 +65,8 @@ export function isKubernetesCluster(item: unknown): item is KubernetesCluster {
   return item instanceof KubernetesCluster;
 }
 
+const requestClusterActivation = asLegacyGlobalFunctionForExtensionApi(requestClusterActivationInjectable);
+
 export class KubernetesCluster<
   Metadata extends KubernetesClusterMetadata = KubernetesClusterMetadata,
   Status extends KubernetesClusterStatus = KubernetesClusterStatus,
@@ -78,7 +82,10 @@ export class KubernetesCluster<
     if (app) {
       await ClusterStore.getInstance().getById(this.getId())?.activate();
     } else {
-      await requestClusterActivation(this.getId(), false);
+      await requestClusterActivation({
+        clusterId: this.getId(),
+        force: false,
+      });
     }
   }
 

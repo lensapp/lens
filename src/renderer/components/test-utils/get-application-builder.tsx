@@ -143,8 +143,6 @@ export const getApplicationBuilder = () => {
     doGeneralOverrides: true,
   });
 
-  mainDi.register(mainExtensionsStateInjectable);
-
   const overrideChannelsForWindow = overrideChannels(mainDi);
 
   const beforeApplicationStartCallbacks: Callback[] = [];

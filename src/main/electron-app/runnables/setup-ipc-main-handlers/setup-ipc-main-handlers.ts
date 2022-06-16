@@ -5,7 +5,7 @@
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import { clusterFrameMap } from "../../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../../common/ipc/cluster";
+import { clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../../common/app-event-bus/event-bus";
@@ -37,12 +37,6 @@ interface Dependencies {
 }
 
 export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore, operatingSystemTheme, askUserForFilePaths }: Dependencies) => {
-  ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
-    return ClusterStore.getInstance()
-      .getById(clusterId)
-      ?.activate(force);
-  });
-
   ipcMainHandle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
     const cluster = ClusterStore.getInstance().getById(clusterId);
 

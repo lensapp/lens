@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
 export const clusterVisibilityHandler = "cluster:visibility";
 export const clusterRefreshHandler = "cluster:refresh";

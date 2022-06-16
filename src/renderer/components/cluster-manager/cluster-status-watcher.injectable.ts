@@ -3,55 +3,53 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { action, reaction } from "mobx";
-import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
-import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
-import type { ClusterId, KubeAuthUpdate } from "../../../common/cluster-types";
-import ipcRendererInjectable from "../../app-paths/get-value-from-registered-channel/ipc-renderer/ipc-renderer.injectable";
-import type { ClusterConnectionStatusState } from "./cluster-status.state.injectable";
+import { action, computed, reaction } from "mobx";
+import clustersInjectable from "../../../common/cluster-store/clusters.injectable";
+import type { ClusterId } from "../../../common/cluster-types";
+import setupAppPathsInjectable from "../../app-paths/setup-app-paths.injectable";
+import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
+import clusterConnectionStatusStateInjectable from "./cluster-status.state.injectable";
 
-function computeRisingEdgeForClusterDisconnect(store: ClusterStore, onNewlyDisconnected: (clusterId: ClusterId) => void) {
-  const disconnectedStateComputer = () => store.clustersList.map(cluster => [cluster.id, cluster.disconnected] as const);
-  const state = new Map(disconnectedStateComputer());
-
-  reaction(
-    disconnectedStateComputer,
-    (disconnectedStates) => {
-      for (const [clusterId, isDisconnected] of disconnectedStates) {
-        if (state.get(clusterId) === isDisconnected) {
-          // do nothing
-        } else {
-          state.set(clusterId, isDisconnected); // save the new state
-
-          if (isDisconnected) {
-            // If the new value is `true` then the previous value was falsy and this is the rising edge.
-            onNewlyDisconnected(clusterId);
-          }
-        }
-      }
-    },
-  );
-}
-
-// This needs to be an `init` function to bypass a bug in the setup -> injectable -> setup path
-const initClusterStatusWatcherInjectable = getInjectable({
+const startClusterStatusClearingInjectable = getInjectable({
   id: "cluster-status-watcher",
   instantiate: (di) => {
-    const ipcRenderer = di.inject(ipcRendererInjectable);
-    const clusterStore = di.inject(clusterStoreInjectable);
+    const statusState = di.inject(clusterConnectionStatusStateInjectable);
+    const state = new Map<string, boolean>();
+    const onNewlyDisconnected = action((clusterId: ClusterId) => {
+      const status = statusState.forCluster(clusterId);
 
-    return (state: ClusterConnectionStatusState) => {
-      ipcRenderer.on("cluster:connection-update", (evt, clusterId: ClusterId, update: KubeAuthUpdate) => {
-        state.forCluster(clusterId).appendAuthUpdate(update);
-      });
-      computeRisingEdgeForClusterDisconnect(clusterStore, action((clusterId) => {
-        const forCluster = state.forCluster(clusterId);
+      status.clearReconnectingState();
+      status.resetAuthOutput();
+    });
 
-        forCluster.clearReconnectingState();
-        forCluster.resetAuthOutput();
-      }));
+    return {
+      run: () => {
+        const clusters = di.inject(clustersInjectable); // This has to be in here so that it happens after the `setupAppPaths`
+        const disconnectedStates = computed(() => clusters.get().map(cluster => [cluster.id, cluster.disconnected] as const));
+
+        reaction(
+          () => disconnectedStates.get(),
+          states => {
+            for (const [clusterId, isDisconnected] of states) {
+              if (state.get(clusterId) !== isDisconnected) {
+                state.set(clusterId, isDisconnected); // save the new state
+
+                if (isDisconnected) {
+                  // If the new value is `true` then the previous value was falsy and this is the rising edge.
+                  onNewlyDisconnected(clusterId);
+                }
+              }
+            }
+          },
+          {
+            fireImmediately: true,
+          },
+        );
+      },
+      runAfter: di.inject(setupAppPathsInjectable),
     };
   },
+  injectionToken: beforeFrameStartsInjectionToken,
 });
 
-export default initClusterStatusWatcherInjectable;
+export default startClusterStatusClearingInjectable;
