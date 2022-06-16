@@ -8,10 +8,10 @@ import crdListRouteInjectable from "../../../common/front-end-routing/routes/clu
 import customResourceDefinitionsInjectable from "./custom-resources.injectable";
 import { groupBy, matches, noop, some, toPairs } from "lodash/fp";
 import customResourcesRouteInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/custom-resources/custom-resources-route.injectable";
-import currentPathParametersInjectable from "../../routes/current-path-parameters.injectable";
 import type { SidebarItemRegistration } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToCustomResourcesInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/custom-resources/navigate-to-custom-resources.injectable";
+import routePathParametersInjectable from "../../routes/route-path-parameters.injectable";
 
 const sidebarItemsForDefinitionGroupsInjectable = getInjectable({
   id: "sidebar-items-for-definition-groups",
@@ -24,7 +24,7 @@ const sidebarItemsForDefinitionGroupsInjectable = getInjectable({
     const crdRoute = di.inject(customResourcesRouteInjectable);
     const crdRouteIsActive = di.inject(routeIsActiveInjectable, crdRoute);
     const crdListRoute = di.inject(crdListRouteInjectable);
-    const pathParameters = di.inject(currentPathParametersInjectable);
+    const pathParameters = di.inject(routePathParametersInjectable, crdRoute);
     const navigateToCustomResources = di.inject(navigateToCustomResourcesInjectable);
 
     return computed((): SidebarItemRegistration[] => {
