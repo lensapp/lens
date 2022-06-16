@@ -48,6 +48,7 @@
     transition: none;
     opacity: 0;
     margin-left: var(--padding);
+    width: calc(var(--unit) * 2);
 
     &:hover {
       /* Drop styles defined for <Icon/>  */
