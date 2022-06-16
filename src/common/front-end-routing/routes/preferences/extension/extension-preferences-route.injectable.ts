@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { routeInjectionToken } from "../../../route-injection-token";
+import { frontEndRouteInjectionToken } from "../../../front-end-route-injection-token";
 
 const extensionPreferencesRouteInjectable = getInjectable({
   id: "extension-preferences-route",
@@ -15,7 +15,7 @@ const extensionPreferencesRouteInjectable = getInjectable({
     isEnabled: computed(() => true),
   }),
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 export default extensionPreferencesRouteInjectable;

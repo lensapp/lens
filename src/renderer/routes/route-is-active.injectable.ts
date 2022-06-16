@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import currentRouteInjectable from "./current-route.injectable";
-import type { Route } from "../../common/front-end-routing/route-injection-token";
+import type { Route } from "../../common/front-end-routing/front-end-route-injection-token";
 
 const routeIsActiveInjectable = getInjectable({
   id: "route-is-active",

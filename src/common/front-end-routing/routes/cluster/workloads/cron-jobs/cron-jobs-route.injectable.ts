@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import isAllowedResourceInjectable from "../../../../../utils/is-allowed-resource.injectable";
-import { routeInjectionToken } from "../../../../route-injection-token";
+import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 
 const cronJobsRouteInjectable = getInjectable({
   id: "cron-jobs-route",
@@ -19,7 +19,7 @@ const cronJobsRouteInjectable = getInjectable({
     };
   },
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 export default cronJobsRouteInjectable;

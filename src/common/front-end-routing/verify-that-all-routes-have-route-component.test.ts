@@ -4,7 +4,7 @@
  */
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
-import { routeInjectionToken } from "./route-injection-token";
+import { frontEndRouteInjectionToken } from "./front-end-route-injection-token";
 import { filter, map, matches } from "lodash/fp";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../cluster-store/cluster-store";
@@ -18,7 +18,7 @@ describe("verify-that-all-routes-have-component", () => {
       getById: () => null,
     } as unknown as ClusterStore));
 
-    const routes = rendererDi.injectMany(routeInjectionToken);
+    const routes = rendererDi.injectMany(frontEndRouteInjectionToken);
     const routeComponents = rendererDi.injectMany(
       routeSpecificComponentInjectionToken,
     );

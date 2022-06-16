@@ -6,7 +6,7 @@
 import type { IComputedValue } from "mobx";
 import type { CatalogCategoryRegistry } from "../common/catalog";
 import type { NavigateToRoute } from "../common/front-end-routing/navigate-to-route-injection-token";
-import type { Route } from "../common/front-end-routing/route-injection-token";
+import type { Route } from "../common/front-end-routing/front-end-route-injection-token";
 import type { CatalogEntityRegistry as MainCatalogEntityRegistry } from "../main/catalog";
 import type { CatalogEntityRegistry as RendererCatalogEntityRegistry } from "../renderer/api/catalog/entity/registry";
 import type { GetExtensionPageParameters } from "../renderer/routes/get-extension-page-parameters.injectable";

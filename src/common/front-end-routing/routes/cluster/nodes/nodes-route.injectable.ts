@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import isAllowedResourceInjectable from "../../../../utils/is-allowed-resource.injectable";
-import { routeInjectionToken } from "../../../route-injection-token";
+import { frontEndRouteInjectionToken } from "../../../front-end-route-injection-token";
 
 const nodesRouteInjectable = getInjectable({
   id: "nodes-route",
@@ -19,7 +19,7 @@ const nodesRouteInjectable = getInjectable({
     };
   },
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 export default nodesRouteInjectable;
