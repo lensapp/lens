@@ -59,7 +59,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
       click: pipeline(
         async () => {
-          await processCheckingForUpdates();
+          await processCheckingForUpdates("tray");
 
           await showApplicationWindow();
         },

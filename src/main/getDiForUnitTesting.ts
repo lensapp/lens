@@ -72,7 +72,7 @@ import getElectronThemeInjectable from "./electron-app/features/get-electron-the
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import productNameInjectable from "./app-paths/app-name/product-name.injectable";
-import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
+import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
 import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
@@ -250,7 +250,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(ipcMainInjectable, () => ({}));
   di.override(getElectronThemeInjectable, () => () => "dark");
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
-  di.override(quitAndInstallUpdateInjectable, () => () => {});
+  di.override(electronQuitAndInstallUpdateInjectable, () => () => {});
   di.override(setUpdateOnQuitInjectable, () => () => {});
   di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
 

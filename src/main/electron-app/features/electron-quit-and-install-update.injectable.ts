@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronUpdaterInjectable from "./electron-updater.injectable";
 
-const quitAndInstallUpdateInjectable = getInjectable({
-  id: "quit-and-install-update",
+const electronQuitAndInstallUpdateInjectable = getInjectable({
+  id: "electron-quit-and-install-update",
 
   instantiate: (di) => {
     const electronUpdater = di.inject(electronUpdaterInjectable);
@@ -17,4 +17,4 @@ const quitAndInstallUpdateInjectable = getInjectable({
   },
 });
 
-export default quitAndInstallUpdateInjectable;
+export default electronQuitAndInstallUpdateInjectable;
