@@ -46,7 +46,7 @@ tag-release:
 
 .PHONY: test
 test: binaries/client
-	yarn run jest $(or $(CMD_ARGS), "src")
+	yarn run jest opening-application-window-using-tray.test.ts
 
 .PHONY: integration
 integration: build
