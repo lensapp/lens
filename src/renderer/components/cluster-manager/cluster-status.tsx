@@ -130,7 +130,10 @@ const NonInjectedClusterStatus = observer((props: ClusterStatusProps & Dependenc
   };
 
   return (
-    <div className={cssNames(styles.status, "flex column box center align-center justify-center", className)}>
+    <div
+      className={cssNames(styles.status, "flex column box center align-center justify-center", className)}
+      data-testid="cluster-status"
+    >
       <div className="flex items-center column gaps">
         <h2>{clusterName}</h2>
         {renderStatusIcon()}

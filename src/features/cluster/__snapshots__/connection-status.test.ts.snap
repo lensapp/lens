@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cluster connection status renders 1`] = `
+<body>
+  <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`cluster connection status when navigating to cluster connection renders 1`] = `
+<body>
+  <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
+      class="ClusterView flex column align-center"
+    >
+      <div
+        class="status flex column box center align-center justify-center box center"
+        data-testid="cluster-status"
+      >
+        <div
+          class="flex items-center column gaps"
+        >
+          <h2>
+            minikube
+          </h2>
+          <div
+            class="Spinner spinner"
+          />
+          <pre
+            class="kube-auth-out"
+          >
+            <p>
+              Connecting
+              …
+            </p>
+          </pre>
+          <pre />
+        </div>
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
