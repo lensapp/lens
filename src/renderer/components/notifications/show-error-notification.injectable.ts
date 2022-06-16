@@ -13,13 +13,12 @@ const showErrorNotificationInjectable = getInjectable({
   instantiate: (di): ShowNotification => {
     const notificationsStore = di.inject(notificationsStoreInjectable);
 
-    return (message, customOpts = {}) =>
-      notificationsStore.add({
-        status: NotificationStatus.ERROR,
-        timeout: 5000,
-        message,
-        ...customOpts,
-      });
+    return (message, customOpts = {}) => notificationsStore.add({
+      status: NotificationStatus.ERROR,
+      timeout: 5000,
+      message,
+      ...customOpts,
+    });
   },
 });
 

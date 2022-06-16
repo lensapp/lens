@@ -22,7 +22,7 @@ interface Dependencies {
   entityRegistry: CatalogEntityRegistry;
 }
 
-export const NonInjectedSidebar = observer(({
+const NonInjectedSidebar = observer(({
   sidebarItems,
   entityRegistry,
 }: Dependencies) => (

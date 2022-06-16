@@ -1,0 +1,174 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ContainerEnv /> renders 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders both env and configMapRef envFrom 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            foobar
+          </span>
+          = 
+          https://localhost:12345
+        </div>
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            configFoo
+          </span>
+          = 
+          configBar
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders env 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            foobar
+          </span>
+          = 
+          https://localhost:12345
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders env 2`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            foobar
+          </span>
+          = 
+          https://localhost:12345
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders envFrom when given a configMapRef 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            configFoo
+          </span>
+          = 
+          configBar
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders envFrom when given a secretRef 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      />
+    </div>
+  </div>
+</body>
+`;

@@ -5,26 +5,39 @@
 
 import "./pod-container-env.scss";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
-import type { PodContainer, Secret } from "../../../common/k8s-api/endpoints";
+import type { PodContainer } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
-import { secretStore } from "../+config-secrets/legacy-store";
-import { configMapStore } from "../+config-maps/legacy-store";
-import { Icon } from "../icon";
-import { base64, cssNames, iter } from "../../utils";
+import { iter } from "../../utils";
 import _ from "lodash";
+import type { SecretStore } from "../+config-secrets/store";
+import type { ConfigMapStore } from "../+config-maps/store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import configMapStoreInjectable from "../+config-maps/store.injectable";
+import secretStoreInjectable from "../+config-secrets/store.injectable";
+import { SecretKey } from "../+config-secrets/secret-key";
 
 export interface ContainerEnvironmentProps {
   container: PodContainer;
   namespace: string;
 }
 
-export const ContainerEnvironment = observer((props: ContainerEnvironmentProps) => {
-  const { container: { env, envFrom = [] }, namespace } = props;
+interface Dependencies {
+  secretStore: SecretStore;
+  configMapStore: ConfigMapStore;
+}
 
-  useEffect( () => autorun(() => {
+const NonInjectedContainerEnvironment = observer((props: ContainerEnvironmentProps & Dependencies) => {
+  const {
+    container: { env, envFrom },
+    namespace,
+    configMapStore,
+    secretStore,
+  } = props;
+
+  useEffect(() => autorun(() => {
     for (const { valueFrom } of env ?? []) {
       if (valueFrom?.configMapKeyRef) {
         configMapStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
@@ -63,28 +76,32 @@ export const ContainerEnvironment = observer((props: ContainerEnvironmentProps) 
         }
 
         if (secretKeyRef) {
-          secretValue = (
-            <SecretKey
-              reference={secretKeyRef}
-              namespace={namespace}
-            />
-          );
+          const secret = secretStore.getByName(secretKeyRef.name, namespace);
+
+          if (secret) {
+            secretValue = (
+              <SecretKey
+                secret={secret}
+                key={secretKeyRef.key}
+              />
+            );
+          }
         }
 
         if (configMapKeyRef) {
           const { name, key } = configMapKeyRef;
           const configMap = configMapStore.getByName(name, namespace);
 
-          secretValue = configMap ?
-            configMap.data[key] :
-            `configMapKeyRef(${name}${key})`;
+          secretValue = configMap
+            ? configMap.data[key]
+            : `configMapKeyRef(${name}${key})`;
         }
       }
 
       return (
         <div className="variable" key={name}>
           <span className="var-name">{name}</span>
-          :
+          {`= `}
           {secretValue}
         </div>
       );
@@ -92,7 +109,7 @@ export const ContainerEnvironment = observer((props: ContainerEnvironmentProps) 
   };
 
   const renderEnvFrom = () => {
-    return Array.from(iter.filterFlatMap(envFrom, vars => {
+    return Array.from(iter.filterFlatMap(envFrom ?? [], vars => {
       if (vars.configMapRef?.name) {
         return renderEnvFromConfigMap(vars.configMapRef.name);
       }
@@ -113,7 +130,7 @@ export const ContainerEnvironment = observer((props: ContainerEnvironmentProps) 
     return Object.entries(configMap.data).map(([name, value]) => (
       <div className="variable" key={name}>
         <span className="var-name">{name}</span>
-        :
+        {`= `}
         {value}
       </div>
     ));
@@ -124,75 +141,31 @@ export const ContainerEnvironment = observer((props: ContainerEnvironmentProps) 
 
     if (!secret) return null;
 
-    return Object.keys(secret.data).map(key => {
-      const secretKeyRef = {
-        name: secret.getName(),
-        key,
-      };
-
-      const value = (
-        <SecretKey
-          reference={secretKeyRef}
-          namespace={namespace}
-        />
-      );
-
-      return (
+    return Object.keys(secret.data)
+      .map(key => (
         <div className="variable" key={key}>
           <span className="var-name">{key}</span>
-          :
-          {value}
+          {`= `}
+          <SecretKey
+            secret={secret}
+            key={key}
+          />
         </div>
-      );
-    });
+      ));
   };
 
   return (
     <DrawerItem name="Environment" className="ContainerEnvironment">
-      {env && renderEnv()}
-      {envFrom && renderEnvFrom()}
+      {renderEnv()}
+      {renderEnvFrom()}
     </DrawerItem>
   );
 });
 
-export interface SecretKeyProps {
-  reference: {
-    name: string;
-    key: string;
-  };
-  namespace: string;
-}
-
-const SecretKey = (props: SecretKeyProps) => {
-  const { reference: { name, key }, namespace } = props;
-  const [loading, setLoading] = useState(false);
-  const [secret, setSecret] = useState<Secret>();
-
-  const showKey = async (evt: React.MouseEvent) => {
-    evt.preventDefault();
-    setLoading(true);
-    const secret = await secretStore.load({ name, namespace });
-
-    setLoading(false);
-    setSecret(secret);
-  };
-
-  const value = secret?.data?.[key];
-
-  if (value) {
-    return <>{base64.decode(value)}</>;
-  }
-
-  return (
-    <>
-      {`secretKeyRef(${name}.${key})`}
-      &nbsp;
-      <Icon
-        className={cssNames("secret-button", { loading })}
-        material="visibility"
-        tooltip="Show"
-        onClick={showKey}
-      />
-    </>
-  );
-};
+export const ContainerEnvironment = withInjectables<Dependencies, ContainerEnvironmentProps>(NonInjectedContainerEnvironment, {
+  getProps: (di, props) => ({
+    ...props,
+    configMapStore: di.inject(configMapStoreInjectable),
+    secretStore: di.inject(secretStoreInjectable),
+  }),
+});

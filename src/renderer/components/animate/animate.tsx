@@ -122,7 +122,7 @@ class DefaultedAnimate extends React.Component<AnimateProps & Dependencies & typ
   }
 }
 
-export const NonInjectedAnimate = (props: AnimateProps & Dependencies) => <DefaultedAnimate {...props} />;
+const NonInjectedAnimate = (props: AnimateProps & Dependencies) => <DefaultedAnimate {...props} />;
 
 export const Animate = withInjectables<Dependencies, AnimateProps>(
   NonInjectedAnimate,

@@ -22,7 +22,7 @@ interface Dependencies {
   clusterId: string | undefined;
 }
 
-export function NonInjectedClusterNoMetrics({ className, navigateToEntitySettings, clusterId }: Dependencies & ClusterNoMetricsProps) {
+function NonInjectedClusterNoMetrics({ className, navigateToEntitySettings, clusterId }: Dependencies & ClusterNoMetricsProps) {
   function openMetricSettingsPage() {
     if (clusterId) {
       navigateToEntitySettings(clusterId, "metrics");

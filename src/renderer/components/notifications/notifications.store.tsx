@@ -21,16 +21,13 @@ export enum NotificationStatus {
 
 export interface CreateNotificationOptions {
   id?: NotificationId;
-  timeout?: number;
-  onClose?(): void;
-}
-
-export interface Notification {
-  id?: NotificationId;
-  message: NotificationMessage;
-  status?: NotificationStatus;
   timeout?: number; // auto-hiding timeout in milliseconds, 0 = no hide
   onClose?(): void; // additional logic on when the notification times out or is closed by the "x"
+}
+
+export interface Notification extends CreateNotificationOptions {
+  message: NotificationMessage;
+  status: NotificationStatus;
 }
 
 export class NotificationsStore {
