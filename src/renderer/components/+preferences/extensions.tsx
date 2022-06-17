@@ -7,7 +7,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
-import { extensionPreferencesModelInjectable } from "./extension-preference-model.injectable";
+import extensionPreferencesModelInjectable from "./extension-preference-model.injectable";
 import { ExtensionSettings } from "./extension-settings";
 import { Preferences } from "./preferences";
 
