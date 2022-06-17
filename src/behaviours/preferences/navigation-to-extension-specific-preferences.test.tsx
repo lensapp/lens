@@ -53,7 +53,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
         const someOtherTestExtension = getRendererExtensionFake(someOtherExtensionStubWithExtensionSpecificPreferenceItems);
 
-        await applicationBuilder.addExtensions(someTestExtension, someOtherTestExtension);
+        await applicationBuilder.extensions.renderer.enable(someTestExtension, someOtherTestExtension);
         applicationBuilder.preferences.navigation.click("extension-some-test-extension-id");
       });
 
@@ -81,7 +81,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         const extensionWithoutPreferences = getRendererExtensionFake(extensionStubWithoutPreferences);
         const extensionWithSpecificTab = getRendererExtensionFake(extensionStubWithShowInPreferencesTab);
 
-        await applicationBuilder.addExtensions(someTestExtension, extensionWithoutPreferences, extensionWithSpecificTab);
+        await applicationBuilder.extensions.renderer.enable(someTestExtension, extensionWithoutPreferences, extensionWithSpecificTab);
       });
 
       it("doesn't show link for extension without preferences", () => {
@@ -161,11 +161,11 @@ describe("preferences - navigation to extension specific preferences", () => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
 
-        await applicationBuilder.addExtensions(extension);
+        await applicationBuilder.extensions.renderer.enable(extension);
       });
 
       it("shows extension tab in general area", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
 
         expect(actual).toMatchSnapshot();
       });
@@ -178,7 +178,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to specific extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
         });
         it("renders", () => {
           expect(rendered.container).toMatchSnapshot();
@@ -201,12 +201,12 @@ describe("preferences - navigation to extension specific preferences", () => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTabs);
 
-        await applicationBuilder.addExtensions(extension);
+        await applicationBuilder.extensions.renderer.enable(extension);
       });
 
       it("shows each of registered tabs in general area", () => {
-        const helloTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-hello-extension-tab");
-        const logsTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-logs-extension-tab");
+        const helloTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-1-nav-item-hello-extension-tab");
+        const logsTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-1-nav-item-logs-extension-tab");
 
         expect(helloTab).toBeInTheDocument();
         expect(logsTab).toBeInTheDocument();
@@ -219,24 +219,24 @@ describe("preferences - navigation to extension specific preferences", () => {
         const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
         const otherExtension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
 
-        await applicationBuilder.addExtensions(extension, otherExtension);
+        await applicationBuilder.extensions.renderer.enable(extension, otherExtension);
       });
 
       it("shows tab from the first extension", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
 
         expect(actual).toBeInTheDocument();
       });
 
       it("shows tab from the second extension", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab");
 
         expect(actual).toBeInTheDocument();
       });
 
       describe("when navigating to first extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
         });
 
         it("renders", () => {
@@ -258,7 +258,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to second extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab");
         });
 
         it("renders", () => {
@@ -300,7 +300,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         applicationBuilder.preferences.navigateTo(extensionRoute, params);
       });
       
-      await applicationBuilder.addExtensions(extension);
+      await applicationBuilder.extensions.renderer.enable(extension);
       rendered = await applicationBuilder.render();
     });
 
@@ -330,7 +330,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         applicationBuilder.preferences.navigateTo(extensionRoute, params);
       });
       
-      await applicationBuilder.addExtensions(extension, extensionUsingOtherTab);
+      await applicationBuilder.extensions.renderer.enable(extension, extensionUsingOtherTab);
       rendered = await applicationBuilder.render();
     });
 

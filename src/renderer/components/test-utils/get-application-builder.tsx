@@ -102,7 +102,7 @@ export interface ApplicationBuilder {
   preferences: {
     close: () => void;
     navigate: () => void;
-    navigateTo: (route: Route, params: Partial<NavigateToRouteOptions<any>>) => void;
+    navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => void;
     navigation: {
       click: (id: string) => void;
     };
