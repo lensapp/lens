@@ -12,7 +12,7 @@ import { getBinaryName } from "../../common/vars";
 import spawnInjectable from "../child-process/spawn.injectable";
 import { getKubeAuthProxyCertificate } from "./get-kube-auth-proxy-certificate";
 import loggerInjectable from "../../common/logger.injectable";
-import baseBundeledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
+import baseBundledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
 
 export type CreateKubeAuthProxy = (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
 
@@ -25,7 +25,7 @@ const createKubeAuthProxyInjectable = getInjectable({
     return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => {
       const clusterUrl = new URL(cluster.apiUrl);
       const dependencies: KubeAuthProxyDependencies = {
-        proxyBinPath: path.join(di.inject(baseBundeledBinariesDirectoryInjectable), binaryName),
+        proxyBinPath: path.join(di.inject(baseBundledBinariesDirectoryInjectable), binaryName),
         proxyCert: getKubeAuthProxyCertificate(clusterUrl.hostname, selfsigned.generate),
         spawn: di.inject(spawnInjectable),
         logger: di.inject(loggerInjectable),

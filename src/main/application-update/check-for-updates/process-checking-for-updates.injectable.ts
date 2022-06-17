@@ -8,11 +8,13 @@ import updatesAreBeingDiscoveredInjectable from "../../../common/application-upd
 import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import { runInAction } from "mobx";
 import askBooleanInjectable from "../../ask-boolean/ask-boolean.injectable";
-import quitAndInstallUpdateInjectable from "../../electron-app/features/quit-and-install-update.injectable";
 import downloadUpdateInjectable from "../download-update/download-update.injectable";
 import broadcastChangeInUpdatingStatusInjectable from "./broadcast-change-in-updating-status.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates-starting-from-channel.injectable";
 import withOrphanPromiseInjectable from "../../../common/utils/with-orphan-promise/with-orphan-promise.injectable";
+import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
+import { getCurrentDateTime } from "../../../common/utils/date/get-current-date-time";
+import quitAndInstallUpdateInjectable from "../quit-and-install-update.injectable";
 
 const processCheckingForUpdatesInjectable = getInjectable({
   id: "process-checking-for-updates",
@@ -27,8 +29,15 @@ const processCheckingForUpdatesInjectable = getInjectable({
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const checkForUpdatesStartingFromChannel = di.inject(checkForUpdatesStartingFromChannelInjectable);
     const withOrphanPromise = di.inject(withOrphanPromiseInjectable);
+    const emitEvent = di.inject(emitEventInjectable);
 
-    return async () => {
+    return async (source: string) => {
+      emitEvent({
+        name: "app",
+        action: "checking-for-updates",
+        params: { currentDateTime: getCurrentDateTime(), source },
+      });
+
       broadcastChangeInUpdatingStatus({ eventId: "checking-for-updates" });
 
       runInAction(() => {
@@ -49,6 +58,12 @@ const processCheckingForUpdatesInjectable = getInjectable({
       }
 
       const { version, actualUpdateChannel } = result;
+
+      emitEvent({
+        name: "app",
+        action: "update-was-discovered",
+        params: { version, currentDateTime: getCurrentDateTime() },
+      });
 
       broadcastChangeInUpdatingStatus({
         eventId: "download-for-update-started",

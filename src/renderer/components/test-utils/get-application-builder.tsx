@@ -13,9 +13,9 @@ import React from "react";
 import { Router } from "react-router";
 import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
+import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
-import { fireEvent } from "@testing-library/react";
+import { getByText, fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
 import { Sidebar } from "../layout/sidebar";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -32,14 +32,13 @@ import applicationMenuItemsInjectable from "../../../main/menu/application-menu-
 import type { MenuItemConstructorOptions, MenuItem } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
-import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
@@ -52,9 +51,13 @@ import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTest
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
 import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
-import type { Route } from "../../../common/front-end-routing/route-injection-token";
-import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
-import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import assert from "assert";
+import { openMenu } from "react-select-event";
+import userEvent from "@testing-library/user-event";
+import { StatusBar } from "../status-bar/status-bar";
+import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
+import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
+import { navigateToRouteInjectionToken, NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -74,13 +77,13 @@ export interface ApplicationBuilder {
   };
 
   applicationMenu: {
-    click: (path: string) => Promise<void>;
+    click: (path: string) => void;
   };
 
   preferences: {
     close: () => void;
     navigate: () => void;
-    navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => void;
+    navigateTo: (route: Route, params: Partial<NavigateToRouteOptions<any>>) => void;
     navigation: {
       click: (id: string) => void;
     };
@@ -88,6 +91,11 @@ export interface ApplicationBuilder {
 
   helmCharts: {
     navigate: () => void;
+  };
+
+  select: {
+    openMenu: (id: string) => void;
+    selectOption: (menuId: string, labelText: string) => void;
   };
 }
 
@@ -98,6 +106,7 @@ interface DiContainers {
 
 interface Environment {
   renderSidebar: () => React.ReactNode;
+  renderStatusBar: () => React.ReactNode;
   beforeRender: () => void;
   onAllowKubeResource: () => void;
 }
@@ -137,6 +146,8 @@ export const getApplicationBuilder = () => {
     application: {
       renderSidebar: () => null,
 
+      renderStatusBar: () => <StatusBar />,
+
       beforeRender: () => {
         const nofifyThatRootFrameIsRendered = rendererDi.inject(broadcastThatRootFrameIsRenderedInjectable);
 
@@ -152,6 +163,7 @@ export const getApplicationBuilder = () => {
 
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
+      renderStatusBar: () => null,
       beforeRender: () => {},
       onAllowKubeResource: () => {},
     } as Environment,
@@ -172,13 +184,13 @@ export const getApplicationBuilder = () => {
     computed(() => []),
   );
 
-  const iconPaths = mainDi.inject(trayIconPathsInjectable);
-
   let trayMenuItemsStateFake: TrayMenuItem[];
   let trayMenuIconPath: string;
 
   mainDi.override(electronTrayInjectable, () => ({
     start: () => {
+      const iconPaths = mainDi.inject(trayIconPathsInjectable);
+
       trayMenuIconPath = iconPaths.normal;
     },
     stop: () => {},
@@ -197,7 +209,7 @@ export const getApplicationBuilder = () => {
     dis,
 
     applicationMenu: {
-      click: async (path: string) => {
+      click: (path: string) => {
         const applicationMenuItems = mainDi.inject(
           applicationMenuItemsInjectable,
         );
@@ -228,8 +240,6 @@ export const getApplicationBuilder = () => {
           undefined,
           {},
         );
-
-        await flushPromises();
       },
     },
 
@@ -395,6 +405,8 @@ export const getApplicationBuilder = () => {
     },
 
     async render() {
+      mainDi.inject(lensProxyPortInjectable).set(42);
+
       for (const callback of beforeApplicationStartCallbacks) {
         await callback(dis);
       }
@@ -405,7 +417,7 @@ export const getApplicationBuilder = () => {
 
       const applicationWindow = mainDi.inject(applicationWindowInjectable);
 
-      await applicationWindow.show();
+      await applicationWindow.start();
 
       const startFrame = rendererDi.inject(startFrameInjectable);
 
@@ -424,6 +436,7 @@ export const getApplicationBuilder = () => {
       rendered = render(
         <Router history={history}>
           {environment.renderSidebar()}
+          {environment.renderStatusBar()}
 
           <Observer>
             {() => {
@@ -442,6 +455,30 @@ export const getApplicationBuilder = () => {
       );
 
       return rendered;
+    },
+
+    select: {
+      openMenu: (menuId) => {
+        const selector = rendered.container.querySelector<HTMLElement>(
+          `#${menuId}`,
+        );
+
+        assert(selector);
+
+        openMenu(selector);
+      },
+
+      selectOption: (menuId, labelText) => {
+        const menuOptions = rendered.baseElement.querySelector<HTMLElement>(
+          `.${menuId}-options`,
+        );
+
+        assert(menuOptions);
+
+        const option = getByText(menuOptions, labelText);
+
+        userEvent.click(option);
+      },
     },
   };
 

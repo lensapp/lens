@@ -3,14 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { SendToViewArgs } from "./lens-window-injection-token";
-import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window-for.injectable";
-import createElectronWindowForInjectable from "./create-electron-window-for.injectable";
+import type { LensWindow, SendToViewArgs } from "./lens-window-injection-token";
+import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
+import createElectronWindowForInjectable from "./create-electron-window.injectable";
+import assert from "assert";
 
-export interface LensWindow {
+export interface ElectronWindow {
   show: () => void;
   close: () => void;
   send: (args: SendToViewArgs) => void;
+  loadFile: (filePath: string) => Promise<void>;
+  loadUrl: (url: string) => Promise<void>;
 }
 
 export interface LensWindowConfiguration {
@@ -33,31 +36,69 @@ const createLensWindowInjectable = getInjectable({
   id: "create-lens-window",
 
   instantiate: (di) => {
-    const createElectronWindowFor = di.inject(createElectronWindowForInjectable);
+    const createElectronWindow = di.inject(createElectronWindowForInjectable);
 
-    return (configuration: LensWindowConfiguration) => {
-      let browserWindow: LensWindow | undefined;
+    return (configuration: LensWindowConfiguration): LensWindow => {
+      let browserWindow: ElectronWindow | undefined;
 
-      const createElectronWindow = createElectronWindowFor({
-        ...configuration,
-        onClose: () => browserWindow = undefined,
-      });
+      let windowIsShown = false;
+      let windowIsStarting = false;
+
+      const showWindow = () => {
+        assert(browserWindow);
+
+        browserWindow.show();
+        windowIsShown = true;
+      };
 
       return {
-        get visible() {
-          return !!browserWindow;
+        id: configuration.id,
+
+        get isVisible() {
+          return windowIsShown;
         },
-        show: async () => {
+
+        get isStarting() {
+          return windowIsStarting;
+        },
+
+        start: async () => {
           if (!browserWindow) {
-            browserWindow = await createElectronWindow();
+            windowIsStarting = true;
+
+            browserWindow = createElectronWindow({
+              ...configuration,
+              onClose: () => {
+                browserWindow = undefined;
+                windowIsShown = false;
+              },
+            });
+
+            const { file: filePathForContent, url: urlForContent } =
+              configuration.getContentSource();
+
+            if (filePathForContent) {
+              await browserWindow.loadFile(filePathForContent);
+            } else if (urlForContent) {
+              await browserWindow.loadUrl(urlForContent);
+            }
+
+            await configuration.beforeOpen?.();
           }
 
-          browserWindow.show();
+          showWindow();
+
+          windowIsStarting = false;
         },
+
+        show: showWindow,
+
         close: () => {
           browserWindow?.close();
           browserWindow = undefined;
+          windowIsShown = false;
         },
+
         send: (args: SendToViewArgs) => {
           if (!browserWindow) {
             throw new Error(`Tried to send message to window "${configuration.id}" but the window was closed`);

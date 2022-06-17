@@ -204,9 +204,9 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
         <div className={styles.dialogContent}>
           {this.renderDeleteMessage(state)}
           {this.renderWarning(state)}
-          <hr className={styles.hr} />
           {contexts.length > 0 && (
             <>
+              <hr className={styles.hr} />
               <div className="mt-4">
                 <Checkbox
                   data-testid="context-switch"

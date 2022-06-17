@@ -82,5 +82,5 @@ const InjectedNamespaceSelect = withInjectables<Dependencies, NamespaceSelectPro
 });
 
 export function NamespaceSelect<IsMulti extends boolean = false>(props: NamespaceSelectProps<IsMulti>): JSX.Element {
-  return <InjectedNamespaceSelect {...(props as never)} />;
+  return <InjectedNamespaceSelect {...(props as unknown as NamespaceSelectProps<boolean>)} />;
 }

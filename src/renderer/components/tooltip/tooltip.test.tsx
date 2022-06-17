@@ -10,6 +10,23 @@ import React from "react";
 import { Tooltip } from "./tooltip";
 
 describe("<Tooltip />", () => {
+  let requestAnimationFrameSpy: jest.SpyInstance<number, [callback: FrameRequestCallback]>;
+
+  beforeEach(() => {
+    requestAnimationFrameSpy = jest.spyOn(window, "requestAnimationFrame");
+
+    requestAnimationFrameSpy.mockImplementation(cb => {
+      cb(0);
+
+      return 0;
+    });
+  });
+
+  afterEach(() => {
+    requestAnimationFrameSpy.mockRestore();
+  });
+
+
   it("does not render to DOM if not visibile", () => {
     const result = render((
       <>

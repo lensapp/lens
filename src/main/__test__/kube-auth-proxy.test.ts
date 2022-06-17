@@ -41,8 +41,8 @@ import { broadcastMessage } from "../../common/ipc";
 import type { ChildProcess } from "child_process";
 import { spawn } from "child_process";
 import { Kubectl } from "../kubectl/kubectl";
-import type { MockProxy } from "jest-mock-extended";
-import { mock } from "jest-mock-extended";
+import type { DeepMockProxy } from "jest-mock-extended";
+import { mockDeep, mock } from "jest-mock-extended";
 import { waitUntilUsed } from "tcp-port-used";
 import type { Readable } from "stream";
 import { EventEmitter } from "stream";
@@ -140,12 +140,12 @@ describe("kube auth proxy tests", () => {
   });
 
   describe("spawn tests", () => {
-    let mockedCP: MockProxy<ChildProcess>;
+    let mockedCP: DeepMockProxy<ChildProcess>;
     let listeners: EventEmitter;
     let proxy: KubeAuthProxy;
 
     beforeEach(async () => {
-      mockedCP = mock<ChildProcess>();
+      mockedCP = mockDeep<ChildProcess>();
       listeners = new EventEmitter();
       const stderr = mockedCP.stderr = mock<Readable>();
       const stdout = mockedCP.stdout = mock<Readable>();

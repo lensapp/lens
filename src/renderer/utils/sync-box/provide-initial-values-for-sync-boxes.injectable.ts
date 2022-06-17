@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
 import syncBoxInitialValueChannelInjectable from "../../../common/utils/sync-box/sync-box-initial-value-channel.injectable";
-import syncBoxStateInjectable from "../../../common/utils/sync-box/sync-box-state.injectable";
+import createSyncBoxStateInjectable from "../../../common/utils/sync-box/sync-box-state.injectable";
 import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
 
 const provideInitialValuesForSyncBoxesInjectable = getInjectable({
@@ -14,7 +14,7 @@ const provideInitialValuesForSyncBoxesInjectable = getInjectable({
   instantiate: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
     const syncBoxInitialValueChannel = di.inject(syncBoxInitialValueChannelInjectable);
-    const setSyncBoxState = (id: string, state: any) => di.inject(syncBoxStateInjectable, id).set(state);
+    const setSyncBoxState = (id: string, state: any) => di.inject(createSyncBoxStateInjectable, id).set(state);
 
     return {
       run: async () => {

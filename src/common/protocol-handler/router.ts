@@ -63,9 +63,9 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
   }
 }
 
-interface Dependencies {
-  extensionLoader: ExtensionLoader;
-  extensionsStore: ExtensionsStore;
+export interface LensProtocolRouterDependencies {
+  readonly extensionLoader: ExtensionLoader;
+  readonly extensionsStore: ExtensionsStore;
 }
 
 export abstract class LensProtocolRouter {
@@ -76,7 +76,7 @@ export abstract class LensProtocolRouter {
 
   static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
 
-  constructor(protected dependencies: Dependencies) {}
+  constructor(protected readonly dependencies: LensProtocolRouterDependencies) {}
 
   /**
    * Attempts to route the given URL to all internal routes that have been registered

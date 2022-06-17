@@ -6,6 +6,7 @@
 import fetchMock from "jest-fetch-mock";
 import configurePackages from "./common/configure-packages";
 import { configure } from "mobx";
+import { setImmediate } from "timers";
 
 // setup default configuration for external npm-packages
 configurePackages();
@@ -22,6 +23,12 @@ fetchMock.enableMocks();
 // Mock __non_webpack_require__ for tests
 globalThis.__non_webpack_require__ = jest.fn();
 
+global.setImmediate = setImmediate;
+
+global.fail = ((error = "Test failed without explicit error") => {
+  console.error(error);
+}) as any;
+
 process.on("unhandledRejection", (err: any) => {
-  fail(err);
+  global.fail(err);
 });

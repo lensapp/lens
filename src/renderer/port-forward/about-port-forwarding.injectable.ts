@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { aboutPortForwarding } from "./port-forward-notify";
 import navigateToPortForwardsInjectable from "../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
-import hostedClusterIdInjectable from "../../common/cluster-store/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "../cluster-frame-context/hosted-cluster-id.injectable";
 import assert from "assert";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
 

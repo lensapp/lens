@@ -14,7 +14,6 @@ import { readFileNotify } from "../read-file-notify/read-file-notify";
 import type { InstallRequest } from "../attempt-install/install-request";
 import type { ExtensionInfo } from "../attempt-install-by-info.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import { AsyncInputValidationError } from "../../input/input_validators";
 
 export type InstallFromInput = (input: string) => Promise<void>;
 
@@ -34,7 +33,7 @@ export const installFromInput = ({
 
     try {
       // fixme: improve error messages for non-tar-file URLs
-      if (InputValidators.isUrl.validate(input, {})) {
+      if (InputValidators.isUrl.validate(input)) {
         // install via url
         disposer = extensionInstallationStateStore.startPreInstall();
         const { promise } = downloadFile({ url: input, timeout: 10 * 60 * 1000 });
@@ -44,23 +43,19 @@ export const installFromInput = ({
       }
 
       try {
-        await InputValidators.isPath.validate(input, {});
+        await InputValidators.isPath.validate(input);
 
         // install from system path
         const fileName = path.basename(input);
 
         return await attemptInstall({ fileName, dataP: readFileNotify(input) });
       } catch (error) {
-        if (error instanceof AsyncInputValidationError) {
-          const extNameCaptures = InputValidators.isExtensionNameInstallRegex.captures(input);
+        const extNameCaptures = InputValidators.isExtensionNameInstallRegex.captures(input);
 
-          if (extNameCaptures) {
-            const { name, version } = extNameCaptures;
+        if (extNameCaptures) {
+          const { name, version } = extNameCaptures;
 
-            return await attemptInstallByInfo({ name, version });
-          }
-        } else {
-          throw error;
+          return await attemptInstallByInfo({ name, version });
         }
       }
 

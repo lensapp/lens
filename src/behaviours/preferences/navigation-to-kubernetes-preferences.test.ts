@@ -5,6 +5,8 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 
 describe("preferences - navigation to kubernetes preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -17,6 +19,15 @@ describe("preferences - navigation to kubernetes preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
+      applicationBuilder.beforeApplicationStart(({ rendererDi, mainDi }) => {
+        rendererDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+
+        mainDi.override(
+          getActiveHelmRepositoriesInjectable,
+          () => async () => ({ callWasSuccessful: true, response: [] }),
+        );
+      });
+
       applicationBuilder.beforeRender(() => {
         applicationBuilder.preferences.navigate();
       });
