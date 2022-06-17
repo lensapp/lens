@@ -16,7 +16,7 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
   id: "extension-preferences-navigation-item",
 
   instantiate: (di) => {
-    return (ext) => {
+    return (ext, extensionInstallationCount) => {
       const extension = ext as LensRendererExtension;
       const navigateToExtensionPreferences = di.inject(
         navigateToExtensionPreferencesInjectable,
@@ -33,7 +33,7 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
       const isActive = computed(() => routeIsActive.get() && pathParameters.get().extensionId === extension.sanitizedExtensionId);
 
       const extensionInjectable = getInjectable({
-        id: `extension-preferences-navigation-item-${extension.sanitizedExtensionId}`,
+        id: `extension-preferences-navigation-item-${extension.sanitizedExtensionId}-${extensionInstallationCount}`,
         instantiate: () => ({
           id: `extension-${extension.sanitizedExtensionId}`,
           label: `${extension.name}`,

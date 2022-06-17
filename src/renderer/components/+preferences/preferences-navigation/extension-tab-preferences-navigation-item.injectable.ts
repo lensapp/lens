@@ -21,7 +21,7 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
   id: "extension-specific-tab-preferences-navigation-items",
 
   instantiate: (di) => {
-    return (ext: LensExtension) => {
+    return (ext: LensExtension, extensionInstallationCount) => {
       const extension = ext as LensRendererExtension;
       const navigateToExtensionPreferences = di.inject(
         navigateToExtensionPreferencesInjectable,
@@ -34,7 +34,7 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
         extension.appPreferenceTabs,
 
         map((tab) => {
-          const id = `extension-${extension.sanitizedExtensionId}-nav-item-${tab.id}`;
+          const id = `extension-${extension.sanitizedExtensionId}-${extensionInstallationCount}-nav-item-${tab.id}`;
           const isActive = computed(() => routeIsActive.get() && pathParameters.get().tabId === tab.id);
 
           return getInjectable({
