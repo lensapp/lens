@@ -5,7 +5,6 @@
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
-import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { IObservableArray, ObservableSet } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
@@ -60,9 +59,11 @@ import type { LensMainExtension } from "../../../extensions/lens-main-extension"
 import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 import type { LensExtension } from "../../../extensions/lens-extension";
 
+import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
+
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
-type EnableExtensions<T> = (...extensions: T[]) => Promise<void>;
+type EnableExtensions<T> = (...extensions: T[]) => void;
 type DisableExtensions<T> = (...extensions: T[]) => void;
 
 export interface ApplicationBuilder {
@@ -222,33 +223,26 @@ export const getApplicationBuilder = () => {
     extensionState: T,
     di: DiContainer,
   ) => {
-    let index = 0;
+    const getExtension = (extension: LensExtension) =>
+      di.inject(extensionInjectable, extension);
 
-    return async (...extensions: LensExtension[]) => {
-      const extensionRegistrators = di.injectMany(
-        extensionRegistratorInjectionToken,
-      );
+    return (...extensionInstances: LensExtension[]) => {
+      const addAndEnableExtensions = () => {
+        extensionInstances.forEach(instance => {
+          const extension = getExtension(instance);
 
-      const addAndEnableExtensions = async () => {
-        index++;
-
-        const registratorPromises = extensions.flatMap((extension) =>
-          extensionRegistrators.map((registrator) =>
-            registrator(extension, index),
-          ),
-        );
-
-        await Promise.all(registratorPromises);
+          extension.register();
+        });
 
         runInAction(() => {
-          extensions.forEach((extension) => {
+          extensionInstances.forEach((extension) => {
             extensionState.add(extension);
           });
         });
       };
 
       if (rendered) {
-        await addAndEnableExtensions();
+        addAndEnableExtensions();
       } else {
         builder.beforeRender(addAndEnableExtensions);
       }
@@ -407,12 +401,12 @@ export const getApplicationBuilder = () => {
     extensions: {
       renderer: {
         enable: enableExtensionsFor(rendererExtensionsState, rendererDi),
-        disable: disableExtensionsFor(rendererExtensionsState),
+        disable: disableExtensionsFor(rendererExtensionsState, rendererDi),
       },
 
       main: {
         enable: enableExtensionsFor(mainExtensionsState, mainDi),
-        disable: disableExtensionsFor(mainExtensionsState),
+        disable: disableExtensionsFor(mainExtensionsState, mainDi),
       },
     },
 
@@ -538,13 +532,22 @@ function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
   ];
 }
 
-const disableExtensionsFor =
-    <T extends ObservableSet>(extensionState: T) =>
+const disableExtensionsFor = <T extends ObservableSet>(
+  extensionState: T,
+  di: DiContainer,
+) => {
+  const getExtension = (instance: LensExtension) =>
+    di.inject(extensionInjectable, instance);
 
-    (...extensions: LensExtension[]) => {
-      extensions.forEach((extension) => {
-        runInAction(() => {
-          extensionState.delete(extension);
-        });
+  return (...extensionInstances: LensExtension[]) => {
+    extensionInstances.forEach((instance) => {
+      const extension = getExtension(instance);
+
+      extension.deregister();
+
+      runInAction(() => {
+        extensionState.delete(extension);
       });
-    };
+    });
+  };
+};

@@ -5,18 +5,20 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import currentlyInClusterFrameInjectable from "./currently-in-cluster-frame.injectable";
-import allRoutesInjectable from "./all-routes.injectable";
 import { matches } from "lodash/fp";
+import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
+import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 
 const routesInjectable = getInjectable({
   id: "routes",
 
   instantiate: (di) => {
-    const allRoutes = di.inject(allRoutesInjectable);
+    const computedInjectMany = di.inject(computedInjectManyInjectable);
     const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
+    const routes = computedInjectMany(frontEndRouteInjectionToken);
 
     return computed(() =>
-      allRoutes
+      routes
         .get()
         .filter(matches({ clusterFrame: currentlyInClusterFrame }))
         .filter((route) => route.isEnabled.get()),

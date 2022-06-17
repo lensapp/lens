@@ -23,7 +23,7 @@ describe("extension special characters in page registrations", () => {
       extensionWithPagesHavingSpecialCharacters,
     );
 
-    await applicationBuilder.extensions.renderer.enable(testExtension);
+    applicationBuilder.extensions.renderer.enable(testExtension);
 
     rendered = await applicationBuilder.render();
   });

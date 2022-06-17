@@ -6,7 +6,7 @@ import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import { pipeline } from "@ogre-tools/fp";
-
+import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import {
   filter,
   flatMap,
@@ -15,11 +15,8 @@ import {
   isEmpty,
   map,
   orderBy,
-  overSome,
   some,
 } from "lodash/fp";
-import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
-import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 
 export interface SidebarItemRegistration {
   id: string;
@@ -30,7 +27,6 @@ export interface SidebarItemRegistration {
   isActive?: IComputedValue<boolean>;
   isVisible?: IComputedValue<boolean>;
   orderNumber: number;
-  extension?: LensRendererExtension;
 }
 
 export const sidebarItemsInjectionToken = getInjectionToken<
@@ -47,25 +43,14 @@ const sidebarItemsInjectable = getInjectable({
   id: "sidebar-items",
 
   instantiate: (di) => {
-    const extensions = di.inject(rendererExtensionsInjectable);
+    const computedInjectMany = di.inject(computedInjectManyInjectable);
+
+    const sidebarItemRegistrations = computedInjectMany(sidebarItemsInjectionToken);
 
     return computed((): HierarchicalSidebarItem[] => {
-      const enabledExtensions = extensions.get();
-
-      const sidebarItemRegistrations = di.injectMany(
-        sidebarItemsInjectionToken,
-      );
-
       const registrations = pipeline(
-        sidebarItemRegistrations,
+        sidebarItemRegistrations.get(),
         flatMap(dereference),
-
-        filter(
-          overSome([
-            isNonExtensionSidebarItem,
-            isEnabledExtensionSidebarItemFor(enabledExtensions),
-          ]),
-        ),
       );
 
       const getSidebarItemsHierarchy = (registrations: SidebarItemRegistration[]) => {
@@ -113,14 +98,6 @@ const sidebarItemsInjectable = getInjectable({
     });
   },
 });
-
-const isNonExtensionSidebarItem = (sidebarItem: SidebarItemRegistration) =>
-  !sidebarItem.extension;
-
-const isEnabledExtensionSidebarItemFor =
-  (enabledExtensions: LensRendererExtension[]) =>
-    (sidebarItem: SidebarItemRegistration) =>
-      !!enabledExtensions.find((x) => x === sidebarItem.extension);
 
 const dereference = (items: IComputedValue<SidebarItemRegistration[]>) =>
   items.get();
