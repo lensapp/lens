@@ -15,6 +15,7 @@ import type { TrayMenuRegistration } from "../tray-menu-registration";
 import { withErrorSuppression } from "../../../common/utils/with-error-suppression/with-error-suppression";
 import type { WithErrorLoggingFor } from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
+import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
 
 const trayMenuItemRegistratorInjectable = getInjectable({
   id: "tray-menu-item-registrator",
@@ -22,11 +23,12 @@ const trayMenuItemRegistratorInjectable = getInjectable({
   instantiate: (di) => (extension, installationCounter) => {
     const mainExtension = extension as LensMainExtension;
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
+    const getRandomId = di.inject(getRandomIdInjectable);
 
     pipeline(
       mainExtension.trayMenus,
 
-      flatMap(toItemInjectablesFor(mainExtension, installationCounter, withErrorLoggingFor)),
+      flatMap(toItemInjectablesFor(mainExtension, installationCounter, withErrorLoggingFor, getRandomId)),
 
       (injectables) => di.register(...injectables),
     );
@@ -37,9 +39,9 @@ const trayMenuItemRegistratorInjectable = getInjectable({
 
 export default trayMenuItemRegistratorInjectable;
 
-const toItemInjectablesFor = (extension: LensMainExtension, installationCounter: number, withErrorLoggingFor: WithErrorLoggingFor) => {
+const toItemInjectablesFor = (extension: LensMainExtension, installationCounter: number, withErrorLoggingFor: WithErrorLoggingFor, getRandomId: () => string) => {
   const _toItemInjectables = (parentId: string | null) => (registration: TrayMenuRegistration): Injectable<TrayMenuItem, TrayMenuItem, void>[] => {
-    const trayItemId = registration.id || kebabCase(registration.label || "");
+    const trayItemId = registration.id || kebabCase(registration.label || getRandomId());
     const id = `${trayItemId}-tray-menu-item-for-extension-${extension.sanitizedExtensionId}-instance-${installationCounter}`;
 
     const parentInjectable = getInjectable({
@@ -72,7 +74,7 @@ const toItemInjectablesFor = (extension: LensMainExtension, installationCounter:
           return decorated(registration);
         },
 
-        enabled: computed(() => !!registration.enabled),
+        enabled: computed(() => registration.enabled ?? true),
         visible: computed(() => true),
 
         extension,

@@ -317,6 +317,10 @@ export const getApplicationBuilder = () => {
           throw new Error(`Tried to click tray menu item with ID ${id} which does not exist. Available IDs are: "${availableIds}"`);
         }
 
+        if (!menuItem.enabled.get()) {
+          throw new Error(`Tried to click tray menu item with ID ${id} which is disabled.`);
+        }
+
         await menuItem.click?.();
       },
     },
