@@ -72,7 +72,7 @@ const toItemInjectablesFor = (extension: LensMainExtension, installationCounter:
           return decorated(registration);
         },
 
-        enabled: computed(() => !!registration.enabled),
+        enabled: computed(() => registration.enabled ?? true),
         visible: computed(() => true),
 
         extension,
