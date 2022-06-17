@@ -136,7 +136,7 @@ export interface IngressSpec {
 
 export interface IngressStatus {
   loadBalancer: {
-    ingress: ILoadBalancerIngress[];
+    ingress?: ILoadBalancerIngress[];
   };
 }
 
@@ -199,7 +199,7 @@ export class Ingress extends KubeObject<IngressStatus, IngressSpec, KubeObjectSc
   }
 
   getLoadBalancers() {
-    return this.status?.loadBalancer.ingress.map(address => (
+    return this.status?.loadBalancer?.ingress?.map(address => (
       address.hostname || address.ip
     )) ?? [];
   }
