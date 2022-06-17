@@ -13,17 +13,17 @@ import { Router } from "react-router";
 import { DefaultProps } from "../../mui-base-theme";
 import { ClusterFrame } from "./cluster-frame";
 import historyInjectable from "../../navigation/history.injectable";
-import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
 import { computed } from "mobx";
 import type { Cluster } from "../../../common/cluster/cluster";
 import createClusterInjectable from "../../create-cluster/create-cluster.injectable";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
-import hostedClusterIdInjectable from "../../../common/cluster-store/hosted-cluster-id.injectable";
 import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
+import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
+import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
+import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 
 describe("<ClusterFrame />", () => {
   let render: () => RenderResult;
