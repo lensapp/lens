@@ -10,16 +10,16 @@ exports[`<DrawerParamToggler /> after clicking the toggle after clicking the tog
         class="flex gaps align-center params"
       >
         <div
-          class="label"
+          class="param-label"
         >
           Foo
         </div>
         <div
-          class="link"
+          class="param-link"
           data-testid="drawer-param-toggler"
         >
           <span
-            class="linkText"
+            class="param-link-text"
           >
             Show
           </span>
@@ -35,6 +35,9 @@ exports[`<DrawerParamToggler /> after clicking the toggle after clicking the tog
           </i>
         </div>
       </div>
+      <div
+        class="param-content"
+      />
     </div>
   </div>
 </body>
@@ -50,16 +53,16 @@ exports[`<DrawerParamToggler /> after clicking the toggle renders 1`] = `
         class="flex gaps align-center params"
       >
         <div
-          class="label"
+          class="param-label"
         >
           Foo
         </div>
         <div
-          class="link"
+          class="param-link"
           data-testid="drawer-param-toggler"
         >
           <span
-            class="linkText"
+            class="param-link-text"
           >
             Hide
           </span>
@@ -76,7 +79,7 @@ exports[`<DrawerParamToggler /> after clicking the toggle renders 1`] = `
         </div>
       </div>
       <div
-        class="content"
+        class="param-content open"
       >
         <div
           data-testid="drawer-child"
@@ -97,16 +100,16 @@ exports[`<DrawerParamToggler /> renders 1`] = `
         class="flex gaps align-center params"
       >
         <div
-          class="label"
+          class="param-label"
         >
           Foo
         </div>
         <div
-          class="link"
+          class="param-link"
           data-testid="drawer-param-toggler"
         >
           <span
-            class="linkText"
+            class="param-link-text"
           >
             Show
           </span>
@@ -122,6 +125,9 @@ exports[`<DrawerParamToggler /> renders 1`] = `
           </i>
         </div>
       </div>
+      <div
+        class="param-content"
+      />
     </div>
   </div>
 </body>
