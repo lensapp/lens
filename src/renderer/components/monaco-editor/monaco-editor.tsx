@@ -94,7 +94,8 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
 
     const { language, value } = this.props;
 
-    return editor.createModel(value, language, uri);
+    // NOTE: if for some reason `value` is not typeof "string" then the following line can throw.
+    return editor.createModel(String(value), language, uri);
   }
 
   @computed get options(): editor.IStandaloneEditorConstructionOptions {
