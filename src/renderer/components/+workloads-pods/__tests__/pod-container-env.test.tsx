@@ -87,7 +87,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.baseElement).toMatchSnapshot();
+    expect(result.getByTestId("env-foobar").innerHTML).toBe(`<span class="var-name">foobar</span>= https://localhost:12345`);
   });
 
   it("renders envFrom when given a configMapRef", () => {
@@ -136,7 +136,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.baseElement).toMatchSnapshot();
+    expect(result.getByTestId("envFrom-configmap-my-config-map").innerHTML).toBe(`<span class="var-name">configFoo</span>= configBar`);
   });
 
   it("renders envFrom when given a secretRef", () => {
@@ -155,6 +155,9 @@ describe("<ContainerEnv />", () => {
           uid: "237",
         },
         type: SecretType.BasicAuth,
+        data: {
+          bar: "bat",
+        },
       });
     });
 
@@ -183,7 +186,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.baseElement).toMatchSnapshot();
+    expect(result.getByTestId("envFrom-secret-my-secret-bar").innerHTML).toMatch(`<span class="var-name">bar</span>= secretKeyRef(my-secret.bar)`);
   });
 
   it("renders env", () => {
@@ -211,7 +214,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.baseElement).toMatchSnapshot();
+    expect(result.getByTestId("env-foobar").innerHTML).toBe(`<span class="var-name">foobar</span>= https://localhost:12345`);
   });
 
   it("renders both env and configMapRef envFrom", () => {
@@ -264,6 +267,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.baseElement).toMatchSnapshot();
+    expect(result.getByTestId("env-foobar").innerHTML).toBe(`<span class="var-name">foobar</span>= https://localhost:12345`);
+    expect(result.getByTestId("envFrom-configmap-my-config-map").innerHTML).toBe(`<span class="var-name">configFoo</span>= configBar`);
   });
 });

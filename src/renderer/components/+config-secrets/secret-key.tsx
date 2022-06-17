@@ -10,15 +10,15 @@ import { Icon } from "../icon";
 
 export interface SecretKeyProps {
   secret: Secret;
-  key: string;
+  field: string;
 }
 
-export const SecretKey = ({ secret, key }: SecretKeyProps) => {
+export const SecretKey = ({ secret, field }: SecretKeyProps) => {
   const [showValue, setShowValue] = useState(false);
 
   const showKey = () => setShowValue(true);
 
-  const value = secret?.data?.[key];
+  const value = secret?.data?.[field];
 
   if (showValue && value) {
     return <>{base64.decode(value)}</>;
@@ -26,7 +26,7 @@ export const SecretKey = ({ secret, key }: SecretKeyProps) => {
 
   return (
     <>
-      {`secretKeyRef(${name}.${key})`}
+      {`secretKeyRef(${secret.getName()}.${field})`}
       &nbsp;
       <Icon
         className="secret-button"

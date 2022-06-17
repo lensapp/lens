@@ -82,7 +82,7 @@ const NonInjectedContainerEnvironment = observer((props: ContainerEnvironmentPro
             secretValue = (
               <SecretKey
                 secret={secret}
-                key={secretKeyRef.key}
+                field={secretKeyRef.key}
               />
             );
           }
@@ -99,7 +99,11 @@ const NonInjectedContainerEnvironment = observer((props: ContainerEnvironmentPro
       }
 
       return (
-        <div className="variable" key={name}>
+        <div
+          className="variable"
+          key={name}
+          data-testid={`env-${name}`}
+        >
           <span className="var-name">{name}</span>
           {`= `}
           {secretValue}
@@ -128,7 +132,11 @@ const NonInjectedContainerEnvironment = observer((props: ContainerEnvironmentPro
     if (!configMap) return null;
 
     return Object.entries(configMap.data).map(([name, value]) => (
-      <div className="variable" key={name}>
+      <div
+        className="variable"
+        key={name}
+        data-testid={`envFrom-configmap-${configMap.getName()}`}
+      >
         <span className="var-name">{name}</span>
         {`= `}
         {value}
@@ -142,13 +150,17 @@ const NonInjectedContainerEnvironment = observer((props: ContainerEnvironmentPro
     if (!secret) return null;
 
     return Object.keys(secret.data)
-      .map(key => (
-        <div className="variable" key={key}>
-          <span className="var-name">{key}</span>
+      .map(name => (
+        <div
+          className="variable"
+          key={name}
+          data-testid={`envFrom-secret-${secretName}-${name}`}
+        >
+          <span className="var-name">{name}</span>
           {`= `}
           <SecretKey
             secret={secret}
-            key={key}
+            field={name}
           />
         </div>
       ));
