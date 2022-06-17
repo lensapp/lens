@@ -55,20 +55,27 @@ const toItemInjectablesFor = (extension: LensMainExtension, installationCounter:
         label: computed(() => registration.label || ""),
         tooltip: registration.toolTip,
 
-        click: pipeline(
-          () => {
-            registration.click?.(registration);
-          },
+        click: () => {
+          const decorated = pipeline(
+            registration.click || (() => {}),
 
-          withErrorLoggingFor(() => `[TRAY]: Clicking of tray item "${trayItemId}" from extension "${extension.sanitizedExtensionId}" failed.`),
+            withErrorLoggingFor(
+              () =>
+                `[TRAY]: Clicking of tray item "${trayItemId}" from extension "${extension.sanitizedExtensionId}" failed.`,
+            ),
 
-          // TODO: Find out how to improve typing so that instead of
-          // x => withErrorSuppression(x) there could only be withErrorSuppression
-          (x) => withErrorSuppression(x),
-        ),
+            // TODO: Find out how to improve typing so that instead of
+            // x => withErrorSuppression(x) there could only be withErrorSuppression
+            x => withErrorSuppression(x),
+          );
+
+          return decorated(registration);
+        },
 
         enabled: computed(() => !!registration.enabled),
         visible: computed(() => true),
+
+        extension,
       }),
 
       injectionToken: trayMenuItemInjectionToken,
