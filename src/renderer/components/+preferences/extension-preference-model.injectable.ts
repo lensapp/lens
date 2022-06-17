@@ -8,7 +8,7 @@ import rendererExtensionsInjectable from "../../../extensions/renderer-extension
 import currentPathParametersInjectable from "../../routes/current-path-parameters.injectable";
 import { getExtensionPreferenceItems } from "./get-extension-preference-items";
 
-export const extensionPreferencesModelInjectable = getInjectable({
+const extensionPreferencesModelInjectable = getInjectable({
   id: "extension-preferences-model",
 
   instantiate: (di) => {
@@ -30,3 +30,5 @@ export const extensionPreferencesModelInjectable = getInjectable({
     });
   },
 });
+
+export default extensionPreferencesModelInjectable;
