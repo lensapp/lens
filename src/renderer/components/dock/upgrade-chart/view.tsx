@@ -58,7 +58,11 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
       ),
       reaction(
         () => this.release?.getRevision(),
-        () => this.reloadValues(),
+        () => {
+          if (this.release) {
+            this.props.upgradeChartTabStore.reloadValues(this.props.tab.id);
+          }
+        },
         {
           fireImmediately: true,
         },
@@ -80,10 +84,6 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
 
   get value() {
     return this.props.upgradeChartTabStore.values.getData(this.tabId);
-  }
-
-  async reloadValues() {
-    this.props.upgradeChartTabStore.reloadValues(this.props.tab.id);
   }
 
   async reloadVersions(release: HelmRelease | null | undefined) {
