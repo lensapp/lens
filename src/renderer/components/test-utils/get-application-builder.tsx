@@ -57,7 +57,8 @@ import userEvent from "@testing-library/user-event";
 import { StatusBar } from "../status-bar/status-bar";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
-import { navigateToRouteInjectionToken, NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
