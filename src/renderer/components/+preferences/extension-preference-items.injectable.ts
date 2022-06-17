@@ -35,7 +35,7 @@ const extensionsPreferenceItemsInjectable = getInjectable({
       return preferences.filter(preference => !preference.showInPreferencesTab);
     });
   },
-  lifecycle: lifecycleEnum.singleton,
+  lifecycle: lifecycleEnum.transient
 });
 
 export default extensionsPreferenceItemsInjectable;
