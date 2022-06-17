@@ -4,19 +4,16 @@
  */
 
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
+import { extensionPreferencesModelInjectable } from "./extension-preference-model.injectable";
 import { ExtensionSettings } from "./extension-settings";
 import { Preferences } from "./preferences";
-import extensionsPreferenceItemsInjectable from "./extension-preference-items.injectable";
-import currentPathParametersInjectable from "../../routes/current-path-parameters.injectable";
-import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 
 interface Dependencies {
-  preferenceItems: IComputedValue<RegisteredAppPreference[]>;
-  extensionName?: string;
+  preferenceItems: RegisteredAppPreference[];
+  extensionName: string;
 }
 
 const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies) => (
@@ -27,10 +24,7 @@ const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies)
         {" "}
         preferences
       </h2>
-      {!extensionName && (
-        <div className="flex items-center">No extension found</div>
-      )}
-      {preferenceItems.get().map((preferenceItem, index) => (
+      {preferenceItems.map((preferenceItem, index) => (
         <ExtensionSettings
           key={`${preferenceItem.id}-${index}`}
           setting={preferenceItem}
@@ -47,14 +41,11 @@ export const Extensions = withInjectables<Dependencies>(
 
   {
     getProps: (di) => {
-      const pathParameters = di.inject(currentPathParametersInjectable);
-      const extensionId = pathParameters.get().extensionId;
-      const extensions = di.inject(rendererExtensionsInjectable);
-      const extension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
+      const { preferenceItems, extensionName } = di.inject(extensionPreferencesModelInjectable).get();
 
       return {
-        preferenceItems: di.inject(extensionsPreferenceItemsInjectable, pathParameters),
-        extensionName: extension?.manifest.name,
+        preferenceItems,
+        extensionName,
       };
     },
   },
