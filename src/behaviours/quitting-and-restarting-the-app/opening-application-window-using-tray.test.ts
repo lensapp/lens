@@ -12,7 +12,6 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { ElectronWindow, LensWindowConfiguration } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { flushPromises } from "../../common/test-utils/flush-promises";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
 
 describe("opening application window using tray", () => {
@@ -24,9 +23,20 @@ describe("opening application window using tray", () => {
     let callForApplicationWindowHtmlMock: AsyncFnMock<() => void>;
 
     beforeEach(async () => {
+      callForSplashWindowHtmlMock = asyncFn();
+      callForApplicationWindowHtmlMock = asyncFn();
+
       applicationBuilder = getApplicationBuilder().beforeApplicationStart(
         ({ mainDi }) => {
           mainDi.override(lensResourcesDirInjectable, () => "some-lens-resources-directory");
+
+          const loadFileMock = jest
+            .fn(callForSplashWindowHtmlMock)
+            .mockImplementationOnce(() => Promise.resolve());
+
+          const loadUrlMock = jest
+            .fn(callForApplicationWindowHtmlMock)
+            .mockImplementationOnce(() => Promise.resolve());
 
           createElectronWindowMock = jest.fn((configuration: LensWindowConfiguration) =>
             ({
@@ -34,7 +44,7 @@ describe("opening application window using tray", () => {
                 send: () => {},
                 close: () => {},
                 show: () => {},
-                loadFile: callForSplashWindowHtmlMock,
+                loadFile: loadFileMock,
                 loadUrl: () => { throw new Error("Should never come here"); },
               },
 
@@ -43,7 +53,7 @@ describe("opening application window using tray", () => {
                 close: () => {},
                 show: () => {},
                 loadFile: () => { throw new Error("Should never come here"); },
-                loadUrl: callForApplicationWindowHtmlMock,
+                loadUrl: loadUrlMock,
               },
             }[configuration.id] as ElectronWindow));
 
@@ -54,20 +64,10 @@ describe("opening application window using tray", () => {
           );
 
           expectWindowsToBeOpen = expectWindowsToBeOpenFor(mainDi);
-
-          callForSplashWindowHtmlMock = asyncFn();
-          callForApplicationWindowHtmlMock = asyncFn();
         },
       );
 
-      const renderPromise = applicationBuilder.render();
-
-      await flushPromises();
-
-      await callForSplashWindowHtmlMock.resolve();
-      await callForApplicationWindowHtmlMock.resolve();
-
-      await renderPromise;
+      await applicationBuilder.render();
     });
 
     it("only an application window is open", () => {
