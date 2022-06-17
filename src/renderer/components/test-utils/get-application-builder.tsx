@@ -197,7 +197,7 @@ export const getApplicationBuilder = () => {
     setMenuItems: (items) => {
       trayMenuItemsStateFake = items;
     },
-    setIconPath: (path: string) => {
+    setIconPath: (path) => {
       trayMenuIconPath = path;
     },
   }));
