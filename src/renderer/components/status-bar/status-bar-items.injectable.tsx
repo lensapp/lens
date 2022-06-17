@@ -6,7 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import type { StatusBarItemProps } from "./status-bar-registration";
-import { StatusBarItem, statusBarItemInjectionToken } from "./status-bar-item-injection-token";
+import type { StatusBarItem } from "./status-bar-item-injection-token";
+import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 
 export interface StatusBarItems {
   right: React.ComponentType<StatusBarItemProps>[];

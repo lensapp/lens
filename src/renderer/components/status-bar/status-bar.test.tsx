@@ -12,8 +12,8 @@ import { renderFor } from "../test-utils/renderFor";
 import type { IObservableArray } from "mobx";
 import { computed, observable } from "mobx";
 import type { DiContainer } from "@ogre-tools/injectable";
-import statusBarItemsInjectable from "./registered-status-bar-items.injectable";
-import type { StatusBarRegistration } from "./status-bar-registration";
+import type { StatusBarItems } from "./status-bar-items.injectable";
+import statusBarItemsInjectable from "./status-bar-items.injectable";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
@@ -72,9 +72,10 @@ describe("<StatusBar />", () => {
     const testId = "testId";
     const text = "heee";
 
-    di.override(statusBarItemsInjectable, () => computed(() => [
-      { item: <span data-testid={testId} >{text}</span> },
-    ] as StatusBarRegistration[]));
+    di.override(statusBarItemsInjectable, () => computed(() => ({
+      right: [ () => <span data-testid={testId} >{text}</span> ],
+      left: [],
+    }) as StatusBarItems));
 
     const { getByTestId } = render(<StatusBar />);
 
