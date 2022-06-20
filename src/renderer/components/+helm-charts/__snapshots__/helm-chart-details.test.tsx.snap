@@ -122,9 +122,8 @@ exports[`<HelmChartDetails /> before getChartDetails resolves when getChartDetai
           <div
             class="introduction flex align-flex-start"
           >
-            <img
+            <div
               class="intro-logo"
-              src=""
             />
             <div
               class="intro-contents box grow"
