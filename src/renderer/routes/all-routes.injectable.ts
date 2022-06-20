@@ -7,8 +7,8 @@ import { overSome } from "lodash/fp";
 import { computed } from "mobx";
 import rendererExtensionsInjectable from "../../extensions/renderer-extensions.injectable";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
-import type { Route } from "../../common/front-end-routing/route-injection-token";
-import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import type { Route } from "../../common/front-end-routing/front-end-route-injection-token";
+import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 
 const allRoutesInjectable = getInjectable({
   id: "all-routes",
@@ -20,7 +20,7 @@ const allRoutesInjectable = getInjectable({
       const enabledExtensions = extensions.get();
 
       return di
-        .injectMany(routeInjectionToken)
+        .injectMany(frontEndRouteInjectionToken)
         .filter((route) =>
           overSome([
             isNonExtensionRoute,

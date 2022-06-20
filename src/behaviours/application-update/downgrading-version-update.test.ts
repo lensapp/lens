@@ -22,8 +22,6 @@ describe("downgrading version update", () => {
   let mainDi: DiContainer;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-
     applicationBuilder = getApplicationBuilder();
 
     applicationBuilder.beforeApplicationStart(({ mainDi }) => {
@@ -79,7 +77,7 @@ describe("downgrading version update", () => {
 
       const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
-      processCheckingForUpdates();
+      processCheckingForUpdates("irrelevant");
 
       expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(expect.any(Object), { allowDowngrade: downgradeIsAllowed });
     });

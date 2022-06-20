@@ -8,6 +8,7 @@
   word-break: break-all;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1;
 
   &.menu {
     @include table-cell-action;

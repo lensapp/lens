@@ -9,8 +9,8 @@ import { computed } from "mobx";
 import type { RenderResult } from "@testing-library/react";
 import { routeSpecificComponentInjectionToken } from "../renderer/routes/route-specific-component-injection-token";
 import { observer } from "mobx-react";
-import type { Route } from "../common/front-end-routing/route-injection-token";
-import { routeInjectionToken } from "../common/front-end-routing/route-injection-token";
+import type { Route } from "../common/front-end-routing/front-end-route-injection-token";
+import { frontEndRouteInjectionToken } from "../common/front-end-routing/front-end-route-injection-token";
 import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import currentRouteInjectable from "../renderer/routes/current-route.injectable";
@@ -192,7 +192,7 @@ describe("navigating between routes", () => {
 
 const testRouteWithoutPathParametersInjectable = getInjectable({
   id: "some-route",
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 
   instantiate: () => ({
     path: "/some-path",
@@ -214,7 +214,7 @@ const testRouteWithoutPathParametersComponentInjectable = getInjectable({
 
 const routeWithOptionalPathParametersInjectable = getInjectable({
   id: "some-route",
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 
   instantiate: (): Route<{ someParameter?: string; someOtherParameter?: string }> => ({
     path: "/some-path/:someParameter?/:someOtherParameter?",

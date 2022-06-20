@@ -450,8 +450,8 @@ export class Input extends React.Component<InputProps, State> {
         <label className="input-area flex gaps align-center" id="">
           {this.renderIcon(iconLeft)}
           {multiLine
-            ? <textarea {...inputProps as never} />
-            : <input {...inputProps as never} />
+            ? <textarea {...inputProps as object} />
+            : <input {...inputProps as object} />
           }
           {this.renderIcon(iconRight)}
           {contentRight}

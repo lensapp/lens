@@ -4,8 +4,8 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import allowedResourcesInjectable from "../cluster-store/allowed-resources.injectable";
 import type { KubeResource } from "../rbac";
+import { allowedResourcesInjectionToken } from "../cluster-store/allowed-resources-injection-token";
 
 export type IsAllowedResource = (resource: KubeResource) => boolean;
 
@@ -13,7 +13,7 @@ const isAllowedResourceInjectable = getInjectable({
   id: "is-allowed-resource",
 
   instantiate: (di, resourceName: string) => {
-    const allowedResources = di.inject(allowedResourcesInjectable);
+    const allowedResources = di.inject(allowedResourcesInjectionToken);
 
     return computed(() => allowedResources.get().has(resourceName));
   },

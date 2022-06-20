@@ -50,7 +50,7 @@ describe("preferences - navigation to telemetry preferences", () => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const testExtensionWithTelemetryPreferenceItems = getRendererExtensionFake(extensionStubWithTelemetryPreferenceItems);
 
-        applicationBuilder.addExtensions(
+        applicationBuilder.extensions.renderer.enable(
           testExtensionWithTelemetryPreferenceItems,
         );
       });
@@ -105,7 +105,7 @@ describe("preferences - navigation to telemetry preferences", () => {
         ],
       });
 
-      applicationBuilder.addExtensions(
+      applicationBuilder.extensions.renderer.enable(
         testExtensionWithTelemetryPreferenceItems,
       );
 

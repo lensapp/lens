@@ -71,9 +71,10 @@ const applicationMenuItemsInjectable = getInjectable({
           },
           ...ignoreIf(!updatingIsEnabled, [
             {
+              id: "check-for-updates",
               label: "Check for updates",
               click() {
-                processCheckingForUpdates().then(() => showApplicationWindow());
+                processCheckingForUpdates("application-menu").then(() => showApplicationWindow());
               },
             },
           ]),
@@ -285,7 +286,7 @@ const applicationMenuItemsInjectable = getInjectable({
               {
                 label: "Check for updates",
                 click() {
-                  processCheckingForUpdates().then(() =>
+                  processCheckingForUpdates("periodic").then(() =>
                     showApplicationWindow(),
                   );
                 },

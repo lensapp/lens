@@ -6,14 +6,14 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
-import type { IObservableArray } from "mobx";
+import type { IObservableArray, ObservableSet } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import { renderFor } from "./renderFor";
 import React from "react";
 import { Router } from "react-router";
 import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import allowedResourcesInjectable from "../../../common/cluster-store/allowed-resources.injectable";
+import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { getByText, fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
@@ -24,7 +24,7 @@ import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter, map, matches, find } from "lodash/fp";
+import { flatMap, compact, join, get, filter, map, matches } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
@@ -32,14 +32,13 @@ import applicationMenuItemsInjectable from "../../../main/menu/application-menu-
 import type { MenuItemConstructorOptions, MenuItem } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
-import hostedClusterInjectable from "../../../common/cluster-store/hosted-cluster.injectable";
+import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
-import { flushPromises } from "../../../common/test-utils/flush-promises";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
@@ -55,13 +54,33 @@ import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectabl
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
+import { StatusBar } from "../status-bar/status-bar";
+import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
+import type { LensMainExtension } from "../../../extensions/lens-main-extension";
+import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
+import type { LensExtension } from "../../../extensions/lens-extension";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
+
+type EnableExtensions<T> = (...extensions: T[]) => Promise<void>;
+type DisableExtensions<T> = (...extensions: T[]) => void;
 
 export interface ApplicationBuilder {
   dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
-  addExtensions: (...extensions: LensRendererExtension[]) => Promise<ApplicationBuilder>;
+
+  extensions: {
+    renderer: {
+      enable: EnableExtensions<LensRendererExtension>;
+      disable: DisableExtensions<LensRendererExtension>;
+    };
+
+    main: {
+      enable: EnableExtensions<LensMainExtension>;
+      disable: DisableExtensions<LensMainExtension>;
+    };
+  };
+
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeRender: (callback: Callback) => ApplicationBuilder;
@@ -74,7 +93,7 @@ export interface ApplicationBuilder {
   };
 
   applicationMenu: {
-    click: (path: string) => Promise<void>;
+    click: (path: string) => void;
   };
 
   preferences: {
@@ -102,6 +121,7 @@ interface DiContainers {
 
 interface Environment {
   renderSidebar: () => React.ReactNode;
+  renderStatusBar: () => React.ReactNode;
   beforeRender: () => void;
   onAllowKubeResource: () => void;
 }
@@ -133,13 +153,16 @@ export const getApplicationBuilder = () => {
   const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeRenderCallbacks: Callback[] = [];
 
-  const extensionsState = observable.array<LensRendererExtension>();
+  const rendererExtensionsState = observable.set<LensRendererExtension>();
+  const mainExtensionsState = observable.set<LensMainExtension>();
 
   rendererDi.override(subscribeStoresInjectable, () => () => () => {});
 
   const environments = {
     application: {
       renderSidebar: () => null,
+
+      renderStatusBar: () => <StatusBar />,
 
       beforeRender: () => {
         const nofifyThatRootFrameIsRendered = rendererDi.inject(broadcastThatRootFrameIsRenderedInjectable);
@@ -156,6 +179,7 @@ export const getApplicationBuilder = () => {
 
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
+      renderStatusBar: () => null,
       beforeRender: () => {},
       onAllowKubeResource: () => {},
     } as Environment,
@@ -169,26 +193,23 @@ export const getApplicationBuilder = () => {
   );
 
   rendererDi.override(rendererExtensionsInjectable, () =>
-    computed(() => extensionsState),
+    computed(() => [...rendererExtensionsState]),
   );
 
   mainDi.override(mainExtensionsInjectable, () =>
-    computed(() => []),
+    computed(() => [...mainExtensionsState]),
   );
 
-  const iconPaths = mainDi.inject(trayIconPathsInjectable);
-
-  let trayMenuItemsStateFake: TrayMenuItem[];
   let trayMenuIconPath: string;
 
   mainDi.override(electronTrayInjectable, () => ({
     start: () => {
+      const iconPaths = mainDi.inject(trayIconPathsInjectable);
+
       trayMenuIconPath = iconPaths.normal;
     },
     stop: () => {},
-    setMenuItems: (items) => {
-      trayMenuItemsStateFake = items;
-    },
+    setMenuItems: () => {},
     setIconPath: (path) => {
       trayMenuIconPath = path;
     },
@@ -197,11 +218,48 @@ export const getApplicationBuilder = () => {
   let allowedResourcesState: IObservableArray<KubeResource>;
   let rendered: RenderResult;
 
+  const enableExtensionsFor = <T extends ObservableSet>(
+    extensionState: T,
+    di: DiContainer,
+  ) => {
+    let index = 0;
+
+    return async (...extensions: LensExtension[]) => {
+      const extensionRegistrators = di.injectMany(
+        extensionRegistratorInjectionToken,
+      );
+
+      const addAndEnableExtensions = async () => {
+        index++;
+
+        const registratorPromises = extensions.flatMap((extension) =>
+          extensionRegistrators.map((registrator) =>
+            registrator(extension, index),
+          ),
+        );
+
+        await Promise.all(registratorPromises);
+
+        runInAction(() => {
+          extensions.forEach((extension) => {
+            extensionState.add(extension);
+          });
+        });
+      };
+
+      if (rendered) {
+        await addAndEnableExtensions();
+      } else {
+        builder.beforeRender(addAndEnableExtensions);
+      }
+    };
+  };
+
   const builder: ApplicationBuilder = {
     dis,
 
     applicationMenu: {
-      click: async (path: string) => {
+      click: (path: string) => {
         const applicationMenuItems = mainDi.inject(
           applicationMenuItemsInjectable,
         );
@@ -232,31 +290,35 @@ export const getApplicationBuilder = () => {
           undefined,
           {},
         );
-
-        await flushPromises();
       },
     },
 
     tray: {
       get: (id: string) => {
-        return trayMenuItemsStateFake.find(matches({ id })) ?? null;
+        const trayMenuItems = mainDi.inject(trayMenuItemsInjectable).get();
+
+        return trayMenuItems.find(matches({ id })) ?? null;
       },
       getIconPath: () => trayMenuIconPath,
+
       click: async (id: string) => {
-        const menuItem = pipeline(
-          trayMenuItemsStateFake,
-          find((menuItem) => menuItem.id === id),
-        );
+        const trayMenuItems = mainDi.inject(trayMenuItemsInjectable).get();
+
+        const menuItem = trayMenuItems.find(matches({ id })) ?? null;
 
         if (!menuItem) {
           const availableIds = pipeline(
-            trayMenuItemsStateFake,
+            trayMenuItems,
             filter(item => !!item.click),
             map(item => item.id),
             join(", "),
           );
 
           throw new Error(`Tried to click tray menu item with ID ${id} which does not exist. Available IDs are: "${availableIds}"`);
+        }
+
+        if (!menuItem.enabled.get()) {
+          throw new Error(`Tried to click tray menu item with ID ${id} which is disabled.`);
         }
 
         await menuItem.click?.();
@@ -342,32 +404,16 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    addExtensions: async (...extensions) => {
-      const extensionRegistrators = rendererDi.injectMany(
-        extensionRegistratorInjectionToken,
-      );
+    extensions: {
+      renderer: {
+        enable: enableExtensionsFor(rendererExtensionsState, rendererDi),
+        disable: disableExtensionsFor(rendererExtensionsState),
+      },
 
-      const addAndEnableExtensions = async () => {
-        const registratorPromises = extensions.flatMap((extension) =>
-          extensionRegistrators.map((registrator) => registrator(extension, 1)),
-        );
-
-        await Promise.all(registratorPromises);
-
-        runInAction(() => {
-          extensions.forEach((extension) => {
-            extensionsState.push(extension);
-          });
-        });
-      };
-
-      if (rendered) {
-        await addAndEnableExtensions();
-      } else {
-        builder.beforeRender(addAndEnableExtensions);
-      }
-
-      return builder;
+      main: {
+        enable: enableExtensionsFor(mainExtensionsState, mainDi),
+        disable: disableExtensionsFor(mainExtensionsState),
+      },
     },
 
     allowKubeResource: (resourceName) => {
@@ -393,6 +439,8 @@ export const getApplicationBuilder = () => {
     },
 
     async render() {
+      mainDi.inject(lensProxyPortInjectable).set(42);
+
       for (const callback of beforeApplicationStartCallbacks) {
         await callback(dis);
       }
@@ -403,7 +451,7 @@ export const getApplicationBuilder = () => {
 
       const applicationWindow = mainDi.inject(applicationWindowInjectable);
 
-      await applicationWindow.show();
+      await applicationWindow.start();
 
       const startFrame = rendererDi.inject(startFrameInjectable);
 
@@ -422,6 +470,7 @@ export const getApplicationBuilder = () => {
       rendered = render(
         <Router history={history}>
           {environment.renderSidebar()}
+          {environment.renderStatusBar()}
 
           <Observer>
             {() => {
@@ -488,3 +537,14 @@ function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
     ),
   ];
 }
+
+const disableExtensionsFor =
+    <T extends ObservableSet>(extensionState: T) =>
+
+    (...extensions: LensExtension[]) => {
+      extensions.forEach((extension) => {
+        runInAction(() => {
+          extensionState.delete(extension);
+        });
+      });
+    };

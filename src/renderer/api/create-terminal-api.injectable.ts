@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import hostedClusterIdInjectable from "../../common/cluster-store/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "../cluster-frame-context/hosted-cluster-id.injectable";
 import type { TerminalApiQuery } from "./terminal-api";
 import { TerminalApi } from "./terminal-api";
 

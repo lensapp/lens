@@ -64,7 +64,7 @@ import { observable } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
 import ipcMainInjectable from "./utils/channel/ipc-main/ipc-main.injectable";
-import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
+import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
@@ -72,7 +72,7 @@ import getElectronThemeInjectable from "./electron-app/features/get-electron-the
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import productNameInjectable from "./app-paths/app-name/product-name.injectable";
-import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
+import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
 import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
@@ -97,6 +97,7 @@ import installHelmChartInjectable from "./helm/helm-service/install-helm-chart.i
 import listHelmReleasesInjectable from "./helm/helm-service/list-helm-releases.injectable";
 import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
 import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
+import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -120,6 +121,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
@@ -242,13 +244,13 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
   di.override(requestSingleInstanceLockInjectable, () => () => true);
   di.override(disableHardwareAccelerationInjectable, () => () => {});
-  di.override(shouldStartHiddenInjectable, () => true);
+  di.override(shouldStartHiddenInjectable, () => false);
   di.override(showMessagePopupInjectable, () => () => {});
   di.override(waitForElectronToBeReadyInjectable, () => () => Promise.resolve());
   di.override(ipcMainInjectable, () => ({}));
   di.override(getElectronThemeInjectable, () => () => "dark");
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
-  di.override(quitAndInstallUpdateInjectable, () => () => {});
+  di.override(electronQuitAndInstallUpdateInjectable, () => () => {});
   di.override(setUpdateOnQuitInjectable, () => () => {});
   di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
 
@@ -256,7 +258,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
     throw new Error("Tried to check for platform updates without explicit override.");
   });
 
-  di.override(createElectronWindowForInjectable, () => () => async () => ({
+  di.override(createElectronWindowForInjectable, () => () => ({
     show: () => {},
 
     close: () => {},
@@ -266,6 +268,9 @@ const overrideElectronFeatures = (di: DiContainer) => {
 
       sendFake(null, arg);
     },
+
+    loadFile: async () => {},
+    loadUrl: async () => {},
   }));
 
   di.override(

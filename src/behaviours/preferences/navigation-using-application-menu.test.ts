@@ -28,8 +28,8 @@ describe("preferences - navigation using application menu", () => {
   });
 
   describe("when navigating to preferences using application menu", () => {
-    beforeEach(async () => {
-      await applicationBuilder.applicationMenu.click("root.preferences");
+    beforeEach(() => {
+      applicationBuilder.applicationMenu.click("root.preferences");
     });
 
     it("renders", () => {

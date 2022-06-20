@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { IObservableValue } from "mobx";
 import { computed } from "mobx";
 import syncBoxChannelInjectable from "./sync-box-channel.injectable";
 import { messageToChannelInjectionToken } from "../channel/message-to-channel-injection-token";
@@ -17,8 +18,8 @@ const createSyncBoxInjectable = getInjectable({
     const messageToChannel = di.inject(messageToChannelInjectionToken);
     const getSyncBoxState = (id: string) => di.inject(syncBoxStateInjectable, id);
 
-    return <TData>(id: string, initialValue: TData): SyncBox<TData> => {
-      const state = getSyncBoxState(id);
+    return <Value>(id: string, initialValue: Value): SyncBox<Value> => {
+      const state = getSyncBoxState(id) as IObservableValue<Value>;
 
       state.set(initialValue);
 

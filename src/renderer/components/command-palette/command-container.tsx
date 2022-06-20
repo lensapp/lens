@@ -21,7 +21,7 @@ import windowAddEventListenerInjectable from "../../window/event-listener.inject
 import type { IComputedValue } from "mobx";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
-import hostedClusterIdInjectable from "../../../common/cluster-store/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 
 interface Dependencies {
   addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;

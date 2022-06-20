@@ -46,7 +46,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
       const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
       const testExtension = getRendererExtensionFake(extensionStubWithSidebarItems);
 
-      await applicationBuilder.addExtensions(testExtension);
+      await applicationBuilder.extensions.renderer.enable(testExtension);
     });
 
     describe("given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered", () => {

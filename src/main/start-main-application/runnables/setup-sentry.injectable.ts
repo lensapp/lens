@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { initializeSentryReporting } from "../../../common/sentry";
 import { init } from "@sentry/electron/main";
-import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/before-electron-is-ready-injection-token";
 
 const setupSentryInjectable = getInjectable({
   id: "setup-sentry",
@@ -18,7 +18,7 @@ const setupSentryInjectable = getInjectable({
 
   causesSideEffects: true,
 
-  injectionToken: beforeApplicationIsLoadingInjectionToken,
+  injectionToken: beforeElectronIsReadyInjectionToken,
 });
 
 export default setupSentryInjectable;
