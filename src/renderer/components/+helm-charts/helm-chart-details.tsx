@@ -46,6 +46,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Dependencies> {
+  private readonly imgLoadingFailed = observable.set<string>(); // The IDs of the HelmChart instances
   readonly chartVersions = observable.array<HelmChart>();
   readonly selectedChart = observable.box<HelmChart | undefined>();
   readonly readme = observable.box<string | undefined>(undefined);
@@ -118,14 +119,32 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     this.props.hideDetails();
   }
 
+  private renderIcon(chart: HelmChart) {
+    const icon = chart.getIcon();
+
+    if (!icon || this.imgLoadingFailed.has(chart.getId())) {
+      return (
+        <div
+          className="intro-logo"
+          dangerouslySetInnerHTML={{ __html: HelmLogoPlaceholder }}
+        />
+      );
+    }
+
+    return (
+      <img
+        className="intro-logo"
+        src={icon}
+        onLoad={evt => evt.currentTarget.classList.add("visible")}
+        onError={() => this.imgLoadingFailed.add(chart.getId())}
+      />
+    );
+  }
+
   renderIntroduction(selectedChart: HelmChart) {
     return (
       <div className="introduction flex align-flex-start">
-        <img
-          className="intro-logo"
-          src={selectedChart.getIcon() || HelmLogoPlaceholder}
-          onError={(event) => event.currentTarget.src = HelmLogoPlaceholder}
-        />
+        {this.renderIcon(selectedChart)}
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between" data-testid="selected-chart-description">
             {selectedChart.getDescription()}
