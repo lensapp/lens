@@ -17,8 +17,7 @@ import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
 import { requestInitialClusterStates } from "../../renderer/ipc";
 import { clusterStates } from "../ipc/cluster";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
-import { loadConfigFromString, validateKubeConfig } from "../kube-helpers";
-import type { ReadFileSync } from "../fs/read-file-sync.injectable";
+import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
@@ -26,7 +25,7 @@ export interface ClusterStoreModel {
 
 interface Dependencies {
   createCluster: CreateCluster;
-  readFileSync: ReadFileSync;
+  readClusterConfigSync: ReadClusterConfigSync;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
@@ -115,24 +114,15 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return undefined;
   }
 
-  private createNewCluster(model: ClusterModel): Cluster {
-    const kubeConfigData = this.dependencies.readFileSync(model.kubeConfigPath);
-    const { config } = loadConfigFromString(kubeConfigData);
-    const result = validateKubeConfig(config, model.contextName);
-
-    if (result.error) {
-      throw result.error;
-    }
-
-    return this.dependencies.createCluster(model, { clusterServerUrl: result.cluster.server });
-  }
-
   addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
     appEventBus.emit({ name: "cluster", action: "add" });
 
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel
-      : this.createNewCluster(clusterOrModel);
+      : this.dependencies.createCluster(
+        clusterOrModel,
+        this.dependencies.readClusterConfigSync(clusterOrModel),
+      );
 
     this.clusters.set(cluster.id, cluster);
 
@@ -152,7 +142,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         if (cluster) {
           cluster.updateModel(clusterModel);
         } else {
-          cluster = this.createNewCluster(clusterModel);
+          cluster = this.dependencies.createCluster(
+            clusterModel,
+            this.dependencies.readClusterConfigSync(clusterModel),
+          );
         }
         newClusters.set(clusterModel.id, cluster);
       } catch (error) {

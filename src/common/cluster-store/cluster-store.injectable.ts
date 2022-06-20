@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterStore } from "./cluster-store";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
-import readFileSyncInjectable from "../fs/read-file-sync.injectable";
+import readClusterConfigSyncInjectable from "./read-cluster-config.injectable";
 
 const clusterStoreInjectable = getInjectable({
   id: "cluster-store",
@@ -15,7 +15,7 @@ const clusterStoreInjectable = getInjectable({
 
     return ClusterStore.createInstance({
       createCluster: di.inject(createClusterInjectionToken),
-      readFileSync: di.inject(readFileSyncInjectable),
+      readClusterConfigSync: di.inject(readClusterConfigSyncInjectable),
     });
   },
 
