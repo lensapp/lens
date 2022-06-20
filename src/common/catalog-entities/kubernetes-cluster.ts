@@ -134,11 +134,19 @@ export class KubernetesCluster<
   }
 
   get k8sVersion() {
-    return this.metadata.kubeVersion?.replace("unknown", "") || "";
+    if (this.metadata.kubeVersion === "unknown") {
+      return "";
+    }
+
+    return this.metadata.kubeVersion;
   }
 
   get k8sDistro() {
-    return this.metadata.distro?.replace("unknown", "") || "";
+    if (this.metadata.distro === "unknown") {
+      return "";
+    }
+
+    return this.metadata.distro;
   }
 }
 
