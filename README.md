@@ -19,7 +19,7 @@ Lens IDE a standalone application for MacOS, Windows and Linux operating systems
 
 ## Installation
 
-See [Getting Started](https://docs.k8slens.dev/latest/getting-started/) page.
+See [Getting Started](https://docs.k8slens.dev/main/getting-started/install-lens/) page.
 
 ## Development
 
