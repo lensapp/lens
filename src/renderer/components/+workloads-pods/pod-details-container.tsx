@@ -11,7 +11,7 @@ import { DrawerItem } from "../drawer";
 import { cssNames, isDefined } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
-import { ContainerEnvironment } from "./pod-container-env";
+import { ContainerEnvironment } from "./pod-container-env/view";
 import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";

@@ -13,7 +13,7 @@ import { Secret, ConfigMap, Pod, SecretType } from "../../../../common/k8s-api/e
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import { ContainerEnvironment } from "../pod-container-env";
+import { ContainerEnvironment } from "./view";
 
 describe("<ContainerEnv />", () => {
   let render: DiRender;
@@ -24,11 +24,15 @@ describe("<ContainerEnv />", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     secretStore = ({
-      load: jest.fn(),
+      load: jest.fn().mockImplementation(async () => {
+        return {} as Secret;
+      }),
       getByName: jest.fn(),
     });
     configMapStore = ({
-      load: jest.fn(),
+      load: jest.fn().mockImplementation(async () => {
+        return {} as ConfigMap;
+      }),
       getByName: jest.fn(),
     });
 
@@ -87,7 +91,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("env-foobar").innerHTML).toBe(`<span class="var-name">foobar</span>= https://localhost:12345`);
+    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar= https://localhost:12345`);
   });
 
   it("renders envFrom when given a configMapRef", () => {
@@ -136,7 +140,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("envFrom-configmap-my-config-map").innerHTML).toBe(`<span class="var-name">configFoo</span>= configBar`);
+    expect(result.getByTestId("envFrom-configmap-my-config-map:configFoo")).toHaveTextContent(`configFoo= configBar`);
   });
 
   it("renders envFrom when given a secretRef", () => {
@@ -186,7 +190,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("envFrom-secret-my-secret-bar").innerHTML).toMatch(`<span class="var-name">bar</span>= secretKeyRef(my-secret.bar)`);
+    expect(result.getByTestId("envFrom-secret-my-secret:bar")).toHaveTextContent(/^bar= secretKeyRef\(my-secret\.bar\)/);
   });
 
   it("renders env", () => {
@@ -214,7 +218,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("env-foobar").innerHTML).toBe(`<span class="var-name">foobar</span>= https://localhost:12345`);
+    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar= https://localhost:12345`);
   });
 
   it("renders both env and configMapRef envFrom", () => {
@@ -267,7 +271,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("env-foobar").innerHTML).toBe(`<span class="var-name">foobar</span>= https://localhost:12345`);
-    expect(result.getByTestId("envFrom-configmap-my-config-map").innerHTML).toBe(`<span class="var-name">configFoo</span>= configBar`);
+    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar= https://localhost:12345`);
+    expect(result.getByTestId("envFrom-configmap-my-config-map:configFoo")).toHaveTextContent(`configFoo= configBar`);
   });
 });

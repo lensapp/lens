@@ -100,6 +100,30 @@ export interface VolumeMount {
   subPathExpr?: string;
 }
 
+export interface EnvVar {
+  name: string;
+  value?: string;
+  valueFrom?: {
+    fieldRef?: {
+      apiVersion: string;
+      fieldPath: string;
+    };
+    secretKeyRef?: {
+      key: string;
+      name: string;
+    };
+    configMapKeyRef?: {
+      key: string;
+      name: string;
+    };
+  };
+}
+
+export interface EnvFromSource {
+  configMapRef?: LocalObjectReference;
+  secretRef?: LocalObjectReference;
+}
+
 export interface PodContainer extends Partial<Record<PodContainerProbe, IContainerProbe>> {
   name: string;
   image: string;
@@ -118,28 +142,8 @@ export interface PodContainer extends Partial<Record<PodContainerProbe, IContain
   };
   terminationMessagePath?: string;
   terminationMessagePolicy?: string;
-  env?: {
-    name: string;
-    value?: string;
-    valueFrom?: {
-      fieldRef?: {
-        apiVersion: string;
-        fieldPath: string;
-      };
-      secretKeyRef?: {
-        key: string;
-        name: string;
-      };
-      configMapKeyRef?: {
-        key: string;
-        name: string;
-      };
-    };
-  }[];
-  envFrom?: {
-    configMapRef?: LocalObjectReference;
-    secretRef?: LocalObjectReference;
-  }[];
+  env?: EnvVar[];
+  envFrom?: EnvFromSource[];
   volumeMounts?: VolumeMount[];
   imagePullPolicy?: string;
 }
