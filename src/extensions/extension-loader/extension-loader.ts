@@ -170,9 +170,9 @@ export class ExtensionLoader {
     try {
       instance.disable();
 
-      const registeredExtension = this.dependencies.getExtension(instance);
+      const extension = this.dependencies.getExtension(instance);
 
-      registeredExtension.deregister();
+      extension.deregister();
 
       this.onRemoveExtensionId.emit(instance.id);
       this.dependencies.extensionInstances.delete(lensExtensionId);
@@ -359,9 +359,9 @@ export class ExtensionLoader {
     );
 
     extensions.forEach(({ instance }) => {
-      const getExtension = this.dependencies.getExtension(instance);
+      const extension = this.dependencies.getExtension(instance);
 
-      getExtension.register();
+      extension.register();
     });
 
     // Return ExtensionLoading[]
