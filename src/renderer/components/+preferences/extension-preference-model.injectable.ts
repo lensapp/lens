@@ -4,15 +4,17 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
+import extensionPreferencesRouteInjectable from "../../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
-import currentPathParametersInjectable from "../../routes/current-path-parameters.injectable";
+import routePathParametersInjectable from "../../routes/route-path-parameters.injectable";
 import { getExtensionPreferenceItems } from "./get-extension-preference-items";
 
 const extensionPreferencesModelInjectable = getInjectable({
   id: "extension-preferences-model",
 
   instantiate: (di) => {
-    const pathParameters = di.inject(currentPathParametersInjectable);
+    const route = di.inject(extensionPreferencesRouteInjectable);
+    const pathParameters = di.inject(routePathParametersInjectable, route);
     const extensions = di.inject(rendererExtensionsInjectable);
       
     return computed(() => {

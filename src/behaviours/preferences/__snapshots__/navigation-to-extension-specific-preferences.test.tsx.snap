@@ -3,7 +3,7 @@
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab shows extension tab in general area 1`] = `
 <div
   class="Tab flex gaps align-center"
-  data-testid="tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab"
+  data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
   role="tab"
   tabindex="0"
 >
@@ -107,7 +107,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab"
+            data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >
@@ -296,7 +296,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab"
+            data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >
@@ -308,7 +308,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab"
+            data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >
@@ -497,7 +497,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab"
+            data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >
@@ -509,7 +509,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab"
+            data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >
@@ -2247,7 +2247,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab"
+            data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >
@@ -2436,7 +2436,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
           </div>
           <div
             class="Tab flex gaps align-center active"
-            data-testid="tab-link-for-extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab"
+            data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
             role="tab"
             tabindex="0"
           >

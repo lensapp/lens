@@ -11,8 +11,8 @@ import { type DiRender, renderFor } from "../../test-utils/renderFor";
 import { Extensions } from "../extensions";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
 import { computed } from "mobx";
-import currentPathParametersInjectable from "../../../routes/current-path-parameters.injectable";
 import { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
+import routePathParametersInjectable from "../../../routes/route-path-parameters.injectable";
 
 class SomeTestExtension extends LensRendererExtension {
   constructor() {
@@ -87,7 +87,7 @@ describe("<Extensions/>", () => {
     render = renderFor(di);
 
     di.override(rendererExtensionsInjectable, () => computed(() => [new SomeTestExtension()]));
-    di.override(currentPathParametersInjectable, () => computed(() => ({ extensionId: "some-test-extension-id" })));
+    di.override(routePathParametersInjectable, () => computed(() => ({ extensionId: "some-test-extension-id" })));
   });
 
   it("renders", () => {
@@ -116,7 +116,7 @@ describe("<Extensions/>", () => {
 
   describe("when tabId param is passed and extension has same showInPreferencesTab param", () => {
     beforeEach(() => {
-      di.override(currentPathParametersInjectable, () => computed(() => ({ extensionId: "some-test-extension-id", tabId: "metircs-extension-tab" })));
+      di.override(routePathParametersInjectable, () => computed(() => ({ extensionId: "some-test-extension-id", tabId: "metircs-extension-tab" })));
     });
 
     it("does render related preferences for specific tab", () => {

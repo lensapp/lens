@@ -13,28 +13,28 @@ import type { LensRendererExtension } from "../../../../extensions/lens-renderer
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import { pipeline } from "@ogre-tools/fp";
 import extensionPreferencesRouteInjectable from "../../../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
-import currentPathParametersInjectable from "../../../routes/current-path-parameters.injectable";
 import navigateToExtensionPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/extension/navigate-to-extension-preferences.injectable";
 import type { LensExtension } from "../../../../extensions/lens-extension";
+import routePathParametersInjectable from "../../../routes/route-path-parameters.injectable";
 
 const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
   id: "extension-specific-tab-preferences-navigation-items",
 
   instantiate: (di) => {
-    return (ext: LensExtension, extensionInstallationCount) => {
+    return (ext: LensExtension) => {
       const extension = ext as LensRendererExtension;
       const navigateToExtensionPreferences = di.inject(
         navigateToExtensionPreferencesInjectable,
       );
       const route = di.inject(extensionPreferencesRouteInjectable);
       const routeIsActive = di.inject(routeIsActiveInjectable, route);
-      const pathParameters = di.inject(currentPathParametersInjectable);
+      const pathParameters = di.inject(routePathParametersInjectable, route);
 
-      const injectables = pipeline(
+      return pipeline(
         extension.appPreferenceTabs,
 
         map((tab) => {
-          const id = `extension-${extension.sanitizedExtensionId}-${extensionInstallationCount}-nav-item-${tab.id}`;
+          const id = `extension-${extension.sanitizedExtensionId}-nav-item-${tab.id}`;
           const isActive = computed(() => routeIsActive.get() && pathParameters.get().tabId === tab.id);
 
           return getInjectable({
@@ -51,10 +51,6 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
           });
         }),
       );
-
-      di.register(...injectables);
-
-      return;
     };
   },
   injectionToken: extensionRegistratorInjectionToken,

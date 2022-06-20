@@ -165,7 +165,7 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows extension tab in general area", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab");
 
         expect(actual).toMatchSnapshot();
       });
@@ -178,7 +178,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to specific extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
         });
         it("renders", () => {
           expect(rendered.container).toMatchSnapshot();
@@ -205,8 +205,8 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows each of registered tabs in general area", () => {
-        const helloTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-1-nav-item-hello-extension-tab");
-        const logsTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-1-nav-item-logs-extension-tab");
+        const helloTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-hello-extension-tab");
+        const logsTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-logs-extension-tab");
 
         expect(helloTab).toBeInTheDocument();
         expect(logsTab).toBeInTheDocument();
@@ -223,20 +223,20 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows tab from the first extension", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab");
 
         expect(actual).toBeInTheDocument();
       });
 
       it("shows tab from the second extension", () => {
-        const actual = rendered.getByTestId("tab-link-for-extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab");
+        const actual = rendered.getByTestId("tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
 
         expect(actual).toBeInTheDocument();
       });
 
       describe("when navigating to first extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-1-nav-item-metrics-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
         });
 
         it("renders", () => {
@@ -258,7 +258,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to second extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-duplicated-tab-page-id-1-nav-item-metrics-extension-tab");
+          applicationBuilder.preferences.navigation.click("extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
         });
 
         it("renders", () => {

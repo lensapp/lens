@@ -34,6 +34,7 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
               instantiate: () => ({
                 id: registration.id || id,
                 title: registration.title,
+                extension,
 
                 components: {
                   Hint: registration.components.Hint,
