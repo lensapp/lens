@@ -13,10 +13,12 @@ import kubectlBinaryNameInjectable from "./binary-name.injectable";
 import bundledKubectlBinaryPathInjectable from "./bundled-binary-path.injectable";
 import baseBundledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
 
+export type CreateKubectl = (clusterVersion: string) => Kubectl;
+
 const createKubectlInjectable = getInjectable({
   id: "create-kubectl",
 
-  instantiate: (di) => {
+  instantiate: (di): CreateKubectl => {
     const dependencies: KubectlDependencies = {
       userStore: di.inject(userStoreInjectable),
       directoryForKubectlBinaries: di.inject(directoryForKubectlBinariesInjectable),
@@ -27,7 +29,7 @@ const createKubectlInjectable = getInjectable({
       baseBundeledBinariesDirectory: di.inject(baseBundledBinariesDirectoryInjectable),
     };
 
-    return (clusterVersion: string) => new Kubectl(dependencies, clusterVersion);
+    return (clusterVersion) => new Kubectl(dependencies, clusterVersion);
   },
 });
 

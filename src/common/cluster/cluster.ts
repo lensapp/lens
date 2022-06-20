@@ -27,6 +27,7 @@ import assert from "assert";
 import type { Logger } from "../logger";
 import type { ReadFileSync } from "../fs/read-file-sync.injectable";
 import type { EmitClusterConnectionUpdate } from "../../main/cluster/emit-connection-update.injectable";
+import type { CreateKubectl } from "../../main/kubectl/create-kubectl.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -34,7 +35,7 @@ export interface ClusterDependencies {
   readonly detectorRegistry: DetectorRegistry;
   createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
   createContextHandler: (cluster: Cluster) => ClusterContextHandler;
-  createKubectl: (clusterVersion: string) => Kubectl;
+  createKubectl: CreateKubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;

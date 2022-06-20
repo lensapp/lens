@@ -19,7 +19,6 @@ const routePathParametersInjectable = getInjectable({
 
     return <Param>(route: Route<Param>): IComputedValue<Partial<Param>> => (
       getOrInsertWith(pathParametersCache, route, () => computed(() => (
-        console.log(currentPath.get()),
         matchPath(currentPath.get(), {
           path: route.path,
           exact: true,

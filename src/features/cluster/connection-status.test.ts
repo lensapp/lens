@@ -4,6 +4,8 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
+import type { ObservableMap } from "mobx";
+import { observable } from "mobx";
 import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import clusterStoreInjectable from "../../common/cluster-store/cluster-store.injectable";
 import type { ClusterId } from "../../common/cluster-types";
@@ -12,13 +14,20 @@ import type { NavigateToClusterView } from "../../common/front-end-routing/route
 import navigateToClusterViewInjectable from "../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import type { ReadFileSync } from "../../common/fs/read-file-sync.injectable";
 import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
+import clusterManagerInjectable from "../../main/cluster-manager.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import createClusterInjectable from "../../renderer/create-cluster/create-cluster.injectable";
+import createClusterInjectable from "../../main/create-cluster/create-cluster.injectable";
+import createContextHandlerInjectable from "../../main/context-handler/create-context-handler.injectable";
+import createKubeconfigManagerInjectable from "../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
+import createKubectlInjectable from "../../main/kubectl/create-kubectl.injectable";
+import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
+import type { Kubectl } from "../../main/kubectl/kubectl";
+import type { ContextHandler } from "../../main/context-handler/context-handler";
 
 describe("cluster connection status", () => {
   let clusterStore: ClusterStore;
-  let clusters: Map<ClusterId, Cluster>;
+  let clusters: ObservableMap<ClusterId, Cluster>;
   let cluster: Cluster;
   let cluster2: Cluster;
   let applicationBuilder: ApplicationBuilder;
@@ -64,8 +73,14 @@ describe("cluster connection status", () => {
     };
 
     applicationBuilder.dis.rendererDi.override(readFileSyncInjectable, () => readFileSyncMock);
+    applicationBuilder.dis.mainDi.override(readFileSyncInjectable, () => readFileSyncMock);
+    applicationBuilder.dis.mainDi.override(clusterManagerInjectable, () => ({}));
+    applicationBuilder.dis.mainDi.override(createKubeconfigManagerInjectable, () => () => ({} as KubeconfigManager));
+    applicationBuilder.dis.mainDi.override(createKubectlInjectable, () => () => ({} as Kubectl));
+    applicationBuilder.dis.mainDi.override(createContextHandlerInjectable, () => () => ({} as ContextHandler));
 
-    applicationBuilder.beforeRender(() => {
+    applicationBuilder.beforeApplicationStart(() => {
+      clusters = observable.map();
       clusterStore = ({
         clusters,
         get clustersList() {
@@ -76,10 +91,12 @@ describe("cluster connection status", () => {
 
       applicationBuilder.dis.mainDi.override(clusterStoreInjectable, () => clusterStore);
       applicationBuilder.dis.rendererDi.override(clusterStoreInjectable, () => clusterStore);
+    });
 
+    applicationBuilder.beforeRender(() => {
       navigateToClusterView = applicationBuilder.dis.rendererDi.inject(navigateToClusterViewInjectable);
 
-      const createCluster = applicationBuilder.dis.rendererDi.inject(createClusterInjectable);
+      const createCluster = applicationBuilder.dis.mainDi.inject(createClusterInjectable);
 
       cluster = createCluster({
         contextName: "minikube",
@@ -92,14 +109,14 @@ describe("cluster connection status", () => {
 
       cluster2 = createCluster({
         contextName: "minikube-2",
-        id: "some-cluster-id",
+        id: "some-cluster-id-2",
         kubeConfigPath: "/some/file/path",
       }, {
         clusterServerUrl: "https://localhost:1234",
       });
       cluster2.activate = jest.fn(); // override for test
 
-      clusters = new Map([
+      clusters.replace([
         [cluster.id, cluster],
         [cluster2.id, cluster2],
       ]);

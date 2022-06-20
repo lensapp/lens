@@ -5,7 +5,7 @@
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import { clusterFrameMap } from "../../../../common/cluster-frames";
-import { clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../../common/ipc/cluster";
+import { clusterSetFrameIdHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../../common/app-event-bus/event-bus";
@@ -46,10 +46,6 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
 
       pushCatalogToRenderer(catalogEntityRegistry);
     }
-  });
-
-  ipcMainOn(clusterVisibilityHandler, (event, clusterId?: ClusterId) => {
-    clusterManager.visibleCluster = clusterId;
   });
 
   ipcMainHandle(clusterRefreshHandler, (event, clusterId: ClusterId) => {
