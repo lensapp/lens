@@ -30,7 +30,6 @@ const logModule = "[EXTENSIONS-LOADER]";
 interface Dependencies {
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
   createExtensionInstance: CreateExtensionInstance;
-  readonly extensionInstallationCounter: Map<string, number>;
   readonly extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   getExtension: (instance: LensExtension) => Extension;
 }
