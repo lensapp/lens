@@ -4,7 +4,6 @@
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
-import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 
 export interface TrayMenuItem {
   id: string;
@@ -17,7 +16,6 @@ export interface TrayMenuItem {
   click?: () => Promise<void> | void;
   tooltip?: string;
   separator?: boolean;
-  extension?: LensMainExtension;
 }
 
 export const trayMenuItemInjectionToken = getInjectionToken<TrayMenuItem>({

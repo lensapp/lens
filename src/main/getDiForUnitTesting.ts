@@ -98,6 +98,7 @@ import listHelmReleasesInjectable from "./helm/helm-service/list-helm-releases.i
 import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
 import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -105,6 +106,8 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   } = opts;
 
   const di = createContainer();
+
+  registerMobX(di);
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
 

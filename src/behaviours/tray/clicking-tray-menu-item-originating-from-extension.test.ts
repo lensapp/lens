@@ -29,7 +29,7 @@ describe("clicking tray menu item originating from extension", () => {
     let someExtension: SomeTestExtension;
     let clickMock: jest.Mock;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       clickMock = jest.fn();
 
       someExtension = new SomeTestExtension({
@@ -37,12 +37,12 @@ describe("clicking tray menu item originating from extension", () => {
         trayMenus: [{ label: "some-label", click: clickMock }],
       });
 
-      await applicationBuilder.extensions.main.enable(someExtension);
+      applicationBuilder.extensions.main.enable(someExtension);
     });
 
     it("when item is clicked, triggers the click handler", () => {
       applicationBuilder.tray.click(
-        "some-label-tray-menu-item-for-extension-some-extension-id-instance-1",
+        "some-label-tray-menu-item-for-extension-some-extension-id",
       );
 
       expect(clickMock).toHaveBeenCalled();
@@ -55,7 +55,7 @@ describe("clicking tray menu item originating from extension", () => {
         });
 
         applicationBuilder.tray.click(
-          "some-label-tray-menu-item-for-extension-some-extension-id-instance-1",
+          "some-label-tray-menu-item-for-extension-some-extension-id",
         );
       });
 
@@ -72,7 +72,7 @@ describe("clicking tray menu item originating from extension", () => {
         clickMock.mockImplementation(() => Promise.reject("some-rejection"));
 
         applicationBuilder.tray.click(
-          "some-label-tray-menu-item-for-extension-some-extension-id-instance-1",
+          "some-label-tray-menu-item-for-extension-some-extension-id",
         );
       });
 
@@ -90,11 +90,9 @@ describe("clicking tray menu item originating from extension", () => {
       });
 
       it("does not have the tray menu item from extension", () => {
-        applicationBuilder.extensions.main.disable(someExtension);
-
         expect(
           applicationBuilder.tray.get(
-            "some-label-tray-menu-item-for-extension-some-extension-id-instance-1",
+            "some-label-tray-menu-item-for-extension-some-extension-id",
           ),
         ).toBeNull();
       });
@@ -105,7 +103,7 @@ describe("clicking tray menu item originating from extension", () => {
 
         expect(
           applicationBuilder.tray.get(
-            "some-label-tray-menu-item-for-extension-some-extension-id-instance-2",
+            "some-label-tray-menu-item-for-extension-some-extension-id",
           ),
         ).not.toBeNull();
       });

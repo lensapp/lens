@@ -42,11 +42,11 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   });
 
   describe("given extension with cluster pages and cluster page menus", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
       const testExtension = getRendererExtensionFake(extensionStubWithSidebarItems);
 
-      await applicationBuilder.extensions.renderer.enable(testExtension);
+      applicationBuilder.extensions.renderer.enable(testExtension);
     });
 
     describe("given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered", () => {

@@ -4,16 +4,23 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import currentRouteInjectable from "./current-route.injectable";
 import type { Route } from "../../common/front-end-routing/front-end-route-injection-token";
+import currentPathInjectable from "./current-path.injectable";
+import { matchPath } from "react-router-dom";
 
 const routeIsActiveInjectable = getInjectable({
   id: "route-is-active",
 
   instantiate: (di, route: Route<unknown>) => {
-    const currentRoute = di.inject(currentRouteInjectable);
+    const currentPath = di.inject(currentPathInjectable);
 
-    return computed(() => currentRoute.get() === route);
+    return computed(
+      () =>
+        !!matchPath(currentPath.get(), {
+          path: route.path,
+          exact: true,
+        }),
+    );
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({

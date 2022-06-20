@@ -22,20 +22,17 @@ const extensionRouteRegistratorInjectable = getInjectable({
   id: "extension-route-registrator",
 
   instantiate: (di) => {
-    return (ext, extensionInstallationCount) => {
+    return (ext) => {
       const extension = ext as LensRendererExtension;
       const toRouteInjectable = toRouteInjectableFor(
         di,
         extension,
-        extensionInstallationCount,
       );
 
-      const routeInjectables = [
+      return [
         ...extension.globalPages.map(toRouteInjectable(false)),
         ...extension.clusterPages.map(toRouteInjectable(true)),
       ].flat();
-
-      di.register(...routeInjectables);
     };
   },
 
@@ -48,12 +45,11 @@ const toRouteInjectableFor =
   (
     di: DiContainerForInjection,
     extension: LensRendererExtension,
-    extensionInstallationCount: number,
   ) =>
     (clusterFrame: boolean) =>
       (registration: PageRegistration) => {
         const routeInjectable = getInjectable({
-          id: `route-${registration.id}-for-extension-${extension.sanitizedExtensionId}-installation-${extensionInstallationCount}`,
+          id: `route-${registration.id}-for-extension-${extension.sanitizedExtensionId}`,
 
           instantiate: () => ({
             path: getExtensionRoutePath(extension, registration.id),
@@ -95,7 +91,7 @@ const toRouteInjectableFor =
         };
 
         const routeSpecificComponentInjectable = getInjectable({
-          id: `route-${registration.id}-component-for-extension-${extension.sanitizedExtensionId}-installation-${extensionInstallationCount}`,
+          id: `route-${registration.id}-component-for-extension-${extension.sanitizedExtensionId}`,
 
           instantiate: (di) => ({
             route: di.inject(routeInjectable),

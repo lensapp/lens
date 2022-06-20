@@ -51,6 +51,7 @@ import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-ch
 import callForPublicHelmRepositoriesInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -58,6 +59,8 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
   } = opts;
 
   const di = createContainer();
+
+  registerMobX(di);
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
