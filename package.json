@@ -386,7 +386,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-mock-extended": "^2.0.6",
     "make-plural": "^6.2.2",
-    "mini-css-extract-plugin": "^2.6.0",
+    "mini-css-extract-plugin": "^2.6.1",
     "mock-http": "^1.1.0",
     "node-gyp": "7.1.2",
     "node-loader": "^2.0.0",
