@@ -13,10 +13,11 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
   id: "extension-preference-item-registrator",
 
   instantiate:
-    (di) =>
-      (ext, extensionInstallationCount) => {
+    () =>
+      (ext) => {
         const extension = ext as LensRendererExtension;
-        const injectables = pipeline(
+
+        return pipeline(
           extension.appPreferences,
 
           filter(
@@ -27,13 +28,12 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
             const id = `extension-preferences-item-${registration.id}-for-extension-${extension.sanitizedExtensionId}`;
 
             return getInjectable({
-              id: `${id}-for-instance-${extensionInstallationCount}`,
+              id,
               injectionToken: extensionPreferenceItemInjectionToken,
 
               instantiate: () => ({
                 id: registration.id || id,
                 title: registration.title,
-                extension,
 
                 components: {
                   Hint: registration.components.Hint,
@@ -43,10 +43,6 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
             });
           }),
         );
-
-        di.register(...injectables);
-
-        return;
       },
 
   injectionToken: extensionRegistratorInjectionToken,

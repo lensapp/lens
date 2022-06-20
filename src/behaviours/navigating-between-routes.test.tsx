@@ -16,8 +16,8 @@ import { getApplicationBuilder } from "../renderer/components/test-utils/get-app
 import currentRouteInjectable from "../renderer/routes/current-route.injectable";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import queryParametersInjectable from "../renderer/routes/query-parameters.injectable";
-import currentPathParametersInjectable from "../renderer/routes/current-path-parameters.injectable";
 import { navigateToRouteInjectionToken } from "../common/front-end-routing/navigate-to-route-injection-token";
+import routePathParametersInjectable from "../renderer/routes/route-path-parameters.injectable";
 
 describe("navigating between routes", () => {
   let rendererDi: DiContainer;
@@ -73,7 +73,7 @@ describe("navigating between routes", () => {
       });
 
       it("does not have path parameters", () => {
-        const pathParameters = rendererDi.inject(currentPathParametersInjectable);
+        const pathParameters = rendererDi.inject(routePathParametersInjectable, route);
 
         expect(pathParameters.get()).toEqual({});
       });
@@ -101,7 +101,6 @@ describe("navigating between routes", () => {
 
   describe("given route with optional path parameters", () => {
     beforeEach(async () => {
-
       applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
         rendererDi.register(routeWithOptionalPathParametersInjectable);
         rendererDi.register(routeWithOptionalPathParametersComponentInjectable);
@@ -146,7 +145,7 @@ describe("navigating between routes", () => {
       });
 
       it("knows path parameters", () => {
-        const pathParameters = rendererDi.inject(currentPathParametersInjectable);
+        const pathParameters = rendererDi.inject(routePathParametersInjectable, route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: "some-value",
@@ -179,7 +178,7 @@ describe("navigating between routes", () => {
       });
 
       it("knows path parameters", () => {
-        const pathParameters = rendererDi.inject(currentPathParametersInjectable);
+        const pathParameters = rendererDi.inject(routePathParametersInjectable, route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: undefined,
@@ -227,10 +226,11 @@ const routeWithOptionalPathParametersComponentInjectable = getInjectable({
   id: "some-route-component",
 
   instantiate: (di) => {
-    const pathParameters = di.inject(currentPathParametersInjectable);
+    const route = di.inject(routeWithOptionalPathParametersInjectable);
+    const pathParameters = di.inject(routePathParametersInjectable, route);
 
     return {
-      route: di.inject(routeWithOptionalPathParametersInjectable),
+      route,
 
       Component: observer(() => (
         <pre>{JSON.stringify(pathParameters.get(), null, 2)}</pre>

@@ -44,11 +44,11 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("when extension with specific preferences is enabled", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
 
-        await applicationBuilder.extensions.renderer.enable(testExtension);
+        applicationBuilder.extensions.renderer.enable(testExtension);
       });
 
       it("renders", () => {

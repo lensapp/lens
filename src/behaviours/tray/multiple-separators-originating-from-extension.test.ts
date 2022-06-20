@@ -28,9 +28,9 @@ describe("multiple separators originating from extension", () => {
       trayMenus: [{ type: "separator" }, { type: "separator" } ],
     });
 
-    return expect(
-      applicationBuilder.extensions.main.enable(someExtension),
-    ).resolves.toBeUndefined();
+    expect(() => {
+      applicationBuilder.extensions.main.enable(someExtension);
+    }).not.toThrow();
   });
 });
 

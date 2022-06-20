@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, kebabCase } from "lodash/fp";
+import { kebabCase } from "lodash/fp";
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
@@ -20,17 +20,13 @@ import getRandomIdInjectable from "../../../common/utils/get-random-id.injectabl
 const trayMenuItemRegistratorInjectable = getInjectable({
   id: "tray-menu-item-registrator",
 
-  instantiate: (di) => (extension, installationCounter) => {
+  instantiate: (di) => (extension) => {
     const mainExtension = extension as LensMainExtension;
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
     const getRandomId = di.inject(getRandomIdInjectable);
 
-    pipeline(
-      mainExtension.trayMenus,
-
-      flatMap(toItemInjectablesFor(mainExtension, installationCounter, withErrorLoggingFor, getRandomId)),
-
-      (injectables) => di.register(...injectables),
+    return mainExtension.trayMenus.flatMap(
+      toItemInjectablesFor(mainExtension, withErrorLoggingFor, getRandomId),
     );
   },
 
@@ -39,10 +35,10 @@ const trayMenuItemRegistratorInjectable = getInjectable({
 
 export default trayMenuItemRegistratorInjectable;
 
-const toItemInjectablesFor = (extension: LensMainExtension, installationCounter: number, withErrorLoggingFor: WithErrorLoggingFor, getRandomId: () => string) => {
+const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor: WithErrorLoggingFor, getRandomId: () => string) => {
   const _toItemInjectables = (parentId: string | null) => (registration: TrayMenuRegistration): Injectable<TrayMenuItem, TrayMenuItem, void>[] => {
     const trayItemId = registration.id || kebabCase(registration.label || getRandomId());
-    const id = `${trayItemId}-tray-menu-item-for-extension-${extension.sanitizedExtensionId}-instance-${installationCounter}`;
+    const id = `${trayItemId}-tray-menu-item-for-extension-${extension.sanitizedExtensionId}`;
 
     const parentInjectable = getInjectable({
       id,
@@ -76,8 +72,6 @@ const toItemInjectablesFor = (extension: LensMainExtension, installationCounter:
 
         enabled: computed(() => registration.enabled ?? true),
         visible: computed(() => true),
-
-        extension,
       }),
 
       injectionToken: trayMenuItemInjectionToken,

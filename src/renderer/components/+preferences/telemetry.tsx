@@ -11,13 +11,13 @@ import { ExtensionSettings } from "./extension-settings";
 import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { Preferences } from "./preferences";
-import type { ExtensionTelemetryPreferenceRegistration } from "./telemetry-preference-items.injectable";
 import telemetryPreferenceItemsInjectable from "./telemetry-preference-items.injectable";
 import sentryDnsUrlInjectable from "./sentry-dns-url.injectable";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
+import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
 
 interface Dependencies {
-  telemetryPreferenceItems: IComputedValue<ExtensionTelemetryPreferenceRegistration[]>;
+  telemetryPreferenceItems: IComputedValue<AppPreferenceRegistration[]>;
   sentryDnsUrl: string;
   userStore: UserStore;
 }

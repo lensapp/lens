@@ -18,17 +18,16 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 const extensionSidebarItemRegistratorInjectable = getInjectable({
   id: "extension-sidebar-item-registrator",
 
-  instantiate: (di) => (ext, extensionInstallationCount) => {
+  instantiate: (di) => (ext) => {
     const extension = ext as LensRendererExtension;
+    const navigateToRoute = di.inject(navigateToRouteInjectionToken);
+    const routes = di.inject(routesInjectable);
 
     const sidebarItemsForExtensionInjectable = getInjectable({
-      id: `sidebar-items-for-extension-${extension.sanitizedExtensionId}-instance-${extensionInstallationCount}`,
+      id: `sidebar-items-for-extension-${extension.sanitizedExtensionId}`,
       injectionToken: sidebarItemsInjectionToken,
 
       instantiate: (di) => {
-        const navigateToRoute = di.inject(navigateToRouteInjectionToken);
-        const routes = di.inject(routesInjectable);
-
         return computed(() => {
           const extensionRoutes = routes.get().filter(matches({ extension }));
 
@@ -44,7 +43,6 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
 
             const res: SidebarItemRegistration = {
               id: `${extension.sanitizedExtensionId}-${registration.id}`,
-              extension,
               orderNumber: 9999,
 
               parentId: registration.parentId
@@ -73,7 +71,9 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
       },
     });
 
-    di.register(sidebarItemsForExtensionInjectable);
+    return [
+      sidebarItemsForExtensionInjectable,
+    ];
   },
 
   injectionToken: extensionRegistratorInjectionToken,
