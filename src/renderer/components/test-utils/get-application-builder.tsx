@@ -543,9 +543,9 @@ const disableExtensionsFor = <T extends ObservableSet>(
     extensionInstances.forEach((instance) => {
       const extension = getExtension(instance);
 
-      extension.deregister();
-
       runInAction(() => {
+        extension.deregister();
+
         extensionState.delete(extension);
       });
     });
