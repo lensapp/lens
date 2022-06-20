@@ -15,8 +15,8 @@ const catalogRouteParametersInjectable = getInjectable({
     const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
-      group: computed(() => pathParameters.get().group),
-      kind: computed(() => pathParameters.get().kind),
+      group: computed(() => pathParameters.get()?.group),
+      kind: computed(() => pathParameters.get()?.kind),
     };
   },
 });

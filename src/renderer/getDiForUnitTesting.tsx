@@ -65,7 +65,8 @@ import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injecta
 import extensionShouldBeEnabledForClusterFrameInjectable from "./extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import forceUpdateModalRootFrameComponentInjectable from "./application-update/force-update-modal/force-update-modal-root-frame-component.injectable";
-import clusterFrameParentElementInjectable from "./components/cluster-manager/parent-element.injectable";
+import getElementByIdInjectable from "./components/cluster-manager/get-element-by-id.injectable";
+import { getOrInsertWith } from "./utils";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
@@ -109,7 +110,11 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
-    di.override(clusterFrameParentElementInjectable, () => document.createElement("div"));
+    di.override(getElementByIdInjectable, () => {
+      const elements = new Map<string, HTMLElement>();
+
+      return (id) => getOrInsertWith(elements, id, () => document.createElement("div"));
+    });
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);

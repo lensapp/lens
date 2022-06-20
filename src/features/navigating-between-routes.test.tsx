@@ -75,7 +75,7 @@ describe("navigating between routes", () => {
       });
 
       it("does not have path parameters", () => {
-        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable)(route);
 
         expect(pathParameters.get()).toEqual({});
       });
@@ -116,7 +116,10 @@ describe("navigating between routes", () => {
     });
 
     describe("when navigating to route with path parameters", () => {
-      let route: Route<any>;
+      let route: Route<{
+          someParameter?: string | undefined;
+          someOtherParameter?: string | undefined;
+      }>;
 
       beforeEach(() => {
         route = windowDi.inject(routeWithOptionalPathParametersInjectable);
@@ -150,7 +153,7 @@ describe("navigating between routes", () => {
       });
 
       it("knows path parameters", () => {
-        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable)(route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: "some-value",
@@ -160,7 +163,10 @@ describe("navigating between routes", () => {
     });
 
     describe("when navigating to route without path parameters", () => {
-      let route: Route<any>;
+      let route: Route<{
+          someParameter?: string | undefined;
+          someOtherParameter?: string | undefined;
+      }>;
 
       beforeEach(() => {
         route = windowDi.inject(routeWithOptionalPathParametersInjectable);
@@ -183,7 +189,7 @@ describe("navigating between routes", () => {
       });
 
       it("knows path parameters", () => {
-        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable)(route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: undefined,
@@ -232,7 +238,7 @@ const routeWithOptionalPathParametersComponentInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(routeWithOptionalPathParametersInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       route,

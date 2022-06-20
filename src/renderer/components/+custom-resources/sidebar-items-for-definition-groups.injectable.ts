@@ -24,7 +24,7 @@ const sidebarItemsForDefinitionGroupsInjectable = getInjectable({
     const crdRoute = di.inject(customResourcesRouteInjectable);
     const crdRouteIsActive = di.inject(routeIsActiveInjectable, crdRoute);
     const crdListRoute = di.inject(crdListRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, crdRoute);
+    const pathParameters = di.inject(routePathParametersInjectable)(crdRoute);
     const navigateToCustomResources = di.inject(navigateToCustomResourcesInjectable);
 
     return computed((): SidebarItemRegistration[] => {
@@ -51,9 +51,15 @@ const sidebarItemsForDefinitionGroupsInjectable = getInjectable({
             onClick: () => navigateToCustomResources(crdPathParameters),
 
             isActive: computed(
-              () =>
-                crdRouteIsActive.get() &&
-                matches(crdPathParameters, pathParameters.get()),
+              () => {
+                const params = pathParameters.get();
+
+                if (!crdRouteIsActive.get() || !params) {
+                  return false;
+                }
+
+                return matches(crdPathParameters, params);
+              },
             ),
 
             isVisible: crdListRoute.isEnabled,

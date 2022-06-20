@@ -15,15 +15,15 @@ const routePathParametersInjectable = getInjectable({
 
   instantiate: (di) => {
     const currentPath = di.inject(currentPathInjectable);
-    const pathParametersCache = new Map<Route<unknown>, IComputedValue<Partial<Record<string, string>>>>();
+    const pathParametersCache = new Map<Route<unknown>, IComputedValue<unknown>>();
 
-    return <Param>(route: Route<Param>): IComputedValue<Partial<Param>> => (
+    return <Param>(route: Route<Param>): IComputedValue<Param | null> => (
       getOrInsertWith(pathParametersCache, route, () => computed(() => (
-        matchPath(currentPath.get(), {
+        matchPath<Param>(currentPath.get(), {
           path: route.path,
           exact: true,
-        })?.params ?? {}
-      )))
+        })?.params ?? null
+      ))) as IComputedValue<Param | null>
     );
   },
 });

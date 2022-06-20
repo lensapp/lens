@@ -15,8 +15,8 @@ const helmChartsRouteParametersInjectable = getInjectable({
     const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
-      chartName: computed(() => pathParameters.get().chartName),
-      repo: computed(() => pathParameters.get().repo),
+      chartName: computed(() => pathParameters.get()?.chartName),
+      repo: computed(() => pathParameters.get()?.repo),
     };
   },
 });

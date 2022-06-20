@@ -7,14 +7,14 @@ import getClusterByIdInjectable from "../../../common/cluster/get-by-id.injectab
 import loggerInjectable from "../../../common/logger.injectable";
 import sendSetVisibleClusterInjectable from "../../cluster/send-set-visible.injectable";
 import { ClusterFrameHandler } from "./cluster-frame-handler";
-import clusterFrameParentElementInjectable from "./parent-element.injectable";
+import getElementByIdInjectable from "./get-element-by-id.injectable";
 
 const clusterFrameHandlerInjectable = getInjectable({
   id: "cluster-frame-handler",
   instantiate: (di) => new ClusterFrameHandler({
     getClusterById: di.inject(getClusterByIdInjectable),
     sendSetVisibleCluster: di.inject(sendSetVisibleClusterInjectable),
-    parentElem: di.inject(clusterFrameParentElementInjectable),
+    getElementById: di.inject(getElementByIdInjectable),
     logger: di.inject(loggerInjectable),
   }),
 });

@@ -15,7 +15,7 @@ const entitySettingsRouteParametersInjectable = getInjectable({
     const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
-      entityId: computed(() => pathParameters.get().entityId),
+      entityId: computed(() => pathParameters.get()?.entityId),
     };
   },
 });

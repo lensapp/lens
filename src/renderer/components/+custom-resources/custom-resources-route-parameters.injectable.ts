@@ -15,8 +15,8 @@ const customResourcesRouteParametersInjectable = getInjectable({
     const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
-      group: computed(() => pathParameters.get().group),
-      name: computed(() => pathParameters.get().name),
+      group: computed(() => pathParameters.get()?.group),
+      name: computed(() => pathParameters.get()?.name),
     };
   },
 });

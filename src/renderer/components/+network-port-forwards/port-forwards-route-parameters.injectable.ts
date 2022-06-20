@@ -15,7 +15,7 @@ const portForwardsRouteParametersInjectable = getInjectable({
     const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
-      forwardport: computed(() => pathParameters.get().forwardport),
+      forwardport: computed(() => pathParameters.get()?.forwardport),
     };
   },
 });

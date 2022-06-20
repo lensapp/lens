@@ -11,6 +11,7 @@ import assert from "assert";
 import type { GetClusterById } from "../../../common/cluster/get-by-id.injectable";
 import type { SendSetVisibleCluster } from "../../cluster/send-set-visible.injectable";
 import type { Logger } from "../../../common/logger";
+import type { GetElementById } from "./get-element-by-id.injectable";
 
 export interface LensView {
   isLoaded: boolean;
@@ -20,7 +21,7 @@ export interface LensView {
 export interface ClusterFrameHandlerDependencies {
   getClusterById: GetClusterById;
   sendSetVisibleCluster: SendSetVisibleCluster;
-  readonly parentElem: HTMLElement;
+  getElementById: GetElementById;
   readonly logger: Logger;
 }
 
@@ -38,6 +39,7 @@ export class ClusterFrameHandler {
   @action
   public initView(clusterId: ClusterId) {
     const cluster = this.dependencies.getClusterById(clusterId);
+    const parentElem = this.dependencies.getElementById("lens-views");
 
     if (!cluster || this.views.has(clusterId)) {
       return;
@@ -57,7 +59,7 @@ export class ClusterFrameHandler {
       view.isLoaded = true;
     }), { once: true });
     this.views.set(clusterId, { frame: iframe, isLoaded: false });
-    this.dependencies.parentElem.appendChild(iframe);
+    parentElem.appendChild(iframe);
 
     this.dependencies.logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
 
@@ -79,7 +81,7 @@ export class ClusterFrameHandler {
           () => {
             this.dependencies.logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
             this.views.delete(clusterId);
-            this.dependencies.parentElem.removeChild(iframe);
+            parentElem.removeChild(iframe);
             dispose();
           },
         );
