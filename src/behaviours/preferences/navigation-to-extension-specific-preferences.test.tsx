@@ -197,6 +197,11 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given extension with few registered tabs", () => {
+      const tabs = [
+        "tab-link-for-extension-hello-world-tab-page-id-nav-item-hello-extension-tab",
+        "tab-link-for-extension-hello-world-tab-page-id-nav-item-logs-extension-tab",
+      ];
+
       beforeEach(async () => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
         const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTabs);
@@ -204,12 +209,10 @@ describe("preferences - navigation to extension specific preferences", () => {
         await applicationBuilder.extensions.renderer.enable(extension);
       });
 
-      it("shows each of registered tabs in general area", () => {
-        const helloTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-hello-extension-tab");
-        const logsTab = rendered.getByTestId("tab-link-for-extension-hello-world-tab-page-id-nav-item-logs-extension-tab");
+      it.each(tabs)("shows '%s' tab in general area", (tab) => {
+        const tabElement = rendered.getByTestId(tab);
 
-        expect(helloTab).toBeInTheDocument();
-        expect(logsTab).toBeInTheDocument();
+        expect(tabElement).toBeInTheDocument();
       });
     });
 
