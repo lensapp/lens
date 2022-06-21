@@ -6,7 +6,11 @@
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 
-export function getExtensionPreferenceItems(extension: LensRendererExtension, tabId?: string): RegisteredAppPreference[] {
+export function getExtensionPreferenceItems(extension?: LensRendererExtension, tabId?: string): RegisteredAppPreference[] {
+  if (!extension) {
+    return [];
+  }
+
   const preferences = extension.appPreferences.map(preference => ({
     id: preference.id || preference.title,
     ...preference,

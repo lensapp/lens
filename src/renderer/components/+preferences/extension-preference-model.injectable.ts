@@ -21,12 +21,8 @@ const extensionPreferencesModelInjectable = getInjectable({
       const { extensionId, tabId } = pathParameters.get();
       const targetExtension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
       
-      if (!targetExtension) {
-        throw new Error("Tried to get extension preferences for extension that does not exist.");
-      }
-      
       return {
-        extensionName: targetExtension.manifest.name,
+        extensionName: targetExtension?.manifest.name,
         preferenceItems: getExtensionPreferenceItems(targetExtension, tabId),
       };
     });

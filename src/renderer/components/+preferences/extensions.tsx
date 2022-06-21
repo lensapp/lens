@@ -13,7 +13,7 @@ import { Preferences } from "./preferences";
 
 interface Dependencies {
   preferenceItems: RegisteredAppPreference[];
-  extensionName: string;
+  extensionName?: string;
 }
 
 const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies) => (
@@ -24,6 +24,9 @@ const NonInjectedExtensions = ({ preferenceItems, extensionName }: Dependencies)
         {" "}
         preferences
       </h2>
+      {!extensionName && (
+        <div className="flex items-center">No extension found</div>
+      )}
       {preferenceItems.map((preferenceItem, index) => (
         <ExtensionSettings
           key={`${preferenceItem.id}-${index}`}
