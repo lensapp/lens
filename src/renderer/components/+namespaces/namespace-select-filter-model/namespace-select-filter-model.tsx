@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { observable, action, untracked, computed, makeObservable } from "mobx";
+import { observable, action, computed, makeObservable, comparer } from "mobx";
 import type { NamespaceStore } from "../store";
 import { isMac } from "../../../../common/vars";
 import type { ActionMeta } from "react-select";
@@ -26,13 +26,18 @@ export class NamespaceSelectFilterModel {
     autoBind(this);
   }
 
+  readonly selectedNames = computed(() => new Set(this.dependencies.namespaceStore.contextNamespaces), {
+    equals: comparer.structural,
+  });
+
   readonly options = computed((): readonly NamespaceSelectFilterOption[] => {
     const baseOptions = this.dependencies.namespaceStore.items.map(ns => ns.getName());
+    const selectedNames = this.selectedNames.get();
 
     baseOptions.sort((
       (left, right) =>
-        +this.selectedNames.has(right)
-        - +this.selectedNames.has(left)
+        +selectedNames.has(right)
+        - +selectedNames.has(left)
     ));
 
     return [
@@ -44,7 +49,7 @@ export class NamespaceSelectFilterModel {
       ...baseOptions.map(namespace => ({
         value: namespace,
         label: namespace,
-        isSelected: this.selectedNames.has(namespace),
+        isSelected: selectedNames.has(namespace),
       })),
     ];
   });
@@ -79,10 +84,6 @@ export class NamespaceSelectFilterModel {
   @action
   openMenu(){
     this.menuIsOpen.set(true);
-  }
-
-  get selectedNames() {
-    return untracked(() => this.dependencies.namespaceStore.selectedNames);
   }
 
   isSelected(namespace: string | string[]) {
