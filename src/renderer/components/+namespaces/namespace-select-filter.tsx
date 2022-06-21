@@ -30,6 +30,7 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
     onKeyDown={model.onKeyDown}
     onClick={model.onClick}
     className="NamespaceSelectFilterParent"
+    data-testid="namespace-select-filter"
   >
     <Select<string | SelectAllNamespaces, NamespaceSelectFilterOption, true>
       id={id}

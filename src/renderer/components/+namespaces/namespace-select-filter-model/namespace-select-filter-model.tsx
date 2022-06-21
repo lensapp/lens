@@ -70,11 +70,13 @@ export class NamespaceSelectFilterModel {
       {
         value: selectAllNamespaces,
         label: "All Namespaces",
+        id: "all-namespaces",
         isSelected: false,
       },
       ...baseOptions.map(namespace => ({
         value: namespace,
         label: namespace,
+        id: namespace,
         isSelected: selectedNames.has(namespace),
       })),
     ];
@@ -94,6 +96,7 @@ export class NamespaceSelectFilterModel {
             small
             material="check"
             className="box right"
+            data-testid={`namespace-select-filter-option-${value}-selected`}
           />
         )}
       </div>

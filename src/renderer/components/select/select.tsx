@@ -25,6 +25,7 @@ export interface SelectOption<Value> {
   label: React.ReactNode;
   isDisabled?: boolean;
   isSelected?: boolean;
+  id?: string;
 }
 
 /**
