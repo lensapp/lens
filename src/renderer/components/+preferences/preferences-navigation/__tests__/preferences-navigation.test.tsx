@@ -10,10 +10,11 @@ import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import { type DiRender, renderFor } from "../../../test-utils/renderFor";
 import { PreferencesNavigation } from "../preferences-navigation";
 import type { PreferenceNavigationItem } from "../preference-navigation-items.injectable";
-import preferenceNavigationItemsInjectable from "../preference-navigation-items.injectable";
 import { computed } from "mobx";
 import { noop } from "../../../../utils";
 import type { IComputedValue } from "mobx/dist/internal";
+import generalPreferenceNavigationItemsInjectable from "../general-preference-navigation-items.injectable";
+import extensionsPreferenceNavigationItemsInjectable from "../extension-preference-navigation-items.injectable";
 
 describe("<PreferencesNavigation />", () => {
   let di: DiContainer;
@@ -40,6 +41,7 @@ describe("<PreferencesNavigation />", () => {
           isVisible: computed(() => true),
           navigate: () => noop,
           orderNumber: 0,
+          parent: "",
         },
         {
           id: "proxy",
@@ -48,10 +50,11 @@ describe("<PreferencesNavigation />", () => {
           isVisible: computed(() => true),
           navigate: () => noop,
           orderNumber: 1,
+          parent: "",
         },
       ]);
 
-      di.override(preferenceNavigationItemsInjectable, () => generalNavItems);
+      di.override(generalPreferenceNavigationItemsInjectable, () => generalNavItems);
     });
 
     it("renders them", () => {
@@ -91,7 +94,9 @@ describe("<PreferencesNavigation />", () => {
           navigate: () => noop,
           orderNumber: 1,
         },
-        // Extension navigation items
+      ]);
+
+      const extensionNavItems: IComputedValue<PreferenceNavigationItem[]> = computed(() => [
         {
           id: "extension-preferences-navigation-item-lensapp-node-menu",
           label: "lensapp-node-menu",
@@ -99,7 +104,7 @@ describe("<PreferencesNavigation />", () => {
           isVisible: computed(() => true),
           navigate: () => noop,
           orderNumber: 0,
-          fromExtension: true,
+          parent: "extensions",
         },
         {
           id: "extension-preferences-navigation-item-lensapp-pod-menu",
@@ -108,7 +113,7 @@ describe("<PreferencesNavigation />", () => {
           isVisible: computed(() => true),
           navigate: () => noop,
           orderNumber: 0,
-          fromExtension: true,
+          parent: "extensions",
         },
         {
           id: "extension-preferences-navigation-item-metrics-plugin",
@@ -117,11 +122,12 @@ describe("<PreferencesNavigation />", () => {
           isVisible: computed(() => false),
           navigate: () => noop,
           orderNumber: 0,
-          fromExtension: true,
+          parent: "extensions",
         },
       ]);
 
-      di.override(preferenceNavigationItemsInjectable, () => generalNavItems);
+      di.override(generalPreferenceNavigationItemsInjectable, () => generalNavItems);
+      di.override(extensionsPreferenceNavigationItemsInjectable, () => extensionNavItems);
     });
 
     it("renders general navigation items", () => {

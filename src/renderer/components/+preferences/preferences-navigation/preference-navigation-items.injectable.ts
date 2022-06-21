@@ -20,7 +20,7 @@ export interface PreferenceNavigationItem {
   isVisible: IComputedValue<boolean>;
   navigate: () => void;
   orderNumber: number;
-  fromExtension?: boolean;
+  parent?: string;
 }
 
 const preferenceNavigationItemsInjectable = getInjectable({

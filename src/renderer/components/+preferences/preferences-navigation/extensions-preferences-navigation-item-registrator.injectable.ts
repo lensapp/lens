@@ -43,7 +43,7 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
           isActive,
           isVisible,
           orderNumber: 20,
-          fromExtension: true,
+          parent: "extensions",
         }),
       });
 
