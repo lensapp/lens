@@ -2,8 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { pipeline } from "@ogre-tools/fp";
-import { flatMap } from "lodash/fp";
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
@@ -12,21 +10,18 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 import type { StatusBarItem } from "./status-bar-item-injection-token";
 import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 import type { StatusBarRegistration } from "./status-bar-registration";
-import * as uuid from "uuid";
 import React from "react";
+import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
 
 const statusBarItemRegistratorInjectable = getInjectable({
   id: "status-bar-item-registrator",
 
-  instantiate: (di) => (extension, installationCounter) => {
+  instantiate: (di) => (extension) => {
     const rendererExtension = extension as LensRendererExtension;
+    const getRandomId = di.inject(getRandomIdInjectable);
 
-    pipeline(
-      rendererExtension.statusBarItems,
-
-      flatMap(toItemInjectablesFor(rendererExtension, installationCounter)),
-
-      (injectables) => di.register(...injectables),
+    return rendererExtension.statusBarItems.flatMap(
+      toItemInjectableFor(rendererExtension, getRandomId),
     );
   },
 
@@ -35,9 +30,9 @@ const statusBarItemRegistratorInjectable = getInjectable({
 
 export default statusBarItemRegistratorInjectable;
 
-const toItemInjectablesFor = (extension: LensRendererExtension, installationCounter: number) => {
-  const _toItemInjectables = () => (registration: StatusBarRegistration): Injectable<StatusBarItem, StatusBarItem, void>[] => {
-    const id = `${uuid.v4()}-status-bar-item-for-extension-${extension.sanitizedExtensionId}-instance-${installationCounter}`;
+const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () => string) => {
+  const _toItemInjectable = () => (registration: StatusBarRegistration): Injectable<StatusBarItem, StatusBarItem, void>[] => {
+    const id = `${getRandomId()}-status-bar-item-for-extension-${extension.sanitizedExtensionId}`;
     let component: React.ComponentType;
     let position: "left" | "right";
 
@@ -56,7 +51,7 @@ const toItemInjectablesFor = (extension: LensRendererExtension, installationCoun
           </>
         );
     } else if (registration.components) {
-      const { position: pos, Item } = registration.components;
+      const { position: pos = "right", Item } = registration.components;
 
       if (pos !== "left" && pos !== "right") {
         throw new TypeError("StatusBarRegistration.components.position must be either 'right' or 'left'");
@@ -83,7 +78,7 @@ const toItemInjectablesFor = (extension: LensRendererExtension, installationCoun
 
   };
 
-  return _toItemInjectables();
+  return _toItemInjectable();
 };
 
 

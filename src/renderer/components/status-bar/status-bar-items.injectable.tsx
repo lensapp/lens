@@ -8,6 +8,7 @@ import { computed } from "mobx";
 import type { StatusBarItemProps } from "./status-bar-registration";
 import type { StatusBarItem } from "./status-bar-item-injection-token";
 import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
+import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 
 export interface StatusBarItems {
   right: React.ComponentType<StatusBarItemProps>[];
@@ -15,7 +16,7 @@ export interface StatusBarItems {
 }
 
 interface Dependencies {
-  registrations: StatusBarItem[];
+  registrations: IComputedValue<StatusBarItem[]>;
 }
 
 function getStatusBarItems({ registrations }: Dependencies): IComputedValue<StatusBarItems> {
@@ -25,15 +26,19 @@ function getStatusBarItems({ registrations }: Dependencies): IComputedValue<Stat
       right: [],
     };
 
-    for (const registration of registrations) {
+    for (const registration of registrations.get()) {
       if (!registration || typeof registration !== "object") {
         continue;
       }
 
-      const { position = "right", component } = registration;
+      const { position = "right", component, visible } = registration;
 
       if (position !== "left" && position !== "right") {
         throw new TypeError("StatusBarRegistration.components.position must be either 'right' or 'left'");
+      }
+
+      if (!visible) {
+        continue;
       }
 
       res[position].push(component);
@@ -49,9 +54,15 @@ function getStatusBarItems({ registrations }: Dependencies): IComputedValue<Stat
 const statusBarItemsInjectable = getInjectable({
   id: "status-bar-items",
 
-  instantiate: (di) => getStatusBarItems({
-    registrations: di.injectMany(statusBarItemInjectionToken),
-  }),
+  instantiate: (di) => {
+    const computedInjectMany = di.inject(
+      computedInjectManyInjectable,
+    );
+
+    return getStatusBarItems({
+      registrations: computedInjectMany(statusBarItemInjectionToken),
+    });
+  },
 
 });
 
