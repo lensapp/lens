@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { observable, action, computed, makeObservable, comparer } from "mobx";
+import { observable, action, computed, makeObservable, comparer, reaction } from "mobx";
 import type { NamespaceStore } from "../store";
 import type { ActionMeta } from "react-select";
 import { Icon } from "../../icon";
@@ -32,11 +32,28 @@ export class NamespaceSelectFilterModel {
   constructor(private readonly dependencies: Dependencies) {
     makeObservable(this);
     autoBind(this);
+
+    reaction(
+      () => this.menuIsOpen.get(),
+      (isOpen) => {
+        if (!isOpen) { // falling edge of menu being open
+          this.optionsSortingSelected.replace(this.selectedNames.get());
+        }
+      },
+    );
   }
 
-  readonly selectedNames = computed(() => new Set(this.dependencies.namespaceStore.contextNamespaces), {
+  readonly menuIsOpen = observable.box(false);
+
+  private readonly selectedNames = computed(() => new Set(this.dependencies.namespaceStore.contextNamespaces), {
     equals: comparer.structural,
   });
+
+  /**
+   * This set is only updated on the falling edge of the menu being open. That way while the menu is
+   * open the order of the items doesn't change
+   */
+  private readonly optionsSortingSelected = observable.set<string>(this.selectedNames.get());
 
   readonly options = computed((): readonly NamespaceSelectFilterOption[] => {
     const baseOptions = this.dependencies.namespaceStore.items.map(ns => ns.getName());
@@ -44,8 +61,8 @@ export class NamespaceSelectFilterModel {
 
     baseOptions.sort((
       (left, right) =>
-        +selectedNames.has(right)
-        - +selectedNames.has(left)
+        +this.optionsSortingSelected.has(right)
+        - +this.optionsSortingSelected.has(left)
     ));
 
     return [
@@ -81,8 +98,6 @@ export class NamespaceSelectFilterModel {
       </div>
     );
   }
-
-  readonly menuIsOpen = observable.box(false);
 
   @action
   closeMenu() {
