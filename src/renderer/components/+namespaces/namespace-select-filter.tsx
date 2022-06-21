@@ -43,7 +43,8 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
       formatOptionLabel={model.formatOptionLabel}
       options={model.options.get()}
       className="NamespaceSelect NamespaceSelectFilter"
-      menuClass="NamespaceSelectFilterMenu" />
+      menuClass="NamespaceSelectFilterMenu"
+    />
   </div>
 ));
 
@@ -54,7 +55,7 @@ export const NamespaceSelectFilter = withInjectables<Dependencies, NamespaceSele
   }),
 });
 
-export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, boolean> {}
+export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, true> {}
 
 interface PlaceholderDependencies {
   namespaceStore: NamespaceStore;
