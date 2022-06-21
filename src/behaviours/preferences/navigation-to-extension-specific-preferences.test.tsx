@@ -130,6 +130,12 @@ describe("preferences - navigation to extension specific preferences", () => {
           expect(rendered.container).toMatchSnapshot();
         });
 
+        it("shows proper page title", () => {
+          const title = rendered.getByText("some-test-extension-id preferences");
+
+          expect(title).toBeInTheDocument();
+        });
+
         it("shows extension specific preferences", () => {
           const page = rendered.getByTestId("extension-preferences-page");
 
@@ -292,6 +298,7 @@ describe("preferences - navigation to extension specific preferences", () => {
       
       const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
       const extension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
+      const otherExtension = getRendererExtensionFake(extensionUsingSomeoneElseTab);
 
       applicationBuilder.beforeRender(() => {
         const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
@@ -303,12 +310,20 @@ describe("preferences - navigation to extension specific preferences", () => {
         applicationBuilder.preferences.navigateTo(extensionRoute, params);
       });
       
-      await applicationBuilder.extensions.renderer.enable(extension);
+      await applicationBuilder.extensions.renderer.enable(extension, otherExtension);
       rendered = await applicationBuilder.render();
     });
 
     it("renders", () => {
       expect(rendered.container).toMatchSnapshot();
+    });
+
+    it("does render related preferences for specific tab", () => {
+      expect(rendered.getByTestId("another-metrics-preference-item-hint")).toBeInTheDocument();
+    });
+
+    it("does not render related preferences for specific tab", () => {
+      expect(rendered.queryByTestId("my-preferences-item-hint")).not.toBeInTheDocument();
     });
   });
 
