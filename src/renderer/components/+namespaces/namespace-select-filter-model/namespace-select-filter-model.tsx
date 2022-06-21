@@ -5,7 +5,6 @@
 import React from "react";
 import { observable, action, computed, makeObservable, comparer } from "mobx";
 import type { NamespaceStore } from "../store";
-import { isMac } from "../../../../common/vars";
 import type { ActionMeta } from "react-select";
 import { Icon } from "../../icon";
 import type { SelectOption } from "../../select";
@@ -13,6 +12,7 @@ import { autoBind } from "../../../utils";
 
 interface Dependencies {
   readonly namespaceStore: NamespaceStore;
+  readonly isMac: boolean;
 }
 
 export const selectAllNamespaces = Symbol("all-namespaces-selected");
@@ -21,6 +21,14 @@ export type SelectAllNamespaces = typeof selectAllNamespaces;
 export type NamespaceSelectFilterOption = SelectOption<string | SelectAllNamespaces>;
 
 export class NamespaceSelectFilterModel {
+  private isSelectionKey = (event: React.KeyboardEvent): boolean  => {
+    if (this.dependencies.isMac) {
+      return event.key === "Meta";
+    }
+
+    return event.key === "Control"; // windows or linux
+  };
+
   constructor(private readonly dependencies: Dependencies) {
     makeObservable(this);
     autoBind(this);
@@ -105,13 +113,17 @@ export class NamespaceSelectFilterModel {
         break;
       case "deselect-option":
         if (typeof action.option === "string") {
+          this.didToggle = true;
           this.dependencies.namespaceStore.toggleSingle(action.option);
         }
         break;
       case "select-option":
         if (action.option?.value === selectAllNamespaces) {
+          this.didToggle = true;
           this.dependencies.namespaceStore.selectAll();
         } else if (action.option) {
+          this.didToggle = true;
+
           if (this.isMultiSelection) {
             this.dependencies.namespaceStore.toggleSingle(action.option.value);
           } else {
@@ -133,14 +145,20 @@ export class NamespaceSelectFilterModel {
   private isMultiSelection = false;
 
   onKeyDown(event: React.KeyboardEvent) {
-    if (isSelectionKey(event)) {
+    if (this.isSelectionKey(event)) {
       this.isMultiSelection = true;
     }
   }
 
+  private didToggle = false;
+
   onKeyUp(event: React.KeyboardEvent) {
-    if (isSelectionKey(event)) {
+    if (this.isSelectionKey(event)) {
       this.isMultiSelection = false;
+
+      if (this.didToggle) {
+        this.closeMenu();
+      }
     }
   }
 
@@ -150,11 +168,3 @@ export class NamespaceSelectFilterModel {
     this.closeMenu();
   }
 }
-
-const isSelectionKey = (event: React.KeyboardEvent): boolean  => {
-  if (isMac) {
-    return event.key === "Meta";
-  }
-
-  return event.key === "Control"; // windows or linux
-};
