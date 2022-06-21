@@ -7,11 +7,12 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import type { FakeExtensionData, TestExtension } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import extensionPreferencesRouteInjectable from "../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
+
 
 describe("preferences - navigation to extension specific preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -98,9 +99,14 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("when extension with specific preferences is enabled", () => {
+      let testExtension: TestExtension;
+
       beforeEach(() => {
         const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-        const testExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
+
+        testExtension = getRendererExtensionFake(
+          extensionStubWithExtensionSpecificPreferenceItems,
+        );
 
         applicationBuilder.extensions.renderer.enable(testExtension);
       });
@@ -158,6 +164,26 @@ describe("preferences - navigation to extension specific preferences", () => {
           const actual = rendered.getByTestId("tab-link-for-extension-some-test-extension-id");
 
           expect(actual).toHaveClass("active");
+        });
+
+        describe("when extension is disabled", () => {
+          beforeEach(() => {
+            applicationBuilder.extensions.renderer.disable(testExtension);
+          });
+
+          it("renders", () => {
+            expect(rendered.baseElement).toMatchSnapshot();
+          });
+
+          it("shows the error message about extension not being present", () => {
+            expect(rendered.getByTestId("error-for-extension-not-being-present")).toBeInTheDocument();
+          });
+
+          it("when extension is enabled again, does not show the error message anymore", () => {
+            applicationBuilder.extensions.renderer.enable(testExtension);
+
+            expect(rendered.queryByTestId("error-for-extension-not-being-present")).not.toBeInTheDocument();
+          });
         });
       });
     });
@@ -292,10 +318,10 @@ describe("preferences - navigation to extension specific preferences", () => {
   describe("when navigating to extension specific tab", () => {
     let rendered: RenderResult;
     let di: DiContainer;
-    
+
     beforeEach(async () => {
       di = getDiForUnitTesting({ doGeneralOverrides: true });
-      
+
       const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
       const extension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
       const otherExtension = getRendererExtensionFake(extensionUsingSomeoneElseTab);
@@ -306,10 +332,10 @@ describe("preferences - navigation to extension specific preferences", () => {
           extensionId: "duplicated-tab-page-id",
           tabId: "metrics-extension-tab",
         }};
-        
+
         applicationBuilder.preferences.navigateTo(extensionRoute, params);
       });
-      
+
       await applicationBuilder.extensions.renderer.enable(extension, otherExtension);
       rendered = await applicationBuilder.render();
     });
@@ -330,10 +356,10 @@ describe("preferences - navigation to extension specific preferences", () => {
   describe("when navigating to someone else extension specific tab", () => {
     let rendered: RenderResult;
     let di: DiContainer;
-    
+
     beforeEach(async () => {
       di = getDiForUnitTesting({ doGeneralOverrides: true });
-      
+
       const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
       const extension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
       const extensionUsingOtherTab = getRendererExtensionFake(extensionUsingSomeoneElseTab);
@@ -344,10 +370,10 @@ describe("preferences - navigation to extension specific preferences", () => {
           extensionId: "extension-using-someone-else-tab-id",
           tabId: "metrics-extension-tab",
         }};
-        
+
         applicationBuilder.preferences.navigateTo(extensionRoute, params);
       });
-      
+
       await applicationBuilder.extensions.renderer.enable(extension, extensionUsingOtherTab);
       rendered = await applicationBuilder.render();
     });

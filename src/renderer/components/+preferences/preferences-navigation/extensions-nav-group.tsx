@@ -9,12 +9,13 @@ import type { PreferenceNavigationItem } from "./preference-navigation-items.inj
 import { Icon } from "../../icon";
 import { PreferencesNavigationTab } from "./preference-navigation-tab";
 import preferenceNavigationItemsForGroupInjectable from "./preference-navigation-items-for-group.injectable";
+import { observer } from "mobx-react";
 
 interface Dependencies {
   navigationItems: IComputedValue<PreferenceNavigationItem[]>;
 }
 
-function NonInjectedExtensionsNavGroup(props: Dependencies) {
+const NonInjectedExtensionsNavGroup = observer((props: Dependencies) => {
   if (!props.navigationItems.get().length) {
     return null;
   }
@@ -42,7 +43,7 @@ function NonInjectedExtensionsNavGroup(props: Dependencies) {
       </div>
     </div>
   );
-}
+});
 
 export const ExtensionsNavGroup = withInjectables<Dependencies>(
   NonInjectedExtensionsNavGroup,

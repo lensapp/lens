@@ -8,12 +8,13 @@ import type { IComputedValue } from "mobx";
 import type { PreferenceNavigationItem } from "./preference-navigation-items.injectable";
 import { PreferencesNavigationTab } from "./preference-navigation-tab";
 import preferenceNavigationItemsForGroupInjectable from "./preference-navigation-items-for-group.injectable";
+import { observer } from "mobx-react";
 
 interface Dependencies {
   navigationItems: IComputedValue<PreferenceNavigationItem[]>;
 }
 
-function NonInjectedGeneralNavGroup(props: Dependencies) {
+const NonInjectedGeneralNavGroup = observer((props: Dependencies) => {
   if (!props.navigationItems.get().length) {
     return null;
   }
@@ -31,7 +32,7 @@ function NonInjectedGeneralNavGroup(props: Dependencies) {
       ))}
     </React.Fragment>
   );
-}
+});
 
 export const GeneralNavGroup = withInjectables<Dependencies>(
   NonInjectedGeneralNavGroup,
