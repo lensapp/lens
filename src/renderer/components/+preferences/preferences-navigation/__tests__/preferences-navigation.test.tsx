@@ -3,168 +3,174 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
-import { type DiRender, renderFor } from "../../../test-utils/renderFor";
-import { PreferencesNavigation } from "../preferences-navigation";
-import type { PreferenceNavigationItem } from "../preference-navigation-items.injectable";
+import "@testing-library/jest-dom/extend-expect";
+import type { RenderResult } from "@testing-library/react";
 import { computed } from "mobx";
-import { noop } from "../../../../utils";
 import type { IComputedValue } from "mobx/dist/internal";
-import generalPreferenceNavigationItemsInjectable from "../general-preference-navigation-items.injectable";
+import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
+import { noop } from "../../../../utils";
+import { ApplicationBuilder, getApplicationBuilder } from "../../../test-utils/get-application-builder";
 import extensionsPreferenceNavigationItemsInjectable from "../extension-preference-navigation-items.injectable";
+import generalPreferenceNavigationItemsInjectable from "../general-preference-navigation-items.injectable";
+import type { PreferenceNavigationItem } from "../preference-navigation-items.injectable";
 
-describe("<PreferencesNavigation />", () => {
-  let di: DiContainer;
-  let render: DiRender;
+describe.only("preferences - navigation block with links", () => {
+  let applicationBuilder: ApplicationBuilder;
 
-  beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
-    render = renderFor(di);
+  beforeEach(() => {
+    applicationBuilder = getApplicationBuilder();
   });
 
-  it("renders", () => {
-    const { container } = render(<PreferencesNavigation />);
+  describe("given in preferences, when rendered", () => {
+    let renderer: RenderResult;
+    let di: DiContainer;
 
-    expect(container).toBeInTheDocument();
-  });
+    describe("when general navigation items passed", () => {
+      beforeEach(async () => {
+        const generalNavItems: IComputedValue<PreferenceNavigationItem[]> = computed(() => [
+          {
+            id: "general",
+            label: "General",
+            isActive: computed(() => false),
+            isVisible: computed(() => true),
+            navigate: () => noop,
+            orderNumber: 0,
+            parent: "",
+          },
+          {
+            id: "proxy",
+            label: "Proxy",
+            isActive: computed(() => false),
+            isVisible: computed(() => true),
+            navigate: () => noop,
+            orderNumber: 1,
+            parent: "",
+          },
+        ]);
 
-  describe("when general navigation items passed", () => {
-    beforeEach(() => {
-      const generalNavItems: IComputedValue<PreferenceNavigationItem[]> = computed(() => [
-        {
-          id: "general",
-          label: "General",
-          isActive: computed(() => false),
-          isVisible: computed(() => true),
-          navigate: () => noop,
-          orderNumber: 0,
-          parent: "",
-        },
-        {
-          id: "proxy",
-          label: "Proxy",
-          isActive: computed(() => false),
-          isVisible: computed(() => true),
-          navigate: () => noop,
-          orderNumber: 1,
-          parent: "",
-        },
-      ]);
+        applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
+          rendererDi.override(
+            generalPreferenceNavigationItemsInjectable,
+            () => generalNavItems,
+          );
+        });
 
-      di.override(generalPreferenceNavigationItemsInjectable, () => generalNavItems);
+        applicationBuilder.beforeRender(() => {
+          applicationBuilder.preferences.navigate();
+        });
+
+        di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+        renderer = await applicationBuilder.render();
+      });
+
+      const links = ["General", "Proxy"];
+
+      it.each(links)("renders link with text content %s", (link) => {
+        expect(renderer.container).toHaveTextContent(link);
+      });
+
+      it("does not show custom settings block", () => {
+        expect(renderer.queryByTestId("extension-settings")).not.toBeInTheDocument();
+      });
     });
 
-    it("renders them", () => {
-      const { container } = render(
-        <PreferencesNavigation/>,
-      );
+    describe("when general + extension navigation items passed", () => {
+      beforeEach(async () => {
+        const generalNavItems: IComputedValue<PreferenceNavigationItem[]> = computed(() => [
+          {
+            id: "general",
+            label: "General",
+            isActive: computed(() => false),
+            isVisible: computed(() => true),
+            navigate: () => noop,
+            orderNumber: 0,
+            parent: "",
+          },
+          {
+            id: "proxy",
+            label: "Proxy",
+            isActive: computed(() => false),
+            isVisible: computed(() => true),
+            navigate: () => noop,
+            orderNumber: 1,
+            parent: "",
+          },
+        ]);
+  
+        const extensionNavItems: IComputedValue<PreferenceNavigationItem[]> = computed(() => [
+          {
+            id: "extension-preferences-navigation-item-lensapp-node-menu",
+            label: "lensapp-node-menu",
+            isActive: computed(() => false),
+            isVisible: computed(() => true),
+            navigate: () => noop,
+            orderNumber: 0,
+            parent: "extensions",
+          },
+          {
+            id: "extension-preferences-navigation-item-lensapp-pod-menu",
+            label: "lensapp-pod-menu",
+            isActive: computed(() => false),
+            isVisible: computed(() => true),
+            navigate: () => noop,
+            orderNumber: 0,
+            parent: "extensions",
+          },
+          {
+            id: "extension-preferences-navigation-item-metrics-plugin",
+            label: "metrics-plugin",
+            isActive: computed(() => false),
+            isVisible: computed(() => false),
+            navigate: () => noop,
+            orderNumber: 0,
+            parent: "extensions",
+          },
+        ]);
+  
+        applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
+          rendererDi.override(
+            generalPreferenceNavigationItemsInjectable,
+            () => generalNavItems,
+          );
+  
+          rendererDi.override(
+            extensionsPreferenceNavigationItemsInjectable,
+            () => extensionNavItems,
+          );
+        });
+  
+        applicationBuilder.beforeRender(() => {
+          applicationBuilder.preferences.navigate();
+        });
+  
+        di = getDiForUnitTesting({ doGeneralOverrides: true });
+  
+        renderer = await applicationBuilder.render();
+      });
 
-      expect(container).toHaveTextContent("General");
-      expect(container).toHaveTextContent("Proxy");
-    });
+      const generalLinks = ["General", "Proxy"];
+  
+      it.each(generalLinks)("renders general link with text content %s", (link) => {
+        expect(renderer.container).toHaveTextContent(link);
+      });
+  
+      it("shows custom settings block", () => {
+        expect(renderer.queryByTestId("extension-settings")).toBeInTheDocument();
+      });
 
-    it("does not show custom settings block", () => {
-      const { queryByTestId } = render(
-        <PreferencesNavigation/>,
-      );
+      const extensionLinks = ["lensapp-node-menu", "lensapp-pod-menu"];
 
-      expect(queryByTestId("extension-settings")).not.toBeInTheDocument();
-    });
-  });
-
-  describe("when general + extension navigation items passed", () => {
-    beforeEach(() => {
-      const generalNavItems: IComputedValue<PreferenceNavigationItem[]> = computed(() => [
-        {
-          id: "general",
-          label: "General",
-          isActive: computed(() => false),
-          isVisible: computed(() => true),
-          navigate: () => noop,
-          orderNumber: 0,
-        },
-        {
-          id: "proxy",
-          label: "Proxy",
-          isActive: computed(() => false),
-          isVisible: computed(() => true),
-          navigate: () => noop,
-          orderNumber: 1,
-        },
-      ]);
-
-      const extensionNavItems: IComputedValue<PreferenceNavigationItem[]> = computed(() => [
-        {
-          id: "extension-preferences-navigation-item-lensapp-node-menu",
-          label: "lensapp-node-menu",
-          isActive: computed(() => false),
-          isVisible: computed(() => true),
-          navigate: () => noop,
-          orderNumber: 0,
-          parent: "extensions",
-        },
-        {
-          id: "extension-preferences-navigation-item-lensapp-pod-menu",
-          label: "lensapp-pod-menu",
-          isActive: computed(() => false),
-          isVisible: computed(() => true),
-          navigate: () => noop,
-          orderNumber: 0,
-          parent: "extensions",
-        },
-        {
-          id: "extension-preferences-navigation-item-metrics-plugin",
-          label: "metrics-plugin",
-          isActive: computed(() => false),
-          isVisible: computed(() => false),
-          navigate: () => noop,
-          orderNumber: 0,
-          parent: "extensions",
-        },
-      ]);
-
-      di.override(generalPreferenceNavigationItemsInjectable, () => generalNavItems);
-      di.override(extensionsPreferenceNavigationItemsInjectable, () => extensionNavItems);
-    });
-
-    it("renders general navigation items", () => {
-      const { container } = render(
-        <PreferencesNavigation/>,
-      );
-
-      expect(container).toHaveTextContent("General");
-      expect(container).toHaveTextContent("Proxy");
-    });
-
-    it("shows custom settings block", () => {
-      const { getByTestId } = render(
-        <PreferencesNavigation/>,
-      );
-
-      expect(getByTestId("extension-settings")).toBeInTheDocument();
-    });
-
-    it("renders extension navigation items", () => {
-      const { getByTestId } = render(
-        <PreferencesNavigation/>,
-      );
-
-      const nodeAppMenuItem = getByTestId("tab-link-for-extension-preferences-navigation-item-lensapp-node-menu");
-      const podMenuItem = getByTestId("tab-link-for-extension-preferences-navigation-item-lensapp-pod-menu");
-
-      expect([nodeAppMenuItem, podMenuItem]).toBeTruthy();
-    });
-
-    it("renders extension navigation items inside custom settings block", () => {
-      const { getByTestId } = render(
-        <PreferencesNavigation/>,
-      );
-      const settingsBlock = getByTestId("extension-settings");
-
-      expect(settingsBlock).toHaveTextContent("lensapp-node-menu");
+      it.each(extensionLinks)("shows extension navigation item %s", (link) => {
+        expect(renderer.getByTestId(`tab-link-for-extension-preferences-navigation-item-${link}`)).toBeInTheDocument();
+      });
+  
+      it("renders extension navigation items inside custom settings block", () => {
+        const settingsBlock = renderer.getByTestId("extension-settings");
+  
+        expect(settingsBlock).toHaveTextContent("lensapp-node-menu");
+      });
     });
   });
 });
