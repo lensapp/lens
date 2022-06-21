@@ -12,51 +12,48 @@ import { CommandDialog } from "./command-dialog";
 import type { ClusterId } from "../../../common/cluster-types";
 import type { CommandOverlay } from "./command-overlay.injectable";
 import commandOverlayInjectable from "./command-overlay.injectable";
-import { isMac } from "../../../common/vars";
-import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
-import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
-import type { Disposer } from "../../utils";
+import type { ipcRendererOn } from "../../../common/ipc";
+import { broadcastMessage } from "../../../common/ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { AddWindowEventListener } from "../../window/event-listener.injectable";
 import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
 import type { IComputedValue } from "mobx";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
-import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
+import isMacInjectable from "../../../common/vars/is-mac.injectable";
+import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
 
 interface Dependencies {
-  addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;
+  addWindowEventListener: AddWindowEventListener;
   commandOverlay: CommandOverlay;
-  clusterId?: ClusterId;
-  matchedClusterId: IComputedValue<ClusterId>;
-  entityRegistry: CatalogEntityRegistry;
+  clusterId: ClusterId | undefined;
+  matchedClusterId: IComputedValue<ClusterId | undefined>;
+  isMac: boolean;
+  legacyOnChannelListen: typeof ipcRendererOn;
 }
 
 @observer
 class NonInjectedCommandContainer extends React.Component<Dependencies> {
-  private escHandler(event: KeyboardEvent) {
-    const { commandOverlay } = this.props;
-
+  private escHandler = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
       event.stopPropagation();
-      commandOverlay.close();
+      this.props.commandOverlay.close();
     }
-  }
+  };
 
   handleCommandPalette = () => {
-    const { commandOverlay, entityRegistry } = this.props;
-    const clusterIsActive = this.props.matchedClusterId.get() !== undefined;
+    const matchedClusterId = this.props.matchedClusterId.get();
 
-    if (clusterIsActive) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      broadcastMessage(`command-palette:${entityRegistry.activeEntity!.getId()}:open`);
+    if (matchedClusterId !== undefined) {
+      broadcastMessage(`command-palette:${matchedClusterId}:open`);
     } else {
-      commandOverlay.open(<CommandDialog />);
+      this.props.commandOverlay.open(<CommandDialog />);
     }
   };
 
   onKeyboardShortcut(action: () => void) {
     return ({ key, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEvent) => {
-      const ctrlOrCmd = isMac ? metaKey && !ctrlKey : !metaKey && ctrlKey;
+      const ctrlOrCmd = this.props.isMac ? metaKey && !ctrlKey : !metaKey && ctrlKey;
 
       if (key === "p" && shiftKey && ctrlOrCmd && !altKey) {
         action();
@@ -75,9 +72,9 @@ class NonInjectedCommandContainer extends React.Component<Dependencies> {
       : "command-palette:open";
 
     disposeOnUnmount(this, [
-      ipcRendererOn(ipcChannel, action),
+      this.props.legacyOnChannelListen(ipcChannel, action),
       addWindowEventListener("keydown", this.onKeyboardShortcut(action)),
-      addWindowEventListener("keyup", (e) => this.escHandler(e), true),
+      addWindowEventListener("keyup", this.escHandler, true),
     ]);
   }
 
@@ -106,6 +103,7 @@ export const CommandContainer = withInjectables<Dependencies>(NonInjectedCommand
     addWindowEventListener: di.inject(windowAddEventListenerInjectable),
     commandOverlay: di.inject(commandOverlayInjectable),
     matchedClusterId: di.inject(matchedClusterIdInjectable),
-    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    isMac: di.inject(isMacInjectable),
+    legacyOnChannelListen: di.inject(legacyOnChannelListenInjectable),
   }),
 });

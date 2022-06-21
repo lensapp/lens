@@ -80,9 +80,7 @@ class NonInjectedSidebarItem extends React.Component<
     return (
       <div
         className={cssNames("SidebarItem")}
-        data-testid="sidebar-item"
-        data-test-id={this.id}
-        data-id-test={this.id}
+        data-testid={`sidebar-item-${this.id}`}
         data-is-active-test={this.isActive}
         data-parent-id-test={this.registration.parentId}
       >

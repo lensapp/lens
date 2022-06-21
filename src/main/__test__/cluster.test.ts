@@ -8,11 +8,10 @@ jest.mock("request");
 jest.mock("request-promise-native");
 
 import { Console } from "console";
-import mockFs from "mock-fs";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { ClusterModel } from "../../common/cluster-types";
+import type { CreateCluster } from "../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
@@ -29,36 +28,13 @@ console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("create clusters", () => {
   let cluster: Cluster;
-  let createCluster: (model: ClusterModel) => Cluster;
+  let createCluster: CreateCluster;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    mockFs({
-      "minikube-config.yml": JSON.stringify({
-        apiVersion: "v1",
-        clusters: [{
-          name: "minikube",
-          cluster: {
-            server: "https://192.168.64.3:8443",
-          },
-        }],
-        contexts: [{
-          context: {
-            cluster: "minikube",
-            user: "minikube",
-          },
-          name: "minikube",
-        }],
-        users: [{
-          name: "minikube",
-        }],
-        kind: "Config",
-        preferences: {},
-      }),
-    });
+    const clusterServerUrl = "https://192.168.64.3:8443";
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
@@ -87,12 +63,13 @@ describe("create clusters", () => {
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
+    }, {
+      clusterServerUrl,
     });
   });
 
   afterEach(() => {
     cluster.disconnect();
-    mockFs.restore();
   });
 
   it("should be able to create a cluster from a cluster model and apiURL should be decoded", () => {
@@ -108,12 +85,6 @@ describe("create clusters", () => {
   });
 
   it("activating cluster should try to connect to cluster and do a refresh", async () => {
-    const cluster = createCluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-
     jest.spyOn(cluster, "reconnect");
     jest.spyOn(cluster, "refreshConnectionStatus");
 

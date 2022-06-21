@@ -17,7 +17,6 @@ import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
-import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { EventStore } from "../+events/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -71,7 +70,7 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
     this.metricPoller.stop();
   }
 
-  renderMetrics(isMetricsHidden?: boolean) {
+  renderMetrics(isMetricsHidden: boolean) {
     if (isMetricsHidden) {
       return null;
     }
@@ -84,7 +83,7 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
     );
   }
 
-  renderClusterOverview(isLoaded: boolean, isMetricsHidden?: boolean) {
+  renderClusterOverview(isLoaded: boolean, isMetricsHidden: boolean) {
     if (!isLoaded) {
       return <Spinner center/>;
     }
@@ -98,9 +97,9 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
   }
 
   render() {
-    const { eventStore, nodeStore } = this.props;
+    const { eventStore, nodeStore, hostedCluster } = this.props;
     const isLoaded = nodeStore.isLoaded && eventStore.isLoaded;
-    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Cluster);
+    const isMetricHidden = hostedCluster.isMetricHidden(ClusterMetricsResourceType.Cluster);
 
     return (
       <TabLayout>

@@ -10,13 +10,13 @@ import type { KubeConfig } from "@kubernetes/client-node";
 import { HttpError } from "@kubernetes/client-node";
 import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
-import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "../kube-helpers";
+import { loadConfigFromFile } from "../kube-helpers";
 import type { KubeApiResource, KubeResource } from "../rbac";
 import { apiResourceRecord, apiResources } from "../rbac";
 import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
 import type { DetectorRegistry } from "../../main/cluster-detectors/detector-registry";
 import plimit from "p-limit";
-import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate } from "../cluster-types";
+import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../cluster-types";
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
 import type { Response } from "request";
@@ -236,27 +236,11 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.preferences.defaultNamespace;
   }
 
-  constructor(private readonly dependencies: ClusterDependencies, model: ClusterModel) {
+  constructor(private readonly dependencies: ClusterDependencies, model: ClusterModel, configData: ClusterConfigData) {
     makeObservable(this);
     this.id = model.id;
     this.updateModel(model);
-
-    const { config } = loadConfigFromFileSync(this.kubeConfigPath);
-    const validationError = validateKubeConfig(config, this.contextName);
-
-    if (validationError) {
-      throw validationError;
-    }
-
-    const context = config.getContextObject(this.contextName);
-
-    assert(context);
-
-    const cluster = config.getCluster(context.cluster);
-
-    assert(cluster);
-
-    this.apiUrl = cluster.server;
+    this.apiUrl = configData.clusterServerUrl;
 
     // for the time being, until renderer gets its own cluster type
     this._contextHandler = this.dependencies.createContextHandler(this);
