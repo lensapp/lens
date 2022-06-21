@@ -6,7 +6,8 @@ import { pipeline } from "@ogre-tools/fp";
 import { getInjectable } from "@ogre-tools/injectable";
 import { filter, orderBy } from "lodash/fp";
 import { computed } from "mobx";
-import { PreferenceNavigationItem, preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
+import type { PreferenceNavigationItem } from "./preference-navigation-items.injectable";
+import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
 
 const generalPreferenceNavigationItemsInjectable = getInjectable({
   id: "general-preference-navigation-items",

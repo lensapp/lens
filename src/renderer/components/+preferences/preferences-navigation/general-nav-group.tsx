@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import React from "react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
@@ -26,7 +30,7 @@ function NonInjectedGeneralNavGroup(props: Dependencies) {
         />
       ))}
     </React.Fragment>
-  )
+  );
 }
 
 export const GeneralNavGroup = withInjectables<Dependencies>(
@@ -35,6 +39,6 @@ export const GeneralNavGroup = withInjectables<Dependencies>(
   {
     getProps: (di) => ({
       navigationItems: di.inject(generalPreferenceNavigationItemsInjectable),
-    })
-  }
-)
+    }),
+  },
+);

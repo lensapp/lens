@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import React from "react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
@@ -7,7 +11,7 @@ import { PreferencesNavigationTab } from "./preference-navigation-tab";
 import extensionsPreferenceNavigationItemsInjectable from "./extension-preference-navigation-items.injectable";
 
 interface Dependencies {
-  navigationItems: IComputedValue<PreferenceNavigationItem[]>
+  navigationItems: IComputedValue<PreferenceNavigationItem[]>;
 }
 
 function NonInjectedExtensionsNavGroup(props: Dependencies) {
@@ -37,7 +41,7 @@ function NonInjectedExtensionsNavGroup(props: Dependencies) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export const ExtensionsNavGroup = withInjectables<Dependencies>(
@@ -45,7 +49,7 @@ export const ExtensionsNavGroup = withInjectables<Dependencies>(
 
   {
     getProps: (di) => ({
-      navigationItems: di.inject(extensionsPreferenceNavigationItemsInjectable)
-    })
-  }
-)
+      navigationItems: di.inject(extensionsPreferenceNavigationItemsInjectable),
+    }),
+  },
+);

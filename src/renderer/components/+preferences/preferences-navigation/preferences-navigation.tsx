@@ -7,7 +7,7 @@ import { Tabs } from "../../tabs";
 import { ExtensionsNavGroup } from "./extensions-nav-group";
 import { GeneralNavGroup } from "./general-nav-group";
 import type {
-  PreferenceNavigationItem
+  PreferenceNavigationItem,
 } from "./preference-navigation-items.injectable";
 
 export const PreferencesNavigation = () => {
