@@ -163,23 +163,24 @@ describe("with-error-logging", () => {
       });
 
       describe("when call rejects with error instance", () => {
-        let error: Error;
-
-        beforeEach(async () => {
-          try {
-            await toBeDecorated.reject(new Error("some-error"));
-            await returnValuePromise;
-          } catch (e) {
-            error = e as Error;
-          }
+        beforeEach(() => {
+          toBeDecorated.reject(new Error("some-error"));
         });
 
-        it("logs the error", () => {
+        it("logs the error", async () => {
+          let error: unknown;
+
+          try {
+            await returnValuePromise;
+          } catch (e) {
+            error = e;
+          }
+
           expect(loggerStub.error).toHaveBeenCalledWith("some-error-message-for-some-error", error);
         });
 
         it("rejects", () => {
-          return expect(() => returnValuePromise).rejects.toThrow("some-error");
+          return expect(returnValuePromise).rejects.toThrow("some-error");
         });
       });
 
@@ -187,8 +188,9 @@ describe("with-error-logging", () => {
         let error: unknown;
 
         beforeEach(async () => {
+          toBeDecorated.reject({ someProperty: "some-rejection" });
+
           try {
-            await toBeDecorated.reject({ someProperty: "some-rejection" });
             await returnValuePromise;
           } catch (e) {
             error = e;
@@ -203,7 +205,7 @@ describe("with-error-logging", () => {
         });
 
         it("rejects", () => {
-          return expect(() => returnValuePromise).rejects.toEqual({ someProperty: "some-rejection" });
+          return expect(returnValuePromise).rejects.toEqual({ someProperty: "some-rejection" });
         });
       });
 

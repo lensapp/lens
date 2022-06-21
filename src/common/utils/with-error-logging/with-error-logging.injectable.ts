@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { isPromise } from "../is-promise/is-promise";
 import logErrorInjectable from "../../log-error.injectable";
+import { isPromise } from "../is-promise/is-promise";
 
 export type WithErrorLoggingFor = (
   getErrorMessage: (error: unknown) => string
@@ -21,18 +21,10 @@ const withErrorLoggingInjectable = getInjectable({
     return (getErrorMessage) =>
       (toBeDecorated) =>
         (...args) => {
+          let returnValue: ReturnType<typeof toBeDecorated>;
+
           try {
-            const returnValue = toBeDecorated(...args);
-
-            if (isPromise(returnValue)) {
-              returnValue.catch((e) => {
-                const errorMessage = getErrorMessage(e);
-
-                logError(errorMessage, e);
-              });
-            }
-
-            return returnValue;
+            returnValue = toBeDecorated(...args);
           } catch (e) {
             const errorMessage = getErrorMessage(e);
 
@@ -40,6 +32,18 @@ const withErrorLoggingInjectable = getInjectable({
 
             throw e;
           }
+
+          if (isPromise(returnValue)) {
+            return returnValue.catch((e: unknown) => {
+              const errorMessage = getErrorMessage(e);
+
+              logError(errorMessage, e);
+
+              throw e;
+            });
+          }
+
+          return returnValue;
         };
   },
 });
