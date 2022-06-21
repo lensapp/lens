@@ -556,7 +556,7 @@ const disableExtensionsFor = <T extends ObservableSet>(
       runInAction(() => {
         extension.deregister();
 
-        extensionState.delete(extension);
+        extensionState.delete(instance);
       });
     });
   };
