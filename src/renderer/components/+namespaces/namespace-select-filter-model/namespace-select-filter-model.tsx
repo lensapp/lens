@@ -38,6 +38,7 @@ export class NamespaceSelectFilterModel {
       (isOpen) => {
         if (!isOpen) { // falling edge of menu being open
           this.optionsSortingSelected.replace(this.selectedNames.get());
+          this.didToggle = false;
         }
       },
     );
