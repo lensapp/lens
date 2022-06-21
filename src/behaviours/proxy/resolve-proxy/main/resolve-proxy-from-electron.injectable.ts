@@ -4,14 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronInjectable from "./electron.injectable";
+import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
 
 const resolveProxyFromElectronInjectable = getInjectable({
   id: "resolve-proxy-from-electron",
 
   instantiate: (di) => {
     const electron = di.inject(electronInjectable);
+    const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
 
-    return async (url: string) => {
+    const withErrorLogging = withErrorLoggingFor(() => "Error resolving proxy");
+
+    return withErrorLogging(async (url: string) => {
       const webContent = electron.webContents
         .getAllWebContents()
         .find((x) => !x.isDestroyed());
@@ -21,7 +25,7 @@ const resolveProxyFromElectronInjectable = getInjectable({
       }
 
       return await webContent.session.resolveProxy(url);
-    };
+    });
   },
 });
 

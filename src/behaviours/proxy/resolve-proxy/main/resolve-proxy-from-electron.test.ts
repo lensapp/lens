@@ -10,16 +10,24 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type electron from "electron";
 import { getPromiseStatus } from "../../../../common/test-utils/get-promise-status";
+import logErrorInjectable from "../../../../common/log-error.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("technical: resolve-proxy-from-electron", () => {
   let resolveProxyMock: AsyncFnMock<(url: string) => Promise<string>>;
+  let logErrorMock: jest.Mock;
+  let di: DiContainer;
+  let actualPromise: Promise<string>;
+
+  beforeEach(() => {
+    di = getDiForUnitTesting();
+
+    logErrorMock = jest.fn();
+    di.override(logErrorInjectable, () => logErrorMock);
+  });
 
   describe("given there are non-destroyed Lens windows, when called with URL", () => {
-    let actualPromise: Promise<string>;
-
     beforeEach(() => {
-      const di = getDiForUnitTesting();
-
       resolveProxyMock = asyncFn();
 
       di.override(
@@ -82,12 +90,10 @@ describe("technical: resolve-proxy-from-electron", () => {
     });
   });
 
-  describe("given there are only destroyed Lens windows, when called with URL, throws", () => {
-    let actualPromise: Promise<string>;
+  describe("given there are only destroyed Lens windows, when called with URL", () => {
+    let error: unknown;
 
-    beforeEach(() => {
-      const di = getDiForUnitTesting();
-
+    beforeEach(async () => {
       di.override(
         electronInjectable,
         () =>
@@ -114,13 +120,15 @@ describe("technical: resolve-proxy-from-electron", () => {
         resolveProxyFromElectronInjectable,
       );
 
-      actualPromise = resolveProxyFromElectron("some-url");
+      try {
+        await resolveProxyFromElectron("some-url");
+      } catch (e) {
+        error = e;
+      }
     });
 
-    it("rejects", () => {
-      return expect(actualPromise).rejects.toThrow(
-        'Tried to resolve proxy for "some-url", but no browser window was available',
-      );
+    it("logs error", () => {
+      expect(logErrorMock).toHaveBeenCalledWith("Error resolving proxy", error);
     });
   });
 });
