@@ -1189,46 +1189,46 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@ogre-tools/fp@8.0.0", "@ogre-tools/fp@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-8.0.0.tgz#dd2319a96ce3d2edd3ee2bc2acca07a94a77bf3b"
-  integrity sha512-8OpGUbG3avGtx6ASz3XNnK/KCyPW25RPp8oYzzU0zihKU5D4QKHy9qNkQ3npurzeg4d1k4BsgkeX+805nqtZOA==
+"@ogre-tools/fp@9.0.0", "@ogre-tools/fp@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.0.tgz#926cd4f13b52961156161feeeafddf22a0ad39c0"
+  integrity sha512-kMUgzhdjHuph0UWteOfyXNGBavZJX23NOA5su6fx9NdTzWhl9yB5Uf6Q//nOvL9COftjZDwnAgIaDU4MPdjyqA==
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-auto-registration@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-8.0.0.tgz#3a443f1f1c9b564baa78cca6a3c81ac4102660b0"
-  integrity sha512-DX1bxn8mDwek+W/SaI5WmDHmkY3B3njs3X4pOvqRtiMis3GaWHzeCZeK3q3Iv5cd14FTW8AsfKtujPmLklNf/A==
+"@ogre-tools/injectable-extension-for-auto-registration@9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-9.0.0.tgz#69463737ef4f7777db4703964b8a72a5fb82d6b3"
+  integrity sha512-+3I9Z0GfA04zZoj7Nw5WhJLDFLJgr5xv8Kp1zPDuT9/OvE9EA6hzAqakMDLbvn1zZOJjkJCGk44x6UjSQJp/9w==
   dependencies:
-    "@ogre-tools/fp" "^8.0.0"
-    "@ogre-tools/injectable" "^8.0.0"
+    "@ogre-tools/fp" "^9.0.0"
+    "@ogre-tools/injectable" "^9.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-mobx@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-8.0.0.tgz#80ff506011e078050dd8dcb72660d17181db6d34"
-  integrity sha512-m8gU3cEFHl9IMZLcvvoS7hVxS6p6nG3jdf6fY6MUZE0u9hx4bZuUdWYoylGQizy0FyRFQ2/m5xhTH2VdtXqx8w==
+"@ogre-tools/injectable-extension-for-mobx@9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-9.0.0.tgz#ed14df39b266e521272977821d3e05bcbd647577"
+  integrity sha512-9Hrtr7AdibcD+Fqn2qNsjiOUakAACO55TB1IqNsOJMMuqQHVB5SFZTHBzdVRqqqY2MwQvWYvd4xfy+beItD/xw==
   dependencies:
-    "@ogre-tools/fp" "^8.0.0"
-    "@ogre-tools/injectable" "^8.0.0"
+    "@ogre-tools/fp" "^9.0.0"
+    "@ogre-tools/injectable" "^9.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-8.0.0.tgz#b2d8db4bb697ba2822d71ec73e6cabee30f70f34"
-  integrity sha512-rZa38fm3UzGa/09qC765Za8xJiSPOYHJGsob8UOt2JQIt/BecTNXPMHexfxy9W+DIdAer+YruUgedChdk9nvdQ==
+"@ogre-tools/injectable-react@9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-9.0.0.tgz#c5c510e893a5c1d7994d8709f70606967cabdec2"
+  integrity sha512-vGQrwkcWibRUWFPbu392riBYY4dXK051FxwyMsDYNRqmvaLo8HuumwjzS1DWS7db/P9Li+Kc+Ms670xIZepcpA==
   dependencies:
-    "@ogre-tools/fp" "^8.0.0"
-    "@ogre-tools/injectable" "^8.0.0"
+    "@ogre-tools/fp" "^9.0.0"
+    "@ogre-tools/injectable" "^9.0.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable@8.0.0", "@ogre-tools/injectable@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-8.0.0.tgz#ea4f98bd2466149add94d4f6a9beb7be03729da7"
-  integrity sha512-59p+8uGqwVQ5IpGpgfn3RA+wXzn1tjnPdFWO3GLEgjyp5dWBaMKufCpCFRvvb9sP6B68qo19aLfy/uSm4AXduw==
+"@ogre-tools/injectable@9.0.0", "@ogre-tools/injectable@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-9.0.0.tgz#0819bc7b5fbae0a467f3250b10b4adb003268067"
+  integrity sha512-z9X86Q9AEkkilLu9V33j/aXv/IUoG944AdfN6WX2zZgJqRNjESN9spoOMqdKqib6JmEjCRxpMvaMwHLQSh14fg==
   dependencies:
-    "@ogre-tools/fp" "^8.0.0"
+    "@ogre-tools/fp" "^9.0.0"
     lodash "^4.17.21"
 
 "@panva/asn1.js@^1.0.0":

@@ -58,7 +58,7 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     doGeneralOverrides = false,
   } = opts;
 
-  const di = createContainer();
+  const di = createContainer("renderer");
 
   registerMobX(di);
 

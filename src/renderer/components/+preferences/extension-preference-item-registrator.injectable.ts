@@ -7,7 +7,7 @@ import { filter, map } from "lodash/fp";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import { pipeline } from "@ogre-tools/fp";
-import { extensionPreferenceItemInjectionToken } from "./extension-preference-items.injectable";
+import { extensionPreferenceItemInjectionToken } from "./extension-preference-items-injection-token";
 
 const extensionPreferenceItemRegistratorInjectable = getInjectable({
   id: "extension-preference-item-registrator",
@@ -34,6 +34,7 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
               instantiate: () => ({
                 id: registration.id || id,
                 title: registration.title,
+                extension,
 
                 components: {
                   Hint: registration.components.Hint,

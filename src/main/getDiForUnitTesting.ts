@@ -105,7 +105,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     doGeneralOverrides = false,
   } = opts;
 
-  const di = createContainer();
+  const di = createContainer("main");
 
   registerMobX(di);
 

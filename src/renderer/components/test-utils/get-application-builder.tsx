@@ -55,6 +55,9 @@ import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
 import { StatusBar } from "../status-bar/status-bar";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
+import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 import type { LensExtension } from "../../../extensions/lens-extension";
@@ -100,6 +103,7 @@ export interface ApplicationBuilder {
   preferences: {
     close: () => void;
     navigate: () => void;
+    navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => void;
     navigation: {
       click: (id: string) => void;
     };
@@ -332,6 +336,12 @@ export const getApplicationBuilder = () => {
         navigateToPreferences();
       },
 
+      navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => {
+        const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
+
+        navigateToRoute(route, params);
+      },
+
       navigation: {
         click: (id: string) => {
           const link = rendered.queryByTestId(`tab-link-for-${id}`);
@@ -546,7 +556,7 @@ const disableExtensionsFor = <T extends ObservableSet>(
       runInAction(() => {
         extension.deregister();
 
-        extensionState.delete(extension);
+        extensionState.delete(instance);
       });
     });
   };

@@ -26,6 +26,7 @@ import { pipeline } from "@ogre-tools/fp";
 import { getExtensionRoutePath } from "../renderer/routes/for-extension";
 import type { LensRendererExtensionDependencies } from "./lens-extension-set-dependencies";
 import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
+import type { AppPreferenceTabRegistration } from "../renderer/components/+preferences/app-preference-tab/app-preference-tab-registration";
 
 export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
   globalPages: registries.PageRegistration[] = [];
@@ -33,6 +34,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
   clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
   kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
+  appPreferenceTabs: AppPreferenceTabRegistration[] = [];
   entitySettings: registries.EntitySettingRegistration[] = [];
   statusBarItems: StatusBarRegistration[] = [];
   kubeObjectDetailItems: registries.KubeObjectDetailRegistration[] = [];
