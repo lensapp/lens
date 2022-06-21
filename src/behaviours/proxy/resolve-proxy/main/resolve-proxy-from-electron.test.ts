@@ -91,7 +91,7 @@ describe("technical: resolve-proxy-from-electron", () => {
   });
 
   describe("given there are only destroyed Lens windows, when called with URL", () => {
-    let error: unknown;
+    let error: any;
 
     beforeEach(async () => {
       di.override(
@@ -125,6 +125,10 @@ describe("technical: resolve-proxy-from-electron", () => {
       } catch (e) {
         error = e;
       }
+    });
+
+    it("throws error", () => {
+      expect(error.message).toBe('Tried to resolve proxy for "some-url", but no browser window was available');
     });
 
     it("logs error", () => {
