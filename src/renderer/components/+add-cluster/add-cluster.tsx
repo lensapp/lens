@@ -39,9 +39,9 @@ interface Dependencies {
 function getContexts(config: KubeConfig): Map<string, Option> {
   return new Map(
     splitConfig(config)
-      .map(({ config, error }) => [config.currentContext, {
+      .map(({ config, validationResult }) => [config.currentContext, {
         config,
-        error,
+        error: validationResult.error?.toString(),
       }]),
   );
 }

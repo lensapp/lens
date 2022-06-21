@@ -43,7 +43,7 @@ const extensionInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, extension: LensExtension) => extension,
+    getInstanceKey: (di, instance: LensExtension) => instance,
   }),
 });
 

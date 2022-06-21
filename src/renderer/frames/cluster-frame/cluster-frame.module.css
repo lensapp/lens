@@ -3,4 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "@testing-library/jest-dom";
+.centering {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -68,6 +68,15 @@ export interface ClusterModel {
 }
 
 /**
+ * This data is retreived from the kubeconfig file before calling the cluster constructor.
+ *
+ * That is done to remove the external dependency on the construction of Cluster instances.
+ */
+export interface ClusterConfigData {
+  clusterServerUrl: string;
+}
+
+/**
  * The complete set of cluster settings or preferences
  */
 export interface ClusterPreferences extends ClusterPrometheusPreferences {

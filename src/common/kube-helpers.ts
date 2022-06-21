@@ -150,7 +150,7 @@ export function loadConfigFromString(content: string): ConfigResult {
 
 export interface SplitConfigEntry {
   config: KubeConfig;
-  error?: string;
+  validationResult: ValidateKubeConfigResult;
 }
 
 /**
@@ -179,7 +179,7 @@ export function splitConfig(kubeConfig: KubeConfig): SplitConfigEntry[] {
 
     return {
       config,
-      error: validateKubeConfig(config, ctx.name)?.toString(),
+      validationResult: validateKubeConfig(config, ctx.name),
     };
   });
 }
@@ -243,25 +243,44 @@ export function dumpConfigYaml(kubeConfig: PartialDeep<KubeConfig>): string {
   return yaml.dump(config, { skipInvalid: true });
 }
 
+export type ValidateKubeConfigResult = {
+  error: Error;
+} | {
+  error?: undefined;
+  context: Context;
+  cluster: Cluster;
+  user: User;
+};
+
 /**
  * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
  *
  * Note: This function returns an error instead of throwing it, returning `undefined` if the validation passes
  */
-export function validateKubeConfig(config: KubeConfig, contextName: string): Error | undefined {
-  const contextObject = config.getContextObject(contextName);
+export function validateKubeConfig(config: KubeConfig, contextName: string): ValidateKubeConfigResult {
+  const context = config.getContextObject(contextName);
 
-  if (!contextObject) {
-    return new Error(`No valid context object provided in kubeconfig for context '${contextName}'`);
+  if (!context) {
+    return {
+      error: new Error(`No valid context object provided in kubeconfig for context '${contextName}'`),
+    };
   }
 
-  if (!config.getCluster(contextObject.cluster)) {
-    return new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`);
+  const cluster = config.getCluster(context.cluster);
+
+  if (!cluster) {
+    return {
+      error: new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`),
+    };
   }
 
-  if (!config.getUser(contextObject.user)) {
-    return new Error(`No valid user object provided in kubeconfig for context '${contextName}'`);
+  const user = config.getUser(context.user);
+
+  if (!user) {
+    return {
+      error: new Error(`No valid user object provided in kubeconfig for context '${contextName}'`),
+    };
   }
 
-  return undefined;
+  return { cluster, user, context };
 }

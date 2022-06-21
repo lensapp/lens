@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionLoader } from "./extension-loader";
 import updateExtensionsStateInjectable from "./update-extensions-state/update-extensions-state.injectable";
-import extensionInstallationCounterInjectable from "./extension-installation-counter.injectable";
 import { createExtensionInstanceInjectionToken } from "./create-extension-instance.token";
 import extensionInstancesInjectable from "./extension-instances.injectable";
 import type { LensExtension } from "../lens-extension";
@@ -17,7 +16,6 @@ const extensionLoaderInjectable = getInjectable({
   instantiate: (di) => new ExtensionLoader({
     updateExtensionsState: di.inject(updateExtensionsStateInjectable),
     createExtensionInstance: di.inject(createExtensionInstanceInjectionToken),
-    extensionInstallationCounter: di.inject(extensionInstallationCounterInjectable),
     extensionInstances: di.inject(extensionInstancesInjectable),
     getExtension: (instance: LensExtension) => di.inject(extensionInjectable, instance),
   }),

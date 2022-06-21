@@ -16,13 +16,16 @@ import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
 import { requestInitialClusterStates } from "../../renderer/ipc";
 import { clusterStates } from "../ipc/cluster";
+import type { CreateCluster } from "../cluster/create-cluster-injection-token";
+import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
 }
 
 interface Dependencies {
-  createCluster: (model: ClusterModel) => Cluster;
+  createCluster: CreateCluster;
+  readClusterConfigSync: ReadClusterConfigSync;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
@@ -116,7 +119,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel
-      : this.dependencies.createCluster(clusterOrModel);
+      : this.dependencies.createCluster(
+        clusterOrModel,
+        this.dependencies.readClusterConfigSync(clusterOrModel),
+      );
 
     this.clusters.set(cluster.id, cluster);
 
@@ -136,7 +142,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         if (cluster) {
           cluster.updateModel(clusterModel);
         } else {
-          cluster = this.dependencies.createCluster(clusterModel);
+          cluster = this.dependencies.createCluster(
+            clusterModel,
+            this.dependencies.readClusterConfigSync(clusterModel),
+          );
         }
         newClusters.set(clusterModel.id, cluster);
       } catch (error) {

@@ -9,9 +9,8 @@ import type { RenderResult } from "@testing-library/react";
 import mockFs from "mock-fs";
 import React from "react";
 import * as selectEvent from "react-select-event";
-import type { Cluster } from "../../../../common/cluster/cluster";
 import { DeleteClusterDialog } from "../view";
-import type { ClusterModel } from "../../../../common/cluster-types";
+import type { CreateCluster } from "../../../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
 import type { OpenDeleteClusterDialog } from "../open.injectable";
@@ -46,14 +45,16 @@ jest.mock("electron", () => ({
   },
 }));
 
+const currentClusterServerUrl = "https://localhost";
+const nonCurrentClusterServerUrl = "http://localhost";
 const multiClusterConfig = `
 apiVersion: v1
 clusters:
 - cluster:
-    server: https://localhost
+    server: ${currentClusterServerUrl}
   name: some-current-context-cluster
 - cluster:
-    server: http://localhost
+    server: ${nonCurrentClusterServerUrl}
   name: some-non-current-context-cluster
 contexts:
 - context:
@@ -73,11 +74,12 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
+const singleClusterServerUrl = "http://localhost";
 const singleClusterConfig = `
 apiVersion: v1
 clusters:
 - cluster:
-    server: http://localhost
+    server: ${singleClusterServerUrl}
   name: some-cluster
 contexts:
 - context:
@@ -97,7 +99,7 @@ let config: KubeConfig;
 
 describe("<DeleteClusterDialog />", () => {
   let applicationBuilder: ApplicationBuilder;
-  let createCluster: (model: ClusterModel) => Cluster;
+  let createCluster: CreateCluster;
   let openDeleteClusterDialog: OpenDeleteClusterDialog;
 
   beforeEach(async () => {
@@ -157,6 +159,8 @@ describe("<DeleteClusterDialog />", () => {
           clusterName: "some-current-context-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
+      }, {
+        clusterServerUrl: currentClusterServerUrl,
       });
 
       openDeleteClusterDialog({ cluster, config });
@@ -204,6 +208,8 @@ describe("<DeleteClusterDialog />", () => {
           clusterName: "minikube",
         },
         kubeConfigPath: "./temp-kube-config",
+      }, {
+        clusterServerUrl: nonCurrentClusterServerUrl,
       });
 
       openDeleteClusterDialog({ cluster, config });
@@ -221,6 +227,8 @@ describe("<DeleteClusterDialog />", () => {
           clusterName: "some-current-context-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
+      }, {
+        clusterServerUrl: currentClusterServerUrl,
       });
 
       openDeleteClusterDialog({ cluster, config });
@@ -236,6 +244,8 @@ describe("<DeleteClusterDialog />", () => {
           clusterName: "some-current-context-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
+      }, {
+        clusterServerUrl: currentClusterServerUrl,
       });
 
       openDeleteClusterDialog({ cluster, config });
@@ -259,12 +269,12 @@ describe("<DeleteClusterDialog />", () => {
       const cluster = createCluster({
         id: "some-non-current-context-cluster",
         contextName: "some-non-current-context",
-
         preferences: {
           clusterName: "some-non-current-context-cluster",
         },
-
         kubeConfigPath: "./temp-kube-config",
+      }, {
+        clusterServerUrl: nonCurrentClusterServerUrl,
       });
 
       const spy = jest.spyOn(cluster, "isInLocalKubeconfig").mockImplementation(() => true);
@@ -301,6 +311,8 @@ describe("<DeleteClusterDialog />", () => {
           clusterName: "some-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
+      }, {
+        clusterServerUrl: singleClusterServerUrl,
       });
 
       openDeleteClusterDialog({ cluster, config });

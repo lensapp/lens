@@ -24,10 +24,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -60,10 +58,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -89,10 +85,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -128,10 +122,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -157,10 +149,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -193,10 +183,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -222,10 +210,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -291,10 +277,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -327,10 +311,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -356,10 +338,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-item-id"
         data-is-active-test="false"
-        data-test-id="some-item-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-item-id"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -375,10 +355,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -414,10 +392,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -443,10 +419,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="namespaces"
         data-is-active-test="false"
-        data-test-id="namespaces"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-namespaces"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -472,10 +446,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -508,10 +480,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -537,10 +507,8 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"

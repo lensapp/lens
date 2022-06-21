@@ -7,14 +7,13 @@ import fs from "fs";
 import mockFs from "mock-fs";
 import path from "path";
 import fse from "fs-extra";
-import type { Cluster } from "../cluster/cluster";
 import type { ClusterStore } from "../cluster-store/cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
-import type { ClusterModel } from "../cluster-types";
 import type { DiContainer } from "@ogre-tools/injectable";
+import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
@@ -25,17 +24,19 @@ import directoryForTempInjectable from "../app-paths/directory-for-temp/director
 import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../main/kubectl/normalized-arch.injectable";
 import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
+import fsInjectable from "../fs/fs.injectable";
 
 console = new Console(stdout, stderr);
 
 const testDataIcon = fs.readFileSync(
   "test-data/cluster-store-migration-icon.png",
 );
+const clusterServerUrl = "https://localhost";
 const kubeconfig = `
 apiVersion: v1
 clusters:
 - cluster:
-    server: https://localhost
+    server: ${clusterServerUrl}
   name: test
 contexts:
 - context:
@@ -78,7 +79,7 @@ jest.mock("electron", () => ({
 describe("cluster-store", () => {
   let mainDi: DiContainer;
   let clusterStore: ClusterStore;
-  let createCluster: (model: ClusterModel) => Cluster;
+  let createCluster: CreateCluster;
 
   beforeEach(async () => {
     mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -94,6 +95,7 @@ describe("cluster-store", () => {
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
     mainDi.permitSideEffects(clusterStoreInjectable);
+    mainDi.permitSideEffects(fsInjectable);
 
     mainDi.unoverride(clusterStoreInjectable);
   });
@@ -143,6 +145,8 @@ describe("cluster-store", () => {
             getCustomKubeConfigDirectory("foo"),
             kubeconfig,
           ),
+        }, {
+          clusterServerUrl,
         });
 
         clusterStore.addCluster(cluster);

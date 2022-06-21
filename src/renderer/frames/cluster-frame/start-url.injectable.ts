@@ -4,29 +4,30 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import type { KubeResource } from "../../../common/rbac";
-import isAllowedResourceInjectable from "../../../common/utils/is-allowed-resource.injectable";
 import clusterOverviewRouteInjectable from "../../../common/front-end-routing/routes/cluster/overview/cluster-overview-route.injectable";
 import workloadsOverviewRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/overview/workloads-overview-route.injectable";
-import { buildURL } from "../../../common/utils/buildUrl";
 
 const startUrlInjectable = getInjectable({
   id: "start-url",
 
   instantiate: (di) => {
-    const isAllowedResource = (resourceName: string) => di.inject(isAllowedResourceInjectable, resourceName);
-
     const clusterOverviewRoute = di.inject(clusterOverviewRouteInjectable);
     const workloadOverviewRoute = di.inject(workloadsOverviewRouteInjectable);
-    const clusterOverviewUrl = buildURL(clusterOverviewRoute.path);
-    const workloadOverviewUrl = buildURL(workloadOverviewRoute.path);
 
     return computed(() => {
-      const resources: KubeResource[] = ["events", "nodes", "pods"];
+      if (clusterOverviewRoute.isEnabled.get()) {
+        return clusterOverviewRoute.path;
+      }
 
-      return resources.every((resourceName) => isAllowedResource(resourceName))
-        ? clusterOverviewUrl
-        : workloadOverviewUrl;
+      if (workloadOverviewRoute.isEnabled.get()) {
+        return workloadOverviewRoute.path;
+      }
+
+      /**
+       * NOTE: This will never be executed as `workloadOverviewRoute.isEnabled` always is true. It
+       * is here is guard against accidental changes at a distance within `workloadOverviewRoute`.
+       */
+      throw new Error("Exhausted all possible starting locations and none are active. This is a bug.");
     });
   },
 });

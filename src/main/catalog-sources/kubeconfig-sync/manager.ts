@@ -25,9 +25,10 @@ import { createHash } from "crypto";
 import { homedir } from "os";
 import globToRegExp from "glob-to-regexp";
 import { inspect } from "util";
-import type { ClusterModel, UpdateClusterModel } from "../../../common/cluster-types";
+import type { ClusterConfigData, UpdateClusterModel } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../catalog/entity-registry";
+import type { CreateCluster } from "../../../common/cluster/create-cluster-injection-token";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
@@ -56,7 +57,7 @@ interface KubeconfigSyncManagerDependencies {
   readonly directoryForKubeConfigs: string;
   readonly entityRegistry: CatalogEntityRegistry;
   readonly clusterManager: ClusterManager;
-  createCluster: (model: ClusterModel) => Cluster;
+  createCluster: CreateCluster;
 }
 
 const kubeConfigSyncName = "lens:kube-sync";
@@ -147,17 +148,22 @@ export class KubeconfigSyncManager {
 }
 
 // exported for testing
-export function configToModels(rootConfig: KubeConfig, filePath: string): UpdateClusterModel[] {
-  const validConfigs = [];
+export function configToModels(rootConfig: KubeConfig, filePath: string): [UpdateClusterModel, ClusterConfigData][] {
+  const validConfigs: ReturnType<typeof configToModels> = [];
 
-  for (const { config, error } of splitConfig(rootConfig)) {
-    if (error) {
-      logger.debug(`${logPrefix} context failed validation: ${error}`, { context: config.currentContext, filePath });
+  for (const { config, validationResult } of splitConfig(rootConfig)) {
+    if (validationResult.error) {
+      logger.debug(`${logPrefix} context failed validation: ${validationResult.error}`, { context: config.currentContext, filePath });
     } else {
-      validConfigs.push({
-        kubeConfigPath: filePath,
-        contextName: config.currentContext,
-      });
+      validConfigs.push([
+        {
+          kubeConfigPath: filePath,
+          contextName: config.currentContext,
+        },
+        {
+          clusterServerUrl: validationResult.cluster.server,
+        },
+      ]);
     }
   }
 
@@ -169,7 +175,7 @@ type RootSource = ObservableMap<string, RootSourceValue>;
 
 interface ComputeDiffDependencies {
   directoryForKubeConfigs: string;
-  createCluster: (model: ClusterModel) => Cluster;
+  createCluster: CreateCluster;
   clusterManager: ClusterManager;
 }
 
@@ -184,15 +190,15 @@ export const computeDiff = ({ directoryForKubeConfigs, createCluster, clusterMan
       }
 
       const rawModels = configToModels(config, filePath);
-      const models = new Map(rawModels.map(m => [m.contextName, m]));
+      const models = new Map(rawModels.map(([model, configData]) => [model.contextName, [model, configData] as const]));
 
       logger.debug(`${logPrefix} File now has ${models.size} entries`, { filePath });
 
       for (const [contextName, value] of source) {
-        const model = models.get(contextName);
+        const data = models.get(contextName);
 
         // remove and disconnect clusters that were removed from the config
-        if (!model) {
+        if (!data) {
           // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
           clusterManager.deleting.delete(value[0].id);
 
@@ -207,17 +213,17 @@ export const computeDiff = ({ directoryForKubeConfigs, createCluster, clusterMan
         // diff against that
 
         // or update the model and mark it as not needed to be added
-        value[0].updateModel(model);
+        value[0].updateModel(data[0]);
         models.delete(contextName);
         logger.debug(`${logPrefix} Updated old cluster from sync`, { filePath, contextName });
       }
 
-      for (const [contextName, model] of models) {
+      for (const [contextName, [model, configData]] of models) {
         // add new clusters to the source
         try {
           const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
 
-          const cluster = ClusterStore.getInstance().getById(clusterId) || createCluster({ ...model, id: clusterId });
+          const cluster = ClusterStore.getInstance().getById(clusterId) || createCluster({ ...model, id: clusterId }, configData);
 
           if (!cluster.apiUrl) {
             throw new Error("Cluster constructor failed, see above error");

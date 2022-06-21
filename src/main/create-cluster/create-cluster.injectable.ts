@@ -32,7 +32,7 @@ const createClusterInjectable = getInjectable({
       createVersionDetector: di.inject(createVersionDetectorInjectable),
     };
 
-    return (model) => new Cluster(dependencies, model);
+    return (model, configData) => new Cluster(dependencies, model, configData);
   },
 
   injectionToken: createClusterInjectionToken,

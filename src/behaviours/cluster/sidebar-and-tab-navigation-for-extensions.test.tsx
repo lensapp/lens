@@ -16,7 +16,6 @@ import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import assert from "assert";
-import { getSidebarItem } from "../utils";
 import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 
@@ -74,21 +73,15 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
       });
 
       it("parent is highlighted", () => {
-        const parent = getSidebarItem(
-          rendered,
-          "some-extension-name-some-parent-id",
-        );
+        const parent = rendered.getByTestId("sidebar-item-some-extension-name-some-parent-id");
 
         expect(parent?.dataset.isActiveTest).toBe("true");
       });
 
       it("parent sidebar item is not expanded", () => {
-        const child = getSidebarItem(
-          rendered,
-          "some-extension-name-some-child-id",
-        );
+        const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
 
-        expect(child).toBeUndefined();
+        expect(child).toBeNull();
       });
 
       it("child page is shown", () => {
@@ -120,21 +113,15 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
       });
 
       it("parent sidebar item is not highlighted", () => {
-        const parent = getSidebarItem(
-          rendered,
-          "some-extension-name-some-parent-id",
-        );
+        const parent = rendered.getByTestId("sidebar-item-some-extension-name-some-parent-id");
 
         expect(parent?.dataset.isActiveTest).toBe("false");
       });
 
       it("parent sidebar item is expanded", () => {
-        const child = getSidebarItem(
-          rendered,
-          "some-extension-name-some-child-id",
-        );
+        const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
 
-        expect(child).not.toBeUndefined();
+        expect(child).not.toBeNull();
       });
     });
 
@@ -162,12 +149,9 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
       });
 
       it("parent sidebar item is not expanded", () => {
-        const child = getSidebarItem(
-          rendered,
-          "some-extension-name-some-child-id",
-        );
+        const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
 
-        expect(child).toBeUndefined();
+        expect(child).toBeNull();
       });
     });
 
@@ -192,12 +176,9 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
       });
 
       it("parent sidebar item is not expanded", () => {
-        const child = getSidebarItem(
-          rendered,
-          "some-extension-name-some-child-id",
-        );
+        const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
 
-        expect(child).toBeUndefined();
+        expect(child).toBeNull();
       });
     });
 
@@ -211,21 +192,15 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
       });
 
       it("parent sidebar item is not highlighted", () => {
-        const parent = getSidebarItem(
-          rendered,
-          "some-extension-name-some-parent-id",
-        );
+        const parent = rendered.getByTestId("sidebar-item-some-extension-name-some-parent-id");
 
         expect(parent?.dataset.isActiveTest).toBe("false");
       });
 
       it("parent sidebar item is not expanded", () => {
-        const child = getSidebarItem(
-          rendered,
-          "some-extension-name-some-child-id",
-        );
+        const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
 
-        expect(child).toBeUndefined();
+        expect(child).toBeNull();
       });
 
       describe("when a parent sidebar item is expanded", () => {
@@ -242,21 +217,15 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
         });
 
         it("parent sidebar item is not highlighted", () => {
-          const parent = getSidebarItem(
-            rendered,
-            "some-extension-name-some-parent-id",
-          );
+          const parent = rendered.getByTestId("sidebar-item-some-extension-name-some-parent-id");
 
           expect(parent?.dataset.isActiveTest).toBe("false");
         });
 
         it("parent sidebar item is expanded", () => {
-          const child = getSidebarItem(
-            rendered,
-            "some-extension-name-some-child-id",
-          );
+          const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
 
-          expect(child).not.toBeUndefined();
+          expect(child).not.toBeNull();
         });
 
         describe("when a child of the parent is selected", () => {
@@ -273,19 +242,13 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           });
 
           it("parent is highlighted", () => {
-            const parent = getSidebarItem(
-              rendered,
-              "some-extension-name-some-parent-id",
-            );
+            const parent = rendered.getByTestId("sidebar-item-some-extension-name-some-parent-id");
 
             expect(parent?.dataset.isActiveTest).toBe("true");
           });
 
           it("child is highlighted", () => {
-            const child = getSidebarItem(
-              rendered,
-              "some-extension-name-some-child-id",
-            );
+            const child = rendered.getByTestId("sidebar-item-some-extension-name-some-child-id");
 
             expect(child?.dataset.isActiveTest).toBe("true");
           });
