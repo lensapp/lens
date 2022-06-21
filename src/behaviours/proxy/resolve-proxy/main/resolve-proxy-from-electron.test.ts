@@ -81,4 +81,46 @@ describe("technical: resolve-proxy-from-electron", () => {
       expect(await actualPromise).toBe("some-proxy");
     });
   });
+
+  describe("given there are only destroyed Lens windows, when called with URL, throws", () => {
+    let actualPromise: Promise<string>;
+
+    beforeEach(() => {
+      const di = getDiForUnitTesting();
+
+      di.override(
+        electronInjectable,
+        () =>
+          ({
+            webContents: {
+              getAllWebContents: () => [
+                {
+                  isDestroyed: () => true,
+
+                  session: {
+                    resolveProxy: () => {
+                      throw new Error("should never come here");
+                    },
+                  },
+                },
+              ],
+            },
+          } as unknown as typeof electron),
+      );
+
+      resolveProxyMock = asyncFn();
+
+      const resolveProxyFromElectron = di.inject(
+        resolveProxyFromElectronInjectable,
+      );
+
+      actualPromise = resolveProxyFromElectron("some-url");
+    });
+
+    it("rejects", () => {
+      return expect(actualPromise).rejects.toThrow(
+        'Tried to resolve proxy for "some-url", but no browser window was available',
+      );
+    });
+  });
 });

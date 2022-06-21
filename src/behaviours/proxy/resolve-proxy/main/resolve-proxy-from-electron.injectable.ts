@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import assert from "assert";
 import electronInjectable from "./electron.injectable";
 
 const resolveProxyFromElectronInjectable = getInjectable({
@@ -17,7 +16,9 @@ const resolveProxyFromElectronInjectable = getInjectable({
         .getAllWebContents()
         .find((x) => !x.isDestroyed());
 
-      assert(webContent);
+      if (!webContent) {
+        throw new Error(`Tried to resolve proxy for "${url}", but no browser window was available`);
+      }
 
       return await webContent.session.resolveProxy(url);
     };
