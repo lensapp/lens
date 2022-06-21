@@ -24,7 +24,7 @@
       },
     },
   },
-  prometheus+:: {
+  kubernetesControlPlane+:: {
     serviceMonitorKubelet+: {
       spec+: {
         endpoints: std.map(function(endpoint)
