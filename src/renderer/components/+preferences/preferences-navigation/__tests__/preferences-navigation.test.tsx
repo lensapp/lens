@@ -3,12 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DiContainer } from "@ogre-tools/injectable";
 import "@testing-library/jest-dom/extend-expect";
 import type { RenderResult } from "@testing-library/react";
 import { computed } from "mobx";
 import type { IComputedValue } from "mobx/dist/internal";
-import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import { noop } from "../../../../utils";
 import type { ApplicationBuilder } from "../../../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../test-utils/get-application-builder";
@@ -25,7 +23,6 @@ describe.only("preferences - navigation block with links", () => {
 
   describe("given in preferences, when rendered", () => {
     let renderer: RenderResult;
-    let di: DiContainer;
 
     describe("when general navigation items passed", () => {
       beforeEach(async () => {
@@ -60,8 +57,6 @@ describe.only("preferences - navigation block with links", () => {
         applicationBuilder.beforeRender(() => {
           applicationBuilder.preferences.navigate();
         });
-
-        di = getDiForUnitTesting({ doGeneralOverrides: true });
 
         renderer = await applicationBuilder.render();
       });
@@ -145,8 +140,6 @@ describe.only("preferences - navigation block with links", () => {
         applicationBuilder.beforeRender(() => {
           applicationBuilder.preferences.navigate();
         });
-  
-        di = getDiForUnitTesting({ doGeneralOverrides: true });
   
         renderer = await applicationBuilder.render();
       });
