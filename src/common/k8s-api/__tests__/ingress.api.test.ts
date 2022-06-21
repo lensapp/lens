@@ -5,6 +5,53 @@
 
 import { computeRuleDeclarations, Ingress } from "../endpoints";
 
+describe("Ingress", () => {
+  it("given no loadbalancer ingresses in status property, loadbalancers should be an empty array", () => {
+    const ingress = new Ingress({
+      apiVersion: "networking.k8s.io/v1",
+      kind: "Ingress",
+      metadata: {
+        name: "foo",
+        resourceVersion: "1",
+        uid: "bar",
+        namespace: "default",
+        selfLink: "/apis/networking.k8s.io/v1/ingresses/default/foo",
+      },
+      status: {
+        loadBalancer: {},
+      },
+    });
+
+    expect(ingress.getLoadBalancers()).toEqual([]);
+  });
+
+  it("given loadbalancer ingresses in status property, loadbalancers should be flat array of ip adresses and hostnames", () => {
+    const ingress = new Ingress({
+      apiVersion: "networking.k8s.io/v1",
+      kind: "Ingress",
+      metadata: {
+        name: "foo",
+        resourceVersion: "1",
+        uid: "bar",
+        namespace: "default",
+        selfLink: "/apis/networking.k8s.io/v1/ingresses/default/foo",
+      },
+      status: {
+        loadBalancer: {
+          ingress: [{
+            ip: "10.0.0.27",
+          },
+          {
+            hostname: "localhost",
+          }],
+        },
+      },
+    });
+
+    expect(ingress.getLoadBalancers()).toEqual(["10.0.0.27", "localhost"]);
+  });
+});
+
 describe("computeRuleDeclarations", () => {
   it("given no tls field, should format links as http://", () => {
     const ingress = new Ingress({
