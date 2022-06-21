@@ -32,6 +32,7 @@ const terminalPreferencesNavigationItemInjectable = getInjectable({
     return {
       id: "telemetry",
       label: "Telemetry",
+      parent: "general",
       navigate: navigateToPreferenceTab(route),
       isActive: routeIsActive,
 

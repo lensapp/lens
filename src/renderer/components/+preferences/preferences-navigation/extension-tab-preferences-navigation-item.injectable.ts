@@ -43,6 +43,7 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
             instantiate: () => ({
               id,
               label: tab.title,
+              parent: "general",
               orderNumber: tab.orderNumber || 100,
               navigate: () => navigateToExtensionPreferences(extension.sanitizedExtensionId, tab.id),
               isVisible: computed(() => true),

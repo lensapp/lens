@@ -27,6 +27,7 @@ const kubernetesPreferencesNavigationItemInjectable = getInjectable({
     return {
       id: "kubernetes",
       label: "Kubernetes",
+      parent: "general",
       navigate: navigateToPreferenceTab(route),
       isActive: routeIsActive,
       isVisible: computed(() => true),

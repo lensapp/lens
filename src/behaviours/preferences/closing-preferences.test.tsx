@@ -250,6 +250,7 @@ const testNavigationItemInjectable = getInjectable({
     return {
       id: "some-test-preference-navigation-item-id",
       label: "Some preference navigation item",
+      parent: "general",
       isActive: routeIsActive,
       isVisible: testRoute.isEnabled,
       navigate: navigateToPreferenceTab(testRoute),

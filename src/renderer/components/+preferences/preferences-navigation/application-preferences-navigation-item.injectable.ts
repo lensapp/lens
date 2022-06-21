@@ -24,6 +24,7 @@ const applicationPreferencesNavigationItemInjectable = getInjectable({
     return {
       id: "application",
       label: "App",
+      parent: "general",
       navigate: navigateToPreferenceTab(route),
       isActive: routeIsActive,
       isVisible: computed(() => true),

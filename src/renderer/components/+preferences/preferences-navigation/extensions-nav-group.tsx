@@ -8,7 +8,7 @@ import type { IComputedValue } from "mobx";
 import type { PreferenceNavigationItem } from "./preference-navigation-items.injectable";
 import { Icon } from "../../icon";
 import { PreferencesNavigationTab } from "./preference-navigation-tab";
-import extensionsPreferenceNavigationItemsInjectable from "./extension-preference-navigation-items.injectable";
+import preferenceNavigationItemsForGroupInjectable from "./preference-navigation-items-for-group.injectable";
 
 interface Dependencies {
   navigationItems: IComputedValue<PreferenceNavigationItem[]>;
@@ -45,11 +45,11 @@ function NonInjectedExtensionsNavGroup(props: Dependencies) {
 }
 
 export const ExtensionsNavGroup = withInjectables<Dependencies>(
-  NonInjectedExtensionsNavGroup, 
+  NonInjectedExtensionsNavGroup,
 
   {
     getProps: (di) => ({
-      navigationItems: di.inject(extensionsPreferenceNavigationItemsInjectable),
+      navigationItems: di.inject(preferenceNavigationItemsForGroupInjectable, "extensions"),
     }),
   },
 );

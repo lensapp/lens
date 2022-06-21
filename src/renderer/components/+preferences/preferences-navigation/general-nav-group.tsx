@@ -7,7 +7,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import type { PreferenceNavigationItem } from "./preference-navigation-items.injectable";
 import { PreferencesNavigationTab } from "./preference-navigation-tab";
-import generalPreferenceNavigationItemsInjectable from "./general-preference-navigation-items.injectable";
+import preferenceNavigationItemsForGroupInjectable from "./preference-navigation-items-for-group.injectable";
 
 interface Dependencies {
   navigationItems: IComputedValue<PreferenceNavigationItem[]>;
@@ -34,11 +34,11 @@ function NonInjectedGeneralNavGroup(props: Dependencies) {
 }
 
 export const GeneralNavGroup = withInjectables<Dependencies>(
-  NonInjectedGeneralNavGroup, 
+  NonInjectedGeneralNavGroup,
 
   {
     getProps: (di) => ({
-      navigationItems: di.inject(generalPreferenceNavigationItemsInjectable),
+      navigationItems: di.inject(preferenceNavigationItemsForGroupInjectable, "general"),
     }),
   },
 );

@@ -24,6 +24,7 @@ const terminalPreferencesNavigationItemInjectable = getInjectable({
     return {
       id: "terminal",
       label: "Terminal",
+      parent: "general",
       navigate: navigateToPreferenceTab(route),
       isActive: routeIsActive,
       isVisible: computed(() => true),

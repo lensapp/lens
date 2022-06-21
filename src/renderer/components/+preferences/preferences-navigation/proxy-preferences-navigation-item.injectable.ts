@@ -24,6 +24,7 @@ const proxyPreferencesNavigationItemInjectable = getInjectable({
     return {
       id: "proxy",
       label: "Proxy",
+      parent: "general",
       navigate: navigateToPreferenceTab(route),
       isActive: routeIsActive,
       isVisible: computed(() => true),
