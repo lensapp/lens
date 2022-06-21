@@ -12,8 +12,6 @@ import type { ClusterId } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { NavigateToClusterView } from "../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import navigateToClusterViewInjectable from "../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
-import type { ReadFileSync } from "../../common/fs/read-file-sync.injectable";
-import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
 import clusterManagerInjectable from "../../main/cluster-manager.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -37,43 +35,6 @@ describe("cluster connection status", () => {
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
 
-    const readFileSyncMock: ReadFileSync = (filePath) => {
-      expect(filePath).toBe("/some/file/path");
-
-      return JSON.stringify({
-        apiVersion: "v1",
-        clusters: [{
-          name: "minikube",
-          cluster: {
-            server: "https://192.168.64.3:8443",
-          },
-        }],
-        contexts: [
-          {
-            context: {
-              cluster: "minikube",
-              user: "minikube",
-            },
-            name: "minikube",
-          },
-          {
-            context: {
-              cluster: "minikube",
-              user: "minikube",
-            },
-            name: "minikube-2",
-          },
-        ],
-        users: [{
-          name: "minikube",
-        }],
-        kind: "Config",
-        preferences: {},
-      });
-    };
-
-    applicationBuilder.dis.rendererDi.override(readFileSyncInjectable, () => readFileSyncMock);
-    applicationBuilder.dis.mainDi.override(readFileSyncInjectable, () => readFileSyncMock);
     applicationBuilder.dis.mainDi.override(clusterManagerInjectable, () => ({}));
     applicationBuilder.dis.mainDi.override(createKubeconfigManagerInjectable, () => () => ({} as KubeconfigManager));
     applicationBuilder.dis.mainDi.override(createKubectlInjectable, () => () => ({} as Kubectl));
@@ -103,7 +64,7 @@ describe("cluster connection status", () => {
         id: "some-cluster-id",
         kubeConfigPath: "/some/file/path",
       }, {
-        clusterServerUrl: "https://localhost:1234",
+        clusterServerUrl: "https://192.168.64.3:8443",
       });
       cluster.activate = jest.fn(); // override for test
 
@@ -112,7 +73,7 @@ describe("cluster connection status", () => {
         id: "some-cluster-id-2",
         kubeConfigPath: "/some/file/path",
       }, {
-        clusterServerUrl: "https://localhost:1234",
+        clusterServerUrl: "https://192.168.64.3:8443",
       });
       cluster2.activate = jest.fn(); // override for test
 
