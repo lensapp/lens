@@ -7,9 +7,9 @@ import { computed } from "mobx";
 import { frontEndRouteInjectionToken } from "../../../front-end-route-injection-token";
 import type { Route } from "../../../front-end-route-injection-token";
 
-interface ExtensionPreferenceRouteParams {
+export interface ExtensionPreferenceRouteParams {
   extensionId: string;
-  tabId?: string;
+  tabId?: string | undefined;
 }
 
 const extensionPreferencesRouteInjectable = getInjectable({

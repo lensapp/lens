@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { SetRequired } from "type-fest";
 import type { Route } from "./front-end-route-injection-token";
 
 type RequiredKeys<T> = Exclude<
@@ -37,9 +38,9 @@ export type NavigateToRouteOptions<TParameter> = Parameters<TParameter> & {
   withoutAffectingBackButton?: boolean;
 };
 
-export type NavigateToRoute = <TRoute extends Route<TParameter>, TParameter extends object | void>(
+export type NavigateToRoute = <TRoute extends Route<object | void>>(
   route: TRoute,
-  options?: NavigateToRouteOptions<TParameter>,
+  options?: NavigateToRouteOptions<SetRequired<TRoute, "parameterSignature">["parameterSignature"]>,
 ) => void;
 
 export const navigateToRouteInjectionToken = getInjectionToken<NavigateToRoute>(
