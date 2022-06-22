@@ -91,11 +91,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.NotificationsStore/</loc>
-         <lastmod>2022-06-22</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.PageLayout/</loc>
          <lastmod>2022-06-22</lastmod>
          <changefreq>daily</changefreq>
@@ -536,11 +531,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/enums/Renderer.Component.NotificationStatus/</loc>
-         <lastmod>2022-06-22</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/enums/Renderer.Component.TooltipPosition/</loc>
          <lastmod>2022-06-22</lastmod>
          <changefreq>daily</changefreq>
@@ -966,11 +956,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.Notification/</loc>
-         <lastmod>2022-06-22</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.PieChartData/</loc>
          <lastmod>2022-06-22</lastmod>
          <changefreq>daily</changefreq>
@@ -1217,6 +1202,11 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.EventBus/</loc>
+         <lastmod>2022-06-22</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Proxy/</loc>
          <lastmod>2022-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>

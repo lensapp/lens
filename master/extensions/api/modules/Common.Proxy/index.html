@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/enums/Renderer.Component.NotificationStatus/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Proxy/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Enumeration: NotificationStatus - Lens Extension Development</title>
+        <title>Namespace: Proxy - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#enumeration-notificationstatus" class="md-skip">
+        <a href="#namespace-proxy" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Enumeration: NotificationStatus
+              Namespace: Proxy
             
           </span>
         </div>
@@ -720,8 +720,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#enumeration-members" class="md-nav__link">
-    Enumeration Members
+  <a href="#functions" class="md-nav__link">
+    Functions
   </a>
   
 </li>
@@ -732,30 +732,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enumeration-members_1" class="md-nav__link">
-    Enumeration Members
+  <a href="#functions_1" class="md-nav__link">
+    Functions
   </a>
   
-    <nav class="md-nav" aria-label="Enumeration Members">
+    <nav class="md-nav" aria-label="Functions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#error" class="md-nav__link">
-    ERROR
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#info" class="md-nav__link">
-    INFO
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ok" class="md-nav__link">
-    OK
+  <a href="#resolvesystemproxy" class="md-nav__link">
+    resolveSystemProxy
   </a>
   
 </li>
@@ -779,24 +765,37 @@
                 
                 
                 
-                <h1 id="enumeration-notificationstatus">Enumeration: NotificationStatus<a class="headerlink" href="#enumeration-notificationstatus" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.NotificationStatus</p>
+                <h1 id="namespace-proxy">Namespace: Proxy<a class="headerlink" href="#namespace-proxy" title="Permanent link">#</a></h1>
+<p><a href="../Common/">Common</a>.Proxy</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="enumeration-members">Enumeration Members<a class="headerlink" href="#enumeration-members" title="Permanent link">#</a></h3>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#error">ERROR</a></li>
-<li><a href="./#info">INFO</a></li>
-<li><a href="./#ok">OK</a></li>
+<li><a href="./#resolvesystemproxy">resolveSystemProxy</a></li>
 </ul>
-<h2 id="enumeration-members_1">Enumeration Members<a class="headerlink" href="#enumeration-members_1" title="Permanent link">#</a></h2>
-<h3 id="error">ERROR<a class="headerlink" href="#error" title="Permanent link">#</a></h3>
-<p>• <strong>ERROR</strong></p>
-<hr />
-<h3 id="info">INFO<a class="headerlink" href="#info" title="Permanent link">#</a></h3>
-<p>• <strong>INFO</strong></p>
-<hr />
-<h3 id="ok">OK<a class="headerlink" href="#ok" title="Permanent link">#</a></h3>
-<p>• <strong>OK</strong></p>
+<h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
+<h3 id="resolvesystemproxy">resolveSystemProxy<a class="headerlink" href="#resolvesystemproxy" title="Permanent link">#</a></h3>
+<p>▸ <strong>resolveSystemProxy</strong>(<code>url</code>): <code>Promise</code>&lt;<code>string</code>></p>
+<p>Resolves URL-specific proxy information from system. See more here: https://www.electronjs.org/docs/latest/api/session#sesresolveproxyurl</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>url</code></td>
+<td align="left"><code>string</code></td>
+<td align="left">The URL for proxy information</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>string</code>></p>
+<p>Promise for proxy information as string</p>
                 
               
               
