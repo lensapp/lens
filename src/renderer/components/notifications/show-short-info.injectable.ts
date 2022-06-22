@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ShowNotification } from "./notifications.store";
+import type { ShowNotification } from "./notifications";
 import showInfoNotificationInjectable from "./show-info-notification.injectable";
 
 const showShortInfoNotificationInjectable = getInjectable({
