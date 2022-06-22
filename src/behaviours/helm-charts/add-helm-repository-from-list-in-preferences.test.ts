@@ -14,6 +14,7 @@ import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
+import type { ExecFile } from "../../main/child-process/exec-file.injectable";
 import execFileInjectable from "../../main/child-process/exec-file.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
@@ -26,10 +27,8 @@ describe("add helm repository from list in preferences", () => {
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
-  let execFileMock: AsyncFnMock<
-    ReturnType<typeof execFileInjectable["instantiate"]>
-  >;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
+  let execFileMock: AsyncFnMock<ExecFile>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
   let callForPublicHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
 
   beforeEach(async () => {

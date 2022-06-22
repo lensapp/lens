@@ -15,6 +15,7 @@ import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
+import type { ExecFile } from "../../main/child-process/exec-file.injectable";
 import execFileInjectable from "../../main/child-process/exec-file.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
@@ -26,7 +27,7 @@ describe("listing active helm repositories in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
   let readYamlFileMock: AsyncFnMock<ReadYamlFile>;
-  let execFileMock: AsyncFnMock<ReturnType<typeof execFileInjectable["instantiate"]>>;
+  let execFileMock: AsyncFnMock<ExecFile>;
   let loggerStub: Logger;
   let showErrorNotificationMock: jest.Mock;
 

@@ -4,7 +4,6 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { ChildProcess } from "child_process";
 import path from "path";
 import directoryForKubeConfigsInjectable from "../../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import createAuthorizationReviewInjectable from "../../../../common/cluster/authorization-review.injectable";
@@ -91,36 +90,20 @@ describe("ResourceApplier", () => {
     });
 
     it("should call unlink, if everything passes", async () => {
-      execFile.mockImplementation(() => Object.assign(
-        Promise.resolve({
-          stdout: "I am some output",
-          stderr: "",
-        }),
-        {
-          child: {} as ChildProcess,
-        },
-      ));
+      execFile.mockImplementation(async () => "I am some output");
 
       await expect(resourceApplier.apply({})).resolves.toBeTruthy();
       expect(unlink).toBeCalledWith("some/temp/file");
     });
 
     it("should return the stdout of execFile", async () => {
-      execFile.mockImplementation(() => Object.assign(
-        Promise.resolve({
-          stdout: "I am some output",
-          stderr: "",
-        }),
-        {
-          child: {} as ChildProcess,
-        },
-      ));
+      execFile.mockImplementation(async () => "I am some output");
 
       expect(await resourceApplier.apply({})).toBe("I am some output");
     });
 
     it("should build up a correct set of arguments", async () => {
-      execFile.mockImplementation((path, args) => {
+      execFile.mockImplementation(async (path, args) => {
         expect(args).toEqual([
           "apply",
           "--kubeconfig",
@@ -131,15 +114,7 @@ describe("ResourceApplier", () => {
           "some/temp/file",
         ]);
 
-        return Object.assign(
-          Promise.resolve({
-            stdout: "I am some output",
-            stderr: "",
-          }),
-          {
-            child: {} as ChildProcess,
-          },
-        );
+        return "I am some output";
       });
 
       await resourceApplier.apply({});
@@ -184,17 +159,7 @@ describe("ResourceApplier", () => {
         onlyOnce(contents);
       });
 
-      execFile.mockImplementation(() => {
-        return Object.assign(
-          Promise.resolve({
-            stdout: "I am some output",
-            stderr: "",
-          }),
-          {
-            child: {} as ChildProcess,
-          },
-        );
-      });
+      execFile.mockImplementation(async () => "I am some output");
 
       await expect(resourceApplier.kubectlApplyAll([...resources])).resolves.toBeTruthy();
       expect(removeDir).toBeCalledWith("some/temp/dir");
@@ -202,7 +167,7 @@ describe("ResourceApplier", () => {
     });
 
     it("should use resonable arguments", async () => {
-      execFile.mockImplementation((path, args) => {
+      execFile.mockImplementation(async (path, args) => {
         expect(args).toEqual([
           "apply",
           "--kubeconfig",
@@ -213,15 +178,7 @@ describe("ResourceApplier", () => {
           "some/temp/dir",
         ]);
 
-        return Object.assign(
-          Promise.resolve({
-            stdout: "I am some output",
-            stderr: "",
-          }),
-          {
-            child: {} as ChildProcess,
-          },
-        );
+        return "I am some output";
       });
 
       await expect(resourceApplier.kubectlApplyAll(["foo", "bar"])).resolves.toBeTruthy();

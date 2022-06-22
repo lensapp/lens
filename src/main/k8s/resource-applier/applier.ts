@@ -75,9 +75,7 @@ export class ResourceApplier implements K8sResourceApplier {
     );
 
     try {
-      const { stdout } = await this.dependencies.execFile(kubectlPath, args);
-
-      return stdout;
+      return await this.dependencies.execFile(kubectlPath, args);
     } catch (error) {
       if (isObject(error) && hasTypedProperty(error, "stderr", isString)) {
         throw error.stderr;
@@ -114,9 +112,8 @@ export class ResourceApplier implements K8sResourceApplier {
 
     try {
       await this.dependencies.writeFile(fileName, content);
-      const { stdout } = await this.dependencies.execFile(kubectlPath, args, { env: execEnv });
 
-      return stdout;
+      return await this.dependencies.execFile(kubectlPath, args, { env: execEnv });
     } catch (error) {
       if (isObject(error) && hasTypedProperty(error, "stderr", isString)) {
         throw error.stderr;
@@ -155,9 +152,7 @@ export class ResourceApplier implements K8sResourceApplier {
 
       this.dependencies.logger.info(`[RESOURCE-APPLIER] Executing ${kubectlPath}`, { args });
 
-      const { stdout } = await this.dependencies.execFile(kubectlPath, args);
-
-      return stdout;
+      return await this.dependencies.execFile(kubectlPath, args);
     } catch (error) {
       this.dependencies.logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
 

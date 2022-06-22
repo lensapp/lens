@@ -3,14 +3,25 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { ExecFileOptions, ExecFileOptionsWithStringEncoding } from "child_process";
 import { execFile } from "child_process";
 import { promisify } from "util";
 
-export type ExecFile = typeof execFile["__promisify__"];
+export interface ExecFile {
+  (file: string, args?: readonly string[], opts?: ExecFileOptionsWithStringEncoding | ExecFileOptions): Promise<string>;
+}
 
 const execFileInjectable = getInjectable({
   id: "exec-file",
-  instantiate: (): ExecFile => promisify(execFile),
+  instantiate: (): ExecFile => {
+    const asyncExecFile = promisify(execFile);
+
+    return async (file) => {
+      const { stdout } = await asyncExecFile(file);
+
+      return stdout;
+    };
+  },
 });
 
 export default execFileInjectable;

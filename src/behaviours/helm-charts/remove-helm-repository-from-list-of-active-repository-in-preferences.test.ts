@@ -13,6 +13,7 @@ import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/ge
 import type { HelmRepo } from "../../common/helm/helm-repo";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
+import type { ExecFile } from "../../main/child-process/exec-file.injectable";
 import execFileInjectable from "../../main/child-process/exec-file.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
@@ -23,10 +24,8 @@ jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
 describe("remove helm repository from list of active repositories in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
-  let execFileMock: AsyncFnMock<
-    ReturnType<typeof execFileInjectable["instantiate"]>
-  >;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
+  let execFileMock: AsyncFnMock<ExecFile>;
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();

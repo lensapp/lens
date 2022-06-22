@@ -17,9 +17,9 @@ const execHelmInjectable = getInjectable({
 
     return async (...args: string[]): Promise<AsyncResult<string>> => {
       try {
-        const { stdout } = await execFile(helmBinaryPath, args);
+        const response = await execFile(helmBinaryPath, args);
 
-        return { callWasSuccessful: true, response: stdout };
+        return { callWasSuccessful: true, response };
       } catch (error) {
         return { callWasSuccessful: false, error: getErrorMessage(error) };
       }
