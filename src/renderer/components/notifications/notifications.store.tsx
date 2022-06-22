@@ -5,7 +5,6 @@
 
 import type React from "react";
 import { action, observable, makeObservable } from "mobx";
-import type { Disposer } from "../../utils";
 import { autoBind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
@@ -19,9 +18,6 @@ export enum NotificationStatus {
   ERROR = "error",
   INFO = "info",
 }
-
-export type ShowNotification = (message: NotificationMessage, opts?: CreateNotificationOptions) => Disposer;
-export type ShowCheckedErrorNotification = (message: unknown, fallback: string, opts?: CreateNotificationOptions) => Disposer;
 
 export interface CreateNotificationOptions {
   id?: NotificationId;

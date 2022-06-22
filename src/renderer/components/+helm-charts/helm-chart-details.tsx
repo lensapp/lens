@@ -19,7 +19,7 @@ import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createInstallChartTabInjectable from "../dock/install-chart/create-install-chart-tab.injectable";
-import type { ShowCheckedErrorNotification } from "../notifications";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import type { SingleValue } from "react-select";
 import AbortController from "abort-controller";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
