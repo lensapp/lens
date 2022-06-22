@@ -23,7 +23,7 @@ import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter, map, matches } from "lodash/fp";
+import { flatMap, compact, join, get, filter, map, matches, last } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
@@ -41,6 +41,7 @@ import startFrameInjectable from "../../start-frame/start-frame.injectable";
 import type { NamespaceStore } from "../+namespaces/store";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
+import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 import { Notifications } from "../notifications/notifications";
@@ -48,7 +49,6 @@ import broadcastThatRootFrameIsRenderedInjectable from "../../frames/root-frame/
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
-import type { TrayMenuItem } from "../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
 import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
 import assert from "assert";
 import { openMenu } from "react-select-event";
@@ -59,7 +59,6 @@ import type { Route } from "../../../common/front-end-routing/front-end-route-in
 import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
-import trayMenuItemsInjectable from "../../../main/tray/tray-menu-item/tray-menu-items.injectable";
 import type { LensExtension } from "../../../extensions/lens-extension";
 
 import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
@@ -92,7 +91,7 @@ export interface ApplicationBuilder {
 
   tray: {
     click: (id: string) => Promise<void>;
-    get: (id: string) => TrayMenuItem | null;
+    get: (id: string) => MinimalTrayMenuItem | null;
     getIconPath: () => string;
   };
 
@@ -207,6 +206,8 @@ export const getApplicationBuilder = () => {
 
   let trayMenuIconPath: string;
 
+  const traySetMenuItemsMock = jest.fn<any, [MinimalTrayMenuItem[]]>();
+
   mainDi.override(electronTrayInjectable, () => ({
     start: () => {
       const iconPaths = mainDi.inject(trayIconPathsInjectable);
@@ -214,7 +215,7 @@ export const getApplicationBuilder = () => {
       trayMenuIconPath = iconPaths.normal;
     },
     stop: () => {},
-    setMenuItems: () => {},
+    setMenuItems: traySetMenuItemsMock,
     setIconPath: (path) => {
       trayMenuIconPath = path;
     },
@@ -293,14 +294,21 @@ export const getApplicationBuilder = () => {
 
     tray: {
       get: (id: string) => {
-        const trayMenuItems = mainDi.inject(trayMenuItemsInjectable).get();
+        const lastCall = last(traySetMenuItemsMock.mock.calls);
 
-        return trayMenuItems.find(matches({ id })) ?? null;
+        assert(lastCall);
+
+        return lastCall[0].find(matches({ id })) ?? null;
       },
+
       getIconPath: () => trayMenuIconPath,
 
       click: async (id: string) => {
-        const trayMenuItems = mainDi.inject(trayMenuItemsInjectable).get();
+        const lastCall = last(traySetMenuItemsMock.mock.calls);
+
+        assert(lastCall);
+
+        const trayMenuItems = lastCall[0];
 
         const menuItem = trayMenuItems.find(matches({ id })) ?? null;
 
@@ -315,7 +323,7 @@ export const getApplicationBuilder = () => {
           throw new Error(`Tried to click tray menu item with ID ${id} which does not exist. Available IDs are: "${availableIds}"`);
         }
 
-        if (!menuItem.enabled.get()) {
+        if (!menuItem.enabled) {
           throw new Error(`Tried to click tray menu item with ID ${id} which is disabled.`);
         }
 

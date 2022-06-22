@@ -5,26 +5,40 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
 import { reaction } from "mobx";
+import type { MinimalTrayMenuItem } from "../electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../electron-tray/electron-tray.injectable";
 import trayMenuItemsInjectable from "../tray-menu-item/tray-menu-items.injectable";
+import type { TrayMenuItem } from "../tray-menu-item/tray-menu-item-injection-token";
 
 const reactiveTrayMenuItemsInjectable = getInjectable({
   id: "reactive-tray-menu-items",
 
   instantiate: (di) => {
     const electronTray = di.inject(electronTrayInjectable);
-    const trayMenuItems = di.inject(trayMenuItemsInjectable);
+    const reactiveItems = di.inject(trayMenuItemsInjectable);
 
-    return getStartableStoppable("reactive-tray-menu-items", () => (
+    return getStartableStoppable("reactive-tray-menu-items", () =>
       reaction(
-        () => trayMenuItems.get(),
-        electronTray.setMenuItems,
+        (): MinimalTrayMenuItem[] => reactiveItems.get().map(toNonReactiveItem),
+
+        (nonReactiveItems) => electronTray.setMenuItems(nonReactiveItems),
+
         {
           fireImmediately: true,
         },
-      )
-    ));
+      ),
+    );
   },
 });
 
 export default reactiveTrayMenuItemsInjectable;
+
+const toNonReactiveItem = (item: TrayMenuItem): MinimalTrayMenuItem => ({
+  id: item.id,
+  parentId: item.parentId,
+  click: item.click,
+  tooltip: item.tooltip,
+  separator: item.separator,
+  enabled: item.enabled.get(),
+  label: item.label?.get(),
+});
