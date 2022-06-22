@@ -99,6 +99,7 @@ import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-rel
 import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -124,6 +125,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(hotbarStoreInjectable, () => ({ load: () => {} }));

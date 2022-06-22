@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "../../logger.injectable";
+import logErrorInjectable from "../../log-error.injectable";
 import { isPromise } from "../is-promise/is-promise";
 
 export type WithErrorLoggingFor = (
@@ -16,30 +16,34 @@ const withErrorLoggingInjectable = getInjectable({
   id: "with-error-logging",
 
   instantiate: (di): WithErrorLoggingFor => {
-    const logger = di.inject(loggerInjectable);
+    const logError = di.inject(logErrorInjectable);
 
     return (getErrorMessage) =>
       (toBeDecorated) =>
         (...args) => {
+          let returnValue: ReturnType<typeof toBeDecorated>;
+
           try {
-            const returnValue = toBeDecorated(...args);
-
-            if (isPromise(returnValue)) {
-              returnValue.catch((e) => {
-                const errorMessage = getErrorMessage(e);
-
-                logger.error(errorMessage, e);
-              });
-            }
-
-            return returnValue;
+            returnValue = toBeDecorated(...args);
           } catch (e) {
             const errorMessage = getErrorMessage(e);
 
-            logger.error(errorMessage, e);
+            logError(errorMessage, e);
 
             throw e;
           }
+
+          if (isPromise(returnValue)) {
+            return returnValue.catch((e: unknown) => {
+              const errorMessage = getErrorMessage(e);
+
+              logError(errorMessage, e);
+
+              throw e;
+            });
+          }
+
+          return returnValue;
         };
   },
 });

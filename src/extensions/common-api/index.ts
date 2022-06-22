@@ -10,6 +10,8 @@ import * as Store from "./stores";
 import * as Util from "./utils";
 import * as Catalog from "./catalog";
 import * as Types from "./types";
+import * as Proxy from "./proxy";
+
 import logger from "../../common/logger";
 
 export {
@@ -20,4 +22,5 @@ export {
   Types,
   Util,
   logger,
+  Proxy,
 };
