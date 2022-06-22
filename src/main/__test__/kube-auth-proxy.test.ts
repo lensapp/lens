@@ -3,39 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    printf: jest.fn(),
-    padLevels: jest.fn(),
-    ms: jest.fn(),
-    splat: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue({
-    silly: jest.fn(),
-    debug: jest.fn(),
-    log: jest.fn(),
-    info: jest.fn(),
-    error: jest.fn(),
-    crit: jest.fn(),
-  }),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
-
-jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
 
 import type { Cluster } from "../../common/cluster/cluster";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
-import { broadcastMessage } from "../../common/ipc";
 import type { ChildProcess } from "child_process";
 import { spawn } from "child_process";
 import { Kubectl } from "../kubectl/kubectl";
@@ -59,10 +31,11 @@ import directoryForTempInjectable from "../../common/app-paths/directory-for-tem
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
+import type { EmitClusterConnectionUpdate } from "../cluster/emit-connection-update.injectable";
+import emitClusterConnectionUpdateInjectable from "../cluster/emit-connection-update.injectable";
 
 console = new Console(stdout, stderr);
 
-const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcastMessage>;
 const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
 const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilUsed>;
 const clusterServerUrl = "https://192.168.64.3:8443";
@@ -70,6 +43,7 @@ const clusterServerUrl = "https://192.168.64.3:8443";
 describe("kube auth proxy tests", () => {
   let createCluster: CreateCluster;
   let createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
+  let mockEmitClusterConnectionUpdate: jest.MockedFunction<EmitClusterConnectionUpdate>;
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -102,9 +76,12 @@ describe("kube auth proxy tests", () => {
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
+    mockEmitClusterConnectionUpdate = jest.fn();
+
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 
+    di.override(emitClusterConnectionUpdateInjectable, () => mockEmitClusterConnectionUpdate);
     di.override(spawnInjectable, () => mockSpawn);
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
@@ -233,34 +210,49 @@ describe("kube auth proxy tests", () => {
       await proxy.run();
       listeners.emit("error", { message: "foobarbat" });
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "foobarbat", isError: true });
+      expect(mockEmitClusterConnectionUpdate).toBeCalledWith({
+        clusterId: "some-cluster-id",
+        update: { message: "foobarbat", isError: true },
+      });
     });
 
     it("should call spawn and broadcast exit", async () => {
       await proxy.run();
       listeners.emit("exit", 0);
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "proxy exited with code: 0", isError: false });
+      expect(mockEmitClusterConnectionUpdate).toBeCalledWith({
+        clusterId: "some-cluster-id",
+        update: { message: "proxy exited with code: 0", isError: false },
+      });
     });
 
     it("should call spawn and broadcast errors from stderr", async () => {
       await proxy.run();
       listeners.emit("stderr/data", "an error");
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "an error", isError: true });
+      expect(mockEmitClusterConnectionUpdate).toBeCalledWith({
+        clusterId: "some-cluster-id",
+        update: { message: "an error", isError: true },
+      });
     });
 
     it("should call spawn and broadcast stdout serving info", async () => {
       await proxy.run();
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "Authentication proxy started", isError: false });
+      expect(mockEmitClusterConnectionUpdate).toBeCalledWith({
+        clusterId: "some-cluster-id",
+        update: { message: "Authentication proxy started", isError: false },
+      });
     });
 
     it("should call spawn and broadcast stdout other info", async () => {
       await proxy.run();
       listeners.emit("stdout/data", "some info");
 
-      expect(mockBroadcastIpc).toBeCalledWith("cluster:connection-update", "some-cluster-id", { message: "some info", isError: false });
+      expect(mockEmitClusterConnectionUpdate).toBeCalledWith({
+        clusterId: "some-cluster-id",
+        update: { message: "some info", isError: false },
+      });
     });
   });
 });

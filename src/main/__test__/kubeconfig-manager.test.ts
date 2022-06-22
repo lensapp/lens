@@ -23,6 +23,7 @@ import directoryForUserDataInjectable from "../../common/app-paths/directory-for
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
+import fsInjectable from "../../common/fs/fs.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -42,6 +43,7 @@ describe("kubeconfig manager tests", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+    di.permitSideEffects(fsInjectable); // still using mockFs
 
     loggerMock = {
       warn: jest.fn(),

@@ -12,7 +12,6 @@ import { apiKubePrefix } from "../common/vars";
 import { getClusterIdFromHost, isErrnoException } from "../common/utils";
 import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
-import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { ClusterId } from "../common/cluster-types";
@@ -74,9 +73,6 @@ export class ClusterManager {
         this.updateEntityStatus(this.dependencies.entityRegistry.findById(change.newValue) as KubernetesCluster);
       }
     });
-
-    ipcMainOn("network:offline", this.onNetworkOffline);
-    ipcMainOn("network:online", this.onNetworkOnline);
   });
 
   @action
@@ -235,7 +231,7 @@ export class ClusterManager {
     }
   }
 
-  protected onNetworkOffline = () => {
+  onNetworkOffline = () => {
     logger.info(`${logPrefix} network is offline`);
     this.dependencies.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
@@ -246,7 +242,7 @@ export class ClusterManager {
     });
   };
 
-  protected onNetworkOnline = () => {
+  onNetworkOnline = () => {
     logger.info(`${logPrefix} network is online`);
     this.dependencies.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {

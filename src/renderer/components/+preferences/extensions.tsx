@@ -7,21 +7,23 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
+import type { ExtensionPreferenceModel } from "./extension-preference-model.injectable";
 import extensionPreferencesModelInjectable from "./extension-preference-model.injectable";
 import { ExtensionSettings } from "./extension-settings";
 import { Preferences } from "./preferences";
 
 interface Dependencies {
-  model: IComputedValue<{
-    preferenceItems: RegisteredAppPreference[];
-    extensionName?: string;
-    preferencePageTitle?: string;
-  }>;
+  model: IComputedValue<ExtensionPreferenceModel | null>;
 }
 
-const NonInjectedExtensions = ({ model }: Dependencies) => {
-  const { extensionName, preferenceItems, preferencePageTitle } = model.get();
+const NonInjectedExtensions = observer(({ model }: Dependencies) => {
+  const data = model.get();
+
+  if (!data) {
+    return null;
+  }
+
+  const { extensionName, preferenceItems, preferencePageTitle } = data;
 
   return (
     <Preferences data-testid="extension-preferences-page">
@@ -48,14 +50,10 @@ const NonInjectedExtensions = ({ model }: Dependencies) => {
       </section>
     </Preferences>
   );
-};
+});
 
-export const Extensions = withInjectables<Dependencies>(
-  observer(NonInjectedExtensions),
-
-  {
-    getProps: (di) => ({
-      model: di.inject(extensionPreferencesModelInjectable),
-    }),
-  },
-);
+export const Extensions = withInjectables<Dependencies>(NonInjectedExtensions, {
+  getProps: (di) => ({
+    model: di.inject(extensionPreferencesModelInjectable),
+  }),
+});

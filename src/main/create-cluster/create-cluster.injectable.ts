@@ -15,7 +15,6 @@ import listNamespacesInjectable from "../../common/cluster/list-namespaces.injec
 import loggerInjectable from "../../common/logger.injectable";
 import detectorRegistryInjectable from "../cluster-detectors/detector-registry.injectable";
 import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
-import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
 import emitClusterConnectionUpdateInjectable from "../cluster/emit-connection-update.injectable";
 
 const createClusterInjectable = getInjectable({
@@ -32,7 +31,6 @@ const createClusterInjectable = getInjectable({
       logger: di.inject(loggerInjectable),
       detectorRegistry: di.inject(detectorRegistryInjectable),
       createVersionDetector: di.inject(createVersionDetectorInjectable),
-      readFileSync: di.inject(readFileSyncInjectable),
       emitClusterConnectionUpdate: di.inject(emitClusterConnectionUpdateInjectable),
     };
 

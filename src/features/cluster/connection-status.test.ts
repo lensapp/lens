@@ -4,15 +4,11 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
-import type { ObservableMap } from "mobx";
-import { observable } from "mobx";
 import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import clusterStoreInjectable from "../../common/cluster-store/cluster-store.injectable";
-import type { ClusterId } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { NavigateToClusterView } from "../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import navigateToClusterViewInjectable from "../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
-import clusterManagerInjectable from "../../main/cluster-manager.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import createClusterInjectable from "../../main/create-cluster/create-cluster.injectable";
@@ -25,7 +21,6 @@ import type { ContextHandler } from "../../main/context-handler/context-handler"
 
 describe("cluster connection status", () => {
   let clusterStore: ClusterStore;
-  let clusters: ObservableMap<ClusterId, Cluster>;
   let cluster: Cluster;
   let cluster2: Cluster;
   let applicationBuilder: ApplicationBuilder;
@@ -35,26 +30,12 @@ describe("cluster connection status", () => {
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.dis.mainDi.override(clusterManagerInjectable, () => ({}));
     applicationBuilder.dis.mainDi.override(createKubeconfigManagerInjectable, () => () => ({} as KubeconfigManager));
     applicationBuilder.dis.mainDi.override(createKubectlInjectable, () => () => ({} as Kubectl));
     applicationBuilder.dis.mainDi.override(createContextHandlerInjectable, () => () => ({} as ContextHandler));
 
-    applicationBuilder.beforeApplicationStart(() => {
-      clusters = observable.map();
-      clusterStore = ({
-        clusters,
-        get clustersList() {
-          return [...clusters.values()];
-        },
-        getById: (id) => clusters.get(id),
-      }) as ClusterStore;
-
-      applicationBuilder.dis.mainDi.override(clusterStoreInjectable, () => clusterStore);
-      applicationBuilder.dis.rendererDi.override(clusterStoreInjectable, () => clusterStore);
-    });
-
     applicationBuilder.beforeRender(() => {
+      clusterStore = applicationBuilder.dis.mainDi.inject(clusterStoreInjectable);
       navigateToClusterView = applicationBuilder.dis.rendererDi.inject(navigateToClusterViewInjectable);
 
       const createCluster = applicationBuilder.dis.mainDi.inject(createClusterInjectable);
@@ -77,7 +58,7 @@ describe("cluster connection status", () => {
       });
       cluster2.activate = jest.fn(); // override for test
 
-      clusters.replace([
+      clusterStore.clusters.replace([
         [cluster.id, cluster],
         [cluster2.id, cluster2],
       ]);

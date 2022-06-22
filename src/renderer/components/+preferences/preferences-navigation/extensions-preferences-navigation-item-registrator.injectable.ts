@@ -8,7 +8,6 @@ import extensionPreferencesRouteInjectable from "../../../../common/front-end-ro
 import navigateToExtensionPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/extension/navigate-to-extension-preferences.injectable";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
-import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import routePathParametersInjectable from "../../../routes/route-path-parameters.injectable";
 import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
 
@@ -28,9 +27,12 @@ const extensionPreferencesNavigationItemRegistratorInjectable = getInjectable({
       );
       const isVisible = computed(() => extensionHasPreferences && extensionHasGeneralPreferences);
       const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
-      const pathParameters = di.inject(routePathParametersInjectable, extensionRoute);
-      const routeIsActive = di.inject(routeIsActiveInjectable, extensionRoute);
-      const isActive = computed(() => routeIsActive.get() && pathParameters.get().extensionId === extension.sanitizedExtensionId);
+      const pathParameters = di.inject(routePathParametersInjectable)(extensionRoute);
+      const isActive = computed(() => {
+        const params = pathParameters.get();
+
+        return params !== null && params.extensionId === extension.sanitizedExtensionId;
+      });
       const id = `extension-preferences-navigation-item-${extension.sanitizedExtensionId}`;
 
       const injectable = getInjectable({

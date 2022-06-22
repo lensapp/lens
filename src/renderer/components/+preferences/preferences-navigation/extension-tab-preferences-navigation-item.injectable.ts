@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { map } from "lodash/fp";
 
-import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
 
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
@@ -23,19 +22,20 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
   instantiate: (di) => {
     return (ext: LensExtension) => {
       const extension = ext as LensRendererExtension;
-      const navigateToExtensionPreferences = di.inject(
-        navigateToExtensionPreferencesInjectable,
-      );
+      const navigateToExtensionPreferences = di.inject(navigateToExtensionPreferencesInjectable);
       const route = di.inject(extensionPreferencesRouteInjectable);
-      const routeIsActive = di.inject(routeIsActiveInjectable, route);
-      const pathParameters = di.inject(routePathParametersInjectable, route);
+      const pathParameters = di.inject(routePathParametersInjectable)(route);
 
       return pipeline(
         extension.appPreferenceTabs,
 
         map((tab) => {
           const id = `extension-${extension.sanitizedExtensionId}-nav-item-${tab.id}`;
-          const isActive = computed(() => routeIsActive.get() && pathParameters.get().tabId === tab.id);
+          const isActive = computed(() => {
+            const params = pathParameters.get();
+
+            return params !== null && params.tabId === tab.id;
+          });
 
           return getInjectable({
             id,

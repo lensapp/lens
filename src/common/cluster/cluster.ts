@@ -25,7 +25,6 @@ import type { CanI } from "./authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
 import assert from "assert";
 import type { Logger } from "../logger";
-import type { ReadFileSync } from "../fs/read-file-sync.injectable";
 import type { EmitClusterConnectionUpdate } from "../../main/cluster/emit-connection-update.injectable";
 import type { CreateKubectl } from "../../main/kubectl/create-kubectl.injectable";
 
@@ -40,9 +39,6 @@ export interface ClusterDependencies {
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
   emitClusterConnectionUpdate: EmitClusterConnectionUpdate;
-
-  // TODO: creating a Cluster should not have such wild side effects
-  readFileSync: ReadFileSync;
 }
 
 /**
