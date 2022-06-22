@@ -12,13 +12,12 @@ import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.ap
 import { HelmChartDetails } from "./helm-chart-details";
 import { ItemListLayout } from "../item-object-list/list-layout";
 import type { IComputedValue } from "mobx";
-import { observable } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import helmChartsRouteParametersInjectable from "./helm-charts-route-parameters.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
-import HelmLogoPlaceholder from "./helm-placeholder.svg";
+import { HelmChartIcon } from "./icon";
 
 enum columnId {
   name = "name",
@@ -39,8 +38,6 @@ interface Dependencies {
 
 @observer
 class NonInjectedHelmCharts extends Component<Dependencies> {
-  private readonly imgLoadingFailed = observable.set<string>(); // The IDs of the HelmChart instances
-
   componentDidMount() {
     helmChartStore.loadAll();
   }
@@ -80,22 +77,6 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
     this.showDetails(null);
   };
 
-  private renderIcon(chart: HelmChart) {
-    const icon = chart.getIcon();
-
-    if (!icon || this.imgLoadingFailed.has(chart.getId())) {
-      return <div dangerouslySetInnerHTML={{ __html: HelmLogoPlaceholder }} />;
-    }
-
-    return (
-      <img
-        src={icon}
-        onLoad={evt => evt.currentTarget.classList.add("visible")}
-        onError={() => this.imgLoadingFailed.add(chart.getId())}
-      />
-    );
-  }
-
   render() {
     return (
       <SiblingsInTabLayout>
@@ -134,7 +115,7 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
           ]}
           renderTableContents={chart => [
             <figure key="image">
-              {this.renderIcon(chart)}
+              <HelmChartIcon chart={chart} />
             </figure>,
             chart.getName(),
             chart.getDescription(),
