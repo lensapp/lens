@@ -9299,10 +9299,10 @@ node-loader@^2.0.0:
   dependencies:
     loader-utils "^2.0.0"
 
-node-pty@^0.11.0-beta19:
-  version "0.11.0-beta9"
-  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-0.11.0-beta9.tgz#38a899d62b1c5c395ca466dfac5203eff989d350"
-  integrity sha512-bU/2zYV6xBMVMHaMe+yr4WEw36PCA0hyZ7A0IBQFWy5l1vjsD52sZ9sGJk+dH7bw3xpuBLHMh9Eq4Di8rJz4IQ==
+node-pty@^0.11.0-beta15:
+  version "0.11.0-beta15"
+  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-0.11.0-beta15.tgz#4b34bdda1076fb98ac1ce1448129df42086d7fc6"
+  integrity sha512-HzRK+W4RX79PqAciyHW6AkMaclOS6f/KTSpOpJ8woEWi4mEx7cMUjH1Ib2ihv84vuFXklRSJGR4o6pS4NblJwQ==
   dependencies:
     nan "^2.14.0"
 
