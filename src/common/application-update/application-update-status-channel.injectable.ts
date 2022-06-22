@@ -10,7 +10,8 @@ export type ApplicationUpdateStatusEventId =
       | "checking-for-updates"
       | "no-updates-available"
       | "download-for-update-started"
-      | "download-for-update-failed";
+      | "download-for-update-failed"
+      | "download-for-update-succeeded";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type ApplicationUpdateStatusChannelMessage = { eventId: ApplicationUpdateStatusEventId; version?: string };

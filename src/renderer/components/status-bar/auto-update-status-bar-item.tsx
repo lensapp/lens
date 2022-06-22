@@ -4,18 +4,45 @@
  */
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
-import React from "react";
-import AutoUpdateStateInjectable from "../../../common/auto-update/auto-update-state.injectable";
-import type { AutoUpdateState } from "../../../common/auto-update/auto-update-state.injectable";
+import assert from "assert";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "../spinner";
+import type { ProgressOfUpdateDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 import progressOfUpdateDownloadInjectable from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
-import type { ProgressOfDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
-import type { SyncBox } from "../../../common/utils/sync-box/sync-box-injection-token";
+import type { DiscoveredUpdateVersion } from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
+import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
+import type { UpdateIsBeingDownloaded } from "../../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
+import updateIsBeingDownloadedInjectable from "../../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
+import type { UpdatesAreBeingDiscovered } from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
+import updatesAreBeingDiscoveredInjectable from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
 
 interface Dependencies {
-  state: AutoUpdateState;
-  progressOfUpdateDownload: SyncBox<ProgressOfDownload>;
+  progressOfUpdateDownload: ProgressOfUpdateDownload;
+  discoveredVersionState: DiscoveredUpdateVersion;
+  downloadingUpdateState: UpdateIsBeingDownloaded;
+  checkingForUpdatesState: UpdatesAreBeingDiscovered;
 }
+
+interface EndNoteProps {
+  version?: string;
+  note: (version: string) => JSX.Element;
+}
+
+const EndNote = ({ version, note }: EndNoteProps) => {
+  const [idling, setIdling] = useState(false);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => setIdling(true), 5000);
+
+    return () => clearTimeout(timerId);
+  });
+
+  if (idling) {
+    return idle();
+  }
+
+  return note(version ?? "");
+};
 
 const checking = () => (
   <>
@@ -23,11 +50,12 @@ const checking = () => (
     <div>{"Checking for updates..."}</div>
   </>
 );
-const available = () => <div>{"Update is available"}</div>;
-const notAvailable = () => <div>{"No new updates available"}</div>;
-const downloading = (state: AutoUpdateState, percentDone: number) => {
-  const { version } = state;
 
+const available = (version: string) => <div>{`${version ?? "Update"} is available`}</div>;
+
+const notAvailable = () => <div>{"No new updates available"}</div>;
+
+const downloading = (version: string, percentDone: number) => {
   if ( percentDone === 0 ) {
     return (
       <>
@@ -37,57 +65,46 @@ const downloading = (state: AutoUpdateState, percentDone: number) => {
     );
   }
 
-  if ( percentDone < 100 ) {
-    return <div>{`Download for version ${version} ${percentDone}%...`}</div>;
-  }
-
-  state.name = "download-succeeded";
-
-  return null;
+  return <div>{`Download for version ${version} ${percentDone}%...`}</div>;
 };
 
-const done = () => <div>{"Done checking for updates"}</div>;
-const downloadFailed = (version: string | undefined) => <div>{`Download for version ${version} failed`}</div>;
-const downloadSucceeded = (version: string | undefined) => <div>{`Download for version ${version} complete`}</div>;
+const downloadSucceeded = (version: string) => <div>{`Download for version ${version} complete`}</div>;
+
 const idle = () => <></>;
 
-export const NonInjectedAutoUpdateComponent = observer(({ state, progressOfUpdateDownload }: Dependencies) => {
+export const NonInjectedAutoUpdateComponent = observer(({ progressOfUpdateDownload, discoveredVersionState, downloadingUpdateState, checkingForUpdatesState }: Dependencies) => {
+  const discoveredVersion = discoveredVersionState.value.get();
 
-  switch(state.name) {
-    case "checking":
-      return checking();
+  if (downloadingUpdateState.value.get()) {
 
-    case "available":
-      return available();
+    assert(discoveredVersion);
 
-    case "not-available":
-      return notAvailable();
+    const roundedPercentage = Math.round(progressOfUpdateDownload.value.get().percentage);
 
-    case "downloading": {
-      const roundedPercentage = Math.round(progressOfUpdateDownload.value.get().percentage);
-      
-      return downloading(state, roundedPercentage);
+    if ( roundedPercentage > 99 ) {
+      return <EndNote note={downloadSucceeded} version={discoveredVersion.version} />;
     }
 
-    case "done":
-      return done();
-
-    case "download-failed":
-      return downloadFailed(state.version);
-
-    case "download-succeeded":
-      return downloadSucceeded(state.version);
-
-    case "idle":
-      return idle();
+    return downloading(discoveredVersion.version, roundedPercentage);
   }
 
+  if (checkingForUpdatesState.value.get()) {
+    return checking();
+  }
+
+  if ( discoveredVersion) {
+    return <EndNote note={available} version={discoveredVersion.version} />;
+  }
+
+  return <EndNote note={notAvailable} />;
 });
 
 export const AutoUpdateComponent = withInjectables<Dependencies>(NonInjectedAutoUpdateComponent, {
   getProps: (di, props) => ({
-    state: di.inject(AutoUpdateStateInjectable),
     progressOfUpdateDownload: di.inject(progressOfUpdateDownloadInjectable),
+    discoveredVersionState: di.inject(discoveredUpdateVersionInjectable),
+    downloadingUpdateState: di.inject(updateIsBeingDownloadedInjectable),
+    checkingForUpdatesState: di.inject(updatesAreBeingDiscoveredInjectable),
     ...props,
   }),
 });
