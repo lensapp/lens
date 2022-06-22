@@ -158,9 +158,6 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../behaviours/**/{renderer,common}/*.injectable.{ts,tsx}", {
-    cwd: __dirname,
-  }),
 ]);
 
 const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
