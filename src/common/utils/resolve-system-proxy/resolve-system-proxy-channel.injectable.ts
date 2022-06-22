@@ -6,16 +6,16 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestChannel } from "../channel/request-channel-injection-token";
 import { requestChannelInjectionToken } from "../channel/request-channel-injection-token";
 
-export type ResolveProxyChannel = RequestChannel<string, string>;
+export type ResolveSystemProxyChannel = RequestChannel<string, string>;
 
-const resolveProxyChannelInjectable = getInjectable({
-  id: "resolve-proxy-channel",
+const resolveSystemProxyChannelInjectable = getInjectable({
+  id: "resolve-system-proxy-channel",
 
-  instantiate: (): ResolveProxyChannel => ({
-    id: "resolve-proxy-channel",
+  instantiate: (): ResolveSystemProxyChannel => ({
+    id: "resolve-system-proxy-channel",
   }),
 
   injectionToken: requestChannelInjectionToken,
 });
 
-export default resolveProxyChannelInjectable;
+export default resolveSystemProxyChannelInjectable;

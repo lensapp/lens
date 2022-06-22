@@ -5,8 +5,8 @@
 
 import { getInjectionToken } from "@ogre-tools/injectable";
 
-export type ResolveProxy = (url: string) => Promise<string>;
+export type ResolveSystemProxy = (url: string) => Promise<string>;
 
-export const resolveProxyInjectionToken = getInjectionToken<ResolveProxy>({
-  id: "resolve-proxy",
+export const resolveSystemProxyInjectionToken = getInjectionToken<ResolveSystemProxy>({
+  id: "resolve-system-proxy",
 });

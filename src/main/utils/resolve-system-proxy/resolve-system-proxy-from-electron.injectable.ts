@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import electronInjectable from "./electron.injectable";
 import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 
-const resolveProxyFromElectronInjectable = getInjectable({
-  id: "resolve-proxy-from-electron",
+const resolveSystemProxyFromElectronInjectable = getInjectable({
+  id: "resolve-system-proxy-from-electron",
 
   instantiate: (di) => {
     const electron = di.inject(electronInjectable);
@@ -29,4 +29,4 @@ const resolveProxyFromElectronInjectable = getInjectable({
   },
 });
 
-export default resolveProxyFromElectronInjectable;
+export default resolveSystemProxyFromElectronInjectable;

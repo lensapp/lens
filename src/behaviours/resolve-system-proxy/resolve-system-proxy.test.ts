@@ -6,25 +6,25 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { ResolveProxy } from "../../common/utils/resolve-proxy/resolve-proxy-injection-token";
-import { resolveProxyInjectionToken } from "../../common/utils/resolve-proxy/resolve-proxy-injection-token";
-import resolveProxyFromElectronInjectable from "../../main/utils/resolve-proxy/resolve-proxy-from-electron.injectable";
+import type { ResolveSystemProxy } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
+import { resolveSystemProxyInjectionToken } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
+import resolveSystemProxyFromElectronInjectable from "../../main/utils/resolve-system-proxy/resolve-system-proxy-from-electron.injectable";
 import { getPromiseStatus } from "../../common/test-utils/get-promise-status";
 
-describe("resolve-proxy", () => {
+describe("resolve-system-proxy", () => {
   let applicationBuilder: ApplicationBuilder;
   let actualPromise: Promise<string>;
-  let resolveProxyFromElectronMock: AsyncFnMock<ResolveProxy>;
+  let resolveSystemProxyFromElectronMock: AsyncFnMock<ResolveSystemProxy>;
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
 
-    resolveProxyFromElectronMock = asyncFn();
+    resolveSystemProxyFromElectronMock = asyncFn();
 
     applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(
-        resolveProxyFromElectronInjectable,
-        () => resolveProxyFromElectronMock,
+        resolveSystemProxyFromElectronInjectable,
+        () => resolveSystemProxyFromElectronMock,
       );
     });
 
@@ -33,15 +33,15 @@ describe("resolve-proxy", () => {
 
   describe("given in main, when called with URL", () => {
     beforeEach(async () => {
-      const resolveProxyInMain = applicationBuilder.dis.mainDi.inject(
-        resolveProxyInjectionToken,
+      const resolveSystemProxyInMain = applicationBuilder.dis.mainDi.inject(
+        resolveSystemProxyInjectionToken,
       );
 
-      actualPromise = resolveProxyInMain("some-url");
+      actualPromise = resolveSystemProxyInMain("some-url");
     });
 
     it("calls for proxy of the URL from Electron", () => {
-      expect(resolveProxyFromElectronMock).toHaveBeenCalledWith("some-url");
+      expect(resolveSystemProxyFromElectronMock).toHaveBeenCalledWith("some-url");
     });
 
     it("does not resolve yet", async () => {
@@ -51,7 +51,7 @@ describe("resolve-proxy", () => {
     });
 
     it("when the call for proxy resolves, resolves with the proxy", async () => {
-      resolveProxyFromElectronMock.resolve("some-proxy");
+      resolveSystemProxyFromElectronMock.resolve("some-proxy");
 
       expect(await actualPromise).toBe("some-proxy");
     });
@@ -59,15 +59,15 @@ describe("resolve-proxy", () => {
 
   describe("given in renderer, when called with URL", () => {
     beforeEach(async () => {
-      const resolveProxyInRenderer = applicationBuilder.dis.rendererDi.inject(
-        resolveProxyInjectionToken,
+      const resolveSystemProxyInRenderer = applicationBuilder.dis.rendererDi.inject(
+        resolveSystemProxyInjectionToken,
       );
 
-      actualPromise = resolveProxyInRenderer("some-url");
+      actualPromise = resolveSystemProxyInRenderer("some-url");
     });
 
     it("calls for proxy of the URL from Electron", () => {
-      expect(resolveProxyFromElectronMock).toHaveBeenCalledWith("some-url");
+      expect(resolveSystemProxyFromElectronMock).toHaveBeenCalledWith("some-url");
     });
 
     it("does not resolve yet", async () => {
@@ -77,7 +77,7 @@ describe("resolve-proxy", () => {
     });
 
     it("when the call for proxy resolves, resolves with the proxy", async () => {
-      resolveProxyFromElectronMock.resolve("some-proxy");
+      resolveSystemProxyFromElectronMock.resolve("some-proxy");
 
       expect(await actualPromise).toBe("some-proxy");
     });

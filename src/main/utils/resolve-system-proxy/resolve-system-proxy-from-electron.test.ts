@@ -4,7 +4,7 @@
  */
 
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import resolveProxyFromElectronInjectable from "./resolve-proxy-from-electron.injectable";
+import resolveSystemProxyFromElectronInjectable from "./resolve-system-proxy-from-electron.injectable";
 import electronInjectable from "./electron.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
@@ -13,8 +13,8 @@ import { getPromiseStatus } from "../../../common/test-utils/get-promise-status"
 import logErrorInjectable from "../../../common/log-error.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 
-describe("technical: resolve-proxy-from-electron", () => {
-  let resolveProxyMock: AsyncFnMock<(url: string) => Promise<string>>;
+describe("technical: resolve-system-proxy-from-electron", () => {
+  let resolveSystemProxyMock: AsyncFnMock<(url: string) => Promise<string>>;
   let logErrorMock: jest.Mock;
   let di: DiContainer;
   let actualPromise: Promise<string>;
@@ -28,7 +28,7 @@ describe("technical: resolve-proxy-from-electron", () => {
 
   describe("given there are non-destroyed Lens windows, when called with URL", () => {
     beforeEach(() => {
-      resolveProxyMock = asyncFn();
+      resolveSystemProxyMock = asyncFn();
 
       di.override(
         electronInjectable,
@@ -49,7 +49,7 @@ describe("technical: resolve-proxy-from-electron", () => {
 
                 {
                   isDestroyed: () => false,
-                  session: { resolveProxy: resolveProxyMock },
+                  session: { resolveProxy: resolveSystemProxyMock },
                 },
 
                 {
@@ -66,15 +66,15 @@ describe("technical: resolve-proxy-from-electron", () => {
           } as unknown as typeof electron),
       );
 
-      const resolveProxyFromElectron = di.inject(
-        resolveProxyFromElectronInjectable,
+      const resolveSystemProxyFromElectron = di.inject(
+        resolveSystemProxyFromElectronInjectable,
       );
 
-      actualPromise = resolveProxyFromElectron("some-url");
+      actualPromise = resolveSystemProxyFromElectron("some-url");
     });
 
     it("calls to resolve proxy from the first window", () => {
-      expect(resolveProxyMock).toHaveBeenCalledWith("some-url");
+      expect(resolveSystemProxyMock).toHaveBeenCalledWith("some-url");
     });
 
     it("does not resolve yet", async () => {
@@ -84,7 +84,7 @@ describe("technical: resolve-proxy-from-electron", () => {
     });
 
     it("when call for proxy, resolves with the proxy", async () => {
-      resolveProxyMock.resolve("some-proxy");
+      resolveSystemProxyMock.resolve("some-proxy");
 
       expect(await actualPromise).toBe("some-proxy");
     });
@@ -114,14 +114,14 @@ describe("technical: resolve-proxy-from-electron", () => {
           } as unknown as typeof electron),
       );
 
-      resolveProxyMock = asyncFn();
+      resolveSystemProxyMock = asyncFn();
 
-      const resolveProxyFromElectron = di.inject(
-        resolveProxyFromElectronInjectable,
+      const resolveSystemProxyFromElectron = di.inject(
+        resolveSystemProxyFromElectronInjectable,
       );
 
       try {
-        await resolveProxyFromElectron("some-url");
+        await resolveSystemProxyFromElectron("some-url");
       } catch (e) {
         error = e;
       }
