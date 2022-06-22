@@ -4,12 +4,12 @@
  */
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { ResolveSystemProxy } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
-import { resolveSystemProxyInjectionToken } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
-import resolveSystemProxyFromElectronInjectable from "../../main/utils/resolve-system-proxy/resolve-system-proxy-from-electron.injectable";
-import { getPromiseStatus } from "../../common/test-utils/get-promise-status";
+import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ResolveSystemProxy } from "./common/resolve-system-proxy-injection-token";
+import { resolveSystemProxyInjectionToken } from "./common/resolve-system-proxy-injection-token";
+import resolveSystemProxyFromElectronInjectable from "./main/resolve-system-proxy-from-electron.injectable";
+import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
 
 describe("resolve-system-proxy", () => {
   let applicationBuilder: ApplicationBuilder;

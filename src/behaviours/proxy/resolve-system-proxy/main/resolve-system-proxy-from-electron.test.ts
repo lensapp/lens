@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { getDiForUnitTesting } from "../../../../main/getDiForUnitTesting";
 import resolveSystemProxyFromElectronInjectable from "./resolve-system-proxy-from-electron.injectable";
 import electronInjectable from "./electron.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type electron from "electron";
-import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
-import logErrorInjectable from "../../../common/log-error.injectable";
+import { getPromiseStatus } from "../../../../common/test-utils/get-promise-status";
+import logErrorInjectable from "../../../../common/log-error.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("technical: resolve-system-proxy-from-electron", () => {

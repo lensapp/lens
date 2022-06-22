@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronInjectable from "./electron.injectable";
-import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
+import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
 
 const resolveSystemProxyFromElectronInjectable = getInjectable({
   id: "resolve-system-proxy-from-electron",
