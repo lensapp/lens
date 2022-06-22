@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { InputValidator } from "../input_validators";
 import { isEmail, isUrl, systemName, unionInputValidators, unionInputValidatorsAsync } from "../input_validators";
 
 type TextValidationCase = [string, boolean];
@@ -145,5 +146,13 @@ describe("input validation tests", () => {
     it.each(tests)("validate %s", (input, output) => {
       expect(systemName.validate(input)).toBe(output);
     });
+  });
+
+  it("should allow InputValidator to be used without any type params", () => {
+    const v: InputValidator = {
+      validate: (input: string) => input.length > 10,
+    };
+
+    expect(v.validate("hello")).toBe(false);
   });
 });

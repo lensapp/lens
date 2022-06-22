@@ -18,38 +18,58 @@ export type InputValidation<IsAsync extends boolean> = (value: string, props?: I
 
 export type SyncValidationMessage = React.ReactNode | ((value: string, props?: InputProps) => React.ReactNode);
 
-export type InputValidator<IsAsync extends boolean = boolean> = {
+/**
+ * @deprecated This type is not as type safe as it is possible to specify an async input validator without specifying a `debounce` time.
+ *
+ * Use {@link asyncInputValidator} or {@link inputValidator} instead to create validators
+ */
+export interface LegacyInputValidator {
   /**
    * Filters itself based on the input props
    */
   condition?: (props: InputProps) => any;
-} & (
-  IsAsync extends true
-    ? {
-      /**
-       * The validation message maybe either specified from the `message` field (higher priority)
-       * or if that is not provided then the message will retrived from the rejected with value
-       */
-      validate: InputValidation<true>;
-      message?: SyncValidationMessage;
-      debounce: number;
-    }
-    : {
-      validate: InputValidation<false>;
-      message: SyncValidationMessage;
-      debounce?: undefined;
-    }
-  );
+  validate: InputValidation<boolean>;
+  message?: SyncValidationMessage;
+  debounce?: number;
+}
 
-export function isAsyncValidator(validator: InputValidator<boolean>): validator is InputValidator<true> {
+export interface AsyncInputValidator {
+  /**
+   * Filters itself based on the input props
+   */
+  condition?: (props: InputProps) => any;
+  validate: InputValidation<true>;
+  message?: SyncValidationMessage;
+  debounce: number;
+}
+
+export interface SyncInputValidator {
+  /**
+   * Filters itself based on the input props
+   */
+  condition?: (props: InputProps) => any;
+  validate: InputValidation<false>;
+  message: SyncValidationMessage;
+  debounce?: undefined;
+}
+
+export type InputValidator<IsAsync extends boolean = boolean> = SyncInputValidator | AsyncInputValidator | (IsAsync extends boolean ? LegacyInputValidator : never);
+
+export function isAsyncValidator(validator: InputValidator): validator is AsyncInputValidator {
   return typeof validator.debounce === "number";
 }
 
-export function asyncInputValidator(validator: InputValidator<true>): InputValidator<true> {
+/**
+ * A helper function to create an {@link AsyncInputValidator}
+ */
+export function asyncInputValidator(validator: AsyncInputValidator): AsyncInputValidator {
   return validator;
 }
 
-export function inputValidator(validator: InputValidator<false>): InputValidator<false> {
+/**
+ * A helper function to create an {@link SyncInputValidator}
+ */
+export function inputValidator(validator: SyncInputValidator): SyncInputValidator {
   return validator;
 }
 
@@ -58,9 +78,9 @@ export function inputValidator(validator: InputValidator<false>): InputValidator
  * one of the input validators matches the input
  */
 export function unionInputValidators(
-  baseValidator: Pick<InputValidator<false>, "condition" | "message">,
-  ...validators: InputValidator<false>[]
-): InputValidator<false> {
+  baseValidator: Pick<SyncInputValidator, "condition" | "message">,
+  ...validators: SyncInputValidator[]
+): SyncInputValidator {
   return inputValidator({
     ...baseValidator,
     validate: (value, props) => validators.some(validator => validator.validate(value, props)),
@@ -72,13 +92,13 @@ export function unionInputValidators(
  * valid if one of the input validators matches the input
  */
 export function unionInputValidatorsAsync(
-  baseValidator: SetRequired<Pick<InputValidator<boolean>, "condition" | "message">, "message">,
-  ...validators: InputValidator<boolean>[]
-): InputValidator<true> {
+  baseValidator: SetRequired<Pick<InputValidator, "condition" | "message">, "message">,
+  ...validators: InputValidator[]
+): AsyncInputValidator {
   const longestDebounce = Math.max(
     ...validators
       .filter(isAsyncValidator)
-      .map(validator => validator.debounce),
+      .map(validator => validator.debounce ?? 0),
     0,
   );
 

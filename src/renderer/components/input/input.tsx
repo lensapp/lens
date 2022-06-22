@@ -178,7 +178,11 @@ export class Input extends React.Component<InputProps, State> {
         break;
       }
 
-      if (isAsyncValidator(validator)) {
+      const result = validator.validate(value, this.props);
+
+      if (typeof result === "boolean" && !result) {
+        errors.push(this.getValidatorError(value, validator));
+      } else if (result instanceof Promise) {
         if (!validationId) {
           this.validationId = validationId = uniqueId("validation_id_");
         }
@@ -189,8 +193,6 @@ export class Input extends React.Component<InputProps, State> {
             return this.getValidatorError(value, validator) || (error instanceof Error ? error.message : String(error));
           }
         })());
-      } else if (!validator.validate(value, this.props)) {
-        errors.push(this.getValidatorError(value, validator));
       }
     }
 
