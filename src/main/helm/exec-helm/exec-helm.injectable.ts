@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import execFileInjectable from "../../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../helm-binary-path.injectable";
 import type { AsyncResult } from "../../../common/utils/async-result";
 import { getErrorMessage } from "../../../common/utils/get-error-message";
+import execFileInjectable from "../../child-process/exec-file.injectable";
 
 const execHelmInjectable = getInjectable({
   id: "exec-helm",
@@ -17,9 +17,9 @@ const execHelmInjectable = getInjectable({
 
     return async (...args: string[]): Promise<AsyncResult<string>> => {
       try {
-        const response = await execFile(helmBinaryPath, args);
+        const { stdout } = await execFile(helmBinaryPath, args);
 
-        return { callWasSuccessful: true, response };
+        return { callWasSuccessful: true, response: stdout };
       } catch (error) {
         return { callWasSuccessful: false, error: getErrorMessage(error) };
       }

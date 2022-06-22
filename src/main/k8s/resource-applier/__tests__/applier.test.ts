@@ -9,7 +9,6 @@ import path from "path";
 import directoryForKubeConfigsInjectable from "../../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import createAuthorizationReviewInjectable from "../../../../common/cluster/authorization-review.injectable";
 import createListNamespacesInjectable from "../../../../common/cluster/list-namespaces.injectable";
-import readFileSyncInjectable from "../../../../common/fs/read-file-sync.injectable";
 import type { RemoveDir } from "../../../../common/fs/remove.injectable";
 import removeDirInjectable from "../../../../common/fs/remove.injectable";
 import tempDirInjectable from "../../../../common/fs/temp-dir.injectable";
@@ -59,26 +58,6 @@ describe("ResourceApplier", () => {
     di.override(removeDirInjectable, () => removeDir = jest.fn());
     di.override(tempDirInjectable, () => jest.fn().mockImplementation(() => "some/temp/dir"));
     di.override(tempFileInjectable, () => jest.fn().mockImplementation(() => "some/temp/file"));
-    di.override(readFileSyncInjectable, () => jest.fn().mockImplementation(() => {
-      return JSON.stringify({
-        clusters: [{
-          name: "some-cluster",
-          cluster: {
-            server: "some-server-url",
-          },
-        }],
-        users: [{
-          name: "some-user",
-        }],
-        contexts: [{
-          name: "some-context",
-          context: {
-            user: "some-user",
-            cluster: "some-cluster",
-          },
-        }],
-      });
-    }));
 
     const createK8sResourceApplier = di.inject(createK8sResourceApplierInjectable);
     const createCluster = di.inject(createClusterInjectable);
@@ -87,6 +66,8 @@ describe("ResourceApplier", () => {
       contextName: "some-context",
       id: "some-id",
       kubeConfigPath: "some/path/config",
+    }, {
+      clusterServerUrl: "some-server-url",
     }));
   });
 

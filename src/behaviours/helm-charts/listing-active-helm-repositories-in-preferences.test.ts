@@ -10,12 +10,12 @@ import readYamlFileInjectable from "../../common/fs/read-yaml-file.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { HelmRepositoriesFromYaml } from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
-import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
+import execFileInjectable from "../../main/child-process/exec-file.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({

@@ -84,7 +84,6 @@ import startKubeConfigSyncInjectable from "./start-main-application/runnables/ku
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
-import execFileInjectable from "../common/fs/exec-file.injectable";
 import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-platform-architecture.injectable";
 import getHelmChartInjectable from "./helm/helm-service/get-helm-chart.injectable";
 import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-values.injectable";
@@ -100,6 +99,7 @@ import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
+import execFileInjectable from "./child-process/exec-file.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {

@@ -8,7 +8,6 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm/helm-repo";
@@ -17,6 +16,7 @@ import isPathInjectable from "../../renderer/components/input/validators/is-path
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
+import execFileInjectable from "../../main/child-process/exec-file.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
