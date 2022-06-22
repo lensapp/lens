@@ -4,12 +4,12 @@
  */
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import type { ResolveProxy } from "./common/resolve-proxy-injection-token";
-import { resolveProxyInjectionToken } from "./common/resolve-proxy-injection-token";
-import resolveProxyFromElectronInjectable from "./main/resolve-proxy-from-electron.injectable";
-import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
+import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ResolveProxy } from "../../common/utils/resolve-proxy/resolve-proxy-injection-token";
+import { resolveProxyInjectionToken } from "../../common/utils/resolve-proxy/resolve-proxy-injection-token";
+import resolveProxyFromElectronInjectable from "../../main/utils/resolve-proxy/resolve-proxy-from-electron.injectable";
+import { getPromiseStatus } from "../../common/test-utils/get-promise-status";
 
 describe("resolve-proxy", () => {
   let applicationBuilder: ApplicationBuilder;

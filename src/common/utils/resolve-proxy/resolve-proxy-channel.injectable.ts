@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { RequestChannel } from "../../../../common/utils/channel/request-channel-injection-token";
-import { requestChannelInjectionToken } from "../../../../common/utils/channel/request-channel-injection-token";
+import type { RequestChannel } from "../channel/request-channel-injection-token";
+import { requestChannelInjectionToken } from "../channel/request-channel-injection-token";
 
 export type ResolveProxyChannel = RequestChannel<string, string>;
 

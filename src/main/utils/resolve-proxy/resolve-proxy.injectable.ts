@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { resolveProxyInjectionToken } from "../common/resolve-proxy-injection-token";
+import { resolveProxyInjectionToken } from "../../../common/utils/resolve-proxy/resolve-proxy-injection-token";
 import resolveProxyFromElectronInjectable from "./resolve-proxy-from-electron.injectable";
 
 const resolveProxyInjectable = getInjectable({

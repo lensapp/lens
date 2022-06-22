@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import resolveProxyChannelInjectable from "../common/resolve-proxy-channel.injectable";
+import resolveProxyChannelInjectable from "../../../common/utils/resolve-proxy/resolve-proxy-channel.injectable";
 import resolveProxyInjectable from "./resolve-proxy.injectable";
-import { requestChannelListenerInjectionToken } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import { requestChannelListenerInjectionToken } from "../../../common/utils/channel/request-channel-listener-injection-token";
 
 const resolveProxyChannelResponderInjectable = getInjectable({
   id: "resolve-proxy-channel-responder",

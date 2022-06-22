@@ -99,7 +99,7 @@ import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-rel
 import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
-import electronInjectable from "../behaviours/proxy/resolve-proxy/main/electron.injectable";
+import electronInjectable from "./utils/resolve-proxy/electron.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {

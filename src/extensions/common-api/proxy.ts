@@ -4,6 +4,6 @@
  */
 
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
-import { resolveProxyInjectionToken } from "../../behaviours/proxy/resolve-proxy/common/resolve-proxy-injection-token";
+import { resolveProxyInjectionToken } from "../../common/utils/resolve-proxy/resolve-proxy-injection-token";
 
 export const resolveProxy = asLegacyGlobalFunctionForExtensionApi(resolveProxyInjectionToken);
