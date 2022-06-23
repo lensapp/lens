@@ -37,7 +37,6 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
-import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/runnables/setup-runnables-for-after-root-frame-is-ready.injectable";
 import setupSentryInjectable from "./start-main-application/runnables/setup-sentry.injectable";
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
@@ -212,7 +211,6 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     initializeExtensionsInjectable,
     setupIpcMainHandlersInjectable,
     setupLensProxyInjectable,
-    setupRunnablesForAfterRootFrameIsReadyInjectable,
     setupSentryInjectable,
     setupShellInjectable,
     setupSyncingOfWeblinksInjectable,
