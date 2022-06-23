@@ -8,19 +8,19 @@ import { observableCrate } from "./impl";
 
 describe("observable-crate", () => {
   it("can be constructed with initial value", () => {
-    expect(() => observableCrate(0).build()).not.toThrow();
+    expect(() => observableCrate(0)).not.toThrow();
   });
 
   it("has a definite type if the initial value is provided", () => {
     expect (() => {
-      const res: ObservableCrate<number> = observableCrate(0).build();
+      const res: ObservableCrate<number> = observableCrate(0);
 
       void res;
     }).not.toThrow();
   });
 
-  it("accepts a map of transitionHandlers", () => {
-    expect(() => observableCrate(0).withHandlers(new Map())).not.toThrow();
+  it("accepts an array of transitionHandlers", () => {
+    expect(() => observableCrate(0, [])).not.toThrow();
   });
 
   describe("with a crate over an enum, and some transition handlers", () => {
@@ -37,23 +37,53 @@ describe("observable-crate", () => {
     beforeEach(() => {
       correctHandler = jest.fn();
       incorrectHandler = jest.fn();
-      crate = observableCrate(Test.Start).withHandlers(new Map([
-        [Test.Start, new Map([
-          [Test.Start, incorrectHandler],
-          [Test.T1, correctHandler],
-          [Test.End, incorrectHandler],
-        ])],
-        [Test.T1, new Map([
-          [Test.Start, incorrectHandler],
-          [Test.T1, incorrectHandler],
-          [Test.End, incorrectHandler],
-        ])],
-        [Test.End, new Map([
-          [Test.Start, incorrectHandler],
-          [Test.T1, incorrectHandler],
-          [Test.End, incorrectHandler],
-        ])],
-      ]));
+      crate = observableCrate(Test.Start, [
+        {
+          from: Test.Start,
+          to: Test.Start,
+          onTransition: incorrectHandler,
+        },
+        {
+          from: Test.Start,
+          to: Test.T1,
+          onTransition: correctHandler,
+        },
+        {
+          from: Test.Start,
+          to: Test.End,
+          onTransition: incorrectHandler,
+        },
+        {
+          from: Test.T1,
+          to: Test.Start,
+          onTransition: incorrectHandler,
+        },
+        {
+          from: Test.T1,
+          to: Test.T1,
+          onTransition: incorrectHandler,
+        },
+        {
+          from: Test.T1,
+          to: Test.End,
+          onTransition: incorrectHandler,
+        },
+        {
+          from: Test.End,
+          to: Test.Start,
+          onTransition: incorrectHandler,
+        },
+        {
+          from: Test.End,
+          to: Test.T1,
+          onTransition: incorrectHandler,
+        },
+        {
+          from: Test.End,
+          to: Test.End,
+          onTransition: incorrectHandler,
+        },
+      ]);
     });
 
     it("initial value is available", () => {
