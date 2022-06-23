@@ -23,24 +23,24 @@ type ObjectContainsNoRequired<T> = T extends ObjectContainingNoRequired<T>
   : false;
 
 // TODO: Missing types for:
-// - Navigating to route without parameters, with parameters
 // - Navigating to route with required parameters, without parameters
-type Parameters<TParameters> = TParameters extends void
-  ? { parameters?: never }
-  : ObjectContainsNoRequired<TParameters> extends true
-    ? { parameters?: TParameters }
-    : { parameters: TParameters };
+type Parameters<TParameters> = ObjectContainsNoRequired<TParameters> extends true
+  ? { parameters?: TParameters }
+  : { parameters: TParameters };
 
-export type NavigateToRouteOptions<TParameter> = Parameters<TParameter> & {
+export type NavigateToRouteOptions<TParameter extends object> = Parameters<TParameter> & BaseNavigateToRouteOptions;
+
+export interface BaseNavigateToRouteOptions {
   query?: Record<string, string>;
   fragment?: string;
   withoutAffectingBackButton?: boolean;
-};
+}
 
-export type NavigateToRoute = <TRoute extends Route<TParameter>, TParameter extends object | void>(
-  route: TRoute,
-  options?: NavigateToRouteOptions<TParameter>,
-) => void;
+export interface NavigateToRoute {
+  (route: Route<void>, options?: BaseNavigateToRouteOptions): void;
+  <TParameters extends Record<TRequiredKeys, string | number>, TRequiredKeys extends string>(route: Route<TParameters>, opts: NavigateToRouteOptions<TParameters>): void;
+  <TParameters extends object>(route: Route<TParameters>, opts?: NavigateToRouteOptions<TParameters>): void;
+}
 
 export const navigateToRouteInjectionToken = getInjectionToken<NavigateToRoute>({
   id: "navigate-to-route-injection-token",

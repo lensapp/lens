@@ -6,15 +6,17 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Route } from "../../../../common/front-end-routing/front-end-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 
+export interface NavigateToPreferenceTabFor {
+  (route: Route<void>): () => void;
+}
+
 const navigateToPreferenceTabInjectable = getInjectable({
   id: "navigate-to-preference-tab",
 
-  instantiate: (di) => {
+  instantiate: (di): NavigateToPreferenceTabFor => {
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
 
-    return <Parameter extends object | void>(route: Route<Parameter>) => () => {
-      navigateToRoute(route, { withoutAffectingBackButton: true });
-    };
+    return (route) => () => navigateToRoute(route, { withoutAffectingBackButton: true });
   },
 });
 
