@@ -23,8 +23,6 @@ import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import createAuthorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
-import { readFileSync } from "fs-extra";
-import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -56,7 +54,6 @@ describe("create clusters", () => {
       setupPrometheus: jest.fn(),
       ensureServer: jest.fn(),
     } as ClusterContextHandler));
-    di.override(readFileSyncInjectable, () => readFileSync); // TODO: don't bypass injectables
 
     createCluster = di.inject(createClusterInjectionToken);
 

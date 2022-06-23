@@ -28,8 +28,6 @@ import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import normalizedPlatformInjectable from "../../../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../../../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../../../main/kubectl/normalized-arch.injectable";
-import readFileSyncInjectable from "../../../../common/fs/read-file-sync.injectable";
-import { readFileSync } from "fs";
 
 jest.mock("electron", () => ({
   app: {
@@ -115,7 +113,6 @@ describe("<DeleteClusterDialog />", () => {
 
       rendererDi.override(hotbarStoreInjectable, () => ({}));
       rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
-      rendererDi.override(readFileSyncInjectable, () => readFileSync);
     });
 
     const { rendererDi } = applicationBuilder.dis;

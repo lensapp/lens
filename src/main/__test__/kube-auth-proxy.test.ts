@@ -59,8 +59,6 @@ import directoryForTempInjectable from "../../common/app-paths/directory-for-tem
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
-import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
-import { readFileSync } from "fs";
 
 console = new Console(stdout, stderr);
 
@@ -117,7 +115,6 @@ describe("kube auth proxy tests", () => {
 
     mockFs(mockMinikubeConfig);
 
-    di.override(readFileSyncInjectable, () => readFileSync); // TODO: don't bypass injectables
     createCluster = di.inject(createClusterInjectionToken);
     createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
   });
