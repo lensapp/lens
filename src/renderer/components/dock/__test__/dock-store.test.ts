@@ -4,7 +4,7 @@
  */
 
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import hostedClusterIdInjectable from "../../../../common/cluster-store/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DockStore, DockTab } from "../dock/store";
 import { TabKind } from "../dock/store";

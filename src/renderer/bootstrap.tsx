@@ -15,7 +15,6 @@ import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
-import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
@@ -150,8 +149,6 @@ export async function bootstrap(di: DiContainer) {
   const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
   extensionInstallationStateStore.bindIpcListeners();
-
-  HelmRepoManager.createInstance(); // initialize the manager
 
   // Register additional store listeners
   clusterStore.registerIpcListener();

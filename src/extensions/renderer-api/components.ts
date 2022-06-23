@@ -19,6 +19,7 @@ import { ConfirmDialog as _ConfirmDialog } from "../../renderer/components/confi
 import type { ConfirmDialogBooleanParams, ConfirmDialogParams, ConfirmDialogProps } from "../../renderer/components/confirm-dialog";
 import openConfirmDialogInjectable from "../../renderer/components/confirm-dialog/open.injectable";
 import confirmInjectable from "../../renderer/components/confirm-dialog/confirm.injectable";
+import notificationsStoreInjectable from "../../renderer/components/notifications/notifications-store.injectable";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -133,3 +134,5 @@ export class TerminalStore {
     console.warn("TerminalStore.resetInstance() does nothing");
   }
 }
+
+export const notificationsStore = asLegacyGlobalForExtensionApi(notificationsStoreInjectable);

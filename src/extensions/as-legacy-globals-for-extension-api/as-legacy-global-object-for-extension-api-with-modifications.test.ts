@@ -21,7 +21,7 @@ describe("asLegacyGlobalObjectForExtensionApiWithModifications", () => {
     };
 
     beforeEach(() => {
-      di = createContainer();
+      di = createContainer("irrelevant");
 
       jest.spyOn(di, "inject");
 

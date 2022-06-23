@@ -70,13 +70,13 @@ describe("channel", () => {
       closeAllWindows();
     });
 
-    describe("given window is shown", () => {
+    describe("given window is started", () => {
       let someWindowFake: LensWindow;
 
       beforeEach(async () => {
         someWindowFake = createTestWindow(mainDi, "some-window");
 
-        await someWindowFake.show();
+        await someWindowFake.start();
       });
 
       it("when sending message, triggers listener in window", () => {
@@ -94,12 +94,12 @@ describe("channel", () => {
       });
     });
 
-    it("given multiple shown windows, when sending message, triggers listeners in all windows", async () => {
+    it("given multiple started windows, when sending message, triggers listeners in all windows", async () => {
       const someWindowFake = createTestWindow(mainDi, "some-window");
       const someOtherWindowFake = createTestWindow(mainDi, "some-other-window");
 
-      await someWindowFake.show();
-      await someOtherWindowFake.show();
+      await someWindowFake.start();
+      await someOtherWindowFake.start();
 
       messageToChannel(testMessageChannel, "some-message");
 

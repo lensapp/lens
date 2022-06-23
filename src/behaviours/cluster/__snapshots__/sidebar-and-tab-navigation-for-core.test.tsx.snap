@@ -24,10 +24,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -60,10 +58,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -89,10 +85,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-parent-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-parent-id"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -121,10 +115,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -160,10 +152,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -189,10 +179,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -225,10 +213,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -254,10 +240,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -323,10 +307,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -359,10 +341,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -388,10 +368,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-parent-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-parent-id"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -420,10 +398,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -459,10 +435,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -488,10 +462,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -524,10 +496,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -553,10 +523,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -622,10 +590,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -658,10 +624,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -687,10 +651,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-parent-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-parent-id"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -721,11 +683,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         >
           <div
             class="SidebarItem"
-            data-id-test="some-child-id"
             data-is-active-test="false"
             data-parent-id-test="some-parent-id"
-            data-test-id="some-child-id"
-            data-testid="sidebar-item"
+            data-testid="sidebar-item-some-child-id"
           >
             <a
               class="nav-item flex gaps align-center"
@@ -743,10 +703,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -782,10 +740,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -811,10 +767,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -847,10 +801,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -876,10 +828,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -945,10 +895,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -981,10 +929,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1010,10 +956,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-parent-id"
         data-is-active-test="true"
-        data-test-id="some-parent-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-parent-id"
       >
         <a
           aria-current="page"
@@ -1045,11 +989,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         >
           <div
             class="SidebarItem"
-            data-id-test="some-child-id"
             data-is-active-test="true"
             data-parent-id-test="some-parent-id"
-            data-test-id="some-child-id"
-            data-testid="sidebar-item"
+            data-testid="sidebar-item-some-child-id"
           >
             <a
               aria-current="page"
@@ -1068,10 +1010,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1107,10 +1047,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1136,10 +1074,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1172,10 +1108,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1201,10 +1135,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1273,10 +1205,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1309,10 +1239,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1338,10 +1266,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-parent-id"
         data-is-active-test="true"
-        data-test-id="some-parent-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-parent-id"
       >
         <a
           aria-current="page"
@@ -1371,10 +1297,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1410,10 +1334,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1439,10 +1361,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1475,10 +1395,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1504,10 +1422,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1576,10 +1492,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1612,10 +1526,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1641,10 +1553,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-parent-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-parent-id"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1675,11 +1585,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         >
           <div
             class="SidebarItem"
-            data-id-test="some-child-id"
             data-is-active-test="false"
             data-parent-id-test="some-parent-id"
-            data-test-id="some-child-id"
-            data-testid="sidebar-item"
+            data-testid="sidebar-item-some-child-id"
           >
             <a
               class="nav-item flex gaps align-center"
@@ -1697,10 +1605,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1736,10 +1642,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1765,10 +1669,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1801,10 +1703,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1830,10 +1730,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1899,10 +1797,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     >
       <div
         class="SidebarItem"
-        data-id-test="workloads"
         data-is-active-test="false"
-        data-test-id="workloads"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-workloads"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1935,10 +1831,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="config"
         data-is-active-test="false"
-        data-test-id="config"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-config"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -1964,10 +1858,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="some-parent-id"
         data-is-active-test="false"
-        data-test-id="some-parent-id"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-some-parent-id"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -1996,10 +1888,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="network"
         data-is-active-test="false"
-        data-test-id="network"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-network"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -2035,10 +1925,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="storage"
         data-is-active-test="false"
-        data-test-id="storage"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-storage"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -2064,10 +1952,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="helm"
         data-is-active-test="false"
-        data-test-id="helm"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-helm"
       >
         <a
           class="nav-item flex gaps align-center expandable"
@@ -2100,10 +1986,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="user-management"
         data-is-active-test="false"
-        data-test-id="user-management"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-user-management"
       >
         <a
           class="nav-item flex gaps align-center"
@@ -2129,10 +2013,8 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
       </div>
       <div
         class="SidebarItem"
-        data-id-test="custom-resources"
         data-is-active-test="false"
-        data-test-id="custom-resources"
-        data-testid="sidebar-item"
+        data-testid="sidebar-item-custom-resources"
       >
         <a
           class="nav-item flex gaps align-center expandable"

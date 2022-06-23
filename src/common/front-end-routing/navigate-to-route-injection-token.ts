@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Route } from "./route-injection-token";
+import type { Route } from "./front-end-route-injection-token";
 
 type InferParametersFrom<TRoute> = TRoute extends Route<infer TParameters>
   ? TParameters

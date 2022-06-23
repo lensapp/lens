@@ -23,15 +23,15 @@ import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 import assert from "assert";
 import { EventEmitter } from "../../common/event-emitter";
 import type { CreateExtensionInstance } from "./create-extension-instance.token";
+import type { Extension } from "./extension/extension.injectable";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
 interface Dependencies {
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
   createExtensionInstance: CreateExtensionInstance;
-  readonly extensionRegistrators: ((extension: LensExtension, extensionInstallationCount: number) => void)[];
-  readonly extensionInstallationCounter: Map<string, number>;
   readonly extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
+  getExtension: (instance: LensExtension) => Extension;
 }
 
 export interface ExtensionLoading {
@@ -169,6 +169,11 @@ export class ExtensionLoader {
 
     try {
       instance.disable();
+
+      const extension = this.dependencies.getExtension(instance);
+
+      extension.deregister();
+
       this.onRemoveExtensionId.emit(instance.id);
       this.dependencies.extensionInstances.delete(lensExtensionId);
       this.nonInstancesByName.delete(instance.name);
@@ -354,13 +359,9 @@ export class ExtensionLoader {
     );
 
     extensions.forEach(({ instance }) => {
-      const installationCount = (this.dependencies.extensionInstallationCounter.get(instance.sanitizedExtensionId) ?? 0) + 1;
+      const extension = this.dependencies.getExtension(instance);
 
-      this.dependencies.extensionInstallationCounter.set(instance.sanitizedExtensionId, installationCount);
-
-      this.dependencies.extensionRegistrators.forEach((register) =>
-        register(instance, installationCount),
-      );
+      extension.register();
     });
 
     // Return ExtensionLoading[]

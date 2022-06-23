@@ -4,6 +4,16 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     >
       <div
@@ -151,6 +161,16 @@ exports[`ask-boolean given started when asking multiple questions when answering
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     >
       <div
@@ -229,6 +249,16 @@ exports[`ask-boolean given started when asking multiple questions when answering
 exports[`ask-boolean given started when asking question renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     >
@@ -309,6 +339,16 @@ exports[`ask-boolean given started when asking question when user answers "no" r
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>
@@ -319,6 +359,16 @@ exports[`ask-boolean given started when asking question when user answers "yes" 
 <body>
   <div>
     <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
   </div>
@@ -328,6 +378,16 @@ exports[`ask-boolean given started when asking question when user answers "yes" 
 exports[`ask-boolean given started when asking question when user closes notification without answering the question renders 1`] = `
 <body>
   <div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+      />
+      <div
+        class="rightSide"
+      />
+    </div>
     <div
       class="Notifications flex column align-flex-end"
     />

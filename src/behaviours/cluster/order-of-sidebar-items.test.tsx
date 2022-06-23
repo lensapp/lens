@@ -8,7 +8,7 @@ import { fireEvent } from "@testing-library/react";
 import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
 import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
 import { computed } from "mobx";
-import { get, includes, noop } from "lodash/fp";
+import { noop } from "lodash/fp";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
@@ -35,22 +35,13 @@ describe("cluster - order of sidebar items", () => {
 
     it("has parent items in order", () => {
       const actual = rendered
-        .queryAllByTestId("sidebar-item")
-
-        .filter((element) =>
-          includes(element.dataset.idTest)([
-            "some-parent-id",
-            "some-other-parent-id",
-            "some-another-parent-id",
-          ]),
-        )
-
-        .map(get("dataset.idTest"));
+        .queryAllByTestId(/^sidebar-item-(some-parent-id|some-other-parent-id|some-another-parent-id)/)
+        .map(elem => elem.dataset.testid);
 
       expect(actual).toEqual([
-        "some-parent-id",
-        "some-another-parent-id",
-        "some-other-parent-id",
+        "sidebar-item-some-parent-id",
+        "sidebar-item-some-another-parent-id",
+        "sidebar-item-some-other-parent-id",
       ]);
     });
 
@@ -69,16 +60,14 @@ describe("cluster - order of sidebar items", () => {
 
       it("has child items in order", () => {
         const actual = rendered
-          .queryAllByTestId("sidebar-item")
-          .filter(
-            (element) => element.dataset.parentIdTest === "some-parent-id",
-          )
-          .map(get("dataset.idTest"));
+          .queryAllByTestId(/^sidebar-item-*/)
+          .filter((element) => element.dataset.parentIdTest === "some-parent-id")
+          .map(elem => elem.dataset.testid);
 
         expect(actual).toEqual([
-          "some-child-id",
-          "some-another-child-id",
-          "some-other-child-id",
+          "sidebar-item-some-child-id",
+          "sidebar-item-some-another-child-id",
+          "sidebar-item-some-other-child-id",
         ]);
       });
     });

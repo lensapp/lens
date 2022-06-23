@@ -3,16 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import path from "path";
-import bundledBinariesNormalizedArchInjectable from "./bundled-binaries-normalized-arch.injectable";
 import bundledResourcesDirectoryInjectable from "./bundled-resources-dir.injectable";
+import getAbsolutePathInjectable from "../path/get-absolute-path.injectable";
+import normalizedPlatformArchitectureInjectable from "./normalized-platform-architecture.injectable";
 
-const baseBundeledBinariesDirectoryInjectable = getInjectable({
-  id: "base-bundeled-binaries-directory",
-  instantiate: (di) => path.join(
-    di.inject(bundledResourcesDirectoryInjectable),
-    di.inject(bundledBinariesNormalizedArchInjectable),
-  ),
+const baseBundledBinariesDirectoryInjectable = getInjectable({
+  id: "base-bundled-binaries-directory",
+  instantiate: (di) => {
+    const bundledResourcesDirectory = di.inject(bundledResourcesDirectoryInjectable);
+    const normalizedPlatformArchitecture = di.inject(normalizedPlatformArchitectureInjectable);
+    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+
+    return getAbsolutePath(
+      bundledResourcesDirectory,
+      normalizedPlatformArchitecture,
+    );
+  },
 });
 
-export default baseBundeledBinariesDirectoryInjectable;
+export default baseBundledBinariesDirectoryInjectable;

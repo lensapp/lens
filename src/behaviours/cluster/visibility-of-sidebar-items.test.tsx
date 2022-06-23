@@ -10,11 +10,10 @@ import { computed } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import React from "react";
 import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
-import { routeInjectionToken } from "../../common/front-end-routing/route-injection-token";
+import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
-import { getSidebarItem } from "../utils";
 
 describe("cluster - visibility of sidebar items", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -42,9 +41,9 @@ describe("cluster - visibility of sidebar items", () => {
     });
 
     it("related sidebar item does not exist", () => {
-      const item = getSidebarItem(rendered, "some-item-id");
+      const item = rendered.queryByTestId("sidebar-item-some-item-id");
 
-      expect(item).toBeUndefined();
+      expect(item).toBeNull();
     });
 
     describe("when kube resource becomes allowed", () => {
@@ -57,9 +56,9 @@ describe("cluster - visibility of sidebar items", () => {
       });
 
       it("related sidebar item exists", () => {
-        const item = getSidebarItem(rendered, "some-item-id");
+        const item = rendered.queryByTestId("sidebar-item-some-item-id");
 
-        expect(item).not.toBeUndefined();
+        expect(item).not.toBeNull();
       });
     });
   });
@@ -83,7 +82,7 @@ const testRouteInjectable = getInjectable({
     };
   },
 
-  injectionToken: routeInjectionToken,
+  injectionToken: frontEndRouteInjectionToken,
 });
 
 const testRouteComponentInjectable = getInjectable({

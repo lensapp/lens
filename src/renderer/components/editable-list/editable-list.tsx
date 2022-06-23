@@ -84,5 +84,5 @@ class DefaultedEditableList<T> extends React.Component<EditableListProps<T> & ty
 }
 
 export function EditableList<T>(props: EditableListProps<T>) {
-  return <DefaultedEditableList {...props as never}/>;
+  return <DefaultedEditableList {...props as object}/>;
 }

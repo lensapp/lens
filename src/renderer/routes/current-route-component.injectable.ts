@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { matches } from "lodash/fp";
 import { computed } from "mobx";
 import currentRouteInjectable from "./current-route.injectable";
@@ -13,6 +14,8 @@ const currentRouteComponentInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(currentRouteInjectable);
+    const computedInjectMany = di.inject(computedInjectManyInjectable);
+    const routeComponents = computedInjectMany(routeSpecificComponentInjectionToken);
 
     return computed(() => {
       const currentRoute = route.get();
@@ -21,8 +24,8 @@ const currentRouteComponentInjectable = getInjectable({
         return undefined;
       }
 
-      const routeSpecificComponent = di
-        .injectMany(routeSpecificComponentInjectionToken)
+      const routeSpecificComponent = routeComponents
+        .get()
         .find(matches({ route: currentRoute }));
 
       return routeSpecificComponent?.Component;

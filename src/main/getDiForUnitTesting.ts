@@ -5,7 +5,7 @@
 
 import glob from "glob";
 import { kebabCase, memoize, noop } from "lodash/fp";
-import type { DiContainer } from "@ogre-tools/injectable";
+import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import appNameInjectable from "./app-paths/app-name/app-name.injectable";
@@ -64,7 +64,7 @@ import { observable } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
 import ipcMainInjectable from "./utils/channel/ipc-main/ipc-main.injectable";
-import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window-for.injectable";
+import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
@@ -72,11 +72,11 @@ import getElectronThemeInjectable from "./electron-app/features/get-electron-the
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import productNameInjectable from "./app-paths/app-name/product-name.injectable";
-import quitAndInstallUpdateInjectable from "./electron-app/features/quit-and-install-update.injectable";
+import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
 import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import baseBundeledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
+import baseBundledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
@@ -84,13 +84,31 @@ import startKubeConfigSyncInjectable from "./start-main-application/runnables/ku
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import execFileInjectable from "../common/fs/exec-file.injectable";
+import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-platform-architecture.injectable";
+import getHelmChartInjectable from "./helm/helm-service/get-helm-chart.injectable";
+import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-values.injectable";
+import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
+import deleteHelmReleaseInjectable from "./helm/helm-service/delete-helm-release.injectable";
+import getHelmReleaseHistoryInjectable from "./helm/helm-service/get-helm-release-history.injectable";
+import getHelmReleaseInjectable from "./helm/helm-service/get-helm-release.injectable";
+import getHelmReleaseValuesInjectable from "./helm/helm-service/get-helm-release-values.injectable";
+import installHelmChartInjectable from "./helm/helm-service/install-helm-chart.injectable";
+import listHelmReleasesInjectable from "./helm/helm-service/list-helm-releases.injectable";
+import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
+import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
+import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
     doGeneralOverrides = false,
   } = opts;
 
-  const di = createContainer();
+  const di = createContainer("main");
+
+  registerMobX(di);
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
 
@@ -107,6 +125,8 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(electronInjectable, () => ({}));
+    di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
@@ -134,6 +154,24 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(periodicalCheckForUpdatesInjectable, () => ({ start: () => {}, stop: () => {}, started: false }));
 
+    overrideFunctionalInjectables(di, [
+      getHelmChartInjectable,
+      getHelmChartValuesInjectable,
+      listHelmChartsInjectable,
+      deleteHelmReleaseInjectable,
+      getHelmReleaseHistoryInjectable,
+      getHelmReleaseInjectable,
+      getHelmReleaseValuesInjectable,
+      installHelmChartInjectable,
+      listHelmReleasesInjectable,
+      rollbackHelmReleaseInjectable,
+      updateHelmReleaseInjectable,
+      writeJsonFileInjectable,
+      readJsonFileInjectable,
+      readFileInjectable,
+      execFileInjectable,
+    ]);
+
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
@@ -141,25 +179,13 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });
-    di.override(baseBundeledBinariesDirectoryInjectable, () => "some-bin-directory");
+    di.override(baseBundledBinariesDirectoryInjectable, () => "some-bin-directory");
     di.override(spawnInjectable, () => () => {
       return {
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
         stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
         on: jest.fn(),
       } as never;
-    });
-
-    di.override(writeJsonFileInjectable, () => () => {
-      throw new Error("Tried to write JSON file to file system without specifying explicit override.");
-    });
-
-    di.override(readJsonFileInjectable, () => () => {
-      throw new Error("Tried to read JSON file from file system without specifying explicit override.");
-    });
-
-    di.override(readFileInjectable, () => () => {
-      throw new Error("Tried to read file from file system without specifying explicit override.");
     });
 
     di.override(loggerInjectable, () => ({
@@ -204,6 +230,7 @@ const overrideOperatingSystem = (di: DiContainer) => {
   di.override(platformInjectable, () => "darwin");
   di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
   di.override(joinPathsInjectable, () => joinPathsFake);
+  di.override(normalizedPlatformArchitectureInjectable, () => "arm64");
 };
 
 const overrideElectronFeatures = (di: DiContainer) => {
@@ -222,13 +249,13 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
   di.override(requestSingleInstanceLockInjectable, () => () => true);
   di.override(disableHardwareAccelerationInjectable, () => () => {});
-  di.override(shouldStartHiddenInjectable, () => true);
+  di.override(shouldStartHiddenInjectable, () => false);
   di.override(showMessagePopupInjectable, () => () => {});
   di.override(waitForElectronToBeReadyInjectable, () => () => Promise.resolve());
   di.override(ipcMainInjectable, () => ({}));
   di.override(getElectronThemeInjectable, () => () => "dark");
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
-  di.override(quitAndInstallUpdateInjectable, () => () => {});
+  di.override(electronQuitAndInstallUpdateInjectable, () => () => {});
   di.override(setUpdateOnQuitInjectable, () => () => {});
   di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
 
@@ -236,7 +263,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
     throw new Error("Tried to check for platform updates without explicit override.");
   });
 
-  di.override(createElectronWindowForInjectable, () => () => async () => ({
+  di.override(createElectronWindowForInjectable, () => () => ({
     show: () => {},
 
     close: () => {},
@@ -246,6 +273,9 @@ const overrideElectronFeatures = (di: DiContainer) => {
 
       sendFake(null, arg);
     },
+
+    loadFile: async () => {},
+    loadUrl: async () => {},
   }));
 
   di.override(
@@ -256,4 +286,12 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(setElectronAppPathInjectable, () => () => {});
   di.override(publishIsConfiguredInjectable, () => false);
   di.override(electronUpdaterIsActiveInjectable, () => false);
+};
+
+const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
+  injectables.forEach(injectable => {
+    di.override(injectable, () => () => {
+      throw new Error(`Tried to run "${injectable.id}" without explicit override.`);
+    });
+  });
 };

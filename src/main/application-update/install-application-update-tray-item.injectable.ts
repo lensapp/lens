@@ -5,12 +5,12 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-item-injection-token";
-import quitAndInstallUpdateInjectable from "../electron-app/features/quit-and-install-update.injectable";
 import discoveredUpdateVersionInjectable from "../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import updateIsBeingDownloadedInjectable from "../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
 import { withErrorSuppression } from "../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
 import withErrorLoggingInjectable from "../../common/utils/with-error-logging/with-error-logging.injectable";
+import quitAndInstallUpdateInjectable from "./quit-and-install-update.injectable";
 
 const installApplicationUpdateTrayItemInjectable = getInjectable({
   id: "install-update-tray-item",

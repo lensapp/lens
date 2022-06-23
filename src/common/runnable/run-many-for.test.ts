@@ -15,7 +15,7 @@ describe("runManyFor", () => {
     let actualPromise: Promise<void>;
 
     beforeEach(() => {
-      const rootDi = createContainer();
+      const rootDi = createContainer("irrelevant");
 
       runMock = asyncFn();
 
@@ -67,7 +67,7 @@ describe("runManyFor", () => {
     let actualPromise: Promise<void>;
 
     beforeEach(() => {
-      const di = createContainer();
+      const di = createContainer("irrelevant");
 
       runMock = asyncFn();
 
@@ -170,7 +170,7 @@ describe("runManyFor", () => {
   });
 
   it("given invalid hierarchy, when running runnables, throws", () => {
-    const rootDi = createContainer();
+    const rootDi = createContainer("irrelevant");
 
     const runMock = asyncFn<(...args: unknown[]) => void>();
 
@@ -218,7 +218,7 @@ describe("runManyFor", () => {
     let runMock: AsyncFnMock<(...args: unknown[]) => Promise<void>>;
 
     beforeEach(() => {
-      const rootDi = createContainer();
+      const rootDi = createContainer("irrelevant");
 
       runMock = asyncFn();
 

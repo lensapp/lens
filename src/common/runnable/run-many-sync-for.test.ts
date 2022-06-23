@@ -11,7 +11,7 @@ describe("runManySyncFor", () => {
     let runMock: jest.Mock;
 
     beforeEach(() => {
-      const rootDi = createContainer();
+      const rootDi = createContainer("irrelevant");
 
       runMock = jest.fn();
 
@@ -50,7 +50,7 @@ describe("runManySyncFor", () => {
     let runMock: jest.Mock<(arg: string) => void>;
 
     beforeEach(() => {
-      const di = createContainer();
+      const di = createContainer("irrelevant");
 
       runMock = jest.fn();
 
@@ -99,7 +99,7 @@ describe("runManySyncFor", () => {
   });
 
   it("given invalid hierarchy, when running runnables, throws", () => {
-    const rootDi = createContainer();
+    const rootDi = createContainer("irrelevant");
 
     const runMock = jest.fn();
 
@@ -147,7 +147,7 @@ describe("runManySyncFor", () => {
     let runMock: jest.Mock<(arg: string, arg2: string) => void>;
 
     beforeEach(() => {
-      const rootDi = createContainer();
+      const rootDi = createContainer("irrelevant");
 
       runMock = jest.fn();
 

@@ -233,7 +233,9 @@ class NonInjectedSelect<
           Menu: ({ className, ...props }) => (
             <WrappedMenu
               {...props}
-              className={cssNames(menuClass, this.themeClass, className)}
+              className={cssNames(menuClass, this.themeClass, className, {
+                [`${inputId}-options`]: !!inputId,
+              })}
             />
           ),
         }}

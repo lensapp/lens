@@ -7,16 +7,17 @@ import { filter, map } from "lodash/fp";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import { pipeline } from "@ogre-tools/fp";
-import { extensionPreferenceItemInjectionToken } from "./extension-preference-items.injectable";
+import { extensionPreferenceItemInjectionToken } from "./extension-preference-items-injection-token";
 
 const extensionPreferenceItemRegistratorInjectable = getInjectable({
   id: "extension-preference-item-registrator",
 
   instantiate:
-    (di) =>
-      (ext, extensionInstallationCount) => {
+    () =>
+      (ext) => {
         const extension = ext as LensRendererExtension;
-        const injectables = pipeline(
+
+        return pipeline(
           extension.appPreferences,
 
           filter(
@@ -27,7 +28,7 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
             const id = `extension-preferences-item-${registration.id}-for-extension-${extension.sanitizedExtensionId}`;
 
             return getInjectable({
-              id: `${id}-for-instance-${extensionInstallationCount}`,
+              id,
               injectionToken: extensionPreferenceItemInjectionToken,
 
               instantiate: () => ({
@@ -43,10 +44,6 @@ const extensionPreferenceItemRegistratorInjectable = getInjectable({
             });
           }),
         );
-
-        di.register(...injectables);
-
-        return;
       },
 
   injectionToken: extensionRegistratorInjectionToken,

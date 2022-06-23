@@ -2,6 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import styles from "./cluster-frame.module.css";
 import React, { useEffect } from "react";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
@@ -30,12 +31,14 @@ import { disposer } from "../../utils";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import startUrlInjectable from "./start-url.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import currentPathInjectable from "../../routes/current-path.injectable";
 
 interface Dependencies {
   namespaceStore: NamespaceStore;
-  currentRouteComponent: IComputedValue<React.ElementType<{}> | undefined | null>;
+  currentRouteComponent: IComputedValue<React.ElementType<{}> | undefined>;
   startUrl: IComputedValue<string>;
   subscribeStores: SubscribeStores;
+  currentPath: IComputedValue<string>;
 }
 
 export const NonInjectedClusterFrame = observer(({
@@ -43,6 +46,7 @@ export const NonInjectedClusterFrame = observer(({
   currentRouteComponent,
   startUrl,
   subscribeStores,
+  currentPath,
 }: Dependencies) => {
   useEffect(() => disposer(
     subscribeStores([
@@ -52,6 +56,8 @@ export const NonInjectedClusterFrame = observer(({
   ), []);
 
   const Component = currentRouteComponent.get();
+  const starting = startUrl.get();
+  const current = currentPath.get();
 
   return (
     <ErrorBoundary>
@@ -62,7 +68,16 @@ export const NonInjectedClusterFrame = observer(({
         {
           Component
             ? <Component />
-            : <Redirect to={startUrl.get()} />
+            // NOTE: this check is to prevent an infinite loop
+            : starting !== current
+              ? <Redirect to={startUrl.get()} />
+              : (
+                <div className={styles.centering}>
+                  <div className="error">
+                    An error has occured. No route can be found matching the current route, which is also the starting route.
+                  </div>
+                </div>
+              )
         }
       </MainLayout>
 
@@ -87,6 +102,7 @@ export const ClusterFrame = withInjectables<Dependencies>(NonInjectedClusterFram
     subscribeStores: di.inject(subscribeStoresInjectable),
     startUrl: di.inject(startUrlInjectable),
     currentRouteComponent: di.inject(currentRouteComponentInjectable),
+    currentPath: di.inject(currentPathInjectable),
   }),
 });
 

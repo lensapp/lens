@@ -9,11 +9,9 @@ import URLParse from "url-parse";
 import type { LensExtension } from "../../../extensions/lens-extension";
 import { broadcastMessage } from "../../../common/ipc";
 import { observable, when, makeObservable } from "mobx";
-import type { RouteAttempt } from "../../../common/protocol-handler";
+import type { LensProtocolRouterDependencies, RouteAttempt } from "../../../common/protocol-handler";
 import { ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { disposer, noop } from "../../../common/utils";
-import type { ExtensionLoader } from "../../../extensions/extension-loader";
-import type { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -36,9 +34,7 @@ function checkHost<Query>(url: URLParse<Query>): boolean {
   }
 }
 
-interface Dependencies {
-  extensionLoader: ExtensionLoader;
-  extensionsStore: ExtensionsStore;
+export interface LensProtocolRouterMainDependencies extends LensProtocolRouterDependencies {
   showApplicationWindow: () => Promise<void>;
 }
 
@@ -50,7 +46,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
 
   protected disposers = disposer();
 
-  constructor(protected dependencies: Dependencies) {
+  constructor(protected readonly dependencies: LensProtocolRouterMainDependencies) {
     super(dependencies);
 
     makeObservable(this);

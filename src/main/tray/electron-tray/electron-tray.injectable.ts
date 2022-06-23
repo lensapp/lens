@@ -9,15 +9,24 @@ import showApplicationWindowInjectable from "../../start-main-application/lens-w
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import trayIconPathsInjectable from "../tray-icon-path.injectable";
-import type { TrayMenuItem } from "../tray-menu-item/tray-menu-item-injection-token";
 import { convertToElectronMenuTemplate } from "../reactive-tray-menu-items/converters";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
+export interface MinimalTrayMenuItem {
+  id: string;
+  parentId: string | null;
+  enabled: boolean;
+  label?: string;
+  click?: () => Promise<void> | void;
+  tooltip?: string;
+  separator?: boolean;
+}
+
 export interface ElectronTray {
   start(): void;
   stop(): void;
-  setMenuItems(menuItems: TrayMenuItem[]): void;
+  setMenuItems(menuItems: MinimalTrayMenuItem[]): void;
   setIconPath(iconPath: string): void;
 }
 

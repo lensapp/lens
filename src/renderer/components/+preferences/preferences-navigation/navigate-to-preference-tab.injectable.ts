@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Route } from "../../../../common/front-end-routing/route-injection-token";
+import type { Route } from "../../../../common/front-end-routing/front-end-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 
 const navigateToPreferenceTabInjectable = getInjectable({

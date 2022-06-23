@@ -5,25 +5,29 @@
 import { getRouteInjectable } from "../../../router/router.injectable";
 import { apiPrefix } from "../../../../common/vars";
 import { route } from "../../../router/route";
-import { helmService } from "../../../helm/helm-service";
+import getHelmChartInjectable from "../../../helm/helm-service/get-helm-chart.injectable";
 
 const getChartRouteInjectable = getRouteInjectable({
   id: "get-chart-route",
 
-  instantiate: () => route({
-    method: "get",
-    path: `${apiPrefix}/v2/charts/{repo}/{chart}`,
-  })(async ({ params, query }) => {
-    const { repo, chart } = params;
+  instantiate: (di) => {
+    const getHelmChart = di.inject(getHelmChartInjectable);
 
-    return {
-      response: await helmService.getChart(
-        repo,
-        chart,
-        query.get("version") ?? undefined,
-      ),
-    };
-  }),
+    return route({
+      method: "get",
+      path: `${apiPrefix}/v2/charts/{repo}/{chart}`,
+    })(async ({ params, query }) => {
+      const { repo, chart } = params;
+
+      return {
+        response: await getHelmChart(
+          repo,
+          chart,
+          query.get("version") ?? undefined,
+        ),
+      };
+    });
+  },
 });
 
 export default getChartRouteInjectable;

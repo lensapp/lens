@@ -3,11 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import platformInjectable from "./platform.injectable";
 
 const normalizedPlatformInjectable = getInjectable({
   id: "normalized-platform",
-  instantiate: () => {
-    switch (process.platform) {
+
+  instantiate: (di) => {
+    const platform = di.inject(platformInjectable);
+
+    switch (platform) {
       case "darwin":
         return "darwin";
       case "linux":
@@ -15,10 +19,9 @@ const normalizedPlatformInjectable = getInjectable({
       case "win32":
         return "windows";
       default:
-        throw new Error(`platform=${process.platform} is unsupported`);
+        throw new Error(`platform=${platform} is unsupported`);
     }
   },
-  causesSideEffects: true,
 });
 
 export default normalizedPlatformInjectable;

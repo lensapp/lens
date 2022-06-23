@@ -10,7 +10,14 @@ import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export class ClusterApi extends KubeApi<Cluster> {
+  /**
+   * @deprecated This field is legacy and never used.
+   */
   static kind = "Cluster";
+
+  /**
+   * @deprecated This field is legacy and never used.
+   */
   static namespaced = true;
 
   constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
@@ -104,6 +111,7 @@ export interface Cluster {
 export class Cluster extends KubeObject {
   static kind = "Cluster";
   static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
+  static namespaced = true;
 
   getStatus() {
     if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;

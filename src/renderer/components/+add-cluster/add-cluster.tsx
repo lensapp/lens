@@ -39,9 +39,9 @@ interface Dependencies {
 function getContexts(config: KubeConfig): Map<string, Option> {
   return new Map(
     splitConfig(config)
-      .map(({ config, error }) => [config.currentContext, {
+      .map(({ config, validationResult }) => [config.currentContext, {
         config,
-        error,
+        error: validationResult.error?.toString(),
       }]),
   );
 }
@@ -134,7 +134,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
         {this.allErrors.length > 0 && (
           <>
             <h3>KubeConfig Yaml Validation Errors:</h3>
-            {...this.allErrors.map(error => <div key={error} className="error">{error}</div>)}
+            {this.allErrors.map(error => <div key={error} className="error">{error}</div>)}
           </>
         )}
         <div className="actions-panel">

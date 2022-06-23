@@ -10,21 +10,22 @@ import type { Cluster } from "../../common/cluster/cluster";
 import { contentTypes } from "./router-content-types";
 import type { LensApiRequest, LensApiResult, Route } from "./route";
 import type { ServerIncomingMessage } from "../lens-proxy/lens-proxy";
+import type { ParseRequest } from "./parse-request.injectable";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
   res: http.ServerResponse;
   cluster: Cluster | undefined;
-  params: any;
+  params: Partial<Record<string, string>>;
   url: URL;
 }
 
 interface Dependencies {
-  parseRequest: (request: http.IncomingMessage, _: null, options: { parse: boolean; output: string }) => Promise<{ payload: any }>;
+  parseRequest: ParseRequest;
 }
 
 export class Router {
-  protected router = new Call.Router();
+  protected router = new Call.Router<ReturnType<typeof handleRoute>>();
 
   constructor(routes: Route<unknown, string>[], private dependencies: Dependencies) {
     routes.forEach(route => {
@@ -37,17 +38,16 @@ export class Router {
     const path = url.pathname;
     const method = req.method.toLowerCase();
     const matchingRoute = this.router.route(method, path);
-    const routeFound = !matchingRoute.isBoom;
 
-    if (routeFound) {
-      const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
-
-      await matchingRoute.route(request, res);
-
-      return true;
+    if (matchingRoute instanceof Error) {
+      return false;
     }
 
-    return false;
+    const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
+
+    await matchingRoute.route(request, res);
+
+    return true;
   }
 
   protected async getRequest(opts: RouterRequestOpts): Promise<LensApiRequest<string>> {
@@ -64,7 +64,7 @@ export class Router {
       raw: {
         req, res,
       },
-      query: url.searchParams as never,
+      query: url.searchParams,
       payload,
       params,
     };

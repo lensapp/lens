@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { TrayMenuItem } from "../tray-menu-item/tray-menu-item-injection-token";
+import type { MinimalTrayMenuItem } from "../electron-tray/electron-tray.injectable";
 
-export function convertToElectronMenuTemplate(trayMenuItems: TrayMenuItem[]): Electron.MenuItemConstructorOptions[] {
+export function convertToElectronMenuTemplate(trayMenuItems: MinimalTrayMenuItem[]): Electron.MenuItemConstructorOptions[] {
   const toTrayMenuOptions = (parentId: string | null) => (
     trayMenuItems
       .filter((item) => item.parentId === parentId)
-      .map((trayMenuItem: TrayMenuItem): Electron.MenuItemConstructorOptions => {
+      .map((trayMenuItem): Electron.MenuItemConstructorOptions => {
         if (trayMenuItem.separator) {
           return { id: trayMenuItem.id, type: "separator" };
         }
@@ -17,8 +17,8 @@ export function convertToElectronMenuTemplate(trayMenuItems: TrayMenuItem[]): El
 
         return {
           id: trayMenuItem.id,
-          label: trayMenuItem.label?.get(),
-          enabled: trayMenuItem.enabled.get(),
+          label: trayMenuItem.label,
+          enabled: trayMenuItem.enabled,
           toolTip: trayMenuItem.tooltip,
 
           ...(childItems.length === 0

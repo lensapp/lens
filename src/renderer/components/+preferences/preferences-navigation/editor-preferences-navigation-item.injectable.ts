@@ -24,6 +24,7 @@ const editorPreferencesNavigationItemInjectable = getInjectable({
     return {
       id: "editor",
       label: "Editor",
+      parent: "general",
       navigate: navigateToPreferenceTab(route),
       isActive: routeIsActive,
       isVisible: computed(() => true),

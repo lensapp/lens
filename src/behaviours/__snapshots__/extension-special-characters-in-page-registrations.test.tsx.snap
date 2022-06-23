@@ -3,6 +3,16 @@
 exports[`extension special characters in page registrations renders 1`] = `
 <div>
   <div
+    class="StatusBar"
+  >
+    <div
+      class="leftSide"
+    />
+    <div
+      class="rightSide"
+    />
+  </div>
+  <div
     class="Notifications flex column align-flex-end"
   />
 </div>
@@ -10,6 +20,16 @@ exports[`extension special characters in page registrations renders 1`] = `
 
 exports[`extension special characters in page registrations when navigating to route with ID having special characters renders 1`] = `
 <div>
+  <div
+    class="StatusBar"
+  >
+    <div
+      class="leftSide"
+    />
+    <div
+      class="rightSide"
+    />
+  </div>
   <div>
     Some page
   </div>

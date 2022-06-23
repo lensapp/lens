@@ -5,7 +5,12 @@
 
 import glob from "glob";
 import { memoize, noop } from "lodash/fp";
-import { createContainer } from "@ogre-tools/injectable";
+import type {
+  DiContainer,
+  Injectable } from "@ogre-tools/injectable";
+import {
+  createContainer,
+} from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
@@ -21,16 +26,13 @@ import type { ClusterStore } from "../common/cluster-store/cluster-store";
 import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
-import isMacInjectable from "../common/vars/is-mac.injectable";
-import isWindowsInjectable from "../common/vars/is-windows.injectable";
-import isLinuxInjectable from "../common/vars/is-linux.injectable";
 import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
 import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
-import hostedClusterIdInjectable from "../common/cluster-store/hosted-cluster-id.injectable";
+import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
 import historyInjectable from "./navigation/history.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
@@ -45,13 +47,20 @@ import appVersionInjectable from "../common/get-configuration-file-model/app-ver
 import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
+import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
+import callForPublicHelmRepositoriesInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import platformInjectable from "../common/vars/platform.injectable";
+import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
     doGeneralOverrides = false,
   } = opts;
 
-  const di = createContainer();
+  const di = createContainer("renderer");
+
+  registerMobX(di);
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
@@ -68,9 +77,10 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
   if (doGeneralOverrides) {
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-    di.override(isMacInjectable, () => true);
-    di.override(isWindowsInjectable, () => false);
-    di.override(isLinuxInjectable, () => false);
+    di.override(platformInjectable, () => "darwin");
+    di.override(startTopbarStateSyncInjectable, () => ({
+      run: () => {},
+    }));
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
@@ -91,9 +101,11 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
       on: () => {},
     }) as unknown as IpcRenderer);
 
-    di.override(broadcastMessageInjectable, () => () => {
-      throw new Error("Tried to broadcast message over IPC without explicit override.");
-    });
+    overrideFunctionalInjectables(di, [
+      broadcastMessageInjectable,
+      getFilePathsInjectable,
+      callForPublicHelmRepositoriesInjectable,
+    ]);
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
@@ -147,3 +159,11 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
+
+const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
+  injectables.forEach(injectable => {
+    di.override(injectable, () => () => {
+      throw new Error(`Tried to run "${injectable.id}" without explicit override.`);
+    });
+  });
+};

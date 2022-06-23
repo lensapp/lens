@@ -7,7 +7,7 @@ import net from "net";
 import type http from "http";
 import spdy from "spdy";
 import type httpProxy from "http-proxy";
-import { apiPrefix, apiKubePrefix } from "../../common/vars";
+import { apiPrefix, apiKubePrefix, contentSecurityPolicy } from "../../common/vars";
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import logger from "../logger";
@@ -237,6 +237,10 @@ export class LensProxy {
       if (proxyTarget) {
         return this.dependencies.proxy.web(req, res, proxyTarget);
       }
+    }
+
+    if (contentSecurityPolicy) {
+      res.setHeader("Content-Security-Policy", contentSecurityPolicy);
     }
 
     this.dependencies.router.route(cluster, req, res);
