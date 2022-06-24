@@ -8,20 +8,18 @@ import styles from "./styles.module.scss";
 import type { HTMLAttributes } from "react";
 import React, { useState } from "react";
 import { Menu, MenuItem } from "../menu";
-import { cssNames } from "../../utils";
+import { cssNames, noop } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
-import appUpdateWarningLevelInjectable from "../../app-update-warning/app-update-warning-level.injectable";
-import type { IComputedValue } from "mobx";
-import quitAndInstallUpdateInjectable from "../../../main/electron-app/features/quit-and-install-update.injectable";
+import updateWarningLevelInjectable from "../../../main/application-update/update-warning-level/update-warning-level.injectable";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
 }
 
 interface Dependencies {
-  warningLevel?: IComputedValue<"light" | "medium" | "high" | "">;
+  warningLevel: "light" | "medium" | "high" | "";
   update: () => void;
 }
 
@@ -34,7 +32,7 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
     setOpened(!opened);
   };
 
-  if (!warningLevel || !warningLevel.get()) {
+  if (!warningLevel) {
     return null;
   }
 
@@ -42,11 +40,11 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
     <>
       <button
         data-testid="update-button"
-        data-warning-level={warningLevel.get()}
+        data-warning-level={warningLevel}
         id={buttonId}
         className={cssNames(styles.updateButton, {
-          [styles.warningHigh]: warningLevel.get() === "high",
-          [styles.warningMedium]: warningLevel.get() === "medium",
+          [styles.warningHigh]: warningLevel === "high",
+          [styles.warningMedium]: warningLevel === "medium",
         })}
       >
         Update
@@ -73,10 +71,15 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
 
 export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(NonInjectedUpdateButton, {
   getProps: (di, props) => {
+    const warnignLevel = di.inject(updateWarningLevelInjectable);
+
+    // TODO: quit and install on update();
+    const update = noop;
+
     return {
       ...props,
-      warningLevel: di.inject(appUpdateWarningLevelInjectable),
-      update: di.inject(quitAndInstallUpdateInjectable),
+      warningLevel: warnignLevel.value.get(),
+      update,
     };
   },
 });
