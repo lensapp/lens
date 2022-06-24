@@ -6,6 +6,7 @@ import checkForPlatformUpdatesInjectable from "../../main/application-update/che
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
+import periodicalCheckForUpdateWarningInjectable from "../../main/application-update/update-warning-level/periodical-check-for-update-warning.injectable";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -34,6 +35,9 @@ describe("encourage user to update when sufficient time passed since update was 
 
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
+
+      mainDi.unoverride(periodicalCheckForUpdateWarningInjectable);
+      mainDi.permitSideEffects(periodicalCheckForUpdateWarningInjectable);
     })
   });
 
