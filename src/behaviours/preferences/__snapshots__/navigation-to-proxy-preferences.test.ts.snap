@@ -52,7 +52,15 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -636,7 +644,15 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />

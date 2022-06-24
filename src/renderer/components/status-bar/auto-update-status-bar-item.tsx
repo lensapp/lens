@@ -72,6 +72,7 @@ const downloadSucceeded = (version: string) => <div>{`Download for version ${ver
 
 const idle = () => <></>;
 
+
 export const NonInjectedAutoUpdateComponent = observer(({ progressOfUpdateDownload, discoveredVersionState, downloadingUpdateState, checkingForUpdatesState }: Dependencies) => {
   const discoveredVersion = discoveredVersionState.value.get();
 

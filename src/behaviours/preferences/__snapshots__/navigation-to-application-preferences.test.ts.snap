@@ -52,7 +52,15 @@ exports[`preferences - navigation to application preferences given in some child
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -312,7 +320,15 @@ exports[`preferences - navigation to application preferences given in some child
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />

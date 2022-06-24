@@ -53,7 +53,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -577,7 +585,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -1101,7 +1117,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -1517,7 +1541,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -2041,7 +2073,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -2457,7 +2497,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -2981,7 +3029,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -3542,7 +3598,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -3958,7 +4022,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -4374,7 +4446,15 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />

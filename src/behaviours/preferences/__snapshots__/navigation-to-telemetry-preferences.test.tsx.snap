@@ -52,7 +52,15 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -298,7 +306,15 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -882,7 +898,15 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -1478,7 +1502,15 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -1712,7 +1744,15 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />

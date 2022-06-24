@@ -52,7 +52,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -648,7 +656,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -848,7 +864,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -914,7 +938,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -980,7 +1012,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -1576,7 +1616,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -1776,7 +1824,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -1976,7 +2032,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />

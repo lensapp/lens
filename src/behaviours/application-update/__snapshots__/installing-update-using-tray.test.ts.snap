@@ -53,7 +53,15 @@ exports[`installing update using tray when started renders 1`] = `
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -118,7 +126,18 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="Spinner singleColor"
+          />
+          <div>
+            Checking for updates...
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -224,7 +243,18 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            Download for version some-version started 
+          </div>
+          <div
+            class="Spinner singleColor"
+          />
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -388,7 +418,15 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -592,7 +630,15 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            some-version is available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -738,7 +784,15 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />

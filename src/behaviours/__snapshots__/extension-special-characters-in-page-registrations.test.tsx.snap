@@ -52,7 +52,15 @@ exports[`extension special characters in page registrations renders 1`] = `
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />
@@ -115,7 +123,15 @@ exports[`extension special characters in page registrations when navigating to r
   >
     <div
       class="leftSide"
-    />
+    >
+      <div
+        class="item"
+      >
+        <div>
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
     />

@@ -53,7 +53,15 @@ exports[`periodical checking of updates given updater is enabled and configurati
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />

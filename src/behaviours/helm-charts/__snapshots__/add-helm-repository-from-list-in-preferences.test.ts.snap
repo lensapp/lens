@@ -53,7 +53,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -577,7 +585,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -1108,7 +1124,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -1692,7 +1716,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -2223,7 +2255,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -2754,7 +2794,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -3278,7 +3326,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -3839,7 +3895,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -4463,7 +4527,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -5024,7 +5096,15 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />

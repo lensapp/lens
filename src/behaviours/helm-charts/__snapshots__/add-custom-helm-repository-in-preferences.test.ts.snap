@@ -53,7 +53,15 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -577,7 +585,15 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -1108,7 +1124,15 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -1748,7 +1772,15 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -2287,7 +2319,15 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -2927,7 +2967,15 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -3743,7 +3791,15 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div>
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />
@@ -4383,7 +4439,11 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        />
+      </div>
       <div
         class="rightSide"
       />
@@ -5199,7 +5259,11 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        />
+      </div>
       <div
         class="rightSide"
       />
@@ -5839,7 +5903,11 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        />
+      </div>
       <div
         class="rightSide"
       />
@@ -6378,7 +6446,11 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        />
+      </div>
       <div
         class="rightSide"
       />
@@ -6910,7 +6982,11 @@ exports[`add custom helm repository in preferences when navigating to preference
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        />
+      </div>
       <div
         class="rightSide"
       />
