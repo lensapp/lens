@@ -40,6 +40,7 @@ export interface NavigateToRoute {
   (route: Route<void>, options?: BaseNavigateToRouteOptions): void;
   <TParameters extends Record<TRequiredKeys, string | number>, TRequiredKeys extends string>(route: Route<TParameters>, opts: NavigateToRouteOptions<TParameters>): void;
   <TParameters extends object>(route: Route<TParameters>, opts?: NavigateToRouteOptions<TParameters>): void;
+  <TParameters extends object>(route: Route<TParameters | void>, opts?: NavigateToRouteOptions<TParameters>): void;
 }
 
 export const navigateToRouteInjectionToken = getInjectionToken<NavigateToRoute>({
