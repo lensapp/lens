@@ -13,11 +13,12 @@ import type { ChartProps } from "./chart";
 import { Chart, ChartKind } from "./chart";
 import { bytesToUnits, cssNames, isObject } from "../../utils";
 import { ZebraStripesPlugin } from "./zebra-stripes.plugin";
-import type { ThemeStore } from "../../themes/store";
+import type { LensTheme } from "../../themes/store";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import assert from "assert";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
+import type { IComputedValue } from "mobx";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 export interface BarChartProps extends ChartProps {
   name?: string;
@@ -27,11 +28,11 @@ export interface BarChartProps extends ChartProps {
 const getBarColor: Scriptable<string> = ({ dataset }) => Color(dataset?.borderColor).alpha(0.2).string();
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
 }
 
 const NonInjectedBarChart = observer(({
-  themeStore,
+  activeTheme,
   name,
   data,
   className,
@@ -40,7 +41,7 @@ const NonInjectedBarChart = observer(({
   options: customOptions,
   ...settings
 }: Dependencies & BarChartProps) => {
-  const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
+  const { textColorPrimary, borderFaintColor, chartStripesColor } = activeTheme.get().colors;
   const { datasets: rawDatasets = [], ...rest } = data;
   const datasets = rawDatasets
     .filter(set => set.data?.length)
@@ -168,7 +169,7 @@ const NonInjectedBarChart = observer(({
 export const BarChart = withInjectables<Dependencies, BarChartProps>(NonInjectedBarChart, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
   }),
 });
 

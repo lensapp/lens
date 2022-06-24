@@ -7,6 +7,7 @@ import styles from "./cluster-issues.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
+import type { IComputedValue } from "mobx";
 import { computed, makeObservable } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
@@ -14,11 +15,9 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
-import type { ThemeStore } from "../../themes/store";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectAge } from "../kube-object/age";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
 import type { NodeStore } from "../+nodes/store";
 import type { EventStore } from "../+events/store";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
@@ -28,6 +27,8 @@ import type { PageParam } from "../../navigation";
 import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
+import type { LensTheme } from "../../themes/store";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 export interface ClusterIssuesProps {
   className?: string;
@@ -48,7 +49,7 @@ enum sortBy {
 }
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
   nodeStore: NodeStore;
   eventStore: EventStore;
   apiManager: ApiManager;
@@ -166,7 +167,7 @@ class NonInjectedClusterIssues extends React.Component<ClusterIssuesProps & Depe
           sortByDefault={{ sortBy: sortBy.object, orderBy: "asc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          className={cssNames("box grow", this.props.themeStore.activeTheme.type)}
+          className={cssNames("box grow", this.props.activeTheme.get().type)}
         >
           <TableHead nowrap>
             <TableCell className="message">Message</TableCell>
@@ -191,7 +192,7 @@ class NonInjectedClusterIssues extends React.Component<ClusterIssuesProps & Depe
 export const ClusterIssues = withInjectables<Dependencies, ClusterIssuesProps>(NonInjectedClusterIssues, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
     apiManager: di.inject(apiManagerInjectable),
     eventStore: di.inject(eventStoreInjectable),
     nodeStore: di.inject(nodeStoreInjectable),

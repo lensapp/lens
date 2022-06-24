@@ -6,6 +6,7 @@
 import styles from "./monaco-editor.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
+import type { IComputedValue } from "mobx";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { editor, Uri } from "monaco-editor";
 import type { MonacoTheme } from "./monaco-themes";
@@ -13,10 +14,10 @@ import { type MonacoValidator, monacoValidators } from "./monaco-validators";
 import { debounce, merge } from "lodash";
 import { autoBind, cssNames, disposer } from "../../utils";
 import type { UserStore } from "../../../common/user-store";
-import type { ThemeStore } from "../../themes/store";
+import type { LensTheme } from "../../themes/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 export type MonacoEditorId = string;
 
@@ -39,8 +40,8 @@ export interface MonacoEditorProps {
 }
 
 interface Dependencies {
-  themeStore: ThemeStore;
   userStore: UserStore;
+  activeTheme: IComputedValue<LensTheme>;
 }
 
 export function createMonacoUri(id: MonacoEditorId): Uri {
@@ -83,7 +84,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   }
 
   @computed get theme() {
-    return this.props.theme ?? this.props.themeStore.activeTheme.monacoTheme;
+    return this.props.theme ?? this.props.activeTheme.get().monacoTheme;
   }
 
   @computed get model(): editor.ITextModel {
@@ -306,8 +307,8 @@ export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, Mon
   {
     getProps: (di, props) => ({
       ...props,
-      themeStore: di.inject(themeStoreInjectable),
       userStore: di.inject(userStoreInjectable),
+      activeTheme: di.inject(activeThemeInjectable),
     }),
   },
 );

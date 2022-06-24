@@ -11,9 +11,10 @@ import ChartJS from "chart.js";
 import type { ChartProps } from "./chart";
 import { Chart } from "./chart";
 import { cssNames } from "../../utils";
-import type { ThemeStore } from "../../themes/store";
+import type { LensTheme } from "../../themes/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
+import type { IComputedValue } from "mobx";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 export interface PieChartProps extends ChartProps {
 }
@@ -44,18 +45,18 @@ function getCutout(length: number | undefined): number {
 }
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
 }
 
 const NonInjectedPieChart = observer(({
-  themeStore,
+  activeTheme,
   data,
   className,
   options,
   showChart,
   ...chartProps
 }: Dependencies & PieChartProps) => {
-  const { contentColor } = themeStore.activeTheme.colors;
+  const { contentColor } = activeTheme.get().colors;
   const opts: ChartOptions = {
     maintainAspectRatio: false,
     tooltips: {
@@ -113,7 +114,7 @@ const NonInjectedPieChart = observer(({
 export const PieChart = withInjectables<Dependencies, PieChartProps>(NonInjectedPieChart, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
   }),
 });
 
