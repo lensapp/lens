@@ -140,7 +140,7 @@ export const lensBlogWeblinkId = "lens-blog-link";
 export const kubernetesDocumentationWeblinkId = "kubernetes-documentation-link";
 
 export const appSemVer = new SemVer(packageInfo.version);
-export const docsUrl = "https://docs.k8slens.dev/main/" as string;
+export const docsUrl = "https://docs.k8slens.dev/main" as string;
 
 export const sentryDsn = packageInfo.config?.sentryDsn ?? "";
 export const contentSecurityPolicy = packageInfo.config?.contentSecurityPolicy ?? "";
