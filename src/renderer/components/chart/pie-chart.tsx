@@ -68,18 +68,11 @@ const NonInjectedPieChart = observer(({
           const total = datasetData.reduce((acc, cur) => acc + cur, 0);
           const percent = Math.round((datasetData[tooltipItem.index] as number / total) * 100);
           const percentLabel = isNaN(percent) ? "N/A" : `${percent}%`;
-          const tooltipLabel = dataset.tooltipLabels?.[tooltipItem.index];
-          let tooltip = `${dataset.label}: ${percentLabel}`;
+          const computeTooltipLabel = dataset.tooltipLabels?.[tooltipItem.index];
 
-          if (tooltipLabel) {
-            if (typeof tooltipLabel === "function") {
-              tooltip = tooltipLabel(percentLabel);
-            } else {
-              tooltip = tooltipLabel;
-            }
-          }
-
-          return tooltip;
+          return computeTooltipLabel
+            ? computeTooltipLabel(percentLabel)
+            : `${dataset.label}: ${percentLabel}`;
         },
       },
       filter: ({ datasetIndex, index }, { datasets = [] }) => {
