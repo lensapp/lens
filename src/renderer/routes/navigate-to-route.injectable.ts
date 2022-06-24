@@ -22,8 +22,7 @@ const navigateToRouteInjectable = getInjectable({
 
     return ((route: Route<object | void>, options: NavigateToRouteOptions<object>) => {
       const url = buildURL(route.path, {
-        // TODO: enhance typing
-        params: options?.parameters as any,
+        params: options?.parameters,
         query: options?.query,
         fragment: options?.fragment,
       });
