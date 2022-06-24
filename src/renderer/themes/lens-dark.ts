@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Theme } from "./store";
+import type { LensTheme } from "./store";
 
-const lensDarkTheme: Theme = {
+const lensDarkTheme: LensTheme = {
   "name": "Dark",
   "type": "dark",
   "description": "Original Lens dark theme",

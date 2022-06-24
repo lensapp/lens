@@ -18,7 +18,7 @@ import assert from "assert";
 
 export type ThemeId = string;
 
-export interface Theme {
+export interface LensTheme {
   name: string;
   type: "dark" | "light";
   colors: Record<string, string>;
@@ -39,7 +39,7 @@ interface Dependencies {
 export class ThemeStore {
   private terminalColorPrefix = "terminal";
 
-  #themes = observable.map<ThemeId, Theme>({
+  #themes = observable.map<ThemeId, LensTheme>({
     "lens-dark": lensDarkTheme,
     "lens-light": lensLightTheme,
   });
@@ -66,9 +66,9 @@ export class ThemeStore {
     return this.dependencies.userStore.terminalTheme;
   }
 
-  private readonly defaultTheme: Theme;
+  private readonly defaultTheme: LensTheme;
 
-  @computed get activeTheme(): Theme {
+  @computed get activeTheme(): LensTheme {
     return this.themes.get(this.activeThemeId) ?? this.defaultTheme;
   }
 
@@ -92,7 +92,7 @@ export class ThemeStore {
   }
 
   get themes() {
-    return this.#themes as ReadonlyDeep<Map<string, Theme>>;
+    return this.#themes as ReadonlyDeep<Map<string, LensTheme>>;
   }
 
   constructor(protected readonly dependencies: Dependencies) {
@@ -130,7 +130,7 @@ export class ThemeStore {
     });
   }
 
-  getThemeById(themeId: ThemeId): Theme | undefined {
+  getThemeById(themeId: ThemeId): LensTheme | undefined {
     return this.themes.get(themeId);
   }
 
