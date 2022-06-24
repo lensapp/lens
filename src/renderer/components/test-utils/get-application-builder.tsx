@@ -442,7 +442,8 @@ export const getApplicationBuilder = () => {
     },
 
     navigateWith: (token) => {
-      const navigate = rendererDi.inject(token);
+      const windowDi = builder.applicationWindow.only.di;
+      const navigate = windowDi.inject(token);
 
       navigate();
     },
