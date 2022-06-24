@@ -6,8 +6,6 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 
-export const allowedResourcesInjectionToken = getInjectionToken<
-  IComputedValue<Set<string>>
->({
+export const allowedResourcesInjectionToken = getInjectionToken<IComputedValue<Set<string>>>({
   id: "allowed-resources",
 });

@@ -104,7 +104,7 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
-        <div className="WorkloadsOverview flex column gaps">
+        <div className="WorkloadsOverview flex column gaps" data-testid="page-for-workloads-overview">
           <div className="header flex gaps align-center">
             <h5 className="box grow">Overview</h5>
             {this.renderLoadErrors()}
