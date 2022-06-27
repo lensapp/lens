@@ -9,10 +9,6 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import React from "react";
 
 // TODO: Make components free of side effects by making them deterministic
-jest.mock("../../renderer/components/tooltip/tooltip", () => ({
-  Tooltip: () => null,
-}));
-
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
   withTooltip: (Target: any) => ({ tooltip, tooltipOverrideDisabled, ...props }: any) => <Target {...props} />,
 }));

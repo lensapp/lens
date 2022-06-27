@@ -41,7 +41,7 @@ import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectab
 import ipcRendererInjectable from "./utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
@@ -59,6 +59,8 @@ import goForwardInjectable from "./components/layout/top-bar/go-forward.injectab
 import closeWindowInjectable from "./components/layout/top-bar/close-window.injectable";
 import maximizeWindowInjectable from "./components/layout/top-bar/maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./components/layout/top-bar/toggle-maximize-window.injectable";
+import commandContainerRootFrameChildComponentInjectable from "./components/command-palette/command-container-root-frame-child-component.injectable";
+import type { HotbarStore } from "../common/hotbars/store";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -103,6 +105,12 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
+    di.override(commandContainerRootFrameChildComponentInjectable, () => ({
+      Component: () => null,
+      id: "command-container",
+      shouldRender: computed(() => false),
+    }));
+
     di.override(watchHistoryStateInjectable, () => () => () => {});
 
     di.override(openAppContextMenuInjectable, () => () => {});
@@ -126,7 +134,11 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
 
-    di.override(hotbarStoreInjectable, () => ({}));
+    di.override(hotbarStoreInjectable, () => ({
+      getActive: () => ({ name: "some-hotbar", items: [] }),
+      getDisplayIndex: () => "0",
+    }) as unknown as HotbarStore);
+
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 

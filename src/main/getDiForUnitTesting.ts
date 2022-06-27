@@ -99,6 +99,7 @@ import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
+import type { HotbarStore } from "../common/hotbars/store";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -127,7 +128,13 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-    di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
+
+    di.override(hotbarStoreInjectable, () => ({
+      load: () => {},
+      getActive: () => ({ name: "some-hotbar", items: [] }),
+      getDisplayIndex: () => "0",
+    }) as unknown as HotbarStore);
+
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
     di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
