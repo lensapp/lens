@@ -60,7 +60,7 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
     equals: comparer.structural,
   });
   const optionsSortingSelected = observable.set(selectedNames.get());
-  const sortNamespacesByIfTheyAreSelected = (left: string, right: string) => {
+  const sortNamespacesByIfTheyHaveBeenSelected = (left: string, right: string) => {
     const isLeftSelected = optionsSortingSelected.has(left);
     const isRightSelected = optionsSortingSelected.has(right);
 
@@ -68,27 +68,26 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
       return 0;
     }
 
-    return isLeftSelected
+    return isRightSelected
       ? 1
       : -1;
   };
-
-  const options = computed((): readonly NamespaceSelectFilterOption[] => {
-    return [
-      {
-        value: selectAllNamespaces,
-        label: "All Namespaces",
-      },
-      ...namespaceStore
-        .items
-        .map(ns => ns.getName())
-        .sort(sortNamespacesByIfTheyAreSelected)
-        .map(namespace => ({
-          value: namespace,
-          label: namespace,
-        })),
-    ];
-  });
+  const options = computed((): readonly NamespaceSelectFilterOption[] => [
+    {
+      value: selectAllNamespaces,
+      label: "All Namespaces",
+      id: "all-namespaces",
+    },
+    ...namespaceStore
+      .items
+      .map(ns => ns.getName())
+      .sort(sortNamespacesByIfTheyHaveBeenSelected)
+      .map(namespace => ({
+        value: namespace,
+        label: namespace,
+        id: namespace,
+      })),
+  ]);
   const menuIsOpen = computed(() => menuState.get() === SelectMenuState.Open);
   const isOptionSelected: NamespaceSelectFilterModel["isOptionSelected"] = (option) => {
     if (option.value === selectAllNamespaces) {
