@@ -3,6 +3,9 @@
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions given no matching component given current url is starting url renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
   >
@@ -467,14 +470,14 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
       </div>
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -947,14 +950,14 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
       </div>
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces permissions renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -1483,8 +1486,5 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
       </div>
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
