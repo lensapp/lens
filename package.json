@@ -405,7 +405,7 @@
     "react-window": "^1.8.7",
     "sass": "^1.53.0",
     "sass-loader": "^12.6.0",
-    "sharp": "^0.30.6",
+    "sharp": "^0.30.7",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.1.4",
     "tar-stream": "^2.2.0",
