@@ -209,11 +209,11 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
               </span>
             </i>
             <span>
-              default
+              test-1
             </span>
             <i
               class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-default-selected"
+              data-testid="namespace-select-filter-option-test-1-selected"
             >
               <span
                 class="icon"
@@ -244,11 +244,11 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
               </span>
             </i>
             <span>
-              kube-system
+              test-2
             </span>
             <i
               class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-kube-system-selected"
+              data-testid="namespace-select-filter-option-test-2-selected"
             >
               <span
                 class="icon"
@@ -279,11 +279,361 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
               </span>
             </i>
             <span>
-              kube-system-2
+              test-3
             </span>
             <i
               class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-kube-system-2-selected"
+              data-testid="namespace-select-filter-option-test-3-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-4"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-4
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-4-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-5"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-5
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-5-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-6"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-6
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-6-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-7"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-7
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-7-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-8"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-8
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-8-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-9"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-9
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-9-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-10"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-10
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-10-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-11"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-11
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-11-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-12"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-12
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-12-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-13"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-13
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-13-selected"
             >
               <span
                 class="icon"
@@ -300,7 +650,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked renders 1`] = `
+exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -330,7 +680,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked re
               class="Select__placeholder css-14el2xx-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
-              Namespace: kube-system
+              Namespace: test-2
             </div>
             <div
               class="Select__input-container css-6j8wv5-Input"
@@ -386,7 +736,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked re
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked when clicked again renders 1`] = `
+exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when clicked again renders 1`] = `
 <body>
   <div>
     <div
@@ -416,7 +766,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               class="Select__placeholder css-14el2xx-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
-              Namespace: kube-system
+              Namespace: test-2
             </div>
             <div
               class="Select__input-container css-6j8wv5-Input"
@@ -509,11 +859,11 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               </span>
             </i>
             <span>
-              kube-system
+              test-2
             </span>
             <i
               class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-kube-system-selected"
+              data-testid="namespace-select-filter-option-test-2-selected"
             >
               <span
                 class="icon"
@@ -544,7 +894,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               </span>
             </i>
             <span>
-              default
+              test-1
             </span>
           </div>
         </div>
@@ -568,7 +918,247 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               </span>
             </i>
             <span>
-              kube-system-2
+              test-3
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-4"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-4
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-5"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-5
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-6"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-6
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-7"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-7
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-8"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-8
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-9"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-9
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-10"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-10
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-11"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-11
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-12"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-12
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-13"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-13
             </span>
           </div>
         </div>
@@ -578,7 +1168,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked when clicked again when 'default' is clicked renders 1`] = `
+exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when clicked again when 'test-1' is clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -608,7 +1198,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               class="Select__placeholder css-14el2xx-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
-              Namespace: default
+              Namespace: test-1
             </div>
             <div
               class="Select__input-container css-6j8wv5-Input"
@@ -664,7 +1254,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked when clicked again when 'default' is clicked when clicked again, then holding down multi select key, and then clicking 'kube-system-2' when 'kube-system-2' is clicked renders 1`] = `
+exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when clicked again when 'test-1' is clicked when clicked again, then holding down multi select key, and then clicking 'test-3' when 'test-3' is clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -694,7 +1284,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               class="Select__placeholder css-14el2xx-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
-              Namespaces: default, kube-system-2
+              Namespaces: test-1, test-3
             </div>
             <div
               class="Select__input-container css-6j8wv5-Input"
@@ -787,11 +1377,11 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               </span>
             </i>
             <span>
-              default
+              test-1
             </span>
             <i
               class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-default-selected"
+              data-testid="namespace-select-filter-option-test-1-selected"
             >
               <span
                 class="icon"
@@ -822,7 +1412,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               </span>
             </i>
             <span>
-              kube-system
+              test-2
             </span>
           </div>
         </div>
@@ -846,11 +1436,11 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
               </span>
             </i>
             <span>
-              kube-system-2
+              test-3
             </span>
             <i
               class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-kube-system-2-selected"
+              data-testid="namespace-select-filter-option-test-3-selected"
             >
               <span
                 class="icon"
@@ -859,6 +1449,246 @@ exports[`<NamespaceSelectFilter /> when clicked when 'kube-system' is clicked wh
                 check
               </span>
             </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-4"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-4
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-5"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-5
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-6"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-6
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-7"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-7
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-8"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-8
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-9"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-9
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-10"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-10
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-11"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-11
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-12"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-12
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-yt9ioa-option"
+          id="react-select-namespace-select-filter-option-13"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-13
+            </span>
           </div>
         </div>
       </div>

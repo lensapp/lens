@@ -43,9 +43,19 @@ describe("<NamespaceSelectFilter />", () => {
     const render = renderFor(di);
 
     namespaceStore.items.replace([
-      createNamespace("default"),
-      createNamespace("kube-system"),
-      createNamespace("kube-system-2"),
+      createNamespace("test-1"),
+      createNamespace("test-2"),
+      createNamespace("test-3"),
+      createNamespace("test-4"),
+      createNamespace("test-5"),
+      createNamespace("test-6"),
+      createNamespace("test-7"),
+      createNamespace("test-8"),
+      createNamespace("test-9"),
+      createNamespace("test-10"),
+      createNamespace("test-11"),
+      createNamespace("test-12"),
+      createNamespace("test-13"),
     ]);
 
     result = render((
@@ -70,17 +80,17 @@ describe("<NamespaceSelectFilter />", () => {
       expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).not.toBeNull();
     });
 
-    describe("when 'kube-system' is clicked", () => {
+    describe("when 'test-2' is clicked", () => {
       beforeEach(() => {
-        result.getByText("kube-system").click();
+        result.getByText("test-2").click();
       });
 
       it("renders", () => {
         expect(result.baseElement).toMatchSnapshot();
       });
 
-      it("has only 'kube-system' is selected in the store", () => {
-        expect(namespaceStore.contextNamespaces).toEqual(["kube-system"]);
+      it("has only 'test-2' is selected in the store", () => {
+        expect(namespaceStore.contextNamespaces).toEqual(["test-2"]);
       });
 
       it("closes menu", () => {
@@ -96,32 +106,32 @@ describe("<NamespaceSelectFilter />", () => {
           expect(result.baseElement).toMatchSnapshot();
         });
 
-        it("shows 'kube-system' as selected", () => {
-          expect(result.queryByTestId("namespace-select-filter-option-kube-system-selected")).not.toBeNull();
+        it("shows 'test-2' as selected", () => {
+          expect(result.queryByTestId("namespace-select-filter-option-test-2-selected")).not.toBeNull();
         });
 
-        it("does not show 'default' as selected", () => {
-          expect(result.queryByTestId("namespace-select-filter-option-default-selected")).toBeNull();
+        it("does not show 'test-1' as selected", () => {
+          expect(result.queryByTestId("namespace-select-filter-option-test-1-selected")).toBeNull();
         });
 
-        describe("when 'default' is clicked", () => {
+        describe("when 'test-1' is clicked", () => {
           beforeEach(() => {
-            result.getByText("default").click();
+            result.getByText("test-1").click();
           });
 
           it("renders", () => {
             expect(result.baseElement).toMatchSnapshot();
           });
 
-          it("has only 'default' is selected in the store", () => {
-            expect(namespaceStore.contextNamespaces).toEqual(["default"]);
+          it("has only 'test-1' is selected in the store", () => {
+            expect(namespaceStore.contextNamespaces).toEqual(["test-1"]);
           });
 
           it("closes menu", () => {
             expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).toBeNull();
           });
 
-          describe("when clicked again, then holding down multi select key, and then clicking 'kube-system-2'", () => {
+          describe("when clicked again, then holding down multi select key, and then clicking 'test-3'", () => {
             beforeEach(() => {
               const filter = result.getByTestId("namespace-select-filter");
 
@@ -129,17 +139,17 @@ describe("<NamespaceSelectFilter />", () => {
               fireEvent.keyDown(filter, { key: "Meta" });
             });
 
-            describe("when 'kube-system-2' is clicked", () => {
+            describe("when 'test-3' is clicked", () => {
               beforeEach(() => {
-                result.getByText("kube-system-2").click();
+                result.getByText("test-3").click();
               });
 
               it("renders", () => {
                 expect(result.baseElement).toMatchSnapshot();
               });
 
-              it("has both 'default' and 'kube-system-2' as selected in the store", () => {
-                expect(new Set(namespaceStore.contextNamespaces)).toEqual(new Set(["default", "kube-system-2"]));
+              it("has both 'test-1' and 'test-3' as selected in the store", () => {
+                expect(new Set(namespaceStore.contextNamespaces)).toEqual(new Set(["test-1", "test-3"]));
               });
 
               it("keeps menu open", () => {
