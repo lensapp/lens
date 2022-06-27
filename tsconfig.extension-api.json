@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "jsx": "react",
     "target": "ES2019",
-    "module": "CommonJS",
+    "module": "ESNext",
     "lib": [
       "ESNext",
       "DOM",
@@ -35,8 +35,7 @@
     ],
     "noEmitOnError": true,
     "declaration": true,
-    "declarationDir": "./src/extensions/npm/extensions/dist",
-    "outDir": "./src/extensions/npm/extensions/dist"
+    "declarationDir": "./src/extensions/npm/extensions/dist"
   },
   "include": [
     "types/*.d.ts",
