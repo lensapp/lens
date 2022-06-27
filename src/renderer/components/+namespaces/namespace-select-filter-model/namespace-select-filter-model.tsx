@@ -60,29 +60,33 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
     equals: comparer.structural,
   });
   const optionsSortingSelected = observable.set(selectedNames.get());
+  const sortNamespacesByIfTheyAreSelected = (left: string, right: string) => {
+    const isLeftSelected = optionsSortingSelected.has(left);
+    const isRightSelected = optionsSortingSelected.has(right);
+
+    if (isLeftSelected === isRightSelected) {
+      return 0;
+    }
+
+    return isLeftSelected
+      ? 1
+      : -1;
+  };
+
   const options = computed((): readonly NamespaceSelectFilterOption[] => {
-    const baseOptions = namespaceStore.items.map(ns => ns.getName());
-    // const namespaces = selectedNames.get();
-
-    baseOptions.sort((
-      (left, right) =>
-        +optionsSortingSelected.has(right)
-        - +optionsSortingSelected.has(left)
-    ));
-
     return [
       {
         value: selectAllNamespaces,
         label: "All Namespaces",
-        id: "all-namespaces",
-        // isSelected: false,
       },
-      ...baseOptions.map(namespace => ({
-        value: namespace,
-        label: namespace,
-        id: namespace,
-        // isSelected: namespaces.has(namespace),
-      })),
+      ...namespaceStore
+        .items
+        .map(ns => ns.getName())
+        .sort(sortNamespacesByIfTheyAreSelected)
+        .map(namespace => ({
+          value: namespace,
+          label: namespace,
+        })),
     ];
   });
   const menuIsOpen = computed(() => menuState.get() === SelectMenuState.Open);
