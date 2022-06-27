@@ -61,6 +61,15 @@ import maximizeWindowInjectable from "./components/layout/top-bar/maximize-windo
 import toggleMaximizeWindowInjectable from "./components/layout/top-bar/toggle-maximize-window.injectable";
 import commandContainerRootFrameChildComponentInjectable from "./components/command-palette/command-container-root-frame-child-component.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
+import commandContainerClusterFrameChildComponentInjectable from "./components/command-palette/command-container-cluster-frame-child-component.injectable";
+import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./components/+workloads-cronjobs/cron-job-trigger-dialog-cluster-frame-child-component.injectable";
+import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
+import replicasetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-replicasets/scale-dialog/replicaset-scale-dialog-cluster-frame-child-component.injectable";
+import statefulsetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-statefulsets/scale/statefulset-scale-dialog-cluster-frame-child-component.injectable";
+import deleteClusterDialogClusterFrameChildComponentInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-cluster-frame-child-component.injectable";
+import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/kube-object-details/kube-object-details-cluster-frame-child-component.injectable";
+import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
+import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -105,14 +114,35 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
+    // TODO: Remove side-effects and shared global state
     di.override(commandContainerRootFrameChildComponentInjectable, () => ({
       Component: () => null,
       id: "command-container",
       shouldRender: computed(() => false),
     }));
 
-    di.override(watchHistoryStateInjectable, () => () => () => {});
+    // TODO: Remove side-effects and shared global state
+    const clusterFrameChildComponentInjectables: Injectable<any, any, any>[] = [
+      commandContainerClusterFrameChildComponentInjectable,
+      cronJobTriggerDialogClusterFrameChildComponentInjectable,
+      deploymentScaleDialogClusterFrameChildComponentInjectable,
+      replicasetScaleDialogClusterFrameChildComponentInjectable,
+      statefulsetScaleDialogClusterFrameChildComponentInjectable,
+      deleteClusterDialogClusterFrameChildComponentInjectable,
+      kubeObjectDetailsClusterFrameChildComponentInjectable,
+      kubeconfigDialogClusterFrameChildComponentInjectable,
+      portForwardDialogClusterFrameChildComponentInjectable,
+    ];
 
+    clusterFrameChildComponentInjectables.forEach((injectable) => {
+      di.override(injectable, () => ({
+        Component: () => null,
+        id: injectable.id,
+        shouldRender: computed(() => false),
+      }));
+    });
+
+    di.override(watchHistoryStateInjectable, () => () => () => {});
     di.override(openAppContextMenuInjectable, () => () => {});
     di.override(goBackInjectable, () => () => {});
     di.override(goForwardInjectable, () => () => {});
@@ -138,7 +168,6 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
       getActive: () => ({ name: "some-hotbar", items: [] }),
       getDisplayIndex: () => "0",
     }) as unknown as HotbarStore);
-
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 

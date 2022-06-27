@@ -9,18 +9,15 @@ import type { IObservableArray, ObservableSet } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
-import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { getByText, fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
-import { Sidebar } from "../layout/sidebar";
 import type { DiContainer } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
-import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { flatMap, compact, join, get, filter, map, matches, last } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
@@ -43,7 +40,6 @@ import historyInjectable from "../../navigation/history.injectable";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
-import { Notifications } from "../notifications/notifications";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
@@ -61,6 +57,8 @@ import type { LensExtension } from "../../../extensions/lens-extension";
 import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
 import { renderFor } from "./renderFor";
 import { RootFrame } from "../../frames/root-frame/root-frame";
+import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
+import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -182,28 +180,13 @@ export const getApplicationBuilder = () => {
 
     clusterFrame: {
       render: () => {
-        const currentRouteComponent = rendererDi.inject(currentRouteComponentInjectable);
         const history = rendererDi.inject(historyInjectable);
 
         const render = renderFor(rendererDi);
 
         return render(
           <Router history={history}>
-            <Sidebar />
-
-            <Observer>
-              {() => {
-                const Component = currentRouteComponent.get();
-
-                if (!Component) {
-                  return null;
-                }
-
-                return <Component />;
-              }}
-            </Observer>
-
-            <Notifications />
+            <ClusterFrame />
           </Router>,
         );
       },
@@ -419,6 +402,7 @@ export const getApplicationBuilder = () => {
 
       const namespaceStoreStub = {
         contextNamespaces: [],
+        items: [],
       } as unknown as NamespaceStore;
 
       const clusterFrameContextFake = new ClusterFrameContext(
@@ -431,6 +415,7 @@ export const getApplicationBuilder = () => {
 
       rendererDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
       rendererDi.override(hostedClusterInjectable, () => clusterStub);
+      rendererDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
       rendererDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
 
       // Todo: get rid of global state.
