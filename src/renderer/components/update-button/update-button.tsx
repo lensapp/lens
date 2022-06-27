@@ -8,13 +8,14 @@ import styles from "./styles.module.scss";
 import type { HTMLAttributes } from "react";
 import React, { useState } from "react";
 import { Menu, MenuItem } from "../menu";
-import { cssNames, noop } from "../../utils";
+import { cssNames } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
-import updateWarningLevelInjectable from "../../../common/application-update/update-warning-level.injectable";
+import updateWarningLevelInjectable from "../../../common/application-update/update-warning-level/update-warning-level.injectable";
 import { computed, IComputedValue } from "mobx";
+import restartAndInstallUpdateInjectable from "./restart-and-install-update.injectable";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
 }
@@ -74,13 +75,10 @@ export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(Non
   getProps: (di, props) => {
     const warnignLevel = di.inject(updateWarningLevelInjectable);
 
-    // TODO: quit and install on update();
-    const update = noop;
-
     return {
       ...props,
       warningLevel: computed(() => warnignLevel.value.get()),
-      update,
+      update: di.inject(restartAndInstallUpdateInjectable),
     };
   },
 });
