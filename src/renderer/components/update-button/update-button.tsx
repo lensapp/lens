@@ -13,13 +13,14 @@ import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
-import updateWarningLevelInjectable from "../../../main/application-update/update-warning-level/update-warning-level.injectable";
+import updateWarningLevelInjectable from "../../../common/application-update/update-warning-level.injectable";
+import { computed, IComputedValue } from "mobx";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
 }
 
 interface Dependencies {
-  warningLevel: "light" | "medium" | "high" | "";
+  warningLevel: IComputedValue<"light" | "medium" | "high" | "">;
   update: () => void;
 }
 
@@ -32,7 +33,7 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
     setOpened(!opened);
   };
 
-  if (!warningLevel) {
+  if (!warningLevel.get()) {
     return null;
   }
 
@@ -40,11 +41,11 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
     <>
       <button
         data-testid="update-button"
-        data-warning-level={warningLevel}
+        data-warning-level={warningLevel.get()}
         id={buttonId}
         className={cssNames(styles.updateButton, {
-          [styles.warningHigh]: warningLevel === "high",
-          [styles.warningMedium]: warningLevel === "medium",
+          [styles.warningHigh]: warningLevel.get() === "high",
+          [styles.warningMedium]: warningLevel.get() === "medium",
         })}
       >
         Update
@@ -78,7 +79,7 @@ export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(Non
 
     return {
       ...props,
-      warningLevel: warnignLevel.value.get(),
+      warningLevel: computed(() => warnignLevel.value.get()),
       update,
     };
   },
