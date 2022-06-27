@@ -188,5 +188,49 @@ describe("<NamespaceSelectFilter />", () => {
         });
       });
     });
+
+    describe("when multi-selection key is pressed", () => {
+      beforeEach(() => {
+        const filter = result.getByTestId("namespace-select-filter");
+
+        fireEvent.keyDown(filter, { key: "Meta" });
+      });
+
+      it("should show placeholder text as 'All namespaces'", () => {
+        expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).toHaveTextContent("All namespaces");
+      });
+
+      describe("when 'test-2' is clicked", () => {
+        beforeEach(() => {
+          result.getByText("test-2").click();
+        });
+
+        it("should not show placeholder text as 'All namespaces'", () => {
+          expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).not.toHaveTextContent("All namespaces");
+        });
+
+        describe("when 'test-2' is clicked", () => {
+          beforeEach(() => {
+            result.getByText("test-2").click();
+          });
+
+          it("should show placeholder text as 'All namespaces'", () => {
+            expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).toHaveTextContent("All namespaces");
+          });
+
+          describe("when multi-selection key is raised", () => {
+            beforeEach(() => {
+              const filter = result.getByTestId("namespace-select-filter");
+
+              fireEvent.keyUp(filter, { key: "Meta" });
+            });
+
+            it("should show placeholder text as 'All namespaces'", () => {
+              expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).toHaveTextContent("All namespaces");
+            });
+          });
+        });
+      });
+    });
   });
 });
