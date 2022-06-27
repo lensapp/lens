@@ -1,7 +1,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import updateDownloadedDateInjectable from "./update-downloaded-date.injectable";
 import { UpdateWarningLevelCalculator } from "./update-warning-level-calculator";
-import updateWarningLevelInjectable from "./update-warning-level.injectable";
+import updateWarningLevelInjectable from "../../../common/application-update/update-warning-level.injectable";
 
 const setUpdateWarningLevelInjectable = getInjectable({
   id: "set-update-warning",
@@ -12,7 +12,7 @@ const setUpdateWarningLevelInjectable = getInjectable({
     const newLevel = new UpdateWarningLevelCalculator(updateDownloadedDate.value.get()).get();
 
     return () => {
-      updateWarningLevel.set(newLevel)
+      updateWarningLevel.set(newLevel);
     }
   }
 });
