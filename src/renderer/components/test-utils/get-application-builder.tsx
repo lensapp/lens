@@ -121,7 +121,7 @@ interface DiContainers {
 }
 
 interface Environment {
-  render: () => RenderResult;
+  RootComponent: React.ElementType;
   onAllowKubeResource: () => void;
 }
 
@@ -159,17 +159,7 @@ export const getApplicationBuilder = () => {
 
   const environments = {
     application: {
-      render: () => {
-        const history = rendererDi.inject(historyInjectable);
-
-        const render = renderFor(rendererDi);
-
-        return render(
-          <Router history={history}>
-            <RootFrame />
-          </Router>,
-        );
-      },
+      RootComponent: RootFrame,
 
       onAllowKubeResource: () => {
         throw new Error(
@@ -179,18 +169,7 @@ export const getApplicationBuilder = () => {
     } as Environment,
 
     clusterFrame: {
-      render: () => {
-        const history = rendererDi.inject(historyInjectable);
-
-        const render = renderFor(rendererDi);
-
-        return render(
-          <Router history={history}>
-            <ClusterFrame />
-          </Router>,
-        );
-      },
-
+      RootComponent: ClusterFrame,
       onAllowKubeResource: () => {},
     } as Environment,
   };
@@ -477,12 +456,19 @@ export const getApplicationBuilder = () => {
 
       await startFrame();
 
-
       for (const callback of beforeRenderCallbacks) {
         await callback(dis);
       }
 
-      rendered = environment.render();
+      const history = rendererDi.inject(historyInjectable);
+
+      const render = renderFor(rendererDi);
+
+      rendered = render(
+        <Router history={history}>
+          <environment.RootComponent />
+        </Router>,
+      );
 
       return rendered;
     },
