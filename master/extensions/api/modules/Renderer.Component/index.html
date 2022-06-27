@@ -866,6 +866,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#notificationid" class="md-nav__link">
+    NotificationId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notificationmessage" class="md-nav__link">
+    NotificationMessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#syncvalidationmessage" class="md-nav__link">
     SyncValidationMessage
   </a>
@@ -1342,6 +1356,7 @@
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="enumerations">Enumerations<a class="headerlink" href="#enumerations" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="../../enums/Renderer.Component.NotificationStatus/">NotificationStatus</a></li>
 <li><a href="../../enums/Renderer.Component.TooltipPosition/">TooltipPosition</a></li>
 </ul>
 <h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
@@ -1350,6 +1365,7 @@
 <li><a href="../../classes/Renderer.Component.Input/">Input</a></li>
 <li><a href="../../classes/Renderer.Component.Menu/">Menu</a></li>
 <li><a href="../../classes/Renderer.Component.MenuItem/">MenuItem</a></li>
+<li><a href="../../classes/Renderer.Component.NotificationsStore/">NotificationsStore</a></li>
 <li><a href="../../classes/Renderer.Component.PageLayout/">PageLayout</a></li>
 <li><a href="../../classes/Renderer.Component.PodDetailsList/">PodDetailsList</a></li>
 <li><a href="../../classes/Renderer.Component.SearchInput/">SearchInput</a></li>
@@ -1404,6 +1420,7 @@
 <li><a href="../../interfaces/Renderer.Component.MenuStyle/">MenuStyle</a></li>
 <li><a href="../../interfaces/Renderer.Component.MonacoEditorProps/">MonacoEditorProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.NamespaceSelectProps/">NamespaceSelectProps</a></li>
+<li><a href="../../interfaces/Renderer.Component.Notification/">Notification</a></li>
 <li><a href="../../interfaces/Renderer.Component.PieChartData/">PieChartData</a></li>
 <li><a href="../../interfaces/Renderer.Component.PieChartProps/">PieChartProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.PodDetailsListProps/">PodDetailsListProps</a></li>
@@ -1452,6 +1469,8 @@
 <li><a href="./#monacoeditorid">MonacoEditorId</a></li>
 <li><a href="./#monacotheme">MonacoTheme</a></li>
 <li><a href="./#namespaceselectsort">NamespaceSelectSort</a></li>
+<li><a href="./#notificationid">NotificationId</a></li>
+<li><a href="./#notificationmessage">NotificationMessage</a></li>
 <li><a href="./#syncvalidationmessage">SyncValidationMessage</a></li>
 <li><a href="./#tablecellelem">TableCellElem</a></li>
 <li><a href="./#tableheadelem">TableHeadElem</a></li>
@@ -1675,6 +1694,12 @@
 <h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
 <p><code>number</code></p>
 <hr />
+<h3 id="notificationid">NotificationId<a class="headerlink" href="#notificationid" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>NotificationId</strong>: <code>string</code> | <code>number</code></p>
+<hr />
+<h3 id="notificationmessage">NotificationMessage<a class="headerlink" href="#notificationmessage" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>NotificationMessage</strong>: <code>string</code> | <code>React.ReactElement</code> | <code>React.ReactElement</code>[] | <code>JsonApiErrorParsed</code> | <code>Error</code></p>
+<hr />
 <h3 id="syncvalidationmessage">SyncValidationMessage<a class="headerlink" href="#syncvalidationmessage" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>SyncValidationMessage</strong>: <code>React.ReactNode</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>React.ReactNode</code></p>
 <hr />
@@ -1879,7 +1904,7 @@
 <p>• <code>Const</code> <strong>NamespaceSelectFilter</strong>: <code>FunctionComponent</code>&lt;<code>NamespaceSelectFilterProps</code>></p>
 <hr />
 <h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>Notifications</strong>: <code>FC</code>&lt;{}> &amp; { <code>checkedError</code>: (<code>message</code>: <code>unknown</code>, <code>fallback</code>: <code>string</code>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<code>Notification</code>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>error</code>: (<code>message</code>: <code>NotificationMessage</code>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<code>Notification</code>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>info</code>: (<code>message</code>: <code>NotificationMessage</code>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<code>Notification</code>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>ok</code>: (<code>message</code>: <code>NotificationMessage</code>) =&gt; () =&gt; <code>void</code> ; <code>shortInfo</code>: (<code>message</code>: <code>NotificationMessage</code>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<code>Notification</code>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code>  }</p>
+<p>• <code>Const</code> <strong>Notifications</strong>: <code>FC</code>&lt;{}> &amp; { <code>checkedError</code>: (<code>message</code>: <code>unknown</code>, <code>fallback</code>: <code>string</code>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>error</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>info</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>ok</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>) =&gt; () =&gt; <code>void</code> ; <code>shortInfo</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code>  }</p>
 <hr />
 <h3 id="piechart">PieChart<a class="headerlink" href="#piechart" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>PieChart</strong>: <code>FunctionComponent</code>&lt;<a href="../../interfaces/Renderer.Component.PieChartProps/"><code>PieChartProps</code></a>></p>
@@ -1901,7 +1926,7 @@
 <p>• <code>Const</code> <strong>memoryOptions</strong>: <code>ChartOptions</code></p>
 <hr />
 <h3 id="notificationsstore">notificationsStore<a class="headerlink" href="#notificationsstore" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>notificationsStore</strong>: <code>NotificationsStore</code></p>
+<p>• <code>Const</code> <strong>notificationsStore</strong>: <a href="../../classes/Renderer.Component.NotificationsStore/"><code>NotificationsStore</code></a></p>
 <hr />
 <h3 id="resizinganchorprops">resizingAnchorProps<a class="headerlink" href="#resizinganchorprops" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>resizingAnchorProps</strong>: <code>Record</code>&lt;<a href="./#drawerposition"><code>DrawerPosition</code></a>, [<code>ResizeDirection</code>, <code>ResizeSide</code>, <code>ResizeGrowthDirection</code>]></p>
