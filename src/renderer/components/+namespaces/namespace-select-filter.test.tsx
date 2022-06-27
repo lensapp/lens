@@ -131,7 +131,7 @@ describe("<NamespaceSelectFilter />", () => {
             expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).toBeNull();
           });
 
-          describe("when clicked again, then holding down multi select key, and then clicking 'test-3'", () => {
+          describe("when clicked again, then holding down multi select key", () => {
             beforeEach(() => {
               const filter = result.getByTestId("namespace-select-filter");
 
@@ -158,6 +158,22 @@ describe("<NamespaceSelectFilter />", () => {
 
               it("does not show 'kube-system' as selected", () => {
                 expect(result.queryByTestId("namespace-select-filter-option-kube-system-selected")).toBeNull();
+              });
+
+              describe("when 'test-13' is clicked", () => {
+                beforeEach(() => {
+                  result.getByText("test-13").click();
+                });
+
+                it("has all of 'test-1', 'test-3', and 'test-13' selected in the store", () => {
+                  expect(new Set(namespaceStore.contextNamespaces)).toEqual(new Set(["test-1", "test-3", "test-13"]));
+                });
+
+                it("'test-13' is not sorted to the top of the list", () => {
+                  const topLevelElement = result.getByText("test-13").parentElement?.parentElement as HTMLElement;
+
+                  expect(topLevelElement.nextSibling).toBe(null);
+                });
               });
 
               describe("when releasing multi select key", () => {

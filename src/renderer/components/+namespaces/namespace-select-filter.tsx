@@ -13,7 +13,6 @@ import type { NamespaceStore } from "./store";
 import { Select } from "../select";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NamespaceSelectFilterModel, NamespaceSelectFilterOption, SelectAllNamespaces } from "./namespace-select-filter-model/namespace-select-filter-model";
-import { formatOptionLabel } from "./namespace-select-filter-model/namespace-select-filter-model";
 import namespaceSelectFilterModelInjectable from "./namespace-select-filter-model/namespace-select-filter-model.injectable";
 import namespaceStoreInjectable from "./store.injectable";
 
@@ -37,16 +36,18 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
       id={id}
       isMulti={true}
       isClearable={false}
-      menuIsOpen={model.menu.isOpen}
+      menuIsOpen={model.menu.isOpen.get()}
       components={{ Placeholder }}
       closeMenuOnSelect={false}
       controlShouldRenderValue={false}
       onChange={model.onChange}
       onBlur={model.reset}
-      formatOptionLabel={formatOptionLabel}
+      formatOptionLabel={model.formatOptionLabel}
       options={model.options.get()}
       className="NamespaceSelect NamespaceSelectFilter"
       menuClass="NamespaceSelectFilterMenu"
+      isOptionSelected={model.isOptionSelected}
+      hideSelectedOptions={false}
     />
   </div>
 ));
