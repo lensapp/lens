@@ -214,8 +214,8 @@ describe("<NamespaceSelectFilter />", () => {
             result.getByText("test-2").click();
           });
 
-          it("should show placeholder text as 'All namespaces'", () => {
-            expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).toHaveTextContent("All namespaces");
+          it("should not show placeholder as 'All namespaces'", () => {
+            expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).not.toHaveTextContent("All namespaces");
           });
 
           describe("when multi-selection key is raised", () => {
@@ -226,7 +226,7 @@ describe("<NamespaceSelectFilter />", () => {
             });
 
             it("should show placeholder text as 'All namespaces'", () => {
-              expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).toHaveTextContent("All namespaces");
+              expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).not.toHaveTextContent("All namespaces");
             });
           });
         });
