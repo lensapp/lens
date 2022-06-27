@@ -62,6 +62,7 @@ import type { LensMainExtension } from "../../../extensions/lens-main-extension"
 import type { LensExtension } from "../../../extensions/lens-extension";
 
 import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
+import { TopBar } from "../layout/top-bar/top-bar";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -125,6 +126,7 @@ interface DiContainers {
 
 interface Environment {
   renderSidebar: () => React.ReactNode;
+  renderTopBar: () => React.ReactNode;
   renderStatusBar: () => React.ReactNode;
   beforeRender: () => void;
   onAllowKubeResource: () => void;
@@ -166,6 +168,8 @@ export const getApplicationBuilder = () => {
     application: {
       renderSidebar: () => null,
 
+      renderTopBar: () => <TopBar />,
+
       renderStatusBar: () => <StatusBar />,
 
       beforeRender: () => {
@@ -184,6 +188,7 @@ export const getApplicationBuilder = () => {
     clusterFrame: {
       renderSidebar: () => <Sidebar />,
       renderStatusBar: () => null,
+      renderTopBar: () => null,
       beforeRender: () => {},
       onAllowKubeResource: () => {},
     } as Environment,
@@ -482,6 +487,7 @@ export const getApplicationBuilder = () => {
       rendered = render(
         <Router history={history}>
           {environment.renderSidebar()}
+          {environment.renderTopBar()}
           {environment.renderStatusBar()}
 
           <Observer>
