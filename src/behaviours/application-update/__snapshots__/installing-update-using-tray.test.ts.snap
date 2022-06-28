@@ -4,6 +4,51 @@ exports[`installing update using tray when started renders 1`] = `
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -24,6 +69,51 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -64,7 +154,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_16"
+            data-testid="close-notification-for-notification_43"
             tabindex="0"
           >
             <span
@@ -85,6 +175,51 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -125,7 +260,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_115"
+            data-testid="close-notification-for-notification_181"
             tabindex="0"
           >
             <span
@@ -165,7 +300,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_118"
+            data-testid="close-notification-for-notification_184"
             tabindex="0"
           >
             <span
@@ -186,6 +321,69 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+        <button
+          class="updateButton"
+          data-testid="update-button"
+          data-warning-level="light"
+          id="update-lens-button"
+        >
+          Update
+          <i
+            class="Icon icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </button>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -226,7 +424,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_183"
+            data-testid="close-notification-for-notification_268"
             tabindex="0"
           >
             <span
@@ -266,7 +464,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_186"
+            data-testid="close-notification-for-notification_271"
             tabindex="0"
           >
             <span
@@ -306,7 +504,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_191"
+            data-testid="close-notification-for-notification_277"
             tabindex="0"
           >
             <span
@@ -326,6 +524,69 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when new update is discovered when download succeeds renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+        <button
+          class="updateButton"
+          data-testid="update-button"
+          data-warning-level="light"
+          id="update-lens-button"
+        >
+          Update
+          <i
+            class="Icon icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </button>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >
@@ -367,7 +628,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_266"
+            data-testid="close-notification-for-notification_371"
             tabindex="0"
           >
             <span
@@ -407,7 +668,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_269"
+            data-testid="close-notification-for-notification_374"
             tabindex="0"
           >
             <span
@@ -498,6 +759,51 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -538,7 +844,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_59"
+            data-testid="close-notification-for-notification_104"
             tabindex="0"
           >
             <span
@@ -578,7 +884,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_62"
+            data-testid="close-notification-for-notification_107"
             tabindex="0"
           >
             <span

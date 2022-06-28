@@ -20,7 +20,6 @@ import { KubeObjectDetails } from "../../components/kube-object-details";
 import { KubeConfigDialog } from "../../components/kubeconfig-dialog";
 import { Sidebar } from "../../components/layout/sidebar";
 import { Dock } from "../../components/dock";
-import { watchHistoryState } from "../../remote-helpers/history-updater";
 import { PortForwardDialog } from "../../port-forward";
 import { DeleteClusterDialog } from "../../components/delete-cluster-dialog";
 import type { NamespaceStore } from "../../components/+namespaces/store";
@@ -32,6 +31,7 @@ import currentRouteComponentInjectable from "../../routes/current-route-componen
 import startUrlInjectable from "./start-url.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import currentPathInjectable from "../../routes/current-path.injectable";
+import watchHistoryStateInjectable from "../../remote-helpers/watch-history-state.injectable";
 
 interface Dependencies {
   namespaceStore: NamespaceStore;
@@ -39,6 +39,7 @@ interface Dependencies {
   startUrl: IComputedValue<string>;
   subscribeStores: SubscribeStores;
   currentPath: IComputedValue<string>;
+  watchHistoryState: () => () => void;
 }
 
 export const NonInjectedClusterFrame = observer(({
@@ -47,6 +48,7 @@ export const NonInjectedClusterFrame = observer(({
   startUrl,
   subscribeStores,
   currentPath,
+  watchHistoryState,
 }: Dependencies) => {
   useEffect(() => disposer(
     subscribeStores([
@@ -103,6 +105,7 @@ export const ClusterFrame = withInjectables<Dependencies>(NonInjectedClusterFram
     startUrl: di.inject(startUrlInjectable),
     currentRouteComponent: di.inject(currentRouteComponentInjectable),
     currentPath: di.inject(currentPathInjectable),
+    watchHistoryState: di.inject(watchHistoryStateInjectable),
   }),
 });
 

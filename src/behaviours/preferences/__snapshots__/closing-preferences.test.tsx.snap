@@ -3,6 +3,51 @@
 exports[`preferences - closing-preferences given accessing preferences directly renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -554,6 +599,51 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 exports[`preferences - closing-preferences given accessing preferences directly when navigating to a tab in preferences renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -709,6 +799,51 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 exports[`preferences - closing-preferences given accessing preferences directly when navigating to a tab in preferences when preferences are closed renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -730,6 +865,51 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 exports[`preferences - closing-preferences given accessing preferences directly when preferences are closed renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -750,6 +930,51 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -1302,6 +1527,51 @@ exports[`preferences - closing-preferences given already in a page and then navi
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences when navigating to a tab in preferences renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -1457,6 +1727,51 @@ exports[`preferences - closing-preferences given already in a page and then navi
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences when navigating to a tab in preferences when preferences are closed renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -1611,6 +1926,51 @@ exports[`preferences - closing-preferences given already in a page and then navi
 
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences when preferences are closed renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >

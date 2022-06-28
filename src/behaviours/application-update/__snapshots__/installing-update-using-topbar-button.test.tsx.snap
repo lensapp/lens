@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`periodical checking of updates given updater is enabled and configuration exists, when started renders 1`] = `
+exports[`encourage user to update when sufficient time passed since update was downloaded when started renders 1`] = `
 <body>
   <div>
     <div

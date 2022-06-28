@@ -11,22 +11,30 @@ import { Menu, MenuItem } from "../menu";
 import { cssNames } from "../../utils";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import { observer } from "mobx-react";
+import type { IComputedValue } from "mobx";
+import restartAndInstallUpdateInjectable from "./restart-and-install-update.injectable";
+import updateWarningLevelInjectable from "./update-warning-level.injectable";
 
-interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
-  warningLevel?: "light" | "medium" | "high";
+interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {}
+
+interface Dependencies {
+  warningLevel: IComputedValue<"light" | "medium" | "high" | "">;
   update: () => void;
 }
 
-export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
+export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: UpdateButtonProps & Dependencies) => {
   const buttonId = id ?? "update-lens-button";
   const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
+  const level = warningLevel.get();
 
   const toggle = () => {
     setOpened(!opened);
   };
 
-  if (!warningLevel) {
+  if (!level) {
     return null;
   }
 
@@ -34,11 +42,11 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
     <>
       <button
         data-testid="update-button"
-        data-warning-level={warningLevel}
+        data-warning-level={level}
         id={buttonId}
         className={cssNames(styles.updateButton, {
-          [styles.warningHigh]: warningLevel === "high",
-          [styles.warningMedium]: warningLevel === "medium",
+          [styles.warningHigh]: level === "high",
+          [styles.warningMedium]: level === "medium",
         })}
       >
         Update
@@ -61,4 +69,15 @@ export function UpdateButton({ warningLevel, update, id }: UpdateButtonProps) {
       </Menu>
     </>
   );
-}
+});
+
+export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(
+  NonInjectedUpdateButton,
+  {
+    getProps: (di, props) => ({
+      ...props,
+      warningLevel: di.inject(updateWarningLevelInjectable),
+      update: di.inject(restartAndInstallUpdateInjectable),
+    }),
+  },
+);

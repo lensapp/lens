@@ -3,6 +3,51 @@
 exports[`navigating between routes given route with optional path parameters when navigating to route with path parameters renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -26,6 +71,51 @@ exports[`navigating between routes given route with optional path parameters whe
 
 exports[`navigating between routes given route without path parameters when navigating to route renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >

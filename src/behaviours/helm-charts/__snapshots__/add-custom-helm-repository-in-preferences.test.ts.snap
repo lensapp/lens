@@ -4,6 +4,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -482,6 +527,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 exports[`add custom helm repository in preferences when navigating to preferences containing helm repositories when active repositories resolve renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >
@@ -968,6 +1058,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 exports[`add custom helm repository in preferences when navigating to preferences containing helm repositories when active repositories resolve when selecting to add custom repository renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >
@@ -1564,6 +1699,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -2057,6 +2237,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 exports[`add custom helm repository in preferences when navigating to preferences containing helm repositories when active repositories resolve when selecting to add custom repository when inputted minimal options for the repository renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >
@@ -2652,6 +2877,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 exports[`add custom helm repository in preferences when navigating to preferences containing helm repositories when active repositories resolve when selecting to add custom repository when inputted minimal options for the repository when showing the maximal options renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >
@@ -3424,6 +3694,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -4018,6 +4333,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 exports[`add custom helm repository in preferences when navigating to preferences containing helm repositories when active repositories resolve when selecting to add custom repository when inputted minimal options for the repository when showing the maximal options when inputted maximal options renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >
@@ -4790,6 +5150,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -5385,6 +5790,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -5879,6 +6329,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -6365,6 +6860,51 @@ exports[`add custom helm repository in preferences when navigating to preference
 exports[`add custom helm repository in preferences when navigating to preferences containing helm repositories when active repositories resolve when selecting to add custom repository when inputted minimal options for the repository when submitted and some time passes when activation resolves with success when adding custom repository again renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >

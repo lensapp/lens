@@ -8,8 +8,7 @@ import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { Icon } from "../../icon";
-import { watchHistoryState } from "../../../remote-helpers/history-updater";
-import { cssNames, noop } from "../../../utils";
+import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
@@ -28,6 +27,7 @@ import goForwardInjectable from "./go-forward.injectable";
 import closeWindowInjectable from "./close-window.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
+import watchHistoryStateInjectable from "../../../remote-helpers/watch-history-state.injectable";
 
 interface Dependencies {
   navigateToCatalog: NavigateToCatalog;
@@ -43,6 +43,7 @@ interface Dependencies {
   minimizeWindow: () => void;
   toggleMaximizeWindow: () => void;
   closeWindow: () => void;
+  watchHistoryState: () => () => void;
 }
 
 const NonInjectedTopBar = observer(({
@@ -59,6 +60,7 @@ const NonInjectedTopBar = observer(({
   closeWindow,
   minimizeWindow,
   toggleMaximizeWindow,
+  watchHistoryState,
 }: Dependencies) => {
   const elem = useRef<HTMLDivElement | null>(null);
 
@@ -115,7 +117,7 @@ const NonInjectedTopBar = observer(({
           onClick={goForward}
           disabled={!nextEnabled.get()}
         />
-        <UpdateButton update={noop} />
+        <UpdateButton />
       </div>
       <div className={styles.items}>
         {renderRegisteredItems(items.get())}
@@ -196,5 +198,6 @@ export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
     closeWindow: di.inject(closeWindowInjectable),
     minimizeWindow: di.inject(maximizeWindowInjectable),
     toggleMaximizeWindow: di.inject(toggleMaximizeWindowInjectable),
+    watchHistoryState: di.inject(watchHistoryStateInjectable),
   }),
 });

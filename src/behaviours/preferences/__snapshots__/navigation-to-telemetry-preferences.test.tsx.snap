@@ -3,6 +3,51 @@
 exports[`preferences - navigation to telemetry preferences given URL for Sentry DNS, when navigating to preferences when navigating to telemetry preferences renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -203,6 +248,51 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
 
 exports[`preferences - navigation to telemetry preferences given in preferences, when rendered renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -742,6 +832,51 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
 
 exports[`preferences - navigation to telemetry preferences given in preferences, when rendered when extension with telemetry preference items gets enabled renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -1294,6 +1429,51 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
 exports[`preferences - navigation to telemetry preferences given in preferences, when rendered when extension with telemetry preference items gets enabled when clicking link to telemetry preferences from navigation renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -1482,6 +1662,51 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
 
 exports[`preferences - navigation to telemetry preferences given no URL for Sentry DNS, when navigating to telemetry preferences renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
