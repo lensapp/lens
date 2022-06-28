@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import { getInjectable } from "@ogre-tools/injectable";
 import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
 import setUpdateWarningLevelInjectable from "./set-update-warning-level.injectable";

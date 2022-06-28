@@ -1,6 +1,11 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { act, RenderResult } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { act } from "@testing-library/react";
 import type { CheckForPlatformUpdates } from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
@@ -67,7 +72,7 @@ describe("encourage user to update when sufficient time passed since update was 
       rendererDi.permitSideEffects(closeWindowInjectable);
       rendererDi.permitSideEffects(maximizeWindowInjectable);
       rendererDi.permitSideEffects(toggleMaximizeWindowInjectable);
-    })
+    });
   });
 
   describe("when started", () => {
@@ -109,13 +114,13 @@ describe("encourage user to update when sufficient time passed since update was 
           const button = rendered.queryByTestId("update-button");
   
           expect(button).toBeInTheDocument();
-        })
+        });
 
         it("has soft emotional indication in the button", () => {
           const button = rendered.getByTestId("update-button");
 
-          expect(button).toHaveAttribute("data-warning-level", "light")
-        })
+          expect(button).toHaveAttribute("data-warning-level", "light");
+        });
 
         describe("when button is clicked", () => {
           it("shows dropdown with update item", () => {
@@ -124,7 +129,7 @@ describe("encourage user to update when sufficient time passed since update was 
             act(() => button?.click());
 
             expect(rendered.getByTestId("update-lens-menu-item")).toBeInTheDocument();
-          })
+          });
 
           it("when selected update now, restarts the application to update", () => {
             const button = rendered.queryByTestId("update-button");
@@ -136,7 +141,7 @@ describe("encourage user to update when sufficient time passed since update was 
             act(() => updateMenuItem?.click());
 
             expect(restartAndInstallUpdate).toBeCalled();
-          })
+          });
 
           describe("when dropdown closed without clicking update item", () => {
             it("does not restart the application to update", async () => {
@@ -147,45 +152,45 @@ describe("encourage user to update when sufficient time passed since update was 
               act(() => button?.click());
 
               expect(restartAndInstallUpdate).not.toBeCalled();
-            })
-          })
-        })
+            });
+          });
+        });
 
         describe("given just enough time passes for medium update encouragement", () => {
           beforeAll(() => {
             jest.useFakeTimers();
-          })
+          });
 
           it("has medium emotional indication in the button", () => {
             const button = rendered.getByTestId("update-button");
 
             jest.advanceTimersByTime(daysToMilliseconds(22));
 
-            expect(button).toHaveAttribute("data-warning-level", "medium")
-          })
+            expect(button).toHaveAttribute("data-warning-level", "medium");
+          });
 
           afterAll(() => {
             jest.useRealTimers();
-          })
-        })
+          });
+        });
 
         describe("given just enough time passes for severe update encouragement", () => {
           beforeAll(() => {
             jest.useFakeTimers();
-          })
+          });
 
           it("has severe emotional indication in the button", () => {
             const button = rendered.getByTestId("update-button");
 
             jest.advanceTimersByTime(daysToMilliseconds(26));
 
-            expect(button).toHaveAttribute("data-warning-level", "high")
-          })
+            expect(button).toHaveAttribute("data-warning-level", "high");
+          });
 
           afterAll(() => {
             jest.useRealTimers();
-          })
-        })
+          });
+        });
       });
     });
   });

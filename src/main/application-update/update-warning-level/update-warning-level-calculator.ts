@@ -1,12 +1,14 @@
-
-
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 type WarningLevel = "high" | "medium" | "light" | "";
 
 export class UpdateWarningLevelCalculator {
   private onceADay = 1000 * 60 * 60 * 24;
   private level: WarningLevel = "";
 
-  constructor (private updateDownloadedDate: Date | null) {
+  constructor(private updateDownloadedDate: Date | null) {
   }
 
   get(): WarningLevel {
