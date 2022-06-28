@@ -9,6 +9,8 @@ import discoveredUpdateVersionInjectable from "../../../common/application-updat
 import { action, runInAction } from "mobx";
 import type { ProgressOfDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 import progressOfUpdateDownloadInjectable from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
+import { getCurrentDateTime } from "../../../common/utils/date/get-current-date-time";
+import updateDownloadedDateTimeInjectable from "../../../common/application-update/update-downloaded-date-time/update-downloaded-date-time.injectable";
 
 const downloadUpdateInjectable = getInjectable({
   id: "download-update",
@@ -18,6 +20,7 @@ const downloadUpdateInjectable = getInjectable({
     const downloadingUpdateState = di.inject(updateIsBeingDownloadedInjectable);
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const progressOfUpdateDownload = di.inject(progressOfUpdateDownloadInjectable);
+    const updateDownloadedDate = di.inject(updateDownloadedDateTimeInjectable);
 
     const updateDownloadProgress = action((progressOfDownload: ProgressOfDownload) => {
       progressOfUpdateDownload.set(progressOfDownload);
@@ -37,6 +40,10 @@ const downloadUpdateInjectable = getInjectable({
         if (!downloadWasSuccessful) {
           discoveredVersionState.set(null);
         }
+
+        const currentDateTime = getCurrentDateTime();
+
+        updateDownloadedDate.set(currentDateTime);
 
         downloadingUpdateState.set(false);
       });

@@ -13,13 +13,11 @@ import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
-import updateWarningLevelInjectable from "../../../common/application-update/update-warning-level/update-warning-level.injectable";
 import type { IComputedValue } from "mobx";
-import { computed } from "mobx";
 import restartAndInstallUpdateInjectable from "./restart-and-install-update.injectable";
+import updateWarningLevelInjectable from "./update-warning-level.injectable";
 
-interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {
-}
+interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {}
 
 interface Dependencies {
   warningLevel: IComputedValue<"light" | "medium" | "high" | "">;
@@ -72,14 +70,13 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
   );
 });
 
-export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(NonInjectedUpdateButton, {
-  getProps: (di, props) => {
-    const warnignLevel = di.inject(updateWarningLevelInjectable);
-
-    return {
+export const UpdateButton = withInjectables<Dependencies, UpdateButtonProps>(
+  NonInjectedUpdateButton,
+  {
+    getProps: (di, props) => ({
       ...props,
-      warningLevel: computed(() => warnignLevel.value.get()),
+      warningLevel: di.inject(updateWarningLevelInjectable),
       update: di.inject(restartAndInstallUpdateInjectable),
-    };
+    }),
   },
-});
+);

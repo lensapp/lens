@@ -11,7 +11,6 @@ import checkForPlatformUpdatesInjectable from "../../main/application-update/che
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
-import periodicalCheckForUpdateWarningInjectable from "../../main/application-update/update-warning-level/periodical-check-for-update-warning.injectable";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
 import closeWindowInjectable from "../../renderer/components/layout/top-bar/close-window.injectable";
 import goBackInjectable from "../../renderer/components/layout/top-bar/go-back.injectable";
@@ -22,6 +21,7 @@ import toggleMaximizeWindowInjectable from "../../renderer/components/layout/top
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import restartAndInstallUpdateInjectable from "../../renderer/components/update-button/restart-and-install-update.injectable";
+import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 
 function daysToMilliseconds(days: number) {
   return Math.round(days * 24 * 60 * 60 * 1000);
@@ -52,9 +52,6 @@ describe("encourage user to update when sufficient time passed since update was 
 
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
-
-      mainDi.unoverride(periodicalCheckForUpdateWarningInjectable);
-      mainDi.permitSideEffects(periodicalCheckForUpdateWarningInjectable);
 
       rendererDi.override(restartAndInstallUpdateInjectable, () => restartAndInstallUpdate = jest.fn());
 
@@ -96,8 +93,9 @@ describe("encourage user to update when sufficient time passed since update was 
       let processCheckingForUpdatesPromise: Promise<void>;
 
       beforeEach(async () => {
-        // TODO: initiate update check process automatically, not from tray
-        processCheckingForUpdatesPromise = applicationBuilder.tray.click("check-for-updates");
+        const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+
+        processCheckingForUpdatesPromise = processCheckingForUpdates("irrelevant");
       });
 
       describe("when update downloaded", () => {
@@ -112,7 +110,7 @@ describe("encourage user to update when sufficient time passed since update was 
 
         it("shows update button to help user to update", () => {
           const button = rendered.queryByTestId("update-button");
-  
+
           expect(button).toBeInTheDocument();
         });
 
@@ -148,7 +146,7 @@ describe("encourage user to update when sufficient time passed since update was 
               const button = rendered.queryByTestId("update-button");
 
               act(() => button?.click());
-              
+
               act(() => button?.click());
 
               expect(restartAndInstallUpdate).not.toBeCalled();
