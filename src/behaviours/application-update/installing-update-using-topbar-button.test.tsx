@@ -168,6 +168,24 @@ describe("encourage user to update when sufficient time passed since update was 
             jest.useRealTimers();
           })
         })
+
+        describe("given just enough time passes for severe update encouragement", () => {
+          beforeAll(() => {
+            jest.useFakeTimers();
+          })
+
+          it("has severe emotional indication in the button", () => {
+            const button = rendered.getByTestId("update-button");
+
+            jest.advanceTimersByTime(daysToMilliseconds(26));
+
+            expect(button).toHaveAttribute("data-warning-level", "high")
+          })
+
+          afterAll(() => {
+            jest.useRealTimers();
+          })
+        })
       });
     });
   });
