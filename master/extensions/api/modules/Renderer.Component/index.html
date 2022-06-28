@@ -2396,7 +2396,6 @@
 <hr />
 <h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
-<p><strong><code>deprecated</code></strong> use <code>di.inject(getDetailsUrlInjectable)</code> instead</p>
 <h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2528,23 +2527,26 @@
 <hr />
 <h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>showDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
-<p><strong><code>deprecated</code></strong> use <code>di.inject(showDetailsInjectable)</code> instead</p>
+<p><strong><code>default</code></strong> resetSelected true</p>
 <h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
+<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td align="left"><code>selfLink</code></td>
 <td align="left"><code>undefined</code> | <code>string</code></td>
+<td align="left">The Kube selflink to show details for</td>
 </tr>
 <tr>
 <td align="left"><code>resetSelected?</code></td>
 <td align="left"><code>boolean</code></td>
+<td align="left">If true then will reset the selected kube object (which object is highlighted generally)</td>
 </tr>
 </tbody>
 </table>
