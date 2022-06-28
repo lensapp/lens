@@ -9,9 +9,9 @@ const setUpdateWarningLevelInjectable = getInjectable({
   instantiate: (di) => {
     const updateDownloadedDate = di.inject(updateDownloadedDateInjectable);
     const updateWarningLevel = di.inject(updateWarningLevelInjectable);
-    const newLevel = new UpdateWarningLevelCalculator(updateDownloadedDate.value.get()).get();
-
+    
     return () => {
+      const newLevel = new UpdateWarningLevelCalculator(updateDownloadedDate.value.get()).get();
       updateWarningLevel.set(newLevel);
     }
   }

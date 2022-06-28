@@ -154,11 +154,12 @@ describe("encourage user to update when sufficient time passed since update was 
         describe("given just enough time passes for medium update encouragement", () => {
           beforeAll(() => {
             jest.useFakeTimers();
-            jest.advanceTimersByTime(daysToMilliseconds(22));
           })
 
           it("has medium emotional indication in the button", () => {
             const button = rendered.getByTestId("update-button");
+
+            jest.advanceTimersByTime(daysToMilliseconds(22));
 
             expect(button).toHaveAttribute("data-warning-level", "medium")
           })
