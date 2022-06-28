@@ -18,6 +18,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab when navigating to specific extension tab renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -206,6 +251,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extensions with tabs having same id when navigating to first extension tab renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -408,6 +498,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extensions with tabs having same id when navigating to second extension tab renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -608,6 +743,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given multiple extensions with specific preferences, when navigating to extension specific preferences page renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -832,6 +1012,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -1371,6 +1596,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -1946,6 +2216,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled when navigating to extension preferences using navigation renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -2159,6 +2474,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -2316,6 +2676,51 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences when navigating to extension specific tab renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -2505,6 +2910,51 @@ exports[`preferences - navigation to extension specific preferences when navigat
 
 exports[`preferences - navigation to extension specific preferences when navigating to someone else extension specific tab renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >

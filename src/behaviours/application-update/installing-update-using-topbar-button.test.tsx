@@ -12,12 +12,6 @@ import type { DownloadPlatformUpdate } from "../../main/application-update/downl
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import closeWindowInjectable from "../../renderer/components/layout/top-bar/close-window.injectable";
-import goBackInjectable from "../../renderer/components/layout/top-bar/go-back.injectable";
-import goForwardInjectable from "../../renderer/components/layout/top-bar/go-forward.injectable";
-import maximizeWindowInjectable from "../../renderer/components/layout/top-bar/maximize-window.injectable";
-import openAppContextMenuInjectable from "../../renderer/components/layout/top-bar/open-app-context-menu.injectable";
-import toggleMaximizeWindowInjectable from "../../renderer/components/layout/top-bar/toggle-maximize-window.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
@@ -36,7 +30,7 @@ describe("encourage user to update when sufficient time passed since update was 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
 
@@ -55,21 +49,6 @@ describe("encourage user to update when sufficient time passed since update was 
 
       quitAndInstallUpdateMock = jest.fn();
       mainDi.override(quitAndInstallUpdateInjectable, () => quitAndInstallUpdateMock);
-
-      // TODO: Remove below lines when TopBar are free from side-effects
-      rendererDi.unoverride(openAppContextMenuInjectable);
-      rendererDi.unoverride(goBackInjectable);
-      rendererDi.unoverride(goForwardInjectable);
-      rendererDi.unoverride(closeWindowInjectable);
-      rendererDi.unoverride(maximizeWindowInjectable);
-      rendererDi.unoverride(toggleMaximizeWindowInjectable);
-
-      rendererDi.permitSideEffects(openAppContextMenuInjectable);
-      rendererDi.permitSideEffects(goBackInjectable);
-      rendererDi.permitSideEffects(goForwardInjectable);
-      rendererDi.permitSideEffects(closeWindowInjectable);
-      rendererDi.permitSideEffects(maximizeWindowInjectable);
-      rendererDi.permitSideEffects(toggleMaximizeWindowInjectable);
     });
   });
 

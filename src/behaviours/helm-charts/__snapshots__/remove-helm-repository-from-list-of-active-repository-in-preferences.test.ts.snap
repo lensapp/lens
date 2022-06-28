@@ -4,6 +4,51 @@ exports[`remove helm repository from list of active repositories in preferences 
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -482,6 +527,51 @@ exports[`remove helm repository from list of active repositories in preferences 
 exports[`remove helm repository from list of active repositories in preferences when navigating to preferences containing helm repositories when active repositories resolve renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >
@@ -969,6 +1059,51 @@ exports[`remove helm repository from list of active repositories in preferences 
 <body>
   <div>
     <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <div
       class="StatusBar"
     >
       <div
@@ -1454,6 +1589,51 @@ exports[`remove helm repository from list of active repositories in preferences 
 exports[`remove helm repository from list of active repositories in preferences when navigating to preferences containing helm repositories when active repositories resolve when removing repository when removing resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
     <div
       class="StatusBar"
     >

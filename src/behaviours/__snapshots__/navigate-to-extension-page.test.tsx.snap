@@ -3,6 +3,51 @@
 exports[`navigate to extension page renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -20,6 +65,51 @@ exports[`navigate to extension page renders 1`] = `
 
 exports[`navigate to extension page when extension navigates to child route renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -41,6 +131,51 @@ exports[`navigate to extension page when extension navigates to child route rend
 
 exports[`navigate to extension page when extension navigates to route with parameters renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
@@ -79,6 +214,51 @@ exports[`navigate to extension page when extension navigates to route with param
 exports[`navigate to extension page when extension navigates to route without parameters renders 1`] = `
 <div>
   <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
+  <div
     class="StatusBar"
   >
     <div
@@ -115,6 +295,51 @@ exports[`navigate to extension page when extension navigates to route without pa
 
 exports[`navigate to extension page when extension navigates to route without parameters when changing page parameters renders 1`] = `
 <div>
+  <div
+    class="topBar"
+  >
+    <div
+      class="items"
+    >
+      <i
+        class="Icon material interactive focusable"
+        data-testid="home-button"
+        tabindex="0"
+      >
+        <span
+          class="icon"
+          data-icon-name="home"
+        >
+          home
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-back"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_back"
+        >
+          arrow_back
+        </span>
+      </i>
+      <i
+        class="Icon material interactive disabled focusable"
+        data-testid="history-forward"
+      >
+        <span
+          class="icon"
+          data-icon-name="arrow_forward"
+        >
+          arrow_forward
+        </span>
+      </i>
+    </div>
+    <div
+      class="items"
+    />
+  </div>
   <div
     class="StatusBar"
   >
