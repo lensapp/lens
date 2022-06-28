@@ -20,8 +20,8 @@ import openAppContextMenuInjectable from "../../renderer/components/layout/top-b
 import toggleMaximizeWindowInjectable from "../../renderer/components/layout/top-bar/toggle-maximize-window.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import restartAndInstallUpdateInjectable from "../../renderer/components/update-button/restart-and-install-update.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
+import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
 
 function daysToMilliseconds(days: number) {
   return Math.round(days * 24 * 60 * 60 * 1000);
@@ -31,7 +31,7 @@ describe("encourage user to update when sufficient time passed since update was 
   let applicationBuilder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
-  let restartAndInstallUpdate: jest.MockedFunction<() => void>;
+  let quitAndInstallUpdateMock: jest.MockedFunction<() => void>;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
@@ -53,7 +53,8 @@ describe("encourage user to update when sufficient time passed since update was 
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
 
-      rendererDi.override(restartAndInstallUpdateInjectable, () => restartAndInstallUpdate = jest.fn());
+      quitAndInstallUpdateMock = jest.fn();
+      mainDi.override(quitAndInstallUpdateInjectable, () => quitAndInstallUpdateMock);
 
       // TODO: Remove below lines when TopBar are free from side-effects
       rendererDi.unoverride(openAppContextMenuInjectable);
@@ -138,7 +139,7 @@ describe("encourage user to update when sufficient time passed since update was 
 
             act(() => updateMenuItem?.click());
 
-            expect(restartAndInstallUpdate).toBeCalled();
+            expect(quitAndInstallUpdateMock).toBeCalled();
           });
 
           describe("when dropdown closed without clicking update item", () => {
@@ -149,7 +150,7 @@ describe("encourage user to update when sufficient time passed since update was 
 
               act(() => button?.click());
 
-              expect(restartAndInstallUpdate).not.toBeCalled();
+              expect(quitAndInstallUpdateMock).not.toBeCalled();
             });
           });
         });
