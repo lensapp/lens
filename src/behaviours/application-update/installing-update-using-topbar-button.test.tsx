@@ -28,6 +28,8 @@ describe("encourage user to update when sufficient time passed since update was 
   let quitAndInstallUpdateMock: jest.MockedFunction<() => void>;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     applicationBuilder = getApplicationBuilder();
 
     applicationBuilder.beforeApplicationStart(({ mainDi }) => {
@@ -79,95 +81,62 @@ describe("encourage user to update when sufficient time passed since update was 
       });
 
       describe("when update downloaded", () => {
+        let button: HTMLElement;
+
         beforeEach(async () => {
           await checkForPlatformUpdatesMock.resolve({
             updateWasDiscovered: true,
             version: "some-version",
           });
+
           await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
           await processCheckingForUpdatesPromise;
+
+          button = rendered.getByTestId("update-button");
         });
 
         it("shows update button to help user to update", () => {
-          const button = rendered.queryByTestId("update-button");
-
           expect(button).toBeInTheDocument();
         });
 
         it("has soft emotional indication in the button", () => {
-          const button = rendered.getByTestId("update-button");
-
           expect(button).toHaveAttribute("data-warning-level", "light");
         });
 
         describe("when button is clicked", () => {
+          beforeEach(() => {
+            act(() => button.click());
+          });
+
           it("shows dropdown with update item", () => {
-            const button = rendered.queryByTestId("update-button");
-
-            act(() => button?.click());
-
             expect(rendered.getByTestId("update-lens-menu-item")).toBeInTheDocument();
           });
 
           it("when selected update now, restarts the application to update", () => {
-            const button = rendered.queryByTestId("update-button");
-
-            act(() => button?.click());
-
             const updateMenuItem = rendered.getByTestId("update-lens-menu-item");
 
-            act(() => updateMenuItem?.click());
+            act(() => updateMenuItem.click());
 
             expect(quitAndInstallUpdateMock).toBeCalled();
           });
 
-          describe("when dropdown closed without clicking update item", () => {
-            it("does not restart the application to update", async () => {
-              const button = rendered.queryByTestId("update-button");
+          it("when dropdown closed without clicking update item, does not restart the application to update", () => {
+            act(() => button.click());
 
-              act(() => button?.click());
-
-              act(() => button?.click());
-
-              expect(quitAndInstallUpdateMock).not.toBeCalled();
-            });
+            expect(quitAndInstallUpdateMock).not.toBeCalled();
           });
         });
 
-        describe("given just enough time passes for medium update encouragement", () => {
-          beforeAll(() => {
-            jest.useFakeTimers();
-          });
+        it("given just enough time passes for medium update encouragement, has medium emotional indication in the button", () => {
+          jest.advanceTimersByTime(daysToMilliseconds(22));
 
-          it("has medium emotional indication in the button", () => {
-            const button = rendered.getByTestId("update-button");
-
-            jest.advanceTimersByTime(daysToMilliseconds(22));
-
-            expect(button).toHaveAttribute("data-warning-level", "medium");
-          });
-
-          afterAll(() => {
-            jest.useRealTimers();
-          });
+          expect(button).toHaveAttribute("data-warning-level", "medium");
         });
 
-        describe("given just enough time passes for severe update encouragement", () => {
-          beforeAll(() => {
-            jest.useFakeTimers();
-          });
+        it("given just enough time passes for severe update encouragement, has severe emotional indication in the button", () => {
+          jest.advanceTimersByTime(daysToMilliseconds(26));
 
-          it("has severe emotional indication in the button", () => {
-            const button = rendered.getByTestId("update-button");
-
-            jest.advanceTimersByTime(daysToMilliseconds(26));
-
-            expect(button).toHaveAttribute("data-warning-level", "high");
-          });
-
-          afterAll(() => {
-            jest.useRealTimers();
-          });
+          expect(button).toHaveAttribute("data-warning-level", "high");
         });
       });
     });
