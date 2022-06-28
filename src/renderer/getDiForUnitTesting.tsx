@@ -52,6 +52,7 @@ import callForPublicHelmRepositoriesInjectable from "./components/+preferences/k
 import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -95,6 +96,8 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
+
+    di.override(watchHistoryStateInjectable, () => () => () => {});
 
     di.override(ipcRendererInjectable, () => ({
       invoke: () => {},
