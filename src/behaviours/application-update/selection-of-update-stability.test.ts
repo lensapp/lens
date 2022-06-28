@@ -19,8 +19,6 @@ import downloadPlatformUpdateInjectable from "../../main/application-update/down
 import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
-import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
-import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
@@ -32,7 +30,6 @@ describe("selection of update stability", () => {
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
   let showInfoNotificationMock: jest.Mock;
-  let askBooleanMock: AsyncFnMock<AskBoolean>;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
@@ -43,11 +40,9 @@ describe("selection of update stability", () => {
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
       showInfoNotificationMock = jest.fn(() => () => {});
-      askBooleanMock = asyncFn();
 
       rendererDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
 
-      mainDi.override(askBooleanInjectable, () => askBooleanMock);
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
       mainDi.override(
