@@ -28,12 +28,13 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
   const buttonId = id ?? "update-lens-button";
   const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
+  const level = warningLevel.get();
 
   const toggle = () => {
     setOpened(!opened);
   };
 
-  if (!warningLevel.get()) {
+  if (!level) {
     return null;
   }
 
@@ -41,11 +42,11 @@ export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: U
     <>
       <button
         data-testid="update-button"
-        data-warning-level={warningLevel.get()}
+        data-warning-level={level}
         id={buttonId}
         className={cssNames(styles.updateButton, {
-          [styles.warningHigh]: warningLevel.get() === "high",
-          [styles.warningMedium]: warningLevel.get() === "medium",
+          [styles.warningHigh]: level === "high",
+          [styles.warningMedium]: level === "medium",
         })}
       >
         Update
