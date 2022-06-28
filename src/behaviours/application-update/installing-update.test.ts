@@ -15,8 +15,6 @@ import asyncFn from "@async-fn/jest";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
-import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
-import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 
@@ -27,7 +25,6 @@ describe("installing update", () => {
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
   let showInfoNotificationMock: jest.Mock;
-  let askBooleanMock: AsyncFnMock<AskBoolean>;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
@@ -38,11 +35,9 @@ describe("installing update", () => {
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
       showInfoNotificationMock = jest.fn(() => () => {});
-      askBooleanMock = asyncFn();
 
       rendererDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
 
-      mainDi.override(askBooleanInjectable, () => askBooleanMock);
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
       mainDi.override(
@@ -160,10 +155,6 @@ describe("installing update", () => {
             expect(showInfoNotificationMock).toHaveBeenCalledWith("Download of update failed");
           });
 
-          it("does not ask user to install update", () => {
-            expect(askBooleanMock).not.toHaveBeenCalled();
-          });
-
           it("renders", () => {
             expect(rendered.baseElement).toMatchSnapshot();
           });
@@ -180,43 +171,6 @@ describe("installing update", () => {
 
           it("renders", () => {
             expect(rendered.baseElement).toMatchSnapshot();
-          });
-
-          it("asks user to install update immediately", () => {
-            expect(askBooleanMock).toHaveBeenCalledWith({
-              title: "Update Available",
-              question:
-                "Version some-version of Lens IDE is available and ready to be installed. Would you like to update now?\n\n" +
-                "Lens should restart automatically, if it doesn't please restart manually. Installed extensions might require updating.",
-            });
-          });
-
-          describe("when user answers to install the update", () => {
-            beforeEach(async () => {
-              await askBooleanMock.resolve(true);
-            });
-
-            it("renders", () => {
-              expect(rendered.baseElement).toMatchSnapshot();
-            });
-
-            it("quits application and installs the update", () => {
-              expect(quitAndInstallUpdateMock).toHaveBeenCalled();
-            });
-          });
-
-          describe("when user answers not to install the update", () => {
-            beforeEach(async () => {
-              await askBooleanMock.resolve(false);
-            });
-
-            it("renders", () => {
-              expect(rendered.baseElement).toMatchSnapshot();
-            });
-
-            it("does not quit application and install the update", () => {
-              expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
-            });
           });
         });
       });

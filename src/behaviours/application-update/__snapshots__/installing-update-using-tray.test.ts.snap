@@ -628,7 +628,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_371"
+            data-testid="close-notification-for-notification_335"
             tabindex="0"
           >
             <span
@@ -668,77 +668,7 @@ exports[`installing update using tray when started when user checks for updates 
         >
           <i
             class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_374"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          <div
-            class="flex column gaps"
-            data-testid="ask-boolean-some-irrelevant-random-id"
-          >
-            <b>
-              Update Available
-            </b>
-            <p>
-              Version some-version of Lens IDE is available and ready to be installed. Would you like to update now?
-
-Lens should restart automatically, if it doesn't please restart manually. Installed extensions might require updating.
-            </p>
-            <div
-              class="flex gaps row align-left box grow"
-            >
-              <button
-                class="Button light"
-                data-testid="ask-boolean-some-irrelevant-random-id-button-yes"
-                type="button"
-              >
-                Yes
-              </button>
-              <button
-                class="Button active outlined"
-                data-testid="ask-boolean-some-irrelevant-random-id-button-no"
-                type="button"
-              >
-                No
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-ask-boolean-for-some-irrelevant-random-id"
+            data-testid="close-notification-for-notification_338"
             tabindex="0"
           >
             <span
