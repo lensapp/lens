@@ -390,7 +390,7 @@
     "mock-http": "^1.1.0",
     "node-gyp": "7.1.2",
     "node-loader": "^2.0.0",
-    "nodemon": "^2.0.16",
+    "nodemon": "^2.0.18",
     "playwright": "^1.22.2",
     "postcss": "^8.4.14",
     "postcss-loader": "^6.2.1",
