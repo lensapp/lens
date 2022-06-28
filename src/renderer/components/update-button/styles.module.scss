@@ -11,7 +11,7 @@
   color: var(--accent-color);
   display: flex;
   align-items: center;
-  padding: 4px 8px;
+  padding: calc(var(--padding) / 4) var(--padding);
   gap: 6px;
   cursor: default;
   position: relative;
