@@ -89,7 +89,7 @@ describe("installing update", () => {
       });
 
       it("notifies the user that checking for updates is happening", () => {
-        expect(showInfoNotificationMock).toHaveBeenCalledWith("Checking for updates...");
+        expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("Checking for updates...");
       });
 
       it("renders", () => {

@@ -12,6 +12,7 @@ import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 import type { StatusBarRegistration } from "./status-bar-registration";
 import React from "react";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
+import logger from "../../../common/logger";
 
 const statusBarItemRegistratorInjectable = getInjectable({
   id: "status-bar-item-registrator",
@@ -36,10 +37,11 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
     let component: React.ComponentType;
     let position: "left" | "right";
 
-    if (registration.item) {
+    if (registration?.item) {
       const { item } = registration;
 
       // default for old API is "right"
+      position = "right";
       component =
         () => (
           <>
@@ -50,7 +52,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
             }
           </>
         );
-    } else if (registration.components) {
+    } else if (registration?.components) {
       const { position: pos = "right", Item } = registration.components;
 
       if (pos !== "left" && pos !== "right") {
@@ -58,10 +60,11 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
       }
 
       position = pos;
-
       component = Item;
     } else {
-      // throw?
+      logger.warn("StatusBarRegistration must have valid item or components field");
+
+      return [];
     }
 
     return [getInjectable({
