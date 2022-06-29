@@ -49,7 +49,6 @@ const lensLightTheme: Theme = {
     "tableHeaderColor": "#555555",
     "tableSelectedRowColor": "#222222",
     "helmLogoBackground": "#ffffff",
-    "helmImgBackground": "#e8e8e8",
     "helmStableRepo": "#3d90ce",
     "helmIncubatorRepo": "#ff7043",
     "helmDescriptionHr": "#dddddd",

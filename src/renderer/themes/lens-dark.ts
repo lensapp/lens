@@ -50,7 +50,6 @@ const lensDarkTheme: Theme = {
     "tableHeaderColor": "#ffffff",
     "tableSelectedRowColor": "#ffffff",
     "helmLogoBackground": "#ffffff",
-    "helmImgBackground": "#414448",
     "helmStableRepo": "#3d90ce",
     "helmIncubatorRepo": "#ff7043",
     "helmDescriptionHr": "#41474a",
