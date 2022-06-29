@@ -356,7 +356,7 @@
     "ansi_up": "^5.1.0",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
-    "cli-progress": "^3.11.1",
+    "cli-progress": "^3.11.2",
     "color": "^3.2.1",
     "command-line-args": "^5.2.1",
     "concurrently": "^7.2.2",
