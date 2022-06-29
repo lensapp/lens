@@ -32,7 +32,7 @@ const statusBarItemRegistratorInjectable = getInjectable({
 export default statusBarItemRegistratorInjectable;
 
 const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () => string) => {
-  const _toItemInjectable = () => (registration: StatusBarRegistration): Injectable<StatusBarItem, StatusBarItem, void>[] => {
+  return (registration: StatusBarRegistration): Injectable<StatusBarItem, StatusBarItem, void>[] => {
     const id = `${getRandomId()}-status-bar-item-for-extension-${extension.sanitizedExtensionId}`;
     let component: React.ComponentType;
     let position: "left" | "right";
@@ -40,7 +40,6 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
     if (registration?.item) {
       const { item } = registration;
 
-      // default for old API is "right"
       position = "right";
       component =
         () => (
@@ -78,10 +77,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
 
       injectionToken: statusBarItemInjectionToken,
     })];
-
   };
-
-  return _toItemInjectable();
 };
 
 
