@@ -19,17 +19,19 @@
 .leftSide {
   display: flex;
   align-items: center;
+  padding-inline-start: calc(var(--padding) / 2);
 }
 
 .rightSide {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding-inline-end: calc(var(--padding) / 2);
 }
 
 .item {
   height: 100%;
-  padding: 0 4px;
+  padding-inline: calc(var(--padding) / 4);
   display: flex;
   align-items: center;
 

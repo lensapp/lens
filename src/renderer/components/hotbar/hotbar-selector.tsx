@@ -58,7 +58,7 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
   return (
     <div className={styles.HotbarSelector}>
       <Icon
-        material="play_arrow"
+        material="arrow_left"
         className={cssNames(styles.Icon, styles.previous)}
         onClick={onPrevClick}/>
       <div className={styles.HotbarIndex}>
@@ -80,7 +80,7 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
         </Tooltip>
       </div>
       <Icon
-        material="play_arrow"
+        material="arrow_right"
         className={styles.Icon}
         onClick={onNextClick}
       />
