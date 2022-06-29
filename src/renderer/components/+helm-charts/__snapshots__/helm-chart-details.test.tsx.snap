@@ -130,7 +130,7 @@ exports[`<HelmChartDetails /> before getChartDetails resolves when getChartDetai
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <g
-                  fill="#929ba6"
+                  fill="currentColor"
                 >
                   <path
                     d="m318 299.5c2.1 1.6 4.8 2.5 7.6 2.5 6.9 0 12.6-5.5 12.9-12.3l.3-.2 4.3-76.7c-5.2.6-10.4 1.5-15.6 2.7-28.5 6.5-53.2 20.5-72.6 39.5l62.9 44.6z"
