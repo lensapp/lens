@@ -16,7 +16,7 @@ const startCheckingForUpdatesInjectable = getInjectable({
 
     return {
       run: async () => {
-        if (updatingIsEnabled) {
+        if (updatingIsEnabled && !periodicalCheckForUpdates.started) {
           await periodicalCheckForUpdates.start();
         }
       },
