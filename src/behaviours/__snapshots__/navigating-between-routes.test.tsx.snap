@@ -56,7 +56,9 @@ exports[`navigating between routes given route with optional path parameters whe
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -133,7 +135,9 @@ exports[`navigating between routes given route without path parameters when navi
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

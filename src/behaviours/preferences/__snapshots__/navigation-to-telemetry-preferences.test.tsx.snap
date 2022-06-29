@@ -56,7 +56,9 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -310,7 +312,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -902,7 +906,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -1506,7 +1512,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -1748,7 +1756,9 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

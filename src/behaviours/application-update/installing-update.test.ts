@@ -15,7 +15,12 @@ import asyncFn from "@async-fn/jest";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
+<<<<<<< HEAD
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
+=======
+import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
+import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
+>>>>>>> 035dcaf34f (fixed tests)
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 
 describe("installing update", () => {
@@ -24,20 +29,32 @@ describe("installing update", () => {
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
+<<<<<<< HEAD
   let showInfoNotificationMock: jest.Mock;
+=======
+  let askBooleanMock: AsyncFnMock<AskBoolean>;
+>>>>>>> 035dcaf34f (fixed tests)
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       quitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
+<<<<<<< HEAD
       showInfoNotificationMock = jest.fn(() => () => {});
 
       rendererDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
 
+=======
+      askBooleanMock = asyncFn();
+
+      mainDi.override(askBooleanInjectable, () => askBooleanMock);
+>>>>>>> 035dcaf34f (fixed tests)
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
       mainDi.override(
@@ -98,8 +115,6 @@ describe("installing update", () => {
 
       describe("when no new update is discovered", () => {
         beforeEach(async () => {
-          showInfoNotificationMock.mockClear();
-
           await checkForPlatformUpdatesMock.resolve({
             updateWasDiscovered: false,
           });
@@ -108,7 +123,7 @@ describe("installing update", () => {
         });
 
         it("notifies the user", () => {
-          expect(showInfoNotificationMock).toHaveBeenCalledWith("No new updates available");
+          expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("No new updates available");
         });
 
         it("does not start downloading update", () => {
@@ -135,7 +150,7 @@ describe("installing update", () => {
         });
 
         it("notifies the user that download is happening", () => {
-          expect(showInfoNotificationMock).toHaveBeenCalledWith("Download for version some-version started...");
+          expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("Download for version some-version started...");
         });
 
         it("renders", () => {
@@ -152,7 +167,7 @@ describe("installing update", () => {
           });
 
           it("notifies the user about failed download", () => {
-            expect(showInfoNotificationMock).toHaveBeenCalledWith("Download of update failed");
+            expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("Download of update failed");
           });
 
           it("renders", () => {
@@ -167,6 +182,10 @@ describe("installing update", () => {
 
           it("does not quit and install update yet", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
+          });
+
+          it("notifies the user about successful download", () => {
+            expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("some-version is available");
           });
 
           it("renders", () => {

@@ -56,7 +56,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -660,7 +662,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -868,7 +872,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -942,7 +948,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -1016,7 +1024,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -1620,7 +1630,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -1828,7 +1840,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -2036,7 +2050,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

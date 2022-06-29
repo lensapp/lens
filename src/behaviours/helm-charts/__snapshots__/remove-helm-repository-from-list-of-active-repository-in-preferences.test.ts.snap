@@ -57,7 +57,9 @@ exports[`remove helm repository from list of active repositories in preferences 
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -589,7 +591,9 @@ exports[`remove helm repository from list of active repositories in preferences 
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -1128,7 +1132,9 @@ exports[`remove helm repository from list of active repositories in preferences 
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -1667,7 +1673,9 @@ exports[`remove helm repository from list of active repositories in preferences 
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>

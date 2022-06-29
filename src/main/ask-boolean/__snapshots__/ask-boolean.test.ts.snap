@@ -12,7 +12,9 @@ exports[`ask-boolean given started when asking multiple questions renders 1`] = 
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -177,7 +179,9 @@ exports[`ask-boolean given started when asking multiple questions when answering
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -274,7 +278,9 @@ exports[`ask-boolean given started when asking question renders 1`] = `
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -371,7 +377,9 @@ exports[`ask-boolean given started when asking question when user answers "no" r
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -399,7 +407,9 @@ exports[`ask-boolean given started when asking question when user answers "yes" 
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -427,7 +437,9 @@ exports[`ask-boolean given started when asking question when user closes notific
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>

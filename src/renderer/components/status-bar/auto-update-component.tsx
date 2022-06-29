@@ -44,33 +44,35 @@ const EndNote = ({ version, note }: EndNoteProps) => {
   return note(version ?? "");
 };
 
+const DivWithTestId = (text: string) => <div data-testid="auto-update-component">{text}</div>;
+
 const checking = () => (
   <>
     <Spinner/>
-    <div>{"Checking for updates..."}</div>
+    {DivWithTestId("Checking for updates..." )}
   </>
 );
 
-const available = (version: string) => <div>{`${version ?? "Update"} is available`}</div>;
+const available = (version: string) => DivWithTestId(`${version ?? "Update"} is available`);
 
-const notAvailable = () => <div>{"No new updates available"}</div>;
+const notAvailable = () => DivWithTestId("No new updates available");
 
 const downloading = (version: string, percentDone: number) => {
   if ( percentDone === 0 ) {
     return (
       <>
-        <div>{`Download for version ${version} started `}</div>
+        {DivWithTestId(`Download for version ${version} started...`)}
         <Spinner/>
       </>
     );
   }
 
-  return <div>{`Download for version ${version} ${percentDone}%...`}</div>;
+  return DivWithTestId(`Download for version ${version} ${percentDone}%...`);
 };
 
-const downloadSucceeded = (version: string) => <div>{`Download for version ${version} complete`}</div>;
+const downloadFailed = (errMsg: string) => DivWithTestId(errMsg);
 
-const idle = () => <></>;
+const idle = () => DivWithTestId("");
 
 
 export const NonInjectedAutoUpdateComponent = observer(({
@@ -81,15 +83,13 @@ export const NonInjectedAutoUpdateComponent = observer(({
 }: Dependencies) => {
   const discoveredVersion = discoveredVersionState.value.get();
 
+  const { percentage, failed } = progressOfUpdateDownload.value.get();
+
   if (downloadingUpdateState.value.get()) {
 
     assert(discoveredVersion);
 
-    const roundedPercentage = Math.round(progressOfUpdateDownload.value.get().percentage);
-
-    if ( roundedPercentage > 99 ) {
-      return <EndNote note={downloadSucceeded} version={discoveredVersion.version} />;
-    }
+    const roundedPercentage = Math.round(percentage);
 
     return downloading(discoveredVersion.version, roundedPercentage);
   }
@@ -100,6 +100,10 @@ export const NonInjectedAutoUpdateComponent = observer(({
 
   if ( discoveredVersion) {
     return <EndNote note={available} version={discoveredVersion.version} />;
+  }
+
+  if ( failed ) {
+    return <EndNote note={downloadFailed} version={failed} />;
   }
 
   return <EndNote note={notAvailable} />;

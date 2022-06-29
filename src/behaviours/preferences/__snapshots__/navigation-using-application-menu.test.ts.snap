@@ -56,7 +56,9 @@ exports[`preferences - navigation using application menu renders 1`] = `
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -127,7 +129,9 @@ exports[`preferences - navigation using application menu when navigating to pref
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

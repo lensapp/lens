@@ -57,7 +57,9 @@ exports[`show-about-using-tray renders 1`] = `
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -130,7 +132,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>

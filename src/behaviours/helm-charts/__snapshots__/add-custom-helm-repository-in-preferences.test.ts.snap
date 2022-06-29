@@ -57,7 +57,9 @@ exports[`add custom helm repository in preferences when navigating to preference
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -589,7 +591,9 @@ exports[`add custom helm repository in preferences when navigating to preference
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -1128,7 +1132,9 @@ exports[`add custom helm repository in preferences when navigating to preference
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -1776,7 +1782,9 @@ exports[`add custom helm repository in preferences when navigating to preference
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -2323,7 +2331,9 @@ exports[`add custom helm repository in preferences when navigating to preference
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -2971,7 +2981,9 @@ exports[`add custom helm repository in preferences when navigating to preference
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -3795,7 +3807,9 @@ exports[`add custom helm repository in preferences when navigating to preference
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -4442,7 +4456,11 @@ exports[`add custom helm repository in preferences when navigating to preference
       >
         <div
           class="item"
-        />
+        >
+          <div
+            data-testid="auto-update-component"
+          />
+        </div>
       </div>
       <div
         class="rightSide"
@@ -5262,7 +5280,11 @@ exports[`add custom helm repository in preferences when navigating to preference
       >
         <div
           class="item"
-        />
+        >
+          <div
+            data-testid="auto-update-component"
+          />
+        </div>
       </div>
       <div
         class="rightSide"
@@ -5906,7 +5928,11 @@ exports[`add custom helm repository in preferences when navigating to preference
       >
         <div
           class="item"
-        />
+        >
+          <div
+            data-testid="auto-update-component"
+          />
+        </div>
       </div>
       <div
         class="rightSide"
@@ -6449,7 +6475,11 @@ exports[`add custom helm repository in preferences when navigating to preference
       >
         <div
           class="item"
-        />
+        >
+          <div
+            data-testid="auto-update-component"
+          />
+        </div>
       </div>
       <div
         class="rightSide"
@@ -6985,7 +7015,11 @@ exports[`add custom helm repository in preferences when navigating to preference
       >
         <div
           class="item"
-        />
+        >
+          <div
+            data-testid="auto-update-component"
+          />
+        </div>
       </div>
       <div
         class="rightSide"

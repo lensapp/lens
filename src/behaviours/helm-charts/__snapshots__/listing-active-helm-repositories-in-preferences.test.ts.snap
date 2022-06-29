@@ -57,7 +57,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -589,7 +591,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -1121,7 +1125,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -1545,7 +1551,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -2077,7 +2085,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -2501,7 +2511,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -3033,7 +3045,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -3602,7 +3616,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -4026,7 +4042,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -4450,7 +4468,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>

@@ -56,7 +56,9 @@ exports[`preferences - navigation to application preferences given in some child
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -324,7 +326,9 @@ exports[`preferences - navigation to application preferences given in some child
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

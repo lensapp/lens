@@ -56,7 +56,9 @@ exports[`navigate to extension page renders 1`] = `
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -127,7 +129,9 @@ exports[`navigate to extension page when extension navigates to child route rend
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -201,7 +205,9 @@ exports[`navigate to extension page when extension navigates to route with param
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -291,7 +297,9 @@ exports[`navigate to extension page when extension navigates to route without pa
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -381,7 +389,9 @@ exports[`navigate to extension page when extension navigates to route without pa
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

@@ -4,15 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import React from "react";
-import { AutoUpdateComponent } from "./auto-update-status-bar-item";
+import { AutoUpdateComponent } from "./auto-update-component";
 import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 
 const autoUpdateStatusBarItemInjectable = getInjectable({
   id: "quit-app-separator-tray-item",
 
   instantiate: () => ({
-    component: () => <AutoUpdateComponent data-testid="auto-update-component" />,
+    component: AutoUpdateComponent,
     position: "left" as const,
     visible: computed(() => true),
   }),

@@ -9,6 +9,7 @@ import { syncBoxInjectionToken } from "../../utils/sync-box/sync-box-injection-t
 
 export interface ProgressOfDownload {
   percentage: number;
+  failed?: string;
 }
 
 export type ProgressOfUpdateDownload = SyncBox<ProgressOfDownload>;

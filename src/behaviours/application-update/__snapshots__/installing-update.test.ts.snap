@@ -57,7 +57,9 @@ exports[`installing update when started renders 1`] = `
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -133,7 +135,9 @@ exports[`installing update when started when user checks for updates renders 1`]
           <div
             class="Spinner singleColor"
           />
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             Checking for updates...
           </div>
         </div>
@@ -206,8 +210,10 @@ exports[`installing update when started when user checks for updates when new up
         <div
           class="item"
         >
-          <div>
-            Download for version some-version started 
+          <div
+            data-testid="auto-update-component"
+          >
+            Download for version some-version started...
           </div>
           <div
             class="Spinner singleColor"
@@ -300,8 +306,10 @@ exports[`installing update when started when user checks for updates when new up
         <div
           class="item"
         >
-          <div>
-            No new updates available
+          <div
+            data-testid="auto-update-component"
+          >
+            Download of update failed
           </div>
         </div>
       </div>
@@ -391,7 +399,9 @@ exports[`installing update when started when user checks for updates when new up
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             some-version is available
           </div>
         </div>
@@ -464,7 +474,9 @@ exports[`installing update when started when user checks for updates when no new
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>

@@ -56,7 +56,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -648,7 +650,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

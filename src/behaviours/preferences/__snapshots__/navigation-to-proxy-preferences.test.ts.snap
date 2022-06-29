@@ -56,7 +56,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -648,7 +650,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>

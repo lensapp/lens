@@ -71,7 +71,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -313,7 +315,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -567,7 +571,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -821,7 +827,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -1098,7 +1106,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -1690,7 +1700,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -2317,7 +2329,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -2583,7 +2597,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="item"
         >
-          <div>
+          <div
+            data-testid="auto-update-component"
+          >
             No new updates available
           </div>
         </div>
@@ -2794,7 +2810,9 @@ exports[`preferences - navigation to extension specific preferences when navigat
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
@@ -3036,7 +3054,9 @@ exports[`preferences - navigation to extension specific preferences when navigat
       <div
         class="item"
       >
-        <div>
+        <div
+          data-testid="auto-update-component"
+        >
           No new updates available
         </div>
       </div>
