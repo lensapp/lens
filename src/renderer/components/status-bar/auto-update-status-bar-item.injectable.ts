@@ -8,7 +8,7 @@ import { AutoUpdateComponent } from "./auto-update-component";
 import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 
 const autoUpdateStatusBarItemInjectable = getInjectable({
-  id: "quit-app-separator-tray-item",
+  id: "auto-update-status-bar-item",
 
   instantiate: () => ({
     component: AutoUpdateComponent,
