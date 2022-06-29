@@ -53,7 +53,17 @@ exports[`encourage user to update when sufficient time passed since update was d
     >
       <div
         class="leftSide"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div
+            data-testid="auto-update-component"
+          >
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
       />

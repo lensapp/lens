@@ -15,12 +15,6 @@ import asyncFn from "@async-fn/jest";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
-<<<<<<< HEAD
-import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
-=======
-import type { AskBoolean } from "../../main/ask-boolean/ask-boolean.injectable";
-import askBooleanInjectable from "../../main/ask-boolean/ask-boolean.injectable";
->>>>>>> 035dcaf34f (fixed tests)
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 
 describe("installing update", () => {
@@ -29,11 +23,6 @@ describe("installing update", () => {
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
-<<<<<<< HEAD
-  let showInfoNotificationMock: jest.Mock;
-=======
-  let askBooleanMock: AsyncFnMock<AskBoolean>;
->>>>>>> 035dcaf34f (fixed tests)
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -45,16 +34,7 @@ describe("installing update", () => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
-<<<<<<< HEAD
-      showInfoNotificationMock = jest.fn(() => () => {});
 
-      rendererDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
-
-=======
-      askBooleanMock = asyncFn();
-
-      mainDi.override(askBooleanInjectable, () => askBooleanMock);
->>>>>>> 035dcaf34f (fixed tests)
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
       mainDi.override(

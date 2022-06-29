@@ -64,12 +64,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
         checkingForUpdatesState.set(false);
       });
 
-      withOrphanPromise(async () => {
-        const { downloadWasSuccessful } = await downloadUpdate();
-
-        if (!downloadWasSuccessful) {
-        }
-      })();
+      withOrphanPromise(async () => await downloadUpdate())();
     };
   },
 });
