@@ -4,7 +4,7 @@
  */
 
 import glob from "glob";
-import { kebabCase, memoize, noop } from "lodash/fp";
+import { kebabCase, memoize, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -112,15 +112,13 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
 
-  for (const filePath of getInjectableFilePaths()) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const injectableInstance = require(filePath).default;
+  const filePaths = getInjectableFilePaths();
 
-    di.register({
-      ...injectableInstance,
-      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
-    });
-  }
+  const injectables = filePaths.map(filePath => require(filePath).default);
+
+  chunk(100)(injectables).forEach(chunkInjectables => {
+    di.register(...chunkInjectables);
+  });
 
   di.preventSideEffects();
 

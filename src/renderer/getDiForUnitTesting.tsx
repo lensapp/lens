@@ -4,10 +4,8 @@
  */
 
 import glob from "glob";
-import { memoize, noop } from "lodash/fp";
-import type {
-  DiContainer,
-  Injectable } from "@ogre-tools/injectable";
+import { memoize, noop, chunk } from "lodash/fp";
+import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import {
   createContainer,
 } from "@ogre-tools/injectable";
@@ -82,14 +80,13 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
-  for (const filePath of getInjectableFilePaths()) {
-    const injectableInstance = require(filePath).default;
+  const filePaths = getInjectableFilePaths();
 
-    di.register({
-      ...injectableInstance,
-      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
-    });
-  }
+  const injectables = filePaths.map(filePath => require(filePath).default);
+
+  chunk(100)(injectables).forEach(chunkInjectables => {
+    di.register(...chunkInjectables);
+  });
 
   di.preventSideEffects();
 
