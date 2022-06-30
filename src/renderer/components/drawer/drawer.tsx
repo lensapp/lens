@@ -107,8 +107,9 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
     // detail: A count of consecutive clicks that happened in a short amount of time
     if (ev.detail === 3) {
       const selection = window.getSelection();
+      const isSelectingChildrenOfInputLabel = selection?.anchorNode instanceof HTMLLabelElement;
 
-      if (selection?.anchorNode?.parentNode) {
+      if (selection?.anchorNode?.parentNode && !isSelectingChildrenOfInputLabel) {
         selection.selectAllChildren(selection.anchorNode.parentNode);
       }
     }
