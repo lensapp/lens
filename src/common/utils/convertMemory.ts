@@ -9,17 +9,18 @@ import * as iter from "./iter";
 // Helper to convert memory from units Ki, Mi, Gi, Ti, Pi to bytes and vise versa
 
 const baseMagnitude = 1024;
-const maxMagnitude = ["EiB", baseMagnitude ** 6] as const;
+const maxMagnitude = ["PiB", baseMagnitude ** 5] as const;
 const magnitudes = new Map([
   ["B", 1] as const,
   ["KiB", baseMagnitude ** 1] as const,
   ["MiB", baseMagnitude ** 2] as const,
   ["GiB", baseMagnitude ** 3] as const,
   ["TiB", baseMagnitude ** 4] as const,
-  ["PiB", baseMagnitude ** 5] as const,
   maxMagnitude,
 ]);
-const unitRegex = /(?<value>[0-9]+(\.[0-9]*)?)(?<suffix>(B|[KMGTPE]iB))?/;
+const unitRegex = /(?<value>[0-9]+(\.[0-9]*)?)(?<suffix>(B|[KMGTP]iB?))?/;
+
+type BinaryUnit = typeof magnitudes extends Map<infer Key, any> ? Key : never;
 
 export function unitsToBytes(value: string): number {
   const unitsMatch = value.match(unitRegex);
@@ -34,7 +35,8 @@ export function unitsToBytes(value: string): number {
     return parsedValue;
   }
 
-  const magnitude = magnitudes.get(unitsMatch.groups.suffix as never);
+  const magnitude = magnitudes.get(unitsMatch.groups.suffix as BinaryUnit)
+    ?? magnitudes.get(`${unitsMatch.groups.suffix}B` as BinaryUnit);
 
   assert(magnitude, "UnitRegex is wrong some how");
 
