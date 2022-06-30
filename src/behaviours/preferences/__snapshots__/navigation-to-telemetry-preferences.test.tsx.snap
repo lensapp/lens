@@ -52,12 +52,13 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -65,6 +66,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -308,12 +310,13 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -321,6 +324,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -902,12 +906,13 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -915,6 +920,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -1508,12 +1514,13 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -1521,6 +1528,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -1752,12 +1760,13 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -1765,6 +1774,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div

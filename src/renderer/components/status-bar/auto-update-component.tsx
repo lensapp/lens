@@ -5,7 +5,7 @@
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import assert from "assert";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Spinner } from "../spinner";
 import type { ProgressOfUpdateDownload } from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
 import progressOfUpdateDownloadInjectable from "../../../common/application-update/progress-of-update-download/progress-of-update-download.injectable";
@@ -15,6 +15,7 @@ import type { UpdateIsBeingDownloaded } from "../../../common/application-update
 import updateIsBeingDownloadedInjectable from "../../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
 import type { UpdatesAreBeingDiscovered } from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
 import updatesAreBeingDiscoveredInjectable from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
+import { now as reactiveDateNow } from "mobx-utils";
 
 interface Dependencies {
   progressOfUpdateDownload: ProgressOfUpdateDownload;
@@ -28,51 +29,39 @@ interface EndNoteProps {
   note: (version: string) => JSX.Element;
 }
 
-const EndNote = ({ version, note }: EndNoteProps) => {
-  const [idling, setIdling] = useState(false);
+const EndNote = observer(({ version, note }: EndNoteProps) => {
+  const [start] = useState(Date.now());
 
-  useEffect(() => {
-    const timerId = setTimeout(() => setIdling(true), 5000);
-
-    return () => clearTimeout(timerId);
-  });
-
-  if (idling) {
+  if (start + 5000 <= reactiveDateNow()) {
     return idle();
   }
-
+  
   return note(version ?? "");
-};
-
-const DivWithTestId = (text: string) => <div data-testid="auto-update-component">{text}</div>;
+});
 
 const checking = () => (
   <>
     <Spinner/>
-    {DivWithTestId("Checking for updates..." )}
+    <div data-testid="app-update-checking">Checking for updates...</div>
   </>
 );
 
-const available = (version: string) => DivWithTestId(`${version ?? "Update"} is available`);
+const available = (version: string) => <div data-testid="app-update-available">{`${version ?? "Update"} is available`}</div>;
 
-const notAvailable = () => DivWithTestId("No new updates available");
+const notAvailable = () => <div data-testid="app-update-not-available">No new updates available</div>;
 
-const downloading = (version: string, percentDone: number) => {
-  if ( percentDone === 0 ) {
-    return (
-      <>
-        {DivWithTestId(`Download for version ${version} started...`)}
-        <Spinner/>
-      </>
-    );
-  }
-
-  return DivWithTestId(`Download for version ${version} ${percentDone}%...`);
+const downloading = (version: string) => {
+  return (
+    <>
+      <div data-testid="app-update-downloading">{`Downloading version ${version}...`}</div>
+      <Spinner/>
+    </>
+  );
 };
 
-const downloadFailed = (errMsg: string) => DivWithTestId(errMsg);
+const downloadFailed = (errMsg: string) => <div data-testid="app-update-download-failed">{errMsg}</div>;
 
-const idle = () => DivWithTestId("");
+const idle = () => <div data-testid="app-update-idle"></div>;
 
 
 export const NonInjectedAutoUpdateComponent = observer(({
@@ -83,15 +72,13 @@ export const NonInjectedAutoUpdateComponent = observer(({
 }: Dependencies) => {
   const discoveredVersion = discoveredVersionState.value.get();
 
-  const { percentage, failed } = progressOfUpdateDownload.value.get();
+  const { failed } = progressOfUpdateDownload.value.get();
 
   if (downloadingUpdateState.value.get()) {
 
     assert(discoveredVersion);
 
-    const roundedPercentage = Math.round(percentage);
-
-    return downloading(discoveredVersion.version, roundedPercentage);
+    return downloading(discoveredVersion.version);
   }
 
   if (checkingForUpdatesState.value.get()) {

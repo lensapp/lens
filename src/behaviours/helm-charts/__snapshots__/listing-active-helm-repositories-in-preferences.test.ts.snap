@@ -53,12 +53,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -66,6 +67,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -587,12 +589,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -600,6 +603,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -1121,12 +1125,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -1134,6 +1139,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -1547,12 +1553,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -1560,6 +1567,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -2081,12 +2089,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -2094,6 +2103,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -2507,12 +2517,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -2520,6 +2531,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -3041,12 +3053,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -3054,6 +3067,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -3612,12 +3626,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -3625,6 +3640,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -4038,12 +4054,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -4051,6 +4068,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -4464,12 +4482,13 @@ exports[`listing active helm repositories in preferences when navigating to pref
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -4477,6 +4496,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div

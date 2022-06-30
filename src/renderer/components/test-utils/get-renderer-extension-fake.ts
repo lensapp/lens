@@ -17,8 +17,10 @@ export class TestExtension extends LensRendererExtension {}
 
 export type FakeExtensionData = SetRequired<Partial<LensRendererExtension>, "id" | "name">;
 
-export const getRendererExtensionFakeFor = (builder: ApplicationBuilder) => (
-  function getRendererExtensionFake({ id, name, ...rest }: FakeExtensionData) {
+export type GetRendererExtensionFake = (fakeExtensionData: FakeExtensionData) => TestExtension;
+
+export const getRendererExtensionFakeFor = (builder: ApplicationBuilder): GetRendererExtensionFake => (
+  function getRendererExtensionFake({ id, name, ...rest }) {
     const instance = new TestExtension({
       id,
       absolutePath: "irrelevant",

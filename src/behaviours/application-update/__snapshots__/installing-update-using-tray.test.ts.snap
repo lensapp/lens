@@ -53,12 +53,13 @@ exports[`installing update using tray when started renders 1`] = `
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -66,6 +67,7 @@ exports[`installing update using tray when started renders 1`] = `
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -128,6 +130,7 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
@@ -136,7 +139,7 @@ exports[`installing update using tray when started when user checks for updates 
             class="Spinner singleColor"
           />
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-checking"
           >
             Checking for updates...
           </div>
@@ -144,6 +147,7 @@ exports[`installing update using tray when started when user checks for updates 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -206,14 +210,15 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-downloading"
           >
-            Download for version some-version started...
+            Downloading version some-version...
           </div>
           <div
             class="Spinner singleColor"
@@ -222,6 +227,7 @@ exports[`installing update using tray when started when user checks for updates 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -302,12 +308,13 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-download-failed"
           >
             Download of update failed
           </div>
@@ -315,6 +322,7 @@ exports[`installing update using tray when started when user checks for updates 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -395,12 +403,13 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-available"
           >
             some-version is available
           </div>
@@ -408,6 +417,7 @@ exports[`installing update using tray when started when user checks for updates 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -470,12 +480,13 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -483,6 +494,7 @@ exports[`installing update using tray when started when user checks for updates 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div

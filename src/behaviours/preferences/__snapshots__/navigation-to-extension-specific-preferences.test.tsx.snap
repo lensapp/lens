@@ -67,12 +67,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -80,6 +81,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -311,12 +313,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -324,6 +327,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -567,12 +571,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -580,6 +585,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -823,12 +829,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -836,6 +843,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -1102,12 +1110,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -1115,6 +1124,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -1696,12 +1706,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -1709,6 +1720,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -2325,12 +2337,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -2338,6 +2351,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -2593,12 +2607,13 @@ exports[`preferences - navigation to extension specific preferences given in pre
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -2606,6 +2621,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -2806,12 +2822,13 @@ exports[`preferences - navigation to extension specific preferences when navigat
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -2819,6 +2836,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -3050,12 +3068,13 @@ exports[`preferences - navigation to extension specific preferences when navigat
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -3063,6 +3082,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div

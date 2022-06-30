@@ -23,14 +23,14 @@ const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps)
 
   return (
     <div className={styles.StatusBar}>
-      <div className={styles.leftSide}>
+      <div className={styles.leftSide} data-testid="status-bar-left">
         {left.map((Item, index) => (
           <div className={styles.item} key={index}>
             <Item />
           </div>
         ))}
       </div>
-      <div className={styles.rightSide}>
+      <div className={styles.rightSide} data-testid="status-bar-right">
         {right.map((Item, index) => (
           <div className={styles.item} key={index}>
             <Item />

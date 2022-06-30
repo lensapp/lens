@@ -52,12 +52,13 @@ exports[`navigate to extension page renders 1`] = `
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -65,6 +66,7 @@ exports[`navigate to extension page renders 1`] = `
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -125,12 +127,13 @@ exports[`navigate to extension page when extension navigates to child route rend
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -138,6 +141,7 @@ exports[`navigate to extension page when extension navigates to child route rend
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -201,12 +205,13 @@ exports[`navigate to extension page when extension navigates to route with param
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -214,6 +219,7 @@ exports[`navigate to extension page when extension navigates to route with param
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -293,12 +299,13 @@ exports[`navigate to extension page when extension navigates to route without pa
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -306,6 +313,7 @@ exports[`navigate to extension page when extension navigates to route without pa
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -385,12 +393,13 @@ exports[`navigate to extension page when extension navigates to route without pa
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -398,6 +407,7 @@ exports[`navigate to extension page when extension navigates to route without pa
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>

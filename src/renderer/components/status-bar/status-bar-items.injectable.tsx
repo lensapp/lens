@@ -27,17 +27,9 @@ function getStatusBarItems({ registrations }: Dependencies): IComputedValue<Stat
     };
 
     for (const registration of registrations.get()) {
-      if (!registration || typeof registration !== "object") {
-        continue;
-      }
-
       const { position = "right", component, visible } = registration;
 
-      if (position !== "left" && position !== "right") {
-        throw new TypeError("StatusBarRegistration.components.position must be either 'right' or 'left'");
-      }
-
-      if (!visible) {
+      if (!visible.get()) {
         continue;
       }
 

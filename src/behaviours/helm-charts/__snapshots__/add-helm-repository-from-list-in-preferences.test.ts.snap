@@ -53,12 +53,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -66,6 +67,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -587,12 +589,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -600,6 +603,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -1128,12 +1132,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -1141,6 +1146,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -1722,12 +1728,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -1735,6 +1742,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -2263,12 +2271,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -2276,6 +2285,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -2804,12 +2814,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -2817,6 +2828,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -3338,12 +3350,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -3351,6 +3364,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -3909,12 +3923,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -3922,6 +3937,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -4543,12 +4559,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -4556,6 +4573,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -5114,12 +5132,13 @@ exports[`add helm repository from list in preferences when navigating to prefere
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -5127,6 +5146,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div

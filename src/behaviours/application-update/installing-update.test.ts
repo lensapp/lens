@@ -86,7 +86,7 @@ describe("installing update", () => {
       });
 
       it("notifies the user that checking for updates is happening", () => {
-        expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("Checking for updates...");
+        expect(rendered.getByTestId("app-update-checking")).toBeInTheDocument();
       });
 
       it("renders", () => {
@@ -103,7 +103,7 @@ describe("installing update", () => {
         });
 
         it("notifies the user", () => {
-          expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("No new updates available");
+          expect(rendered.getByTestId("app-update-not-available")).toBeInTheDocument();
         });
 
         it("does not start downloading update", () => {
@@ -112,6 +112,12 @@ describe("installing update", () => {
 
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
+        });
+
+        it.skip("when 5 seconds elapses, clears the notification to the user", () => {
+          jest.advanceTimersByTime(6000);
+
+          expect(rendered.getByTestId("app-update-idle")).toBeInTheDocument();
         });
       });
 
@@ -130,7 +136,7 @@ describe("installing update", () => {
         });
 
         it("notifies the user that download is happening", () => {
-          expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("Download for version some-version started...");
+          expect(rendered.getByTestId("app-update-downloading")).toBeInTheDocument();
         });
 
         it("renders", () => {
@@ -147,7 +153,7 @@ describe("installing update", () => {
           });
 
           it("notifies the user about failed download", () => {
-            expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("Download of update failed");
+            expect(rendered.getByTestId("app-update-download-failed")).toBeInTheDocument();
           });
 
           it("renders", () => {
@@ -165,7 +171,7 @@ describe("installing update", () => {
           });
 
           it("notifies the user about successful download", () => {
-            expect(rendered.getByTestId("auto-update-component")).toHaveTextContent("some-version is available");
+            expect(rendered.getByTestId("app-update-available")).toBeInTheDocument();
           });
 
           it("renders", () => {

@@ -52,12 +52,13 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -65,6 +66,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -646,12 +648,13 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
   >
     <div
       class="leftSide"
+      data-testid="status-bar-left"
     >
       <div
         class="item"
       >
         <div
-          data-testid="auto-update-component"
+          data-testid="app-update-not-available"
         >
           No new updates available
         </div>
@@ -659,6 +662,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
     </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div

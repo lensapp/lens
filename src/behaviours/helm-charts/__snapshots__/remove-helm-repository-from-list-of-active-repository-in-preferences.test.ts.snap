@@ -53,12 +53,13 @@ exports[`remove helm repository from list of active repositories in preferences 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -66,6 +67,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -587,12 +589,13 @@ exports[`remove helm repository from list of active repositories in preferences 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -600,6 +603,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -1128,12 +1132,13 @@ exports[`remove helm repository from list of active repositories in preferences 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -1141,6 +1146,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -1669,12 +1675,13 @@ exports[`remove helm repository from list of active repositories in preferences 
     >
       <div
         class="leftSide"
+        data-testid="status-bar-left"
       >
         <div
           class="item"
         >
           <div
-            data-testid="auto-update-component"
+            data-testid="app-update-not-available"
           >
             No new updates available
           </div>
@@ -1682,6 +1689,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
