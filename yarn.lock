@@ -1211,10 +1211,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@ogre-tools/fp@9.0.0", "@ogre-tools/fp@^9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.0.tgz#926cd4f13b52961156161feeeafddf22a0ad39c0"
-  integrity sha512-kMUgzhdjHuph0UWteOfyXNGBavZJX23NOA5su6fx9NdTzWhl9yB5Uf6Q//nOvL9COftjZDwnAgIaDU4MPdjyqA==
+"@ogre-tools/fp@9.0.1", "@ogre-tools/fp@^9.0.0":
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.1.tgz#22c23bd209f6f56bf66a5ff4514930334a3a4782"
+  integrity sha512-7kORUcvR9DZz5/2qDSSKExGeisXzfmOafP+Z6l8C+WQXEmEQm7CmFMyBEyMkei0eNFzNghlKYgRFpsvBdU3KAg==
   dependencies:
     lodash "^4.17.21"
 

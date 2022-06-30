@@ -209,7 +209,7 @@
     "@hapi/subtext": "^7.0.4",
     "@kubernetes/client-node": "^0.16.3",
     "@material-ui/styles": "^4.11.5",
-    "@ogre-tools/fp": "9.0.0",
+    "@ogre-tools/fp": "9.0.1",
     "@ogre-tools/injectable": "9.0.0",
     "@ogre-tools/injectable-extension-for-auto-registration": "9.0.0",
     "@ogre-tools/injectable-extension-for-mobx": "9.0.0",
