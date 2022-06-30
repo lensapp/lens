@@ -31,7 +31,7 @@
 
 .item {
   height: 100%;
-  padding-inline: calc(var(--padding) / 4);
+  padding-inline: var(--padding);
   display: flex;
   align-items: center;
 
