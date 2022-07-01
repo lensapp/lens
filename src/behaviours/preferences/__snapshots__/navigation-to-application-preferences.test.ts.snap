@@ -52,9 +52,21 @@ exports[`preferences - navigation to application preferences given in some child
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -312,9 +324,21 @@ exports[`preferences - navigation to application preferences given in some child
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div

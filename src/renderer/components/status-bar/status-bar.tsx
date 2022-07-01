@@ -8,14 +8,14 @@ import styles from "./status-bar.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { RegisteredStatusBarItems } from "./registered-status-bar-items.injectable";
-import registeredStatusBarItemsInjectable from "./registered-status-bar-items.injectable";
+import type { StatusBarItems } from "./status-bar-items.injectable";
+import statusBarItemsInjectable from "./status-bar-items.injectable";
 import type { IComputedValue } from "mobx";
 
 export interface StatusBarProps {}
 
 interface Dependencies {
-  items: IComputedValue<RegisteredStatusBarItems>;
+  items: IComputedValue<StatusBarItems>;
 }
 
 const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps) => {
@@ -23,14 +23,14 @@ const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps)
 
   return (
     <div className={styles.StatusBar}>
-      <div className={styles.leftSide}>
+      <div className={styles.leftSide} data-testid="status-bar-left">
         {left.map((Item, index) => (
           <div className={styles.item} key={index}>
             <Item />
           </div>
         ))}
       </div>
-      <div className={styles.rightSide}>
+      <div className={styles.rightSide} data-testid="status-bar-right">
         {right.map((Item, index) => (
           <div className={styles.item} key={index}>
             <Item />
@@ -44,7 +44,7 @@ const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps)
 
 export const StatusBar = withInjectables<Dependencies, StatusBarProps>(NonInjectedStatusBar, {
   getProps: (di, props) => ({
-    items: di.inject(registeredStatusBarItemsInjectable),
+    items: di.inject(statusBarItemsInjectable),
     ...props,
   }),
 });

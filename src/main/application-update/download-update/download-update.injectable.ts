@@ -38,6 +38,7 @@ const downloadUpdateInjectable = getInjectable({
 
       runInAction(() => {
         if (!downloadWasSuccessful) {
+          progressOfUpdateDownload.set({ percentage: 0, failed: "Download of update failed" });
           discoveredVersionState.set(null);
         }
 

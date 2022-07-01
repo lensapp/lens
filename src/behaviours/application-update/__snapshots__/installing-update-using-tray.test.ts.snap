@@ -53,9 +53,21 @@ exports[`installing update using tray when started renders 1`] = `
     >
       <div
         class="leftSide"
-      />
+        data-testid="status-bar-left"
+      >
+        <div
+          class="item"
+        >
+          <div
+            data-testid="app-update-not-available"
+          >
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
@@ -118,55 +130,29 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+        data-testid="status-bar-left"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="Spinner singleColor"
+          />
+          <div
+            data-testid="app-update-checking"
+          >
+            Checking for updates...
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Checking for updates...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_43"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </body>
 `;
@@ -224,95 +210,29 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+        data-testid="status-bar-left"
+      >
+        <div
+          class="item"
+        >
+          <div
+            data-testid="app-update-downloading"
+          >
+            Downloading version some-version...
+          </div>
+          <div
+            class="Spinner singleColor"
+          />
+        </div>
+      </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Checking for updates...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_181"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Download for version some-version started...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_184"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </body>
 `;
@@ -388,135 +308,26 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+        data-testid="status-bar-left"
+      >
+        <div
+          class="item"
+        >
+          <div
+            data-testid="app-update-download-failed"
+          >
+            Download of update failed
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Checking for updates...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_268"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Download for version some-version started...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_271"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Download of update failed
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_277"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </body>
 `;
@@ -592,95 +403,26 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+        data-testid="status-bar-left"
+      >
+        <div
+          class="item"
+        >
+          <div
+            data-testid="app-update-available"
+          >
+            some-version is available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Checking for updates...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_335"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Download for version some-version started...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_338"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </body>
 `;
@@ -738,95 +480,26 @@ exports[`installing update using tray when started when user checks for updates 
     >
       <div
         class="leftSide"
-      />
+        data-testid="status-bar-left"
+      >
+        <div
+          class="item"
+        >
+          <div
+            data-testid="app-update-not-available"
+          >
+            No new updates available
+          </div>
+        </div>
+      </div>
       <div
         class="rightSide"
+        data-testid="status-bar-right"
       />
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Checking for updates...
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_104"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-      <div
-        class="Animate opacity notification flex info enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          No new updates available
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_107"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </body>
 `;

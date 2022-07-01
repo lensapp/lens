@@ -52,9 +52,21 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -648,9 +660,21 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -848,9 +872,21 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -914,9 +950,21 @@ exports[`preferences - closing-preferences given accessing preferences directly 
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -980,9 +1028,21 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -1576,9 +1636,21 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -1776,9 +1848,21 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -1976,9 +2060,21 @@ exports[`preferences - closing-preferences given already in a page and then navi
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div

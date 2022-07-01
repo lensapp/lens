@@ -8,7 +8,6 @@ import updatesAreBeingDiscoveredInjectable from "../../../common/application-upd
 import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import { runInAction } from "mobx";
 import downloadUpdateInjectable from "../download-update/download-update.injectable";
-import broadcastChangeInUpdatingStatusInjectable from "./broadcast-change-in-updating-status.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates-starting-from-channel.injectable";
 import withOrphanPromiseInjectable from "../../../common/utils/with-orphan-promise/with-orphan-promise.injectable";
 import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
@@ -20,7 +19,6 @@ const processCheckingForUpdatesInjectable = getInjectable({
   instantiate: (di) => {
     const downloadUpdate = di.inject(downloadUpdateInjectable);
     const selectedUpdateChannel = di.inject(selectedUpdateChannelInjectable);
-    const broadcastChangeInUpdatingStatus = di.inject(broadcastChangeInUpdatingStatusInjectable);
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const checkForUpdatesStartingFromChannel = di.inject(checkForUpdatesStartingFromChannelInjectable);
@@ -34,8 +32,6 @@ const processCheckingForUpdatesInjectable = getInjectable({
         params: { currentDateTime: getCurrentDateTime(), source },
       });
 
-      broadcastChangeInUpdatingStatus({ eventId: "checking-for-updates" });
-
       runInAction(() => {
         checkingForUpdatesState.set(true);
       });
@@ -43,8 +39,6 @@ const processCheckingForUpdatesInjectable = getInjectable({
       const result = await checkForUpdatesStartingFromChannel(selectedUpdateChannel.value.get());
 
       if (!result.updateWasDiscovered) {
-        broadcastChangeInUpdatingStatus({ eventId: "no-updates-available" });
-
         runInAction(() => {
           discoveredVersionState.set(null);
           checkingForUpdatesState.set(false);
@@ -61,11 +55,6 @@ const processCheckingForUpdatesInjectable = getInjectable({
         params: { version, currentDateTime: getCurrentDateTime() },
       });
 
-      broadcastChangeInUpdatingStatus({
-        eventId: "download-for-update-started",
-        version,
-      });
-
       runInAction(() => {
         discoveredVersionState.set({
           version,
@@ -75,15 +64,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
         checkingForUpdatesState.set(false);
       });
 
-      withOrphanPromise(async () => {
-        const { downloadWasSuccessful } = await downloadUpdate();
-
-        if (!downloadWasSuccessful) {
-          broadcastChangeInUpdatingStatus({
-            eventId: "download-for-update-failed",
-          });
-        }
-      })();
+      withOrphanPromise(async () => await downloadUpdate())();
     };
   },
 });

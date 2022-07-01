@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`encourage user to update when sufficient time passed since update was downloaded when started renders 1`] = `
+exports[`status-bar-items-originating-from-extensions when application starts when extension with status bar items is loaded renders 1`] = `
 <body>
   <div>
     <div
@@ -64,11 +64,57 @@ exports[`encourage user to update when sufficient time passed since update was d
             No new updates available
           </div>
         </div>
+        <div
+          class="item"
+        >
+          <div
+            data-testid="some-testId"
+          >
+            left1
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <div
+            data-testid="some-testId"
+          >
+            left2
+          </div>
+        </div>
       </div>
       <div
         class="rightSide"
         data-testid="status-bar-right"
-      />
+      >
+        <div
+          class="item"
+        >
+          <div
+            data-testid="some-testId"
+          >
+            right3
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            data-testid="some-testId"
+          >
+            right2
+          </span>
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            data-testid="some-testId"
+          >
+            right1
+          </span>
+        </div>
+      </div>
     </div>
     <div
       class="Notifications flex column align-flex-end"

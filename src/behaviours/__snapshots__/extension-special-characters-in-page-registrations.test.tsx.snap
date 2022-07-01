@@ -52,9 +52,21 @@ exports[`extension special characters in page registrations renders 1`] = `
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -115,9 +127,21 @@ exports[`extension special characters in page registrations when navigating to r
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>

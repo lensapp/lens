@@ -52,9 +52,21 @@ exports[`navigate to extension page renders 1`] = `
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div
@@ -115,9 +127,21 @@ exports[`navigate to extension page when extension navigates to child route rend
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -181,9 +205,21 @@ exports[`navigate to extension page when extension navigates to route with param
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -263,9 +299,21 @@ exports[`navigate to extension page when extension navigates to route without pa
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>
@@ -345,9 +393,21 @@ exports[`navigate to extension page when extension navigates to route without pa
   >
     <div
       class="leftSide"
-    />
+      data-testid="status-bar-left"
+    >
+      <div
+        class="item"
+      >
+        <div
+          data-testid="app-update-not-available"
+        >
+          No new updates available
+        </div>
+      </div>
+    </div>
     <div
       class="rightSide"
+      data-testid="status-bar-right"
     />
   </div>
   <div>

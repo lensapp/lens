@@ -15,7 +15,6 @@ import asyncFn from "@async-fn/jest";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
-import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 
 describe("installing update", () => {
@@ -24,19 +23,17 @@ describe("installing update", () => {
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
-  let showInfoNotificationMock: jest.Mock;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       quitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
-      showInfoNotificationMock = jest.fn(() => () => {});
-
-      rendererDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
 
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
@@ -89,7 +86,7 @@ describe("installing update", () => {
       });
 
       it("notifies the user that checking for updates is happening", () => {
-        expect(showInfoNotificationMock).toHaveBeenCalledWith("Checking for updates...");
+        expect(rendered.getByTestId("app-update-checking")).toBeInTheDocument();
       });
 
       it("renders", () => {
@@ -98,8 +95,6 @@ describe("installing update", () => {
 
       describe("when no new update is discovered", () => {
         beforeEach(async () => {
-          showInfoNotificationMock.mockClear();
-
           await checkForPlatformUpdatesMock.resolve({
             updateWasDiscovered: false,
           });
@@ -108,7 +103,7 @@ describe("installing update", () => {
         });
 
         it("notifies the user", () => {
-          expect(showInfoNotificationMock).toHaveBeenCalledWith("No new updates available");
+          expect(rendered.getByTestId("app-update-not-available")).toBeInTheDocument();
         });
 
         it("does not start downloading update", () => {
@@ -117,6 +112,12 @@ describe("installing update", () => {
 
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
+        });
+
+        it.skip("when 5 seconds elapses, clears the notification to the user", () => {
+          jest.advanceTimersByTime(6000);
+
+          expect(rendered.getByTestId("app-update-idle")).toBeInTheDocument();
         });
       });
 
@@ -135,7 +136,7 @@ describe("installing update", () => {
         });
 
         it("notifies the user that download is happening", () => {
-          expect(showInfoNotificationMock).toHaveBeenCalledWith("Download for version some-version started...");
+          expect(rendered.getByTestId("app-update-downloading")).toBeInTheDocument();
         });
 
         it("renders", () => {
@@ -152,7 +153,7 @@ describe("installing update", () => {
           });
 
           it("notifies the user about failed download", () => {
-            expect(showInfoNotificationMock).toHaveBeenCalledWith("Download of update failed");
+            expect(rendered.getByTestId("app-update-download-failed")).toBeInTheDocument();
           });
 
           it("renders", () => {
@@ -167,6 +168,10 @@ describe("installing update", () => {
 
           it("does not quit and install update yet", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
+          });
+
+          it("notifies the user about successful download", () => {
+            expect(rendered.getByTestId("app-update-available")).toBeInTheDocument();
           });
 
           it("renders", () => {
