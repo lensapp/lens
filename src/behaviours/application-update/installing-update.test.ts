@@ -115,7 +115,7 @@ describe("installing update", () => {
           expect(rendered.baseElement).toMatchSnapshot();
         });
 
-        it.skip("when 5 seconds elapses, clears the notification to the user", () => {
+        it("when 5 seconds elapses, clears the notification to the user", () => {
           advanceFakeTime(6000);
 
           expect(rendered.getByTestId("app-update-idle")).toBeInTheDocument();
