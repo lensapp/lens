@@ -15,7 +15,7 @@ import type { UpdateIsBeingDownloaded } from "../../../common/application-update
 import updateIsBeingDownloadedInjectable from "../../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";
 import type { UpdatesAreBeingDiscovered } from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
 import updatesAreBeingDiscoveredInjectable from "../../../common/application-update/updates-are-being-discovered/updates-are-being-discovered.injectable";
-import { now as reactiveDateNow } from "mobx-utils";
+import { reactiveNow } from "../../../common/utils/reactive-now/reactive-now";
 
 interface Dependencies {
   progressOfUpdateDownload: ProgressOfUpdateDownload;
@@ -32,10 +32,10 @@ interface EndNoteProps {
 const EndNote = observer(({ version, note }: EndNoteProps) => {
   const [start] = useState(Date.now());
 
-  if (start + 5000 <= reactiveDateNow()) {
+  if (start + 5000 <= reactiveNow()) {
     return idle();
   }
-  
+
   return note(version ?? "");
 });
 
