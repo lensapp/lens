@@ -8,8 +8,8 @@ import packageJsonInjectable from "../../../common/vars/package-json.injectable"
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import trayIconPathsInjectable from "../tray-icon-path.injectable";
 import { convertToElectronMenuTemplate } from "../reactive-tray-menu-items/converters";
+import trayIconInjectable from "../menu-icon/tray-icon.injectable";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
 
@@ -38,13 +38,13 @@ const electronTrayInjectable = getInjectable({
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const isWindows = di.inject(isWindowsInjectable);
     const logger = di.inject(loggerInjectable);
-    const trayIconPaths = di.inject(trayIconPathsInjectable);
+    const trayIcon = di.inject(trayIconInjectable);
 
     let tray: Tray;
 
     return {
       start: () => {
-        tray = new Tray(trayIconPaths.normal);
+        tray = new Tray(trayIcon.get().iconPath);
 
         tray.setToolTip(packageJson.description);
         tray.setIgnoreDoubleClickEvents(true);
