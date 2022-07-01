@@ -33,29 +33,42 @@ describe("status-bar-items-originating-from-extensions", () => {
 
     it("when multiple extensions with status bar items are loaded, shows items in correct order", () => {
       const testExtension1 = getRendererExtensionFake({
-        id: "some-id", name: "some-name", statusBarItems: [{
-          components: {
-            Item: () => <div data-testid="some-testId">extension1</div>,
-            position: "right",
+        id: "some-id",
+        name: "some-name",
+
+        statusBarItems: [
+          {
+            components: {
+              Item: () => <div data-testid="some-testId">extension1</div>,
+              position: "right",
+            },
           },
-        }],
+        ],
       });
 
       const testExtension2 = getRendererExtensionFake({
-        id: "some-other-id", name: "some-other-name", statusBarItems: [{
-          components: {
-            Item: () => <div data-testid="some-testId">extension2</div>,
-            position: "right",
+        id: "some-other-id",
+        name: "some-other-name",
+        statusBarItems: [
+          {
+            components: {
+              Item: () => <div data-testid="some-testId">extension2</div>,
+              position: "right",
+            },
           },
-        }],
+        ],
       });
 
       applicationBuilder.extensions.renderer.enable(testExtension1, testExtension2);
 
-      const actual = rendered.getByTestId("status-bar-right");
-      const positions = getTestStatusBarTexts(actual, ["extension1", "extension2"]);
+      const rightSide = rendered.getByTestId("status-bar-right");
 
-      expect(positions).toEqual(["extension2", "extension1"]);
+      const actual = getTestStatusBarTexts(rightSide, [
+        "extension1",
+        "extension2",
+      ]);
+
+      expect(actual).toEqual(["extension2", "extension1"]);
     });
 
     describe("when extension with status bar items is loaded", () => {
@@ -63,30 +76,34 @@ describe("status-bar-items-originating-from-extensions", () => {
 
       beforeEach(() => {
         testExtension = getRendererExtensionFake({
-          id: "some-id", name: "some-name", statusBarItems: [{
-            item: () => <span data-testid="some-testId" >right1</span>,
-          },
-          {
-            item: () => <span data-testid="some-testId" >right2</span>,
-          },
-          {
-            components: {
-              Item: () => <div data-testid="some-testId">right3</div>,
-              position: "right",
+          id: "some-id",
+          name: "some-name",
+          statusBarItems: [
+            {
+              item: () => <span data-testid="some-testId">right1</span>,
             },
-          },
-          {
-            components: {
-              Item: () => <div data-testid="some-testId">left1</div>,
-              position: "left",
+            {
+              item: () => <span data-testid="some-testId">right2</span>,
             },
-          },
-          {
-            components: {
-              Item: () => <div data-testid="some-testId">left2</div>,
-              position: "left",
+            {
+              components: {
+                Item: () => <div data-testid="some-testId">right3</div>,
+                position: "right",
+              },
             },
-          }],
+            {
+              components: {
+                Item: () => <div data-testid="some-testId">left1</div>,
+                position: "left",
+              },
+            },
+            {
+              components: {
+                Item: () => <div data-testid="some-testId">left2</div>,
+                position: "left",
+              },
+            },
+          ],
         });
 
         applicationBuilder.extensions.renderer.enable(testExtension);
@@ -97,32 +114,37 @@ describe("status-bar-items-originating-from-extensions", () => {
       });
 
       it("shows right side status bar items in the correct order", () => {
-        const actual = rendered.getByTestId("status-bar-right");
-        const positions = getTestStatusBarTexts(actual, ["right1", "right2", "right3"]);
+        const rightSide = rendered.getByTestId("status-bar-right");
 
-        expect(positions).toEqual(["right3", "right2", "right1"]);
+        const actual = getTestStatusBarTexts(rightSide, [
+          "right1",
+          "right2",
+          "right3",
+        ]);
+
+        expect(actual).toEqual(["right3", "right2", "right1"]);
       });
 
       it("shows left side status bar items in the correct order", () => {
-        const actual = rendered.getByTestId("status-bar-left");
-        const positions = getTestStatusBarTexts(actual, ["left2", "left1"]);
+        const leftSide = rendered.getByTestId("status-bar-left");
 
-        expect(positions).toEqual(["left1", "left2"]);
+        const actual = getTestStatusBarTexts(leftSide, ["left2", "left1"]);
+
+        expect(actual).toEqual(["left1", "left2"]);
       });
 
       it("when the extension is removed, shows there are no extension status bar items", () => {
-
         applicationBuilder.extensions.renderer.disable(testExtension);
 
         const actual = rendered.queryAllByTestId("some-testId");
 
         expect(actual).toHaveLength(0);
-
       });
     });
   });
 });
 
-const getTestStatusBarTexts = (actual: HTMLElement, expectedTexts: string[]) => {
-  return Array.from(actual.children).map(elem => elem.textContent).filter(elem => elem && expectedTexts.includes(elem));
-};
+const getTestStatusBarTexts = (actual: HTMLElement, expectedTexts: string[]) =>
+  Array.from(actual.children)
+    .map((elem) => elem.textContent)
+    .filter((elem) => elem && expectedTexts.includes(elem));
