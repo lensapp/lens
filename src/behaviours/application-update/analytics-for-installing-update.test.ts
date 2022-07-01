@@ -90,7 +90,7 @@ describe("analytics for installing update", () => {
         action: "checking-for-updates",
 
         params: {
-          currentDateTime: "2015-10-21T07:28:00Z",
+          currentDateTime: "2015-10-21T09:28:00Z",
           source: "periodic",
         },
       });
