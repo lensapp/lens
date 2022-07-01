@@ -18,6 +18,7 @@ import { navigateToRouteInjectionToken } from "../../common/front-end-routing/na
 import assert from "assert";
 import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
+import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("cluster - sidebar and tab navigation for extensions", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -25,7 +26,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   let rendered: RenderResult;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    useFakeTime("2015-10-21T07:28:00Z");
 
     applicationBuilder = getApplicationBuilder();
     rendererDi = applicationBuilder.dis.rendererDi;
@@ -278,7 +279,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           });
 
           it("when not enough time passes, does not store state for expanded sidebar items to file system yet", async () => {
-            jest.advanceTimersByTime(250 - 1);
+            advanceFakeTime(250 - 1);
 
             const pathExistsFake = rendererDi.inject(pathExistsInjectable);
 
@@ -290,7 +291,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           });
 
           it("when enough time passes, stores state for expanded sidebar items to file system", async () => {
-            jest.advanceTimersByTime(250);
+            advanceFakeTime(250);
 
             const readJsonFileFake = rendererDi.inject(readJsonFileInjectable);
 

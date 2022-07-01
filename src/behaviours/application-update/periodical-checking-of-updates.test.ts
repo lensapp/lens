@@ -11,6 +11,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 
@@ -19,7 +20,7 @@ describe("periodical checking of updates", () => {
   let processCheckingForUpdatesMock: AsyncFnMock<() => Promise<void>>;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    useFakeTime("2015-10-21T07:28:00Z");
 
     applicationBuilder = getApplicationBuilder();
 
@@ -59,7 +60,7 @@ describe("periodical checking of updates", () => {
     it("when just not enough time passes, does not check for updates again automatically yet", () => {
       processCheckingForUpdatesMock.mockClear();
 
-      jest.advanceTimersByTime(ENOUGH_TIME - 1);
+      advanceFakeTime(ENOUGH_TIME - 1);
 
       expect(processCheckingForUpdatesMock).not.toHaveBeenCalled();
     });
@@ -67,7 +68,7 @@ describe("periodical checking of updates", () => {
     it("when just enough time passes, checks for updates again automatically", () => {
       processCheckingForUpdatesMock.mockClear();
 
-      jest.advanceTimersByTime(ENOUGH_TIME);
+      advanceFakeTime(ENOUGH_TIME);
 
       expect(processCheckingForUpdatesMock).toHaveBeenCalled();
     });
