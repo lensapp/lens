@@ -165,7 +165,7 @@ exports[`extensions - navigation using application menu when navigating to exten
             <p>
               Add new features via Lens Extensions. Check out the 
               <a
-                href="https://docs.k8slens.dev/main//extensions/"
+                href="https://docs.k8slens.dev/main/extensions/"
                 rel="noreferrer"
                 target="_blank"
               >
