@@ -17,6 +17,7 @@ import downloadPlatformUpdateInjectable from "../../main/application-update/down
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import { useFakeTime } from "../../common/test-utils/use-fake-time";
+import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 
 describe("installing update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -35,6 +36,8 @@ describe("installing update", () => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
+
+      mainDi.override(staticFilesDirectoryInjectable, () => "/some-static-files-directory");
 
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
@@ -65,11 +68,19 @@ describe("installing update", () => {
     beforeEach(async () => {
       rendered = await applicationBuilder.render();
 
-      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(
+        processCheckingForUpdatesInjectable,
+      );
     });
 
     it("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();
+    });
+
+    it("shows normal tray icon", () => {
+      expect(applicationBuilder.tray.getIconPath()).toBe(
+        "/some-static-files-directory/icons/trayIconTemplate.png",
+      );
     });
 
     describe("when user checks for updates", () => {
@@ -86,6 +97,12 @@ describe("installing update", () => {
         );
       });
 
+      it("shows tray icon for checking for updates", () => {
+        expect(applicationBuilder.tray.getIconPath()).toBe(
+          "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+        );
+      });
+
       it("renders", () => {
         expect(rendered.baseElement).toMatchSnapshot();
       });
@@ -97,6 +114,12 @@ describe("installing update", () => {
           });
 
           await processCheckingForUpdatesPromise;
+        });
+
+        it("shows tray icon for normal", () => {
+          expect(applicationBuilder.tray.getIconPath()).toBe(
+            "/some-static-files-directory/icons/trayIconTemplate.png",
+          );
         });
 
         it("does not start downloading update", () => {
@@ -122,6 +145,12 @@ describe("installing update", () => {
           expect(downloadPlatformUpdateMock).toHaveBeenCalled();
         });
 
+        it("still shows tray icon for downloading", () => {
+          expect(applicationBuilder.tray.getIconPath()).toBe(
+            "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+          );
+        });
+
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
         });
@@ -133,6 +162,12 @@ describe("installing update", () => {
 
           it("does not quit and install update yet", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
+          });
+
+          it("still shows normal tray icon", () => {
+            expect(applicationBuilder.tray.getIconPath()).toBe(
+              "/some-static-files-directory/icons/trayIconTemplate.png",
+            );
           });
 
           it("renders", () => {
@@ -147,6 +182,12 @@ describe("installing update", () => {
 
           it("does not quit and install update yet", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
+          });
+
+          it("shows tray icon for update being available", () => {
+            expect(applicationBuilder.tray.getIconPath()).toBe(
+              "/some-static-files-directory/icons/trayIconUpdateAvailableTemplate.png",
+            );
           });
 
           it("renders", () => {
