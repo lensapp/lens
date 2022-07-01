@@ -4,9 +4,9 @@
  */
 
 import { observer } from "mobx-react";
-import { now } from "mobx-utils";
 import React from "react";
 import { formatDuration } from "../../utils";
+import { reactiveNow } from "../../../common/utils/reactive-now/reactive-now";
 
 export interface ReactiveDurationProps {
   timestamp: string | undefined;
@@ -42,7 +42,7 @@ export const ReactiveDuration = observer(({ timestamp, compact = true }: Reactiv
 
   return (
     <>
-      {formatDuration(now(computeUpdateInterval(timestampSeconds)) - timestampSeconds, compact)}
+      {formatDuration(reactiveNow(computeUpdateInterval(timestampSeconds)) - timestampSeconds, compact)}
     </>
   );
 });

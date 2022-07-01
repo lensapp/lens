@@ -10,6 +10,7 @@ import { lensWindowInjectionToken } from "../../main/start-main-application/lens
 import exitAppInjectable from "../../main/electron-app/features/exit-app.injectable";
 import clusterManagerInjectable from "../../main/cluster-manager.injectable";
 import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
+import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("quitting the app using application menu", () => {
   describe("given application has started", () => {
@@ -18,7 +19,7 @@ describe("quitting the app using application menu", () => {
     let exitAppMock: jest.Mock;
 
     beforeEach(async () => {
-      jest.useFakeTimers();
+      useFakeTime("2015-10-21T07:28:00Z");
 
       applicationBuilder = getApplicationBuilder().beforeApplicationStart(
         ({ mainDi }) => {
@@ -71,14 +72,14 @@ describe("quitting the app using application menu", () => {
       });
 
       it("after insufficient time passes, does not terminate application yet", () => {
-        jest.advanceTimersByTime(999);
+        advanceFakeTime(999);
 
         expect(exitAppMock).not.toHaveBeenCalled();
       });
 
       describe("after sufficient time passes", () => {
         beforeEach(() => {
-          jest.advanceTimersByTime(1000);
+          advanceFakeTime(1000);
         });
 
         it("terminates application", () => {

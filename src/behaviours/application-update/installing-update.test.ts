@@ -16,6 +16,7 @@ import type { DownloadPlatformUpdate } from "../../main/application-update/downl
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
+import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("installing update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -25,7 +26,7 @@ describe("installing update", () => {
   let setUpdateOnQuitMock: jest.Mock;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    useFakeTime("2015-10-21T07:28:00Z");
 
     applicationBuilder = getApplicationBuilder();
 
@@ -114,8 +115,8 @@ describe("installing update", () => {
           expect(rendered.baseElement).toMatchSnapshot();
         });
 
-        it.skip("when 5 seconds elapses, clears the notification to the user", () => {
-          jest.advanceTimersByTime(6000);
+        it("when 5 seconds elapses, clears the notification to the user", () => {
+          advanceFakeTime(6000);
 
           expect(rendered.getByTestId("app-update-idle")).toBeInTheDocument();
         });

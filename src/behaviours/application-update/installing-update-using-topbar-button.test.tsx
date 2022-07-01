@@ -16,6 +16,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
+import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 function daysToMilliseconds(days: number) {
   return Math.round(days * 24 * 60 * 60 * 1000);
@@ -28,7 +29,7 @@ describe("encourage user to update when sufficient time passed since update was 
   let quitAndInstallUpdateMock: jest.MockedFunction<() => void>;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    useFakeTime("2015-10-21T07:28:00Z");
 
     applicationBuilder = getApplicationBuilder();
 
@@ -128,13 +129,13 @@ describe("encourage user to update when sufficient time passed since update was 
         });
 
         it("given just enough time passes for medium update encouragement, has medium emotional indication in the button", () => {
-          jest.advanceTimersByTime(daysToMilliseconds(22));
+          advanceFakeTime(daysToMilliseconds(22));
 
           expect(button).toHaveAttribute("data-warning-level", "medium");
         });
 
         it("given just enough time passes for severe update encouragement, has severe emotional indication in the button", () => {
-          jest.advanceTimersByTime(daysToMilliseconds(26));
+          advanceFakeTime(daysToMilliseconds(26));
 
           expect(button).toHaveAttribute("data-warning-level", "high");
         });

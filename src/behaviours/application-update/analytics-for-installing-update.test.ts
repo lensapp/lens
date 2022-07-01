@@ -18,6 +18,7 @@ import downloadPlatformUpdateInjectable from "../../main/application-update/down
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("analytics for installing update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -27,9 +28,7 @@ describe("analytics for installing update", () => {
   let mainDi: DiContainer;
 
   beforeEach(async () => {
-    jest.useFakeTimers();
-
-    global.Date.now = () => new Date("2015-10-21T07:28:00Z").getTime();
+    useFakeTime("2015-10-21T07:28:00Z");
 
     applicationBuilder = getApplicationBuilder();
 
@@ -84,14 +83,14 @@ describe("analytics for installing update", () => {
     it("when enough time passes to check for updates again, sends event to analytics for being checked periodically", () => {
       analyticsListenerMock.mockClear();
 
-      jest.advanceTimersByTime(1000 * 60 * 60 * 2);
+      advanceFakeTime(1000 * 60 * 60 * 2);
 
       expect(analyticsListenerMock).toHaveBeenCalledWith({
         name: "app",
         action: "checking-for-updates",
 
         params: {
-          currentDateTime: "2015-10-21T07:28:00Z",
+          currentDateTime: "2015-10-21T09:28:00Z",
           source: "periodic",
         },
       });

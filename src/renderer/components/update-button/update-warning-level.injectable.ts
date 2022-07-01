@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { now as reactiveDateNow } from "mobx-utils";
 import updateDownloadedDateTimeInjectable from "../../../common/application-update/update-downloaded-date-time/update-downloaded-date-time.injectable";
+import { reactiveNow } from "../../../common/utils/reactive-now/reactive-now";
 
 const updateWarningLevelInjectable = getInjectable({
   id: "update-warning-level",
@@ -23,7 +23,7 @@ const updateWarningLevelInjectable = getInjectable({
       const ONE_DAY = 1000 * 60 * 60 * 24;
 
       const downloadedAtTimestamp = new Date(downloadedAt).getTime();
-      const currentDateTimeTimestamp = reactiveDateNow(ONE_DAY);
+      const currentDateTimeTimestamp = reactiveNow(ONE_DAY);
 
       const elapsedTime = currentDateTimeTimestamp - downloadedAtTimestamp;
 
