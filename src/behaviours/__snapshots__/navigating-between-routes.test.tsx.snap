@@ -110,17 +110,7 @@ exports[`navigating between routes given route with optional path parameters whe
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -240,17 +230,7 @@ exports[`navigating between routes given route without path parameters when navi
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"

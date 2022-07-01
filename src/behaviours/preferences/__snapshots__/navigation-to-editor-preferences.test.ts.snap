@@ -625,17 +625,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -1157,17 +1147,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"

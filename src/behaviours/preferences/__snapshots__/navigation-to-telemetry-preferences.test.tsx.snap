@@ -287,17 +287,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -935,17 +925,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -1595,17 +1575,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -1893,17 +1863,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -2154,17 +2114,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"

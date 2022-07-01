@@ -16,7 +16,7 @@ import type { DownloadPlatformUpdate } from "../../main/application-update/downl
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import { useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("installing update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -86,10 +86,6 @@ describe("installing update", () => {
         );
       });
 
-      it("notifies the user that checking for updates is happening", () => {
-        expect(rendered.getByTestId("app-update-checking")).toBeInTheDocument();
-      });
-
       it("renders", () => {
         expect(rendered.baseElement).toMatchSnapshot();
       });
@@ -103,22 +99,12 @@ describe("installing update", () => {
           await processCheckingForUpdatesPromise;
         });
 
-        it("notifies the user", () => {
-          expect(rendered.getByTestId("app-update-not-available")).toBeInTheDocument();
-        });
-
         it("does not start downloading update", () => {
           expect(downloadPlatformUpdateMock).not.toHaveBeenCalled();
         });
 
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
-        });
-
-        it("when 5 seconds elapses, clears the notification to the user", () => {
-          advanceFakeTime(6000);
-
-          expect(rendered.getByTestId("app-update-idle")).toBeInTheDocument();
         });
       });
 
@@ -136,10 +122,6 @@ describe("installing update", () => {
           expect(downloadPlatformUpdateMock).toHaveBeenCalled();
         });
 
-        it("notifies the user that download is happening", () => {
-          expect(rendered.getByTestId("app-update-downloading")).toBeInTheDocument();
-        });
-
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
         });
@@ -151,10 +133,6 @@ describe("installing update", () => {
 
           it("does not quit and install update yet", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
-          });
-
-          it("notifies the user about failed download", () => {
-            expect(rendered.getByTestId("app-update-download-failed")).toBeInTheDocument();
           });
 
           it("renders", () => {
@@ -169,10 +147,6 @@ describe("installing update", () => {
 
           it("does not quit and install update yet", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
-          });
-
-          it("notifies the user about successful download", () => {
-            expect(rendered.getByTestId("app-update-available")).toBeInTheDocument();
           });
 
           it("renders", () => {

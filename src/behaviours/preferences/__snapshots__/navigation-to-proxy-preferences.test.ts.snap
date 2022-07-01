@@ -625,17 +625,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -949,17 +939,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
