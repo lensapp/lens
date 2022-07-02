@@ -84,6 +84,10 @@
     "runtime": "@side/jest-runtime"
   },
   "build": {
+    "publish": {
+      "url": "https://github.com/lensapp/lens/releases/download/Latest",
+      "provider": "generic"
+    },
     "generateUpdatesFilesForAllChannels": true,
     "files": [
       "static/build/main.js"
