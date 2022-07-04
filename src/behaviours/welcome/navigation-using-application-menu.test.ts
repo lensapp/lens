@@ -21,25 +21,41 @@ describe("welcome - navigation using application menu", () => {
     expect(rendered.container).toMatchSnapshot();
   });
 
-  it("does not show welcome page yet", () => {
-    const actual = rendered.queryByTestId("welcome-page");
+  it("shows welcome page being front page", () => {
+    const actual = rendered.getByTestId("welcome-page");
 
-    expect(actual).toBeNull();
+    expect(actual).not.toBeNull();
   });
 
-  describe("when navigating to welcome using application menu", () => {
+  describe("when navigated somewhere else", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click("help.welcome");
+      applicationBuilder.applicationMenu.click("root.preferences");
     });
 
     it("renders", () => {
-      expect(rendered.container).toMatchSnapshot();
+      expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    it("shows welcome page", () => {
-      const actual = rendered.getByTestId("welcome-page");
+    it("does not show welcome page", () => {
+      const actual = rendered.queryByTestId("welcome-page");
 
-      expect(actual).not.toBeNull();
+      expect(actual).toBeNull();
+    });
+
+    describe("when navigated to welcome using application menu", () => {
+      beforeEach(() => {
+        applicationBuilder.applicationMenu.click("help.welcome");
+      });
+
+      it("renders", () => {
+        expect(rendered.container).toMatchSnapshot();
+      });
+
+      it("shows welcome page", () => {
+        const actual = rendered.getByTestId("welcome-page");
+
+        expect(actual).not.toBeNull();
+      });
     });
   });
 });

@@ -184,7 +184,9 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
     return (
       <div className={cssNames("HotbarMenu flex column", { draggingOver: this.draggingOver }, className)}>
         <div className="HotbarItems flex column gaps">
-          <DragDropContext onDragStart={() => this.onDragStart()} onDragEnd={(result) => this.onDragEnd(result)}>
+          <DragDropContext
+            onDragStart={() => this.onDragStart()}
+            onDragEnd={(result) => this.onDragEnd(result)}>
             {this.renderGrid()}
           </DragDropContext>
         </div>

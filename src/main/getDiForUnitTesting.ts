@@ -4,7 +4,7 @@
  */
 
 import glob from "glob";
-import { kebabCase, memoize, noop } from "lodash/fp";
+import { kebabCase, memoize, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -99,6 +99,7 @@ import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
+import type { HotbarStore } from "../common/hotbars/store";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -111,15 +112,13 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
 
-  for (const filePath of getInjectableFilePaths()) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const injectableInstance = require(filePath).default;
+  const filePaths = getInjectableFilePaths();
 
-    di.register({
-      ...injectableInstance,
-      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
-    });
-  }
+  const injectables = filePaths.map(filePath => require(filePath).default);
+
+  chunk(100)(injectables).forEach(chunkInjectables => {
+    di.register(...chunkInjectables);
+  });
 
   di.preventSideEffects();
 
@@ -127,7 +126,13 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-    di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
+
+    di.override(hotbarStoreInjectable, () => ({
+      load: () => {},
+      getActive: () => ({ name: "some-hotbar", items: [] }),
+      getDisplayIndex: () => "0",
+    }) as unknown as HotbarStore);
+
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
     di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id) => (void id, {}) as Cluster }) as ClusterStore);

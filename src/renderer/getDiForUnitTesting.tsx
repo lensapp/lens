@@ -4,10 +4,8 @@
  */
 
 import glob from "glob";
-import { memoize, noop } from "lodash/fp";
-import type {
-  DiContainer,
-  Injectable } from "@ogre-tools/injectable";
+import { memoize, noop, chunk } from "lodash/fp";
+import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import {
   createContainer,
 } from "@ogre-tools/injectable";
@@ -41,7 +39,7 @@ import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectab
 import ipcRendererInjectable from "./utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
 import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
@@ -59,6 +57,18 @@ import goForwardInjectable from "./components/layout/top-bar/go-forward.injectab
 import closeWindowInjectable from "./components/layout/top-bar/close-window.injectable";
 import maximizeWindowInjectable from "./components/layout/top-bar/maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./components/layout/top-bar/toggle-maximize-window.injectable";
+import commandContainerRootFrameChildComponentInjectable from "./components/command-palette/command-container-root-frame-child-component.injectable";
+import type { HotbarStore } from "../common/hotbars/store";
+import commandContainerClusterFrameChildComponentInjectable from "./components/command-palette/command-container-cluster-frame-child-component.injectable";
+import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./components/+workloads-cronjobs/cron-job-trigger-dialog-cluster-frame-child-component.injectable";
+import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
+import replicasetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-replicasets/scale-dialog/replicaset-scale-dialog-cluster-frame-child-component.injectable";
+import statefulsetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-statefulsets/scale/statefulset-scale-dialog-cluster-frame-child-component.injectable";
+import deleteClusterDialogClusterFrameChildComponentInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-cluster-frame-child-component.injectable";
+import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/kube-object-details/kube-object-details-cluster-frame-child-component.injectable";
+import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
+import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
+import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -71,14 +81,13 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
-  for (const filePath of getInjectableFilePaths()) {
-    const injectableInstance = require(filePath).default;
+  const filePaths = getInjectableFilePaths();
 
-    di.register({
-      ...injectableInstance,
-      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
-    });
-  }
+  const injectables = filePaths.map(filePath => require(filePath).default);
+
+  chunk(100)(injectables).forEach(chunkInjectables => {
+    di.register(...chunkInjectables);
+  });
 
   di.preventSideEffects();
 
@@ -103,8 +112,35 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
-    di.override(watchHistoryStateInjectable, () => () => () => {});
+    // TODO: Remove side-effects and shared global state
+    di.override(commandContainerRootFrameChildComponentInjectable, () => ({
+      Component: () => null,
+      id: "command-container",
+      shouldRender: computed(() => false),
+    }));
 
+    // TODO: Remove side-effects and shared global state
+    const clusterFrameChildComponentInjectables: Injectable<any, any, any>[] = [
+      commandContainerClusterFrameChildComponentInjectable,
+      cronJobTriggerDialogClusterFrameChildComponentInjectable,
+      deploymentScaleDialogClusterFrameChildComponentInjectable,
+      replicasetScaleDialogClusterFrameChildComponentInjectable,
+      statefulsetScaleDialogClusterFrameChildComponentInjectable,
+      deleteClusterDialogClusterFrameChildComponentInjectable,
+      kubeObjectDetailsClusterFrameChildComponentInjectable,
+      kubeconfigDialogClusterFrameChildComponentInjectable,
+      portForwardDialogClusterFrameChildComponentInjectable,
+    ];
+
+    clusterFrameChildComponentInjectables.forEach((injectable) => {
+      di.override(injectable, () => ({
+        Component: () => null,
+        id: injectable.id,
+        shouldRender: computed(() => false),
+      }));
+    });
+
+    di.override(watchHistoryStateInjectable, () => () => () => {});
     di.override(openAppContextMenuInjectable, () => () => {});
     di.override(goBackInjectable, () => () => {});
     di.override(goForwardInjectable, () => () => {});
@@ -126,13 +162,17 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
 
-    di.override(hotbarStoreInjectable, () => ({}));
+    di.override(hotbarStoreInjectable, () => ({
+      getActive: () => ({ name: "some-hotbar", items: [] }),
+      getDisplayIndex: () => "0",
+    }) as unknown as HotbarStore);
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
 
+    di.override(setupSystemCaInjectable, () => ({ run: () => {} }));
     di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
     di.override(provideInitialValuesForSyncBoxesInjectable, () => ({ run: () => {} }));
 

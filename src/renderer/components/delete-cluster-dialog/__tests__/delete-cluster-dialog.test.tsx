@@ -7,9 +7,7 @@ import { KubeConfig } from "@kubernetes/client-node";
 import { fireEvent } from "@testing-library/react";
 import type { RenderResult } from "@testing-library/react";
 import mockFs from "mock-fs";
-import React from "react";
 import * as selectEvent from "react-select-event";
-import { DeleteClusterDialog } from "../view";
 import type { CreateCluster } from "../../../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../../../common/cluster/create-cluster-injection-token";
 import createContextHandlerInjectable from "../../../../main/context-handler/create-context-handler.injectable";
@@ -19,12 +17,6 @@ import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-cre
 import createKubeconfigManagerInjectable from "../../../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
 import type { ApplicationBuilder } from "../../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../test-utils/get-application-builder";
-import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
-import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-import { routeSpecificComponentInjectionToken } from "../../../routes/route-specific-component-injection-token";
-import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
-import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import normalizedPlatformInjectable from "../../../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../../../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../../../main/kubectl/normalized-arch.injectable";
@@ -111,20 +103,7 @@ describe("<DeleteClusterDialog />", () => {
       mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
       mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
       mainDi.override(normalizedPlatformInjectable, () => "darwin");
-
-      rendererDi.override(hotbarStoreInjectable, () => ({}));
       rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
-    });
-
-    const { rendererDi } = applicationBuilder.dis;
-
-    rendererDi.register(testRouteInjectable, testRouteComponentInjectable);
-
-    applicationBuilder.beforeRender(({ rendererDi }) => {
-      const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
-      const testRoute = rendererDi.inject(testRouteInjectable);
-
-      navigateToRoute(testRoute);
     });
 
     mockFs();
@@ -320,27 +299,4 @@ describe("<DeleteClusterDialog />", () => {
       expect(rendered.getByTestId("no-more-contexts-warning")).toBeInstanceOf(HTMLElement);
     });
   });
-});
-
-const testRouteInjectable = getInjectable({
-  id: "some-test-route",
-
-  instantiate: () => ({
-    path: "/some-test-path",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
-});
-
-const testRouteComponentInjectable = getInjectable({
-  id: "some-test-component",
-
-  instantiate: (di) => ({
-    route: di.inject(testRouteInjectable),
-    Component: () => <DeleteClusterDialog />,
-  }),
-
-  injectionToken: routeSpecificComponentInjectionToken,
 });

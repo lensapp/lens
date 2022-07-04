@@ -14,10 +14,10 @@ import { Tab } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { observable } from "mobx";
-import { isMac } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
 import { Tooltip, TooltipPosition } from "../tooltip";
+import isMacInjectable from "../../../common/vars/is-mac.injectable";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
@@ -25,6 +25,7 @@ export interface DockTabProps extends TabProps<DockTabModel> {
 
 interface Dependencies {
   dockStore: DockStore;
+  isMac: boolean;
 }
 
 @observer
@@ -73,7 +74,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
   }
 
   render() {
-    const { className, moreActions, dockStore, active, ...tabProps } = this.props;
+    const { className, moreActions, dockStore, active, isMac, ...tabProps } = this.props;
 
     if (!tabProps.value) {
       return;
@@ -100,7 +101,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
                   <Icon
                     small
                     material="close"
-                    tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
+                    tooltip={`Close ${this.props.isMac ? "⌘+W" : "Ctrl+W"}`}
                     onClick={close}
                   />
                 </div>
@@ -124,6 +125,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
 export const DockTab = withInjectables<Dependencies, DockTabProps>(NonInjectedDockTab, {
   getProps: (di, props) => ({
     dockStore: di.inject(dockStoreInjectable),
+    isMac: di.inject(isMacInjectable),
     ...props,
   }),
 });

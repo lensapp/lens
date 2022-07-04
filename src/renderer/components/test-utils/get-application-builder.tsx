@@ -7,21 +7,17 @@ import rendererExtensionsInjectable from "../../../extensions/renderer-extension
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import type { IObservableArray, ObservableSet } from "mobx";
 import { computed, observable, runInAction } from "mobx";
-import { renderFor } from "./renderFor";
 import React from "react";
 import { Router } from "react-router";
-import { Observer } from "mobx-react";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { getByText, fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
-import { Sidebar } from "../layout/sidebar";
 import type { DiContainer } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
-import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { flatMap, compact, join, get, filter, map, matches, last } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
@@ -44,8 +40,6 @@ import historyInjectable from "../../navigation/history.injectable";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
-import { Notifications } from "../notifications/notifications";
-import broadcastThatRootFrameIsRenderedInjectable from "../../frames/root-frame/broadcast-that-root-frame-is-rendered.injectable";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
@@ -53,7 +47,6 @@ import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectabl
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
-import { StatusBar } from "../status-bar/status-bar";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
 import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
@@ -62,7 +55,10 @@ import type { LensMainExtension } from "../../../extensions/lens-main-extension"
 import type { LensExtension } from "../../../extensions/lens-extension";
 
 import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
-import { TopBar } from "../layout/top-bar/top-bar";
+import { renderFor } from "./renderFor";
+import { RootFrame } from "../../frames/root-frame/root-frame";
+import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
+import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -125,10 +121,7 @@ interface DiContainers {
 }
 
 interface Environment {
-  renderSidebar: () => React.ReactNode;
-  renderTopBar: () => React.ReactNode;
-  renderStatusBar: () => React.ReactNode;
-  beforeRender: () => void;
+  RootComponent: React.ElementType;
   onAllowKubeResource: () => void;
 }
 
@@ -166,17 +159,7 @@ export const getApplicationBuilder = () => {
 
   const environments = {
     application: {
-      renderSidebar: () => null,
-
-      renderTopBar: () => <TopBar />,
-
-      renderStatusBar: () => <StatusBar />,
-
-      beforeRender: () => {
-        const nofifyThatRootFrameIsRendered = rendererDi.inject(broadcastThatRootFrameIsRenderedInjectable);
-
-        nofifyThatRootFrameIsRendered();
-      },
+      RootComponent: RootFrame,
 
       onAllowKubeResource: () => {
         throw new Error(
@@ -186,10 +169,7 @@ export const getApplicationBuilder = () => {
     } as Environment,
 
     clusterFrame: {
-      renderSidebar: () => <Sidebar />,
-      renderStatusBar: () => null,
-      renderTopBar: () => null,
-      beforeRender: () => {},
+      RootComponent: ClusterFrame,
       onAllowKubeResource: () => {},
     } as Environment,
   };
@@ -401,6 +381,7 @@ export const getApplicationBuilder = () => {
 
       const namespaceStoreStub = {
         contextNamespaces: [],
+        items: [],
       } as unknown as NamespaceStore;
 
       const clusterFrameContextFake = new ClusterFrameContext(
@@ -413,6 +394,7 @@ export const getApplicationBuilder = () => {
 
       rendererDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
       rendererDi.override(hostedClusterInjectable, () => clusterStub);
+      rendererDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
       rendererDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
 
       // Todo: get rid of global state.
@@ -474,35 +456,17 @@ export const getApplicationBuilder = () => {
 
       await startFrame();
 
-      const render = renderFor(rendererDi);
-      const history = rendererDi.inject(historyInjectable);
-      const currentRouteComponent = rendererDi.inject(currentRouteComponentInjectable);
-
       for (const callback of beforeRenderCallbacks) {
         await callback(dis);
       }
 
-      environment.beforeRender();
+      const history = rendererDi.inject(historyInjectable);
+
+      const render = renderFor(rendererDi);
 
       rendered = render(
         <Router history={history}>
-          {environment.renderSidebar()}
-          {environment.renderTopBar()}
-          {environment.renderStatusBar()}
-
-          <Observer>
-            {() => {
-              const Component = currentRouteComponent.get();
-
-              if (!Component) {
-                return null;
-              }
-
-              return <Component />;
-            }}
-          </Observer>
-
-          <Notifications />
+          <environment.RootComponent />
         </Router>,
       );
 
