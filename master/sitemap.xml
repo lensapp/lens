@@ -851,6 +851,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.CreateNotificationOptions/</loc>
+         <lastmod>2022-07-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.CustomPlaceholderProps/</loc>
          <lastmod>2022-07-04</lastmod>
          <changefreq>daily</changefreq>

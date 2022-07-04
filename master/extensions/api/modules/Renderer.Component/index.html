@@ -880,6 +880,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#shownotification" class="md-nav__link">
+    ShowNotification
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#syncvalidationmessage" class="md-nav__link">
     SyncValidationMessage
   </a>
@@ -1397,6 +1404,7 @@
 <li><a href="../../interfaces/Renderer.Component.ConfirmDialogBooleanParams/">ConfirmDialogBooleanParams</a></li>
 <li><a href="../../interfaces/Renderer.Component.ConfirmDialogParams/">ConfirmDialogParams</a></li>
 <li><a href="../../interfaces/Renderer.Component.ConfirmDialogProps/">ConfirmDialogProps</a></li>
+<li><a href="../../interfaces/Renderer.Component.CreateNotificationOptions/">CreateNotificationOptions</a></li>
 <li><a href="../../interfaces/Renderer.Component.CustomPlaceholderProps/">CustomPlaceholderProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.DialogProps/">DialogProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.DrawerItemLabelsProps/">DrawerItemLabelsProps</a></li>
@@ -1471,6 +1479,7 @@
 <li><a href="./#namespaceselectsort">NamespaceSelectSort</a></li>
 <li><a href="./#notificationid">NotificationId</a></li>
 <li><a href="./#notificationmessage">NotificationMessage</a></li>
+<li><a href="./#shownotification">ShowNotification</a></li>
 <li><a href="./#syncvalidationmessage">SyncValidationMessage</a></li>
 <li><a href="./#tablecellelem">TableCellElem</a></li>
 <li><a href="./#tableheadelem">TableHeadElem</a></li>
@@ -1700,6 +1709,32 @@
 <h3 id="notificationmessage">NotificationMessage<a class="headerlink" href="#notificationmessage" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>NotificationMessage</strong>: <code>string</code> | <code>React.ReactElement</code> | <code>React.ReactElement</code>[] | <code>JsonApiErrorParsed</code> | <code>Error</code></p>
 <hr />
+<h3 id="shownotification">ShowNotification<a class="headerlink" href="#shownotification" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>ShowNotification</strong>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>, <code>opts?</code>: <a href="../../interfaces/Renderer.Component.CreateNotificationOptions/"><code>CreateNotificationOptions</code></a>) =&gt; <code>Disposer</code></p>
+<h4 id="type-declaration_3">Type declaration<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
+<p>▸ (<code>message</code>, <code>opts?</code>): <code>Disposer</code></p>
+<h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>message</code></td>
+<td align="left"><a href="./#notificationmessage"><code>NotificationMessage</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>opts?</code></td>
+<td align="left"><a href="../../interfaces/Renderer.Component.CreateNotificationOptions/"><code>CreateNotificationOptions</code></a></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h5>
+<p><code>Disposer</code></p>
+<hr />
 <h3 id="syncvalidationmessage">SyncValidationMessage<a class="headerlink" href="#syncvalidationmessage" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>SyncValidationMessage</strong>: <code>React.ReactNode</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>React.ReactNode</code></p>
 <hr />
@@ -1746,9 +1781,9 @@
 </tr>
 </tbody>
 </table>
-<h4 id="type-declaration_3">Type declaration<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
+<h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
 <p>▸ (<code>data</code>): <code>undefined</code> | <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
-<h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
+<h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -1763,7 +1798,7 @@
 </tr>
 </tbody>
 </table>
-<h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h5>
+<h5 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h5>
 <p><code>undefined</code> | <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
 <hr />
 <h3 id="tablesortcallbacks">TableSortCallbacks<a class="headerlink" href="#tablesortcallbacks" title="Permanent link">#</a></h3>
@@ -1808,7 +1843,7 @@
 <hr />
 <h3 id="inputvalidators">InputValidators<a class="headerlink" href="#inputvalidators" title="Permanent link">#</a></h3>
 <p>• <strong>InputValidators</strong>: <code>Object</code></p>
-<h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
+<h4 id="type-declaration_5">Type declaration<a class="headerlink" href="#type-declaration_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1904,7 +1939,7 @@
 <p>• <code>Const</code> <strong>NamespaceSelectFilter</strong>: <code>FunctionComponent</code>&lt;<code>NamespaceSelectFilterProps</code>></p>
 <hr />
 <h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>Notifications</strong>: <code>FC</code>&lt;{}> &amp; { <code>checkedError</code>: (<code>message</code>: <code>unknown</code>, <code>fallback</code>: <code>string</code>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>error</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>info</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code> ; <code>ok</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>) =&gt; () =&gt; <code>void</code> ; <code>shortInfo</code>: (<code>message</code>: <a href="./#notificationmessage"><code>NotificationMessage</code></a>, <code>customOpts?</code>: <code>Partial</code>&lt;<code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"message"</code>>>) =&gt; () =&gt; <code>void</code>  }</p>
+<p>• <code>Const</code> <strong>Notifications</strong>: <code>FC</code>&lt;{}> &amp; { <code>checkedError</code>: <code>ShowCheckedErrorNotification</code> ; <code>error</code>: <a href="./#shownotification"><code>ShowNotification</code></a> ; <code>info</code>: <a href="./#shownotification"><code>ShowNotification</code></a> ; <code>ok</code>: <a href="./#shownotification"><code>ShowNotification</code></a> ; <code>shortInfo</code>: <a href="./#shownotification"><code>ShowNotification</code></a>  }</p>
 <hr />
 <h3 id="piechart">PieChart<a class="headerlink" href="#piechart" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>PieChart</strong>: <code>FunctionComponent</code>&lt;<a href="../../interfaces/Renderer.Component.PieChartProps/"><code>PieChartProps</code></a>></p>
@@ -1936,7 +1971,7 @@
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
 <h3 id="checkbox">Checkbox<a class="headerlink" href="#checkbox" title="Permanent link">#</a></h3>
 <p>▸ <strong>Checkbox</strong>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1951,12 +1986,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="draweritem">DrawerItem<a class="headerlink" href="#draweritem" title="Permanent link">#</a></h3>
 <p>▸ <strong>DrawerItem</strong>(<code>__namedParameters</code>): <code>null</code> | <code>Element</code></p>
-<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1971,12 +2006,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>Element</code></p>
 <hr />
 <h3 id="draweritemlabels">DrawerItemLabels<a class="headerlink" href="#draweritemlabels" title="Permanent link">#</a></h3>
 <p>▸ <strong>DrawerItemLabels</strong>(<code>props</code>): <code>null</code> | <code>Element</code></p>
-<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1991,12 +2026,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>Element</code></p>
 <hr />
 <h3 id="drawertitle">DrawerTitle<a class="headerlink" href="#drawertitle" title="Permanent link">#</a></h3>
 <p>▸ <strong>DrawerTitle</strong>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2011,13 +2046,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="formswitch">FormSwitch<a class="headerlink" href="#formswitch" title="Permanent link">#</a></h3>
 <p>▸ <strong>FormSwitch</strong>(<code>props</code>): <code>Element</code></p>
 <p><strong><code>deprecated</code></strong> Use <Switch/> instead from "../switch.tsx".</p>
-<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2032,7 +2067,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="kubeobjectlistlayout">KubeObjectListLayout<a class="headerlink" href="#kubeobjectlistlayout" title="Permanent link">#</a></h3>
@@ -2060,7 +2095,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2075,7 +2110,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="kubeobjectmenu">KubeObjectMenu<a class="headerlink" href="#kubeobjectmenu" title="Permanent link">#</a></h3>
@@ -2095,7 +2130,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2110,7 +2145,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="namespaceselect">NamespaceSelect<a class="headerlink" href="#namespaceselect" title="Permanent link">#</a></h3>
@@ -2130,7 +2165,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2145,45 +2180,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>JSX.Element</code></p>
 <hr />
 <h3 id="radio">Radio<a class="headerlink" href="#radio" title="Permanent link">#</a></h3>
 <p>▸ <strong>Radio</strong>&lt;<code>T</code>>(<code>__namedParameters</code>): <code>Element</code></p>
 <h4 id="type-parameters_9">Type parameters<a class="headerlink" href="#type-parameters_9" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.RadioProps/"><code>RadioProps</code></a>&lt;<code>T</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
-<p><code>Element</code></p>
-<hr />
-<h3 id="radiogroup">RadioGroup<a class="headerlink" href="#radiogroup" title="Permanent link">#</a></h3>
-<p>▸ <strong>RadioGroup</strong>&lt;<code>T</code>>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2207,11 +2209,44 @@
 <tbody>
 <tr>
 <td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.RadioGroupProps/"><code>RadioGroupProps</code></a>&lt;<code>T</code>></td>
+<td align="left"><a href="../../interfaces/Renderer.Component.RadioProps/"><code>RadioProps</code></a>&lt;<code>T</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<p><code>Element</code></p>
+<hr />
+<h3 id="radiogroup">RadioGroup<a class="headerlink" href="#radiogroup" title="Permanent link">#</a></h3>
+<p>▸ <strong>RadioGroup</strong>&lt;<code>T</code>>(<code>__namedParameters</code>): <code>Element</code></p>
+<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>__namedParameters</code></td>
+<td align="left"><a href="../../interfaces/Renderer.Component.RadioGroupProps/"><code>RadioGroupProps</code></a>&lt;<code>T</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="select">Select<a class="headerlink" href="#select" title="Permanent link">#</a></h3>
@@ -2243,7 +2278,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2258,12 +2293,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="submenu">SubMenu<a class="headerlink" href="#submenu" title="Permanent link">#</a></h3>
 <p>▸ <strong>SubMenu</strong>(<code>props</code>): <code>Element</code></p>
-<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2278,12 +2313,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="switch">Switch<a class="headerlink" href="#switch" title="Permanent link">#</a></h3>
 <p>▸ <strong>Switch</strong>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2298,12 +2333,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="tablayout">TabLayout<a class="headerlink" href="#tablayout" title="Permanent link">#</a></h3>
 <p>▸ <strong>TabLayout</strong>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
+<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2318,7 +2353,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="table">Table<a class="headerlink" href="#table" title="Permanent link">#</a></h3>
@@ -2336,7 +2371,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
+<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2351,12 +2386,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="asyncinputvalidator">asyncInputValidator<a class="headerlink" href="#asyncinputvalidator" title="Permanent link">#</a></h3>
 <p>▸ <strong>asyncInputValidator</strong>(<code>validator</code>): <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
-<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
+<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2371,12 +2406,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
 <hr />
 <h3 id="createterminaltab">createTerminalTab<a class="headerlink" href="#createterminaltab" title="Permanent link">#</a></h3>
 <p>▸ <strong>createTerminalTab</strong>(<code>tabParams?</code>): <code>Required</code>&lt;<code>DockTabCreate</code>></p>
-<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
+<h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2391,12 +2426,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>Required</code>&lt;<code>DockTabCreate</code>></p>
 <hr />
 <h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
-<h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
+<h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2419,12 +2454,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <hr />
 <h3 id="inputvalidator_1">inputValidator<a class="headerlink" href="#inputvalidator_1" title="Permanent link">#</a></h3>
 <p>▸ <strong>inputValidator</strong>(<code>validator</code>): <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></p>
-<h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
+<h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2439,12 +2474,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
+<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></p>
 <hr />
 <h3 id="isasyncvalidator">isAsyncValidator<a class="headerlink" href="#isasyncvalidator" title="Permanent link">#</a></h3>
 <p>▸ <strong>isAsyncValidator</strong>(<code>validator</code>): validator is InputValidator&lt;true></p>
-<h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
+<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2459,12 +2494,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
+<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
 <p>validator is InputValidator&lt;true></p>
 <hr />
 <h3 id="issvg">isSvg<a class="headerlink" href="#issvg" title="Permanent link">#</a></h3>
 <p>▸ <strong>isSvg</strong>(<code>content</code>): <code>boolean</code></p>
-<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
+<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2479,7 +2514,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <hr />
 <h3 id="onmultiselectfor">onMultiSelectFor<a class="headerlink" href="#onmultiselectfor" title="Permanent link">#</a></h3>
@@ -2507,7 +2542,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
+<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2522,13 +2557,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
+<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
 <p><a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>true</code>, <code>Group</code>>[<code>"onChange"</code>]</p>
 <hr />
 <h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>showDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
 <p><strong><code>default</code></strong> resetSelected true</p>
-<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
+<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2550,14 +2585,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
+<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="unioninputvalidatorsasync">unionInputValidatorsAsync<a class="headerlink" href="#unioninputvalidatorsasync" title="Permanent link">#</a></h3>
 <p>▸ <strong>unionInputValidatorsAsync</strong>(<code>baseValidator</code>, ...<code>validators</code>): <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
 <p>Create a new input validator from a list of syncronous or async input validators. Will match as
 valid if one of the input validators matches the input</p>
-<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
+<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2576,7 +2611,7 @@ valid if one of the input validators matches the input</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
+<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
 <hr />
 <h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
@@ -2594,7 +2629,7 @@ valid if one of the input validators matches the input</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
+<h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2609,7 +2644,7 @@ valid if one of the input validators matches the input</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
+<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p><code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></p>
                 
               
