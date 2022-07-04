@@ -3,16 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { injectSystemCAs } from "../../../common/system-ca";
 import React from "react";
 import { Observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import broadcastThatRootFrameIsRenderedInjectable from "./broadcast-that-root-frame-is-rendered.injectable";
 import type { RootFrameChildComponent } from "./root-frame-child-component-injection-token";
 import { rootFrameChildComponentInjectionToken } from "./root-frame-child-component-injection-token";
-
-// Todo: remove import-time side-effect.
-injectSystemCAs();
 
 interface Dependencies {
   broadcastThatRootFrameIsRendered: () => void;

@@ -68,6 +68,7 @@ import deleteClusterDialogClusterFrameChildComponentInjectable from "./component
 import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/kube-object-details/kube-object-details-cluster-frame-child-component.injectable";
 import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
+import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -171,6 +172,7 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
 
+    di.override(setupSystemCaInjectable, () => ({ run: () => {} }));
     di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
     di.override(provideInitialValuesForSyncBoxesInjectable, () => ({ run: () => {} }));
 
