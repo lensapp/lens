@@ -17,6 +17,7 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import helmChartsRouteParametersInjectable from "./helm-charts-route-parameters.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
+import { HelmChartIcon } from "./icon";
 
 enum columnId {
   name = "name",
@@ -114,10 +115,7 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
           ]}
           renderTableContents={chart => [
             <figure key="image">
-              <img
-                src={chart.getIcon() || require("./helm-placeholder.svg")}
-                onLoad={evt => evt.currentTarget.classList.add("visible")}
-              />
+              <HelmChartIcon chart={chart} />
             </figure>,
             chart.getName(),
             chart.getDescription(),

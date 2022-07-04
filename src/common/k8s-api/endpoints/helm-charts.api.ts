@@ -315,6 +315,8 @@ export class HelmChart implements HelmChartData {
     autoBind(this);
   }
 
+  static create(data: RawHelmChart): HelmChart;
+  static create(data: RawHelmChart, opts?: HelmChartCreateOpts): HelmChart | undefined;
   static create(data: RawHelmChart, { onError = "throw" }: HelmChartCreateOpts = {}): HelmChart | undefined {
     const result = helmChartValidator.validate(data, {
       abortEarly: false,

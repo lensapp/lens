@@ -9,9 +9,7 @@ import type {
   DockTab,
   DockTabCreate,
   DockTabCreateSpecific } from "../dock/store";
-import {
-  TabKind,
-} from "../dock/store";
+import { TabKind } from "../dock/store";
 import type { InstallChartTabStore } from "./store";
 import createDockTabInjectable from "../dock/create-dock-tab.injectable";
 
@@ -19,6 +17,8 @@ interface Dependencies {
   createDockTab: (rawTab: DockTabCreate, addNumber: boolean) => DockTab;
   installChartStore: InstallChartTabStore;
 }
+
+export type CreateInstallChartTab = (chart: HelmChart, tabParams?: DockTabCreateSpecific) => DockTab;
 
 const createInstallChartTab = ({ createDockTab, installChartStore }: Dependencies) => (chart: HelmChart, tabParams: DockTabCreateSpecific = {}) => {
   const { name, repo, version } = chart;

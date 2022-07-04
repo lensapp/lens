@@ -7,7 +7,6 @@ import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
 import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
-import { getChartDetails } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { computed, observable, reaction, runInAction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
@@ -20,10 +19,13 @@ import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createInstallChartTabInjectable from "../dock/install-chart/create-install-chart-tab.injectable";
-import { Notifications } from "../notifications";
-import HelmLogoPlaceholder from "./helm-placeholder.svg";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import type { SingleValue } from "react-select";
-import { AbortController } from "abort-controller";
+import AbortController from "abort-controller";
+import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
+import type { GetChartDetails } from "./get-char-details.injectable";
+import getChartDetailsInjectable from "./get-char-details.injectable";
+import { HelmChartIcon } from "./icon";
 
 export interface HelmChartDetailsProps {
   chart: HelmChart;
@@ -38,6 +40,8 @@ const LargeTooltip = withStyles({
 
 interface Dependencies {
   createInstallChartTab: (helmChart: HelmChart) => void;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
+  getChartDetails: GetChartDetails;
 }
 
 @observer
@@ -73,7 +77,7 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
         });
 
         try {
-          const { readme, versions } = await getChartDetails(repo, name, { version });
+          const { readme, versions } = await this.props.getChartDetails(repo, name, { version });
 
           runInAction(() => {
             this.readme.set(readme);
@@ -81,7 +85,7 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
             this.selectedChart.set(versions[0]);
           });
         } catch (error) {
-          Notifications.checkedError(error, "Unknown error occured while getting chart details");
+          this.props.showCheckedErrorNotification(error, "Unknown error occured while getting chart details");
         }
       }, {
         fireImmediately: true,
@@ -101,11 +105,11 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
       this.abortController.abort();
       this.abortController = new AbortController();
       const { chart: { name, repo }} = this.props;
-      const { readme } = await getChartDetails(repo, name, { version: chart.version, reqInit: { signal: this.abortController.signal }});
+      const { readme } = await this.props.getChartDetails(repo, name, { version: chart.version, reqInit: { signal: this.abortController.signal }});
 
       this.readme.set(readme);
     } catch (error) {
-      Notifications.checkedError(error, "Unknown error occured while getting chart details");
+      this.props.showCheckedErrorNotification(error, "Unknown error occured while getting chart details");
     }
   }
 
@@ -117,13 +121,12 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
   renderIntroduction(selectedChart: HelmChart) {
     return (
       <div className="introduction flex align-flex-start">
-        <img
+        <HelmChartIcon
+          chart={selectedChart}
           className="intro-logo"
-          src={selectedChart.getIcon() || HelmLogoPlaceholder}
-          onError={(event) => event.currentTarget.src = HelmLogoPlaceholder}
         />
         <div className="intro-contents box grow">
-          <div className="description flex align-center justify-space-between">
+          <div className="description flex align-center justify-space-between" data-testid="selected-chart-description">
             {selectedChart.getDescription()}
             <Button
               primary
@@ -194,7 +197,7 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     }
 
     return (
-      <div className="chart-description">
+      <div className="chart-description" data-testid="helmchart-readme">
         <MarkdownViewer markdown={readme} />
       </div>
     );
@@ -232,13 +235,11 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
   }
 }
 
-export const HelmChartDetails = withInjectables<Dependencies, HelmChartDetailsProps>(
-  NonInjectedHelmChartDetails,
-
-  {
-    getProps: (di, props) => ({
-      createInstallChartTab: di.inject(createInstallChartTabInjectable),
-      ...props,
-    }),
-  },
-);
+export const HelmChartDetails = withInjectables<Dependencies, HelmChartDetailsProps>(NonInjectedHelmChartDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    createInstallChartTab: di.inject(createInstallChartTabInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
+    getChartDetails: di.inject(getChartDetailsInjectable),
+  }),
+});
