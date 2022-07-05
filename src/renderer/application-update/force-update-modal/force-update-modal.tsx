@@ -26,15 +26,12 @@ const NonInjectedForceUpdateModal = observer(
         className={styles.ForceUpdateModal}
       >
         <div className={styles.header}>
-          <h2>Updating is required</h2>
+          <h2>Please update</h2>
         </div>
 
         <div className={styles.content}>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto
-            culpa distinctio inventore sapiente sed. Consequatur debitis dicta
-            dolorum expedita illum magni natus quae rem repudiandae rerum,
-            similique suscipit velit voluptatum.
+            An update to Lens Desktop is required to continue using the application.
           </p>
         </div>
 

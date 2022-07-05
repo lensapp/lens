@@ -452,14 +452,14 @@ exports[`force user to update when too long since update was downloaded when app
           class="header"
         >
           <h2>
-            Updating is required
+            Please update
           </h2>
         </div>
         <div
           class="content"
         >
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto culpa distinctio inventore sapiente sed. Consequatur debitis dicta dolorum expedita illum magni natus quae rem repudiandae rerum, similique suscipit velit voluptatum.
+            An update to Lens Desktop is required to continue using the application.
           </p>
         </div>
         <div
