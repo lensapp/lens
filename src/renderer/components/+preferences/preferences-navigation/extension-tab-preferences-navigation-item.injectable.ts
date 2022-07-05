@@ -46,7 +46,15 @@ const extensionSpecificTabNavigationItemRegistratorInjectable = getInjectable({
               parent: "general",
               orderNumber: tab.orderNumber || 100,
               navigate: () => navigateToExtensionPreferences(extension.sanitizedExtensionId, tab.id),
-              isVisible: computed(() => true),
+
+              isVisible: computed(() => {
+                if (!tab.visible) {
+                  return true;
+                }
+
+                return tab.visible.get();
+              }),
+
               isActive,
             }),
           });
