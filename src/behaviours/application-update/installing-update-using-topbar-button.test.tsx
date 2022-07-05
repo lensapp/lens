@@ -18,6 +18,7 @@ import processCheckingForUpdatesInjectable from "../../main/application-update/c
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
+
 function daysToMilliseconds(days: number) {
   return Math.round(days * 24 * 60 * 60 * 1000);
 }
@@ -73,10 +74,13 @@ describe("encourage user to update when sufficient time passed since update was 
     });
 
     describe("given the update check", () => {
+      let processCheckingForUpdates: (source: string) => Promise<void>;
       let processCheckingForUpdatesPromise: Promise<void>;
 
       beforeEach(async () => {
-        const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+        processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(
+          processCheckingForUpdatesInjectable,
+        );
 
         processCheckingForUpdatesPromise = processCheckingForUpdates("irrelevant");
       });
@@ -102,6 +106,33 @@ describe("encourage user to update when sufficient time passed since update was 
 
         it("has soft emotional indication in the button", () => {
           expect(button).toHaveAttribute("data-warning-level", "light");
+        });
+
+        describe("given some time passes, when checking for updates again", () => {
+          beforeEach(() => {
+            advanceFakeTime(daysToMilliseconds(2));
+
+            processCheckingForUpdates("irrelevant");
+          });
+
+          describe("when checking for updates resolves with same version that was previously downloaded", () => {
+            beforeEach(async () => {
+              await checkForPlatformUpdatesMock.resolve({
+                updateWasDiscovered: true,
+                version: "some-version",
+              });
+            });
+
+            it("when enough time from download passes for medium update encouragement, has medium emotional indication in the button", () => {
+              advanceFakeTime(daysToMilliseconds(20));
+
+              expect(button).toHaveAttribute("data-warning-level", "medium");
+            });
+
+            it("renders", () => {
+              expect(rendered.baseElement).toMatchSnapshot();
+            });
+          });
         });
 
         describe("when button is clicked", () => {

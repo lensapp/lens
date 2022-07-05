@@ -193,6 +193,59 @@ describe("installing update", () => {
           it("renders", () => {
             expect(rendered.baseElement).toMatchSnapshot();
           });
+
+          describe("given checking for updates again", () => {
+            beforeEach(() => {
+              downloadPlatformUpdateMock.mockClear();
+
+              processCheckingForUpdates("irrelevant");
+            });
+
+            it("shows tray icon for checking for updates", () => {
+              expect(applicationBuilder.tray.getIconPath()).toBe(
+                "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+              );
+            });
+
+            describe("when check resolves with same update that is already downloaded", () => {
+              beforeEach(async () => {
+                await checkForPlatformUpdatesMock.resolve({
+                  updateWasDiscovered: true,
+                  version: "some-version",
+                });
+              });
+
+              it("does not re-download the update", () => {
+                expect(downloadPlatformUpdateMock).not.toHaveBeenCalled();
+              });
+
+              it("shows tray icon for update being available", () => {
+                expect(applicationBuilder.tray.getIconPath()).toBe(
+                  "/some-static-files-directory/icons/trayIconUpdateAvailableTemplate.png",
+                );
+              });
+            });
+
+            describe("when check resolves with different update that was previously downloaded", () => {
+              beforeEach(async () => {
+                await checkForPlatformUpdatesMock.resolve({
+                  updateWasDiscovered: true,
+                  version: "some-other-version",
+                });
+              });
+
+              it("downloads the update", () => {
+                expect(downloadPlatformUpdateMock).toHaveBeenCalled();
+              });
+
+              it("shows tray icon for downloading update", () => {
+                expect(applicationBuilder.tray.getIconPath()).toBe(
+                  "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+                );
+              });
+
+            });
+          });
         });
       });
     });
