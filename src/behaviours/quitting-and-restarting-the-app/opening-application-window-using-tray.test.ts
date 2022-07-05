@@ -13,6 +13,7 @@ import asyncFn from "@async-fn/jest";
 import type { ElectronWindow, LensWindowConfiguration } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
+import focusApplicationInjectable from "../../main/electron-app/features/focus-application.injectable";
 
 describe("opening application window using tray", () => {
   describe("given application has started", () => {
@@ -21,13 +22,18 @@ describe("opening application window using tray", () => {
     let expectWindowsToBeOpen: (windowIds: string[]) => void;
     let callForSplashWindowHtmlMock: AsyncFnMock<() => void>;
     let callForApplicationWindowHtmlMock: AsyncFnMock<() => void>;
+    let focusApplicationMock: jest.Mock;
 
     beforeEach(async () => {
       callForSplashWindowHtmlMock = asyncFn();
       callForApplicationWindowHtmlMock = asyncFn();
 
+      focusApplicationMock = jest.fn();
+
       applicationBuilder = getApplicationBuilder().beforeApplicationStart(
         ({ mainDi }) => {
+          mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
+
           mainDi.override(lensResourcesDirInjectable, () => "some-lens-resources-directory");
 
           const loadFileMock = jest
@@ -99,10 +105,16 @@ describe("opening application window using tray", () => {
 
       describe("when an application window is reopened using tray", () => {
         beforeEach(() => {
+          focusApplicationMock.mockClear();
+
           callForSplashWindowHtmlMock.mockClear();
           callForApplicationWindowHtmlMock.mockClear();
 
           applicationBuilder.tray.click("open-app");
+        });
+
+        it("focuses the application", () => {
+          expect(focusApplicationMock).toHaveBeenCalled();
         });
 
         it("still no windows are open", () => {
