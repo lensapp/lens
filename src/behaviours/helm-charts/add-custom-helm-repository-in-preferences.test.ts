@@ -17,6 +17,7 @@ import isPathInjectable from "../../renderer/components/input/validators/is-path
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
+import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -54,6 +55,8 @@ describe("add custom helm repository in preferences", () => {
 
       // TODO: Figure out how to make async validators unit testable
       rendererDi.override(isPathInjectable, () => ({ debounce: 0, validate: async () => {} }));
+
+      rendererDi.permitSideEffects(appEventBusInjectable);
 
       mainDi.override(
         getActiveHelmRepositoriesInjectable,

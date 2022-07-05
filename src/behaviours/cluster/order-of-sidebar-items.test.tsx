@@ -11,6 +11,7 @@ import { computed } from "mobx";
 import { noop } from "lodash/fp";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 
 describe("cluster - order of sidebar items", () => {
   let rendered: RenderResult;
@@ -21,6 +22,7 @@ describe("cluster - order of sidebar items", () => {
 
     applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.register(testSidebarItemsInjectable);
+      rendererDi.permitSideEffects(appEventBusInjectable);
     });
   });
 

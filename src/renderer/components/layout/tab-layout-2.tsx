@@ -44,7 +44,7 @@ const NonInjectedTabLayout = observer(
               return (
                 <Tab
                   onClick={() => {
-                    if (registration.title) {
+                    if (registration.title) {
                       captureClick(registration.title.toString(), "Tab Click");
                     }
                     registration.onClick();

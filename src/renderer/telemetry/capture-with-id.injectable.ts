@@ -9,7 +9,7 @@ import type { EventEmitter } from "../../common/event-emitter";
 
 // foo_bar-baz => Foo Bar Baz
 function getNameFromId(id: string) {
-  return id.split(/[/,-,--]/).filter(Boolean).map((part) => `${part[0].toUpperCase()+part.substring(1)}`).join("");
+  return id.split(/[/,-,_,--]/).filter(Boolean).map((part) => `${part[0].toUpperCase()+part.substring(1)}`).join(" ");
 }
 
 function captureWithId(eventBus: EventEmitter<[AppEvent]>, id: string, action: string) {

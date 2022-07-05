@@ -120,7 +120,7 @@ class NonInjectedTab extends React.PureComponent<TabProps & Dependencies> {
   }
 
   render() {
-    const { active, disabled, icon, label, value, ...elemProps } = this.props;
+    const { active, disabled, icon, label, value, capture, ...elemProps } = this.props;
     let { className } = this.props;
 
     className = cssNames("Tab flex gaps align-center", className, {

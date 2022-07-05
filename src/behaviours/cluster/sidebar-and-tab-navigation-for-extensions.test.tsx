@@ -22,6 +22,7 @@ import { getExtensionFakeFor } from "../../renderer/components/test-utils/get-ex
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
+import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -46,6 +47,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
       rendererDi.override(storageSaveDelayInjectable, () => 250);
 
+      rendererDi.permitSideEffects(appEventBusInjectable);
       rendererDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",

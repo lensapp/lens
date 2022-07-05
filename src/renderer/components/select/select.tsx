@@ -195,6 +195,7 @@ class NonInjectedSelect<
       isMulti,
       id: inputId,
       onChange,
+      capture,
       ...props
     } = this.props;
 
@@ -232,7 +233,7 @@ class NonInjectedSelect<
         classNamePrefix="Select"
         onChange={action((newValue: OnChangeValue<Option, IsMulti>, actionMeta: ActionMeta<Option>) => {
           if (inputId) {
-            props.capture(inputId, "Select Change");
+            capture(inputId, "Select Change");
           }
 
           return onChange?.(newValue, actionMeta);

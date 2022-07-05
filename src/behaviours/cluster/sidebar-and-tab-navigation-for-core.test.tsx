@@ -25,6 +25,7 @@ import sidebarStorageInjectable from "../../renderer/components/layout/sidebar-s
 import hostedClusterIdInjectable from "../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
+import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 
 describe("cluster - sidebar and tab navigation for core", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -48,6 +49,8 @@ describe("cluster - sidebar and tab navigation for core", () => {
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
       );
+
+      rendererDi.permitSideEffects(appEventBusInjectable);
     });
   });
 

@@ -4,11 +4,24 @@
  */
 
 import React from "react";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { Switch } from "../switch";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("<Switch/>", () => {
+  let di: DiContainer;
+  let render: DiRender;
+
+  beforeEach(() => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    render = renderFor(di);
+  });
+
+
   it("renders w/o errors", () => {
     const { container } = render(<Switch />);
 

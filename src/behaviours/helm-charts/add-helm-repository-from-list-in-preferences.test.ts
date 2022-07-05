@@ -15,6 +15,7 @@ import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
+import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -52,6 +53,8 @@ describe("add helm repository from list in preferences", () => {
         callForPublicHelmRepositoriesInjectable,
         () => callForPublicHelmRepositoriesMock,
       );
+
+      rendererDi.permitSideEffects(appEventBusInjectable);
 
       mainDi.override(
         getActiveHelmRepositoriesInjectable,

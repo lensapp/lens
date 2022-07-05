@@ -20,6 +20,9 @@ import { getApplicationBuilder } from "../../test-utils/get-application-builder"
 import normalizedPlatformInjectable from "../../../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../../../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../../../main/kubectl/normalized-arch.injectable";
+import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
+import { EventEmitter } from "../../../../common/event-emitter";
+import type { AppEvent } from "../../../../common/app-event-bus/event-bus";
 
 jest.mock("electron", () => ({
   app: {
@@ -103,6 +106,8 @@ describe("<DeleteClusterDialog />", () => {
       mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
       mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
       mainDi.override(normalizedPlatformInjectable, () => "darwin");
+
+      rendererDi.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
       rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
     });
 

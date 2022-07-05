@@ -22,6 +22,7 @@ import { createObservableHistory } from "mobx-observable-history";
 import navigateToPreferenceTabInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab.injectable";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
+import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 
 describe("preferences - closing-preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -35,6 +36,7 @@ describe("preferences - closing-preferences", () => {
       rendererDi.register(testFrontPageRouteInjectable);
       rendererDi.register(testFrontPageRouteComponentInjectable);
       rendererDi.register(testNavigationItemInjectable);
+      rendererDi.permitSideEffects(appEventBusInjectable);
 
       rendererDi.override(navigateToFrontPageInjectable, (di) => {
         const navigateToRoute = di.inject(navigateToRouteInjectionToken);
