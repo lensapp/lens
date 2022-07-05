@@ -4,59 +4,206 @@ exports[`cluster connection status renders 1`] = `
 <body>
   <div>
     <div
-      class="topBar"
+      class="ClusterManager"
     >
       <div
-        class="items"
+        class="topBar"
       >
-        <i
-          class="Icon material interactive focusable"
-          data-testid="home-button"
-          tabindex="0"
+        <div
+          class="items"
         >
-          <span
-            class="icon"
-            data-icon-name="home"
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
           >
-            home
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-back"
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
         >
-          <span
-            class="icon"
-            data-icon-name="arrow_back"
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
           >
-            arrow_back
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-forward"
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
         >
-          <span
-            class="icon"
-            data-icon-name="arrow_forward"
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
           >
-            arrow_forward
-          </span>
-        </i>
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
       </div>
       <div
-        class="items"
-      />
-    </div>
-    <div
-      class="StatusBar"
-    >
-      <div
-        class="leftSide"
-      />
-      <div
-        class="rightSide"
-      />
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        >
+          <div
+            class="item"
+          >
+            <div
+              data-testid="app-update-not-available"
+            >
+              No new updates available
+            </div>
+          </div>
+        </div>
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
     </div>
     <div
       class="Notifications flex column align-flex-end"
@@ -69,86 +216,150 @@ exports[`cluster connection status when navigating to cluster connection renders
 <body>
   <div>
     <div
-      class="topBar"
+      class="ClusterManager"
     >
       <div
-        class="items"
-      >
-        <i
-          class="Icon material interactive focusable"
-          data-testid="home-button"
-          tabindex="0"
-        >
-          <span
-            class="icon"
-            data-icon-name="home"
-          >
-            home
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-back"
-        >
-          <span
-            class="icon"
-            data-icon-name="arrow_back"
-          >
-            arrow_back
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-forward"
-        >
-          <span
-            class="icon"
-            data-icon-name="arrow_forward"
-          >
-            arrow_forward
-          </span>
-        </i>
-      </div>
-      <div
-        class="items"
-      />
-    </div>
-    <div
-      class="StatusBar"
-    >
-      <div
-        class="leftSide"
-      />
-      <div
-        class="rightSide"
-      />
-    </div>
-    <div
-      class="ClusterView flex column align-center"
-    >
-      <div
-        class="status flex column box center align-center justify-center box center"
-        data-testid="cluster-status"
+        class="topBar"
       >
         <div
-          class="flex items-center column gaps"
+          class="items"
         >
-          <h2>
-            minikube
-          </h2>
-          <div
-            class="Spinner spinner"
-          />
-          <pre
-            class="kube-auth-out"
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
           >
-            <p>
-              Connecting
-              …
-            </p>
-          </pre>
-          <pre />
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
         </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="ClusterView flex column align-center"
+        >
+          <div
+            class="status flex column box center align-center justify-center box center"
+            data-testid="cluster-status"
+          >
+            <div
+              class="flex items-center column gaps"
+            >
+              <h2>
+                minikube
+              </h2>
+              <div
+                class="Spinner spinner"
+              />
+              <pre
+                class="kube-auth-out"
+              >
+                <p>
+                  Connecting
+                  …
+                </p>
+              </pre>
+              <pre />
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        >
+          <div
+            class="item"
+          >
+            <div
+              data-testid="app-update-not-available"
+            >
+              No new updates available
+            </div>
+          </div>
+        </div>
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
       </div>
     </div>
     <div
@@ -162,86 +373,150 @@ exports[`cluster connection status when navigating to cluster connection when a 
 <body>
   <div>
     <div
-      class="topBar"
+      class="ClusterManager"
     >
       <div
-        class="items"
-      >
-        <i
-          class="Icon material interactive focusable"
-          data-testid="home-button"
-          tabindex="0"
-        >
-          <span
-            class="icon"
-            data-icon-name="home"
-          >
-            home
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-back"
-        >
-          <span
-            class="icon"
-            data-icon-name="arrow_back"
-          >
-            arrow_back
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-forward"
-        >
-          <span
-            class="icon"
-            data-icon-name="arrow_forward"
-          >
-            arrow_forward
-          </span>
-        </i>
-      </div>
-      <div
-        class="items"
-      />
-    </div>
-    <div
-      class="StatusBar"
-    >
-      <div
-        class="leftSide"
-      />
-      <div
-        class="rightSide"
-      />
-    </div>
-    <div
-      class="ClusterView flex column align-center"
-    >
-      <div
-        class="status flex column box center align-center justify-center box center"
-        data-testid="cluster-status"
+        class="topBar"
       >
         <div
-          class="flex items-center column gaps"
+          class="items"
         >
-          <h2>
-            minikube-2
-          </h2>
-          <div
-            class="Spinner spinner"
-          />
-          <pre
-            class="kube-auth-out"
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
           >
-            <p>
-              Connecting
-              …
-            </p>
-          </pre>
-          <pre />
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
         </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="ClusterView flex column align-center"
+        >
+          <div
+            class="status flex column box center align-center justify-center box center"
+            data-testid="cluster-status"
+          >
+            <div
+              class="flex items-center column gaps"
+            >
+              <h2>
+                minikube-2
+              </h2>
+              <div
+                class="Spinner spinner"
+              />
+              <pre
+                class="kube-auth-out"
+              >
+                <p>
+                  Connecting
+                  …
+                </p>
+              </pre>
+              <pre />
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        >
+          <div
+            class="item"
+          >
+            <div
+              data-testid="app-update-not-available"
+            >
+              No new updates available
+            </div>
+          </div>
+        </div>
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
       </div>
     </div>
     <div
