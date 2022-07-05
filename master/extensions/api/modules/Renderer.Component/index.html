@@ -1644,7 +1644,7 @@
 </table>
 <hr />
 <h3 id="inputvalidator">InputValidator<a class="headerlink" href="#inputvalidator" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>InputValidator</strong>&lt;<code>IsAsync</code>>: { <code>condition?</code>: (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code>  } &amp; <code>IsAsync</code> extends <code>true</code> ? { <code>debounce</code>: <code>number</code> ; <code>message?</code>: <a href="./#syncvalidationmessage"><code>SyncValidationMessage</code></a> ; <code>validate</code>: <a href="./#inputvalidation"><code>InputValidation</code></a>&lt;<code>true</code>>  } : { <code>debounce?</code>: <code>undefined</code> ; <code>message</code>: <a href="./#syncvalidationmessage"><code>SyncValidationMessage</code></a> ; <code>validate</code>: <a href="./#inputvalidation"><code>InputValidation</code></a>&lt;<code>false</code>>  }</p>
+<p>Ƭ <strong>InputValidator</strong>&lt;<code>IsAsync</code>>: <code>SyncInputValidator</code> | <code>AsyncInputValidator</code> | <code>IsAsync</code> extends <code>boolean</code> ? <code>LegacyInputValidator</code> : <code>never</code></p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1854,15 +1854,15 @@
 <tbody>
 <tr>
 <td align="left"><code>accountId</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>isEmail</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>isExtensionNameInstall</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>isExtensionNameInstallRegex</code></td>
@@ -1878,35 +1878,35 @@
 </tr>
 <tr>
 <td align="left"><code>isNumber</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>isPath</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></td>
+<td align="left"><code>AsyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>isRequired</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>isUrl</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>maxLength</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>minLength</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>systemName</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 <tr>
 <td align="left"><code>unionInputValidators</code></td>
-<td align="left">(<code>baseValidator</code>: <code>Pick</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>>, <code>"message"</code> | <code>"condition"</code>>, ...<code>validators</code>: <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>>[]) =&gt; <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left">(<code>baseValidator</code>: <code>Pick</code>&lt;<code>SyncInputValidator</code>, <code>"message"</code> | <code>"condition"</code>>, ...<code>validators</code>: <code>SyncInputValidator</code>[]) =&gt; <code>SyncInputValidator</code></td>
 </tr>
 </tbody>
 </table>
@@ -2390,7 +2390,8 @@
 <p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="asyncinputvalidator">asyncInputValidator<a class="headerlink" href="#asyncinputvalidator" title="Permanent link">#</a></h3>
-<p>▸ <strong>asyncInputValidator</strong>(<code>validator</code>): <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
+<p>▸ <strong>asyncInputValidator</strong>(<code>validator</code>): <code>AsyncInputValidator</code></p>
+<p>A helper function to create an AsyncInputValidator</p>
 <h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2402,12 +2403,12 @@
 <tbody>
 <tr>
 <td align="left"><code>validator</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></td>
+<td align="left"><code>AsyncInputValidator</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
-<p><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
+<p><code>AsyncInputValidator</code></p>
 <hr />
 <h3 id="createterminaltab">createTerminalTab<a class="headerlink" href="#createterminaltab" title="Permanent link">#</a></h3>
 <p>▸ <strong>createTerminalTab</strong>(<code>tabParams?</code>): <code>Required</code>&lt;<code>DockTabCreate</code>></p>
@@ -2458,7 +2459,8 @@
 <p><code>string</code></p>
 <hr />
 <h3 id="inputvalidator_1">inputValidator<a class="headerlink" href="#inputvalidator_1" title="Permanent link">#</a></h3>
-<p>▸ <strong>inputValidator</strong>(<code>validator</code>): <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></p>
+<p>▸ <strong>inputValidator</strong>(<code>validator</code>): <code>SyncInputValidator</code></p>
+<p>A helper function to create an SyncInputValidator</p>
 <h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2470,15 +2472,15 @@
 <tbody>
 <tr>
 <td align="left"><code>validator</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></td>
+<td align="left"><code>SyncInputValidator</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
-<p><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>false</code>></p>
+<p><code>SyncInputValidator</code></p>
 <hr />
 <h3 id="isasyncvalidator">isAsyncValidator<a class="headerlink" href="#isasyncvalidator" title="Permanent link">#</a></h3>
-<p>▸ <strong>isAsyncValidator</strong>(<code>validator</code>): validator is InputValidator&lt;true></p>
+<p>▸ <strong>isAsyncValidator</strong>(<code>validator</code>): validator is AsyncInputValidator</p>
 <h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2495,7 +2497,7 @@
 </tbody>
 </table>
 <h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
-<p>validator is InputValidator&lt;true></p>
+<p>validator is AsyncInputValidator</p>
 <hr />
 <h3 id="issvg">isSvg<a class="headerlink" href="#issvg" title="Permanent link">#</a></h3>
 <p>▸ <strong>isSvg</strong>(<code>content</code>): <code>boolean</code></p>
@@ -2589,7 +2591,7 @@
 <p><code>void</code></p>
 <hr />
 <h3 id="unioninputvalidatorsasync">unionInputValidatorsAsync<a class="headerlink" href="#unioninputvalidatorsasync" title="Permanent link">#</a></h3>
-<p>▸ <strong>unionInputValidatorsAsync</strong>(<code>baseValidator</code>, ...<code>validators</code>): <a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
+<p>▸ <strong>unionInputValidatorsAsync</strong>(<code>baseValidator</code>, ...<code>validators</code>): <code>AsyncInputValidator</code></p>
 <p>Create a new input validator from a list of syncronous or async input validators. Will match as
 valid if one of the input validators matches the input</p>
 <h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
@@ -2612,7 +2614,7 @@ valid if one of the input validators matches the input</p>
 </tbody>
 </table>
 <h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
-<p><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>true</code>></p>
+<p><code>AsyncInputValidator</code></p>
 <hr />
 <h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
 <p>▸ <strong>withTooltip</strong>&lt;<code>TargetProps</code>>(<code>Target</code>): <code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></p>
