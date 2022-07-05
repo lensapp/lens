@@ -290,17 +290,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -600,17 +590,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -910,17 +890,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -1243,17 +1213,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -1891,17 +1851,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -2574,17 +2524,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -2895,17 +2835,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -3162,17 +3092,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -3461,17 +3381,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"
@@ -3759,17 +3669,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
       <div
         class="leftSide"
         data-testid="status-bar-left"
-      >
-        <div
-          class="item"
-        >
-          <div
-            data-testid="app-update-not-available"
-          >
-            No new updates available
-          </div>
-        </div>
-      </div>
+      />
       <div
         class="rightSide"
         data-testid="status-bar-right"

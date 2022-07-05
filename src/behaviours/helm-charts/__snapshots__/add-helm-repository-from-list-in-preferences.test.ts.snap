@@ -564,17 +564,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -1159,17 +1149,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -1756,17 +1736,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -2402,17 +2372,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -2997,17 +2957,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -3585,17 +3535,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -4210,17 +4150,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -4837,17 +4767,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -5523,17 +5443,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -6111,17 +6021,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"

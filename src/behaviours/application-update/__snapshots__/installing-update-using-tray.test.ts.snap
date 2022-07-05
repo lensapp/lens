@@ -188,17 +188,7 @@ exports[`installing update using tray when started renders 1`] = `
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -400,20 +390,7 @@ exports[`installing update using tray when started when user checks for updates 
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              class="Spinner singleColor"
-            />
-            <div
-              data-testid="app-update-checking"
-            >
-              Checking for updates...
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -615,20 +592,7 @@ exports[`installing update using tray when started when user checks for updates 
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-downloading"
-            >
-              Downloading version some-version...
-            </div>
-            <div
-              class="Spinner singleColor"
-            />
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -848,17 +812,7 @@ exports[`installing update using tray when started when user checks for updates 
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-download-failed"
-            >
-              Download of update failed
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -1078,17 +1032,7 @@ exports[`installing update using tray when started when user checks for updates 
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-available"
-            >
-              some-version is available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"
@@ -1290,17 +1234,7 @@ exports[`installing update using tray when started when user checks for updates 
         <div
           class="leftSide"
           data-testid="status-bar-left"
-        >
-          <div
-            class="item"
-          >
-            <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-        </div>
+        />
         <div
           class="rightSide"
           data-testid="status-bar-right"

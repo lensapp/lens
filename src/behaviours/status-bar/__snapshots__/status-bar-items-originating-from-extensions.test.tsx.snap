@@ -193,15 +193,6 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
             class="item"
           >
             <div
-              data-testid="app-update-not-available"
-            >
-              No new updates available
-            </div>
-          </div>
-          <div
-            class="item"
-          >
-            <div
               data-testid="some-testId"
             >
               left1

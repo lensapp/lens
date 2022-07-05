@@ -43,7 +43,6 @@ import applicationWindowInjectable from "../../../main/start-main-application/le
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
-import trayIconPathsInjectable from "../../../main/tray/tray-icon-path.injectable";
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
@@ -194,11 +193,7 @@ export const getApplicationBuilder = () => {
   const traySetMenuItemsMock = jest.fn<any, [MinimalTrayMenuItem[]]>();
 
   mainDi.override(electronTrayInjectable, () => ({
-    start: () => {
-      const iconPaths = mainDi.inject(trayIconPathsInjectable);
-
-      trayMenuIconPath = iconPaths.normal;
-    },
+    start: () => {},
     stop: () => {},
     setMenuItems: traySetMenuItemsMock,
     setIconPath: (path) => {

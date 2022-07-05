@@ -16,7 +16,8 @@ import type { DownloadPlatformUpdate } from "../../main/application-update/downl
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import { useFakeTime } from "../../common/test-utils/use-fake-time";
+import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 
 describe("installing update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -35,6 +36,8 @@ describe("installing update", () => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
+
+      mainDi.override(staticFilesDirectoryInjectable, () => "/some-static-files-directory");
 
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
@@ -65,11 +68,19 @@ describe("installing update", () => {
     beforeEach(async () => {
       rendered = await applicationBuilder.render();
 
-      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(
+        processCheckingForUpdatesInjectable,
+      );
     });
 
     it("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();
+    });
+
+    it("shows normal tray icon", () => {
+      expect(applicationBuilder.tray.getIconPath()).toBe(
+        "/some-static-files-directory/icons/trayIconTemplate.png",
+      );
     });
 
     describe("when user checks for updates", () => {
@@ -86,8 +97,10 @@ describe("installing update", () => {
         );
       });
 
-      it("notifies the user that checking for updates is happening", () => {
-        expect(rendered.getByTestId("app-update-checking")).toBeInTheDocument();
+      it("shows tray icon for checking for updates", () => {
+        expect(applicationBuilder.tray.getIconPath()).toBe(
+          "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+        );
       });
 
       it("renders", () => {
@@ -103,8 +116,10 @@ describe("installing update", () => {
           await processCheckingForUpdatesPromise;
         });
 
-        it("notifies the user", () => {
-          expect(rendered.getByTestId("app-update-not-available")).toBeInTheDocument();
+        it("shows tray icon for normal", () => {
+          expect(applicationBuilder.tray.getIconPath()).toBe(
+            "/some-static-files-directory/icons/trayIconTemplate.png",
+          );
         });
 
         it("does not start downloading update", () => {
@@ -113,12 +128,6 @@ describe("installing update", () => {
 
         it("renders", () => {
           expect(rendered.baseElement).toMatchSnapshot();
-        });
-
-        it("when 5 seconds elapses, clears the notification to the user", () => {
-          advanceFakeTime(6000);
-
-          expect(rendered.getByTestId("app-update-idle")).toBeInTheDocument();
         });
       });
 
@@ -136,8 +145,10 @@ describe("installing update", () => {
           expect(downloadPlatformUpdateMock).toHaveBeenCalled();
         });
 
-        it("notifies the user that download is happening", () => {
-          expect(rendered.getByTestId("app-update-downloading")).toBeInTheDocument();
+        it("still shows tray icon for downloading", () => {
+          expect(applicationBuilder.tray.getIconPath()).toBe(
+            "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+          );
         });
 
         it("renders", () => {
@@ -153,8 +164,10 @@ describe("installing update", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
           });
 
-          it("notifies the user about failed download", () => {
-            expect(rendered.getByTestId("app-update-download-failed")).toBeInTheDocument();
+          it("still shows normal tray icon", () => {
+            expect(applicationBuilder.tray.getIconPath()).toBe(
+              "/some-static-files-directory/icons/trayIconTemplate.png",
+            );
           });
 
           it("renders", () => {
@@ -171,8 +184,10 @@ describe("installing update", () => {
             expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
           });
 
-          it("notifies the user about successful download", () => {
-            expect(rendered.getByTestId("app-update-available")).toBeInTheDocument();
+          it("shows tray icon for update being available", () => {
+            expect(applicationBuilder.tray.getIconPath()).toBe(
+              "/some-static-files-directory/icons/trayIconUpdateAvailableTemplate.png",
+            );
           });
 
           it("renders", () => {

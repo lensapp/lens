@@ -14,15 +14,12 @@ import asyncFn from "@async-fn/jest";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import showApplicationWindowInjectable from "../../main/start-main-application/lens-window/show-application-window.injectable";
-import type { TrayIconPaths } from "../../main/tray/tray-icon-path.injectable";
-import trayIconPathsInjectable from "../../main/tray/tray-icon-path.injectable";
 
 describe("installing update using tray", () => {
   let applicationBuilder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let showApplicationWindowMock: jest.Mock;
-  let trayIconPaths: TrayIconPaths;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
@@ -46,7 +43,6 @@ describe("installing update using tray", () => {
 
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
-      trayIconPaths = mainDi.inject(trayIconPathsInjectable);
     });
   });
 
@@ -59,10 +55,6 @@ describe("installing update using tray", () => {
 
     it("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();
-    });
-
-    it("should use the normal tray icon", () => {
-      expect(applicationBuilder.tray.getIconPath()).toBe(trayIconPaths.normal);
     });
 
     it("user cannot install update yet", () => {
@@ -78,10 +70,6 @@ describe("installing update using tray", () => {
 
       it("does not show application window yet", () => {
         expect(showApplicationWindowMock).not.toHaveBeenCalled();
-      });
-
-      it("should still use the normal tray icon", () => {
-        expect(applicationBuilder.tray.getIconPath()).toBe(trayIconPaths.normal);
       });
 
       it("user cannot check for updates again", () => {
@@ -117,10 +105,6 @@ describe("installing update using tray", () => {
           expect(showApplicationWindowMock).toHaveBeenCalled();
         });
 
-        it("should still use the normal tray icon", () => {
-          expect(applicationBuilder.tray.getIconPath()).toBe(trayIconPaths.normal);
-        });
-
         it("user cannot install update", () => {
           expect(applicationBuilder.tray.get("install-update")).toBeNull();
         });
@@ -154,10 +138,6 @@ describe("installing update using tray", () => {
 
         it("shows application window", () => {
           expect(showApplicationWindowMock).toHaveBeenCalled();
-        });
-
-        it("should use the update available icon", () => {
-          expect(applicationBuilder.tray.getIconPath()).toBe(trayIconPaths.updateAvailable);
         });
 
         it("user cannot check for updates again yet", () => {
@@ -199,10 +179,6 @@ describe("installing update using tray", () => {
             ).toBeNull();
           });
 
-          it("should revert to use the normal tray icon", () => {
-            expect(applicationBuilder.tray.getIconPath()).toBe(trayIconPaths.normal);
-          });
-
           it("user can check for updates again", () => {
             expect(
               applicationBuilder.tray.get("check-for-updates")?.enabled,
@@ -229,10 +205,6 @@ describe("installing update using tray", () => {
             expect(
               applicationBuilder.tray.get("install-update")?.label,
             ).toBe("Install update some-version");
-          });
-
-          it("should use the update available icon", () => {
-            expect(applicationBuilder.tray.getIconPath()).toBe(trayIconPaths.updateAvailable);
           });
 
           it("user can check for updates again", () => {
