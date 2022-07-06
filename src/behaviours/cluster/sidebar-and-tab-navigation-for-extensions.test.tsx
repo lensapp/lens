@@ -19,6 +19,8 @@ import assert from "assert";
 import hostedClusterIdInjectable from "../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 import { getExtensionFakeFor } from "../../renderer/components/test-utils/get-extension-fake";
+import type { IObservableValue } from "mobx";
+import { runInAction, computed, observable } from "mobx";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -49,7 +51,11 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   });
 
   describe("given extension with cluster pages and cluster page menus", () => {
+    let someObservable: IObservableValue<boolean>;
+
     beforeEach(() => {
+      someObservable = observable.box(false);
+
       const getExtensionFake = getExtensionFakeFor(applicationBuilder);
 
       const testExtension = getExtensionFake({
@@ -112,6 +118,16 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
               components: {
                 Icon: null as never,
+              },
+            },
+
+            {
+              id: "some-menu-with-controlled-visibility",
+              title: "Some menu with controlled visibility",
+              visible: computed(() => someObservable.get()),
+
+              components: {
+                Icon: () => <div>Some icon</div>,
               },
             },
           ],
@@ -274,6 +290,26 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
         const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
 
         expect(child).toBeNull();
+      });
+
+      it("does not show the sidebar item that should be hidden", () => {
+        const child = rendered.queryByTestId(
+          "sidebar-item-some-extension-name-some-menu-with-controlled-visibility",
+        );
+
+        expect(child).not.toBeInTheDocument();
+      });
+
+      it("when sidebar item becomes visible, shows the sidebar item", () => {
+        runInAction(() => {
+          someObservable.set(true);
+        });
+
+        const child = rendered.queryByTestId(
+          "sidebar-item-some-extension-name-some-menu-with-controlled-visibility",
+        );
+
+        expect(child).toBeInTheDocument();
       });
 
       describe("when a parent sidebar item is expanded", () => {
