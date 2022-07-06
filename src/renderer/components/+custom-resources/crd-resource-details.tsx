@@ -16,7 +16,7 @@ import { Input } from "../input";
 import type { AdditionalPrinterColumnsV1 } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import { convertKubectlJsonPathToNodeJsonPath } from "../../utils/jsonPath";
-import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object";
+import type { KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import logger from "../../../common/logger";
 import { JSONPath } from "@astronautlabs/jsonpath";
@@ -71,7 +71,8 @@ export class CustomResourceDetails extends React.Component<CustomResourceDetails
     ));
   }
 
-  renderStatus(customResource: KubeObject<KubeObjectStatus, unknown>, columns: AdditionalPrinterColumnsV1[]) {
+  renderStatus(cr: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
+    const customResource = cr as KubeObject<KubeObjectMetadata, KubeObjectStatus, unknown>;
     const showStatus = !columns.find(column => column.name == "Status") && Array.isArray(customResource.status?.conditions);
 
     if (!showStatus) {

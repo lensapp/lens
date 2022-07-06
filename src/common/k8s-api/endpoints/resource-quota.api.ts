@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectScope } from "../kube-object";
+import type { NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -50,7 +50,11 @@ export interface ResourceQuotaStatus {
   used: IResourceQuotaValues;
 }
 
-export class ResourceQuota extends KubeObject<ResourceQuotaStatus, ResourceQuotaSpec, KubeObjectScope.Namespace> {
+export class ResourceQuota extends KubeObject<
+  NamespaceScopedMetadata,
+  ResourceQuotaStatus,
+  ResourceQuotaSpec
+> {
   static readonly kind = "ResourceQuota";
   static readonly namespaced = true;
   static readonly apiBase = "/api/v1/resourcequotas";

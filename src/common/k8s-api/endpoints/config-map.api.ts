@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { DerivedKubeApiOptions } from "../kube-api";
@@ -16,7 +16,11 @@ export interface ConfigMapData extends KubeJsonApiData<KubeObjectMetadata<KubeOb
   immutable?: boolean;
 }
 
-export class ConfigMap extends KubeObject<void, void, KubeObjectScope.Namespace> {
+export class ConfigMap extends KubeObject<
+  NamespaceScopedMetadata,
+  void,
+  void
+> {
   static kind = "ConfigMap";
   static namespaced = true;
   static apiBase = "/api/v1/configmaps";

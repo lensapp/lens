@@ -5,7 +5,7 @@
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import type { ClusterScopedMetadata, KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { RoleRef } from "./types/role-ref";
 import type { Subject } from "./types/subject";
@@ -15,7 +15,11 @@ export interface ClusterRoleBindingData extends KubeJsonApiData<KubeObjectMetada
   roleRef: RoleRef;
 }
 
-export class ClusterRoleBinding extends KubeObject<void, void, KubeObjectScope.Cluster> {
+export class ClusterRoleBinding extends KubeObject<
+  ClusterScopedMetadata,
+  void,
+  void
+> {
   static kind = "ClusterRoleBinding";
   static namespaced = false;
   static apiBase = "/apis/rbac.authorization.k8s.io/v1/clusterrolebindings";

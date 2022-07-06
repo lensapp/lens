@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -14,7 +14,11 @@ export interface RoleData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectS
   rules?: PolicyRule[];
 }
 
-export class Role extends KubeObject<void, void, KubeObjectScope.Namespace> {
+export class Role extends KubeObject<
+  NamespaceScopedMetadata,
+  void,
+  void
+> {
   static readonly kind = "Role";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/rbac.authorization.k8s.io/v1/roles";

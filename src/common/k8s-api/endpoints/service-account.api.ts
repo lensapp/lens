@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectMetadata, KubeObjectScope, LocalObjectReference, ObjectReference } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope, LocalObjectReference, NamespaceScopedMetadata, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -15,7 +15,11 @@ export interface ServiceAccountData extends KubeJsonApiData<KubeObjectMetadata<K
   secrets?: ObjectReference[];
 }
 
-export class ServiceAccount extends KubeObject<void, void, KubeObjectScope.Namespace> {
+export class ServiceAccount extends KubeObject<
+  NamespaceScopedMetadata,
+  void,
+  void
+> {
   static readonly kind = "ServiceAccount";
   static readonly namespaced = true;
   static readonly apiBase = "/api/v1/serviceaccounts";

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectScope, LabelSelector, TypedLocalObjectReference } from "../kube-object";
+import type { LabelSelector, NamespaceScopedMetadata, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { MetricData } from "./metrics.api";
 import { metricsApi } from "./metrics.api";
@@ -53,7 +53,11 @@ export interface PersistentVolumeClaimStatus {
   phase: string; // Pending
 }
 
-export class PersistentVolumeClaim extends KubeObject<PersistentVolumeClaimStatus, PersistentVolumeClaimSpec, KubeObjectScope.Namespace> {
+export class PersistentVolumeClaim extends KubeObject<
+  NamespaceScopedMetadata,
+  PersistentVolumeClaimStatus,
+  PersistentVolumeClaimSpec
+> {
   static readonly kind = "PersistentVolumeClaim";
   static readonly namespaced = true;
   static readonly apiBase = "/api/v1/persistentvolumeclaims";

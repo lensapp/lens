@@ -4,7 +4,7 @@
  */
 
 import { autoBind } from "../../utils";
-import type { KubeObjectMetadata, KubeObjectScope, ObjectReference } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -75,7 +75,11 @@ export interface EndpointsData extends KubeJsonApiData<KubeObjectMetadata<KubeOb
   subsets?: EndpointSubset[];
 }
 
-export class Endpoints extends KubeObject<void, void, KubeObjectScope.Namespace> {
+export class Endpoints extends KubeObject<
+  NamespaceScopedMetadata,
+  void,
+  void
+> {
   static kind = "Endpoints";
   static namespaced = true;
   static apiBase = "/api/v1/endpoints";
