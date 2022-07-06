@@ -7,9 +7,9 @@ import { observable, makeObservable } from "mobx";
 import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
-import { isDevelopment } from "../../common/vars";
 import type { Defaulted } from "../utils";
-import { TerminalChannels, type TerminalMessage } from "../../common/terminal/channels";
+import type { CreateWebsocket } from "./create-websocket.injectable";
+import type { DefaultWebsocketParams } from "./default-websocket-params.injectable";
 
 interface WebsocketApiParams {
   /**
@@ -64,27 +64,25 @@ export interface WebSocketEvents {
   close: () => void;
 }
 
+export interface WebSocketApiDependencies {
+  createWebsocket: CreateWebsocket;
+  readonly defaultParams: DefaultWebsocketParams;
+}
+
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
   protected socket: WebSocket | null = null;
   protected pendingCommands: string[] = [];
   protected reconnectTimer?: number;
   protected pingTimer?: number;
-  protected params: Defaulted<WebsocketApiParams, keyof typeof WebSocketApi["defaultParams"]>;
+  protected readonly params: Defaulted<WebsocketApiParams, keyof DefaultWebsocketParams>;
 
   @observable readyState = WebSocketApiState.PENDING;
 
-  private static readonly defaultParams = {
-    logging: isDevelopment,
-    reconnectDelay: 10,
-    flushOnOpen: true,
-    pingMessage: JSON.stringify({ type: TerminalChannels.PING } as TerminalMessage),
-  };
-
-  constructor(params: WebsocketApiParams) {
+  constructor(protected readonly dependencies: WebSocketApiDependencies, params: WebsocketApiParams) {
     super();
     makeObservable(this);
     this.params = {
-      ...WebSocketApi.defaultParams,
+      ...this.dependencies.defaultParams,
       ...params,
     };
     const { pingInterval } = this.params;
@@ -111,7 +109,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.socket?.close();
 
     // start new connection
-    this.socket = new WebSocket(url);
+    this.socket = this.dependencies.createWebsocket(url);
     this.socket.addEventListener("open", ev => this._onOpen(ev));
     this.socket.addEventListener("message", ev => this._onMessage(ev));
     this.socket.addEventListener("error", ev => this._onError(ev));
