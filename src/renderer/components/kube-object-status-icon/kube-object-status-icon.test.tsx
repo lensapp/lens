@@ -3,38 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import { computed } from "mobx";
-import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
+import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-status";
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { KubeObjectStatusIcon } from "./kube-object-status-icon";
 import React from "react";
-import type { KubeObjectStatusRegistration } from "./kube-object-status-registration";
+import { useFakeTime } from "../../../common/test-utils/use-fake-time";
+import { getInjectable } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { kubeObjectStatusTextInjectionToken } from "./kube-object-status-text-injection-token";
+import { computed } from "mobx";
 
 describe("kube-object-status-icon", () => {
   let render: DiRender;
-  let kubeObjectStatusRegistrations: KubeObjectStatusRegistration[];
+  let di: DiContainer;
 
   beforeEach(() => {
-    // TODO: Make mocking of date in unit tests global
-    global.Date.now = () => new Date("2015-10-21T07:28:00Z").getTime();
+    useFakeTime("2015-10-21T07:28:00Z");
 
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     render = renderFor(di);
-
-    kubeObjectStatusRegistrations = [];
-
-    const someTestExtension = new SomeTestExtension(
-      kubeObjectStatusRegistrations,
-    );
-
-    di.override(rendererExtensionsInjectable, () =>
-      computed(() => [someTestExtension]),
-    );
   });
 
   it("given no statuses, when rendered, renders as empty", () => {
@@ -48,14 +39,14 @@ describe("kube-object-status-icon", () => {
   it('given level "critical" status, when rendered, renders with status', () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const statusRegistration = getStatusRegistration(
+    const statusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.CRITICAL,
       "critical",
       "some-kind",
       ["some-api-version"],
     );
 
-    kubeObjectStatusRegistrations.push(statusRegistration);
+    di.register(statusTextInjectable);
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
@@ -67,14 +58,14 @@ describe("kube-object-status-icon", () => {
   it('given level "info" status, when rendered, renders with status', () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const statusRegistration = getStatusRegistration(
+    const statusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.INFO,
       "info",
       "some-kind",
       ["some-api-version"],
     );
 
-    kubeObjectStatusRegistrations.push(statusRegistration);
+    di.register(statusTextInjectable);
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
@@ -86,14 +77,14 @@ describe("kube-object-status-icon", () => {
   it('given level "warning" status, when rendered, renders with status', () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const statusRegistration = getStatusRegistration(
+    const statusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.WARNING,
       "warning",
       "some-kind",
       ["some-api-version"],
     );
 
-    kubeObjectStatusRegistrations.push(statusRegistration);
+    di.register(statusTextInjectable);
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
@@ -105,30 +96,32 @@ describe("kube-object-status-icon", () => {
   it("given status for all levels is present, when rendered, renders with statuses", () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const critical = getStatusRegistration(
+    const criticalStatusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.CRITICAL,
       "critical",
       "some-kind",
       ["some-api-version"],
     );
 
-    const warning = getStatusRegistration(
+    const warningStatusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.WARNING,
       "warning",
       "some-kind",
       ["some-api-version"],
     );
 
-    const info = getStatusRegistration(
+    const infoStatusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.INFO,
       "info",
       "some-kind",
       ["some-api-version"],
     );
 
-    kubeObjectStatusRegistrations.push(critical);
-    kubeObjectStatusRegistrations.push(warning);
-    kubeObjectStatusRegistrations.push(info);
+    di.register(
+      criticalStatusTextInjectable,
+      warningStatusTextInjectable,
+      infoStatusTextInjectable,
+    );
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
@@ -140,22 +133,21 @@ describe("kube-object-status-icon", () => {
   it("given info and warning statuses are present, when rendered, renders with statuses", () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const warning = getStatusRegistration(
+    const warningStatusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.WARNING,
       "warning",
       "some-kind",
       ["some-api-version"],
     );
 
-    const info = getStatusRegistration(
+    const infoStatusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.INFO,
       "info",
       "some-kind",
       ["some-api-version"],
     );
 
-    kubeObjectStatusRegistrations.push(warning);
-    kubeObjectStatusRegistrations.push(info);
+    di.register(warningStatusTextInjectable, infoStatusTextInjectable);
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
@@ -168,14 +160,14 @@ describe("kube-object-status-icon", () => {
   it("given registration for wrong api version, when rendered, renders as empty", () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const statusRegistration = getStatusRegistration(
+    const statusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.CRITICAL,
       "irrelevant",
       "some-kind",
       ["some-other-api-version"],
     );
 
-    kubeObjectStatusRegistrations.push(statusRegistration);
+    di.register(statusTextInjectable);
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
@@ -187,14 +179,14 @@ describe("kube-object-status-icon", () => {
   it("given registration for wrong kind, when rendered, renders as empty", () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const statusRegistration = getStatusRegistration(
+    const statusTextInjectable = getStatusTextInjectable(
       KubeObjectStatusLevel.CRITICAL,
       "irrelevant",
       "some-other-kind",
       ["some-api-version"],
     );
 
-    kubeObjectStatusRegistrations.push(statusRegistration);
+    di.register(statusTextInjectable);
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
@@ -206,21 +198,25 @@ describe("kube-object-status-icon", () => {
   it("given registration without status for exact kube object, when rendered, renders as empty", () => {
     const kubeObject = getKubeObjectStub("some-kind", "some-api-version");
 
-    const statusRegistration = {
-      apiVersions: ["some-api-version"],
-      kind: "some-kind",
-      resolve: (): void => {},
-    };
+    const statusTextInjectable = getInjectable({
+      id: "some-id",
+      instantiate: () => ({
+        apiVersions: ["some-api-version"],
+        kind: "some-kind",
+        resolve: () => { return undefined as unknown as KubeObjectStatus; },
+        enabled: computed(() => true),
+      }),
 
-    // @ts-ignore
-    kubeObjectStatusRegistrations.push(statusRegistration);
+      injectionToken: kubeObjectStatusTextInjectionToken,
+    });
+
+    di.register(statusTextInjectable);
 
     const { baseElement } = render(
       <KubeObjectStatusIcon object={kubeObject} />,
     );
 
     expect(baseElement).toMatchSnapshot();
-
   });
 });
 
@@ -236,28 +232,20 @@ const getKubeObjectStub = (kind: string, apiVersion: string) => KubeObject.creat
   },
 });
 
-const getStatusRegistration = (level: KubeObjectStatusLevel, title: string, kind: string, apiVersions: string[]) => ({
-  apiVersions,
-  kind,
-  resolve: (kubeObject: KubeObject) => ({
-    level,
-    text: `Some ${title} status for ${kubeObject.getName()}`,
-    timestamp: "2015-10-19T07:28:00Z",
+const getStatusTextInjectable = (level: KubeObjectStatusLevel, title: string, kind: string, apiVersions: string[]) => getInjectable({
+  id: title,
+  instantiate: () => ({
+    apiVersions,
+    kind,
+
+    resolve: (kubeObject: KubeObject) => ({
+      level,
+      text: `Some ${title} status for ${kubeObject.getName()}`,
+      timestamp: "2015-10-19T07:28:00Z",
+    }),
+
+    enabled: computed(() => true),
   }),
+
+  injectionToken: kubeObjectStatusTextInjectionToken,
 });
-
-class SomeTestExtension extends LensRendererExtension {
-  constructor(kubeObjectStatusTexts: KubeObjectStatusRegistration[]) {
-    super({
-      id: "some-id",
-      absolutePath: "irrelevant",
-      isBundled: false,
-      isCompatible: false,
-      isEnabled: false,
-      manifest: { name: "some-id", version: "some-version", engines: { lens: "^5.5.0" }},
-      manifestPath: "irrelevant",
-    });
-
-    this.kubeObjectStatusTexts = kubeObjectStatusTexts;
-  }
-}
