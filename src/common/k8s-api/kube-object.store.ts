@@ -83,6 +83,8 @@ export type KubeApiDataFrom<K extends KubeObject, A> = A extends KubeApi<K, infe
     : never
   : never;
 
+export type JsonPatch = Patch;
+
 export abstract class KubeObjectStore<
   K extends KubeObject = KubeObject,
   A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
@@ -385,7 +387,7 @@ export abstract class KubeObjectStore<
     return newItem;
   }
 
-  async patch(item: K, patch: Patch): Promise<K> {
+  async patch(item: K, patch: JsonPatch): Promise<K> {
     const rawItem = await this.api.patch(
       {
         name: item.getName(), namespace: item.getNs(),

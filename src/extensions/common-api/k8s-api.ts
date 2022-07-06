@@ -26,6 +26,8 @@ export {
   KubeObject,
   KubeStatus,
   type KubeObjectMetadata,
+  type NamespaceScopedMetadata,
+  type ClusterScopedMetadata,
   type BaseKubeJsonApiObjectMetadata,
   type KubeJsonApiObjectMetadata,
   type KubeStatusData,
@@ -33,6 +35,7 @@ export {
 
 export {
   KubeObjectStore,
+  type JsonPatch,
   type KubeObjectStoreLoadAllParams,
   type KubeObjectStoreLoadingParams,
   type KubeObjectStoreSubscribeParams,
