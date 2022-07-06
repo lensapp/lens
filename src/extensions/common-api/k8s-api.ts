@@ -35,6 +35,10 @@ export {
 } from "../../common/k8s-api/kube-object";
 
 export {
+  type KubeJsonApiData,
+} from "../../common/k8s-api/kube-json-api";
+
+export {
   KubeObjectStore,
   type JsonPatch,
   type KubeObjectStoreLoadAllParams,
