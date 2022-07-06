@@ -187,6 +187,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
 
     return (
       <MenuActions
+        id={`menu-actions-for-kube-object-menu-for-${object?.getId()}`}
         className={cssNames("KubeObjectMenu", className)}
         onOpen={object ? () => this.emitOnContextMenuOpen(object) : undefined}
         {...menuProps}

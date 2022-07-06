@@ -16,6 +16,7 @@ import { withErrorSuppression } from "../../../common/utils/with-error-suppressi
 import type { WithErrorLoggingFor } from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
+import { isBoolean } from "../../../common/utils";
 
 const trayMenuItemRegistratorInjectable = getInjectable({
   id: "tray-menu-item-registrator",
@@ -64,14 +65,31 @@ const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor:
 
             // TODO: Find out how to improve typing so that instead of
             // x => withErrorSuppression(x) there could only be withErrorSuppression
-            x => withErrorSuppression(x),
+            (x) => withErrorSuppression(x),
           );
 
           return decorated(registration);
         },
 
-        enabled: computed(() => registration.enabled ?? true),
-        visible: computed(() => true),
+        enabled: computed(() => {
+          if (registration.enabled === undefined) {
+            return true;
+          }
+
+          if (isBoolean(registration.enabled)) {
+            return registration.enabled;
+          }
+
+          return registration.enabled.get();
+        }),
+
+        visible: computed(() => {
+          if (!registration.visible) {
+            return true;
+          }
+
+          return registration.visible.get();
+        }),
       }),
 
       injectionToken: trayMenuItemInjectionToken,

@@ -78,6 +78,7 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
 
     return (
       <MenuActions
+        id="menu-actions-for-release-menu"
         {...menuProps}
         className={cssNames("HelmReleaseMenu", className)}
         removeAction={this.remove}

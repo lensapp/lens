@@ -492,7 +492,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_10"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >
@@ -1028,7 +1028,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_12"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >
@@ -1604,7 +1604,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_15"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >
@@ -2103,7 +2103,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_18"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >
@@ -2602,7 +2602,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_27"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >
@@ -3060,7 +3060,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_1"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >
@@ -3636,7 +3636,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_5"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >
@@ -4172,7 +4172,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_8"
+                id="menu-actions-for-dock"
                 tabindex="0"
                 tooltip="New tab"
               >

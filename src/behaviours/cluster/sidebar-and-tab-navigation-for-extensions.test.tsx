@@ -16,10 +16,11 @@ import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import assert from "assert";
-import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import hostedClusterIdInjectable from "../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import { getExtensionFakeFor } from "../../renderer/components/test-utils/get-extension-fake";
+import type { IObservableValue } from "mobx";
+import { runInAction, computed, observable } from "mobx";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -50,11 +51,90 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   });
 
   describe("given extension with cluster pages and cluster page menus", () => {
-    beforeEach(() => {
-      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-      const testExtension = getRendererExtensionFake(extensionStubWithSidebarItems);
+    let someObservable: IObservableValue<boolean>;
 
-      applicationBuilder.extensions.renderer.enable(testExtension);
+    beforeEach(() => {
+      someObservable = observable.box(false);
+
+      const getExtensionFake = getExtensionFakeFor(applicationBuilder);
+
+      const testExtension = getExtensionFake({
+        id: "some-extension-id",
+        name: "some-extension-name",
+
+        rendererOptions: {
+          clusterPages: [
+            {
+              components: {
+                Page: () => {
+                  throw new Error("should never come here");
+                },
+              },
+            },
+            {
+              id: "some-child-page-id",
+
+              components: {
+                Page: () => <div data-testid="some-child-page">Some child page</div>,
+              },
+            },
+            {
+              id: "some-other-child-page-id",
+
+              components: {
+                Page: () => (
+                  <div data-testid="some-other-child-page">Some other child page</div>
+                ),
+              },
+            },
+          ],
+
+          clusterPageMenus: [
+            {
+              id: "some-parent-id",
+              title: "Parent",
+
+              components: {
+                Icon: () => <div>Some icon</div>,
+              },
+            },
+
+            {
+              id: "some-child-id",
+              target: { pageId: "some-child-page-id" },
+              parentId: "some-parent-id",
+              title: "Child 1",
+
+              components: {
+                Icon: null as never,
+              },
+            },
+
+            {
+              id: "some-other-child-id",
+              target: { pageId: "some-other-child-page-id" },
+              parentId: "some-parent-id",
+              title: "Child 2",
+
+              components: {
+                Icon: null as never,
+              },
+            },
+
+            {
+              id: "some-menu-with-controlled-visibility",
+              title: "Some menu with controlled visibility",
+              visible: computed(() => someObservable.get()),
+
+              components: {
+                Icon: () => <div>Some icon</div>,
+              },
+            },
+          ],
+        },
+      });
+
+      applicationBuilder.extensions.enable(testExtension);
     });
 
     describe("given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered", () => {
@@ -212,6 +292,26 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
         expect(child).toBeNull();
       });
 
+      it("does not show the sidebar item that should be hidden", () => {
+        const child = rendered.queryByTestId(
+          "sidebar-item-some-extension-name-some-menu-with-controlled-visibility",
+        );
+
+        expect(child).not.toBeInTheDocument();
+      });
+
+      it("when sidebar item becomes visible, shows the sidebar item", () => {
+        runInAction(() => {
+          someObservable.set(true);
+        });
+
+        const child = rendered.queryByTestId(
+          "sidebar-item-some-extension-name-some-menu-with-controlled-visibility",
+        );
+
+        expect(child).toBeInTheDocument();
+      });
+
       describe("when a parent sidebar item is expanded", () => {
         beforeEach(() => {
           const parentLink = rendered.getByTestId(
@@ -355,65 +455,3 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
     });
   });
 });
-
-const extensionStubWithSidebarItems: FakeExtensionData = {
-  id: "some-extension-id",
-  name: "some-extension-name",
-  clusterPages: [
-    {
-      components: {
-        Page: () => {
-          throw new Error("should never come here");
-        },
-      },
-    },
-    {
-      id: "some-child-page-id",
-
-      components: {
-        Page: () => <div data-testid="some-child-page">Some child page</div>,
-      },
-    },
-    {
-      id: "some-other-child-page-id",
-
-      components: {
-        Page: () => (
-          <div data-testid="some-other-child-page">Some other child page</div>
-        ),
-      },
-    },
-  ],
-  clusterPageMenus: [
-    {
-      id: "some-parent-id",
-      title: "Parent",
-
-      components: {
-        Icon: () => <div>Some icon</div>,
-      },
-    },
-
-    {
-      id: "some-child-id",
-      target: { pageId: "some-child-page-id" },
-      parentId: "some-parent-id",
-      title: "Child 1",
-
-      components: {
-        Icon: null as never,
-      },
-    },
-
-    {
-      id: "some-other-child-id",
-      target: { pageId: "some-other-child-page-id" },
-      parentId: "some-parent-id",
-      title: "Child 2",
-
-      components: {
-        Icon: null as never,
-      },
-    },
-  ],
-};

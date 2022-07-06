@@ -433,7 +433,7 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
                     >
                       <i
                         class="Icon material interactive focusable"
-                        id="menu_actions_27"
+                        id="menu-actions-for-item-object-list-content"
                         tabindex="0"
                       >
                         <span
@@ -541,7 +541,7 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_14"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -555,7 +555,7 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_16"
+              id="tooltip_target_15"
               tabindex="0"
             >
               <span
@@ -568,7 +568,7 @@ exports[`helm-charts - navigation to Helm charts when navigating to Helm charts 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_17"
+              id="tooltip_target_16"
               tabindex="0"
             >
               <span

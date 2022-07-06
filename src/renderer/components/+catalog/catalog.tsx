@@ -198,7 +198,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     };
 
     return (
-      <MenuActions onOpen={onOpen}>
+      <MenuActions id="menu-actions-for-catalog" onOpen={onOpen}>
         <MenuItem
           key="open-details"
           onClick={() => this.props.catalogEntityStore.selectedItemId.set(entity.getId())}

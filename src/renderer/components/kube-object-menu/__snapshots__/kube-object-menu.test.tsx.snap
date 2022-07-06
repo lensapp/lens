@@ -6,6 +6,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -45,6 +46,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -136,6 +138,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-other-uid"
       >
         <li
           class="MenuItem"
@@ -172,6 +175,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-other-uid"
       >
         <li
           class="MenuItem"
@@ -260,6 +264,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -351,6 +356,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -441,6 +447,7 @@ exports[`kube-object-menu given no kube object, renders 1`] = `
   <div>
     <ul
       class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+      id="menu-actions-for-kube-object-menu-for-undefined"
     />
   </div>
 </body>

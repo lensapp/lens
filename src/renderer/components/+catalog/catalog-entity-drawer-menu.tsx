@@ -95,6 +95,7 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
 
     return (
       <MenuActions
+        id="menu-actions-for-catalog-entity-drawer-menu"
         className={cssNames("CatalogEntityDrawerMenu", className)}
         toolbar
         {...menuProps}

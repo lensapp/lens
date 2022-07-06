@@ -13,12 +13,12 @@ import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import type { MenuProps } from "./menu";
 import { Menu, MenuItem } from "./menu";
-import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
 import type { TooltipDecoratorProps } from "../tooltip";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
+import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
@@ -38,6 +38,7 @@ export interface MenuActionsProps extends Partial<MenuProps> {
    */
   removeAction?: () => void | Promise<void>;
   onOpen?: () => void;
+  id?: string;
 }
 
 interface Dependencies {
@@ -49,9 +50,6 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
   static defaultProps = {
     removeConfirmationMessage: "Remove item?",
   };
-
-  // TODO: Make deterministic
-  public id = uniqueId("menu_actions_");
 
   @observable isOpen = !!this.props.toolbar;
 
@@ -100,10 +98,10 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
     if (isValidElement<HTMLElement>(triggerIcon)) {
       className = cssNames(triggerIcon.props.className, { active: this.isOpen });
 
-      return React.cloneElement(triggerIcon, { id: this.id, className });
+      return React.cloneElement(triggerIcon, { id: this.props.id, className });
     }
     const iconProps: IconProps & TooltipDecoratorProps = {
-      id: this.id,
+      id: this.props.id,
       interactive: true,
       material: isString(triggerIcon) ? triggerIcon : undefined,
       active: this.isOpen,
@@ -131,7 +129,7 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
         {this.renderTriggerIcon()}
 
         <Menu
-          htmlFor={this.id}
+          htmlFor={this.props.id}
           isOpen={this.isOpen}
           open={this.toggle}
           close={this.toggle}
@@ -175,7 +173,8 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
 
 export const MenuActions = withInjectables<Dependencies, MenuActionsProps>(NonInjectedMenuActions, {
   getProps: (di, props) => ({
-    ...props,
+    id: di.inject(getRandomIdInjectable)(),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    ...props,
   }),
 });

@@ -49,6 +49,8 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
                 ? `${extension.sanitizedExtensionId}-${registration.parentId}`
                 : null,
 
+              ...(registration.visible ? { isVisible: registration.visible } : {}),
+
               title: registration.title,
               getIcon: registration.components.Icon
                 ? () => <registration.components.Icon />

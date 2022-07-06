@@ -89,6 +89,7 @@ export class ClusterIconSetting extends React.Component<ClusterIconSettingProps>
             />
           </div>
           <MenuActions
+            id="menu-actions-for-cluster-icon-settings"
             toolbar={false}
             autoCloseOnSelect={true}
             triggerIcon={{ material: "more_horiz" }}

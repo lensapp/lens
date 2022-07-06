@@ -402,7 +402,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_58"
+                        id="tooltip_target_56"
                         tabindex="0"
                       >
                         <span
@@ -427,7 +427,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_59"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -441,7 +441,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_61"
+              id="tooltip_target_58"
               tabindex="0"
             >
               <span
@@ -454,7 +454,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_62"
+              id="tooltip_target_59"
               tabindex="0"
             >
               <span
@@ -907,7 +907,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_17"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -921,7 +921,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_19"
+              id="tooltip_target_18"
               tabindex="0"
             >
               <span
@@ -934,7 +934,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_20"
+              id="tooltip_target_19"
               tabindex="0"
             >
               <span
@@ -1418,7 +1418,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_98"
+                        id="tooltip_target_94"
                         tabindex="0"
                       >
                         <span
@@ -1443,7 +1443,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_99"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -1457,7 +1457,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_101"
+              id="tooltip_target_96"
               tabindex="0"
             >
               <span
@@ -1470,7 +1470,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_102"
+              id="tooltip_target_97"
               tabindex="0"
             >
               <span

@@ -78,6 +78,9 @@ export interface ApplicationBuilder {
       enable: EnableExtensions<LensMainExtension>;
       disable: DisableExtensions<LensMainExtension>;
     };
+
+    enable: (...extensions: { renderer: LensRendererExtension; main: LensMainExtension }[]) => void;
+    disable: (...extensions: { renderer: LensRendererExtension; main: LensMainExtension }[]) => void;
   };
 
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
@@ -233,6 +236,11 @@ export const getApplicationBuilder = () => {
       }
     };
   };
+
+  const enableRendererExtension = enableExtensionsFor(rendererExtensionsState, rendererDi);
+  const enableMainExtension = enableExtensionsFor(mainExtensionsState, mainDi);
+  const disableRendererExtension = disableExtensionsFor(rendererExtensionsState, rendererDi);
+  const disableMainExtension = disableExtensionsFor(mainExtensionsState, mainDi);
 
   const builder: ApplicationBuilder = {
     dis,
@@ -400,13 +408,29 @@ export const getApplicationBuilder = () => {
 
     extensions: {
       renderer: {
-        enable: enableExtensionsFor(rendererExtensionsState, rendererDi),
-        disable: disableExtensionsFor(rendererExtensionsState, rendererDi),
+        enable: enableRendererExtension,
+        disable: disableRendererExtension,
       },
 
       main: {
-        enable: enableExtensionsFor(mainExtensionsState, mainDi),
-        disable: disableExtensionsFor(mainExtensionsState, mainDi),
+        enable: enableMainExtension,
+        disable: disableMainExtension,
+      },
+
+      enable: (...extensions) => {
+        const rendererExtensions = extensions.map(extension => extension.renderer);
+        const mainExtensions = extensions.map(extension => extension.main);
+
+        enableRendererExtension(...rendererExtensions);
+        enableMainExtension(...mainExtensions);
+      },
+
+      disable: (...extensions) => {
+        const rendererExtensions = extensions.map(extension => extension.renderer);
+        const mainExtensions = extensions.map(extension => extension.main);
+
+        disableRendererExtension(...rendererExtensions);
+        disableMainExtension(...mainExtensions);
       },
     },
 
