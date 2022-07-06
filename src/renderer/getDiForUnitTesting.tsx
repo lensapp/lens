@@ -70,6 +70,9 @@ import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/k
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
 import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
 import allowTerminalTransparencyInjectable from "./components/dock/terminal/allow-transparency.injectable";
+import isProductionInjectable from "../common/vars/is-production.injectable";
+import isDevelopmentInjectable from "../common/vars/is-development.injectable";
+import isTestEnvInjectable from "../common/vars/is-test-env.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -93,6 +96,9 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(isProductionInjectable, () => false);
+    di.override(isDevelopmentInjectable, () => false);
+    di.override(isTestEnvInjectable, () => true);
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(platformInjectable, () => "darwin");
     di.override(startTopbarStateSyncInjectable, () => ({

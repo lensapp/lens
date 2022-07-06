@@ -104,6 +104,8 @@ import focusApplicationInjectable from "./electron-app/features/focus-applicatio
 import getValidCwdInjectable from "./shell-session/get-valid-cwd.injectable";
 import getCachedShellEnvInjectable from "./shell-session/get-cached-shell-env.injectable";
 import spawnPtyInjectable from "./shell-session/spawn-pty.injectable";
+import isProductionInjectable from "../common/vars/is-production.injectable";
+import isTestEnvInjectable from "../common/vars/is-test-env.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -127,6 +129,9 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    di.override(isProductionInjectable, () => false);
+    di.override(isDevelopmentInjectable, () => false);
+    di.override(isTestEnvInjectable, () => true);
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
@@ -146,7 +151,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     overrideRunnablesHavingSideEffects(di);
     overrideElectronFeatures(di);
 
-    di.override(isDevelopmentInjectable, () => false);
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
 
