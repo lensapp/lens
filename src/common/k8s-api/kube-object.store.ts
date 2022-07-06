@@ -83,6 +83,8 @@ export type KubeApiDataFrom<K extends KubeObject, A> = A extends KubeApi<K, infe
     : never
   : never;
 
+export type JsonPatch = Patch;
+
 export abstract class KubeObjectStore<
   K extends KubeObject = KubeObject,
   A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
@@ -90,7 +92,7 @@ export abstract class KubeObjectStore<
 > extends ItemStore<K> {
   static readonly defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
-  public readonly api: A;
+  public readonly api!: A;
   public readonly limit: number | undefined;
   public readonly bufferSize: number;
   @observable private loadedNamespaces: string[] | undefined = undefined;
@@ -103,9 +105,18 @@ export abstract class KubeObjectStore<
     return when(() => Boolean(this.loadedNamespaces));
   }
 
-  constructor(api: A, opts?: KubeObjectStoreOptions) {
+  constructor(api: A, opts?: KubeObjectStoreOptions);
+  /**
+   * @deprecated Supply API instance through constructor
+   */
+  constructor();
+  constructor(api?: A, opts?: KubeObjectStoreOptions) {
     super();
-    this.api = api;
+
+    if (api) {
+      this.api = api;
+    }
+
     this.limit = opts?.limit;
     this.bufferSize = opts?.bufferSize ?? 50_000;
 
@@ -376,7 +387,7 @@ export abstract class KubeObjectStore<
     return newItem;
   }
 
-  async patch(item: K, patch: Patch): Promise<K> {
+  async patch(item: K, patch: JsonPatch): Promise<K> {
     const rawItem = await this.api.patch(
       {
         name: item.getName(), namespace: item.getNs(),

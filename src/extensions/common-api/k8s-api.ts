@@ -25,14 +25,22 @@ export {
 export {
   KubeObject,
   KubeStatus,
+  type OwnerReference,
   type KubeObjectMetadata,
+  type NamespaceScopedMetadata,
+  type ClusterScopedMetadata,
   type BaseKubeJsonApiObjectMetadata,
   type KubeJsonApiObjectMetadata,
   type KubeStatusData,
 } from "../../common/k8s-api/kube-object";
 
 export {
+  type KubeJsonApiData,
+} from "../../common/k8s-api/kube-json-api";
+
+export {
   KubeObjectStore,
+  type JsonPatch,
   type KubeObjectStoreLoadAllParams,
   type KubeObjectStoreLoadingParams,
   type KubeObjectStoreSubscribeParams,

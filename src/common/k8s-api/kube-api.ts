@@ -10,7 +10,7 @@ import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata, KubeObjectScope } from "./kube-object";
+import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata } from "./kube-object";
 import { KubeObject, KubeStatus, isKubeStatusData } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
@@ -32,7 +32,7 @@ import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-e
 /**
  * The options used for creating a `KubeApi`
  */
-export interface KubeApiOptions<T extends KubeObject<any, any, KubeObjectScope>, Data extends KubeJsonApiDataFor<T> = KubeJsonApiDataFor<T>> extends DerivedKubeApiOptions {
+export interface KubeApiOptions<T extends KubeObject, Data extends KubeJsonApiDataFor<T> = KubeJsonApiDataFor<T>> extends DerivedKubeApiOptions {
   /**
    * base api-path for listing all resources, e.g. "/api/v1/pods"
    *
@@ -171,7 +171,7 @@ export interface IRemoteKubeApiConfig {
   };
   /**
    * Custom instance of https.agent to use for the requests
-   * 
+   *
    * @remarks the custom agent replaced default agent, options skipTLSVerify,
    * clientCertificateData, clientKeyData and caData are ignored.
    */
@@ -179,17 +179,17 @@ export interface IRemoteKubeApiConfig {
 }
 
 export function forCluster<
-  Object extends KubeObject<any, any, KubeObjectScope>,
+  Object extends KubeObject,
   Api extends KubeApi<Object>,
   Data extends KubeJsonApiDataFor<Object>,
 >(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => Api): Api;
 export function forCluster<
-  Object extends KubeObject<any, any, KubeObjectScope>,
+  Object extends KubeObject,
   Data extends KubeJsonApiDataFor<Object>,
 >(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>): KubeApi<Object>;
 
 export function forCluster<
-  Object extends KubeObject<any, any, KubeObjectScope>,
+  Object extends KubeObject,
   Data extends KubeJsonApiDataFor<Object>,
 >(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: (new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>) = KubeApi): KubeApi<Object> {
   const url = new URL(apiBase.config.serverAddress);
@@ -210,17 +210,17 @@ export function forCluster<
 }
 
 export function forRemoteCluster<
-  Object extends KubeObject<any, any, KubeObjectScope>,
+  Object extends KubeObject,
   Api extends KubeApi<Object>,
   Data extends KubeJsonApiDataFor<Object>,
 >(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => Api): Api;
 export function forRemoteCluster<
-  Object extends KubeObject<any, any, KubeObjectScope>,
+  Object extends KubeObject,
   Data extends KubeJsonApiDataFor<Object>,
 >(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>): KubeApi<Object>;
 
 export function forRemoteCluster<
-  Object extends KubeObject<any, any, KubeObjectScope>,
+  Object extends KubeObject,
   Api extends KubeApi<Object>,
   Data extends KubeJsonApiDataFor<Object>,
 >(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object> = KubeApi): KubeApi<Object> {
@@ -277,7 +277,7 @@ export function forRemoteCluster<
 
 export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = (data: IKubeWatchEvent<T>, error: any) => void;
 
-export interface KubeApiWatchOptions<Object extends KubeObject<any, any, KubeObjectScope>, Data extends KubeJsonApiDataFor<Object>> {
+export interface KubeApiWatchOptions<Object extends KubeObject, Data extends KubeJsonApiDataFor<Object>> {
   namespace: string;
   callback?: KubeApiWatchCallback<Data>;
   abortController?: AbortController;

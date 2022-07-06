@@ -4,7 +4,7 @@
  */
 
 import { autoBind } from "../../utils";
-import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import type { ClusterScopedMetadata, KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -29,7 +29,11 @@ export interface StorageClassData extends KubeJsonApiData<KubeObjectMetadata<Kub
   volumeBindingMode?: string;
 }
 
-export class StorageClass extends KubeObject<void, void, KubeObjectScope.Cluster> {
+export class StorageClass extends KubeObject<
+  ClusterScopedMetadata,
+  void,
+  void
+> {
   static readonly kind = "StorageClass";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/storage.k8s.io/v1/storageclasses";

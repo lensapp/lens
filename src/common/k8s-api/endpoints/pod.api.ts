@@ -8,7 +8,7 @@ import { metricsApi } from "./metrics.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions, ResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { RequireExactlyOne } from "type-fest";
-import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, LabelSelector, KubeObjectScope } from "../kube-object";
+import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import type { SecretReference } from "./secret.api";
 import type { PersistentVolumeClaimSpec } from "./persistent-volume-claim.api";
 import { KubeObject } from "../kube-object";
@@ -776,7 +776,11 @@ export interface PodStatus {
   reason?: string;
 }
 
-export class Pod extends KubeObject<PodStatus, PodSpec, KubeObjectScope.Namespace> {
+export class Pod extends KubeObject<
+  NamespaceScopedMetadata,
+  PodStatus,
+  PodSpec
+> {
   static kind = "Pod";
   static namespaced = true;
   static apiBase = "/api/v1/pods";

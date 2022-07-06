@@ -6,7 +6,7 @@
 import type { DerivedKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import type { ClusterScopedMetadata, KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { AggregationRule } from "./types/aggregation-rule";
 import type { PolicyRule } from "./types/policy-rule";
@@ -16,7 +16,11 @@ export interface ClusterRoleData extends KubeJsonApiData<KubeObjectMetadata<Kube
   aggregationRule?: AggregationRule;
 }
 
-export class ClusterRole extends KubeObject<void, void, KubeObjectScope.Cluster> {
+export class ClusterRole extends KubeObject<
+  ClusterScopedMetadata,
+  void,
+  void
+> {
   static kind = "ClusterRole";
   static namespaced = false;
   static apiBase = "/apis/rbac.authorization.k8s.io/v1/clusterroles";
