@@ -32,6 +32,7 @@ interface Dependencies {
   createExtensionInstance: CreateExtensionInstance;
   readonly extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   getExtension: (instance: LensExtension) => Extension;
+  getExtensionIsEnabledForCluster: (extension: LensRendererExtension, cluster: KubernetesCluster) => Promise<boolean>;
 }
 
 export interface ExtensionLoading {
@@ -282,7 +283,9 @@ export class ExtensionLoader {
       const extension = ext as LensRendererExtension;
 
       // getCluster must be a callback, as the entity might be available only after an extension has been loaded
-      if ((await extension.isEnabledForCluster(entity)) === false) {
+      const extensionIsEnabledForCluster = await this.dependencies.getExtensionIsEnabledForCluster(extension, entity);
+
+      if (!extensionIsEnabledForCluster) {
         return [];
       }
 

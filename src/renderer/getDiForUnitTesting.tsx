@@ -69,6 +69,8 @@ import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/
 import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
 import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
+import extensionShouldBeEnabledForClusterFrameInjectable from "./extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
+import { asyncComputed } from "@ogre-tools/injectable-react";
 import forceUpdateModalRootFrameComponentInjectable from "./application-update/force-update-modal/force-update-modal-root-frame-component.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
@@ -125,6 +127,11 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
       Component: () => null,
       shouldRender: computed(() => false),
     }));
+
+    // TODO: Remove after "LensRendererExtension.isEnabledForCluster" is removed
+    di.override(extensionShouldBeEnabledForClusterFrameInjectable, () =>
+      asyncComputed(async () => true, true),
+    );
 
     // TODO: Remove side-effects and shared global state
     const clusterFrameChildComponentInjectables: Injectable<any, any, any>[] = [
