@@ -15,8 +15,6 @@ function getNameFromId(id: string) {
 function captureWithId(eventBus: EventEmitter<[AppEvent]>, id: string, action: string) {
   const target = getNameFromId(id);
 
-  console.log(`[captureWithId]: ${target}`);
-
   eventBus.emit({
     name: target,
     action,

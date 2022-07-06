@@ -25,7 +25,6 @@ describe("auto capture with id", () => {
   });
 
   it("calls event bus", () => {
-    console.log(capture);
     capture("foo_bar-baz", "click");
     expect(emitEvent).toHaveBeenCalledWith({
       name: "Foo Bar Baz",
