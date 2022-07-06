@@ -13,3 +13,4 @@ export type { ProtocolHandlerRegistration, RouteParams as ProtocolRouteParams, R
 export type { CustomCategoryViewProps, CustomCategoryViewComponents, CustomCategoryViewRegistration } from "../../renderer/components/+catalog/custom-views";
 export type { ShellEnvModifier, ShellEnvContext } from "../../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
 export type { KubeObjectContextMenuItem, KubeObjectOnContextMenuOpenContext, KubeObjectOnContextMenuOpen, KubeObjectHandlers, KubeObjectHandlerRegistration } from "../../renderer/kube-object/handler";
+export type { TrayMenuRegistration } from "../../main/tray/tray-menu-registration";
