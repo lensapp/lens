@@ -398,11 +398,9 @@ export class ExtensionLoader {
     try {
       return __non_webpack_require__(extAbsolutePath).default;
     } catch (error) {
-      if (window && error instanceof window.Error) {
-        console.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error.stack || error}`, extension);
-      } else {
-        logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error}`, { extension });
-      }
+      const message = (error instanceof Error ? error.stack : undefined) || error;
+
+      logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${message}`, { extension });
     }
 
     return null;
