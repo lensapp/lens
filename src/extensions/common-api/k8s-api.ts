@@ -25,6 +25,7 @@ export {
 export {
   KubeObject,
   KubeStatus,
+  type OwnerReference,
   type KubeObjectMetadata,
   type NamespaceScopedMetadata,
   type ClusterScopedMetadata,
