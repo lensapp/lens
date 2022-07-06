@@ -20,12 +20,17 @@ import type { DiContainer } from "@ogre-tools/injectable";
 export class TestExtensionMain extends LensMainExtension {}
 export class TestExtensionRenderer extends LensRendererExtension {}
 
-export type GetExtensionFake = (arg: {
+export interface FakeExtensionOptions {
   id: string;
   name: string;
   rendererOptions?: Partial<LensRendererExtension>;
   mainOptions?: Partial<LensMainExtension>;
-}) => { main: TestExtensionMain; renderer: TestExtensionRenderer };
+}
+
+export type GetExtensionFake = (arg: FakeExtensionOptions) => {
+  main: TestExtensionMain;
+  renderer: TestExtensionRenderer;
+};
 
 export const getExtensionFakeFor =
   (builder: ApplicationBuilder): GetExtensionFake =>
