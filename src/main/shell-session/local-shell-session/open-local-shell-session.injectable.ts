@@ -10,6 +10,12 @@ import type WebSocket from "ws";
 import terminalShellEnvModifyInjectable from "../shell-env-modifier/terminal-shell-env-modify.injectable";
 import baseBundeledBinariesDirectoryInjectable from "../../../common/vars/base-bundled-binaries-dir.injectable";
 import type { Kubectl } from "../../kubectl/kubectl";
+import kubectlBinariesPathInjectable from "../../../common/user-store/kubectl-binaries-path.injectable";
+import downloadKubectlBinariesInjectable from "../../../common/user-store/download-kubectl-binaries.injectable";
+import ensureShellProcessInjectable from "../ensure-shell-process.injectable";
+import getCachedShellEnvInjectable from "../get-cached-shell-env.injectable";
+import getValidCwdInjectable from "../get-valid-cwd.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -26,6 +32,12 @@ const openLocalShellSessionInjectable = getInjectable({
     const deps: LocalShellSessionDependencies = {
       terminalShellEnvModify: di.inject(terminalShellEnvModifyInjectable),
       baseBundeledBinariesDirectory: di.inject(baseBundeledBinariesDirectoryInjectable),
+      kubectlBinariesPath: di.inject(kubectlBinariesPathInjectable),
+      downloadKubectlBinaries: di.inject(downloadKubectlBinariesInjectable),
+      ensureShellProcess: di.inject(ensureShellProcessInjectable),
+      getCachedShellEnv: di.inject(getCachedShellEnvInjectable),
+      getValidCwd: di.inject(getValidCwdInjectable),
+      logger: di.inject(loggerInjectable),
     };
 
     return (args) => new LocalShellSession(deps, args).open();

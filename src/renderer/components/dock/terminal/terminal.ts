@@ -15,7 +15,7 @@ import { disposer } from "../../../utils";
 import { isMac } from "../../../../common/vars";
 import { once } from "lodash";
 import { clipboard } from "electron";
-import logger from "../../../../common/logger";
+import type { Logger } from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
 import assert from "assert";
 import { TerminalChannels } from "../../../../common/terminal/channels";
@@ -26,6 +26,7 @@ export interface TerminalDependencies {
   readonly terminalCopyOnSelect: IComputedValue<boolean>;
   readonly themeStore: ThemeStore;
   readonly allowTransparency: boolean;
+  readonly logger: Logger;
 }
 
 export interface TerminalArguments {
@@ -196,14 +197,14 @@ export class Terminal {
   };
 
   setFontSize = (fontSize: number) => {
-    logger.info(`[TERMINAL]: set fontSize to ${fontSize}`);
+    this.dependencies.logger.info(`[TERMINAL]: set fontSize to ${fontSize}`);
 
     this.xterm.options.fontSize = fontSize;
     this.fit();
   };
 
   setFontFamily = (fontFamily: string) => {
-    logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
+    this.dependencies.logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
 
     this.xterm.options.fontFamily = fontFamily;
     this.fit();

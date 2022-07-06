@@ -5,9 +5,11 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { spawn } from "node-pty";
 
+export type SpawnPty = typeof spawn;
+
 const spawnPtyInjectable = getInjectable({
   id: "spawn-pty",
-  instantiate: () => spawn,
+  instantiate: (): SpawnPty => spawn,
   causesSideEffects: true,
 });
 

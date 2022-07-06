@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { IComputedValue } from "mobx";
 import path from "path";
-import { UserStore } from "../../../common/user-store";
 import type { TerminalShellEnvModify } from "../shell-env-modifier/terminal-shell-env-modify.injectable";
 import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-session";
 import { ShellSession } from "../shell-session";
@@ -12,6 +12,8 @@ import { ShellSession } from "../shell-session";
 export interface LocalShellSessionDependencies extends ShellSessionDependencies {
   terminalShellEnvModify: TerminalShellEnvModify;
   readonly baseBundeledBinariesDirectory: string;
+  readonly kubectlBinariesPath: IComputedValue<string | undefined>;
+  readonly downloadKubectlBinaries: IComputedValue<boolean>;
 }
 
 export class LocalShellSession extends ShellSession {
@@ -30,11 +32,8 @@ export class LocalShellSession extends ShellSession {
   }
 
   public async open() {
-    let env = await this.getCachedShellEnv();
-
-    // extensions can modify the env
-    env = this.dependencies.terminalShellEnvModify(this.cluster.id, env);
-
+    const cachedEnv = await this.getCachedShellEnv();
+    const env = this.dependencies.terminalShellEnvModify(this.cluster.id, cachedEnv);
     const shell = env.PTYSHELL;
 
     if (!shell) {
@@ -47,8 +46,8 @@ export class LocalShellSession extends ShellSession {
   }
 
   protected async getShellArgs(shell: string): Promise<string[]> {
-    const pathFromPreferences = UserStore.getInstance().kubectlBinariesPath || this.kubectl.getBundledPath();
-    const kubectlPathDir = UserStore.getInstance().downloadKubectlBinaries ? await this.kubectlBinDirP : path.dirname(pathFromPreferences);
+    const pathFromPreferences = this.dependencies.kubectlBinariesPath.get() || this.kubectl.getBundledPath();
+    const kubectlPathDir = this.dependencies.downloadKubectlBinaries.get() ? await this.kubectlBinDirP : path.dirname(pathFromPreferences);
 
     switch(path.basename(shell)) {
       case "powershell.exe":
