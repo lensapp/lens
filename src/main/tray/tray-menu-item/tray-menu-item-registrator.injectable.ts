@@ -71,7 +71,14 @@ const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor:
         },
 
         enabled: computed(() => registration.enabled ?? true),
-        visible: computed(() => true),
+
+        visible: computed(() => {
+          if (!registration.visible) {
+            return true;
+          }
+
+          return registration.visible.get();
+        }),
       }),
 
       injectionToken: trayMenuItemInjectionToken,

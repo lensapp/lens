@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { IComputedValue } from "mobx";
+
 export interface TrayMenuRegistration {
   label?: string;
   click?: (menuItem: TrayMenuRegistration) => void;
@@ -11,4 +13,5 @@ export interface TrayMenuRegistration {
   toolTip?: string;
   enabled?: boolean;
   submenu?: TrayMenuRegistration[];
+  visible?: IComputedValue<boolean>;
 }
