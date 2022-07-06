@@ -524,7 +524,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_15"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -538,7 +538,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_17"
+              id="tooltip_target_16"
               tabindex="0"
             >
               <span
@@ -551,7 +551,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_18"
+              id="tooltip_target_17"
               tabindex="0"
             >
               <span
@@ -1127,7 +1127,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_54"
+                        id="tooltip_target_52"
                         tabindex="0"
                       >
                         <span
@@ -1152,7 +1152,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_55"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -1166,7 +1166,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_57"
+              id="tooltip_target_54"
               tabindex="0"
             >
               <span
@@ -1179,7 +1179,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_58"
+              id="tooltip_target_55"
               tabindex="0"
             >
               <span

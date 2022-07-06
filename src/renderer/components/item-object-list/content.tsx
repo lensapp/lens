@@ -343,6 +343,7 @@ class NonInjectedItemListLayoutContent<
 
     return (
       <MenuActions
+        id="menu-actions-for-item-object-list-content"
         className="ItemListLayoutVisibilityMenu"
         toolbar={false}
         autoCloseOnSelect={false}

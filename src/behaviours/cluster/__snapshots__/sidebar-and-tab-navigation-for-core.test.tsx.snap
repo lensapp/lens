@@ -468,7 +468,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_186"
+                        id="tooltip_target_177"
                         tabindex="0"
                       >
                         <span
@@ -493,7 +493,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_187"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -507,7 +507,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_189"
+              id="tooltip_target_179"
               tabindex="0"
             >
               <span
@@ -520,7 +520,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_190"
+              id="tooltip_target_180"
               tabindex="0"
             >
               <span
@@ -1007,7 +1007,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_226"
+                        id="tooltip_target_215"
                         tabindex="0"
                       >
                         <span
@@ -1032,7 +1032,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_227"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -1046,7 +1046,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_229"
+              id="tooltip_target_217"
               tabindex="0"
             >
               <span
@@ -1059,7 +1059,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_230"
+              id="tooltip_target_218"
               tabindex="0"
             >
               <span
@@ -1568,7 +1568,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_286"
+                        id="tooltip_target_272"
                         tabindex="0"
                       >
                         <span
@@ -1593,7 +1593,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_287"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -1607,7 +1607,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_289"
+              id="tooltip_target_274"
               tabindex="0"
             >
               <span
@@ -1620,7 +1620,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_290"
+              id="tooltip_target_275"
               tabindex="0"
             >
               <span
@@ -2013,7 +2013,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_349"
+                        id="tooltip_target_332"
                         tabindex="0"
                       >
                         <span
@@ -2038,7 +2038,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_350"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -2052,7 +2052,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_352"
+              id="tooltip_target_334"
               tabindex="0"
             >
               <span
@@ -2065,7 +2065,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_353"
+              id="tooltip_target_335"
               tabindex="0"
             >
               <span
@@ -2460,7 +2460,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_15"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -2474,7 +2474,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_17"
+              id="tooltip_target_16"
               tabindex="0"
             >
               <span
@@ -2487,7 +2487,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_18"
+              id="tooltip_target_17"
               tabindex="0"
             >
               <span
@@ -2996,7 +2996,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_86"
+                        id="tooltip_target_82"
                         tabindex="0"
                       >
                         <span
@@ -3021,7 +3021,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_87"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -3035,7 +3035,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_89"
+              id="tooltip_target_84"
               tabindex="0"
             >
               <span
@@ -3048,7 +3048,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_90"
+              id="tooltip_target_85"
               tabindex="0"
             >
               <span
@@ -3535,7 +3535,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_146"
+                        id="tooltip_target_139"
                         tabindex="0"
                       >
                         <span
@@ -3560,7 +3560,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <i
                 class="Icon new-dock-tab material interactive focusable"
-                id="menu_actions_147"
+                id="menu-actions-for-dock"
                 tabindex="0"
               >
                 <span
@@ -3574,7 +3574,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_149"
+              id="tooltip_target_141"
               tabindex="0"
             >
               <span
@@ -3587,7 +3587,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </i>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_150"
+              id="tooltip_target_142"
               tabindex="0"
             >
               <span

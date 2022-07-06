@@ -67,7 +67,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
           <Icon
             material="stop"
             tooltip="Stop port-forward"
-            interactive={toolbar} 
+            interactive={toolbar}
           />
           <span className="title">Stop</span>
         </MenuItem>
@@ -79,7 +79,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
         <Icon
           material="play_arrow"
           tooltip="Start port-forward"
-          interactive={toolbar} 
+          interactive={toolbar}
         />
         <span className="title">Start</span>
       </MenuItem>
@@ -98,7 +98,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
             <Icon
               material="open_in_browser"
               interactive={toolbar}
-              tooltip="Open in browser" 
+              tooltip="Open in browser"
             />
             <span className="title">Open</span>
           </MenuItem>
@@ -107,7 +107,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
           <Icon
             material="edit"
             tooltip="Change port or protocol"
-            interactive={toolbar} 
+            interactive={toolbar}
           />
           <span className="title">Edit</span>
         </MenuItem>
@@ -121,6 +121,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
 
     return (
       <MenuActions
+        id="menu-actions-for-port-forward-menu"
         {...menuProps}
         className={cssNames("PortForwardMenu", className)}
         removeAction={this.remove}
