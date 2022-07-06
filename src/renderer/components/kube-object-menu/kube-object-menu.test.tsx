@@ -8,12 +8,13 @@ import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import userEvent from "@testing-library/user-event";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { ConfirmDialog } from "../confirm-dialog";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-
+import { computed } from "mobx";
 import clusterInjectable from "./dependencies/cluster.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
@@ -21,12 +22,9 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectMenu } from "./index";
-import type { KubeObjectMenuRegistration } from "./kube-object-menu-registration";
-import { computed } from "mobx";
-import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
+import { kubeObjectMenuItemInjectionToken } from "./kube-object-menu-item-injection-token";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../tooltip/tooltip");
@@ -35,58 +33,20 @@ jest.mock("../tooltip/withTooltip", () => ({
 }));
 
 // TODO: make `animated={false}` not required to make tests deterministic
-
-class SomeTestExtension extends LensRendererExtension {
-  constructor(
-    kubeObjectMenuItems: KubeObjectMenuRegistration[],
-  ) {
-    super({
-      id: "some-id",
-      absolutePath: "irrelevant",
-      isBundled: false,
-      isCompatible: false,
-      isEnabled: false,
-      manifest: { name: "some-id", version: "some-version", engines: { lens: "^5.5.0" }},
-      manifestPath: "irrelevant",
-    });
-
-    this.kubeObjectMenuItems = kubeObjectMenuItems;
-  }
-}
-
 describe("kube-object-menu", () => {
   let di: DiContainer;
   let render: DiRender;
 
   beforeEach(() => {
-    const MenuItemComponent = () => <li>Some menu item</li>;
-    const someTestExtension = new SomeTestExtension([
-      {
-        apiVersions: ["some-api-version"],
-        kind: "some-kind",
-        components: { MenuItem: MenuItemComponent },
-      },
-
-      {
-        apiVersions: ["some-unrelated-api-version"],
-        kind: "some-kind",
-        components: { MenuItem: MenuItemComponent },
-      },
-
-      {
-        apiVersions: ["some-api-version"],
-        kind: "some-unrelated-kind",
-        components: { MenuItem: MenuItemComponent },
-      },
-    ]);
-
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    render = renderFor(di);
-
-    di.override(rendererExtensionsInjectable, () =>
-      computed(() => [someTestExtension]),
+    di.register(
+      someMenuItemInjectable,
+      someOtherMenuItemInjectable,
+      someAnotherMenuItemInjectable,
     );
+
+    render = renderFor(di);
 
     di.override(
       clusterInjectable,
@@ -317,4 +277,48 @@ describe("kube-object-menu", () => {
       expect(baseElement).toMatchSnapshot();
     });
   });
+});
+
+const MenuItemComponent = () => <li>Some menu item</li>;
+
+const someMenuItemInjectable = getInjectable({
+  id: "some-menu-item",
+
+  instantiate: () => ({
+    apiVersions: ["some-api-version"],
+    kind: "some-kind",
+    Component: MenuItemComponent,
+    enabled: computed(() => true),
+    orderNumber: 1,
+  }),
+
+  injectionToken: kubeObjectMenuItemInjectionToken,
+});
+
+const someOtherMenuItemInjectable = getInjectable({
+  id: "some-other-menu-item",
+
+  instantiate: () => ({
+    apiVersions: ["some-unrelated-api-version"],
+    kind: "some-kind",
+    Component: MenuItemComponent,
+    enabled: computed(() => true),
+    orderNumber: 1,
+  }),
+
+  injectionToken: kubeObjectMenuItemInjectionToken,
+});
+
+const someAnotherMenuItemInjectable = getInjectable({
+  id: "some-another-menu-item",
+
+  instantiate: () => ({
+    apiVersions: ["some-api-version"],
+    kind: "some-unrelated-kind",
+    Component: MenuItemComponent,
+    enabled: computed(() => true),
+    orderNumber: 1,
+  }),
+
+  injectionToken: kubeObjectMenuItemInjectionToken,
 });
