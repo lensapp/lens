@@ -8,6 +8,7 @@ import configurePackages from "./common/configure-packages";
 import { configure } from "mobx";
 import { setImmediate } from "timers";
 import { TextEncoder, TextDecoder as TextDecoderNode } from "util";
+import ResizeObserver from "resize-observer-polyfill";
 
 // setup default configuration for external npm-packages
 configurePackages();
@@ -36,3 +37,18 @@ process.on("unhandledRejection", (err: any) => {
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoderNode as unknown as typeof TextDecoder;
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // Deprecated
+    removeListener: jest.fn(), // Deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+global.ResizeObserver = ResizeObserver;

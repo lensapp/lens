@@ -25,6 +25,7 @@ export interface TerminalDependencies {
   readonly terminalConfig: IComputedValue<TerminalConfig>;
   readonly terminalCopyOnSelect: IComputedValue<boolean>;
   readonly themeStore: ThemeStore;
+  readonly allowTransparency: boolean;
 }
 
 export interface TerminalArguments {
@@ -88,6 +89,7 @@ export class Terminal {
       cursorStyle: "bar",
       fontSize: this.fontSize,
       fontFamily: this.fontFamily,
+      allowTransparency: dependencies.allowTransparency,
     });
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
@@ -119,6 +121,9 @@ export class Terminal {
       () => this.api.removeAllListeners(),
       () => window.removeEventListener("resize", this.onResize),
       () => this.elem.removeEventListener("contextmenu", this.onContextMenu),
+      this.xterm.onResize(({ cols, rows }) => {
+        this.api.sendTerminalSize(cols, rows);
+      }),
     );
   }
 
@@ -127,21 +132,7 @@ export class Terminal {
     this.xterm.dispose();
   }
 
-  fit = () => {
-    try {
-      const { cols, rows } = this.fitAddon.proposeDimensions();
-
-      // attempt to resize/fit terminal when it's not visible in DOM will crash with exception
-      // see: https://github.com/xtermjs/xterm.js/issues/3118
-      if (isNaN(cols) || isNaN(rows)) return;
-
-      this.fitAddon.fit();
-      this.api.sendTerminalSize(cols, rows);
-    } catch (error) {
-      // see https://github.com/lensapp/lens/issues/1891
-      logger.error(`[TERMINAL]: failed to resize terminal to fit`, error);
-    }
-  };
+  fit = () => this.fitAddon.fit();
 
   fitLazy = debounce(this.fit, 250);
 

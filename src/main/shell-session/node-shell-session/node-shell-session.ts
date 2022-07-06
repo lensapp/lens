@@ -6,17 +6,18 @@
 import { v4 as uuid } from "uuid";
 import { Watch, CoreV1Api } from "@kubernetes/client-node";
 import type { KubeConfig } from "@kubernetes/client-node";
-import type { ShellSessionArgs } from "../shell-session";
+import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-session";
 import { ShellOpenError, ShellSession } from "../shell-session";
 import { get, once } from "lodash";
 import { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import { KubeJsonApi } from "../../../common/k8s-api/kube-json-api";
-import logger from "../../logger";
 import { TerminalChannels } from "../../../common/terminal/channels";
 
 export interface NodeShellSessionArgs extends ShellSessionArgs {
   nodeName: string;
 }
+
+export interface NodeShellSessionDependencies extends ShellSessionDependencies {}
 
 export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
@@ -26,8 +27,8 @@ export class NodeShellSession extends ShellSession {
   protected readonly cwd: string | undefined = undefined;
   protected readonly nodeName: string;
 
-  constructor({ nodeName, ...args }: NodeShellSessionArgs) {
-    super(args);
+  constructor(protected readonly dependencies: NodeShellSessionDependencies, { nodeName, ...args }: NodeShellSessionArgs) {
+    super(dependencies, args);
     this.nodeName = nodeName;
   }
 
@@ -39,7 +40,7 @@ export class NodeShellSession extends ShellSession {
     const cleanup = once(() => {
       coreApi
         .deleteNamespacedPod(this.podName, "kube-system")
-        .catch(error => logger.warn(`[NODE-SHELL]: failed to remove pod shell`, error));
+        .catch(error => this.dependencies.logger.warn(`[NODE-SHELL]: failed to remove pod shell`, error));
     });
 
     this.websocket.once("close", cleanup);
@@ -79,7 +80,7 @@ export class NodeShellSession extends ShellSession {
 
     switch (nodeOs) {
       default:
-        logger.warn(`[NODE-SHELL-SESSION]: could not determine node OS, falling back with assumption of linux`);
+        this.dependencies.logger.warn(`[NODE-SHELL-SESSION]: could not determine node OS, falling back with assumption of linux`);
         // fallthrough
       case "linux":
         args.push("sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))");
@@ -131,7 +132,7 @@ export class NodeShellSession extends ShellSession {
   }
 
   protected waitForRunningPod(kc: KubeConfig): Promise<void> {
-    logger.debug(`[NODE-SHELL]: waiting for ${this.podName} to be running`);
+    this.dependencies.logger.debug(`[NODE-SHELL]: waiting for ${this.podName} to be running`);
 
     return new Promise((resolve, reject) => {
       new Watch(kc)
@@ -150,19 +151,19 @@ export class NodeShellSession extends ShellSession {
           },
           // done callback is called if the watch terminates normally
           (err) => {
-            logger.error(`[NODE-SHELL]: ${this.podName} was not created in time`);
+            this.dependencies.logger.error(`[NODE-SHELL]: ${this.podName} was not created in time`);
             reject(err);
           },
         )
         .then(req => {
           setTimeout(() => {
-            logger.error(`[NODE-SHELL]: aborting wait for ${this.podName}, timing out`);
+            this.dependencies.logger.error(`[NODE-SHELL]: aborting wait for ${this.podName}, timing out`);
             req.abort();
             reject("Pod creation timed out");
           }, 2 * 60 * 1000); // 2 * 60 * 1000
         })
         .catch(error => {
-          logger.error(`[NODE-SHELL]: waiting for ${this.podName} failed: ${error}`);
+          this.dependencies.logger.error(`[NODE-SHELL]: waiting for ${this.podName} failed: ${error}`);
           reject(error);
         });
     });

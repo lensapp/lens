@@ -102,10 +102,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
 
-  @computed get resolvedShell(): string | undefined {
-    return this.shell || process.env.SHELL || process.env.PTYSHELL;
-  }
-
   startMainReactions() {
     // open at system start-up
     reaction(() => this.openAtLogin, openAtLogin => {

@@ -6,10 +6,10 @@
 import path from "path";
 import { UserStore } from "../../../common/user-store";
 import type { TerminalShellEnvModify } from "../shell-env-modifier/terminal-shell-env-modify.injectable";
-import type { ShellSessionArgs } from "../shell-session";
+import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-session";
 import { ShellSession } from "../shell-session";
 
-export interface LocalShellSessionDependencies {
+export interface LocalShellSessionDependencies extends ShellSessionDependencies {
   terminalShellEnvModify: TerminalShellEnvModify;
   readonly baseBundeledBinariesDirectory: string;
 }
@@ -18,7 +18,7 @@ export class LocalShellSession extends ShellSession {
   ShellType = "shell";
 
   constructor(protected readonly dependencies: LocalShellSessionDependencies, args: ShellSessionArgs) {
-    super(args);
+    super(dependencies, args);
   }
 
   protected getPathEntries(): string[] {

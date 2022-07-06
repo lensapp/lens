@@ -4,22 +4,26 @@
  */
 
 export type Disposer = () => void;
-
-interface Extendable<T> {
-  push(...vals: T[]): void;
+export interface LibraryDisposers {
+  dispose(): void;
 }
 
-export type ExtendableDisposer = Disposer & Extendable<Disposer>;
+export interface ExtendableDisposer {
+  (): void;
+  push(...disposers: (Disposer | LibraryDisposers)[]): void;
+}
 
-export function disposer(...args: (Disposer | undefined | null)[]): ExtendableDisposer {
-  const res = () => {
-    args.forEach(dispose => dispose?.());
+export function disposer(...args: (Disposer | LibraryDisposers | undefined | null)[]): ExtendableDisposer {
+  return Object.assign(() => {
+    args.forEach(d => {
+      if (typeof d === "function") {
+        d();
+      } else if (d) {
+        d.dispose();
+      }
+    });
     args.length = 0;
-  };
-
-  res.push = (...vals: Disposer[]) => {
-    args.push(...vals);
-  };
-
-  return res;
+  }, {
+    push: (...vals) => args.push(...vals),
+  } as Pick<ExtendableDisposer, "push">);
 }

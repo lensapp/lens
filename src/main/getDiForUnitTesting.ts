@@ -101,6 +101,9 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
 import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
+import getValidCwdInjectable from "./shell-session/get-valid-cwd.injectable";
+import getCachedShellEnvInjectable from "./shell-session/get-cached-shell-env.injectable";
+import spawnPtyInjectable from "./shell-session/spawn-pty.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -158,6 +161,16 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
 
     di.override(periodicalCheckForUpdatesInjectable, () => ({ start: () => {}, stop: () => {}, started: false }));
+    di.override(getValidCwdInjectable, () => () => Promise.resolve("/some/valid/cwd"));
+    di.override(getCachedShellEnvInjectable, (di) => ({ cluster }) => Promise.resolve({
+      NO_PROXY: "localhost,127.0.0.1",
+      TERM_PROGRAM: di.inject(appNameInjectable),
+      TERM_PROGRAM_VERSION: di.inject(appVersionInjectable),
+      KUBECONFIG: `/some/proxy/kubeconfig/${cluster.id}`,
+      PTYPID: "12345",
+      PTYSHELL: "zsh",
+      PATH: process.env.PATH,
+    }));
 
     overrideFunctionalInjectables(di, [
       getHelmChartInjectable,
@@ -175,6 +188,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       readJsonFileInjectable,
       readFileInjectable,
       execFileInjectable,
+      spawnPtyInjectable,
     ]);
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this

@@ -30,7 +30,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     return Array.from(elem.current?.querySelectorAll(".Tabs .Tab") ?? []);
   };
 
-  const renderTab = (tab?: DockTabModel) => {
+  const renderTab = (tab: DockTabModel | undefined, index: number) => {
     if (!tab) {
       return null;
     }
@@ -38,14 +38,37 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
     switch (tab.kind) {
       case TabKind.CREATE_RESOURCE:
       case TabKind.EDIT_RESOURCE:
-        return <DockTab value={tab} icon="edit" />;
+        return (
+          <DockTab
+            value={tab}
+            icon="edit"
+            data-testid={`dock-tab-${index}`}
+          />
+        );
       case TabKind.INSTALL_CHART:
       case TabKind.UPGRADE_CHART:
-        return <DockTab value={tab} icon="install_desktop" />;
+        return (
+          <DockTab
+            value={tab}
+            icon="install_desktop"
+            data-testid={`dock-tab-${index}`}
+          />
+        );
       case TabKind.POD_LOGS:
-        return <DockTab value={tab} icon="subject" />;
+        return (
+          <DockTab
+            value={tab}
+            icon="subject"
+            data-testid={`dock-tab-${index}`}
+          />
+        );
       case TabKind.TERMINAL:
-        return <TerminalTab value={tab} />;
+        return (
+          <TerminalTab
+            value={tab}
+            data-testid={`dock-tab-${index}`}
+          />
+        );
     }
   };
 
@@ -96,7 +119,11 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: DockTabs
         scrollable={showScrollbar}
         className={styles.tabs}
       >
-        {tabs.map(tab => <Fragment key={tab.id}>{renderTab(tab)}</Fragment>)}
+        {tabs.map((tab, index) => (
+          <Fragment key={tab.id}>
+            {renderTab(tab, index)}
+          </Fragment>
+        ))}
       </Tabs>
     </div>
   );

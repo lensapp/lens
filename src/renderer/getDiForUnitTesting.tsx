@@ -69,6 +69,7 @@ import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/
 import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
 import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
+import allowTerminalTransparencyInjectable from "./components/dock/terminal/allow-transparency.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -185,7 +186,7 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
           isTableColumnHidden: () => false,
           extensionRegistryUrl: { customUrl: "some-custom-url" },
           syncKubeconfigEntries: observable.map(),
-          terminalConfig: { fontSize: 42 },
+          terminalConfig: { fontSize: 42, fontFamily: "RobotoMono" },
           editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
         } as unknown as UserStore),
     );
@@ -197,7 +198,7 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     overrideFsWithFakes(di);
 
     di.override(focusWindowInjectable, () => () => {});
-
+    di.override(allowTerminalTransparencyInjectable, () => true);
     di.override(loggerInjectable, () => ({
       warn: noop,
       debug: noop,

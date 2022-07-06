@@ -74,8 +74,7 @@
       "<rootDir>/src/extensions/npm"
     ],
     "setupFiles": [
-      "<rootDir>/src/jest.setup.ts",
-      "jest-canvas-mock"
+      "<rootDir>/src/jest.setup.ts"
     ],
     "globalSetup": "<rootDir>/src/jest.timezone.ts",
     "setupFilesAfterEnv": [
@@ -354,6 +353,7 @@
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "ansi_up": "^5.1.0",
+    "canvas": "^2.9.3",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
     "cli-progress": "^3.11.2",
@@ -382,9 +382,9 @@
     "ignore-loader": "^0.1.2",
     "include-media": "^1.4.9",
     "jest": "^28.1.2",
-    "jest-canvas-mock": "^2.3.1",
     "jest-environment-jsdom": "^28.1.1",
     "jest-fetch-mock": "^3.0.3",
+    "jest-image-snapshot": "^5.1.0",
     "jest-mock-extended": "^2.0.6",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^2.6.1",
@@ -404,6 +404,7 @@
     "react-select-event": "^5.5.0",
     "react-table": "^7.8.0",
     "react-window": "^1.8.7",
+    "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.53.0",
     "sass-loader": "^12.6.0",
     "sharp": "^0.30.7",

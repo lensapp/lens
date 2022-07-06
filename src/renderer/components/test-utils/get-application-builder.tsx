@@ -66,16 +66,16 @@ type EnableExtensions<T> = (...extensions: T[]) => void;
 type DisableExtensions<T> = (...extensions: T[]) => void;
 
 export interface ApplicationBuilder {
-  dis: DiContainers;
+  readonly dis: DiContainers;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
 
-  extensions: {
-    renderer: {
+  readonly extensions: {
+    readonly renderer: {
       enable: EnableExtensions<LensRendererExtension>;
       disable: DisableExtensions<LensRendererExtension>;
     };
 
-    main: {
+    readonly main: {
       enable: EnableExtensions<LensMainExtension>;
       disable: DisableExtensions<LensMainExtension>;
     };
@@ -89,38 +89,42 @@ export interface ApplicationBuilder {
   beforeRender: (callback: Callback) => ApplicationBuilder;
   render: () => Promise<RenderResult>;
 
-  tray: {
+  readonly tray: {
     click: (id: string) => Promise<void>;
     get: (id: string) => MinimalTrayMenuItem | null;
     getIconPath: () => string;
   };
 
-  applicationMenu: {
+  readonly dock: {
+    click: (index: number) => void;
+  };
+
+  readonly applicationMenu: {
     click: (path: string) => void;
   };
 
-  preferences: {
+  readonly preferences: {
     close: () => void;
     navigate: () => void;
     navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => void;
-    navigation: {
+    readonly navigation: {
       click: (id: string) => void;
     };
   };
 
-  helmCharts: {
+  readonly helmCharts: {
     navigate: () => void;
   };
 
-  select: {
+  readonly select: {
     openMenu: (id: string) => void;
     selectOption: (menuId: string, labelText: string) => void;
   };
 }
 
 interface DiContainers {
-  rendererDi: DiContainer;
-  mainDi: DiContainer;
+  readonly rendererDi: DiContainer;
+  readonly mainDi: DiContainer;
 }
 
 interface Environment {
@@ -254,6 +258,11 @@ export const getApplicationBuilder = () => {
   const enableMainExtension = enableExtensionsFor(mainExtensionsState, mainDi);
   const disableRendererExtension = disableExtensionsFor(rendererExtensionsState, rendererDi);
   const disableMainExtension = disableExtensionsFor(mainExtensionsState, mainDi);
+  const dock: ApplicationBuilder["dock"] = {
+    click: (index) => {
+      rendered.getByTestId(`dock-tab-${index}`).click();
+    },
+  };
 
   const builder: ApplicationBuilder = {
     dis,
@@ -291,6 +300,14 @@ export const getApplicationBuilder = () => {
           {},
         );
       },
+    },
+
+    get dock() {
+      if (environment === environments.clusterFrame) {
+        return dock;
+      }
+
+      throw new Error("cannot use dock in application frame");
     },
 
     tray: {

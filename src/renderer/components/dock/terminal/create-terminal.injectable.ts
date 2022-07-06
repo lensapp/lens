@@ -11,6 +11,7 @@ import terminalSpawningPoolInjectable from "./terminal-spawning-pool.injectable"
 import terminalConfigInjectable from "../../../../common/user-store/terminal-config.injectable";
 import terminalCopyOnSelectInjectable from "../../../../common/user-store/terminal-copy-on-select.injectable";
 import themeStoreInjectable from "../../../themes/store.injectable";
+import allowTerminalTransparencyInjectable from "./allow-transparency.injectable";
 
 export type CreateTerminal = (tabId: TabId, api: TerminalApi) => Terminal;
 
@@ -22,6 +23,7 @@ const createTerminalInjectable = getInjectable({
       terminalConfig: di.inject(terminalConfigInjectable),
       terminalCopyOnSelect: di.inject(terminalCopyOnSelectInjectable),
       themeStore: di.inject(themeStoreInjectable),
+      allowTransparency: di.inject(allowTerminalTransparencyInjectable),
     };
 
     return (tabId, api) => new Terminal(dependencies, { tabId, api });
