@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.KubeJsonApiData/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Interface: BaseKubeJsonApiObjectMetadata - Lens Extension Development</title>
+        <title>Interface: KubeJsonApiData - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-basekubejsonapiobjectmetadatanamespaced" class="md-skip">
+        <a href="#interface-kubejsonapidatametadata-status-spec" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: BaseKubeJsonApiObjectMetadata<Namespaced\>
+              Interface: KubeJsonApiData<Metadata, Status, Spec\>
             
           </span>
         </div>
@@ -719,6 +719,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#indexable" class="md-nav__link">
     Indexable
   </a>
@@ -754,113 +761,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#annotations" class="md-nav__link">
-    annotations
+  <a href="#apiversion" class="md-nav__link">
+    apiVersion
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#clustername" class="md-nav__link">
-    clusterName
+  <a href="#kind" class="md-nav__link">
+    kind
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#creationtimestamp" class="md-nav__link">
-    creationTimestamp
+  <a href="#metadata" class="md-nav__link">
+    metadata
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deletiongraceperiodseconds" class="md-nav__link">
-    deletionGracePeriodSeconds
+  <a href="#spec" class="md-nav__link">
+    spec
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deletiontimestamp" class="md-nav__link">
-    deletionTimestamp
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#finalizers" class="md-nav__link">
-    finalizers
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#generatename" class="md-nav__link">
-    generateName
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#generation" class="md-nav__link">
-    generation
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#labels" class="md-nav__link">
-    labels
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#managedfields" class="md-nav__link">
-    managedFields
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#name" class="md-nav__link">
-    name
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#namespace" class="md-nav__link">
-    namespace
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ownerreferences" class="md-nav__link">
-    ownerReferences
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resourceversion" class="md-nav__link">
-    resourceVersion
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#selflink" class="md-nav__link">
-    selfLink
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#uid" class="md-nav__link">
-    uid
+  <a href="#status" class="md-nav__link">
+    status
   </a>
   
 </li>
@@ -884,8 +814,8 @@
                 
                 
                 
-                <h1 id="interface-basekubejsonapiobjectmetadatanamespaced">Interface: BaseKubeJsonApiObjectMetadata&lt;Namespaced><a class="headerlink" href="#interface-basekubejsonapiobjectmetadatanamespaced" title="Permanent link">#</a></h1>
-<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.BaseKubeJsonApiObjectMetadata</p>
+                <h1 id="interface-kubejsonapidatametadata-status-spec">Interface: KubeJsonApiData&lt;Metadata, Status, Spec><a class="headerlink" href="#interface-kubejsonapidatametadata-status-spec" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeJsonApiData</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <table>
 <thead>
@@ -896,163 +826,50 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Namespaced</code></td>
-<td align="left">extends <code>KubeObjectScope</code></td>
+<td align="left"><code>Metadata</code></td>
+<td align="left">extends <a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a> = <a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>Status</code></td>
+<td align="left"><code>unknown</code></td>
+</tr>
+<tr>
+<td align="left"><code>Spec</code></td>
+<td align="left"><code>unknown</code></td>
 </tr>
 </tbody>
 </table>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><code>JsonApiData</code></li>
+</ul>
+<p>↳ <strong><code>KubeJsonApiData</code></strong></p>
 <h2 id="indexable">Indexable<a class="headerlink" href="#indexable" title="Permanent link">#</a></h2>
-<p>▪ [key: <code>string</code>]: <code>unknown</code></p>
+<p>▪ [otherKeys: <code>string</code>]: <code>unknown</code></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#annotations">annotations</a></li>
-<li><a href="./#clustername">clusterName</a></li>
-<li><a href="./#creationtimestamp">creationTimestamp</a></li>
-<li><a href="./#deletiongraceperiodseconds">deletionGracePeriodSeconds</a></li>
-<li><a href="./#deletiontimestamp">deletionTimestamp</a></li>
-<li><a href="./#finalizers">finalizers</a></li>
-<li><a href="./#generatename">generateName</a></li>
-<li><a href="./#generation">generation</a></li>
-<li><a href="./#labels">labels</a></li>
-<li><a href="./#managedfields">managedFields</a></li>
-<li><a href="./#name">name</a></li>
-<li><a href="./#namespace">namespace</a></li>
-<li><a href="./#ownerreferences">ownerReferences</a></li>
-<li><a href="./#resourceversion">resourceVersion</a></li>
-<li><a href="./#selflink">selfLink</a></li>
-<li><a href="./#uid">uid</a></li>
+<li><a href="./#apiversion">apiVersion</a></li>
+<li><a href="./#kind">kind</a></li>
+<li><a href="./#metadata">metadata</a></li>
+<li><a href="./#spec">spec</a></li>
+<li><a href="./#status">status</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="annotations">annotations<a class="headerlink" href="#annotations" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>annotations</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></p>
-<p>Annotations is an unstructured key value map stored with a resource that may be set by
-external tools to store and retrieve arbitrary metadata. They are not queryable and should be
-preserved when modifying objects.</p>
-<p>More info: http://kubernetes.io/docs/user-guide/annotations</p>
+<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
+<p>• <strong>apiVersion</strong>: <code>string</code></p>
 <hr />
-<h3 id="clustername">clusterName<a class="headerlink" href="#clustername" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>clusterName</strong>: <code>string</code></p>
-<p>The name of the cluster which the object belongs to. This is used to distinguish resources
-with same name and namespace in different clusters. This field is not set anywhere right now
-and apiserver is going to ignore it if set in create or update request.</p>
+<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
+<p>• <strong>kind</strong>: <code>string</code></p>
 <hr />
-<h3 id="creationtimestamp">creationTimestamp<a class="headerlink" href="#creationtimestamp" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>creationTimestamp</strong>: <code>string</code></p>
-<p>CreationTimestamp is a timestamp representing the server time when this object was created. It
-is not guaranteed to be set in happens-before order across separate operations. Clients may
-not set this value. It is represented in RFC3339 form and is in UTC.  Populated by the system.</p>
-<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata</p>
+<h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
+<p>• <strong>metadata</strong>: <code>Metadata</code></p>
 <hr />
-<h3 id="deletiongraceperiodseconds">deletionGracePeriodSeconds<a class="headerlink" href="#deletiongraceperiodseconds" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>deletionGracePeriodSeconds</strong>: <code>number</code></p>
-<p>Number of seconds allowed for this object to gracefully terminate before it will be removed
-from the system. Only set when deletionTimestamp is also set. May only be shortened.</p>
+<h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>spec</strong>: <code>Spec</code></p>
 <hr />
-<h3 id="deletiontimestamp">deletionTimestamp<a class="headerlink" href="#deletiontimestamp" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>deletionTimestamp</strong>: <code>string</code></p>
-<p>DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field
-is set by the server when a graceful deletion is requested by the user, and is not directly
-settable by a client. The resource is expected to be deleted (no longer visible from resource
-lists, and not reachable by name) after the time in this field, once the finalizers list is
-empty. As long as the finalizers list contains items, deletion is blocked. Once the
-<code>deletionTimestamp</code> is set, this value may not be unset or be set further into the future,
-although it may be shortened or the resource may be deleted prior to this time. For example,
-a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a
-graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet
-will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the
-pod from the API. In the presence of network partitions, this object may still exist after
-this timestamp, until an administrator or automated process can determine the resource is
-fully terminated. If not set, graceful deletion of the object has not been requested.
-Populated by the system when a graceful deletion is requested.</p>
-<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata</p>
-<hr />
-<h3 id="finalizers">finalizers<a class="headerlink" href="#finalizers" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>finalizers</strong>: <code>string</code>[]</p>
-<p>Must be empty before the object is deleted from the registry. Each entry is an identifier for
-the responsible component that will remove the entry from the list. If the deletionTimestamp
-of the object is non-nil, entries in this list can only be removed. Finalizers may be
-processed and removed in any order.  Order is NOT enforced because it introduces significant
-risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder
-it. If the finalizer list is processed in order, then this can lead to a situation in which
-the component responsible for the first finalizer in the list is waiting for a signal (field
-value, external system, or other) produced by a component responsible for a finalizer later in
-the list, resulting in a deadlock. Without enforced ordering finalizers are free to order
-amongst themselves and are not vulnerable to ordering changes in the list.</p>
-<hr />
-<h3 id="generatename">generateName<a class="headerlink" href="#generatename" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>generateName</strong>: <code>string</code></p>
-<p>GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the
-Name field has not been provided. If this field is used, the name returned to the client will
-be different than the name passed. This value will also be combined with a unique suffix. The
-provided value has the same validation rules as the Name field, and may be truncated by the
-length of the suffix required to make the value unique on the server.  If this field is
-specified and the generated name exists, the server will NOT return a 409 - instead, it will
-either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not
-be found in the time allotted, and the client should retry (optionally after the time indicated
-in the Retry-After header). Applied only if Name is not specified.</p>
-<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency</p>
-<hr />
-<h3 id="generation">generation<a class="headerlink" href="#generation" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>generation</strong>: <code>number</code></p>
-<p>A sequence number representing a specific generation of the desired state. Populated by the
-system.</p>
-<hr />
-<h3 id="labels">labels<a class="headerlink" href="#labels" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>labels</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></p>
-<p>Map of string keys and values that can be used to organize and categorize (scope and select)
-objects. May match selectors of replication controllers and services.</p>
-<p>More info: http://kubernetes.io/docs/user-guide/labels</p>
-<hr />
-<h3 id="managedfields">managedFields<a class="headerlink" href="#managedfields" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>managedFields</strong>: <code>unknown</code>[]</p>
-<p>ManagedFields maps workflow-id and version to the set of fields that are managed by that
-workflow. This is mostly for internal housekeeping, and users typically shouldn't need to set
-or understand this field. A workflow can be the user's name, a controller's name, or the name
-of a specific apply path like "ci-cd". The set of fields is always in the version that the
-workflow used when modifying the object.</p>
-<hr />
-<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>name</strong>: <code>string</code></p>
-<p>Name must be unique within a namespace. Is required when creating resources, although some
-resources may allow a client to request the generation of an appropriate name automatically.
-Name is primarily intended for creation idempotence and configuration definition.</p>
-<p>More info: http://kubernetes.io/docs/user-guide/identifiers#names</p>
-<hr />
-<h3 id="namespace">namespace<a class="headerlink" href="#namespace" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>namespace</strong>: <code>ScopedNamespace</code>&lt;<code>Namespaced</code>></p>
-<p>Namespace defines the space within which each name must be unique. An empty namespace is
-equivalent to the "default" namespace, but "default" is the canonical representation. Not all
-objects are required to be scoped to a namespace - the value of this field for those objects
-will be empty.  Must be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces</p>
-<hr />
-<h3 id="ownerreferences">ownerReferences<a class="headerlink" href="#ownerreferences" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>ownerReferences</strong>: <a href="../Renderer.K8sApi.OwnerReference/"><code>OwnerReference</code></a>[]</p>
-<p>List of objects depended by this object. If ALL objects in the list have been deleted, this
-object will be garbage collected. If this object is managed by a controller, then an entry in
-this list will point to this controller, with the controller field set to true. There cannot
-be more than one managing controller.</p>
-<hr />
-<h3 id="resourceversion">resourceVersion<a class="headerlink" href="#resourceversion" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>resourceVersion</strong>: <code>string</code></p>
-<p>An opaque value that represents the internal version of this object that can be used by
-clients to determine when objects have changed. May be used for optimistic concurrency, change
-detection, and the watch operation on a resource or set of resources. Clients must treat these
-values as opaque and passed unmodified back to the server. They may only be valid for a
-particular resource or set of resources. Populated by the system. Value must be treated as
-opaque by clients.</p>
-<p>More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency</p>
-<hr />
-<h3 id="selflink">selfLink<a class="headerlink" href="#selflink" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>selfLink</strong>: <code>string</code></p>
-<p>SelfLink is a URL representing this object. Populated by the system.</p>
-<hr />
-<h3 id="uid">uid<a class="headerlink" href="#uid" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>uid</strong>: <code>string</code></p>
-<p>UID is the unique in time and space value for this object. It is typically generated by the
-server on successful creation of a resource and is not allowed to change on PUT operations.
-Populated by the system.</p>
-<p>More info: http://kubernetes.io/docs/user-guide/identifiers#uids</p>
+<h3 id="status">status<a class="headerlink" href="#status" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>status</strong>: <code>Status</code></p>
                 
               
               

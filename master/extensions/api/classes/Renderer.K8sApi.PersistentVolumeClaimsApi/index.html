@@ -1186,7 +1186,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#kind">kind</a></p>
 <hr />
 <h3 id="objectconstructor">objectConstructor<a class="headerlink" href="#objectconstructor" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>objectConstructor</strong>: <code>KubeObjectConstructor</code>&lt;<a href="../Renderer.K8sApi.PersistentVolumeClaim/"><code>PersistentVolumeClaim</code></a>, <code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespace</code>>, <code>PersistentVolumeClaimStatus</code>, <code>PersistentVolumeClaimSpec</code>>></p>
+<p>• <code>Readonly</code> <strong>objectConstructor</strong>: <code>KubeObjectConstructor</code>&lt;<a href="../Renderer.K8sApi.PersistentVolumeClaim/"><code>PersistentVolumeClaim</code></a>, <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#namespacescopedmetadata"><code>NamespaceScopedMetadata</code></a>, <code>PersistentVolumeClaimStatus</code>, <code>PersistentVolumeClaimSpec</code>>></p>
 <h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#objectconstructor">objectConstructor</a></p>
 <hr />
@@ -1246,7 +1246,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#create">create</a></p>
 <hr />
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">#</a></h3>
-<p>▸ <strong>delete</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p>▸ <strong>delete</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1263,7 +1263,7 @@
 </tbody>
 </table>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#delete">delete</a></p>
 <hr />
@@ -1411,7 +1411,7 @@
 <tbody>
 <tr>
 <td align="left"><code>event</code></td>
-<td align="left"><code>IKubeWatchEvent</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></td>
+<td align="left"><code>IKubeWatchEvent</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></td>
 </tr>
 </tbody>
 </table>
@@ -1592,7 +1592,7 @@
 <tbody>
 <tr>
 <td align="left"><code>opts</code></td>
-<td align="left"><code>KubeApiWatchOptions</code>&lt;<a href="../Renderer.K8sApi.PersistentVolumeClaim/"><code>PersistentVolumeClaim</code></a>, <code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespace</code>>, <code>PersistentVolumeClaimStatus</code>, <code>PersistentVolumeClaimSpec</code>>></td>
+<td align="left"><code>KubeApiWatchOptions</code>&lt;<a href="../Renderer.K8sApi.PersistentVolumeClaim/"><code>PersistentVolumeClaim</code></a>, <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#namespacescopedmetadata"><code>NamespaceScopedMetadata</code></a>, <code>PersistentVolumeClaimStatus</code>, <code>PersistentVolumeClaimSpec</code>>></td>
 </tr>
 </tbody>
 </table>

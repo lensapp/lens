@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-kubeobjectstatus-spec-namespaced" class="md-skip">
+        <a href="#class-kubeobjectmetadata-status-spec" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Class: KubeObject<Status, Spec, Namespaced\>
+              Class: KubeObject<Metadata, Status, Spec\>
             
           </span>
         </div>
@@ -1091,7 +1091,7 @@
                 
                 
                 
-                <h1 id="class-kubeobjectstatus-spec-namespaced">Class: KubeObject&lt;Status, Spec, Namespaced><a class="headerlink" href="#class-kubeobjectstatus-spec-namespaced" title="Permanent link">#</a></h1>
+                <h1 id="class-kubeobjectmetadata-status-spec">Class: KubeObject&lt;Metadata, Status, Spec><a class="headerlink" href="#class-kubeobjectmetadata-status-spec" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeObject</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <table>
@@ -1103,16 +1103,16 @@
 </thead>
 <tbody>
 <tr>
+<td align="left"><code>Metadata</code></td>
+<td align="left">extends <a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>> = <a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>></td>
+</tr>
+<tr>
 <td align="left"><code>Status</code></td>
 <td align="left"><code>unknown</code></td>
 </tr>
 <tr>
 <td align="left"><code>Spec</code></td>
 <td align="left"><code>unknown</code></td>
-</tr>
-<tr>
-<td align="left"><code>Namespaced</code></td>
-<td align="left">extends <code>KubeObjectScope</code> = <code>KubeObjectScope</code></td>
 </tr>
 </tbody>
 </table>
@@ -1204,7 +1204,7 @@
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new KubeObject</strong>&lt;<code>Status</code>, <code>Spec</code>, <code>Namespaced</code>>(<code>data</code>)</p>
+<p>• <strong>new KubeObject</strong>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>>(<code>data</code>)</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1215,16 +1215,16 @@
 </thead>
 <tbody>
 <tr>
+<td align="left"><code>Metadata</code></td>
+<td align="left">extends <a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>> = <a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>></td>
+</tr>
+<tr>
 <td align="left"><code>Status</code></td>
 <td align="left"><code>unknown</code></td>
 </tr>
 <tr>
 <td align="left"><code>Spec</code></td>
 <td align="left"><code>unknown</code></td>
-</tr>
-<tr>
-<td align="left"><code>Namespaced</code></td>
-<td align="left">extends <code>KubeObjectScope</code> = <code>KubeObjectScope</code></td>
 </tr>
 </tbody>
 </table>
@@ -1239,7 +1239,7 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespaced</code>>, <code>Status</code>, <code>Spec</code>></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1251,7 +1251,7 @@
 <p>• <strong>kind</strong>: <code>string</code></p>
 <hr />
 <h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<p>• <strong>metadata</strong>: <a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespaced</code>></p>
+<p>• <strong>metadata</strong>: <code>Metadata</code></p>
 <hr />
 <h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
 <p>• <strong>spec</strong>: <code>Spec</code></p>
@@ -1274,7 +1274,7 @@
 <p><code>string</code></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">#</a></h3>
-<p>▸ <strong>delete</strong>(<code>params?</code>): <code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p>▸ <strong>delete</strong>(<code>params?</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <p><strong><code>deprecated</code></strong> use KubeApi.delete instead</p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
@@ -1292,7 +1292,7 @@
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <hr />
 <h3 id="getage">getAge<a class="headerlink" href="#getage" title="Permanent link">#</a></h3>
 <p>▸ <strong>getAge</strong>(<code>humanize?</code>, <code>compact?</code>, <code>fromNow?</code>): <code>string</code> | <code>number</code></p>
@@ -1382,14 +1382,14 @@ creation timestamp of this object.</p>
 <p>ItemObject.getName</p>
 <hr />
 <h3 id="getns">getNs<a class="headerlink" href="#getns" title="Permanent link">#</a></h3>
-<p>▸ <strong>getNs</strong>(): <code>ScopedNamespace</code>&lt;<code>Namespaced</code>></p>
+<p>▸ <strong>getNs</strong>(): <code>Metadata</code>[<code>"namespace"</code>]</p>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>ScopedNamespace</code>&lt;<code>Namespaced</code>></p>
+<p><code>Metadata</code>[<code>"namespace"</code>]</p>
 <hr />
 <h3 id="getownerrefs">getOwnerRefs<a class="headerlink" href="#getownerrefs" title="Permanent link">#</a></h3>
-<p>▸ <strong>getOwnerRefs</strong>(): { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>ScopedNamespace</code>&lt;<code>Namespaced</code>> ; <code>uid</code>: <code>string</code>  }[]</p>
+<p>▸ <strong>getOwnerRefs</strong>(): { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>Metadata</code>[<code>"namespace"</code>] ; <code>uid</code>: <code>string</code>  }[]</p>
 <h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p>{ <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>ScopedNamespace</code>&lt;<code>Namespaced</code>> ; <code>uid</code>: <code>string</code>  }[]</p>
+<p>{ <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>Metadata</code>[<code>"namespace"</code>] ; <code>uid</code>: <code>string</code>  }[]</p>
 <hr />
 <h3 id="getresourceversion">getResourceVersion<a class="headerlink" href="#getresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>getResourceVersion</strong>(): <code>string</code></p>
@@ -1402,9 +1402,9 @@ creation timestamp of this object.</p>
 <p><code>string</code></p>
 <hr />
 <h3 id="getsearchfields">getSearchFields<a class="headerlink" href="#getsearchfields" title="Permanent link">#</a></h3>
-<p>▸ <strong>getSearchFields</strong>(): (<code>string</code> | <code>ScopedNamespace</code>&lt;<code>Namespaced</code>>)[]</p>
+<p>▸ <strong>getSearchFields</strong>(): (<code>string</code> | <code>Metadata</code>[<code>"namespace"</code>])[]</p>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
-<p>(<code>string</code> | <code>ScopedNamespace</code>&lt;<code>Namespaced</code>>)[]</p>
+<p>(<code>string</code> | <code>Metadata</code>[<code>"namespace"</code>])[]</p>
 <hr />
 <h3 id="gettimedifffromnow">getTimeDiffFromNow<a class="headerlink" href="#gettimedifffromnow" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTimeDiffFromNow</strong>(): <code>number</code></p>
@@ -1414,7 +1414,7 @@ creation timestamp of this object.</p>
 <p><code>number</code></p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
-<p>▸ <strong>patch</strong>(<code>patch</code>): <code>Promise</code>&lt;<code>null</code> | <code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p>▸ <strong>patch</strong>(<code>patch</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <p><strong><code>deprecated</code></strong> use KubeApi.patch instead</p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
@@ -1432,7 +1432,7 @@ creation timestamp of this object.</p>
 </tbody>
 </table>
 <h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>null</code> | <code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <hr />
 <h3 id="toplainobject">toPlainObject<a class="headerlink" href="#toplainobject" title="Permanent link">#</a></h3>
 <p>▸ <strong>toPlainObject</strong>(): <code>JsonObject</code></p>
@@ -1440,7 +1440,7 @@ creation timestamp of this object.</p>
 <p><code>JsonObject</code></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>(<code>data</code>): <code>Promise</code>&lt;<code>null</code> | <code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p>▸ <strong>update</strong>(<code>data</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <p>Perform a full update (or more specifically a replace)</p>
 <p>Note: this is brittle if <code>data</code> is not actually partial (but instead whole).
 As fields such as <code>resourceVersion</code> will probably out of date. This is a
@@ -1457,15 +1457,15 @@ common race condition.</p>
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="./"><code>KubeObject</code></a>&lt;<code>Status</code>, <code>Spec</code>, <code>Namespaced</code>>></td>
+<td align="left"><code>Partial</code>&lt;<a href="./"><code>KubeObject</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>null</code> | <code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>create</strong>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>>(<code>data</code>): <a href="./"><code>KubeObject</code></a>&lt;<code>Status</code>, <code>Spec</code>, <code>KubeObjectScope</code>></p>
+<p>▸ <code>Static</code> <strong>create</strong>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>>(<code>data</code>): <a href="./"><code>KubeObject</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1500,15 +1500,15 @@ common race condition.</p>
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>KubeJsonApiData</code>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
-<p><a href="./"><code>KubeObject</code></a>&lt;<code>Status</code>, <code>Spec</code>, <code>KubeObjectScope</code>></p>
+<p><a href="./"><code>KubeObject</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></p>
 <hr />
 <h3 id="isjsonapidata">isJsonApiData<a class="headerlink" href="#isjsonapidata" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>isJsonApiData</strong>(<code>object</code>): object is KubeJsonApiData&lt;BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster>, unknown, unknown></p>
+<p>▸ <code>Static</code> <strong>isJsonApiData</strong>(<code>object</code>): object is KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown></p>
 <h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1525,7 +1525,7 @@ common race condition.</p>
 </tbody>
 </table>
 <h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
-<p>object is KubeJsonApiData&lt;BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster>, unknown, unknown></p>
+<p>object is KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown></p>
 <hr />
 <h3 id="isjsonapidatalist">isJsonApiDataList<a class="headerlink" href="#isjsonapidatalist" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isJsonApiDataList</strong>&lt;<code>T</code>>(<code>object</code>, <code>verifyItem</code>): object is KubeJsonApiDataList&lt;T></p>
@@ -1585,7 +1585,7 @@ common race condition.</p>
 <p>object is KubeJsonApiListMetadata</p>
 <hr />
 <h3 id="iskubejsonapimetadata">isKubeJsonApiMetadata<a class="headerlink" href="#iskubejsonapimetadata" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>isKubeJsonApiMetadata</strong>(<code>object</code>): object is BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster></p>
+<p>▸ <code>Static</code> <strong>isKubeJsonApiMetadata</strong>(<code>object</code>): object is KubeJsonApiObjectMetadata&lt;KubeObjectScope></p>
 <h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1602,7 +1602,7 @@ common race condition.</p>
 </tbody>
 </table>
 <h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
-<p>object is BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster></p>
+<p>object is KubeJsonApiObjectMetadata&lt;KubeObjectScope></p>
 <hr />
 <h3 id="isnonsystem">isNonSystem<a class="headerlink" href="#isnonsystem" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isNonSystem</strong>(<code>item</code>): <code>boolean</code></p>
@@ -1617,7 +1617,7 @@ common race condition.</p>
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>> | <a href="./"><code>KubeObject</code></a>&lt;<code>unknown</code>, <code>unknown</code>, <code>KubeObjectScope</code>></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>> | <a href="./"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1625,7 +1625,7 @@ common race condition.</p>
 <p><code>boolean</code></p>
 <hr />
 <h3 id="ispartialjsonapidata">isPartialJsonApiData<a class="headerlink" href="#ispartialjsonapidata" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>isPartialJsonApiData</strong>(<code>object</code>): object is Partial&lt;KubeJsonApiData&lt;BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster>, unknown, unknown>></p>
+<p>▸ <code>Static</code> <strong>isPartialJsonApiData</strong>(<code>object</code>): object is Partial&lt;KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown>></p>
 <h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1642,10 +1642,10 @@ common race condition.</p>
 </tbody>
 </table>
 <h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
-<p>object is Partial&lt;KubeJsonApiData&lt;BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster>, unknown, unknown>></p>
+<p>object is Partial&lt;KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown>></p>
 <hr />
 <h3 id="ispartialjsonapimetadata">isPartialJsonApiMetadata<a class="headerlink" href="#ispartialjsonapimetadata" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>isPartialJsonApiMetadata</strong>(<code>object</code>): object is Partial&lt;BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster>></p>
+<p>▸ <code>Static</code> <strong>isPartialJsonApiMetadata</strong>(<code>object</code>): object is Partial&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>></p>
 <h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1662,7 +1662,7 @@ common race condition.</p>
 </tbody>
 </table>
 <h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
-<p>object is Partial&lt;BaseKubeJsonApiObjectMetadata&lt;Namespace> &amp; Object | BaseKubeJsonApiObjectMetadata&lt;Cluster>></p>
+<p>object is Partial&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>></p>
 <hr />
 <h3 id="stringifylabels">stringifyLabels<a class="headerlink" href="#stringifylabels" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>stringifyLabels</strong>(<code>labels?</code>): <code>string</code>[]</p>

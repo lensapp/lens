@@ -775,6 +775,20 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#clusterscopedmetadata" class="md-nav__link">
+    ClusterScopedMetadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonpatch" class="md-nav__link">
+    JsonPatch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kubejsonapiobjectmetadata" class="md-nav__link">
     KubeJsonApiObjectMetadata
   </a>
@@ -784,6 +798,13 @@
           <li class="md-nav__item">
   <a href="#kubeobjectmetadata" class="md-nav__link">
     KubeObjectMetadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespacescopedmetadata" class="md-nav__link">
+    NamespaceScopedMetadata
   </a>
   
 </li>
@@ -1150,16 +1171,21 @@
 <li><a href="../../interfaces/Renderer.K8sApi.IPodContainerStatus/">IPodContainerStatus</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.IRemoteKubeApiConfig/">IRemoteKubeApiConfig</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.ISecretRef/">ISecretRef</a></li>
+<li><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/">KubeJsonApiData</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.KubeObjectStatus/">KubeObjectStatus</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadAllParams/">KubeObjectStoreLoadAllParams</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadingParams/">KubeObjectStoreLoadingParams</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreSubscribeParams/">KubeObjectStoreSubscribeParams</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.KubeStatusData/">KubeStatusData</a></li>
+<li><a href="../../interfaces/Renderer.K8sApi.OwnerReference/">OwnerReference</a></li>
 </ul>
 <h3 id="type-aliases">Type Aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#clusterscopedmetadata">ClusterScopedMetadata</a></li>
+<li><a href="./#jsonpatch">JsonPatch</a></li>
 <li><a href="./#kubejsonapiobjectmetadata">KubeJsonApiObjectMetadata</a></li>
 <li><a href="./#kubeobjectmetadata">KubeObjectMetadata</a></li>
+<li><a href="./#namespacescopedmetadata">NamespaceScopedMetadata</a></li>
 </ul>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
 <ul>
@@ -1201,8 +1227,14 @@
 <li><a href="./#isallowedresource">isAllowedResource</a></li>
 </ul>
 <h2 id="type-aliases_1">Type Aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
+<h3 id="clusterscopedmetadata">ClusterScopedMetadata<a class="headerlink" href="#clusterscopedmetadata" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>ClusterScopedMetadata</strong>: <a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope.Cluster</code>></p>
+<hr />
+<h3 id="jsonpatch">JsonPatch<a class="headerlink" href="#jsonpatch" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>JsonPatch</strong>: <code>Patch</code></p>
+<hr />
 <h3 id="kubejsonapiobjectmetadata">KubeJsonApiObjectMetadata<a class="headerlink" href="#kubejsonapiobjectmetadata" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>KubeJsonApiObjectMetadata</strong>&lt;<code>Namespaced</code>>: <code>Namespaced</code> extends <code>KubeObjectScope.Namespace</code> ? <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope.Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } : <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespaced</code>></p>
+<p>Ƭ <strong>KubeJsonApiObjectMetadata</strong>&lt;<code>Namespaced</code>>: <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespaced</code>> &amp; <code>Namespaced</code> extends <code>KubeObjectScope.Namespace</code> ? { <code>namespace</code>: <code>string</code>  } : {}</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1236,6 +1268,9 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h3 id="namespacescopedmetadata">NamespaceScopedMetadata<a class="headerlink" href="#namespacescopedmetadata" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>NamespaceScopedMetadata</strong>: <a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope.Namespace</code>></p>
 <h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
 <h3 id="apimanager">apiManager<a class="headerlink" href="#apimanager" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>apiManager</strong>: <code>ApiManager</code></p>
@@ -1340,7 +1375,7 @@
 <tbody>
 <tr>
 <td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<code>any</code>, <code>any</code>, <code>KubeObjectScope</code>, <code>Object</code>></td>
+<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
 </tr>
 <tr>
 <td align="left"><code>Api</code></td>
@@ -1348,7 +1383,7 @@
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
-<td align="left">extends <code>KubeJsonApiData</code>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>any</code>, <code>any</code>, <code>Data</code>></td>
+<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1389,11 +1424,11 @@
 <tbody>
 <tr>
 <td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<code>any</code>, <code>any</code>, <code>KubeObjectScope</code>, <code>Object</code>></td>
+<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
-<td align="left">extends <code>KubeJsonApiData</code>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>any</code>, <code>any</code>, <code>Data</code>></td>
+<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1436,7 +1471,7 @@
 <tbody>
 <tr>
 <td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<code>any</code>, <code>any</code>, <code>KubeObjectScope</code>, <code>Object</code>></td>
+<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
 </tr>
 <tr>
 <td align="left"><code>Api</code></td>
@@ -1444,7 +1479,7 @@
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
-<td align="left">extends <code>KubeJsonApiData</code>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>any</code>, <code>any</code>, <code>Data</code>></td>
+<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1485,11 +1520,11 @@
 <tbody>
 <tr>
 <td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<code>any</code>, <code>any</code>, <code>KubeObjectScope</code>, <code>Object</code>></td>
+<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
-<td align="left">extends <code>KubeJsonApiData</code>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>any</code>, <code>any</code>, <code>Data</code>></td>
+<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
 </tr>
 </tbody>
 </table>

@@ -1218,7 +1218,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#kind">kind</a></p>
 <hr />
 <h3 id="objectconstructor">objectConstructor<a class="headerlink" href="#objectconstructor" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>objectConstructor</strong>: <code>KubeObjectConstructor</code>&lt;<a href="../Renderer.K8sApi.Deployment/"><code>Deployment</code></a>, <code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespace</code>>, <code>DeploymentStatus</code>, <code>DeploymentSpec</code>>></p>
+<p>• <code>Readonly</code> <strong>objectConstructor</strong>: <code>KubeObjectConstructor</code>&lt;<a href="../Renderer.K8sApi.Deployment/"><code>Deployment</code></a>, <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#namespacescopedmetadata"><code>NamespaceScopedMetadata</code></a>, <code>DeploymentStatus</code>, <code>DeploymentSpec</code>>></p>
 <h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#objectconstructor">objectConstructor</a></p>
 <hr />
@@ -1278,7 +1278,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#create">create</a></p>
 <hr />
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">#</a></h3>
-<p>▸ <strong>delete</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p>▸ <strong>delete</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1295,7 +1295,7 @@
 </tbody>
 </table>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#delete">delete</a></p>
 <hr />
@@ -1499,7 +1499,7 @@
 <tbody>
 <tr>
 <td align="left"><code>event</code></td>
-<td align="left"><code>IKubeWatchEvent</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></td>
+<td align="left"><code>IKubeWatchEvent</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></td>
 </tr>
 </tbody>
 </table>
@@ -1613,7 +1613,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#refreshresourceversion">refreshResourceVersion</a></p>
 <hr />
 <h3 id="restart">restart<a class="headerlink" href="#restart" title="Permanent link">#</a></h3>
-<p>▸ <strong>restart</strong>(<code>params</code>): <code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p>▸ <strong>restart</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1638,10 +1638,10 @@
 </tbody>
 </table>
 <h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <hr />
 <h3 id="scale">scale<a class="headerlink" href="#scale" title="Permanent link">#</a></h3>
-<p>▸ <strong>scale</strong>(<code>params</code>, <code>replicas</code>): <code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p>▸ <strong>scale</strong>(<code>params</code>, <code>replicas</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1670,7 +1670,7 @@
 </tbody>
 </table>
 <h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>KubeJsonApiData</code>&lt;<a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespace</code>> &amp; { <code>namespace</code>: <code>string</code>  } | <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Cluster</code>>, <code>unknown</code>, <code>unknown</code>>></p>
+<p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <hr />
 <h3 id="setresourceversion">setResourceVersion<a class="headerlink" href="#setresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>setResourceVersion</strong>(<code>namespace?</code>, <code>newVersion</code>): <code>void</code></p>
@@ -1740,7 +1740,7 @@
 <tbody>
 <tr>
 <td align="left"><code>opts</code></td>
-<td align="left"><code>KubeApiWatchOptions</code>&lt;<a href="../Renderer.K8sApi.Deployment/"><code>Deployment</code></a>, <code>KubeJsonApiData</code>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespace</code>>, <code>DeploymentStatus</code>, <code>DeploymentSpec</code>>></td>
+<td align="left"><code>KubeApiWatchOptions</code>&lt;<a href="../Renderer.K8sApi.Deployment/"><code>Deployment</code></a>, <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#namespacescopedmetadata"><code>NamespaceScopedMetadata</code></a>, <code>DeploymentStatus</code>, <code>DeploymentSpec</code>>></td>
 </tr>
 </tbody>
 </table>
