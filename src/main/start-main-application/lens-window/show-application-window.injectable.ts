@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import splashWindowInjectable from "./splash-window/splash-window.injectable";
 import applicationWindowInjectable from "./application-window/application-window.injectable";
 import { identity, some } from "lodash/fp";
+import focusApplicationInjectable from "../../electron-app/features/focus-application.injectable";
 const someIsTruthy = some(identity);
 
 const showApplicationWindowInjectable = getInjectable({
@@ -14,8 +15,11 @@ const showApplicationWindowInjectable = getInjectable({
   instantiate: (di) => {
     const applicationWindow = di.inject(applicationWindowInjectable);
     const splashWindow = di.inject(splashWindowInjectable);
+    const focusApplication = di.inject(focusApplicationInjectable);
 
     return async () => {
+      focusApplication();
+
       if (applicationWindow.isStarting) {
         applicationWindow.show();
         splashWindow.close();

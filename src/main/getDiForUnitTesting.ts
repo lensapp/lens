@@ -100,6 +100,7 @@ import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-applicat
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
+import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -261,6 +262,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(electronQuitAndInstallUpdateInjectable, () => () => {});
   di.override(setUpdateOnQuitInjectable, () => () => {});
   di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
+  di.override(focusApplicationInjectable, () => () => {});
 
   di.override(checkForPlatformUpdatesInjectable, () => () => {
     throw new Error("Tried to check for platform updates without explicit override.");
