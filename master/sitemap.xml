@@ -796,6 +796,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.TrayMenuRegistration/</loc>
+         <lastmod>2022-07-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.Catalog.CatalogEntityRegistry/</loc>
          <lastmod>2022-07-06</lastmod>
          <changefreq>daily</changefreq>
