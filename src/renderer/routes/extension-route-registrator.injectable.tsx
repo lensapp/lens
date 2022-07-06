@@ -14,9 +14,11 @@ import { extensionRegistratorInjectionToken } from "../../extensions/extension-l
 import { SiblingsInTabLayout } from "../components/layout/siblings-in-tab-layout";
 import extensionPageParametersInjectable from "./extension-page-parameters.injectable";
 import { routeSpecificComponentInjectionToken } from "./route-specific-component-injection-token";
+import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import { getExtensionRoutePath } from "./for-extension";
+import extensionShouldBeEnabledForClusterFrameInjectable from "../extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 
 const extensionRouteRegistratorInjectable = getInjectable({
   id: "extension-route-registrator",
@@ -24,14 +26,27 @@ const extensionRouteRegistratorInjectable = getInjectable({
   instantiate: (di) => {
     return (ext) => {
       const extension = ext as LensRendererExtension;
-      const toRouteInjectable = toRouteInjectableFor(
-        di,
+      const toRouteInjectable = toRouteInjectableFor(di, extension);
+
+      const extensionShouldBeEnabledForClusterFrame = di.inject(
+        extensionShouldBeEnabledForClusterFrameInjectable,
         extension,
       );
 
       return [
-        ...extension.globalPages.map(toRouteInjectable(false)),
-        ...extension.clusterPages.map(toRouteInjectable(true)),
+        ...extension.globalPages.map(
+          toRouteInjectable(
+            false,
+            computed(() => true),
+          ),
+        ),
+
+        ...extension.clusterPages.map(
+          toRouteInjectable(
+            true,
+            computed(() => extensionShouldBeEnabledForClusterFrame.value.get()),
+          ),
+        ),
       ].flat();
     };
   },
@@ -46,7 +61,7 @@ const toRouteInjectableFor =
     di: DiContainerForInjection,
     extension: LensRendererExtension,
   ) =>
-    (clusterFrame: boolean) =>
+    (clusterFrame: boolean, isEnabled: IComputedValue<boolean>) =>
       (registration: PageRegistration) => {
         const routeInjectable = getInjectable({
           id: `route-${registration.id}-for-extension-${extension.sanitizedExtensionId}`,
@@ -54,7 +69,7 @@ const toRouteInjectableFor =
           instantiate: () => ({
             path: getExtensionRoutePath(extension, registration.id),
             clusterFrame,
-            isEnabled: computed(() => true),
+            isEnabled,
             extension,
           }),
 
