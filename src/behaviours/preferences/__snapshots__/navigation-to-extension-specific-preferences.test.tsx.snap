@@ -173,7 +173,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               id="extensions"
             >
               <h2>
-                registered-tab-page-id
+                Metrics tab
                  
                 preferences
               </h2>
@@ -473,7 +473,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               id="extensions"
             >
               <h2>
-                registered-tab-page-id
+                Metrics tab
                  
                 preferences
               </h2>
@@ -773,7 +773,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               id="extensions"
             >
               <h2>
-                duplicated-tab-page-id
+                Metrics tab
                  
                 preferences
               </h2>
@@ -3264,7 +3264,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
               id="extensions"
             >
               <h2>
-                duplicated-tab-page-id
+                Metrics tab
                  
                 preferences
               </h2>
