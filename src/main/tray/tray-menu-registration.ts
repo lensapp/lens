@@ -11,7 +11,7 @@ export interface TrayMenuRegistration {
   id?: string;
   type?: "normal" | "separator" | "submenu";
   toolTip?: string;
-  enabled?: boolean;
+  enabled?: boolean | IComputedValue<boolean>;
   submenu?: TrayMenuRegistration[];
   visible?: IComputedValue<boolean>;
 }
