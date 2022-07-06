@@ -90,7 +90,7 @@ export abstract class KubeObjectStore<
 > extends ItemStore<K> {
   static readonly defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
-  public readonly api: A;
+  public readonly api!: A;
   public readonly limit: number | undefined;
   public readonly bufferSize: number;
   @observable private loadedNamespaces: string[] | undefined = undefined;
@@ -103,9 +103,18 @@ export abstract class KubeObjectStore<
     return when(() => Boolean(this.loadedNamespaces));
   }
 
-  constructor(api: A, opts?: KubeObjectStoreOptions) {
+  constructor(api: A, opts?: KubeObjectStoreOptions);
+  /**
+   * @deprecated Supply API instance through constructor
+   */
+  constructor();
+  constructor(api?: A, opts?: KubeObjectStoreOptions) {
     super();
-    this.api = api;
+
+    if (api) {
+      this.api = api;
+    }
+
     this.limit = opts?.limit;
     this.bufferSize = opts?.bufferSize ?? 50_000;
 
