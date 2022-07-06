@@ -194,6 +194,46 @@ describe("analytics for installing update", () => {
           await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
         });
 
+        describe("given checking for updates again", () => {
+          beforeEach(() => {
+            const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
+
+            processCheckingForUpdates("irrelevant");
+
+            analyticsListenerMock.mockClear();
+          });
+
+          it("when check resolves with same version that was previously downloaded, does not send event to analytics about update discovered", async () => {
+            await checkForPlatformUpdatesMock.resolve({
+              updateWasDiscovered: true,
+              version: "43.0.0",
+            });
+
+            expect(analyticsListenerMock).not.toHaveBeenCalled();
+          });
+
+          it("when check resolves with different version that was previously downloaded, sends event to analytics about update discovered", async () => {
+            await checkForPlatformUpdatesMock.resolve({
+              updateWasDiscovered: true,
+              version: "44.0.0",
+            });
+
+            expect(analyticsListenerMock.mock.calls).toEqual([
+              [
+                {
+                  name: "app",
+                  action: "update-was-discovered",
+
+                  params: {
+                    version: "44.0.0",
+                    currentDateTime: "2015-10-21T07:28:00Z",
+                  },
+                },
+              ],
+            ]);
+          });
+        });
+
         it("does not send event to analytics about update downloaded being successful", () => {
           expect(analyticsListenerMock).not.toHaveBeenCalled();
         });

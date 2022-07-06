@@ -49,6 +49,16 @@ const processCheckingForUpdatesInjectable = getInjectable({
 
       const { version, actualUpdateChannel } = result;
 
+      const previouslyDiscovered = discoveredVersionState.value.get();
+
+      if (version === previouslyDiscovered?.version) {
+        runInAction(() => {
+          checkingForUpdatesState.set(false);
+        });
+
+        return;
+      }
+
       emitEvent({
         name: "app",
         action: "update-was-discovered",
