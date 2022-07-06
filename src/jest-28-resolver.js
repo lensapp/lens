@@ -21,9 +21,12 @@ module.exports = (path, options) => {
       // Once we're able to migrate our Jest config to ESM and a browser crypto
       // implementation is available for the browser+ESM version of uuid to use (eg, via
       // https://github.com/jsdom/jsdom/pull/3352 or a similar polyfill), this can go away.
-      if (pkg.name === "uuid") {
-        delete pkg["exports"];
-        delete pkg["module"];
+      switch (pkg.name) {
+        case "uuid":
+        case "jose":
+          delete pkg["exports"];
+          delete pkg["module"];
+          break;
       }
 
       return pkg;
