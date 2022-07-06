@@ -14,6 +14,7 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { getExtensionRoutePath } from "../../routes/for-extension";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
+import extensionShouldBeEnabledForClusterFrameInjectable from "../../extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 
 const extensionSidebarItemRegistratorInjectable = getInjectable({
   id: "extension-sidebar-item-registrator",
@@ -22,6 +23,7 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
     const extension = ext as LensRendererExtension;
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const routes = di.inject(routesInjectable);
+    const extensionShouldBeEnabledForClusterFrame = di.inject(extensionShouldBeEnabledForClusterFrameInjectable, extension);
 
     const sidebarItemsForExtensionInjectable = getInjectable({
       id: `sidebar-items-for-extension-${extension.sanitizedExtensionId}`,
@@ -41,6 +43,18 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
               matches({ path: targetRoutePath }),
             );
 
+            const isVisible = computed(() => {
+              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+                return false;
+              }
+
+              if (!registration.visible) {
+                return true;
+              }
+
+              return registration.visible.get();
+            });
+
             const res: SidebarItemRegistration = {
               id: `${extension.sanitizedExtensionId}-${registration.id}`,
               orderNumber: 9999,
@@ -49,7 +63,7 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
                 ? `${extension.sanitizedExtensionId}-${registration.parentId}`
                 : null,
 
-              ...(registration.visible ? { isVisible: registration.visible } : {}),
+              isVisible,
 
               title: registration.title,
               getIcon: registration.components.Icon
