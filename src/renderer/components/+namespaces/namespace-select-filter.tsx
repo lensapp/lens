@@ -29,12 +29,14 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
     onKeyUp={model.onKeyUp}
     onKeyDown={model.onKeyDown}
     onClick={model.onClick}
+    className="NamespaceSelectFilterParent"
+    data-testid="namespace-select-filter"
   >
     <Select<string | SelectAllNamespaces, NamespaceSelectFilterOption, true>
       id={id}
       isMulti={true}
       isClearable={false}
-      menuIsOpen={model.menuIsOpen.get()}
+      menuIsOpen={model.menu.isOpen.get()}
       components={{ Placeholder }}
       closeMenuOnSelect={false}
       controlShouldRenderValue={false}
@@ -43,7 +45,10 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
       formatOptionLabel={model.formatOptionLabel}
       options={model.options.get()}
       className="NamespaceSelect NamespaceSelectFilter"
-      menuClass="NamespaceSelectFilterMenu" />
+      menuClass="NamespaceSelectFilterMenu"
+      isOptionSelected={model.isOptionSelected}
+      hideSelectedOptions={false}
+    />
   </div>
 ));
 
@@ -54,7 +59,7 @@ export const NamespaceSelectFilter = withInjectables<Dependencies, NamespaceSele
   }),
 });
 
-export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, boolean> {}
+export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, true> {}
 
 interface PlaceholderDependencies {
   namespaceStore: NamespaceStore;

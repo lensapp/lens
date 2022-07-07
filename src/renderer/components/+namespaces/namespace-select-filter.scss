@@ -4,14 +4,17 @@
   }
 }
 
+.NamespaceSelectFilterParent {
+  max-width: 300px;
+}
+
 .NamespaceSelectFilter {
   --gradientColor: var(--select-menu-bgc);
 
   .Select {
     &__placeholder {
-      width: 100%;
       white-space: nowrap;
-      overflow: scroll!important;
+      overflow: scroll hidden!important;
       text-overflow: unset!important;
       margin-left: -8px;
       padding-left: 8px;
@@ -61,6 +64,10 @@
       word-break: break-all;
       padding: 4px 8px;
       border-radius: 3px;
+
+      &--is-selected:not(&--is-focused) {
+        background: transparent;
+      }
     }
   }
 
