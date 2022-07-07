@@ -8,7 +8,7 @@ import path from "path";
 import os from "os";
 import type { ClusterStoreModel } from "../../../common/cluster-store/cluster-store";
 import type { KubeconfigSyncEntry } from "../../../common/user-store";
-import { hasTypedProperty, isErrnoException, isLogicalChildPath } from "../../../common/utils";
+import { hasOptionalTypedProperty, isErrnoException, isLogicalChildPath } from "../../../common/utils";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -39,17 +39,20 @@ const userStoreV503Beta1MigrationInjectable = getInjectable({
             return;
           }
 
-          if (!hasTypedProperty(preferences, "syncKubeconfigEntries", Array.isArray)) {
+          if (!hasOptionalTypedProperty(preferences, "syncKubeconfigEntries", Array.isArray)) {
+            delete (preferences as any).syncKubeconfigEntries;
+
+            store.set("preferences", preferences);
+
             return;
           }
 
-          const { syncKubeconfigEntries } = preferences;
-
+          const { syncKubeconfigEntries = [] } = preferences;
           const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(joinPaths(userDataPath, "lens-cluster-store.json"))) ?? {};
           const extensionDataDir = joinPaths(userDataPath, "extension_data");
           const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
 
-          syncPaths.add(path.join(os.homedir(), ".kube"));
+          syncPaths.add(joinPaths(os.homedir(), ".kube"));
 
           for (const cluster of clusters) {
             if (!cluster.kubeConfigPath) {

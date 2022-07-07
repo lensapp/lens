@@ -16,7 +16,7 @@ import type { Logger } from "../../common/logger";
 export interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
   readonly logger: Logger;
-  lensProxyPort: { get: () => number };
+  readonly lensProxyPort: { get: () => number };
 }
 
 export class KubeconfigManager {
@@ -78,7 +78,7 @@ export class KubeconfigManager {
 
       return this.tempFilePath = await this.createProxyKubeconfig();
     } catch (error) {
-      throw Object.assign(new Error("Failed to creat temp config for auth-proxy"), { cause: error });
+      throw new Error("Failed to creat temp config for auth-proxy", { cause: error as Error });
     }
   }
 

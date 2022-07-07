@@ -18,11 +18,12 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { parse } from "url";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
-import assert from "assert";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
+import readFileInjectable from "../../common/fs/read-file.injectable";
+import fsInjectable from "../../common/fs/fs.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -30,7 +31,7 @@ const clusterServerUrl = "https://192.168.64.3:8443";
 
 describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
-  let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager | undefined;
+  let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
   let di: DiContainer;
   let loggerMock: jest.Mocked<Logger>;
 
@@ -42,6 +43,9 @@ describe("kubeconfig manager tests", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+
+    di.unoverride(readFileInjectable);
+    di.permitSideEffects(fsInjectable);
 
     loggerMock = {
       warn: jest.fn(),
@@ -110,11 +114,17 @@ describe("kubeconfig manager tests", () => {
 
   it("should create 'temp' kube config with proxy", async () => {
     const kubeConfManager = createKubeconfigManager(clusterFake);
+    let kubeConfigPath: string;
 
-    assert(kubeConfManager, "should actually create one");
+    try {
+      kubeConfigPath = await kubeConfManager.getPath();
+    } catch (error) {
+      console.error(error);
+      fail(error);
+    }
 
     expect(loggerMock.error).not.toBeCalled();
-    expect(await kubeConfManager.getPath()).toBe(`some-directory-for-temp${path.sep}kubeconfig-foo`);
+    expect(kubeConfigPath).toBe(`some-directory-for-temp${path.sep}kubeconfig-foo`);
     // this causes an intermittent "ENXIO: no such device or address, read" error
     //    const file = await fse.readFile(await kubeConfManager.getPath());
     const file = fse.readFileSync(await kubeConfManager.getPath());
@@ -127,9 +137,6 @@ describe("kubeconfig manager tests", () => {
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
     const kubeConfManager = createKubeconfigManager(clusterFake);
-
-    assert(kubeConfManager, "should actually create one");
-
     const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);

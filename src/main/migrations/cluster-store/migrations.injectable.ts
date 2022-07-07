@@ -8,6 +8,7 @@
 import joinMigrationsInjectable from "../join.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { clusterStoreMigrationDeclarationInjectionToken } from "./migration";
+import { clusterStoreMigrationsInjectionToken } from "../../../common/cluster-store/migrations";
 
 const clusterStoreMigrationsInjectable = getInjectable({
   id: "cluster-store-migrations",
@@ -17,6 +18,7 @@ const clusterStoreMigrationsInjectable = getInjectable({
 
     return joinMigrations(migrationDeclarations);
   },
+  injectionToken: clusterStoreMigrationsInjectionToken,
 });
 
 export default clusterStoreMigrationsInjectable;
