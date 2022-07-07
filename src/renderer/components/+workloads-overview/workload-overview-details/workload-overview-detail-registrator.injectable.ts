@@ -38,9 +38,13 @@ const workloadOverviewDetailRegistratorInjectable = getInjectable({
           instantiate: () => ({
             Component: registration.components.Details,
 
-            enabled: computed(() =>
-              extensionShouldBeEnabledForClusterFrame.value.get(),
-            ),
+            enabled: computed(() => {
+              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+                return false;
+              }
+
+              return registration.visible ? registration.visible.get() : true;
+            }),
 
             orderNumber:
               0.5 + (registration.priority ? 100 - registration.priority : 50),
