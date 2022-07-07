@@ -4,24 +4,17 @@
  */
 
 import { KubeConfig } from "@kubernetes/client-node";
-import fse from "fs-extra";
 import path from "path";
 import os from "os";
 import yaml from "js-yaml";
 import logger from "../main/logger";
 import type { Cluster, Context, User } from "@kubernetes/client-node/dist/config_types";
 import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
-import { isDefined, resolvePath } from "./utils";
+import { isDefined } from "./utils";
 import Joi from "joi";
 import type { PartialDeep } from "type-fest";
 
 export const kubeConfigDefaultPath = path.join(os.homedir(), ".kube", "config");
-
-export async function loadConfigFromFile(filePath: string): Promise<ConfigResult> {
-  const content = await fse.readFile(resolvePath(filePath), "utf-8");
-
-  return loadConfigFromString(content);
-}
 
 const clusterSchema = Joi.object({
   name: Joi
