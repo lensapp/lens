@@ -29,7 +29,7 @@ describe("add helm repository from list in preferences", () => {
   let execFileMock: AsyncFnMock<
     ReturnType<typeof execFileInjectable["instantiate"]>
   >;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
   let callForPublicHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
 
   beforeEach(async () => {

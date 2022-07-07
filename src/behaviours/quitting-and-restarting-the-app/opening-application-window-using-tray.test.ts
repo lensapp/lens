@@ -20,8 +20,8 @@ describe("opening application window using tray", () => {
     let applicationBuilder: ApplicationBuilder;
     let createElectronWindowMock: jest.Mock;
     let expectWindowsToBeOpen: (windowIds: string[]) => void;
-    let callForSplashWindowHtmlMock: AsyncFnMock<() => void>;
-    let callForApplicationWindowHtmlMock: AsyncFnMock<() => void>;
+    let callForSplashWindowHtmlMock: AsyncFnMock<() => Promise<void>>;
+    let callForApplicationWindowHtmlMock: AsyncFnMock<() => Promise<void>>;
     let focusApplicationMock: jest.Mock;
 
     beforeEach(async () => {

@@ -59,7 +59,7 @@ describe("with-error-suppression", () => {
 
   describe("given decorated async function", () => {
     let decorated: (a: string, b: string) => Promise<number> | Promise<void>;
-    let toBeDecorated: AsyncFnMock<(a: string, b: string) => number>;
+    let toBeDecorated: AsyncFnMock<(a: string, b: string) => Promise<number>>;
 
     beforeEach(() => {
       toBeDecorated = asyncFn();
