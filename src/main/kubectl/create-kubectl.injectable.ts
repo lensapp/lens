@@ -12,6 +12,7 @@ import normalizedPlatformInjectable from "../../common/vars/normalized-platform.
 import kubectlBinaryNameInjectable from "./binary-name.injectable";
 import bundledKubectlBinaryPathInjectable from "./bundled-binary-path.injectable";
 import baseBundledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
+import loggerInjectable from "../../common/logger.injectable";
 
 const createKubectlInjectable = getInjectable({
   id: "create-kubectl",
@@ -25,6 +26,7 @@ const createKubectlInjectable = getInjectable({
       kubectlBinaryName: di.inject(kubectlBinaryNameInjectable),
       bundledKubectlBinaryPath: di.inject(bundledKubectlBinaryPathInjectable),
       baseBundeledBinariesDirectory: di.inject(baseBundledBinariesDirectoryInjectable),
+      logger: di.inject(loggerInjectable),
     };
 
     return (clusterVersion: string) => new Kubectl(dependencies, clusterVersion);

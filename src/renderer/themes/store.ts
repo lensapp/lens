@@ -5,7 +5,6 @@
 
 import { comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { autoBind } from "../utils";
-import logger from "../../main/logger";
 import lensDarkTheme from "./lens-dark";
 import lensLightTheme from "./lens-light";
 import type { MonacoTheme } from "../components/monaco-editor";
@@ -15,6 +14,7 @@ import type { IpcRenderer } from "electron";
 import { getNativeThemeChannel, setNativeThemeChannel } from "../../common/ipc/native-theme";
 import type { ReadonlyDeep } from "type-fest/source/readonly-deep";
 import assert from "assert";
+import type { Logger } from "../../common/logger";
 
 export type ThemeId = string;
 
@@ -29,16 +29,17 @@ export interface Theme {
 
 interface Dependencies {
   readonly userStore: {
-    colorTheme: string;
-    terminalTheme: ThemeId;
+    readonly colorTheme: string;
+    readonly terminalTheme: ThemeId;
     resetTheme(): void;
   };
   readonly ipcRenderer: IpcRenderer;
+  readonly logger: Logger;
 }
 
-export class ThemeStore {
-  private terminalColorPrefix = "terminal";
+const terminalColorPrefix = "terminal";
 
+export class ThemeStore {
   #themes = observable.map<ThemeId, Theme>({
     "lens-dark": lensDarkTheme,
     "lens-light": lensLightTheme,
@@ -77,7 +78,7 @@ export class ThemeStore {
 
     return Object
       .entries(theme.colors)
-      .filter(([name]) => name.startsWith(this.terminalColorPrefix));
+      .filter(([name]) => name.startsWith(terminalColorPrefix));
   }
 
   // Replacing keys stored in styles to format accepted by terminal
@@ -85,7 +86,7 @@ export class ThemeStore {
   @computed get xtermColors(): Record<string, string> {
     return Object.fromEntries(
       this.terminalColors.map(([name, color]) => [
-        camelCase(name.replace(this.terminalColorPrefix, "")),
+        camelCase(name.replace(terminalColorPrefix, "")),
         color,
       ]),
     );
@@ -117,11 +118,11 @@ export class ThemeStore {
     reaction(() => ({
       themeId: this.activeThemeId,
       terminalThemeId: this.terminalThemeId,
-    }), () => {
+    }), (themes) => {
       try {
         this.applyActiveTheme();
-      } catch (err) {
-        logger.error(`Failed to apply active theme: ${err}`);
+      } catch (error) {
+        this.dependencies.logger.error(`Failed to apply themes: ${error}`, themes);
         this.dependencies.userStore.resetTheme();
       }
     }, {
