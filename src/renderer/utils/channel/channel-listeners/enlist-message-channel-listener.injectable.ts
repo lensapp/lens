@@ -24,11 +24,9 @@ const enlistMessageChannelListenerInjectable = getInjectable({
         );
       };
 
-      console.debug(`[IPC]: listening on ${channel.id}`);
       ipcRenderer.on(channel.id, nativeCallback);
 
       return () => {
-        console.debug(`[IPC]: listenering off ${channel.id}`);
         ipcRenderer.off(channel.id, nativeCallback);
       };
     };
