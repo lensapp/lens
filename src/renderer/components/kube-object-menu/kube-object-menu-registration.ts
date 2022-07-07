@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { IComputedValue } from "mobx";
 import type React from "react";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 
@@ -19,4 +20,5 @@ export interface KubeObjectMenuRegistration {
   kind: string;
   apiVersions: string[];
   components: KubeObjectMenuComponents;
+  visible?: IComputedValue<boolean>;
 }

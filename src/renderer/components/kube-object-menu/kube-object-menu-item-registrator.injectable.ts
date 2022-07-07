@@ -40,9 +40,13 @@ const kubeObjectMenuItemRegistratorInjectable = getInjectable({
             apiVersions: registration.apiVersions,
             Component: registration.components.MenuItem,
 
-            enabled: computed(() =>
-              extensionShouldBeEnabledForClusterFrame.value.get(),
-            ),
+            enabled: computed(() => {
+              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+                return false;
+              }
+
+              return registration.visible ? registration.visible.get() : true;
+            }),
 
             orderNumber: 100,
           }),
