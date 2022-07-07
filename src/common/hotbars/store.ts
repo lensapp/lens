@@ -5,7 +5,6 @@
 
 import { action, comparer, observable, makeObservable, computed } from "mobx";
 import { BaseStore } from "../base-store";
-import migrations from "../../migrations/hotbar-store";
 import { toJS } from "../utils";
 import type { CatalogEntity } from "../catalog";
 import { broadcastMessage } from "../ipc";
@@ -15,6 +14,7 @@ import { hotbarTooManyItemsChannel } from "../ipc/hotbar";
 import type { GeneralEntity } from "../catalog-entities";
 import type { Logger } from "../logger";
 import assert from "assert";
+import type { Migrations } from "conf/dist/source/types";
 
 export interface HotbarStoreModel {
   hotbars: Hotbar[];
@@ -24,6 +24,7 @@ export interface HotbarStoreModel {
 interface Dependencies {
   readonly catalogCatalogEntity: GeneralEntity;
   readonly logger: Logger;
+  readonly migrations: Migrations<HotbarStoreModel> | undefined;
 }
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
@@ -38,7 +39,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       syncOptions: {
         equals: comparer.structural,
       },
-      migrations,
+      migrations: dependencies.migrations,
     });
 
     makeObservable(this);

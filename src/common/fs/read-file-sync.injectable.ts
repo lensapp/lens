@@ -5,14 +5,31 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import fsInjectable from "./fs.injectable";
 
-export type ReadFileSync = (filePath: string) => string;
+export interface ReadFileAsBufferOptions {
+  asBuffer: true;
+}
+
+export interface ReadFileAsStringOptions {
+  asBuffer: false;
+}
+
+export interface ReadFileSync {
+  (filePath: string, options?: ReadFileAsStringOptions): string;
+  (filePath: string, options: ReadFileAsBufferOptions): Buffer;
+}
 
 const readFileSyncInjectable = getInjectable({
   id: "read-file-sync",
-  instantiate: (di): ReadFileSync => {
+  instantiate: (di) => {
     const { readFileSync } = di.inject(fsInjectable);
 
-    return (filePath) => readFileSync(filePath, "utf-8");
+    return ((filePath, options = { asBuffer: false }) => {
+      if (options.asBuffer) {
+        return readFileSync(filePath);
+      } else {
+        return readFileSync(filePath, "utf-8");
+      }
+    }) as ReadFileSync;
   },
 });
 

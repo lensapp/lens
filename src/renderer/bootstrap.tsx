@@ -19,7 +19,6 @@ import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
-import { WeblinkStore } from "../common/weblink-store";
 import { initializeSentryReporting } from "../common/sentry";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
@@ -46,6 +45,7 @@ import kubernetesClusterCategoryInjectable from "../common/catalog/categories/ku
 import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
+import weblinkStoreInjectable from "../common/weblinks/store.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -141,7 +141,7 @@ export async function bootstrap(di: DiContainer) {
   // TODO: Remove temporal dependencies
   di.inject(themeStoreInjectable);
 
-  WeblinkStore.createInstance();
+  di.inject(weblinkStoreInjectable);
 
   const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 

@@ -7,7 +7,7 @@ import { app, ipcMain } from "electron";
 import winston, { format } from "winston";
 import type Transport from "winston-transport";
 import { consoleFormat } from "winston-console-format";
-import { isDebugging, isTestEnv } from "./vars";
+import { isDebugging, isProduction } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
 
 export interface Logger {
@@ -18,13 +18,8 @@ export interface Logger {
   silly: (message: string, ...args: any) => void;
 }
 
-const logLevel = process.env.LOG_LEVEL
-  ? process.env.LOG_LEVEL
-  : isDebugging
-    ? "debug"
-    : isTestEnv
-      ? "error"
-      : "info";
+const defaultLogLevel = isDebugging ? "debug" : "info";
+const logLevel = process.env.LOG_LEVEL || defaultLogLevel;
 
 const transports: Transport[] = [];
 
@@ -51,7 +46,8 @@ if (ipcMain) {
     }),
   );
 
-  if (!isTestEnv) {
+  // TODO: replace logger with injectable
+  if (isProduction) {
     transports.push(
       new winston.transports.File({
         handleExceptions: false,

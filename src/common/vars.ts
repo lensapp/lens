@@ -29,11 +29,6 @@ export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env
 export const isSnap = !!process.env.SNAP;
 
 /**
- * @deprecated Switch to using isTestEnvInjectable
- */
-export const isTestEnv = !!process.env.JEST_WORKER_ID;
-
-/**
  * @deprecated Switch to using isProductionInjectable
  */
 export const isProduction = process.env.NODE_ENV === "production";
@@ -41,7 +36,7 @@ export const isProduction = process.env.NODE_ENV === "production";
 /**
  * @deprecated Switch to using isDevelopmentInjectable
  */
-export const isDevelopment = !isTestEnv && !isProduction;
+export const isDevelopment = !isProduction;
 
 export const productName = packageInfo.productName;
 

@@ -14,7 +14,6 @@ import { Singleton, toJS } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
-import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
 import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -40,22 +39,15 @@ export abstract class BaseStore<T> extends Singleton {
   protected constructor(protected params: BaseStoreParams<T>) {
     super();
     makeObservable(this);
-
-    if (ipcRenderer) {
-      params.migrations = undefined; // don't run migrations on renderer
-    }
   }
 
   /**
    * This must be called after the last child's constructor is finished (or just before it finishes)
    */
   load() {
-    if (!isTestEnv) {
-      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
-    }
+    logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
 
     const di = getLegacyGlobalDiForExtensionApi();
-
     const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
 
     this.storeConfig = getConfigurationFileModel({
@@ -72,10 +64,7 @@ export abstract class BaseStore<T> extends Singleton {
     }
 
     this.enableSync();
-
-    if (!isTestEnv) {
-      logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
-    }
+    logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
   }
 
   get name() {

@@ -17,12 +17,6 @@ import type { PartialDeep } from "type-fest";
 
 export const kubeConfigDefaultPath = path.join(os.homedir(), ".kube", "config");
 
-export function loadConfigFromFileSync(filePath: string): ConfigResult {
-  const content = fse.readFileSync(resolvePath(filePath), "utf-8");
-
-  return loadConfigFromString(content);
-}
-
 export async function loadConfigFromFile(filePath: string): Promise<ConfigResult> {
   const content = await fse.readFile(resolvePath(filePath), "utf-8");
 

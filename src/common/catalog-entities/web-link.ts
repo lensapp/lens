@@ -6,7 +6,7 @@
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 import { productName } from "../vars";
-import { WeblinkStore } from "../weblink-store";
+import { WeblinkStore } from "../weblinks/store";
 
 export type WebLinkStatusPhase = "available" | "unavailable";
 

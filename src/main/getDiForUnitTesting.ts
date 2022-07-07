@@ -101,6 +101,7 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
 import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
+import migrationLogInjectable from "./migrations/log.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -127,7 +128,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-
+    di.override(migrationLogInjectable, () => noop);
     di.override(hotbarStoreInjectable, () => ({
       load: () => {},
       getActive: () => ({ name: "some-hotbar", items: [] }),

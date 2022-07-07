@@ -8,7 +8,6 @@
 import { comparer, reaction, toJS, when } from "mobx";
 import type { StorageLayer } from "../storageHelper";
 import { StorageHelper } from "../storageHelper";
-import { isTestEnv } from "../../../common/vars";
 import type { JsonObject, JsonValue } from "type-fest";
 import type { Logger } from "../../../common/logger";
 import type { GetAbsolutePath } from "../../../common/path/get-absolute-path.injectable";
@@ -52,10 +51,7 @@ export const createStorage = ({
       } catch {
         // do nothing
       } finally {
-        if (!isTestEnv) {
-          logger.info(`${logPrefix} loading finished for ${filePath}`);
-        }
-
+        logger.debug(`${logPrefix} loading finished for ${filePath}`);
         storage.loaded = true;
       }
 
