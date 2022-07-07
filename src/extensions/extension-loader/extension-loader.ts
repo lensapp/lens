@@ -12,7 +12,7 @@ import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../..
 import type { Disposer } from "../../common/utils";
 import { isDefined, toJS } from "../../common/utils";
 import logger from "../../main/logger";
-import type { CatalogEntity, KubernetesCluster } from "../common-api/catalog";
+import type { KubernetesCluster } from "../common-api/catalog";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
@@ -275,32 +275,10 @@ export class ExtensionLoader {
     });
   };
 
-  loadOnClusterRenderer = (getCluster: () => CatalogEntity) => {
+  loadOnClusterRenderer = () => {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
 
-    this.autoInitExtensions(async (ext) => {
-      const entity = getCluster() as KubernetesCluster;
-      const extension = ext as LensRendererExtension;
-
-      // getCluster must be a callback, as the entity might be available only after an extension has been loaded
-      if (await this.dependencies.getExtensionIsEnabledForCluster(extension, entity)) {
-        return [];
-      }
-
-      const removeItems = [
-        registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
-      ];
-
-      this.onRemoveExtensionId.addListener((removedExtensionId) => {
-        if (removedExtensionId === extension.id) {
-          removeItems.forEach(remove => {
-            remove();
-          });
-        }
-      });
-
-      return removeItems;
-    });
+    this.autoInitExtensions(async () => []);
   };
 
   protected async loadExtensions(installedExtensions: Map<string, InstalledExtension>, register: (ext: LensExtension) => Promise<Disposer[]>) {
