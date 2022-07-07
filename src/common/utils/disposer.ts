@@ -3,23 +3,35 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export type Disposer = () => void;
 
-interface Extendable<T> {
-  push(...vals: T[]): void;
+
+export interface Disposer {
+  (): void;
 }
 
-export type ExtendableDisposer = Disposer & Extendable<Disposer>;
+export interface Disposable {
+  dispose(): void;
+}
 
-export function disposer(...args: (Disposer | undefined | null)[]): ExtendableDisposer {
-  const res = () => {
-    args.forEach(dispose => dispose?.());
-    args.length = 0;
-  };
+export interface ExtendableDisposer extends Disposer {
+  push(...vals: (Disposer | ExtendableDisposer | Disposable)[]): void;
+}
 
-  res.push = (...vals: Disposer[]) => {
-    args.push(...vals);
-  };
+export function disposer(...items: (Disposer | Disposable | undefined | null)[]): ExtendableDisposer {
+  return Object.assign(() => {
+    for (const item of items) {
+      if (!item) {
+        continue;
+      }
 
-  return res;
+      if (typeof item === "function") {
+        item();
+      } else {
+        item.dispose();
+      }
+    }
+    items.length = 0;
+  }, {
+    push: (...newItems) => items.push(...newItems),
+  } as Pick<ExtendableDisposer, "push">);
 }
