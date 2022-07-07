@@ -103,7 +103,7 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
         ),
         actions: (
           <MenuActions
-            id="menu-actions-for-installed-extensions"
+            id={`menu-actions-for-installed-extensions-for-${id}`}
             usePortal
             toolbar={false}>
             {isCompatible && (

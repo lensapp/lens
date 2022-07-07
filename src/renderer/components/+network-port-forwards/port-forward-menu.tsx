@@ -121,7 +121,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
 
     return (
       <MenuActions
-        id="menu-actions-for-port-forward-menu"
+        id={`menu-actions-for-port-forward-menu-for-${this.props.portForward.getId()}`}
         {...menuProps}
         className={cssNames("PortForwardMenu", className)}
         removeAction={this.remove}
