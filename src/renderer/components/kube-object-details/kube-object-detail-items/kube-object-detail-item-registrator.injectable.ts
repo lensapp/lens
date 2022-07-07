@@ -10,9 +10,7 @@ import extensionShouldBeEnabledForClusterFrameInjectable from "../../../extensio
 import { kubeObjectDetailItemInjectionToken } from "./kube-object-detail-item-injection-token";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import currentKubeObjectInDetailsInjectable from "../current-kube-object-in-details.injectable";
-import {
-  kubeObjectMatchesToKindAndApiVersion,
-} from "./kube-object-matches-to-kind-and-api-version";
+import { kubeObjectMatchesToKindAndApiVersion } from "./kube-object-matches-to-kind-and-api-version";
 
 const kubeObjectDetailItemRegistratorInjectable = getInjectable({
   id: "kube-object-detail-item-registrator",
@@ -45,20 +43,24 @@ const kubeObjectDetailItemRegistratorInjectable = getInjectable({
           id,
 
           instantiate: (di) => {
-            const kubeObject = di.inject(
-              currentKubeObjectInDetailsInjectable,
-            );
+            const kubeObject = di.inject(currentKubeObjectInDetailsInjectable);
 
             return {
               kind: registration.kind,
               apiVersions: registration.apiVersions,
               Component: registration.components.Details,
 
-              enabled: computed(
-                () =>
-                  extensionShouldBeEnabledForClusterFrame.value.get() &&
-                  isRelevantKubeObject(kubeObject.get()),
-              ),
+              enabled: computed(() => {
+                if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+                  return false;
+                }
+
+                if (!isRelevantKubeObject(kubeObject.get())) {
+                  return false;
+                }
+
+                return registration.visible ? registration.visible.get() : true;
+              }),
 
               orderNumber: 300 - (registration.priority || 50),
             };
