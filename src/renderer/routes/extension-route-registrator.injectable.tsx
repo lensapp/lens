@@ -35,16 +35,22 @@ const extensionRouteRegistratorInjectable = getInjectable({
 
       return [
         ...extension.globalPages.map(
-          toRouteInjectable(
-            false,
-            computed(() => true),
+          toRouteInjectable(false, (registration) =>
+            computed(() =>
+              registration.enabled ? registration.enabled.get() : true,
+            ),
           ),
         ),
 
         ...extension.clusterPages.map(
-          toRouteInjectable(
-            true,
-            computed(() => extensionShouldBeEnabledForClusterFrame.value.get()),
+          toRouteInjectable(true, (registration) =>
+            computed(() => {
+              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+                return false;
+              }
+
+              return registration.enabled ? registration.enabled.get() : true;
+            }),
           ),
         ),
       ].flat();
@@ -61,7 +67,7 @@ const toRouteInjectableFor =
     di: DiContainerForInjection,
     extension: LensRendererExtension,
   ) =>
-    (clusterFrame: boolean, isEnabled: IComputedValue<boolean>) =>
+    (clusterFrame: boolean, getIsEnabled: (registration: PageRegistration) => IComputedValue<boolean>) =>
       (registration: PageRegistration) => {
         const routeInjectable = getInjectable({
           id: `route-${registration.id}-for-extension-${extension.sanitizedExtensionId}`,
@@ -69,7 +75,7 @@ const toRouteInjectableFor =
           instantiate: () => ({
             path: getExtensionRoutePath(extension, registration.id),
             clusterFrame,
-            isEnabled,
+            isEnabled: getIsEnabled(registration),
             extension,
           }),
 
