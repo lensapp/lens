@@ -4,6 +4,7 @@
  */
 
 import { action, comparer, observable, makeObservable, computed } from "mobx";
+import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import { toJS } from "../utils";
 import type { CatalogEntity } from "../catalog";
@@ -21,7 +22,7 @@ export interface HotbarStoreModel {
   activeHotbarId: string;
 }
 
-interface Dependencies {
+interface HotbarStoreDependencies extends BaseStoreDependencies {
   readonly catalogCatalogEntity: GeneralEntity;
   readonly logger: Logger;
   readonly migrations: Migrations<HotbarStoreModel> | undefined;
@@ -32,8 +33,8 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
   @observable private _activeHotbarId!: string;
 
-  constructor(private readonly dependencies: Dependencies) {
-    super({
+  constructor(protected readonly dependencies: HotbarStoreDependencies) {
+    super(dependencies, {
       configName: "lens-hotbar-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
@@ -149,7 +150,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     const index = this.hotbars.findIndex((hotbar) => hotbar.id === id);
 
     if (index < 0) {
-      return void console.warn(
+      return this.dependencies.logger.warn(
         `[HOTBAR-STORE]: cannot setHotbarName: unknown id`,
         { id },
       );

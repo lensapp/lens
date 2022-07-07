@@ -6,6 +6,7 @@
 import type { LensExtensionId } from "../lens-extension";
 import { action, computed, makeObservable, observable } from "mobx";
 import { toJS } from "../../common/utils";
+import type { BaseStoreDependencies } from "../../common/base-store";
 import { BaseStore } from "../../common/base-store";
 
 export interface LensExtensionsStoreModel {
@@ -22,10 +23,12 @@ export interface IsEnabledExtensionDescriptor {
   isBundled: boolean;
 }
 
+export interface ExtensionsStoreDependencies extends BaseStoreDependencies {}
+
 export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
   readonly displayName = "ExtensionsStore";
-  constructor() {
-    super({
+  constructor(protected readonly dependencies: ExtensionsStoreDependencies) {
+    super(dependencies, {
       configName: "lens-extensions",
     });
     makeObservable(this);

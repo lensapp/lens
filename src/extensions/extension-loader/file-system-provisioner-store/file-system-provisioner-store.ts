@@ -8,6 +8,7 @@ import { SHA256 } from "crypto-js";
 import fse from "fs-extra";
 import { action, makeObservable, observable } from "mobx";
 import path from "path";
+import type { BaseStoreDependencies } from "../../../common/base-store";
 import { BaseStore } from "../../../common/base-store";
 import type { LensExtensionId } from "../../lens-extension";
 import { getOrInsertWith, toJS } from "../../../common/utils";
@@ -16,16 +17,16 @@ interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
-interface Dependencies {
-  directoryForExtensionData: string;
+interface FileSystemProvisionerStoreDependencies extends BaseStoreDependencies {
+  readonly directoryForExtensionData: string;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
   readonly displayName = "FilesystemProvisionerStore";
   registeredExtensions = observable.map<LensExtensionId, string>();
 
-  constructor(private dependencies: Dependencies) {
-    super({
+  constructor(protected readonly dependencies: FileSystemProvisionerStoreDependencies) {
+    super(dependencies, {
       configName: "lens-filesystem-provisioner-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
     });

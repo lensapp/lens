@@ -11,20 +11,24 @@ import type { IEqualsComparer } from "mobx";
 import { makeObservable, reaction, runInAction } from "mobx";
 import type { Disposer } from "./utils";
 import { Singleton, toJS } from "./utils";
-import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 import { kebabCase } from "lodash";
-import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import getConfigurationFileModelInjectable from "./get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "./get-configuration-file-model/app-version/app-version.injectable";
+import type { GetConfigurationFileModel } from "./get-configuration-file-model/get-configuration-file-model.injectable";
+import type { Logger } from "./logger";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: {
     fireImmediately?: boolean;
     equals?: IEqualsComparer<T>;
   };
+}
+
+export interface BaseStoreDependencies {
+  readonly logger: Logger;
+  readonly appVersion: string;
+  readonly directoryForUserData: string;
+  getConfigurationFileModel: GetConfigurationFileModel;
 }
 
 /**
@@ -36,7 +40,7 @@ export abstract class BaseStore<T> extends Singleton {
 
   readonly displayName: string = this.constructor.name;
 
-  protected constructor(protected params: BaseStoreParams<T>) {
+  protected constructor(protected readonly depenendices: BaseStoreDependencies, protected params: BaseStoreParams<T>) {
     super();
     makeObservable(this);
   }
@@ -45,26 +49,22 @@ export abstract class BaseStore<T> extends Singleton {
    * This must be called after the last child's constructor is finished (or just before it finishes)
    */
   load() {
-    logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
-
-    const di = getLegacyGlobalDiForExtensionApi();
-    const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
-
-    this.storeConfig = getConfigurationFileModel({
+    this.depenendices.logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
+    this.storeConfig = this.depenendices.getConfigurationFileModel({
       ...this.params,
       projectName: "lens",
-      projectVersion: di.inject(appVersionInjectable),
+      projectVersion: this.depenendices.appVersion,
       cwd: this.cwd(),
     });
 
     const res: any = this.fromStore(this.storeConfig.store);
 
     if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
-      console.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+      this.depenendices.logger.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
 
     this.enableSync();
-    logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
+    this.depenendices.logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
   }
 
   get name() {
@@ -84,13 +84,11 @@ export abstract class BaseStore<T> extends Singleton {
   }
 
   protected cwd() {
-    const di = getLegacyGlobalDiForExtensionApi();
-
-    return di.inject(directoryForUserDataInjectable);
+    return this.depenendices.directoryForUserData;
   }
 
   protected saveToFile(model: T) {
-    logger.info(`[STORE]: SAVING ${this.path}`);
+    this.depenendices.logger.info(`[STORE]: SAVING ${this.path}`);
 
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
     if (this.storeConfig) {
@@ -111,14 +109,14 @@ export abstract class BaseStore<T> extends Singleton {
 
     if (ipcMain) {
       this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
-        logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
+        this.depenendices.logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       }));
     }
 
     if (ipcRenderer) {
       this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
-        logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
+        this.depenendices.logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
       }));
     }

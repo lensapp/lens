@@ -4,6 +4,7 @@
  */
 
 import mockFs from "mock-fs";
+import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
@@ -15,6 +16,7 @@ import getConfigurationFileModelInjectable
   from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import appVersionInjectable
   from "../get-configuration-file-model/app-version/app-version.injectable";
+import loggerInjectable from "../logger.injectable";
 
 jest.mock("electron", () => ({
   ipcMain: {
@@ -34,8 +36,8 @@ class TestStore extends BaseStore<TestStoreModel> {
   @observable b = "";
   @observable c = "";
 
-  constructor() {
-    super({
+  constructor(dependencies: BaseStoreDependencies) {
+    super(dependencies, {
       configName: "test-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
@@ -82,13 +84,11 @@ describe("BaseStore", () => {
   let store: TestStore;
 
   beforeEach(() => {
-    const mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
-    mainDi.permitSideEffects(getConfigurationFileModelInjectable);
-    mainDi.permitSideEffects(appVersionInjectable);
-
-    TestStore.resetInstance();
+    di.override(directoryForUserDataInjectable, () => "some-user-data-directory");
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.permitSideEffects(appVersionInjectable);
 
     const mockOpts = {
       "some-user-data-directory": {
@@ -98,13 +98,18 @@ describe("BaseStore", () => {
 
     mockFs(mockOpts);
 
-    store = TestStore.createInstance();
+    TestStore.resetInstance();
+    store = TestStore.createInstance({
+      logger: di.inject(loggerInjectable),
+      appVersion: di.inject(appVersionInjectable),
+      directoryForUserData: di.inject(directoryForUserDataInjectable),
+      getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
+    });
   });
 
   afterEach(() => {
     mockFs.restore();
     store.disableSync();
-    TestStore.resetInstance();
   });
 
   describe("persistence", () => {

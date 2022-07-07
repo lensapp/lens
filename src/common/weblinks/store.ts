@@ -4,6 +4,7 @@
  */
 
 import { action, comparer, observable, makeObservable } from "mobx";
+import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import * as uuid from "uuid";
 import { toJS } from "../utils";
@@ -26,7 +27,7 @@ export interface WeblinkStoreModel {
   weblinks: WeblinkData[];
 }
 
-export interface WeblinkStoreDependencies {
+export interface WeblinkStoreDependencies extends BaseStoreDependencies {
   readonly migrations: Migrations<WeblinkStoreModel> | undefined;
 }
 
@@ -35,7 +36,7 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
   @observable weblinks: WeblinkData[] = [];
 
   constructor(protected readonly dependencies: WeblinkStoreDependencies) {
-    super({
+    super(dependencies, {
       configName: "lens-weblink-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {

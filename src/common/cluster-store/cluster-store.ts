@@ -6,6 +6,7 @@
 
 import { ipcMain, ipcRenderer, webFrame } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
+import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import { Cluster } from "../cluster/cluster";
 import logger from "../../main/logger";
@@ -23,7 +24,7 @@ export interface ClusterStoreModel {
   clusters?: ClusterModel[];
 }
 
-interface Dependencies {
+interface ClusterStoreDependencies extends BaseStoreDependencies {
   createCluster: CreateCluster;
   readClusterConfigSync: ReadClusterConfigSync;
   readonly migrations: Migrations<ClusterStoreModel> | undefined;
@@ -35,8 +36,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   protected disposer = disposer();
 
-  constructor(protected readonly dependencies: Dependencies) {
-    super({
+  constructor(protected readonly dependencies: ClusterStoreDependencies) {
+    super(dependencies, {
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
