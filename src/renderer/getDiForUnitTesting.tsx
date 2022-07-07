@@ -57,9 +57,7 @@ import goForwardInjectable from "./components/layout/top-bar/go-forward.injectab
 import closeWindowInjectable from "./components/layout/top-bar/close-window.injectable";
 import maximizeWindowInjectable from "./components/layout/top-bar/maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./components/layout/top-bar/toggle-maximize-window.injectable";
-import commandContainerRootFrameChildComponentInjectable from "./components/command-palette/command-container-root-frame-child-component.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
-import commandContainerClusterFrameChildComponentInjectable from "./components/command-palette/command-container-cluster-frame-child-component.injectable";
 import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./components/+workloads-cronjobs/cron-job-trigger-dialog-cluster-frame-child-component.injectable";
 import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
 import replicasetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-replicasets/scale-dialog/replicaset-scale-dialog-cluster-frame-child-component.injectable";
@@ -70,6 +68,8 @@ import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/k
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
 import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
 import forceUpdateModalRootFrameComponentInjectable from "./application-update/force-update-modal/force-update-modal-root-frame-component.injectable";
+import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
+import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -108,17 +108,12 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     di.override(appVersionInjectable, () => "1.0.0");
 
     di.override(historyInjectable, () => createMemoryHistory());
-
+    di.override(legacyOnChannelListenInjectable, () => () => noop);
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
-
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
-    // TODO: Remove side-effects and shared global state
-    di.override(commandContainerRootFrameChildComponentInjectable, () => ({
-      Component: () => null,
-      id: "command-container",
-      shouldRender: computed(() => false),
-    }));
+    // TODO: remove when entity settings registry is refactored
+    di.override(getEntitySettingCommandsInjectable, () => () => []);
 
     di.override(forceUpdateModalRootFrameComponentInjectable, () => ({
       id: "force-update-modal",
@@ -128,7 +123,6 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     // TODO: Remove side-effects and shared global state
     const clusterFrameChildComponentInjectables: Injectable<any, any, any>[] = [
-      commandContainerClusterFrameChildComponentInjectable,
       cronJobTriggerDialogClusterFrameChildComponentInjectable,
       deploymentScaleDialogClusterFrameChildComponentInjectable,
       replicasetScaleDialogClusterFrameChildComponentInjectable,

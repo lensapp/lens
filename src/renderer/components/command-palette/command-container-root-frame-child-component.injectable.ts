@@ -9,15 +9,11 @@ import { CommandContainer } from "./command-container";
 
 const commandContainerRootFrameChildComponentInjectable = getInjectable({
   id: "command-container-root-frame-child-component",
-
   instantiate: () => ({
     id: "command-container",
     shouldRender: computed(() => true),
     Component: CommandContainer,
   }),
-
-  causesSideEffects: true,
-
   injectionToken: rootFrameChildComponentInjectionToken,
 });
 

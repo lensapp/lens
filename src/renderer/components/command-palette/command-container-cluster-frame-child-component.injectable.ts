@@ -9,15 +9,11 @@ import { clusterFrameChildComponentInjectionToken } from "../../frames/cluster-f
 
 const commandContainerClusterFrameChildComponentInjectable = getInjectable({
   id: "command-container-cluster-frame-child-component",
-
   instantiate: () => ({
     id: "command-container",
     shouldRender: computed(() => true),
     Component: CommandContainer,
   }),
-
-  causesSideEffects: true,
-
   injectionToken: clusterFrameChildComponentInjectionToken,
 });
 
