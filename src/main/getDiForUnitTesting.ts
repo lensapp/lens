@@ -101,6 +101,7 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
 import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
+import showAboutInjectable from "../behaviours/show-about/main/show-about.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -175,6 +176,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       readJsonFileInjectable,
       readFileInjectable,
       execFileInjectable,
+      showAboutInjectable,
     ]);
 
     // TODO: Remove usages of globally exported appEventBus to get rid of this
