@@ -31,6 +31,9 @@ const forceUpdateModalRootFrameComponentInjectable = getInjectable({
   },
 
   injectionToken: rootFrameChildComponentInjectionToken,
+
+  // Note: Globally overridden because it observes the current time which can cause long running tests
+  causesSideEffects: true,
 });
 
 export default forceUpdateModalRootFrameComponentInjectable;

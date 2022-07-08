@@ -18,7 +18,6 @@ import processCheckingForUpdatesInjectable from "../../main/application-update/c
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
-
 function daysToMilliseconds(days: number) {
   return Math.round(days * 24 * 60 * 60 * 1000);
 }
