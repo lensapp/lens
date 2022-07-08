@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import restartAndInstallUpdateChannel from "../../common/restart-and-install-update-channel/restart-and-install-update-channel.injectable";
-import messageToChannelInjectable from "../../../../renderer/utils/channel/message-to-channel.injectable";
+import restartAndInstallUpdateChannel from "../common/restart-and-install-update-channel/restart-and-install-update-channel.injectable";
+import messageToChannelInjectable from "../../../renderer/utils/channel/message-to-channel.injectable";
 
 const restartAndInstallUpdateInjectable = getInjectable({
   id: "restart-and-install-update",

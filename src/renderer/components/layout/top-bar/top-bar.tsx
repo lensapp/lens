@@ -18,7 +18,7 @@ import type { NavigateToCatalog } from "../../../../common/front-end-routing/rou
 import navigateToCatalogInjectable from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import catalogRouteInjectable from "../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
-import { UpdateButton } from "../../../../behaviours/application-update/renderer/update-button";
+import { UpdateButton } from "../../../../behaviours/application-update/sub-features/top-bar/renderer/update-button";
 import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
 import topBarNextEnabledInjectable from "./next-enabled.injectable";
 import openAppContextMenuInjectable from "./open-app-context-menu.injectable";

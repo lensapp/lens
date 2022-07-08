@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import updateDownloadedDateTimeInjectable from "../../common/update-downloaded-date-time/update-downloaded-date-time.injectable";
-import { reactiveNow } from "../../../../common/utils/reactive-now/reactive-now";
+import updateDownloadedDateTimeInjectable from "../../../../common/update-downloaded-date-time/update-downloaded-date-time.injectable";
+import { reactiveNow } from "../../../../../../common/utils/reactive-now/reactive-now";
 
 const updateWarningLevelInjectable = getInjectable({
   id: "update-warning-level",

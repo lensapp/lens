@@ -4,7 +4,7 @@
  */
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import restartAndInstallUpdateInjectable from "../update-button/restart-and-install-update.injectable";
+import restartAndInstallUpdateInjectable from "../restart-and-install-update.injectable";
 import { Countdown } from "../../../../renderer/components/countdown/countdown";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";

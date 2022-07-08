@@ -4,10 +4,10 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import getTrayIconPathInjectable from "../../../tray/main/menu-icon/get-tray-icon-path.injectable";
-import { trayIconInjectionToken } from "../../../tray/main/menu-icon/tray-icon-injection-token";
-import updatesAreBeingDiscoveredInjectable from "../../common/updates-are-being-discovered/updates-are-being-discovered.injectable";
-import updateIsBeingDownloadedInjectable from "../../common/update-is-being-downloaded/update-is-being-downloaded.injectable";
+import getTrayIconPathInjectable from "../../../../../tray/main/menu-icon/get-tray-icon-path.injectable";
+import { trayIconInjectionToken } from "../../../../../tray/main/menu-icon/tray-icon-injection-token";
+import updatesAreBeingDiscoveredInjectable from "../../../../common/updates-are-being-discovered/updates-are-being-discovered.injectable";
+import updateIsBeingDownloadedInjectable from "../../../../common/update-is-being-downloaded/update-is-being-downloaded.injectable";
 
 const checkingForUpdatesTrayIconInjectable = getInjectable({
   id: "checking-for-updates-tray-icon",

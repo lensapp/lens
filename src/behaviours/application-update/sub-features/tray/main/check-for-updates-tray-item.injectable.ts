@@ -4,18 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import updatingIsEnabledInjectable from "./updating-is-enabled.injectable";
-import { trayMenuItemInjectionToken } from "../../tray/main/tray-menu-item/tray-menu-item-injection-token";
-import showApplicationWindowInjectable from "../../../main/start-main-application/lens-window/show-application-window.injectable";
-import discoveredUpdateVersionInjectable from "../common/discovered-update-version/discovered-update-version.injectable";
-import updateIsBeingDownloadedInjectable from "../common/update-is-being-downloaded/update-is-being-downloaded.injectable";
-import updatesAreBeingDiscoveredInjectable from "../common/updates-are-being-discovered/updates-are-being-discovered.injectable";
-import progressOfUpdateDownloadInjectable from "../common/progress-of-update-download/progress-of-update-download.injectable";
+import updatingIsEnabledInjectable from "../../../main/updating-is-enabled.injectable";
+import { trayMenuItemInjectionToken } from "../../../../tray/main/tray-menu-item/tray-menu-item-injection-token";
+import showApplicationWindowInjectable from "../../../../../main/start-main-application/lens-window/show-application-window.injectable";
+import discoveredUpdateVersionInjectable from "../../../common/discovered-update-version/discovered-update-version.injectable";
+import updateIsBeingDownloadedInjectable from "../../../common/update-is-being-downloaded/update-is-being-downloaded.injectable";
+import updatesAreBeingDiscoveredInjectable from "../../../common/updates-are-being-discovered/updates-are-being-discovered.injectable";
+import progressOfUpdateDownloadInjectable from "../../../common/progress-of-update-download/progress-of-update-download.injectable";
 import assert from "assert";
-import processCheckingForUpdatesInjectable from "./check-for-updates/process-checking-for-updates.injectable";
-import { withErrorSuppression } from "../../../common/utils/with-error-suppression/with-error-suppression";
+import processCheckingForUpdatesInjectable from "../../../main/check-for-updates/process-checking-for-updates.injectable";
+import { withErrorSuppression } from "../../../../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
-import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
+import withErrorLoggingInjectable from "../../../../../common/utils/with-error-logging/with-error-logging.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
