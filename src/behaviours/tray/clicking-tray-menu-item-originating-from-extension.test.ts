@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { LensMainExtension } from "../../extensions/lens-main-extension";
-import type { TrayMenuRegistration } from "../../main/tray/tray-menu-registration";
+import type { TrayMenuRegistration } from "./main/tray-menu-registration";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import loggerInjectable from "../../common/logger.injectable";

@@ -7,16 +7,16 @@ import { kebabCase } from "lodash/fp";
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
-import type { LensMainExtension } from "../../../extensions/lens-main-extension";
+import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
+import type { LensMainExtension } from "../../../../extensions/lens-main-extension";
 import type { TrayMenuItem } from "./tray-menu-item-injection-token";
 import { trayMenuItemInjectionToken } from "./tray-menu-item-injection-token";
 import type { TrayMenuRegistration } from "../tray-menu-registration";
-import { withErrorSuppression } from "../../../common/utils/with-error-suppression/with-error-suppression";
-import type { WithErrorLoggingFor } from "../../../common/utils/with-error-logging/with-error-logging.injectable";
-import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
-import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
-import { isBoolean } from "../../../common/utils";
+import { withErrorSuppression } from "../../../../common/utils/with-error-suppression/with-error-suppression";
+import type { WithErrorLoggingFor } from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
+import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
+import getRandomIdInjectable from "../../../../common/utils/get-random-id.injectable";
+import { isBoolean } from "../../../../common/utils";
 
 const trayMenuItemRegistratorInjectable = getInjectable({
   id: "tray-menu-item-registrator",

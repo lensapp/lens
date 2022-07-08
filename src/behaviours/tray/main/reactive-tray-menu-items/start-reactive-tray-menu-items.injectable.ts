@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import reactiveTrayMenuItemsInjectable from "./reactive-tray-menu-items.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import startTrayInjectable from "../electron-tray/start-tray.injectable";
 
 const startReactiveTrayMenuItemsInjectable = getInjectable({

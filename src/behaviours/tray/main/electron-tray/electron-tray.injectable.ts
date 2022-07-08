@@ -4,10 +4,10 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { Menu, Tray } from "electron";
-import packageJsonInjectable from "../../../common/vars/package-json.injectable";
-import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
-import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import packageJsonInjectable from "../../../../common/vars/package-json.injectable";
+import showApplicationWindowInjectable from "../../../../main/start-main-application/lens-window/show-application-window.injectable";
+import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
 import { convertToElectronMenuTemplate } from "../reactive-tray-menu-items/converters";
 import trayIconInjectable from "../menu-icon/tray-icon.injectable";
 

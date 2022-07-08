@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronTrayInjectable from "./electron-tray.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../../../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
 import stopReactiveTrayMenuItemsInjectable from "../reactive-tray-menu-items/stop-reactive-tray-menu-items.injectable";
 
 const stopTrayInjectable = getInjectable({

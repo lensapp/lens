@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
-import staticFilesDirectoryInjectable from "../../../common/vars/static-files-directory.injectable";
-import isDevelopmentInjectable from "../../../common/vars/is-development.injectable";
-import isMacInjectable from "../../../common/vars/is-mac.injectable";
+import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
+import staticFilesDirectoryInjectable from "../../../../common/vars/static-files-directory.injectable";
+import isDevelopmentInjectable from "../../../../common/vars/is-development.injectable";
+import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import { camelCase, flow, upperFirst } from "lodash/fp";
 const upperCamelCase = flow(camelCase, upperFirst);
 
