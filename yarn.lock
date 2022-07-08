@@ -26,10 +26,10 @@
     static-eval "2.0.2"
     underscore "1.7.0"
 
-"@async-fn/jest@1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.6.1.tgz#ca298832fa1e7fb650ea2abd1a466acbbcf2cd58"
-  integrity sha512-UZoKtoccMr2VZjNOeRo6JJRg4Cb2O8EQH3bxIg3jl20Ya1KGIFs5kW3bf/0GRLY9XwL1mKlr1VHtp2vXlvcqtg==
+"@async-fn/jest@1.6.4":
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.6.4.tgz#202f6a070847123e81c7c6bd5bee5a8f12ebbd40"
+  integrity sha512-m3T/m6a39f5dbqFj79BGCqudkm42McgMXD7M0ZorKeqqdAbNazay7t+VDOz5qqFHO12frFbbhAB5GnFPoGADPA==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.8.3":
   version "7.16.0"
@@ -12620,10 +12620,10 @@ typedoc-plugin-markdown@^3.13.1:
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@0.23.2:
-  version "0.23.2"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.2.tgz#c5f82752530749c8b541ff9b17883f6fb9e72f14"
-  integrity sha512-THpC4vtb3wu1yck6YHzEc4ck6W4lScf8TD0Rg7XAetDih8BzP+ErYO0/6DtdzYcZyKkDwEoujkMeWW7CffCbrQ==
+typedoc@0.23.6:
+  version "0.23.6"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.6.tgz#9f604aea83e6b7bc40853ab93036a7f4dbc20a5b"
+  integrity sha512-YkL7zq6Tjnze7tlPcXQd527VPpcz30cvvzVTar6jJtiHt1DPWgH8c64x2s2xsGQ+SafQpAc90jYyrB6+rXLW1g==
   dependencies:
     lunr "^2.3.9"
     marked "^4.0.16"
