@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { generalCatalogEntityInjectionToken } from "../general-catalog-entity-injection-token";
-import { GeneralEntity } from "../../index";
-import { buildURL } from "../../../utils/buildUrl";
-import welcomeRouteInjectable from "../../../front-end-routing/routes/welcome/welcome-route.injectable";
+import { generalCatalogEntityInjectionToken } from "../../../common/catalog-entities/general-catalog-entities/general-catalog-entity-injection-token";
+import { GeneralEntity } from "../../../common/catalog-entities";
+import { buildURL } from "../../../common/utils/buildUrl";
+import welcomeRouteInjectable from "./welcome-route.injectable";
 
 const welcomeCatalogEntityInjectable = getInjectable({
   id: "general-catalog-entity-for-welcome",

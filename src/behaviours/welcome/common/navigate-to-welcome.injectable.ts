@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import welcomeRouteInjectable from "./welcome-route.injectable";
-import { navigateToRouteInjectionToken } from "../../navigate-to-route-injection-token";
+import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 
 const navigateToWelcomeInjectable = getInjectable({
   id: "navigate-to-welcome",

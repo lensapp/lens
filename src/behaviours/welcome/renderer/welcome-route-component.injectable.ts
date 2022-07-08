@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { Welcome } from "./welcome";
-import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
-import { routeSpecificComponentInjectionToken } from "../../routes/route-specific-component-injection-token";
+import welcomeRouteInjectable from "../common/welcome-route.injectable";
+import { routeSpecificComponentInjectionToken } from "../../../renderer/routes/route-specific-component-injection-token";
 
 const welcomeRouteComponentInjectable = getInjectable({
   id: "welcome-route-component",

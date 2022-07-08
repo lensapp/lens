@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { frontEndRouteInjectionToken } from "../../front-end-route-injection-token";
+import { frontEndRouteInjectionToken } from "../../../common/front-end-routing/front-end-route-injection-token";
 
 const welcomeRouteInjectable = getInjectable({
   id: "welcome-route",
