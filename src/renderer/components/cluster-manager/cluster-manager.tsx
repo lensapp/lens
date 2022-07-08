@@ -8,7 +8,7 @@ import "./cluster-manager.scss";
 import React from "react";
 import { Redirect } from "react-router";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { StatusBar } from "../status-bar/status-bar";
+import { StatusBar } from "../../../behaviours/status-bar/renderer/status-bar";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";

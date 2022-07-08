@@ -17,7 +17,7 @@ import type { CommandRegistration } from "../renderer/components/command-palette
 import type { AppPreferenceRegistration } from "../renderer/components/+preferences/app-preferences/app-preference-registration";
 import type { AdditionalCategoryColumnRegistration } from "../renderer/components/+catalog/custom-category-columns";
 import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
-import type { StatusBarRegistration } from "../renderer/components/status-bar/status-bar-registration";
+import type { StatusBarRegistration } from "../behaviours/status-bar/renderer/status-bar-registration";
 import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/kube-object-menu-registration";
 import type { WorkloadsOverviewDetailRegistration } from "../renderer/components/+workloads-overview/workloads-overview-detail-registration";
 import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";

@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-export type { StatusBarRegistration } from "../../renderer/components/status-bar/status-bar-registration";
+export type { StatusBarRegistration } from "../../behaviours/status-bar/renderer/status-bar-registration";
 export type { KubeObjectMenuRegistration, KubeObjectMenuComponents } from "../../renderer/components/kube-object-menu/kube-object-menu-registration";
 export type { AppPreferenceRegistration, AppPreferenceComponents } from "../../renderer/components/+preferences/app-preferences/app-preference-registration";
 export type { KubeObjectDetailRegistration, KubeObjectDetailComponents } from "../registries/kube-object-detail-registry";
