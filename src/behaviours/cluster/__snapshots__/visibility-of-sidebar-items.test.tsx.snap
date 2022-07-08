@@ -298,7 +298,10 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
@@ -851,7 +854,10 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >

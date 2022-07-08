@@ -328,7 +328,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
@@ -867,7 +870,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
@@ -1428,7 +1434,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
@@ -2856,7 +2865,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
@@ -3395,7 +3407,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
