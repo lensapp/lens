@@ -8,7 +8,7 @@ import { GeneralEntity } from "../../index";
 import { buildURL } from "../../../utils/buildUrl";
 import welcomeRouteInjectable from "../../../front-end-routing/routes/welcome/welcome-route.injectable";
 
-const welcomeCatalogEntityInjectable = getInjectable({
+const welcomeGeneralEntityInjectable = getInjectable({
   id: "general-catalog-entity-for-welcome",
 
   instantiate: (di) => {
@@ -38,4 +38,4 @@ const welcomeCatalogEntityInjectable = getInjectable({
   injectionToken: generalCatalogEntityInjectionToken,
 });
 
-export default welcomeCatalogEntityInjectable;
+export default welcomeGeneralEntityInjectable;

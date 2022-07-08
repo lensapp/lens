@@ -3,17 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import fse from "fs-extra";
 import { isNull } from "lodash";
-import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../../common/cluster-store/cluster-store";
 import type { Hotbar, HotbarItem } from "../../../common/hotbars/types";
 import { defaultHotbarCells, getEmptyHotbar } from "../../../common/hotbars/types";
 import { generateNewIdFor } from "../utils";
-import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import catalogCatalogEntityInjectable from "../../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
+import catalogGeneralEntityInjectable from "../../../common/catalog-entities/general-catalog-entities/implementations/catalog-entity.injectable";
 import { isDefined, isErrnoException } from "../../../common/utils";
 
 interface Pre500WorkspaceStoreModel {
@@ -32,12 +29,17 @@ interface PartialHotbar {
 import { getInjectable } from "@ogre-tools/injectable";
 import migrationLogInjectable from "../log.injectable";
 import { hotbarStoreMigrationDeclarationInjectionToken } from "./migration";
+import fsInjectable from "../../../common/fs/fs.injectable";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 
 const hotbarStoreV500Beta10MigrationInjectable = getInjectable({
   id: "hotbar-store-v5.0.0-beta.10-migration",
   instantiate: (di) => {
     const migrationLog = di.inject(migrationLogInjectable);
     const userDataPath = di.inject(directoryForUserDataInjectable);
+    const catalogGeneralEntity = di.inject(catalogGeneralEntityInjectable);
+    const { readJsonSync } = di.inject(fsInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
 
     return {
       version: "5.0.0-beta.10",
@@ -49,10 +51,7 @@ const hotbarStoreV500Beta10MigrationInjectable = getInjectable({
         if (hotbars.length === 0) {
           const hotbar = getEmptyHotbar("default");
 
-          const di = getLegacyGlobalDiForExtensionApi();
-          const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
-
-          const { metadata: { uid, name, source }} = catalogCatalogEntity;
+          const { metadata: { uid, name, source }} = catalogGeneralEntity;
 
           hotbar.items[0] = { entity: { uid, name, source }};
 
@@ -60,8 +59,8 @@ const hotbarStoreV500Beta10MigrationInjectable = getInjectable({
         }
 
         try {
-          const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
-          const { clusters = [] }: ClusterStoreModel = fse.readJSONSync(path.join(userDataPath, "lens-cluster-store.json"));
+          const workspaceStoreData: Pre500WorkspaceStoreModel = readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json"));
+          const { clusters = [] }: ClusterStoreModel = readJsonSync(joinPaths(userDataPath, "lens-cluster-store.json"));
           const workspaceHotbars = new Map<string, PartialHotbar>(); // mapping from WorkspaceId to HotBar
 
           for (const { id, name } of workspaceStoreData.workspaces) {
@@ -130,11 +129,8 @@ const hotbarStoreV500Beta10MigrationInjectable = getInjectable({
            */
           if (hotbars.every(hotbar => hotbar.items.every(item => item?.entity?.uid !== "catalog-entity"))) {
             // note, we will add a new whole hotbar here called "default" if that was previously removed
-            const di = getLegacyGlobalDiForExtensionApi();
-            const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
-
             const defaultHotbar = hotbars.find(hotbar => hotbar.name === "default");
-            const { metadata: { uid, name, source }} = catalogCatalogEntity;
+            const { metadata: { uid, name, source }} = catalogGeneralEntity;
 
             if (defaultHotbar) {
               const freeIndex = defaultHotbar.items.findIndex(isNull);

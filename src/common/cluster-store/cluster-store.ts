@@ -9,8 +9,7 @@ import { action, comparer, computed, makeObservable, observable, reaction } from
 import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import { Cluster } from "../cluster/cluster";
-import logger from "../../main/logger";
-import { appEventBus } from "../app-event-bus/event-bus";
+import type { AppEvent } from "../app-event-bus/event-bus";
 import { ipcMainHandle } from "../ipc";
 import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
@@ -19,6 +18,7 @@ import { clusterStates } from "../ipc/cluster";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { Migrations } from "conf/dist/source/types";
+import type { EventEmitter } from "../event-emitter";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
@@ -28,6 +28,7 @@ interface ClusterStoreDependencies extends BaseStoreDependencies {
   createCluster: CreateCluster;
   readClusterConfigSync: ReadClusterConfigSync;
   readonly migrations: Migrations<ClusterStoreModel> | undefined;
+  readonly appEventBus: EventEmitter<[AppEvent]>;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
@@ -52,7 +53,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   async loadInitialOnRenderer() {
-    logger.info("[CLUSTER-STORE] requesting initial state sync");
+    this.dependencies.logger.info("[CLUSTER-STORE] requesting initial state sync");
 
     for (const { id, state } of await requestInitialClusterStates()) {
       this.getById(id)?.setState(state);
@@ -77,7 +78,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   registerIpcListener() {
-    logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`);
+    this.dependencies.logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`);
     const ipc = ipcMain ?? ipcRenderer;
 
     ipc?.on("cluster:state", (event, clusterId: ClusterId, state: ClusterState) => {
@@ -117,7 +118,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
-    appEventBus.emit({ name: "cluster", action: "add" });
+    this.dependencies.appEventBus.emit({ name: "cluster", action: "add" });
 
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel
@@ -151,7 +152,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         }
         newClusters.set(clusterModel.id, cluster);
       } catch (error) {
-        logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
+        this.dependencies.logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
       }
     }
 

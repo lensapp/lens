@@ -6,26 +6,26 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { generalCatalogEntityInjectionToken } from "../general-catalog-entity-injection-token";
 import { GeneralEntity } from "../../index";
 import { buildURL } from "../../../utils/buildUrl";
-import appPreferencesRouteInjectable from "../../../front-end-routing/routes/preferences/app/app-preferences-route.injectable";
+import catalogRouteInjectable from "../../../front-end-routing/routes/catalog/catalog-route.injectable";
 
-const preferencesCatalogEntityInjectable = getInjectable({
-  id: "general-catalog-entity-for-preferences",
+const catalogGeneralEntityInjectable = getInjectable({
+  id: "general-catalog-entity-for-catalog",
 
   instantiate: (di) => {
-    const route = di.inject(appPreferencesRouteInjectable);
+    const route = di.inject(catalogRouteInjectable);
     const url = buildURL(route.path);
 
     return new GeneralEntity({
       metadata: {
-        uid: "preferences-entity",
-        name: "Preferences",
+        uid: "catalog-entity",
+        name: "Catalog",
         source: "app",
         labels: {},
       },
       spec: {
         path: url,
         icon: {
-          material: "settings",
+          material: "view_list",
           background: "#3d90ce",
         },
       },
@@ -38,4 +38,4 @@ const preferencesCatalogEntityInjectable = getInjectable({
   injectionToken: generalCatalogEntityInjectionToken,
 });
 
-export default preferencesCatalogEntityInjectable;
+export default catalogGeneralEntityInjectable;

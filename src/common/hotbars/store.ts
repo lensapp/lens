@@ -23,7 +23,7 @@ export interface HotbarStoreModel {
 }
 
 interface HotbarStoreDependencies extends BaseStoreDependencies {
-  readonly catalogCatalogEntity: GeneralEntity;
+  readonly catalogGeneralEntity: GeneralEntity;
   readonly logger: Logger;
   readonly migrations: Migrations<HotbarStoreModel> | undefined;
 }
@@ -88,7 +88,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       const hotbar = getEmptyHotbar("Default");
       const {
         metadata: { uid, name, source },
-      } = this.dependencies.catalogCatalogEntity;
+      } = this.dependencies.catalogGeneralEntity;
       const initialItem = { entity: { uid, name, source }};
 
       hotbar.items[0] = initialItem;

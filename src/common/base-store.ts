@@ -40,7 +40,7 @@ export abstract class BaseStore<T> extends Singleton {
 
   readonly displayName: string = this.constructor.name;
 
-  protected constructor(protected readonly depenendices: BaseStoreDependencies, protected params: BaseStoreParams<T>) {
+  protected constructor(protected readonly dependencies: BaseStoreDependencies, protected params: BaseStoreParams<T>) {
     super();
     makeObservable(this);
   }
@@ -49,22 +49,22 @@ export abstract class BaseStore<T> extends Singleton {
    * This must be called after the last child's constructor is finished (or just before it finishes)
    */
   load() {
-    this.depenendices.logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
-    this.storeConfig = this.depenendices.getConfigurationFileModel({
+    this.dependencies.logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
+    this.storeConfig = this.dependencies.getConfigurationFileModel({
       ...this.params,
       projectName: "lens",
-      projectVersion: this.depenendices.appVersion,
+      projectVersion: this.dependencies.appVersion,
       cwd: this.cwd(),
     });
 
     const res: any = this.fromStore(this.storeConfig.store);
 
     if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
-      this.depenendices.logger.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+      this.dependencies.logger.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
 
     this.enableSync();
-    this.depenendices.logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
+    this.dependencies.logger.debug(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
   }
 
   get name() {
@@ -84,11 +84,11 @@ export abstract class BaseStore<T> extends Singleton {
   }
 
   protected cwd() {
-    return this.depenendices.directoryForUserData;
+    return this.dependencies.directoryForUserData;
   }
 
   protected saveToFile(model: T) {
-    this.depenendices.logger.info(`[STORE]: SAVING ${this.path}`);
+    this.dependencies.logger.info(`[STORE]: SAVING ${this.path}`);
 
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
     if (this.storeConfig) {
@@ -109,14 +109,14 @@ export abstract class BaseStore<T> extends Singleton {
 
     if (ipcMain) {
       this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
-        this.depenendices.logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
+        this.dependencies.logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       }));
     }
 
     if (ipcRenderer) {
       this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
-        this.depenendices.logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
+        this.dependencies.logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
       }));
     }

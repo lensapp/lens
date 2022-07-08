@@ -15,7 +15,7 @@ import type { HotbarStore } from "../hotbars/store";
 import catalogEntityRegistryInjectable from "../../main/catalog/entity-registry.injectable";
 import { computed } from "mobx";
 import hasCategoryForEntityInjectable from "../catalog/has-category-for-entity.injectable";
-import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
+import catalogGeneralEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-entity.injectable";
 import loggerInjectable from "../logger.injectable";
 import type { Logger } from "../logger";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -103,13 +103,13 @@ describe("HotbarStore", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-    const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
+    const catalogGeneralEntity = di.inject(catalogGeneralEntityInjectable);
 
     catalogEntityRegistry.addComputedSource("some-id", computed(() => [
       testCluster,
       minikubeCluster,
       awsCluster,
-      catalogCatalogEntity,
+      catalogGeneralEntity,
     ]));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
