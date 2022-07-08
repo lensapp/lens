@@ -38,7 +38,6 @@ import navigateToCatalogInjectable from "../../../common/front-end-routing/route
 import catalogRouteParametersInjectable from "./catalog-route-parameters.injectable";
 import { browseCatalogTab } from "./catalog-browse-tab";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
-import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { HotbarStore } from "../../../common/hotbars/store";
 import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
@@ -48,6 +47,7 @@ import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
+import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;
@@ -356,7 +356,7 @@ export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
     customCategoryViews: di.inject(customCategoryViewsInjectable),
     routeParameters: di.inject(catalogRouteParametersInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
-    emitEvent: di.inject(appEventBusInjectable).emit,
+    emitEvent: di.inject(emitEventInjectable),
     hotbarStore: di.inject(hotbarStoreInjectable),
     catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),

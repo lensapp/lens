@@ -11,13 +11,24 @@ import * as yaml from "js-yaml";
 import path from "path";
 import tempy from "tempy";
 import logger from "./logger";
-import { appEventBus } from "../common/app-event-bus/event-bus";
 import { isChildProcessError } from "../common/utils";
 import type { Patch } from "rfc6902";
 import { promiseExecFile } from "../common/utils/promise-exec";
+import type { EmitEvent } from "../common/app-event-bus/emit-event.injectable";
+import emitEventInjectable from "../common/app-event-bus/emit-event.injectable";
+import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi, Environments } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export class ResourceApplier {
-  constructor(protected cluster: Cluster) {}
+  private readonly dependencies: { emitEvent: EmitEvent };
+
+  constructor(protected cluster: Cluster) {
+    // TODO: replace with dependencies
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+
+    this.dependencies = {
+      emitEvent: di.inject(emitEventInjectable),
+    };
+  }
 
   /**
    * Patch a kube resource's manifest, throwing any error that occurs.
@@ -27,7 +38,7 @@ export class ResourceApplier {
    * @param ns The optional namespace of the kube resource
    */
   async patch(name: string, kind: string, patch: Patch, ns?: string): Promise<string> {
-    appEventBus.emit({ name: "resource", action: "patch" });
+    this.dependencies.emitEvent({ name: "resource", action: "patch" });
 
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
@@ -64,7 +75,7 @@ export class ResourceApplier {
 
   async apply(resource: KubernetesObject | any): Promise<string> {
     resource = this.sanitizeObject(resource);
-    appEventBus.emit({ name: "resource", action: "apply" });
+    this.dependencies.emitEvent({ name: "resource", action: "apply" });
 
     return this.kubectlApply(yaml.dump(resource));
   }

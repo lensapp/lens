@@ -4,24 +4,29 @@
  */
 
 import type { AppEvent } from "../app-event-bus/event-bus";
-import { appEventBus } from "../app-event-bus/event-bus";
-import { assert, Console } from "console";
-import { stdout, stderr } from "process";
-
-console = new Console(stdout, stderr);
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import appEventBusInjectable from "../app-event-bus/app-event-bus.injectable";
+import type { EventEmitter } from "../event-emitter";
 
 describe("event bus tests", () => {
+  let appEventBus: EventEmitter<[AppEvent]>;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting();
+
+    appEventBus = di.inject(appEventBusInjectable);
+  });
+
   describe("emit", () => {
     it("emits an event", () => {
-      let event: AppEvent | undefined;
+      let event!: AppEvent;
 
       appEventBus.addListener((data) => {
         event = data;
       });
 
       appEventBus.emit({ name: "foo", action: "bar" });
-      assert(event);
-      expect(event?.name).toBe("foo");
+      expect(event.name).toBe("foo");
     });
   });
 });

@@ -13,10 +13,10 @@ import type { ClusterContextHandler } from "../context-handler/context-handler";
 import logger from "../logger";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
-import { appEventBus } from "../../common/app-event-bus/event-bus";
 import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
+import type { EmitEvent } from "../../common/app-event-bus/emit-event.injectable";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 
@@ -29,6 +29,7 @@ interface Dependencies {
   router: Router;
   proxy: httpProxy;
   lensProxyPort: { set: (portNumber: number) => void };
+  emitEvent: EmitEvent;
 }
 
 const watchParam = "watch";
@@ -116,7 +117,7 @@ export class LensProxy {
             logger.info(`[LENS-PROXY]: Subsequent error: ${error}`);
           });
 
-          appEventBus.emit({ name: "lens-proxy", action: "listen", params: { port }});
+          this.dependencies.emitEvent({ name: "lens-proxy", action: "listen", params: { port }});
           resolve(port);
         })
         .once("error", (error) => {

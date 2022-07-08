@@ -14,11 +14,12 @@ import os from "os";
 import { isMac, isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
-import { appEventBus } from "../../common/app-event-bus/event-bus";
 import logger from "../logger";
 import { stat } from "fs/promises";
 import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
+import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -287,7 +288,11 @@ export abstract class ShellSession {
         }
       });
 
-    appEventBus.emit({ name: this.ShellType, action: "open" });
+    // TODO: replace with dependencies
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+    const emitEvent = di.inject(emitEventInjectable);
+
+    emitEvent({ name: this.ShellType, action: "open" });
   }
 
   protected getPathEntries(): string[] {

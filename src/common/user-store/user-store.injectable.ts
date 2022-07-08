@@ -10,6 +10,7 @@ import directoryForUserDataInjectable from "../app-paths/directory-for-user-data
 import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import loggerInjectable from "../logger.injectable";
+import emitEventInjectable from "../app-event-bus/emit-event.injectable";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",
@@ -30,6 +31,7 @@ const userStoreInjectable = getInjectable({
       appVersion: di.inject(appVersionInjectable),
       directoryForUserData: di.inject(directoryForUserDataInjectable),
       getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
+      emitEvent: di.inject(emitEventInjectable),
     });
   },
 

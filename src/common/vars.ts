@@ -25,7 +25,11 @@ export const isWindows = process.platform === "win32";
  */
 export const isLinux = process.platform === "linux";
 
+/**
+ * @deprecated Use `di.inject(isDebuggingInjectable)` instead
+ */
 export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
+
 export const isSnap = !!process.env.SNAP;
 
 /**

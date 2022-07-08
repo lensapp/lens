@@ -28,9 +28,6 @@ import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake
 import joinPathsInjectable from "../common/path/join-paths.injectable";
 import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
-import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
-import { EventEmitter } from "../common/event-emitter";
-import type { AppEvent } from "../common/app-event-bus/event-bus";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
@@ -177,9 +174,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       readFileInjectable,
       execFileInjectable,
     ]);
-
-    // TODO: Remove usages of globally exported appEventBus to get rid of this
-    di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
     di.override(appNameInjectable, () => "some-app-name");
     di.override(broadcastMessageInjectable, () => (channel) => {

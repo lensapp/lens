@@ -9,7 +9,6 @@ import { action, comparer, computed, makeObservable, observable, reaction } from
 import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import { Cluster } from "../cluster/cluster";
-import type { AppEvent } from "../app-event-bus/event-bus";
 import { ipcMainHandle } from "../ipc";
 import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
@@ -18,7 +17,7 @@ import { clusterStates } from "../ipc/cluster";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { Migrations } from "conf/dist/source/types";
-import type { EventEmitter } from "../event-emitter";
+import type { EmitEvent } from "../app-event-bus/emit-event.injectable";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
@@ -27,8 +26,8 @@ export interface ClusterStoreModel {
 interface ClusterStoreDependencies extends BaseStoreDependencies {
   createCluster: CreateCluster;
   readClusterConfigSync: ReadClusterConfigSync;
+  emitEvent: EmitEvent;
   readonly migrations: Migrations<ClusterStoreModel> | undefined;
-  readonly appEventBus: EventEmitter<[AppEvent]>;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
@@ -118,7 +117,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
-    this.dependencies.appEventBus.emit({ name: "cluster", action: "add" });
+    this.dependencies.emitEvent({ name: "cluster", action: "add" });
 
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel

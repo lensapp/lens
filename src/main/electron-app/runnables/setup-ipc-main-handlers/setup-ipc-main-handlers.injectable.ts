@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
+import type { SetupIpcMainHandlersDependencies } from "./setup-ipc-main-handlers";
 import { setupIpcMainHandlers } from "./setup-ipc-main-handlers";
 import loggerInjectable from "../../../../common/logger.injectable";
 import clusterManagerInjectable from "../../../cluster-manager.injectable";
@@ -14,39 +15,29 @@ import { onLoadOfApplicationInjectionToken } from "../../../start-main-applicati
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
 import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
 import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
+import emitEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
-
-    const directoryForLensLocalStorage = di.inject(
-      directoryForLensLocalStorageInjectable,
-    );
-
-    const clusterManager = di.inject(clusterManagerInjectable);
-    const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
-    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-    const clusterStore = di.inject(clusterStoreInjectable);
-    const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
-    const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
+    const deps: SetupIpcMainHandlersDependencies = {
+      directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
+      clusterManager: di.inject(clusterManagerInjectable),
+      applicationMenuItems: di.inject(applicationMenuItemsInjectable),
+      getAbsolutePath: di.inject(getAbsolutePathInjectable),
+      catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
+      clusterStore: di.inject(clusterStoreInjectable),
+      operatingSystemTheme: di.inject(operatingSystemThemeInjectable),
+      askUserForFilePaths: di.inject(askUserForFilePathsInjectable),
+      emitEvent: di.inject(emitEventInjectable),
+    };
 
     return {
       run: () => {
         logger.debug("[APP-MAIN] initializing ipc main handlers");
-
-        setupIpcMainHandlers({
-          applicationMenuItems,
-          getAbsolutePath,
-          directoryForLensLocalStorage,
-          clusterManager,
-          catalogEntityRegistry,
-          clusterStore,
-          operatingSystemTheme,
-          askUserForFilePaths,
-        });
+        setupIpcMainHandlers(deps);
       },
     };
   },

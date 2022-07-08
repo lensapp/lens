@@ -8,7 +8,6 @@ import { clusterFrameMap } from "../../../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
-import { appEventBus } from "../../../../common/app-event-bus/event-bus";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
@@ -24,8 +23,9 @@ import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
 import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
 import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
+import type { EmitEvent } from "../../../../common/app-event-bus/emit-event.injectable";
 
-interface Dependencies {
+export interface SetupIpcMainHandlersDependencies {
   directoryForLensLocalStorage: string;
   getAbsolutePath: GetAbsolutePath;
   applicationMenuItems: IComputedValue<MenuItemOpts[]>;
@@ -34,9 +34,20 @@ interface Dependencies {
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
+  emitEvent: EmitEvent;
 }
 
-export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore, operatingSystemTheme, askUserForFilePaths }: Dependencies) => {
+export const setupIpcMainHandlers = ({
+  applicationMenuItems,
+  directoryForLensLocalStorage,
+  getAbsolutePath,
+  clusterManager,
+  catalogEntityRegistry,
+  clusterStore,
+  operatingSystemTheme,
+  askUserForFilePaths,
+  emitEvent,
+}: SetupIpcMainHandlersDependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -65,7 +76,7 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
   });
 
   ipcMainHandle(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "stop" });
+    emitEvent({ name: "cluster", action: "stop" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
@@ -75,7 +86,7 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
   });
 
   ipcMainHandle(clusterDeleteHandler, async (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "remove" });
+    emitEvent({ name: "cluster", action: "remove" });
 
     const clusterStore = ClusterStore.getInstance();
     const cluster = clusterStore.getById(clusterId);
@@ -109,7 +120,7 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-apply-all" });
+    emitEvent({ name: "cluster", action: "kubectl-apply-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
@@ -128,7 +139,7 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
   });
 
   ipcMainHandle(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-delete-all" });
+    emitEvent({ name: "cluster", action: "kubectl-delete-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
