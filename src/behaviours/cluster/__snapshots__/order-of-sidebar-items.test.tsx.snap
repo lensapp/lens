@@ -359,7 +359,10 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
@@ -987,7 +990,10 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
               >
                 Overview
               </h5>
-              <div>
+              <div
+                class="NamespaceSelectFilterParent"
+                data-testid="namespace-select-filter"
+              >
                 <div
                   class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
                 >
