@@ -18,6 +18,7 @@ import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-t
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
 import timeAfterUpdateMustBeInstalledInjectable from "../../renderer/application-update/force-update-modal/time-after-update-must-be-installed.injectable";
 import secondsAfterInstallStartsInjectable from "../../renderer/application-update/force-update-modal/seconds-after-install-starts.injectable";
+import forceUpdateModalRootFrameComponentInjectable from "../../renderer/application-update/force-update-modal/force-update-modal-root-frame-component.injectable";
 
 const TIME_AFTER_UPDATE_MUST_BE_INSTALLED = 1000;
 const TIME_AFTER_INSTALL_STARTS = 5 * 1000;
@@ -35,6 +36,9 @@ describe("force user to update when too long since update was downloaded", () =>
     applicationBuilder = getApplicationBuilder();
 
     applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+      rendererDi.unoverride(forceUpdateModalRootFrameComponentInjectable);
+      rendererDi.permitSideEffects(forceUpdateModalRootFrameComponentInjectable);
+
       checkForPlatformUpdatesMock = asyncFn();
 
       mainDi.override(checkForPlatformUpdatesInjectable, () => checkForPlatformUpdatesMock);

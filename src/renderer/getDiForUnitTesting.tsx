@@ -69,6 +69,7 @@ import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/
 import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
 import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
+import forceUpdateModalRootFrameComponentInjectable from "./application-update/force-update-modal/force-update-modal-root-frame-component.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -116,6 +117,12 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     di.override(commandContainerRootFrameChildComponentInjectable, () => ({
       Component: () => null,
       id: "command-container",
+      shouldRender: computed(() => false),
+    }));
+
+    di.override(forceUpdateModalRootFrameComponentInjectable, () => ({
+      id: "force-update-modal",
+      Component: () => null,
       shouldRender: computed(() => false),
     }));
 
