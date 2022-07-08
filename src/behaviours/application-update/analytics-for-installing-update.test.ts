@@ -5,19 +5,19 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "./main/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CheckForPlatformUpdates } from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
+import type { CheckForPlatformUpdates } from "./main/check-for-platform-updates/check-for-platform-updates.injectable";
+import checkForPlatformUpdatesInjectable from "./main/check-for-platform-updates/check-for-platform-updates.injectable";
 import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
-import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
-import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
+import processCheckingForUpdatesInjectable from "./main/check-for-updates/process-checking-for-updates.injectable";
+import type { DownloadPlatformUpdate } from "./main/download-platform-update/download-platform-update.injectable";
+import downloadPlatformUpdateInjectable from "./main/download-platform-update/download-platform-update.injectable";
+import quitAndInstallUpdateInjectable from "./main/quit-and-install-update.injectable";
 import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
-import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import periodicalCheckForUpdatesInjectable from "./main/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("analytics for installing update", () => {
