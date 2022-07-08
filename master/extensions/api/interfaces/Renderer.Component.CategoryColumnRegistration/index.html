@@ -733,13 +733,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -768,26 +761,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#titleprops" class="md-nav__link">
-    titleProps
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#rendercell" class="md-nav__link">
     renderCell
   </a>
@@ -804,6 +777,13 @@
           <li class="md-nav__item">
   <a href="#sortcallback" class="md-nav__link">
     sortCallback
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#titleprops" class="md-nav__link">
+    titleProps
   </a>
   
 </li>
@@ -839,13 +819,10 @@
 <ul>
 <li><a href="./#id">id</a></li>
 <li><a href="./#priority">priority</a></li>
-<li><a href="./#titleprops">titleProps</a></li>
-</ul>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
-<ul>
 <li><a href="./#rendercell">renderCell</a></li>
 <li><a href="./#searchfilter">searchFilter</a></li>
 <li><a href="./#sortcallback">sortCallback</a></li>
+<li><a href="./#titleprops">titleProps</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
@@ -857,14 +834,12 @@
 <p>The sorting order value.</p>
 <p><strong><code>default</code></strong> 50</p>
 <hr />
-<h3 id="titleprops">titleProps<a class="headerlink" href="#titleprops" title="Permanent link">#</a></h3>
-<p>• <strong>titleProps</strong>: <code>TitleCellProps</code></p>
-<p>This function will be used to generate the columns title cell.</p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="rendercell">renderCell<a class="headerlink" href="#rendercell" title="Permanent link">#</a></h3>
-<p>▸ <strong>renderCell</strong>(<code>entity</code>): <code>ReactNode</code></p>
+<p>• <strong>renderCell</strong>: (<code>entity</code>: <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>) =&gt; <code>ReactNode</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>entity</code>): <code>ReactNode</code></p>
 <p>This function will be called to generate the cells (on demand) for the column</p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -879,14 +854,16 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
 <p><code>ReactNode</code></p>
 <hr />
 <h3 id="searchfilter">searchFilter<a class="headerlink" href="#searchfilter" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>searchFilter</strong>(<code>entity</code>): <code>string</code> | <code>string</code>[]</p>
+<p>• <code>Optional</code> <strong>searchFilter</strong>: (<code>entity</code>: <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>) =&gt; <code>string</code> | <code>string</code>[]</p>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<p>▸ (<code>entity</code>): <code>string</code> | <code>string</code>[]</p>
 <p>If provided then searching is supported on this column and this function will be called
 to determine if the current search string matches for this row.</p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -901,16 +878,18 @@ to determine if the current search string matches for this row.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
 <p><code>string</code> | <code>string</code>[]</p>
 <hr />
 <h3 id="sortcallback">sortCallback<a class="headerlink" href="#sortcallback" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>sortCallback</strong>(<code>entity</code>): <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<p>• <code>Optional</code> <strong>sortCallback</strong>: (<code>entity</code>: <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>) =&gt; <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<p>▸ (<code>entity</code>): <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
 <p>If provided then the column will support sorting and this function will be called to
 determine a row's ordering.</p>
 <p>strings are sorted ahead of numbers, and arrays determine ordering between equal
 elements of the previous index.</p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<h5 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -925,8 +904,12 @@ elements of the previous index.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
 <p><code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<hr />
+<h3 id="titleprops">titleProps<a class="headerlink" href="#titleprops" title="Permanent link">#</a></h3>
+<p>• <strong>titleProps</strong>: <code>TitleCellProps</code></p>
+<p>This function will be used to generate the columns title cell.</p>
                 
               
               

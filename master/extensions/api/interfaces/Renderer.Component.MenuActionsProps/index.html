@@ -831,8 +831,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#onopen" class="md-nav__link">
+    onOpen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#position" class="md-nav__link">
     position
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removeaction" class="md-nav__link">
+    removeAction
   </a>
   
 </li>
@@ -866,6 +880,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#updateaction" class="md-nav__link">
+    updateAction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#useportal" class="md-nav__link">
     usePortal
   </a>
@@ -893,29 +914,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#onopen" class="md-nav__link">
-    onOpen
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#open" class="md-nav__link">
     open
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#removeaction" class="md-nav__link">
-    removeAction
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#updateaction" class="md-nav__link">
-    updateAction
   </a>
   
 </li>
@@ -961,20 +961,20 @@
 <li><a href="./#htmlfor">htmlFor</a></li>
 <li><a href="./#id">id</a></li>
 <li><a href="./#isopen">isOpen</a></li>
+<li><a href="./#onopen">onOpen</a></li>
 <li><a href="./#position">position</a></li>
+<li><a href="./#removeaction">removeAction</a></li>
 <li><a href="./#removeconfirmationmessage">removeConfirmationMessage</a></li>
 <li><a href="./#toggleevent">toggleEvent</a></li>
 <li><a href="./#toolbar">toolbar</a></li>
 <li><a href="./#triggericon">triggerIcon</a></li>
+<li><a href="./#updateaction">updateAction</a></li>
 <li><a href="./#useportal">usePortal</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#close">close</a></li>
-<li><a href="./#onopen">onOpen</a></li>
 <li><a href="./#open">open</a></li>
-<li><a href="./#removeaction">removeAction</a></li>
-<li><a href="./#updateaction">updateAction</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="animated">animated<a class="headerlink" href="#animated" title="Permanent link">#</a></h3>
@@ -1030,10 +1030,25 @@
 <h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>Partial.isOpen</p>
 <hr />
+<h3 id="onopen">onOpen<a class="headerlink" href="#onopen" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onOpen</strong>: () =&gt; <code>void</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (): <code>void</code></p>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>void</code></p>
+<hr />
 <h3 id="position">position<a class="headerlink" href="#position" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>position</strong>: <a href="../Renderer.Component.MenuPosition/"><code>MenuPosition</code></a></p>
 <h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>Partial.position</p>
+<hr />
+<h3 id="removeaction">removeAction<a class="headerlink" href="#removeaction" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>removeAction</strong>: () =&gt; <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<p>▸ (): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<p><strong><code>deprecated</code></strong> Provide your own remove <code>&lt;MenuItem&gt;</code> as part of the <code>children</code> passed to this component</p>
+<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
+<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
 <hr />
 <h3 id="removeconfirmationmessage">removeConfirmationMessage<a class="headerlink" href="#removeconfirmationmessage" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>removeConfirmationMessage</strong>: <code>ReactNode</code> | () =&gt; <code>ReactNode</code></p>
@@ -1050,6 +1065,14 @@
 <h3 id="triggericon">triggerIcon<a class="headerlink" href="#triggericon" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>triggerIcon</strong>: <code>ReactNode</code> | <a href="../Renderer.Component.IconProps/"><code>IconProps</code></a> &amp; <a href="../Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a></p>
 <hr />
+<h3 id="updateaction">updateAction<a class="headerlink" href="#updateaction" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>updateAction</strong>: () =&gt; <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<p>▸ (): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<p><strong><code>deprecated</code></strong> Provide your own update <code>&lt;MenuItem&gt;</code> as part of the <code>children</code> passed to this component</p>
+<h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
+<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<hr />
 <h3 id="useportal">usePortal<a class="headerlink" href="#useportal" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>usePortal</strong>: <code>boolean</code> | <code>HTMLElement</code></p>
 <h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
@@ -1057,34 +1080,17 @@
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="close">close<a class="headerlink" href="#close" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>close</strong>(): <code>void</code></p>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>Partial.close</p>
 <hr />
-<h3 id="onopen">onOpen<a class="headerlink" href="#onopen" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>onOpen</strong>(): <code>void</code></p>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
 <h3 id="open">open<a class="headerlink" href="#open" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>open</strong>(): <code>void</code></p>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>Partial.open</p>
-<hr />
-<h3 id="removeaction">removeAction<a class="headerlink" href="#removeaction" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>removeAction</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
-<p><strong><code>deprecated</code></strong> Provide your own remove <code>&lt;MenuItem&gt;</code> as part of the <code>children</code> passed to this component</p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
-<hr />
-<h3 id="updateaction">updateAction<a class="headerlink" href="#updateaction" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>updateAction</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
-<p><strong><code>deprecated</code></strong> Provide your own update <code>&lt;MenuItem&gt;</code> as part of the <code>children</code> passed to this component</p>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
                 
               
               

@@ -740,13 +740,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -782,8 +775,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#customrowheights" class="md-nav__link">
+    customRowHeights
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#dangerouslysetinnerhtml" class="md-nav__link">
     dangerouslySetInnerHTML
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gettablerow" class="md-nav__link">
+    getTableRow
   </a>
   
 </li>
@@ -1755,6 +1762,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#onsort" class="md-nav__link">
+    onSort
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#onstalled" class="md-nav__link">
     onStalled
   </a>
@@ -1923,6 +1937,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#renderrow" class="md-nav__link">
+    renderRow
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rowlineheight" class="md-nav__link">
     rowLineHeight
   </a>
@@ -2011,47 +2032,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#customrowheights" class="md-nav__link">
-    customRowHeights
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gettablerow" class="md-nav__link">
-    getTableRow
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#onsort" class="md-nav__link">
-    onSort
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#renderrow" class="md-nav__link">
-    renderRow
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2092,7 +2072,9 @@
 <li><a href="./#autosize">autoSize</a></li>
 <li><a href="./#children">children</a></li>
 <li><a href="./#classname">className</a></li>
+<li><a href="./#customrowheights">customRowHeights</a></li>
 <li><a href="./#dangerouslysetinnerhtml">dangerouslySetInnerHTML</a></li>
+<li><a href="./#gettablerow">getTableRow</a></li>
 <li><a href="./#items">items</a></li>
 <li><a href="./#noitems">noItems</a></li>
 <li><a href="./#onabort">onAbort</a></li>
@@ -2231,6 +2213,7 @@
 <li><a href="./#onseekingcapture">onSeekingCapture</a></li>
 <li><a href="./#onselect">onSelect</a></li>
 <li><a href="./#onselectcapture">onSelectCapture</a></li>
+<li><a href="./#onsort">onSort</a></li>
 <li><a href="./#onstalled">onStalled</a></li>
 <li><a href="./#onstalledcapture">onStalledCapture</a></li>
 <li><a href="./#onsubmit">onSubmit</a></li>
@@ -2255,6 +2238,7 @@
 <li><a href="./#onwaitingcapture">onWaitingCapture</a></li>
 <li><a href="./#onwheel">onWheel</a></li>
 <li><a href="./#onwheelcapture">onWheelCapture</a></li>
+<li><a href="./#renderrow">renderRow</a></li>
 <li><a href="./#rowlineheight">rowLineHeight</a></li>
 <li><a href="./#rowpadding">rowPadding</a></li>
 <li><a href="./#scrollable">scrollable</a></li>
@@ -2268,13 +2252,6 @@
 <li><a href="./#virtual">virtual</a></li>
 <li><a href="./#virtualheight">virtualHeight</a></li>
 </ul>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#customrowheights">customRowHeights</a></li>
-<li><a href="./#gettablerow">getTableRow</a></li>
-<li><a href="./#onsort">onSort</a></li>
-<li><a href="./#renderrow">renderRow</a></li>
-</ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="autosize">autoSize<a class="headerlink" href="#autosize" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>autoSize</strong>: <code>boolean</code></p>
@@ -2287,9 +2264,39 @@
 <h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
 <hr />
+<h3 id="customrowheights">customRowHeights<a class="headerlink" href="#customrowheights" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>customRowHeights</strong>: (<code>item</code>: <code>Item</code>, <code>lineHeight</code>: <code>number</code>, <code>paddings</code>: <code>number</code>) =&gt; <code>number</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>item</code>, <code>lineHeight</code>, <code>paddings</code>): <code>number</code></p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>item</code></td>
+<td align="left"><code>Item</code></td>
+</tr>
+<tr>
+<td align="left"><code>lineHeight</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+<tr>
+<td align="left"><code>paddings</code></td>
+<td align="left"><code>number</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>number</code></p>
+<hr />
 <h3 id="dangerouslysetinnerhtml">dangerouslySetInnerHTML<a class="headerlink" href="#dangerouslysetinnerhtml" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>dangerouslySetInnerHTML</strong>: <code>Object</code></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2306,6 +2313,28 @@
 </table>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>React.DOMAttributes.dangerouslySetInnerHTML</p>
+<hr />
+<h3 id="gettablerow">getTableRow<a class="headerlink" href="#gettablerow" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>getTableRow</strong>: (<code>uid</code>: <code>string</code>) =&gt; <code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<p>▸ (<code>uid</code>): <code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>uid</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
+<p><code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>items</strong>: <code>Item</code>[]</p>
@@ -2995,6 +3024,28 @@
 <h4 id="inherited-from_137">Inherited from<a class="headerlink" href="#inherited-from_137" title="Permanent link">#</a></h4>
 <p>React.DOMAttributes.onSelectCapture</p>
 <hr />
+<h3 id="onsort">onSort<a class="headerlink" href="#onsort" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onSort</strong>: (<code>params</code>: <a href="../Renderer.Component.TableSortParams/"><code>TableSortParams</code></a>) =&gt; <code>void</code></p>
+<h4 id="type-declaration_3">Type declaration<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
+<p>▸ (<code>params</code>): <code>void</code></p>
+<h5 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>params</code></td>
+<td align="left"><a href="../Renderer.Component.TableSortParams/"><code>TableSortParams</code></a></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
+<p><code>void</code></p>
+<hr />
 <h3 id="onstalled">onStalled<a class="headerlink" href="#onstalled" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>onStalled</strong>: <code>ReactEventHandler</code>&lt;<code>HTMLDivElement</code>></p>
 <h4 id="inherited-from_138">Inherited from<a class="headerlink" href="#inherited-from_138" title="Permanent link">#</a></h4>
@@ -3115,6 +3166,28 @@
 <h4 id="inherited-from_161">Inherited from<a class="headerlink" href="#inherited-from_161" title="Permanent link">#</a></h4>
 <p>React.DOMAttributes.onWheelCapture</p>
 <hr />
+<h3 id="renderrow">renderRow<a class="headerlink" href="#renderrow" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>renderRow</strong>: (<code>item</code>: <code>Item</code>) =&gt; <code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
+<p>▸ (<code>item</code>): <code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>item</code></td>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h5>
+<p><code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<hr />
 <h3 id="rowlineheight">rowLineHeight<a class="headerlink" href="#rowlineheight" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>rowLineHeight</strong>: <code>number</code></p>
 <p>Row line height in pixels</p>
@@ -3159,94 +3232,6 @@ auto sizer to fill available height</p>
 <p>Only used when virtual is true. Sets the virtual list to be a fixed height.
 Needed when used in contexts that already have a parent component that
 is <code>overflow-y: scroll</code>,</p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="customrowheights">customRowHeights<a class="headerlink" href="#customrowheights" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>customRowHeights</strong>(<code>item</code>, <code>lineHeight</code>, <code>paddings</code>): <code>number</code></p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>Item</code></td>
-</tr>
-<tr>
-<td align="left"><code>lineHeight</code></td>
-<td align="left"><code>number</code></td>
-</tr>
-<tr>
-<td align="left"><code>paddings</code></td>
-<td align="left"><code>number</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>number</code></p>
-<hr />
-<h3 id="gettablerow">getTableRow<a class="headerlink" href="#gettablerow" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>getTableRow</strong>(<code>uid</code>): <code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>uid</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
-<hr />
-<h3 id="onsort">onSort<a class="headerlink" href="#onsort" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>onSort</strong>(<code>params</code>): <code>void</code></p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>params</code></td>
-<td align="left"><a href="../Renderer.Component.TableSortParams/"><code>TableSortParams</code></a></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
-<h3 id="renderrow">renderRow<a class="headerlink" href="#renderrow" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>renderRow</strong>(<code>item</code>): <code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>Item</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>undefined</code> | <code>null</code> | <code>ReactElement</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
                 
               
               

@@ -733,13 +733,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1890,6 +1883,13 @@
           <li class="md-nav__item">
   <a href="#oncanplaythroughcapture" class="md-nav__link">
     onCanPlayThroughCapture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onchange" class="md-nav__link">
+    onChange
   </a>
   
 </li>
@@ -3278,26 +3278,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#onchange" class="md-nav__link">
-    onChange
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3485,6 +3465,7 @@
 <li><a href="./#oncanplaycapture">onCanPlayCapture</a></li>
 <li><a href="./#oncanplaythrough">onCanPlayThrough</a></li>
 <li><a href="./#oncanplaythroughcapture">onCanPlayThroughCapture</a></li>
+<li><a href="./#onchange">onChange</a></li>
 <li><a href="./#onchangecapture">onChangeCapture</a></li>
 <li><a href="./#onclick">onClick</a></li>
 <li><a href="./#onclickcapture">onClickCapture</a></li>
@@ -3682,10 +3663,6 @@
 <li><a href="./#width">width</a></li>
 <li><a href="./#wmode">wmode</a></li>
 <li><a href="./#wrap">wrap</a></li>
-</ul>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#onchange">onChange</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="about">about<a class="headerlink" href="#about" title="Permanent link">#</a></h3>
@@ -4608,6 +4585,32 @@ A hint could be a sample value or a brief description of the expected format.</p
 <p>• <code>Optional</code> <strong>onCanPlayThroughCapture</strong>: <code>ReactEventHandler</code>&lt;<code>HTMLInputElement</code>></p>
 <h4 id="inherited-from_162">Inherited from<a class="headerlink" href="#inherited-from_162" title="Permanent link">#</a></h4>
 <p>Omit.onCanPlayThroughCapture</p>
+<hr />
+<h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>onChange</strong>: (<code>checked</code>: <code>boolean</code>, <code>event</code>: <code>ChangeEvent</code>&lt;<code>HTMLInputElement</code>>) =&gt; <code>void</code></p>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<p>▸ (<code>checked</code>, <code>event</code>): <code>void</code></p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>checked</code></td>
+<td align="left"><code>boolean</code></td>
+</tr>
+<tr>
+<td align="left"><code>event</code></td>
+<td align="left"><code>ChangeEvent</code>&lt;<code>HTMLInputElement</code>></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>void</code></p>
 <hr />
 <h3 id="onchangecapture">onChangeCapture<a class="headerlink" href="#onchangecapture" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>onChangeCapture</strong>: <code>FormEventHandler</code>&lt;<code>HTMLInputElement</code>></p>
@@ -5595,30 +5598,6 @@ A hint could be a sample value or a brief description of the expected format.</p
 <p>• <code>Optional</code> <strong>wrap</strong>: <code>string</code></p>
 <h4 id="inherited-from_359">Inherited from<a class="headerlink" href="#inherited-from_359" title="Permanent link">#</a></h4>
 <p>Omit.wrap</p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
-<p>▸ <code>Optional</code> <strong>onChange</strong>(<code>checked</code>, <code>event</code>): <code>void</code></p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>checked</code></td>
-<td align="left"><code>boolean</code></td>
-</tr>
-<tr>
-<td align="left"><code>event</code></td>
-<td align="left"><code>ChangeEvent</code>&lt;<code>HTMLInputElement</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
                 
               
               

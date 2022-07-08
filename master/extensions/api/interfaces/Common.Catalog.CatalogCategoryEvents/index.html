@@ -720,8 +720,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
+  <a href="#properties" class="md-nav__link">
+    Properties
   </a>
   
 </li>
@@ -732,11 +732,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
+  <a href="#properties_1" class="md-nav__link">
+    Properties
   </a>
   
-    <nav class="md-nav" aria-label="Methods">
+    <nav class="md-nav" aria-label="Properties">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -782,18 +782,20 @@
                 <h1 id="interface-catalogcategoryevents">Interface: CatalogCategoryEvents<a class="headerlink" href="#interface-catalogcategoryevents" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Catalog/">Catalog</a>.CatalogCategoryEvents</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#catalogaddmenu">catalogAddMenu</a></li>
 <li><a href="./#contextmenuopen">contextMenuOpen</a></li>
 <li><a href="./#load">load</a></li>
 </ul>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="catalogaddmenu">catalogAddMenu<a class="headerlink" href="#catalogaddmenu" title="Permanent link">#</a></h3>
-<p>▸ <strong>catalogAddMenu</strong>(<code>context</code>): <code>void</code></p>
+<p>• <strong>catalogAddMenu</strong>: (<code>context</code>: <a href="../Common.Catalog.CatalogEntityAddMenuContext/"><code>CatalogEntityAddMenuContext</code></a>) =&gt; <code>void</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>context</code>): <code>void</code></p>
 <p>This event will be emitted when the catalog add menu is opened and is the
 way to added entries to that menu.</p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -808,14 +810,16 @@ way to added entries to that menu.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
 <hr />
 <h3 id="contextmenuopen">contextMenuOpen<a class="headerlink" href="#contextmenuopen" title="Permanent link">#</a></h3>
-<p>▸ <strong>contextMenuOpen</strong>(<code>entity</code>, <code>context</code>): <code>void</code></p>
+<p>• <strong>contextMenuOpen</strong>: (<code>entity</code>: <a href="../../classes/Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>, <code>context</code>: <a href="../Common.Catalog.CatalogEntityContextMenuContext/"><code>CatalogEntityContextMenuContext</code></a>) =&gt; <code>void</code></p>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<p>▸ (<code>entity</code>, <code>context</code>): <code>void</code></p>
 <p>This event will be emitted when the context menu for an entity is declared
 by this category is opened.</p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
@@ -834,14 +838,16 @@ by this category is opened.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
 <hr />
 <h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
-<p>▸ <strong>load</strong>(): <code>void</code></p>
+<p>• <strong>load</strong>: () =&gt; <code>void</code></p>
+<h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<p>▸ (): <code>void</code></p>
 <p>This event will be emitted when the category is loaded in the catalog
 view.</p>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
                 
               
