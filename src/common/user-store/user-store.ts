@@ -15,8 +15,8 @@ import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
-import type { SelectedUpdateChannel } from "../application-update/selected-update-channel/selected-update-channel.injectable";
-import type { UpdateChannelId } from "../application-update/update-channels";
+import type { SelectedUpdateChannel } from "../../behaviours/application-update/common/selected-update-channel/selected-update-channel.injectable";
+import type { UpdateChannelId } from "../../behaviours/application-update/common/update-channels";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
