@@ -8,7 +8,7 @@ import "./overview-workload-status.scss";
 import React from "react";
 import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
-import type { DatasetTooltipLabel, PieChartData } from "../chart";
+import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
 import { object } from "../../utils";
 import type { LensTheme } from "../../themes/store";
@@ -53,39 +53,33 @@ const NonInjectedOverviewWorkloadStatus = observer((props: OverviewWorkloadStatu
     workload,
     activeTheme,
   } = props;
-  const chartData: Required<PieChartData> = {
-    labels: [],
-    datasets: [],
-  };
 
-  const statuses = object.entries(workload.status.get()).filter(([, val]) => val > 0);
+  const statusesToBeShown = object.entries(workload.status.get()).filter(([, val]) => val > 0);
   const theme = activeTheme.get();
 
-  if (statuses.length === 0) {
-    chartData.datasets.push({
-      data: [1],
-      backgroundColor: [theme.colors.pieChartDefaultColor],
-      label: "Empty",
-    });
-  } else {
-    const data: number[] = [];
-    const backgroundColor: string[] = [];
-    const tooltipLabels: DatasetTooltipLabel[] = [];
+  const emptyDataSet = {
+    data: [1],
+    backgroundColor: [theme.colors.pieChartDefaultColor],
+    label: "Empty",
+  };
+  const statusDataSet = {
+    label: "Status",
+    data: statusesToBeShown.map(([, value]) => value),
+    backgroundColor: statusesToBeShown.map(([status]) => (
+      theme.colors[statusBackgroundColorMapping[toLowercase(status)]]
+    )),
+    tooltipLabels: statusesToBeShown.map(([status]) => (
+      (percent: string) => `${capitalize(status)}: ${percent}`
+    )),
+  };
 
-    for (const [status, value] of statuses) {
-      data.push(value);
-      backgroundColor.push(theme.colors[statusBackgroundColorMapping[toLowercase(status)]]);
-      tooltipLabels.push(percent => `${capitalize(status)}: ${percent}`);
-      chartData.labels.push(`${capitalize(status)}: ${value}`);
-    }
+  const chartData: Required<PieChartData> = {
+    datasets: [statusesToBeShown.length > 0 ? statusDataSet : emptyDataSet],
 
-    chartData.datasets.push({
-      data,
-      backgroundColor,
-      label: "Status",
-      tooltipLabels,
-    });
-  }
+    labels: statusesToBeShown.map(
+      ([status, value]) => `${capitalize(status)}: ${value}`,
+    ),
+  };
 
   return (
     <div className="OverviewWorkloadStatus">

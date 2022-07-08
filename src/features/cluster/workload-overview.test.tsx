@@ -26,7 +26,7 @@ describe("workload overview", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    it("does not yet show workload overview", () => {
+    it("shows workload overview", () => {
       expect(rendered.queryByTestId("page-for-workloads-overview")).toBeInTheDocument();
     });
 
