@@ -23,7 +23,7 @@ jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
 describe("remove helm repository from list of active repositories in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
   let execFileMock: AsyncFnMock<
     ReturnType<typeof execFileInjectable["instantiate"]>
   >;

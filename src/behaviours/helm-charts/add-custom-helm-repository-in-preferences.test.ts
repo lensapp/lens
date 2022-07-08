@@ -31,7 +31,7 @@ describe("add custom helm repository in preferences", () => {
   let execFileMock: AsyncFnMock<
     ReturnType<typeof execFileInjectable["instantiate"]>
   >;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
 
   beforeEach(async () => {
     jest.useFakeTimers();
