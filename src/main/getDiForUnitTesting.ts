@@ -209,6 +209,7 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
+  ...glob.sync("../behaviours/**/{main,common}/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
 
 // TODO: Reorganize code in Runnables to get rid of requirement for override
