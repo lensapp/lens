@@ -7,7 +7,7 @@ import { LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
 import type { MenuRegistration } from "../main/menu/menu-registration";
-import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
+import type { TrayMenuRegistration } from "../behaviours/tray/main/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
 import type { LensMainExtensionDependencies } from "./lens-extension-set-dependencies";
 

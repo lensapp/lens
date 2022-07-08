@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
+import { trayMenuItemInjectionToken } from "../../behaviours/tray/main/tray-menu-item/tray-menu-item-injection-token";
 import { computed } from "mobx";
-import stopServicesAndExitAppInjectable from "../../../stop-services-and-exit-app.injectable";
-import { withErrorSuppression } from "../../../../common/utils/with-error-suppression/with-error-suppression";
+import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.injectable";
+import { withErrorSuppression } from "../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
-import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
+import withErrorLoggingInjectable from "../../common/utils/with-error-logging/with-error-logging.injectable";
 
 const quitAppTrayItemInjectable = getInjectable({
   id: "quit-app-tray-item",

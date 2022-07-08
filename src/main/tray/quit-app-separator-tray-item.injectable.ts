@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
+import { trayMenuItemInjectionToken } from "../../behaviours/tray/main/tray-menu-item/tray-menu-item-injection-token";
 import { computed } from "mobx";
 
 const quitAppSeparatorTrayItemInjectable = getInjectable({

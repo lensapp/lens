@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
-import productNameInjectable from "../../../app-paths/app-name/product-name.injectable";
-import showApplicationWindowInjectable from "../../../start-main-application/lens-window/show-application-window.injectable";
+import { trayMenuItemInjectionToken } from "../../behaviours/tray/main/tray-menu-item/tray-menu-item-injection-token";
+import productNameInjectable from "../app-paths/app-name/product-name.injectable";
+import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 import { computed } from "mobx";
-import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
-import { withErrorSuppression } from "../../../../common/utils/with-error-suppression/with-error-suppression";
+import withErrorLoggingInjectable from "../../common/utils/with-error-logging/with-error-logging.injectable";
+import { withErrorSuppression } from "../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
 
 const openAppTrayItemInjectable = getInjectable({

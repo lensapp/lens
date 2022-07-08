@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import updatingIsEnabledInjectable from "./updating-is-enabled.injectable";
-import { trayMenuItemInjectionToken } from "../tray/tray-menu-item/tray-menu-item-injection-token";
+import { trayMenuItemInjectionToken } from "../../behaviours/tray/main/tray-menu-item/tray-menu-item-injection-token";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 import discoveredUpdateVersionInjectable from "../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 import updateIsBeingDownloadedInjectable from "../../common/application-update/update-is-being-downloaded/update-is-being-downloaded.injectable";

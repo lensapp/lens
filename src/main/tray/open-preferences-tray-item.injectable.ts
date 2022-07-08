@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
-import navigateToPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import { trayMenuItemInjectionToken } from "../../behaviours/tray/main/tray-menu-item/tray-menu-item-injection-token";
+import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import { computed } from "mobx";
-import { withErrorSuppression } from "../../../../common/utils/with-error-suppression/with-error-suppression";
+import { withErrorSuppression } from "../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
-import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
+import withErrorLoggingInjectable from "../../common/utils/with-error-logging/with-error-logging.injectable";
 
 const openPreferencesTrayItemInjectable = getInjectable({
   id: "open-preferences-tray-item",

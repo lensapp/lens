@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import getTrayIconPathInjectable from "../../tray/menu-icon/get-tray-icon-path.injectable";
-import { trayIconInjectionToken } from "../../tray/menu-icon/tray-icon-injection-token";
+import getTrayIconPathInjectable from "../../../behaviours/tray/main/menu-icon/get-tray-icon-path.injectable";
+import { trayIconInjectionToken } from "../../../behaviours/tray/main/menu-icon/tray-icon-injection-token";
 import updateIsReadyToBeInstalledInjectable from "../update-is-ready-to-be-installed.injectable";
 
 const updateIsReadyToBeInstalledTrayIconInjectable = getInjectable({
