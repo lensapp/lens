@@ -16,7 +16,7 @@ import { TopBar } from "../layout/top-bar/top-bar";
 import catalogPreviousActiveTabStorageInjectable from "../+catalog/catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 import type { IComputedValue } from "mobx";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
-import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
+import welcomeRouteInjectable from "../../../behaviours/welcome/common/welcome-route.injectable";
 import { buildURL } from "../../../common/utils/buildUrl";
 import type { StorageLayer } from "../../utils";
 import type { WatchForGeneralEntityNavigation } from "../../api/helpers/watch-for-general-entity-navigation.injectable";

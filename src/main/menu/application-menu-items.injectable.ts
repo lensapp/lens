@@ -15,7 +15,7 @@ import updatingIsEnabledInjectable from "../../behaviours/application-update/mai
 import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import navigateToExtensionsInjectable from "../../common/front-end-routing/routes/extensions/navigate-to-extensions.injectable";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import navigateToWelcomeInjectable from "../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
+import navigateToWelcomeInjectable from "../../behaviours/welcome/common/navigate-to-welcome.injectable";
 import navigateToAddClusterInjectable from "../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
 import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
