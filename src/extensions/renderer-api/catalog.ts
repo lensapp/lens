@@ -10,6 +10,7 @@ import type { Disposer } from "../../common/utils";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
+import activeKubernetesClusterInjectable from "../../renderer/cluster-frame-context/active-kubernetes-cluster.injectable";
 
 export const catalogCategories = asLegacyGlobalForExtensionApi(catalogCategoryRegistryInjectable);
 
@@ -53,3 +54,7 @@ export class CatalogEntityRegistry {
 }
 
 export const catalogEntities = new CatalogEntityRegistry();
+
+export const activeCluster = asLegacyGlobalForExtensionApi(
+  activeKubernetesClusterInjectable,
+);
