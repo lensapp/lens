@@ -28,7 +28,7 @@ export const FlexVolume: VolumeVariantComponent<"flexVolume"> = (
         {readOnly.toString()}
       </DrawerItem>
       {
-        ...Object.entries(options)
+        Object.entries(options)
           .map(([key, value]) => (
             <DrawerItem key={key} name={`Option: ${key}`}>
               {value}

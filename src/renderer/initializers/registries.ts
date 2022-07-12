@@ -7,6 +7,5 @@ import * as registries from "../../extensions/registries";
 
 export function initRegistries() {
   registries.CatalogEntityDetailRegistry.createInstance();
-  registries.KubeObjectDetailRegistry.createInstance();
   registries.EntitySettingRegistry.createInstance();
 }

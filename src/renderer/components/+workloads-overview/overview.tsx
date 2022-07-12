@@ -20,7 +20,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
-import detailComponentsInjectable from "./detail-components.injectable";
+import workloadOverviewDetailsInjectable from "./workload-overview-details/workload-overview-details.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import type { PodStore } from "../+workloads-pods/store";
 import type { DaemonSetStore } from "../+workloads-daemonsets/store";
@@ -37,7 +37,7 @@ import type { EventStore } from "../+events/store";
 import eventStoreInjectable from "../+events/store.injectable";
 
 interface Dependencies {
-  detailComponents: IComputedValue<React.ComponentType<{}>[]>;
+  detailComponents: IComputedValue<React.ElementType<{}>[]>;
   clusterFrameContext: ClusterFrameContext;
   subscribeStores: SubscribeStores;
   podStore: PodStore;
@@ -122,7 +122,7 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
 
 export const WorkloadsOverview = withInjectables<Dependencies>(NonInjectedWorkloadsOverview, {
   getProps: (di) => ({
-    detailComponents: di.inject(detailComponentsInjectable),
+    detailComponents: di.inject(workloadOverviewDetailsInjectable),
     clusterFrameContext: di.inject(clusterFrameContextInjectable),
     subscribeStores: di.inject(subscribeStoresInjectable),
     daemonSetStore: di.inject(daemonSetStoreInjectable),

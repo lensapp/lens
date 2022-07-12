@@ -9,9 +9,6 @@ import { createExtensionInstanceInjectionToken } from "./create-extension-instan
 import extensionInstancesInjectable from "./extension-instances.injectable";
 import type { LensExtension } from "../lens-extension";
 import extensionInjectable from "./extension/extension.injectable";
-import type { LensRendererExtension } from "../lens-renderer-extension";
-import extensionIsEnabledForClusterInjectable from "./extension-is-enabled-for-cluster.injectable";
-import type { KubernetesCluster } from "../../common/catalog-entities";
 
 const extensionLoaderInjectable = getInjectable({
   id: "extension-loader",
@@ -21,11 +18,6 @@ const extensionLoaderInjectable = getInjectable({
     createExtensionInstance: di.inject(createExtensionInstanceInjectionToken),
     extensionInstances: di.inject(extensionInstancesInjectable),
     getExtension: (instance: LensExtension) => di.inject(extensionInjectable, instance),
-
-    getExtensionIsEnabledForCluster: (extension: LensRendererExtension, cluster: KubernetesCluster) => di.inject(extensionIsEnabledForClusterInjectable, {
-      extension,
-      cluster,
-    }),
   }),
 });
 
