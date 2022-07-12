@@ -13,13 +13,14 @@ import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterNameInjectable from "./dependencies/cluster-name.injectable";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
-import kubeObjectMenuItemsInjectable from "./dependencies/kube-object-menu-items/kube-object-menu-items.injectable";
+import kubeObjectMenuItemsInjectable from "./kube-object-menu-items.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import type { HideDetails } from "../kube-detail-params/hide-details.injectable";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 import type { OnKubeObjectContextMenuOpen } from "./on-context-menu-open.injectable";
 import onKubeObjectContextMenuOpenInjectable from "./on-context-menu-open.injectable";
 import type { KubeObjectContextMenuItem } from "../../kube-object/handler";
+import type { IComputedValue } from "mobx";
 import { observable, runInAction } from "mobx";
 import type { WithConfirmation } from "../confirm-dialog/with-confirm.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
@@ -36,7 +37,7 @@ export interface KubeObjectMenuProps<TKubeObject extends KubeObject> extends Men
 
 interface Dependencies {
   apiManager: ApiManager;
-  kubeObjectMenuItems: React.ElementType[];
+  kubeObjectMenuItems: IComputedValue<React.ElementType[]>;
   clusterName: string | undefined;
   hideDetails: HideDetails;
   createEditResourceTab: (kubeObject: KubeObject) => void;
@@ -73,7 +74,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
   private renderMenuItems() {
     const { object, toolbar } = this.props;
 
-    return this.props.kubeObjectMenuItems.map((MenuItem, index) => (
+    return this.props.kubeObjectMenuItems.get().map((MenuItem, index) => (
       <MenuItem
         object={object}
         toolbar={toolbar}
@@ -206,9 +207,7 @@ export const KubeObjectMenu = withInjectables<Dependencies, KubeObjectMenuProps<
     apiManager: di.inject(apiManagerInjectable),
     createEditResourceTab: di.inject(createEditResourceTabInjectable),
     hideDetails: di.inject(hideDetailsInjectable),
-    kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, {
-      kubeObject: props.object,
-    }),
+    kubeObjectMenuItems: di.inject(kubeObjectMenuItemsInjectable, props.object),
     onContextMenuOpen: di.inject(onKubeObjectContextMenuOpenInjectable),
     navigate: di.inject(navigateInjectable),
     withConfirmation: di.inject(withConfirmationInjectable),
