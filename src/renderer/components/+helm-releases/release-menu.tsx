@@ -85,6 +85,7 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
         removeConfirmationMessage={() => (
           <p>
             Remove Helm Release
+            {" "}
             <b>{release.name}</b>
             ?
           </p>
