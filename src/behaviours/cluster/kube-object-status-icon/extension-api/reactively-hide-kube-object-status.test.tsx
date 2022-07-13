@@ -2,29 +2,26 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { AsyncFnMock } from "@async-fn/jest";
-import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getExtensionFakeFor } from "../../../../renderer/components/test-utils/get-extension-fake";
 import { getInjectable } from "@ogre-tools/injectable";
 import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
-import { computed } from "mobx";
+import type { IObservableValue } from "mobx";
+import { observable, runInAction, computed } from "mobx";
 import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
-import { KubeObject } from "../../../../common/k8s-api/kube-object";
 import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
-import { KubeObjectMenu } from "../../../../renderer/components/kube-object-menu";
+import { KubeObject } from "../../../../common/k8s-api/kube-object";
+import { KubeObjectStatusLevel } from "../../../../common/k8s-api/kube-object-status";
+import { KubeObjectStatusIcon } from "../../../../renderer/components/kube-object-status-icon";
 
-describe("disable kube object menu items when cluster is not relevant", () => {
+describe("reactively hide kube object status", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
-  let isEnabledForClusterMock: AsyncFnMock<
-    (cluster: KubernetesCluster) => Promise<boolean>
-  >;
+  let someObservable: IObservableValue<boolean>;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
@@ -39,24 +36,24 @@ describe("disable kube object menu items when cluster is not relevant", () => {
 
     const getExtensionFake = getExtensionFakeFor(builder);
 
-    isEnabledForClusterMock = asyncFn();
+    someObservable = observable.box(false);
 
     const testExtension = getExtensionFake({
       id: "test-extension-id",
       name: "test-extension",
 
       rendererOptions: {
-        isEnabledForCluster: isEnabledForClusterMock,
-
-        kubeObjectMenuItems: [
+        kubeObjectStatusTexts: [
           {
             kind: "some-kind",
             apiVersions: ["some-api-version"],
-            components: {
-              MenuItem: () => (
-                <div data-testid="some-test-id">Some menu item</div>
-              ),
-            },
+
+            resolve: () => ({
+              level: KubeObjectStatusLevel.CRITICAL,
+              text: "some-kube-object-status-text",
+            }),
+
+            visible: computed(() => someObservable.get()),
           },
         ],
       },
@@ -72,48 +69,24 @@ describe("disable kube object menu items when cluster is not relevant", () => {
     builder.extensions.enable(testExtension);
   });
 
-  describe("given not yet known if extension should be enabled for the cluster", () => {
-    it("renders", () => {
-      expect(rendered.baseElement).toMatchSnapshot();
-    });
+  it("does not show the kube object status", () => {
+    const actual = rendered.baseElement.querySelectorAll(
+      ".KubeObjectStatusIcon",
+    );
 
-    it("does not show the kube object menu item", () => {
-      const actual = rendered.queryByTestId("some-test-id");
-
-      expect(actual).not.toBeInTheDocument();
-    });
+    expect(actual).toHaveLength(0);
   });
 
-  describe("given extension shouldn't be enabled for the cluster", () => {
-    beforeEach(async () => {
-      await isEnabledForClusterMock.resolve(false);
+  it("given item should be shown, shows the kube object status", () => {
+    runInAction(() => {
+      someObservable.set(true);
     });
 
-    it("renders", () => {
-      expect(rendered.baseElement).toMatchSnapshot();
-    });
+    const actual = rendered.baseElement.querySelectorAll(
+      ".KubeObjectStatusIcon",
+    );
 
-    it("does not show the kube object menu item", () => {
-      const actual = rendered.queryByTestId("some-test-id");
-
-      expect(actual).not.toBeInTheDocument();
-    });
-  });
-
-  describe("given extension should be enabled for the cluster", () => {
-    beforeEach(async () => {
-      await isEnabledForClusterMock.resolve(true);
-    });
-
-    it("renders", () => {
-      expect(rendered.baseElement).toMatchSnapshot();
-    });
-
-    it("shows the kube object menu item", () => {
-      const actual = rendered.getByTestId("some-test-id");
-
-      expect(actual).toBeInTheDocument();
-    });
+    expect(actual).toHaveLength(1);
   });
 });
 
@@ -136,8 +109,7 @@ const testRouteComponentInjectable = getInjectable({
     route: di.inject(testRouteInjectable),
 
     Component: () => (
-      <KubeObjectMenu
-        toolbar={true}
+      <KubeObjectStatusIcon
         object={getKubeObjectStub("some-kind", "some-api-version")}
       />
     ),

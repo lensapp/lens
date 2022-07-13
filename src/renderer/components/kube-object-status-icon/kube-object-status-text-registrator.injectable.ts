@@ -38,9 +38,13 @@ const kubeObjectStatusTextRegistratorInjectable = getInjectable({
           instantiate: () => ({
             ...registration,
 
-            enabled: computed(() =>
-              extensionShouldBeEnabledForClusterFrame.value.get(),
-            ),
+            enabled: computed(() => {
+              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+                return false;
+              }
+
+              return registration.visible ? registration.visible.get() : true;
+            }),
           }),
 
           injectionToken: kubeObjectStatusTextInjectionToken,
