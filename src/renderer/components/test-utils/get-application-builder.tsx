@@ -58,6 +58,8 @@ import { renderFor } from "./renderFor";
 import { RootFrame } from "../../frames/root-frame/root-frame";
 import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
+import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
+import { catalogEntityFromCluster } from "../../../main/cluster-manager";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -381,6 +383,10 @@ export const getApplicationBuilder = () => {
       const clusterStub = {
         accessibleNamespaces: [],
       } as unknown as Cluster;
+
+      rendererDi.override(activeKubernetesClusterInjectable, () =>
+        computed(() => catalogEntityFromCluster(clusterStub)),
+      );
 
       const namespaceStoreStub = {
         contextNamespaces: [],

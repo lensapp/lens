@@ -9,10 +9,12 @@ import React from "react";
 import { Icon } from "../icon";
 import { cssNames, formatDuration, getOrInsert } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import statusesForKubeObjectInjectable from "./statuses-for-kube-object.injectable";
+import kubeObjectStatusTextsForObjectInjectable from "./kube-object-status-texts-for-object.injectable";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-status";
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
+import type { IComputedValue } from "mobx";
+import { observer } from "mobx-react";
 
 function statusClassName(level: KubeObjectStatusLevel): string {
   switch (level) {
@@ -76,9 +78,10 @@ export interface KubeObjectStatusIconProps {
 }
 
 interface Dependencies {
-  statuses: KubeObjectStatus[];
+  statuses: IComputedValue<KubeObjectStatus[]>;
 }
 
+@observer
 class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIconProps & Dependencies> {
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
     const filteredStatuses = statuses.filter((item) => item.level == level);
@@ -104,7 +107,7 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
   }
 
   render() {
-    const statuses = this.props.statuses;
+    const statuses = this.props.statuses.get();
 
     if (statuses.length === 0) {
       return null;
@@ -135,7 +138,7 @@ export const KubeObjectStatusIcon = withInjectables<Dependencies, KubeObjectStat
 
   {
     getProps: (di, props) => ({
-      statuses: di.inject(statusesForKubeObjectInjectable, props.object),
+      statuses: di.inject(kubeObjectStatusTextsForObjectInjectable, props.object),
       ...props,
     }),
   },
