@@ -1,0 +1,1965 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <div
+            class="winMenu"
+          >
+            <div
+              data-testid="window-menu"
+            >
+              <svg
+                height="12"
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+                width="12"
+              >
+                <path
+                  d="M0,8.5h12v1H0V8.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,5.5h12v1H0V5.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,2.5h12v1H0V2.5z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        >
+          <div
+            class="windowButtons linuxButtons"
+          >
+            <div
+              class="minimize"
+              data-testid="window-minimize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="currentColor"
+                  height="1"
+                  width="10"
+                  x="1"
+                  y="9"
+                />
+              </svg>
+            </div>
+            <div
+              class="maximize"
+              data-testid="window-maximize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="none"
+                  height="9"
+                  stroke="currentColor"
+                  width="9"
+                  x="1.5"
+                  y="1.5"
+                />
+              </svg>
+            </div>
+            <div
+              class="close"
+              data-testid="window-close"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <polygon
+                  fill="currentColor"
+                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <div
+            class="winMenu"
+          >
+            <div
+              data-testid="window-menu"
+            >
+              <svg
+                height="12"
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+                width="12"
+              >
+                <path
+                  d="M0,8.5h12v1H0V8.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,5.5h12v1H0V5.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,2.5h12v1H0V2.5z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        >
+          <div
+            class="windowButtons linuxButtons"
+          >
+            <div
+              class="minimize"
+              data-testid="window-minimize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="currentColor"
+                  height="1"
+                  width="10"
+                  x="1"
+                  y="9"
+                />
+              </svg>
+            </div>
+            <div
+              class="maximize"
+              data-testid="window-maximize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="none"
+                  height="9"
+                  stroke="currentColor"
+                  width="9"
+                  x="1.5"
+                  y="1.5"
+                />
+              </svg>
+            </div>
+            <div
+              class="close"
+              data-testid="window-close"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <polygon
+                  fill="currentColor"
+                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHIFT+CTRL+P renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <div
+            class="winMenu"
+          >
+            <div
+              data-testid="window-menu"
+            >
+              <svg
+                height="12"
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+                width="12"
+              >
+                <path
+                  d="M0,8.5h12v1H0V8.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,5.5h12v1H0V5.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,2.5h12v1H0V2.5z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        >
+          <div
+            class="windowButtons linuxButtons"
+          >
+            <div
+              class="minimize"
+              data-testid="window-minimize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="currentColor"
+                  height="1"
+                  width="10"
+                  x="1"
+                  y="9"
+                />
+              </svg>
+            </div>
+            <div
+              class="maximize"
+              data-testid="window-maximize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="none"
+                  height="9"
+                  stroke="currentColor"
+                  width="9"
+                  x="1.5"
+                  y="1.5"
+                />
+              </svg>
+            </div>
+            <div
+              class="close"
+              data-testid="window-close"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <polygon
+                  fill="currentColor"
+                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+  <div
+    class="Dialog flex center"
+  >
+    <div
+      class="box"
+    >
+      <div
+        class="CommandContainer"
+        data-testid="command-container"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHIFT+CTRL+P when pressing ESC renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <div
+            class="winMenu"
+          >
+            <div
+              data-testid="window-menu"
+            >
+              <svg
+                height="12"
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+                width="12"
+              >
+                <path
+                  d="M0,8.5h12v1H0V8.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,5.5h12v1H0V5.5z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M0,2.5h12v1H0V2.5z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        >
+          <div
+            class="windowButtons linuxButtons"
+          >
+            <div
+              class="minimize"
+              data-testid="window-minimize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="currentColor"
+                  height="1"
+                  width="10"
+                  x="1"
+                  y="9"
+                />
+              </svg>
+            </div>
+            <div
+              class="maximize"
+              data-testid="window-maximize"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <rect
+                  fill="none"
+                  height="9"
+                  stroke="currentColor"
+                  width="9"
+                  x="1.5"
+                  y="1.5"
+                />
+              </svg>
+            </div>
+            <div
+              class="close"
+              data-testid="window-close"
+            >
+              <svg
+                shape-rendering="crispEdges"
+                viewBox="0 0 12 12"
+              >
+                <polygon
+                  fill="currentColor"
+                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHIFT+CMD+P renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+  <div
+    class="Dialog flex center"
+  >
+    <div
+      class="box"
+    >
+      <div
+        class="CommandContainer"
+        data-testid="command-container"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHIFT+CMD+P when pressing ESC renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="flex justify-center Welcome align-center"
+          data-testid="welcome-page"
+        >
+          <div
+            data-testid="welcome-banner-container"
+            style="width: 320px;"
+          >
+            <i
+              class="Icon logo svg focusable"
+            >
+              <span
+                class="icon"
+              />
+            </i>
+            <div
+              class="flex justify-center"
+            >
+              <div
+                data-testid="welcome-text-container"
+                style="width: 320px;"
+              >
+                <h2>
+                  Welcome to OpenLens 5!
+                </h2>
+                <p>
+                  To get you started we have auto-detected your clusters in your
+                   
+                  kubeconfig file and added them to the catalog, your centralized
+                   
+                  view for managing all your cloud-native resources.
+                  <br />
+                  <br />
+                  If you have any questions or feedback, please join our 
+                  <a
+                    class="link"
+                    href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Lens Community slack channel
+                  </a>
+                  .
+                </p>
+                <ul
+                  class="block"
+                  data-testid="welcome-menu-container"
+                  style="width: 320px;"
+                >
+                  <li
+                    class="flex grid-12"
+                  >
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="view_list"
+                      >
+                        view_list
+                      </span>
+                    </i>
+                    <a
+                      class="box col-10"
+                    >
+                      Browse Clusters in Catalog
+                    </a>
+                    <i
+                      class="Icon box col-1 material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="navigate_next"
+                      >
+                        navigate_next
+                      </span>
+                    </i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;

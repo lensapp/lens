@@ -5,7 +5,6 @@
 
 import React from "react";
 import type { RegisteredEntitySetting } from "../../../../extensions/registries";
-import { EntitySettingRegistry } from "../../../../extensions/registries";
 import { HotbarAddCommand } from "../../hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../../hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../../hotbar/hotbar-switch-command";
@@ -38,6 +37,7 @@ import navigateToJobsInjectable from "../../../../common/front-end-routing/route
 import navigateToCronJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/cron-jobs/navigate-to-cron-jobs.injectable";
 import navigateToCustomResourcesInjectable from "../../../../common/front-end-routing/routes/cluster/custom-resources/custom-resources/navigate-to-custom-resources.injectable";
 import navigateToEntitySettingsInjectable from "../../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import getEntitySettingCommandsInjectable from "./get-entity-setting-commands.injectable";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -247,9 +247,7 @@ const internalCommandsInjectable = getInjectable({
 
   instantiate: (di) => getInternalCommands({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
-    getEntitySettingItems: EntitySettingRegistry
-      .getInstance()
-      .getItemsForKind,
+    getEntitySettingItems: di.inject(getEntitySettingCommandsInjectable),
     createTerminalTab: di.inject(createTerminalTabInjectable),
     navigateToPreferences: di.inject(navigateToPreferencesInjectable),
     navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
