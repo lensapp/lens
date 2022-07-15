@@ -9,9 +9,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { PriorityClass } from "../../../common/k8s-api/endpoints";
+import type { PriorityClass } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
-import logger from "../../../common/logger";
 
 export interface PriorityClassesDetailsProps extends KubeObjectDetailsProps<PriorityClass> {
 }
@@ -21,16 +20,6 @@ export class PriorityClassesDetails extends React.Component<PriorityClassesDetai
 
   render() {
     const { object: pc } = this.props;
-
-    if (!pc) {
-      return null;
-    }
-
-    if (!(pc instanceof PriorityClass)) {
-      logger.error("[PriorityClassesDetails]: passed object that is not an instanceof PriorityClass", pc);
-
-      return null;
-    }
 
     return (
       <div className="PriorityClassesDetails">
