@@ -1228,49 +1228,49 @@
 </ul>
 <h2 id="type-aliases_1">Type Aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
 <h3 id="clusterscopedmetadata">ClusterScopedMetadata<a class="headerlink" href="#clusterscopedmetadata" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>ClusterScopedMetadata</strong>: <a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope.Cluster</code>></p>
+<p>Ƭ <strong>ClusterScopedMetadata</strong>: <a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope.Cluster</code>&gt;</p>
 <hr />
 <h3 id="jsonpatch">JsonPatch<a class="headerlink" href="#jsonpatch" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>JsonPatch</strong>: <code>Patch</code></p>
 <hr />
 <h3 id="kubejsonapiobjectmetadata">KubeJsonApiObjectMetadata<a class="headerlink" href="#kubejsonapiobjectmetadata" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>KubeJsonApiObjectMetadata</strong>&lt;<code>Namespaced</code>>: <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespaced</code>> &amp; <code>Namespaced</code> extends <code>KubeObjectScope.Namespace</code> ? { <code>namespace</code>: <code>string</code>  } : {}</p>
+<p>Ƭ <strong>KubeJsonApiObjectMetadata</strong>&lt;<code>Namespaced</code>&gt;: <a href="../../interfaces/Renderer.K8sApi.BaseKubeJsonApiObjectMetadata/"><code>BaseKubeJsonApiObjectMetadata</code></a>&lt;<code>Namespaced</code>&gt; &amp; <code>Namespaced</code> extends <code>KubeObjectScope.Namespace</code> ? { <code>namespace</code>: <code>string</code>  } : {}</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Namespaced</code></td>
-<td align="left">extends <code>KubeObjectScope</code> = <code>KubeObjectScope</code></td>
+<td style="text-align: left;"><code>Namespaced</code></td>
+<td style="text-align: left;">extends <code>KubeObjectScope</code> = <code>KubeObjectScope</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="kubeobjectmetadata">KubeObjectMetadata<a class="headerlink" href="#kubeobjectmetadata" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>KubeObjectMetadata</strong>&lt;<code>Namespaced</code>>: <a href="./#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>Namespaced</code>> &amp; { <code>name</code>: <code>string</code> ; <code>resourceVersion</code>: <code>string</code> ; <code>selfLink</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }</p>
+<p>Ƭ <strong>KubeObjectMetadata</strong>&lt;<code>Namespaced</code>&gt;: <a href="./#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>Namespaced</code>&gt; &amp; { <code>name</code>: <code>string</code> ; <code>resourceVersion</code>: <code>string</code> ; <code>selfLink</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Namespaced</code></td>
-<td align="left">extends <code>KubeObjectScope</code> = <code>KubeObjectScope</code></td>
+<td style="text-align: left;"><code>Namespaced</code></td>
+<td style="text-align: left;">extends <code>KubeObjectScope</code> = <code>KubeObjectScope</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="namespacescopedmetadata">NamespaceScopedMetadata<a class="headerlink" href="#namespacescopedmetadata" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>NamespaceScopedMetadata</strong>: <a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope.Namespace</code>></p>
+<p>Ƭ <strong>NamespaceScopedMetadata</strong>: <a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope.Namespace</code>&gt;</p>
 <h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
 <h3 id="apimanager">apiManager<a class="headerlink" href="#apimanager" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>apiManager</strong>: <code>ApiManager</code></p>
@@ -1363,27 +1363,27 @@
 <p>• <code>Const</code> <strong>storageClassApi</strong>: <code>StorageClassApi</code></p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
 <h3 id="forcluster">forCluster<a class="headerlink" href="#forcluster" title="Permanent link">#</a></h3>
-<p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Api</code>, <code>Data</code>>(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass</code>): <code>Api</code></p>
+<p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Api</code>, <code>Data</code>&gt;(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass</code>): <code>Api</code></p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
+<td style="text-align: left;"><code>Object</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Object</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>Api</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>, <code>Api</code>></td>
+<td style="text-align: left;"><code>Api</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;, <code>Api</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>Data</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>Data</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Data</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1391,44 +1391,44 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>cluster</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.ILocalKubeApiConfig/"><code>ILocalKubeApiConfig</code></a></td>
+<td style="text-align: left;"><code>cluster</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.ILocalKubeApiConfig/"><code>ILocalKubeApiConfig</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>kubeClass</code></td>
-<td align="left"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>kubeClass</code></td>
+<td style="text-align: left;"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>apiClass</code></td>
-<td align="left">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>>) =&gt; <code>Api</code></td>
+<td style="text-align: left;"><code>apiClass</code></td>
+<td style="text-align: left;">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;&gt;) =&gt; <code>Api</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>Api</code></p>
-<p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass?</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>></p>
+<p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Data</code>&gt;(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass?</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>&gt;</p>
 <h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
+<td style="text-align: left;"><code>Object</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Object</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>Data</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>Data</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Data</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1436,50 +1436,50 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>cluster</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.ILocalKubeApiConfig/"><code>ILocalKubeApiConfig</code></a></td>
+<td style="text-align: left;"><code>cluster</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.ILocalKubeApiConfig/"><code>ILocalKubeApiConfig</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>kubeClass</code></td>
-<td align="left"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>kubeClass</code></td>
+<td style="text-align: left;"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>apiClass?</code></td>
-<td align="left">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>>) =&gt; <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></td>
+<td style="text-align: left;"><code>apiClass?</code></td>
+<td style="text-align: left;">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;&gt;) =&gt; <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>></p>
+<p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>&gt;</p>
 <hr />
 <h3 id="forremotecluster">forRemoteCluster<a class="headerlink" href="#forremotecluster" title="Permanent link">#</a></h3>
-<p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Api</code>, <code>Data</code>>(<code>config</code>, <code>kubeClass</code>, <code>apiClass</code>): <code>Api</code></p>
+<p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Api</code>, <code>Data</code>&gt;(<code>config</code>, <code>kubeClass</code>, <code>apiClass</code>): <code>Api</code></p>
 <h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
+<td style="text-align: left;"><code>Object</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Object</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>Api</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>, <code>Api</code>></td>
+<td style="text-align: left;"><code>Api</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;, <code>Api</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>Data</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>Data</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Data</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1487,44 +1487,44 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>config</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.IRemoteKubeApiConfig/"><code>IRemoteKubeApiConfig</code></a></td>
+<td style="text-align: left;"><code>config</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.IRemoteKubeApiConfig/"><code>IRemoteKubeApiConfig</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>kubeClass</code></td>
-<td align="left"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>kubeClass</code></td>
+<td style="text-align: left;"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>apiClass</code></td>
-<td align="left">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>>) =&gt; <code>Api</code></td>
+<td style="text-align: left;"><code>apiClass</code></td>
+<td style="text-align: left;">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;&gt;) =&gt; <code>Api</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>Api</code></p>
-<p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>config</code>, <code>kubeClass</code>, <code>apiClass?</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>></p>
+<p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Data</code>&gt;(<code>config</code>, <code>kubeClass</code>, <code>apiClass?</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>&gt;</p>
 <h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Object</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Object</code>></td>
+<td style="text-align: left;"><code>Object</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Object</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>Data</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>Data</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="./#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>Data</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1532,27 +1532,27 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>config</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.IRemoteKubeApiConfig/"><code>IRemoteKubeApiConfig</code></a></td>
+<td style="text-align: left;"><code>config</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.IRemoteKubeApiConfig/"><code>IRemoteKubeApiConfig</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>kubeClass</code></td>
-<td align="left"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>></td>
+<td style="text-align: left;"><code>kubeClass</code></td>
+<td style="text-align: left;"><code>KubeObjectConstructor</code>&lt;<code>Object</code>, <code>Data</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>apiClass?</code></td>
-<td align="left">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>>) =&gt; <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></td>
+<td style="text-align: left;"><code>apiClass?</code></td>
+<td style="text-align: left;">(<code>apiOpts</code>: <code>KubeApiOptions</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;&gt;) =&gt; <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>&gt;&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>></p>
+<p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>&gt;</p>
 <hr />
 <h3 id="isallowedresource">isAllowedResource<a class="headerlink" href="#isallowedresource" title="Permanent link">#</a></h3>
 <p>▸ <strong>isAllowedResource</strong>(<code>resource</code>): <code>boolean</code></p>
@@ -1560,14 +1560,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>resource</code></td>
-<td align="left"><code>KubeResource</code> | <code>KubeResource</code>[]</td>
+<td style="text-align: left;"><code>resource</code></td>
+<td style="text-align: left;"><code>KubeResource</code> | <code>KubeResource</code>[]</td>
 </tr>
 </tbody>
 </table>

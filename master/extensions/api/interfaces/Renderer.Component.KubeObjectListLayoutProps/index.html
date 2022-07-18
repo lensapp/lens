@@ -1003,34 +1003,34 @@
                 
                 
                 
-                <h1 id="interface-kubeobjectlistlayoutpropsk-a-d">Interface: KubeObjectListLayoutProps&lt;K, A, D><a class="headerlink" href="#interface-kubeobjectlistlayoutpropsk-a-d" title="Permanent link">#</a></h1>
+                <h1 id="interface-kubeobjectlistlayoutpropsk-a-d">Interface: KubeObjectListLayoutProps&lt;K, A, D&gt;<a class="headerlink" href="#interface-kubeobjectlistlayoutpropsk-a-d" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.KubeObjectListLayoutProps</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>K</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
+<td style="text-align: left;"><code>K</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>A</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>></td>
+<td style="text-align: left;"><code>A</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>D</code></td>
-<td align="left">extends <code>KubeJsonApiDataFor</code>&lt;<code>K</code>></td>
+<td style="text-align: left;"><code>D</code></td>
+<td style="text-align: left;">extends <code>KubeJsonApiDataFor</code>&lt;<code>K</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>Omit</code>&lt;<code>ItemListLayoutProps</code>&lt;<code>K</code>, <code>false</code>>, <code>"getItems"</code> | <code>"dependentStores"</code> | <code>"preloadStores"</code>></li>
+<li><code>Omit</code>&lt;<code>ItemListLayoutProps</code>&lt;<code>K</code>, <code>false</code>&gt;, <code>"getItems"</code> | <code>"dependentStores"</code> | <code>"preloadStores"</code>&gt;</li>
 </ul>
 <p>↳ <strong><code>KubeObjectListLayoutProps</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -1072,7 +1072,7 @@
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="addremovebuttons">addRemoveButtons<a class="headerlink" href="#addremovebuttons" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>addRemoveButtons</strong>: <code>Partial</code>&lt;<code>AddRemoveButtonsProps</code>></p>
+<p>• <code>Optional</code> <strong>addRemoveButtons</strong>: <code>Partial</code>&lt;<code>AddRemoveButtonsProps</code>&gt;</p>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
 <p>Omit.addRemoveButtons</p>
 <hr />
@@ -1092,50 +1092,50 @@
 <p>Omit.customizeHeader</p>
 <hr />
 <h3 id="customizeremovedialog">customizeRemoveDialog<a class="headerlink" href="#customizeremovedialog" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>customizeRemoveDialog</strong>: (<code>selectedItems</code>: <code>K</code>[]) =&gt; <code>Partial</code>&lt;<a href="../Renderer.Component.ConfirmDialogParams/"><code>ConfirmDialogParams</code></a>></p>
+<p>• <code>Optional</code> <strong>customizeRemoveDialog</strong>: (<code>selectedItems</code>: <code>K</code>[]) =&gt; <code>Partial</code>&lt;<a href="../Renderer.Component.ConfirmDialogParams/"><code>ConfirmDialogParams</code></a>&gt;</p>
 <h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<p>▸ (<code>selectedItems</code>): <code>Partial</code>&lt;<a href="../Renderer.Component.ConfirmDialogParams/"><code>ConfirmDialogParams</code></a>></p>
+<p>▸ (<code>selectedItems</code>): <code>Partial</code>&lt;<a href="../Renderer.Component.ConfirmDialogParams/"><code>ConfirmDialogParams</code></a>&gt;</p>
 <h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>selectedItems</code></td>
-<td align="left"><code>K</code>[]</td>
+<td style="text-align: left;"><code>selectedItems</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
-<p><code>Partial</code>&lt;<a href="../Renderer.Component.ConfirmDialogParams/"><code>ConfirmDialogParams</code></a>></p>
+<p><code>Partial</code>&lt;<a href="../Renderer.Component.ConfirmDialogParams/"><code>ConfirmDialogParams</code></a>&gt;</p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>Omit.customizeRemoveDialog</p>
 <hr />
 <h3 id="customizetablerowprops">customizeTableRowProps<a class="headerlink" href="#customizetablerowprops" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>customizeTableRowProps</strong>: (<code>item</code>: <code>K</code>) =&gt; <code>Partial</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>K</code>>></p>
+<p>• <code>Optional</code> <strong>customizeTableRowProps</strong>: (<code>item</code>: <code>K</code>) =&gt; <code>Partial</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>K</code>&gt;&gt;</p>
 <h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
-<p>▸ (<code>item</code>): <code>Partial</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>K</code>>></p>
+<p>▸ (<code>item</code>): <code>Partial</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>K</code>&gt;&gt;</p>
 <h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
-<p><code>Partial</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>K</code>>></p>
+<p><code>Partial</code>&lt;<a href="../Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>K</code>&gt;&gt;</p>
 <h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>Omit.customizeTableRowProps</p>
 <hr />
@@ -1155,12 +1155,12 @@
 <p>Omit.failedToLoadMessage</p>
 <hr />
 <h3 id="filtercallbacks">filterCallbacks<a class="headerlink" href="#filtercallbacks" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>filterCallbacks</strong>: <code>ItemsFilters</code>&lt;<code>K</code>></p>
+<p>• <code>Optional</code> <strong>filterCallbacks</strong>: <code>ItemsFilters</code>&lt;<code>K</code>&gt;</p>
 <h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>Omit.filterCallbacks</p>
 <hr />
 <h3 id="filteritems">filterItems<a class="headerlink" href="#filteritems" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>filterItems</strong>: <code>ItemsFilter</code>&lt;<code>K</code>>[]</p>
+<p>• <code>Optional</code> <strong>filterItems</strong>: <code>ItemsFilter</code>&lt;<code>K</code>&gt;[]</p>
 <p><strong><code>deprecated</code></strong> </p>
 <h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>Omit.filterItems</p>
@@ -1213,14 +1213,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
@@ -1230,21 +1230,21 @@
 <p>Omit.onDetails</p>
 <hr />
 <h3 id="renderfooter">renderFooter<a class="headerlink" href="#renderfooter" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>renderFooter</strong>: (<code>parent</code>: <code>NonInjectedItemListLayout</code>&lt;<code>K</code>, <code>false</code>>) =&gt; <code>ReactNode</code></p>
+<p>• <code>Optional</code> <strong>renderFooter</strong>: (<code>parent</code>: <code>NonInjectedItemListLayout</code>&lt;<code>K</code>, <code>false</code>&gt;) =&gt; <code>ReactNode</code></p>
 <h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
 <p>▸ (<code>parent</code>): <code>ReactNode</code></p>
 <h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>parent</code></td>
-<td align="left"><code>NonInjectedItemListLayout</code>&lt;<code>K</code>, <code>false</code>></td>
+<td style="text-align: left;"><code>parent</code></td>
+<td style="text-align: left;"><code>NonInjectedItemListLayout</code>&lt;<code>K</code>, <code>false</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1254,30 +1254,30 @@
 <p>Omit.renderFooter</p>
 <hr />
 <h3 id="renderheadertitle">renderHeaderTitle<a class="headerlink" href="#renderheadertitle" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>renderHeaderTitle</strong>: <code>RenderHeaderTitle</code>&lt;<code>K</code>, <code>false</code>></p>
+<p>• <code>Optional</code> <strong>renderHeaderTitle</strong>: <code>RenderHeaderTitle</code>&lt;<code>K</code>, <code>false</code>&gt;</p>
 <h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p>Omit.renderHeaderTitle</p>
 <hr />
 <h3 id="renderitemmenu">renderItemMenu<a class="headerlink" href="#renderitemmenu" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>renderItemMenu</strong>: (<code>item</code>: <code>K</code>, <code>store</code>: <code>ItemListStore</code>&lt;<code>K</code>, <code>false</code>>) =&gt; <code>ReactNode</code></p>
+<p>• <code>Optional</code> <strong>renderItemMenu</strong>: (<code>item</code>: <code>K</code>, <code>store</code>: <code>ItemListStore</code>&lt;<code>K</code>, <code>false</code>&gt;) =&gt; <code>ReactNode</code></p>
 <h4 id="type-declaration_5">Type declaration<a class="headerlink" href="#type-declaration_5" title="Permanent link">#</a></h4>
 <p>▸ (<code>item</code>, <code>store</code>): <code>ReactNode</code></p>
 <h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 <tr>
-<td align="left"><code>store</code></td>
-<td align="left"><code>ItemListStore</code>&lt;<code>K</code>, <code>false</code>></td>
+<td style="text-align: left;"><code>store</code></td>
+<td style="text-align: left;"><code>ItemListStore</code>&lt;<code>K</code>, <code>false</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1294,14 +1294,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
@@ -1316,7 +1316,7 @@
 <p>Omit.renderTableHeader</p>
 <hr />
 <h3 id="searchfilters">searchFilters<a class="headerlink" href="#searchfilters" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>searchFilters</strong>: <code>SearchFilter</code>&lt;<code>K</code>>[]</p>
+<p>• <code>Optional</code> <strong>searchFilters</strong>: <code>SearchFilter</code>&lt;<code>K</code>&gt;[]</p>
 <h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
 <p>Omit.searchFilters</p>
 <hr />
@@ -1326,12 +1326,12 @@
 <p>Omit.showHeader</p>
 <hr />
 <h3 id="sortingcallbacks">sortingCallbacks<a class="headerlink" href="#sortingcallbacks" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>sortingCallbacks</strong>: <a href="../../modules/Renderer.Component/#tablesortcallbacks"><code>TableSortCallbacks</code></a>&lt;<code>K</code>></p>
+<p>• <code>Optional</code> <strong>sortingCallbacks</strong>: <a href="../../modules/Renderer.Component/#tablesortcallbacks"><code>TableSortCallbacks</code></a>&lt;<code>K</code>&gt;</p>
 <h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p>Omit.sortingCallbacks</p>
 <hr />
 <h3 id="store">store<a class="headerlink" href="#store" title="Permanent link">#</a></h3>
-<p>• <strong>store</strong>: <a href="../../classes/Renderer.K8sApi.KubeObjectStore/"><code>KubeObjectStore</code></a>&lt;<code>K</code>, <code>A</code>, <code>D</code>></p>
+<p>• <strong>store</strong>: <a href="../../classes/Renderer.K8sApi.KubeObjectStore/"><code>KubeObjectStore</code></a>&lt;<code>K</code>, <code>A</code>, <code>D</code>&gt;</p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p>Omit.store</p>
 <hr />
@@ -1344,7 +1344,7 @@
 <p>Omit.tableId</p>
 <hr />
 <h3 id="tableprops">tableProps<a class="headerlink" href="#tableprops" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>tableProps</strong>: <code>Partial</code>&lt;<a href="../Renderer.Component.TableProps/"><code>TableProps</code></a>&lt;<code>K</code>>></p>
+<p>• <code>Optional</code> <strong>tableProps</strong>: <code>Partial</code>&lt;<a href="../Renderer.Component.TableProps/"><code>TableProps</code></a>&lt;<code>K</code>&gt;&gt;</p>
 <h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
 <p>Omit.tableProps</p>
 <hr />

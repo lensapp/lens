@@ -901,14 +901,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>extension</code></td>
-<td align="left"><a href="../Renderer.LensExtension/"><code>LensExtension</code></a></td>
+<td style="text-align: left;"><code>extension</code></td>
+<td style="text-align: left;"><a href="../Renderer.LensExtension/"><code>LensExtension</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -918,10 +918,10 @@
 <h3 id="ipcprefix">[IpcPrefix]<a class="headerlink" href="#ipcprefix" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>[IpcPrefix]</strong>: <code>string</code></p>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>IpcRegistrar.__@IpcPrefix@80559</p>
+<p>IpcRegistrar.__@IpcPrefix@80554</p>
 <hr />
 <h3 id="extension">extension<a class="headerlink" href="#extension" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>extension</strong>: <code>LensExtension</code>&lt;<code>LensExtensionDependencies</code>></p>
+<p>• <code>Protected</code> <strong>extension</strong>: <code>LensExtension</code>&lt;<code>LensExtensionDependencies</code>&gt;</p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>IpcRegistrar.extension</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
@@ -931,21 +931,21 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>channel</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">The channel to broadcast to your whole extension, both <code>main</code> and <code>renderer</code></td>
+<td style="text-align: left;"><code>channel</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">The channel to broadcast to your whole extension, both <code>main</code> and <code>renderer</code></td>
 </tr>
 <tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>any</code>[]</td>
-<td align="left">The arguments passed to all listeners</td>
+<td style="text-align: left;"><code>...args</code></td>
+<td style="text-align: left;"><code>any</code>[]</td>
+<td style="text-align: left;">The arguments passed to all listeners</td>
 </tr>
 </tbody>
 </table>
@@ -955,7 +955,7 @@
 <p>IpcRegistrar.broadcast</p>
 <hr />
 <h3 id="invoke">invoke<a class="headerlink" href="#invoke" title="Permanent link">#</a></h3>
-<p>▸ <strong>invoke</strong>(<code>channel</code>, ...<code>args</code>): <code>Promise</code>&lt;<code>any</code>></p>
+<p>▸ <strong>invoke</strong>(<code>channel</code>, ...<code>args</code>): <code>Promise</code>&lt;<code>any</code>&gt;</p>
 <p>Request main to execute its function over the <code>channel</code> channel.
 This function only interacts with functions registered via <code>Ipc.IpcMain.handleRpc</code>
 An error will be thrown if no function has been registered on <code>main</code> with this channel ID.</p>
@@ -963,26 +963,26 @@ An error will be thrown if no function has been registered on <code>main</code> 
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>channel</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">The channel to invoke a RPC on</td>
+<td style="text-align: left;"><code>channel</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">The channel to invoke a RPC on</td>
 </tr>
 <tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>any</code>[]</td>
-<td align="left">The arguments to pass to the RPC</td>
+<td style="text-align: left;"><code>...args</code></td>
+<td style="text-align: left;"><code>any</code>[]</td>
+<td style="text-align: left;">The arguments to pass to the RPC</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>any</code>></p>
+<p><code>Promise</code>&lt;<code>any</code>&gt;</p>
 <p>A promise of the resulting value</p>
 <hr />
 <h3 id="listen">listen<a class="headerlink" href="#listen" title="Permanent link">#</a></h3>
@@ -994,21 +994,21 @@ a component then putting the returned value in a <code>disposeOnUnmount</code> c
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>channel</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">The channel to listen for broadcasts on</td>
+<td style="text-align: left;"><code>channel</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">The channel to listen for broadcasts on</td>
 </tr>
 <tr>
-<td align="left"><code>listener</code></td>
-<td align="left">(<code>event</code>: <code>IpcRendererEvent</code>, ...<code>args</code>: <code>any</code>[]) =&gt; <code>any</code></td>
-<td align="left">The function that will be called with the arguments of the broadcast</td>
+<td style="text-align: left;"><code>listener</code></td>
+<td style="text-align: left;">(<code>event</code>: <code>IpcRendererEvent</code>, ...<code>args</code>: <code>any</code>[]) =&gt; <code>any</code></td>
+<td style="text-align: left;">The function that will be called with the arguments of the broadcast</td>
 </tr>
 </tbody>
 </table>
@@ -1017,7 +1017,7 @@ a component then putting the returned value in a <code>disposeOnUnmount</code> c
 <p>An optional disposer, Lens will cleanup even if this is not called</p>
 <hr />
 <h3 id="createinstance">createInstance<a class="headerlink" href="#createinstance" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>createInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, ...<code>args</code>): <code>T</code></p>
+<p>▸ <code>Static</code> <strong>createInstance</strong>&lt;<code>T</code>, <code>R</code>&gt;(<code>this</code>, ...<code>args</code>): <code>T</code></p>
 <p>Creates the single instance of the child class if one was not already created.</p>
 <p>Multiple calls will return the same instance.
 Essentially throwing away the arguments to the subsequent calls.</p>
@@ -1027,18 +1027,18 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 <tr>
-<td align="left"><code>R</code></td>
-<td align="left">extends <code>any</code>[]</td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">extends <code>any</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1046,21 +1046,21 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>this</code></td>
-<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
-<td align="left">Implicit argument that is the child class type</td>
+<td style="text-align: left;"><code>this</code></td>
+<td style="text-align: left;"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>&gt;</td>
+<td style="text-align: left;">Implicit argument that is the child class type</td>
 </tr>
 <tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>R</code></td>
-<td align="left">The constructor arguments for the child class</td>
+<td style="text-align: left;"><code>...args</code></td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">The constructor arguments for the child class</td>
 </tr>
 </tbody>
 </table>
@@ -1071,24 +1071,24 @@ only the first's arguments will be used.</p>
 <p>IpcRegistrar.createInstance</p>
 <hr />
 <h3 id="getinstance">getInstance<a class="headerlink" href="#getinstance" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>strict?</code>): <code>T</code></p>
+<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>&gt;(<code>this</code>, <code>strict?</code>): <code>T</code></p>
 <p>Get the instance of the child class that was previously created.</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 <tr>
-<td align="left"><code>R</code></td>
-<td align="left">extends <code>any</code>[]</td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">extends <code>any</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1096,21 +1096,21 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>this</code></td>
-<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
-<td align="left">Implicit argument that is the child class type</td>
+<td style="text-align: left;"><code>this</code></td>
+<td style="text-align: left;"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>&gt;</td>
+<td style="text-align: left;">Implicit argument that is the child class type</td>
 </tr>
 <tr>
-<td align="left"><code>strict?</code></td>
-<td align="left"><code>true</code></td>
-<td align="left">If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
+<td style="text-align: left;"><code>strict?</code></td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
 </tr>
 </tbody>
 </table>
@@ -1119,23 +1119,23 @@ only the first's arguments will be used.</p>
 <p>An instance of the child class</p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>IpcRegistrar.getInstance</p>
-<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>strict</code>): <code>undefined</code> | <code>T</code></p>
+<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>&gt;(<code>this</code>, <code>strict</code>): <code>undefined</code> | <code>T</code></p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 <tr>
-<td align="left"><code>R</code></td>
-<td align="left">extends <code>any</code>[]</td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">extends <code>any</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1143,18 +1143,18 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>this</code></td>
-<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
+<td style="text-align: left;"><code>this</code></td>
+<td style="text-align: left;"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>strict</code></td>
-<td align="left"><code>false</code></td>
+<td style="text-align: left;"><code>strict</code></td>
+<td style="text-align: left;"><code>false</code></td>
 </tr>
 </tbody>
 </table>

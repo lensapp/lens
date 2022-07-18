@@ -1263,7 +1263,7 @@
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.JobStore</p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="../Renderer.K8sApi.KubeObjectStore/"><code>KubeObjectStore</code></a>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>, <code>JobApi</code>></li>
+<li><a href="../Renderer.K8sApi.KubeObjectStore/"><code>KubeObjectStore</code></a>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>, <code>JobApi</code>&gt;</li>
 </ul>
 <p>↳ <strong><code>JobStore</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -1348,22 +1348,22 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>dependencies</code></td>
-<td align="left"><code>Dependencies</code></td>
+<td style="text-align: left;"><code>dependencies</code></td>
+<td style="text-align: left;"><code>Dependencies</code></td>
 </tr>
 <tr>
-<td align="left"><code>api</code></td>
-<td align="left"><code>JobApi</code></td>
+<td style="text-align: left;"><code>api</code></td>
+<td style="text-align: left;"><code>JobApi</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts?</code></td>
-<td align="left"><code>KubeObjectStoreOptions</code></td>
+<td style="text-align: left;"><code>opts?</code></td>
+<td style="text-align: left;"><code>KubeObjectStoreOptions</code></td>
 </tr>
 </tbody>
 </table>
@@ -1384,7 +1384,7 @@
 <p>• <code>Protected</code> <code>Readonly</code> <strong>dependencies</strong>: <code>Dependencies</code></p>
 <hr />
 <h3 id="eventsbuffer">eventsBuffer<a class="headerlink" href="#eventsbuffer" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>eventsBuffer</strong>: <code>IObservableArray</code>&lt;<code>IKubeWatchEvent</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#namespacescopedmetadata"><code>NamespaceScopedMetadata</code></a>, <code>JobStatus</code>, <code>JobSpec</code>>>></p>
+<p>• <code>Protected</code> <strong>eventsBuffer</strong>: <code>IObservableArray</code>&lt;<code>IKubeWatchEvent</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#namespacescopedmetadata"><code>NamespaceScopedMetadata</code></a>, <code>JobStatus</code>, <code>JobSpec</code>&gt;&gt;&gt;</p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#eventsbuffer">eventsBuffer</a></p>
 <hr />
@@ -1404,7 +1404,7 @@
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#isloading">isLoading</a></p>
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
-<p>• <strong>items</strong>: <code>IObservableArray</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>• <strong>items</strong>: <code>IObservableArray</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#items">items</a></p>
 <hr />
@@ -1414,12 +1414,12 @@
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#limit">limit</a></p>
 <hr />
 <h3 id="selecteditemsids">selectedItemsIds<a class="headerlink" href="#selecteditemsids" title="Permanent link">#</a></h3>
-<p>• <strong>selectedItemsIds</strong>: <code>ObservableSet</code>&lt;<code>string</code>></p>
+<p>• <strong>selectedItemsIds</strong>: <code>ObservableSet</code>&lt;<code>string</code>&gt;</p>
 <h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#selecteditemsids">selectedItemsIds</a></p>
 <hr />
 <h3 id="defaultcontext">defaultContext<a class="headerlink" href="#defaultcontext" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <code>Readonly</code> <strong>defaultContext</strong>: <code>IObservableValue</code>&lt;<code>undefined</code> | <code>ClusterContext</code>></p>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>defaultContext</strong>: <code>IObservableValue</code>&lt;<code>undefined</code> | <code>ClusterContext</code>&gt;</p>
 <h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#defaultcontext">defaultContext</a></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
@@ -1438,16 +1438,16 @@
 <p>KubeObjectStore.contextItems</p>
 <hr />
 <h3 id="contextready">contextReady<a class="headerlink" href="#contextready" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>contextReady</strong>(): <code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p>• <code>get</code> <strong>contextReady</strong>(): <code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p><code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.contextReady</p>
 <hr />
 <h3 id="namespacesready">namespacesReady<a class="headerlink" href="#namespacesready" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>namespacesReady</strong>(): <code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p>• <code>get</code> <strong>namespacesReady</strong>(): <code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p><code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>KubeObjectStore.namespacesReady</p>
 <hr />
@@ -1466,9 +1466,9 @@
 <p>KubeObjectStore.selectedItems</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="iterator">[iterator]<a class="headerlink" href="#iterator" title="Permanent link">#</a></h3>
-<p>▸ <strong>[iterator]</strong>(): <code>Generator</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>, <code>void</code>, <code>undefined</code>></p>
+<p>▸ <strong>[iterator]</strong>(): <code>Generator</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>, <code>void</code>, <code>undefined</code>&gt;</p>
 <h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>Generator</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>, <code>void</code>, <code>undefined</code>></p>
+<p><code>Generator</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>, <code>void</code>, <code>undefined</code>&gt;</p>
 <h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#[iterator]">[iterator]</a></p>
 <hr />
@@ -1478,16 +1478,16 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Default value</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>delay</code></td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>1000</code></td>
+<td style="text-align: left;"><code>delay</code></td>
+<td style="text-align: left;"><code>number</code></td>
+<td style="text-align: left;"><code>1000</code></td>
 </tr>
 </tbody>
 </table>
@@ -1497,70 +1497,70 @@
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#bindwatcheventsupdater">bindWatchEventsUpdater</a></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <strong>create</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <strong>create</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>data?</code></td>
-<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></td>
+<td style="text-align: left;"><code>data?</code></td>
+<td style="text-align: left;"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#create">create</a></p>
 <hr />
 <h3 id="createitem">createItem<a class="headerlink" href="#createitem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>createItem</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <code>Protected</code> <strong>createItem</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>data?</code></td>
-<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></td>
+<td style="text-align: left;"><code>data?</code></td>
+<td style="text-align: left;"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#createitem">createItem</a></p>
 <hr />
@@ -1570,14 +1570,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>Item</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1592,14 +1592,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1614,21 +1614,21 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Default value</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>namespace</code></td>
-<td align="left"><code>string</code> | <code>string</code>[]</td>
-<td align="left"><code>undefined</code></td>
+<td style="text-align: left;"><code>namespace</code></td>
+<td style="text-align: left;"><code>string</code> | <code>string</code>[]</td>
+<td style="text-align: left;"><code>undefined</code></td>
 </tr>
 <tr>
-<td align="left"><code>strict</code></td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
+<td style="text-align: left;"><code>strict</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
+<td style="text-align: left;"><code>false</code></td>
 </tr>
 </tbody>
 </table>
@@ -1643,14 +1643,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1665,14 +1665,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>labels</code></td>
-<td align="left"><code>string</code>[] | <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></td>
+<td style="text-align: left;"><code>labels</code></td>
+<td style="text-align: left;"><code>string</code>[] | <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>&gt;&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1687,18 +1687,18 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1713,14 +1713,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>path</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1735,14 +1735,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>job</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>job</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1755,14 +1755,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1784,14 +1784,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>cronJob</code></td>
-<td align="left"><a href="../Renderer.K8sApi.CronJob/"><code>CronJob</code></a></td>
+<td style="text-align: left;"><code>cronJob</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.CronJob/"><code>CronJob</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1804,14 +1804,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>jobs?</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;"><code>jobs?</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1820,26 +1820,26 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>failed</code></td>
-<td align="left"><code>number</code></td>
+<td style="text-align: left;"><code>failed</code></td>
+<td style="text-align: left;"><code>number</code></td>
 </tr>
 <tr>
-<td align="left"><code>pending</code></td>
-<td align="left"><code>number</code></td>
+<td style="text-align: left;"><code>pending</code></td>
+<td style="text-align: left;"><code>number</code></td>
 </tr>
 <tr>
-<td align="left"><code>running</code></td>
-<td align="left"><code>number</code></td>
+<td style="text-align: left;"><code>running</code></td>
+<td style="text-align: left;"><code>number</code></td>
 </tr>
 <tr>
-<td align="left"><code>succeeded</code></td>
-<td align="left"><code>number</code></td>
+<td style="text-align: left;"><code>succeeded</code></td>
+<td style="text-align: left;"><code>number</code></td>
 </tr>
 </tbody>
 </table>
@@ -1857,14 +1857,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1879,14 +1879,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>visibleItems</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;"><code>visibleItems</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1896,128 +1896,128 @@
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#isselectedall">isSelectedAll</a></p>
 <hr />
 <h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
-<p>▸ <strong>load</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <strong>load</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#load">load</a></p>
 <hr />
 <h3 id="loadall">loadAll<a class="headerlink" href="#loadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]></p>
+<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]&gt;</p>
 <h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadAllParams/"><code>KubeObjectStoreLoadAllParams</code></a></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadAllParams/"><code>KubeObjectStoreLoadAllParams</code></a></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]></p>
+<p><code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]&gt;</p>
 <h4 id="inherited-from_33">Inherited from<a class="headerlink" href="#inherited-from_33" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loadall">loadAll</a></p>
 <hr />
 <h3 id="loadfrompath">loadFromPath<a class="headerlink" href="#loadfrompath" title="Permanent link">#</a></h3>
-<p>▸ <strong>loadFromPath</strong>(<code>resourcePath</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <strong>loadFromPath</strong>(<code>resourcePath</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>resourcePath</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>resourcePath</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_34">Inherited from<a class="headerlink" href="#inherited-from_34" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loadfrompath">loadFromPath</a></p>
 <hr />
 <h3 id="loaditem">loadItem<a class="headerlink" href="#loaditem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>loadItem</strong>(<code>params</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <code>Protected</code> <strong>loadItem</strong>(<code>params</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<code>null</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_35">Inherited from<a class="headerlink" href="#inherited-from_35" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loaditem">loadItem</a></p>
 <hr />
 <h3 id="loaditems">loadItems<a class="headerlink" href="#loaditems" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]></p>
+<p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]&gt;</p>
 <h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadingParams/"><code>KubeObjectStoreLoadingParams</code></a></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadingParams/"><code>KubeObjectStoreLoadingParams</code></a></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]></p>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]&gt;</p>
 <h4 id="inherited-from_36">Inherited from<a class="headerlink" href="#inherited-from_36" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#loaditems">loadItems</a></p>
 <hr />
@@ -2027,18 +2027,18 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>partialItems</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;"><code>partialItems</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
 </tr>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>MergeItemsOptions</code></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><code>MergeItemsOptions</code></td>
 </tr>
 </tbody>
 </table>
@@ -2048,28 +2048,28 @@
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#mergeitems">mergeItems</a></p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
-<p>▸ <strong>patch</strong>(<code>item</code>, <code>patch</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <strong>patch</strong>(<code>item</code>, <code>patch</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>patch</code></td>
-<td align="left"><code>Patch</code></td>
+<td style="text-align: left;"><code>patch</code></td>
+<td style="text-align: left;"><code>Patch</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_38">Inherited from<a class="headerlink" href="#inherited-from_38" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#patch">patch</a></p>
 <hr />
@@ -2079,14 +2079,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
 </tr>
 </tbody>
 </table>
@@ -2096,113 +2096,113 @@
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#pickonlyselected">pickOnlySelected</a></p>
 <hr />
 <h3 id="reloadall">reloadAll<a class="headerlink" href="#reloadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]></p>
+<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]&gt;</p>
 <h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>opts</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>opts</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts.force?</code></td>
-<td align="left"><code>boolean</code></td>
+<td style="text-align: left;"><code>opts.force?</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts.merge?</code></td>
-<td align="left"><code>boolean</code></td>
+<td style="text-align: left;"><code>opts.merge?</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts.namespaces?</code></td>
-<td align="left"><code>string</code>[]</td>
+<td style="text-align: left;"><code>opts.namespaces?</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]></p>
+<p><code>Promise</code>&lt;<code>undefined</code> | <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]&gt;</p>
 <h4 id="inherited-from_40">Inherited from<a class="headerlink" href="#inherited-from_40" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#reloadall">reloadAll</a></p>
 <hr />
 <h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
-<p>▸ <strong>remove</strong>(<code>item</code>): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>remove</strong>(<code>item</code>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_41">Inherited from<a class="headerlink" href="#inherited-from_41" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#remove">remove</a></p>
 <hr />
 <h3 id="removeitem">removeItem<a class="headerlink" href="#removeitem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>removeItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <code>Protected</code> <strong>removeItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>request</code></td>
-<td align="left">() =&gt; <code>Promise</code>&lt;<code>any</code>></td>
+<td style="text-align: left;"><code>request</code></td>
+<td style="text-align: left;">() =&gt; <code>Promise</code>&lt;<code>any</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_35">Returns<a class="headerlink" href="#returns_35" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_42">Inherited from<a class="headerlink" href="#inherited-from_42" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#removeitem">removeItem</a></p>
 <hr />
 <h3 id="removeitems">removeItems<a class="headerlink" href="#removeitems" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeItems</strong>(<code>items</code>): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>removeItems</strong>(<code>items</code>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_36">Returns<a class="headerlink" href="#returns_36" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_43">Inherited from<a class="headerlink" href="#inherited-from_43" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#removeitems">removeItems</a></p>
 <hr />
 <h3 id="removeselecteditems">removeSelectedItems<a class="headerlink" href="#removeselecteditems" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeSelectedItems</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>removeSelectedItems</strong>(): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="returns_37">Returns<a class="headerlink" href="#returns_37" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_44">Inherited from<a class="headerlink" href="#inherited-from_44" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#removeselecteditems">removeSelectedItems</a></p>
 <hr />
@@ -2219,14 +2219,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>error</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>error</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
@@ -2248,14 +2248,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2274,26 +2274,26 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
-<td align="left">the items to be sorted (default: the current items in this store)</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;">the items to be sorted (default: the current items in this store)</td>
 </tr>
 <tr>
-<td align="left"><code>sorting</code></td>
-<td align="left">(<code>item</code>: <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>) =&gt; <code>any</code>[]</td>
-<td align="left">list of functions to determine sort order (default: sorting by name)</td>
+<td style="text-align: left;"><code>sorting</code></td>
+<td style="text-align: left;">(<code>item</code>: <a href="../Renderer.K8sApi.Job/"><code>Job</code></a>) =&gt; <code>any</code>[]</td>
+<td style="text-align: left;">list of functions to determine sort order (default: sorting by name)</td>
 </tr>
 <tr>
-<td align="left"><code>order?</code></td>
-<td align="left"><code>"asc"</code> | <code>"desc"</code></td>
-<td align="left">whether to sort from least to greatest (<code>"asc"</code> (default)) or vice-versa (<code>"desc"</code>)</td>
+<td style="text-align: left;"><code>order?</code></td>
+<td style="text-align: left;"><code>"asc"</code> | <code>"desc"</code></td>
+<td style="text-align: left;">whether to sort from least to greatest (<code>"asc"</code> (default)) or vice-versa (<code>"desc"</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -2308,14 +2308,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreSubscribeParams/"><code>KubeObjectStoreSubscribeParams</code></a></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreSubscribeParams/"><code>KubeObjectStoreSubscribeParams</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2330,14 +2330,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2352,14 +2352,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>visibleItems</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
+<td style="text-align: left;"><code>visibleItems</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a>[]</td>
 </tr>
 </tbody>
 </table>
@@ -2374,14 +2374,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2391,28 +2391,28 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#unselect">unselect</a></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>data</code></td>
-<td align="left"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></td>
+<td style="text-align: left;"><code>data</code></td>
+<td style="text-align: left;"><code>PartialObjectDeep</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_47">Returns<a class="headerlink" href="#returns_47" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_54">Inherited from<a class="headerlink" href="#inherited-from_54" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#update">update</a></p>
 <hr />
@@ -2424,28 +2424,28 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#updatefromeventsbuffer">updateFromEventsBuffer</a></p>
 <hr />
 <h3 id="updateitem">updateItem<a class="headerlink" href="#updateitem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><a href="../Renderer.K8sApi.Job/"><code>Job</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>request</code></td>
-<td align="left">() =&gt; <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></td>
+<td style="text-align: left;"><code>request</code></td>
+<td style="text-align: left;">() =&gt; <code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_49">Returns<a class="headerlink" href="#returns_49" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>></p>
+<p><code>Promise</code>&lt;<a href="../Renderer.K8sApi.Job/"><code>Job</code></a>&gt;</p>
 <h4 id="inherited-from_56">Inherited from<a class="headerlink" href="#inherited-from_56" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObjectStore/">KubeObjectStore</a>.<a href="../Renderer.K8sApi.KubeObjectStore/#updateitem">updateItem</a></p>
                 

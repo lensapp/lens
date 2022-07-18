@@ -884,20 +884,20 @@
                 
                 
                 
-                <h1 id="interface-basekubejsonapiobjectmetadatanamespaced">Interface: BaseKubeJsonApiObjectMetadata&lt;Namespaced><a class="headerlink" href="#interface-basekubejsonapiobjectmetadatanamespaced" title="Permanent link">#</a></h1>
+                <h1 id="interface-basekubejsonapiobjectmetadatanamespaced">Interface: BaseKubeJsonApiObjectMetadata&lt;Namespaced&gt;<a class="headerlink" href="#interface-basekubejsonapiobjectmetadatanamespaced" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.BaseKubeJsonApiObjectMetadata</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Namespaced</code></td>
-<td align="left">extends <code>KubeObjectScope</code></td>
+<td style="text-align: left;"><code>Namespaced</code></td>
+<td style="text-align: left;">extends <code>KubeObjectScope</code></td>
 </tr>
 </tbody>
 </table>
@@ -925,7 +925,7 @@
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="annotations">annotations<a class="headerlink" href="#annotations" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>annotations</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></p>
+<p>• <code>Optional</code> <strong>annotations</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>&gt;&gt;</p>
 <p>Annotations is an unstructured key value map stored with a resource that may be set by
 external tools to store and retrieve arbitrary metadata. They are not queryable and should be
 preserved when modifying objects.</p>
@@ -999,7 +999,7 @@ in the Retry-After header). Applied only if Name is not specified.</p>
 system.</p>
 <hr />
 <h3 id="labels">labels<a class="headerlink" href="#labels" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>labels</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></p>
+<p>• <code>Optional</code> <strong>labels</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>&gt;&gt;</p>
 <p>Map of string keys and values that can be used to organize and categorize (scope and select)
 objects. May match selectors of replication controllers and services.</p>
 <p>More info: http://kubernetes.io/docs/user-guide/labels</p>
@@ -1020,7 +1020,7 @@ Name is primarily intended for creation idempotence and configuration definition
 <p>More info: http://kubernetes.io/docs/user-guide/identifiers#names</p>
 <hr />
 <h3 id="namespace">namespace<a class="headerlink" href="#namespace" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <code>Readonly</code> <strong>namespace</strong>: <code>ScopedNamespace</code>&lt;<code>Namespaced</code>></p>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>namespace</strong>: <code>ScopedNamespace</code>&lt;<code>Namespaced</code>&gt;</p>
 <p>Namespace defines the space within which each name must be unique. An empty namespace is
 equivalent to the "default" namespace, but "default" is the canonical representation. Not all
 objects are required to be scoped to a namespace - the value of this field for those objects

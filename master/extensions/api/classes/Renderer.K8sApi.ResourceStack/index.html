@@ -889,24 +889,24 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>cluster</code></td>
-<td align="left"><a href="../Common.Catalog.KubernetesCluster/"><code>KubernetesCluster</code></a>&lt;<a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a>></td>
+<td style="text-align: left;"><code>cluster</code></td>
+<td style="text-align: left;"><a href="../Common.Catalog.KubernetesCluster/"><code>KubernetesCluster</code></a>&lt;<a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="cluster">cluster<a class="headerlink" href="#cluster" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>cluster</strong>: <a href="../Common.Catalog.KubernetesCluster/"><code>KubernetesCluster</code></a>&lt;<a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a>></p>
+<p>• <code>Protected</code> <strong>cluster</strong>: <a href="../Common.Catalog.KubernetesCluster/"><code>KubernetesCluster</code></a>&lt;<a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a>&gt;</p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <strong>name</strong>: <code>string</code></p>
@@ -917,14 +917,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>kubectlArgs</code></td>
-<td align="left"><code>string</code>[]</td>
+<td style="text-align: left;"><code>kubectlArgs</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -932,140 +932,140 @@
 <p><code>string</code>[]</p>
 <hr />
 <h3 id="applyresources">applyResources<a class="headerlink" href="#applyresources" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>applyResources</strong>(<code>resources</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>></p>
+<p>▸ <code>Protected</code> <strong>applyResources</strong>(<code>resources</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>&gt;</p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>resources</code></td>
-<td align="left"><code>string</code>[]</td>
+<td style="text-align: left;"><code>resources</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
 </tr>
 <tr>
-<td align="left"><code>extraArgs?</code></td>
-<td align="left"><code>string</code>[]</td>
+<td style="text-align: left;"><code>extraArgs?</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>string</code>></p>
+<p><code>Promise</code>&lt;<code>string</code>&gt;</p>
 <hr />
 <h3 id="deleteresources">deleteResources<a class="headerlink" href="#deleteresources" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>deleteResources</strong>(<code>resources</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>></p>
+<p>▸ <code>Protected</code> <strong>deleteResources</strong>(<code>resources</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>&gt;</p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>resources</code></td>
-<td align="left"><code>string</code>[]</td>
+<td style="text-align: left;"><code>resources</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
 </tr>
 <tr>
-<td align="left"><code>extraArgs?</code></td>
-<td align="left"><code>string</code>[]</td>
+<td style="text-align: left;"><code>extraArgs?</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>string</code>></p>
+<p><code>Promise</code>&lt;<code>string</code>&gt;</p>
 <hr />
 <h3 id="kubectlapplyfolder">kubectlApplyFolder<a class="headerlink" href="#kubectlapplyfolder" title="Permanent link">#</a></h3>
-<p>▸ <strong>kubectlApplyFolder</strong>(<code>folderPath</code>, <code>templateContext?</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>></p>
+<p>▸ <strong>kubectlApplyFolder</strong>(<code>folderPath</code>, <code>templateContext?</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>&gt;</p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>folderPath</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">folder path that is searched for files defining kubernetes resources.</td>
+<td style="text-align: left;"><code>folderPath</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">folder path that is searched for files defining kubernetes resources.</td>
 </tr>
 <tr>
-<td align="left"><code>templateContext?</code></td>
-<td align="left"><code>any</code></td>
-<td align="left">sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.</td>
+<td style="text-align: left;"><code>templateContext?</code></td>
+<td style="text-align: left;"><code>any</code></td>
+<td style="text-align: left;">sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.</td>
 </tr>
 <tr>
-<td align="left"><code>extraArgs?</code></td>
-<td align="left"><code>string</code>[]</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>extraArgs?</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
+<td style="text-align: left;">-</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>string</code>></p>
+<p><code>Promise</code>&lt;<code>string</code>&gt;</p>
 <hr />
 <h3 id="kubectldeletefolder">kubectlDeleteFolder<a class="headerlink" href="#kubectldeletefolder" title="Permanent link">#</a></h3>
-<p>▸ <strong>kubectlDeleteFolder</strong>(<code>folderPath</code>, <code>templateContext?</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>></p>
+<p>▸ <strong>kubectlDeleteFolder</strong>(<code>folderPath</code>, <code>templateContext?</code>, <code>extraArgs?</code>): <code>Promise</code>&lt;<code>string</code>&gt;</p>
 <h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>folderPath</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">folder path that is searched for files defining kubernetes resources.</td>
+<td style="text-align: left;"><code>folderPath</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">folder path that is searched for files defining kubernetes resources.</td>
 </tr>
 <tr>
-<td align="left"><code>templateContext?</code></td>
-<td align="left"><code>any</code></td>
-<td align="left">sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.</td>
+<td style="text-align: left;"><code>templateContext?</code></td>
+<td style="text-align: left;"><code>any</code></td>
+<td style="text-align: left;">sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.</td>
 </tr>
 <tr>
-<td align="left"><code>extraArgs?</code></td>
-<td align="left"><code>string</code>[]</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>extraArgs?</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
+<td style="text-align: left;">-</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>string</code>></p>
+<p><code>Promise</code>&lt;<code>string</code>&gt;</p>
 <hr />
 <h3 id="rendertemplates">renderTemplates<a class="headerlink" href="#rendertemplates" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>renderTemplates</strong>(<code>folderPath</code>, <code>templateContext</code>): <code>Promise</code>&lt;<code>string</code>[]></p>
+<p>▸ <code>Protected</code> <strong>renderTemplates</strong>(<code>folderPath</code>, <code>templateContext</code>): <code>Promise</code>&lt;<code>string</code>[]&gt;</p>
 <h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>folderPath</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>folderPath</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>templateContext</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>templateContext</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>string</code>[]></p>
+<p><code>Promise</code>&lt;<code>string</code>[]&gt;</p>
                 
               
               

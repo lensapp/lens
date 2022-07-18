@@ -1238,34 +1238,34 @@
                 
                 
                 
-                <h1 id="class-kubeobjectstorek-a-d">Class: KubeObjectStore&lt;K, A, D><a class="headerlink" href="#class-kubeobjectstorek-a-d" title="Permanent link">#</a></h1>
+                <h1 id="class-kubeobjectstorek-a-d">Class: KubeObjectStore&lt;K, A, D&gt;<a class="headerlink" href="#class-kubeobjectstorek-a-d" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeObjectStore</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>K</code></td>
-<td align="left">extends <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a> = <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
+<td style="text-align: left;"><code>K</code></td>
+<td style="text-align: left;">extends <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a> = <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>A</code></td>
-<td align="left">extends <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>> = <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>KubeJsonApiDataFor</code>&lt;<code>K</code>>></td>
+<td style="text-align: left;"><code>A</code></td>
+<td style="text-align: left;">extends <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>&gt; = <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>KubeJsonApiDataFor</code>&lt;<code>K</code>&gt;&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>D</code></td>
-<td align="left">extends <code>KubeJsonApiDataFor</code>&lt;<code>K</code>> = <code>KubeApiDataFrom</code>&lt;<code>K</code>, <code>A</code>></td>
+<td style="text-align: left;"><code>D</code></td>
+<td style="text-align: left;">extends <code>KubeJsonApiDataFor</code>&lt;<code>K</code>&gt; = <code>KubeApiDataFrom</code>&lt;<code>K</code>, <code>A</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>ItemStore</code>&lt;<code>K</code>></li>
+<li><code>ItemStore</code>&lt;<code>K</code>&gt;</li>
 </ul>
 <p>↳ <strong><code>KubeObjectStore</code></strong></p>
 <p>↳↳ <a href="../Renderer.K8sApi.EventStore/"><code>EventStore</code></a></p>
@@ -1369,27 +1369,27 @@
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new KubeObjectStore</strong>&lt;<code>K</code>, <code>A</code>, <code>D</code>>(<code>api</code>, <code>opts?</code>)</p>
+<p>• <strong>new KubeObjectStore</strong>&lt;<code>K</code>, <code>A</code>, <code>D</code>&gt;(<code>api</code>, <code>opts?</code>)</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>K</code></td>
-<td align="left">extends <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>K</code>> = <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
+<td style="text-align: left;"><code>K</code></td>
+<td style="text-align: left;">extends <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>K</code>&gt; = <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>A</code></td>
-<td align="left">extends <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>, <code>A</code>> = <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>KubeJsonApiDataFor</code>&lt;<code>K</code>>></td>
+<td style="text-align: left;"><code>A</code></td>
+<td style="text-align: left;">extends <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>, <code>A</code>&gt; = <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>KubeJsonApiDataFor</code>&lt;<code>K</code>&gt;&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>D</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>D</code>> = <code>KubeApiDataFrom</code>&lt;<code>K</code>, <code>A</code>></td>
+<td style="text-align: left;"><code>D</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>D</code>&gt; = <code>KubeApiDataFrom</code>&lt;<code>K</code>, <code>A</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1397,45 +1397,45 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>api</code></td>
-<td align="left"><code>A</code></td>
+<td style="text-align: left;"><code>api</code></td>
+<td style="text-align: left;"><code>A</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts?</code></td>
-<td align="left"><code>KubeObjectStoreOptions</code></td>
+<td style="text-align: left;"><code>opts?</code></td>
+<td style="text-align: left;"><code>KubeObjectStoreOptions</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p>ItemStore&lt;K\&gt;.constructor</p>
-<p>• <strong>new KubeObjectStore</strong>&lt;<code>K</code>, <code>A</code>, <code>D</code>>()</p>
+<p>• <strong>new KubeObjectStore</strong>&lt;<code>K</code>, <code>A</code>, <code>D</code>&gt;()</p>
 <p><strong><code>deprecated</code></strong> Supply API instance through constructor</p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>K</code></td>
-<td align="left">extends <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>K</code>> = <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
+<td style="text-align: left;"><code>K</code></td>
+<td style="text-align: left;">extends <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>K</code>&gt; = <a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>A</code></td>
-<td align="left">extends <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>, <code>A</code>> = <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>KubeJsonApiDataFor</code>&lt;<code>K</code>>></td>
+<td style="text-align: left;"><code>A</code></td>
+<td style="text-align: left;">extends <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>, <code>A</code>&gt; = <a href="../Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>KubeJsonApiDataFor</code>&lt;<code>K</code>&gt;&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>D</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>D</code>> = <code>KubeApiDataFrom</code>&lt;<code>K</code>, <code>A</code>></td>
+<td style="text-align: left;"><code>D</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>D</code>&gt; = <code>KubeApiDataFrom</code>&lt;<code>K</code>, <code>A</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1449,7 +1449,7 @@
 <p>• <code>Readonly</code> <strong>bufferSize</strong>: <code>number</code></p>
 <hr />
 <h3 id="eventsbuffer">eventsBuffer<a class="headerlink" href="#eventsbuffer" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>eventsBuffer</strong>: <code>IObservableArray</code>&lt;<code>IKubeWatchEvent</code>&lt;<code>D</code>>></p>
+<p>• <code>Protected</code> <strong>eventsBuffer</strong>: <code>IObservableArray</code>&lt;<code>IKubeWatchEvent</code>&lt;<code>D</code>&gt;&gt;</p>
 <hr />
 <h3 id="failedloading">failedLoading<a class="headerlink" href="#failedloading" title="Permanent link">#</a></h3>
 <p>• <strong>failedLoading</strong>: <code>boolean</code> = <code>false</code></p>
@@ -1467,7 +1467,7 @@
 <p>ItemStore.isLoading</p>
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
-<p>• <strong>items</strong>: <code>IObservableArray</code>&lt;<code>K</code>></p>
+<p>• <strong>items</strong>: <code>IObservableArray</code>&lt;<code>K</code>&gt;</p>
 <h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p>ItemStore.items</p>
 <hr />
@@ -1475,12 +1475,12 @@
 <p>• <code>Readonly</code> <strong>limit</strong>: <code>undefined</code> | <code>number</code></p>
 <hr />
 <h3 id="selecteditemsids">selectedItemsIds<a class="headerlink" href="#selecteditemsids" title="Permanent link">#</a></h3>
-<p>• <strong>selectedItemsIds</strong>: <code>ObservableSet</code>&lt;<code>string</code>></p>
+<p>• <strong>selectedItemsIds</strong>: <code>ObservableSet</code>&lt;<code>string</code>&gt;</p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>ItemStore.selectedItemsIds</p>
 <hr />
 <h3 id="defaultcontext">defaultContext<a class="headerlink" href="#defaultcontext" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <code>Readonly</code> <strong>defaultContext</strong>: <code>IObservableValue</code>&lt;<code>undefined</code> | <code>ClusterContext</code>></p>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>defaultContext</strong>: <code>IObservableValue</code>&lt;<code>undefined</code> | <code>ClusterContext</code>&gt;</p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="context">context<a class="headerlink" href="#context" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>context</strong>(): <code>undefined</code> | <code>ClusterContext</code></p>
@@ -1493,14 +1493,14 @@
 <p><code>K</code>[]</p>
 <hr />
 <h3 id="contextready">contextReady<a class="headerlink" href="#contextready" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>contextReady</strong>(): <code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p>• <code>get</code> <strong>contextReady</strong>(): <code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p><code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <hr />
 <h3 id="namespacesready">namespacesReady<a class="headerlink" href="#namespacesready" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>namespacesReady</strong>(): <code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p>• <code>get</code> <strong>namespacesReady</strong>(): <code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>> &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
+<p><code>Promise</code>&lt;<code>void</code>&gt; &amp; { <code>cancel</code>: () =&gt; <code>void</code>  }</p>
 <hr />
 <h3 id="query">query<a class="headerlink" href="#query" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>query</strong>(): <code>KubeApiQueryParams</code></p>
@@ -1515,9 +1515,9 @@
 <p>ItemStore.selectedItems</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="iterator">[iterator]<a class="headerlink" href="#iterator" title="Permanent link">#</a></h3>
-<p>▸ <strong>[iterator]</strong>(): <code>Generator</code>&lt;<code>K</code>, <code>void</code>, <code>undefined</code>></p>
+<p>▸ <strong>[iterator]</strong>(): <code>Generator</code>&lt;<code>K</code>, <code>void</code>, <code>undefined</code>&gt;</p>
 <h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>Generator</code>&lt;<code>K</code>, <code>void</code>, <code>undefined</code>></p>
+<p><code>Generator</code>&lt;<code>K</code>, <code>void</code>, <code>undefined</code>&gt;</p>
 <h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>ItemStore.__@iterator@515</p>
 <hr />
@@ -1527,16 +1527,16 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Default value</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>delay</code></td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>1000</code></td>
+<td style="text-align: left;"><code>delay</code></td>
+<td style="text-align: left;"><code>number</code></td>
+<td style="text-align: left;"><code>1000</code></td>
 </tr>
 </tbody>
 </table>
@@ -1544,68 +1544,68 @@
 <p><code>void</code></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <strong>create</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<code>K</code>></p>
+<p>▸ <strong>create</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<code>K</code>&gt;</p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>data?</code></td>
-<td align="left"><code>PartialDeep</code>&lt;<code>K</code>></td>
+<td style="text-align: left;"><code>data?</code></td>
+<td style="text-align: left;"><code>PartialDeep</code>&lt;<code>K</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>K</code>></p>
+<p><code>Promise</code>&lt;<code>K</code>&gt;</p>
 <hr />
 <h3 id="createitem">createItem<a class="headerlink" href="#createitem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>createItem</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<code>null</code> | <code>K</code>></p>
+<p>▸ <code>Protected</code> <strong>createItem</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<code>null</code> | <code>K</code>&gt;</p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>data?</code></td>
-<td align="left"><code>PartialDeep</code>&lt;<code>K</code>></td>
+<td style="text-align: left;"><code>data?</code></td>
+<td style="text-align: left;"><code>PartialDeep</code>&lt;<code>K</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>null</code> | <code>K</code>></p>
+<p><code>Promise</code>&lt;<code>null</code> | <code>K</code>&gt;</p>
 <h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p>ItemStore.createItem</p>
 <hr />
@@ -1615,14 +1615,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>Item</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1637,14 +1637,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><code>K</code>[]</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1657,21 +1657,21 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Default value</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>namespace</code></td>
-<td align="left"><code>string</code> | <code>string</code>[]</td>
-<td align="left"><code>undefined</code></td>
+<td style="text-align: left;"><code>namespace</code></td>
+<td style="text-align: left;"><code>string</code> | <code>string</code>[]</td>
+<td style="text-align: left;"><code>undefined</code></td>
 </tr>
 <tr>
-<td align="left"><code>strict</code></td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
+<td style="text-align: left;"><code>strict</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
+<td style="text-align: left;"><code>false</code></td>
 </tr>
 </tbody>
 </table>
@@ -1684,14 +1684,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1704,14 +1704,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>labels</code></td>
-<td align="left"><code>string</code>[] | <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></td>
+<td style="text-align: left;"><code>labels</code></td>
+<td style="text-align: left;"><code>string</code>[] | <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>&gt;&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1724,18 +1724,18 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1750,14 +1750,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>path</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>path</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1770,14 +1770,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1806,14 +1806,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
@@ -1828,14 +1828,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>visibleItems</code></td>
-<td align="left"><code>K</code>[]</td>
+<td style="text-align: left;"><code>visibleItems</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1845,122 +1845,122 @@
 <p>ItemStore.isSelectedAll</p>
 <hr />
 <h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
-<p>▸ <strong>load</strong>(<code>params</code>): <code>Promise</code>&lt;<code>K</code>></p>
+<p>▸ <strong>load</strong>(<code>params</code>): <code>Promise</code>&lt;<code>K</code>&gt;</p>
 <h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>K</code>></p>
+<p><code>Promise</code>&lt;<code>K</code>&gt;</p>
 <hr />
 <h3 id="loadall">loadAll<a class="headerlink" href="#loadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]></p>
+<p>▸ <strong>loadAll</strong>(<code>__namedParameters?</code>): <code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]&gt;</p>
 <h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadAllParams/"><code>KubeObjectStoreLoadAllParams</code></a></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadAllParams/"><code>KubeObjectStoreLoadAllParams</code></a></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]></p>
+<p><code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]&gt;</p>
 <hr />
 <h3 id="loadfrompath">loadFromPath<a class="headerlink" href="#loadfrompath" title="Permanent link">#</a></h3>
-<p>▸ <strong>loadFromPath</strong>(<code>resourcePath</code>): <code>Promise</code>&lt;<code>K</code>></p>
+<p>▸ <strong>loadFromPath</strong>(<code>resourcePath</code>): <code>Promise</code>&lt;<code>K</code>&gt;</p>
 <h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>resourcePath</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>resourcePath</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>K</code>></p>
+<p><code>Promise</code>&lt;<code>K</code>&gt;</p>
 <hr />
 <h3 id="loaditem">loadItem<a class="headerlink" href="#loaditem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>loadItem</strong>(<code>params</code>): <code>Promise</code>&lt;<code>null</code> | <code>K</code>></p>
+<p>▸ <code>Protected</code> <strong>loadItem</strong>(<code>params</code>): <code>Promise</code>&lt;<code>null</code> | <code>K</code>&gt;</p>
 <h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>params</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>params</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.name</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.name</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params.namespace?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>params.namespace?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>null</code> | <code>K</code>></p>
+<p><code>Promise</code>&lt;<code>null</code> | <code>K</code>&gt;</p>
 <h4 id="overrides_5">Overrides<a class="headerlink" href="#overrides_5" title="Permanent link">#</a></h4>
 <p>ItemStore.loadItem</p>
 <hr />
 <h3 id="loaditems">loadItems<a class="headerlink" href="#loaditems" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<code>K</code>[]></p>
+<p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<code>K</code>[]&gt;</p>
 <h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadingParams/"><code>KubeObjectStoreLoadingParams</code></a></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreLoadingParams/"><code>KubeObjectStoreLoadingParams</code></a></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>K</code>[]></p>
+<p><code>Promise</code>&lt;<code>K</code>[]&gt;</p>
 <h4 id="overrides_6">Overrides<a class="headerlink" href="#overrides_6" title="Permanent link">#</a></h4>
 <p>ItemStore.loadItems</p>
 <hr />
@@ -1970,18 +1970,18 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>partialItems</code></td>
-<td align="left"><code>K</code>[]</td>
+<td style="text-align: left;"><code>partialItems</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
 </tr>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>MergeItemsOptions</code></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><code>MergeItemsOptions</code></td>
 </tr>
 </tbody>
 </table>
@@ -1989,28 +1989,28 @@
 <p><code>K</code>[]</p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
-<p>▸ <strong>patch</strong>(<code>item</code>, <code>patch</code>): <code>Promise</code>&lt;<code>K</code>></p>
+<p>▸ <strong>patch</strong>(<code>item</code>, <code>patch</code>): <code>Promise</code>&lt;<code>K</code>&gt;</p>
 <h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 <tr>
-<td align="left"><code>patch</code></td>
-<td align="left"><code>Patch</code></td>
+<td style="text-align: left;"><code>patch</code></td>
+<td style="text-align: left;"><code>Patch</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>K</code>></p>
+<p><code>Promise</code>&lt;<code>K</code>&gt;</p>
 <hr />
 <h3 id="pickonlyselected">pickOnlySelected<a class="headerlink" href="#pickonlyselected" title="Permanent link">#</a></h3>
 <p>▸ <strong>pickOnlySelected</strong>(<code>items</code>): <code>K</code>[]</p>
@@ -2018,14 +2018,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><code>K</code>[]</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -2035,109 +2035,109 @@
 <p>ItemStore.pickOnlySelected</p>
 <hr />
 <h3 id="reloadall">reloadAll<a class="headerlink" href="#reloadall" title="Permanent link">#</a></h3>
-<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]></p>
+<p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]&gt;</p>
 <h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>opts</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>opts</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts.force?</code></td>
-<td align="left"><code>boolean</code></td>
+<td style="text-align: left;"><code>opts.force?</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts.merge?</code></td>
-<td align="left"><code>boolean</code></td>
+<td style="text-align: left;"><code>opts.merge?</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
 </tr>
 <tr>
-<td align="left"><code>opts.namespaces?</code></td>
-<td align="left"><code>string</code>[]</td>
+<td style="text-align: left;"><code>opts.namespaces?</code></td>
+<td style="text-align: left;"><code>string</code>[]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]></p>
+<p><code>Promise</code>&lt;<code>undefined</code> | <code>K</code>[]&gt;</p>
 <hr />
 <h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
-<p>▸ <strong>remove</strong>(<code>item</code>): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>remove</strong>(<code>item</code>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <hr />
 <h3 id="removeitem">removeItem<a class="headerlink" href="#removeitem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>removeItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <code>Protected</code> <strong>removeItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 <tr>
-<td align="left"><code>request</code></td>
-<td align="left">() =&gt; <code>Promise</code>&lt;<code>any</code>></td>
+<td style="text-align: left;"><code>request</code></td>
+<td style="text-align: left;">() =&gt; <code>Promise</code>&lt;<code>any</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>ItemStore.removeItem</p>
 <hr />
 <h3 id="removeitems">removeItems<a class="headerlink" href="#removeitems" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeItems</strong>(<code>items</code>): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>removeItems</strong>(<code>items</code>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><code>K</code>[]</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="overrides_7">Overrides<a class="headerlink" href="#overrides_7" title="Permanent link">#</a></h4>
 <p>ItemStore.removeItems</p>
 <hr />
 <h3 id="removeselecteditems">removeSelectedItems<a class="headerlink" href="#removeselecteditems" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeSelectedItems</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>removeSelectedItems</strong>(): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="overrides_8">Overrides<a class="headerlink" href="#overrides_8" title="Permanent link">#</a></h4>
 <p>ItemStore.removeSelectedItems</p>
 <hr />
@@ -2154,14 +2154,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>error</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>error</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
@@ -2181,14 +2181,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
@@ -2207,26 +2207,26 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>items</code></td>
-<td align="left"><code>K</code>[]</td>
-<td align="left">the items to be sorted (default: the current items in this store)</td>
+<td style="text-align: left;"><code>items</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
+<td style="text-align: left;">the items to be sorted (default: the current items in this store)</td>
 </tr>
 <tr>
-<td align="left"><code>sorting</code></td>
-<td align="left">(<code>item</code>: <code>K</code>) =&gt; <code>any</code>[]</td>
-<td align="left">list of functions to determine sort order (default: sorting by name)</td>
+<td style="text-align: left;"><code>sorting</code></td>
+<td style="text-align: left;">(<code>item</code>: <code>K</code>) =&gt; <code>any</code>[]</td>
+<td style="text-align: left;">list of functions to determine sort order (default: sorting by name)</td>
 </tr>
 <tr>
-<td align="left"><code>order?</code></td>
-<td align="left"><code>"asc"</code> | <code>"desc"</code></td>
-<td align="left">whether to sort from least to greatest (<code>"asc"</code> (default)) or vice-versa (<code>"desc"</code>)</td>
+<td style="text-align: left;"><code>order?</code></td>
+<td style="text-align: left;"><code>"asc"</code> | <code>"desc"</code></td>
+<td style="text-align: left;">whether to sort from least to greatest (<code>"asc"</code> (default)) or vice-versa (<code>"desc"</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -2241,14 +2241,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreSubscribeParams/"><code>KubeObjectStoreSubscribeParams</code></a></td>
+<td style="text-align: left;"><code>__namedParameters</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.K8sApi.KubeObjectStoreSubscribeParams/"><code>KubeObjectStoreSubscribeParams</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2261,14 +2261,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
@@ -2283,14 +2283,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>visibleItems</code></td>
-<td align="left"><code>K</code>[]</td>
+<td style="text-align: left;"><code>visibleItems</code></td>
+<td style="text-align: left;"><code>K</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -2305,14 +2305,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 </tbody>
 </table>
@@ -2322,28 +2322,28 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <p>ItemStore.unselect</p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<code>K</code>></p>
+<p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<code>K</code>&gt;</p>
 <h4 id="parameters_33">Parameters<a class="headerlink" href="#parameters_33" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 <tr>
-<td align="left"><code>data</code></td>
-<td align="left"><code>PartialDeep</code>&lt;<code>K</code>></td>
+<td style="text-align: left;"><code>data</code></td>
+<td style="text-align: left;"><code>PartialDeep</code>&lt;<code>K</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>K</code>></p>
+<p><code>Promise</code>&lt;<code>K</code>&gt;</p>
 <hr />
 <h3 id="updatefromeventsbuffer">updateFromEventsBuffer<a class="headerlink" href="#updatefromeventsbuffer" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>updateFromEventsBuffer</strong>(): <code>void</code></p>
@@ -2351,28 +2351,28 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <p><code>void</code></p>
 <hr />
 <h3 id="updateitem">updateItem<a class="headerlink" href="#updateitem" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<code>K</code>></p>
+<p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<code>K</code>&gt;</p>
 <h4 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>item</code></td>
-<td align="left"><code>K</code></td>
+<td style="text-align: left;"><code>item</code></td>
+<td style="text-align: left;"><code>K</code></td>
 </tr>
 <tr>
-<td align="left"><code>request</code></td>
-<td align="left">() =&gt; <code>Promise</code>&lt;<code>K</code>></td>
+<td style="text-align: left;"><code>request</code></td>
+<td style="text-align: left;">() =&gt; <code>Promise</code>&lt;<code>K</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_46">Returns<a class="headerlink" href="#returns_46" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>K</code>></p>
+<p><code>Promise</code>&lt;<code>K</code>&gt;</p>
 <h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p>ItemStore.updateItem</p>
                 

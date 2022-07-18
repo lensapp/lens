@@ -879,10 +879,10 @@
 <p>• <strong>new NotificationsStore</strong>()</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="autohidetimers">autoHideTimers<a class="headerlink" href="#autohidetimers" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>autoHideTimers</strong>: <code>Map</code>&lt;<a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a>, <code>number</code>></p>
+<p>• <code>Protected</code> <strong>autoHideTimers</strong>: <code>Map</code>&lt;<a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a>, <code>number</code>&gt;</p>
 <hr />
 <h3 id="notifications">notifications<a class="headerlink" href="#notifications" title="Permanent link">#</a></h3>
-<p>• <strong>notifications</strong>: <code>IObservableArray</code>&lt;<code>Simplify</code>&lt;<code>Except</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>> &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>>>>></p>
+<p>• <strong>notifications</strong>: <code>IObservableArray</code>&lt;<code>Simplify</code>&lt;<code>Except</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>&gt; &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>&gt;&gt;&gt;&gt;</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="add">add<a class="headerlink" href="#add" title="Permanent link">#</a></h3>
 <p>▸ <strong>add</strong>(<code>rawNotification</code>): () =&gt; <code>void</code></p>
@@ -890,14 +890,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>rawNotification</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a></td>
+<td style="text-align: left;"><code>rawNotification</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -913,14 +913,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -928,24 +928,24 @@
 <p><code>void</code></p>
 <hr />
 <h3 id="getbyid">getById<a class="headerlink" href="#getbyid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getById</strong>(<code>id</code>): <code>undefined</code> | <code>Simplify</code>&lt;<code>Except</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>> &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>>>></p>
+<p>▸ <strong>getById</strong>(<code>id</code>): <code>undefined</code> | <code>Simplify</code>&lt;<code>Except</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>&gt; &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>&gt;&gt;&gt;</p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>undefined</code> | <code>Simplify</code>&lt;<code>Except</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>> &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>>>></p>
+<p><code>undefined</code> | <code>Simplify</code>&lt;<code>Except</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>&gt; &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.Notification/"><code>Notification</code></a>, <code>"id"</code>&gt;&gt;&gt;</p>
 <hr />
 <h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
 <p>▸ <strong>remove</strong>(<code>id</code>): <code>void</code></p>
@@ -953,14 +953,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -973,14 +973,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><a href="../../modules/Renderer.Component/#notificationid"><code>NotificationId</code></a></td>
 </tr>
 </tbody>
 </table>

@@ -824,7 +824,7 @@
 <p>• <strong>new Singleton</strong>()</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="createinstance">createInstance<a class="headerlink" href="#createinstance" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>createInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, ...<code>args</code>): <code>T</code></p>
+<p>▸ <code>Static</code> <strong>createInstance</strong>&lt;<code>T</code>, <code>R</code>&gt;(<code>this</code>, ...<code>args</code>): <code>T</code></p>
 <p>Creates the single instance of the child class if one was not already created.</p>
 <p>Multiple calls will return the same instance.
 Essentially throwing away the arguments to the subsequent calls.</p>
@@ -834,18 +834,18 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 <tr>
-<td align="left"><code>R</code></td>
-<td align="left">extends <code>any</code>[]</td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">extends <code>any</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -853,21 +853,21 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>this</code></td>
-<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
-<td align="left">Implicit argument that is the child class type</td>
+<td style="text-align: left;"><code>this</code></td>
+<td style="text-align: left;"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>&gt;</td>
+<td style="text-align: left;">Implicit argument that is the child class type</td>
 </tr>
 <tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>R</code></td>
-<td align="left">The constructor arguments for the child class</td>
+<td style="text-align: left;"><code>...args</code></td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">The constructor arguments for the child class</td>
 </tr>
 </tbody>
 </table>
@@ -876,24 +876,24 @@ only the first's arguments will be used.</p>
 <p>An instance of the child class</p>
 <hr />
 <h3 id="getinstance">getInstance<a class="headerlink" href="#getinstance" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>strict?</code>): <code>T</code></p>
+<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>&gt;(<code>this</code>, <code>strict?</code>): <code>T</code></p>
 <p>Get the instance of the child class that was previously created.</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 <tr>
-<td align="left"><code>R</code></td>
-<td align="left">extends <code>any</code>[]</td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">extends <code>any</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -901,44 +901,44 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>this</code></td>
-<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
-<td align="left">Implicit argument that is the child class type</td>
+<td style="text-align: left;"><code>this</code></td>
+<td style="text-align: left;"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>&gt;</td>
+<td style="text-align: left;">Implicit argument that is the child class type</td>
 </tr>
 <tr>
-<td align="left"><code>strict?</code></td>
-<td align="left"><code>true</code></td>
-<td align="left">If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
+<td style="text-align: left;"><code>strict?</code></td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>T</code></p>
 <p>An instance of the child class</p>
-<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>strict</code>): <code>undefined</code> | <code>T</code></p>
+<p>▸ <code>Static</code> <strong>getInstance</strong>&lt;<code>T</code>, <code>R</code>&gt;(<code>this</code>, <code>strict</code>): <code>undefined</code> | <code>T</code></p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 <tr>
-<td align="left"><code>R</code></td>
-<td align="left">extends <code>any</code>[]</td>
+<td style="text-align: left;"><code>R</code></td>
+<td style="text-align: left;">extends <code>any</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -946,18 +946,18 @@ only the first's arguments will be used.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>this</code></td>
-<td align="left"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>></td>
+<td style="text-align: left;"><code>this</code></td>
+<td style="text-align: left;"><code>StaticThis</code>&lt;<code>T</code>, <code>R</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>strict</code></td>
-<td align="left"><code>false</code></td>
+<td style="text-align: left;"><code>strict</code></td>
+<td style="text-align: left;"><code>false</code></td>
 </tr>
 </tbody>
 </table>
