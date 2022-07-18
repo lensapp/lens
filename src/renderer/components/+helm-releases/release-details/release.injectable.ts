@@ -20,7 +20,7 @@ const releaseInjectable = getInjectable({
       const namespace = routeParameters.namespace.get();
 
       if (!name || !namespace) {
-        return null;
+        return undefined;
       }
 
       return releases.value.get().find(matches({ name, namespace }));

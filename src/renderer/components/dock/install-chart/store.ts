@@ -4,9 +4,9 @@
  */
 
 import { makeObservable } from "mobx";
+import type { HelmReleaseUpdateDetails } from "../../../k8s/helm-releases.api/update.injectable";
 import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
-import type { HelmReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 
 export interface IChartInstallData {
   name: string;

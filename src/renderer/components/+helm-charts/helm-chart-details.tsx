@@ -6,7 +6,7 @@
 import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
-import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
+import type { HelmChart } from "../../k8s/helm-chart";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
 import { autoBind, stopPropagation } from "../../utils";

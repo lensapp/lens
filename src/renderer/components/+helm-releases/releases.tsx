@@ -7,7 +7,6 @@ import "../item-object-list/item-list-layout.scss";
 import "./releases.scss";
 
 import React, { Component } from "react";
-import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import type { ItemListStore } from "../item-object-list";
@@ -17,14 +16,15 @@ import { kebabCase } from "lodash/fp";
 import { HelmReleaseMenu } from "./release-menu";
 import { ReleaseRollbackDialog } from "./dialog/dialog";
 import { ReleaseDetails } from "./release-details/release-details";
+import type { RemovableHelmRelease } from "./removable-releases.injectable";
 import removableReleasesInjectable from "./removable-releases.injectable";
-import type { RemovableHelmRelease } from "./removable-releases";
 import type { IComputedValue } from "mobx";
 import releasesInjectable from "./releases.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import helmReleasesRouteParametersInjectable from "./helm-releases-route-parameters.injectable";
 import type { NavigateToHelmReleases } from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
+import type { HelmRelease } from "../../k8s/helm-release";
 
 enum columnId {
   name = "name",

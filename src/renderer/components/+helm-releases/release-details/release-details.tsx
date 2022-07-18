@@ -11,7 +11,6 @@ import type { IComputedValue } from "mobx";
 import { computed, makeObservable, observable } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
-import type { HelmRelease, HelmReleaseDetails, HelmReleaseUpdateDetails, HelmReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "../release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../../drawer";
 import { Badge } from "../../badge";
@@ -29,7 +28,6 @@ import { MonacoEditor } from "../../monaco-editor";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createUpgradeChartTabInjectable from "../../dock/upgrade-chart/create-upgrade-chart-tab.injectable";
-import updateReleaseInjectable from "../update-release/update-release.injectable";
 import releaseInjectable from "./release.injectable";
 import releaseDetailsInjectable from "./release-details.injectable";
 import releaseValuesInjectable from "./release-values.injectable";
@@ -41,16 +39,20 @@ import themeStoreInjectable from "../../../themes/store.injectable";
 import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
+import type { HelmRelease } from "../../../k8s/helm-release";
+import type { HelmReleaseDetails } from "../../../k8s/helm-releases.api";
+import type { UpdateHelmRelease } from "../../../k8s/helm-releases.api/update.injectable";
+import updateHelmReleaseInjectable from "../../../k8s/helm-releases.api/update.injectable";
 
 export interface ReleaseDetailsProps {
   hideDetails(): void;
 }
 
 interface Dependencies {
-  release: IComputedValue<HelmRelease | null | undefined>;
+  release: IComputedValue<HelmRelease | undefined>;
   releaseDetails: IAsyncComputed<HelmReleaseDetails>;
   releaseValues: IAsyncComputed<string>;
-  updateRelease: (name: string, namespace: string, payload: HelmReleaseUpdatePayload) => Promise<HelmReleaseUpdateDetails>;
+  updateHelmRelease: UpdateHelmRelease;
   createUpgradeChartTab: (release: HelmRelease) => void;
   userSuppliedValuesAreShown: { toggle: () => void; value: boolean };
   themeStore: ThemeStore;
@@ -86,7 +88,7 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
     this.saving = true;
 
     try {
-      await this.props.updateRelease(name, namespace, data);
+      await this.props.updateHelmRelease(name, namespace, data);
       Notifications.ok(
         <p>
           Release
@@ -291,7 +293,7 @@ export const ReleaseDetails = withInjectables<Dependencies, ReleaseDetailsProps>
     releaseDetails: di.inject(releaseDetailsInjectable),
     releaseValues: di.inject(releaseValuesInjectable),
     userSuppliedValuesAreShown: di.inject(userSuppliedValuesAreShownInjectable),
-    updateRelease: di.inject(updateReleaseInjectable),
+    updateHelmRelease: di.inject(updateHelmReleaseInjectable),
     createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
     themeStore: di.inject(themeStoreInjectable),
     apiManager: di.inject(apiManagerInjectable),

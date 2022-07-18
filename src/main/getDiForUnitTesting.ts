@@ -31,7 +31,6 @@ import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
-import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
 import setupSentryInjectable from "./start-main-application/runnables/setup-sentry.injectable";
@@ -39,7 +38,6 @@ import setupShellInjectable from "./start-main-application/runnables/setup-shell
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
 import applicationMenuInjectable from "./menu/application-menu.injectable";
-import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/runnables/setup-system-ca.injectable";
 import setupDeepLinkingInjectable from "./electron-app/runnables/setup-deep-linking.injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
@@ -99,6 +97,10 @@ import electronInjectable from "./utils/resolve-system-proxy/electron.injectable
 import type { HotbarStore } from "../common/hotbars/store";
 import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
 import migrationLogInjectable from "./migrations/log.injectable";
+import hardwareAccelerationShouldBeDisabledInjectable from "../common/vars/disable-gpu.injectable";
+import directoryForIntegrationTestingInjectable from "./app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
+import isProductionInjectable from "../common/vars/is-production.injectable";
+import isDebuggingInjectable from "../common/vars/is-debugging.injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -141,8 +143,10 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     overrideRunnablesHavingSideEffects(di);
     overrideElectronFeatures(di);
 
-    di.override(isDevelopmentInjectable, () => false);
-    di.override(environmentVariablesInjectable, () => ({}));
+    di.override(isProductionInjectable, () => true);
+    di.override(isDebuggingInjectable, () => false);
+    di.override(hardwareAccelerationShouldBeDisabledInjectable, () => false);
+    di.override(directoryForIntegrationTestingInjectable, () => undefined);
     di.override(commandLineArgumentsInjectable, () => []);
 
     di.override(productNameInjectable, () => "some-product-name");

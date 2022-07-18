@@ -8,7 +8,6 @@ import { waitUntilDefined } from "../../../../common/utils";
 import type { CallForHelmChartValues } from "./chart-data/call-for-helm-chart-values.injectable";
 import callForHelmChartValuesInjectable from "./chart-data/call-for-helm-chart-values.injectable";
 import type { IChartInstallData, InstallChartTabStore } from "./store";
-import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
 import React from "react";
 import {
   action,
@@ -19,13 +18,14 @@ import {
 import assert from "assert";
 import type { CallForCreateHelmRelease } from "../../+helm-releases/create-release/call-for-create-helm-release.injectable";
 import callForCreateHelmReleaseInjectable from "../../+helm-releases/create-release/call-for-create-helm-release.injectable";
-import type { HelmReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { NavigateToHelmReleases } from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import type { SingleValue } from "react-select";
 import type { CallForHelmChartVersions } from "../../+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
 import callForHelmChartVersionsInjectable from "../../+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
+import type { HelmChart } from "../../../k8s/helm-chart";
+import type { HelmReleaseUpdateDetails } from "../../../k8s/helm-releases.api/update.injectable";
 
 const installChartModelInjectable = getInjectable({
   id: "install-chart-model",

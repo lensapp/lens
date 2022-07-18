@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import installChartTabStoreInjectable from "./store.injectable";
-import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
+import type { HelmChart } from "../../../k8s/helm-chart";
 import type { DockTab, DockTabCreateSpecific } from "../dock/store";
 import { TabKind } from "../dock/store";
 import createDockTabInjectable from "../dock/create-dock-tab.injectable";

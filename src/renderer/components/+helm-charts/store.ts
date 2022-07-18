@@ -6,20 +6,26 @@
 import semver from "semver";
 import { observable, makeObservable } from "mobx";
 import { autoBind, sortCompareChartVersions } from "../../utils";
-import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
-import { getChartDetails, listCharts } from "../../../common/k8s-api/endpoints/helm-charts.api";
+import type { HelmChart } from "../../k8s/helm-chart";
 import { ItemStore } from "../../../common/item.store";
 import flatten from "lodash/flatten";
+import type { ListHelmCharts } from "../../k8s/helm-charts.api/list.injectable";
+import type { GetHelmChartDetails } from "../../k8s/helm-charts.api/get-details.injectable";
 
 export interface ChartVersion {
   repo: string;
   version: string;
 }
 
+export interface HelmChartStoreDependencies {
+  listHelmCharts: ListHelmCharts;
+  getHelmChartDetails: GetHelmChartDetails;
+}
+
 export class HelmChartStore extends ItemStore<HelmChart> {
   @observable versions = observable.map<string, ChartVersion[]>();
 
-  constructor() {
+  constructor(protected readonly dependencies: HelmChartStoreDependencies) {
     super();
 
     makeObservable(this);
@@ -28,7 +34,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   async loadAll() {
     try {
-      const res = await this.loadItems(() => listCharts());
+      const res = await this.loadItems(() => this.dependencies.listHelmCharts());
 
       this.failedLoading = false;
 
@@ -68,7 +74,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
     }
 
     const loadVersions = async (repo: string) => {
-      const { versions } = await getChartDetails(repo, chartName);
+      const { versions } = await this.dependencies.getHelmChartDetails(repo, chartName);
 
       return versions.map(chart => ({
         repo,
@@ -104,5 +110,3 @@ export class HelmChartStore extends ItemStore<HelmChart> {
     throw new Error("removeItems is not supported");
   }
 }
-
-export const helmChartStore = new HelmChartStore();

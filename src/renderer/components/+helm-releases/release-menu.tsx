@@ -4,17 +4,19 @@
  */
 
 import React from "react";
-import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { cssNames } from "../../utils";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { CreateUpgradeChartTab } from "../dock/upgrade-chart/create-upgrade-chart-tab.injectable";
 import createUpgradeChartTabInjectable from "../dock/upgrade-chart/create-upgrade-chart-tab.injectable";
-import deleteReleaseInjectable from "./delete-release/delete-release.injectable";
 import type { OpenHelmReleaseRollbackDialog } from "./dialog/open.injectable";
 import openHelmReleaseRollbackDialogInjectable from "./dialog/open.injectable";
+import type { HelmRelease } from "../../k8s/helm-release";
+import type { DeleteHelmRelease } from "../../k8s/helm-releases.api/delete.injectable";
+import deleteHelmReleaseInjectable from "../../k8s/helm-releases.api/delete.injectable";
 
 export interface HelmReleaseMenuProps extends MenuActionsProps {
   release: HelmRelease;
@@ -22,14 +24,16 @@ export interface HelmReleaseMenuProps extends MenuActionsProps {
 }
 
 interface Dependencies {
-  deleteRelease: (release: HelmRelease) => Promise<any>;
-  createUpgradeChartTab: (release: HelmRelease) => void;
+  deleteHelmRelease: DeleteHelmRelease;
+  createUpgradeChartTab: CreateUpgradeChartTab;
   openRollbackDialog: OpenHelmReleaseRollbackDialog;
 }
 
 class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & Dependencies> {
-  remove = () => {
-    return this.props.deleteRelease(this.props.release);
+  remove = async () => {
+    const { name, namespace } = this.props.release;
+
+    await this.props.deleteHelmRelease(name, namespace);
   };
 
   upgrade = () => {
@@ -100,7 +104,7 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
 export const HelmReleaseMenu = withInjectables<Dependencies, HelmReleaseMenuProps>(NonInjectedHelmReleaseMenu, {
   getProps: (di, props) => ({
     ...props,
-    deleteRelease: di.inject(deleteReleaseInjectable),
+    deleteHelmRelease: di.inject(deleteHelmReleaseInjectable),
     createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
     openRollbackDialog: di.inject(openHelmReleaseRollbackDialogInjectable),
   }),

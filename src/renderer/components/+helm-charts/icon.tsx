@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from "react";
-import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
+import type { HelmChart } from "../../k8s/helm-chart";
 
 export interface HelmChartIconProps {
   className?: string;

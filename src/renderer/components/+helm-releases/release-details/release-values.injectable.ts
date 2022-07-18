@@ -3,17 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getReleaseValues } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import releaseInjectable from "./release.injectable";
-import { Notifications } from "../../notifications";
 import userSuppliedValuesAreShownInjectable from "./user-supplied-values-are-shown.injectable";
+import getHelmReleaseValuesInjectable from "../../../k8s/helm-releases.api/get-values.injectable";
+import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 
 const releaseValuesInjectable = getInjectable({
   id: "release-values",
 
-  instantiate: (di) =>
-    asyncComputed(async () => {
+  instantiate: (di) => {
+    const getHelmReleaseValues = di.inject(getHelmReleaseValuesInjectable);
+    const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const userSuppliedValuesAreShown = di.inject(userSuppliedValuesAreShownInjectable);
+
+    return asyncComputed(async () => {
       const release = di.inject(releaseInjectable).get();
 
       // TODO: Figure out way to get rid of defensive code
@@ -21,16 +25,15 @@ const releaseValuesInjectable = getInjectable({
         return "";
       }
 
-      const userSuppliedValuesAreShown = di.inject(userSuppliedValuesAreShownInjectable).value;
-
       try {
-        return await getReleaseValues(release.getName(), release.getNs(), !userSuppliedValuesAreShown) ?? "";
+        return await getHelmReleaseValues(release.getName(), release.getNs(), !userSuppliedValuesAreShown.value) ?? "";
       } catch (error) {
-        Notifications.error(`Failed to load values for ${release.getName()}: ${error}`);
+        showErrorNotification(`Failed to load values for ${release.getName()}: ${error}`);
 
         return "";
       }
-    }),
+    });
+  },
 });
 
 export default releaseValuesInjectable;

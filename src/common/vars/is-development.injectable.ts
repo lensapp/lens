@@ -7,7 +7,6 @@ import isProductionInjectable from "./is-production.injectable";
 
 const isDevelopmentInjectable = getInjectable({
   id: "is-development",
-
   instantiate: (di) => !di.inject(isProductionInjectable),
 });
 

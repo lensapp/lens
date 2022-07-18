@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
-import { listReleases } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import listHelmReleasesInjectable from "../../k8s/helm-releases.api/list.injectable";
 import releaseSecretsInjectable from "./release-secrets.injectable";
 
 const releasesInjectable = getInjectable({
@@ -16,6 +16,7 @@ const releasesInjectable = getInjectable({
     const clusterContext = di.inject(clusterFrameContextInjectable);
     const namespaceStore = di.inject(namespaceStoreInjectable);
     const releaseSecrets = di.inject(releaseSecretsInjectable);
+    const listHelmReleases = di.inject(listHelmReleasesInjectable);
 
     return asyncComputed(async () => {
       const contextNamespaces = namespaceStore.contextNamespaces || [];
@@ -29,11 +30,10 @@ const releasesInjectable = getInjectable({
           contextNamespaces.includes(namespace),
         );
 
-      const releaseArrays = await (isLoadingAll ? listReleases() : Promise.all(
-        contextNamespaces.map((namespace) =>
-          listReleases(namespace),
-        ),
-      ));
+      const releaseArrays = await (isLoadingAll
+        ? listHelmReleases()
+        : Promise.all(contextNamespaces.map(listHelmReleases))
+      );
 
       return releaseArrays.flat();
     }, []);
