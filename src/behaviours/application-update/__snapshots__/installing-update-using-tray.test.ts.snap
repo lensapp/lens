@@ -78,7 +78,7 @@ exports[`installing update using tray when started renders 1`] = `
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -280,7 +280,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -482,7 +482,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -702,7 +702,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -922,7 +922,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1124,7 +1124,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your

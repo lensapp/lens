@@ -77,7 +77,7 @@ exports[`preferences - navigation using application menu renders 1`] = `
               style="width: 320px;"
             >
               <h2>
-                Welcome to OpenLens 5!
+                Welcome to OpenLens!
               </h2>
               <p>
                 To get you started we have auto-detected your clusters in your

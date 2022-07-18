@@ -74,7 +74,7 @@ const NonInjectedWelcome = observer(({ welcomeMenuItems, welcomeBannerItems }: D
             data-testid="welcome-text-container"
           >
             <h2>
-              {`Welcome to ${productName} 5!`}
+              {`Welcome to ${productName}!`}
             </h2>
 
             <p>
