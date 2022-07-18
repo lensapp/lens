@@ -20,6 +20,7 @@ interface GetPortArgs {
         };
         raw?: RegExpExecArray;
     };
+    rawMatcher: string;
   };
   /**
    * Called when the port is found
@@ -27,7 +28,7 @@ interface GetPortArgs {
   onFind?: () => void;
   /**
    * Timeout for how long to wait for the port.
-   * Default: 5s
+   * Default: 15s
    */
   timeout?: number;
 }
@@ -61,7 +62,7 @@ export function getPortFrom(stream: Readable, args: GetPortArgs): Promise<number
     };
     const timeoutID = setTimeout(() => {
       stream.off("data", handler);
-      logger.warn(`[getPortFrom]: failed to retrieve port via ${args.lineRegex.toString()}: ${logLines}`);
+      logger.warn(`[getPortFrom]: failed to retrieve port via ${args.lineRegex.rawMatcher}`, logLines);
       reject(new Error("failed to retrieve port from stream"));
     }, args.timeout ?? 15000);
 
