@@ -159,7 +159,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -442,7 +442,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -725,7 +725,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1020,7 +1020,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1222,7 +1222,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1424,7 +1424,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1626,7 +1626,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1840,7 +1840,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens 5!
+                  Welcome to OpenLens!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
