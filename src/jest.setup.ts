@@ -36,3 +36,11 @@ process.on("unhandledRejection", (err: any) => {
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoderNode as unknown as typeof TextDecoder;
+
+global.ResizeObserver = class {
+  observe = () => {};
+  unobserve = () => {};
+  disconnect = () => {};
+};
+
+jest.mock("./renderer/components/monaco-editor/monaco-editor");
