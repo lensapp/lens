@@ -31,11 +31,11 @@ const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[],
         } catch (error) {
           if (isRequestError(error)) {
             if (lastAttempt || (error.statusCode && error.statusCode >= 400 && error.statusCode < 500)) {
-              logger.error("[Metrics]: metrics not available", error?.response ? error.response?.body : error);
-              throw new Error("Metrics not available");
+              throw new Error("Metrics not available", { cause: error });
             }
+          } else if (error instanceof Error) {
+            throw new Error("Metrics not available", { cause: error });
           } else {
-            logger.error("[Metrics]: metrics not available", error);
             throw new Error("Metrics not available");
           }
 

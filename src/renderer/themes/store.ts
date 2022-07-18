@@ -121,7 +121,7 @@ export class ThemeStore {
       try {
         this.applyActiveTheme();
       } catch (err) {
-        logger.error(err);
+        logger.error(`Failed to apply active theme: ${err}`);
         this.dependencies.userStore.resetTheme();
       }
     }, {

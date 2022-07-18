@@ -78,4 +78,4 @@ export default winston.createLogger({
     format.simple(),
   ),
   transports,
-});
+}) as Logger;
