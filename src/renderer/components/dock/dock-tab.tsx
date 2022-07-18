@@ -115,6 +115,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
               </Tooltip>
             </div>
           )}
+          data-testid={`dock-tab-for-${id}`}
         />
         {this.renderMenu(id)}
       </>

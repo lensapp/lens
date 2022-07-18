@@ -124,7 +124,10 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
     if (!isOpen || !selectedTab) return null;
 
     return (
-      <div className={`tab-content ${selectedTab.kind}`} style={{ flexBasis: height }}>
+      <div
+        className={`tab-content ${selectedTab.kind}`}
+        style={{ flexBasis: height }}
+        data-testid={`dock-tab-content-for-${selectedTab.id}`}>
         {this.renderTab(selectedTab)}
       </div>
     );

@@ -14,9 +14,12 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import type { DockStore, TabId } from "./dock/store";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 
 export interface InfoPanelProps extends OptionalProps {
   tabId: TabId;
@@ -35,10 +38,15 @@ export interface OptionalProps {
   showInlineInfo?: boolean;
   showNotifications?: boolean;
   showStatusPanel?: boolean;
+  submitTestId?: string;
+  cancelTestId?: string;
+  submittingTestId?: string;
 }
 
 interface Dependencies {
   dockStore: DockStore;
+  showSuccessNotification: ShowNotification;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -82,11 +90,11 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
       const result = await this.props.submit?.();
 
       if (showNotifications && result) {
-        Notifications.ok(result);
+        this.props.showSuccessNotification(result);
       }
     } catch (error) {
       if (showNotifications) {
-        Notifications.checkedError(error, "Unknown error while submitting");
+        this.props.showCheckedErrorNotification(error, "Unknown error while submitting");
       }
     } finally {
       this.waiting = false;
@@ -128,7 +136,7 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
           <div className="flex gaps align-center">
             {waiting ? (
               <>
-                <Spinner /> 
+                <Spinner data-testid={this.props.submittingTestId} />
                 {" "}
                 {submittingMessage}
               </>
@@ -140,7 +148,8 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
             <Button
               plain
               label="Cancel"
-              onClick={close} 
+              onClick={close}
+              data-testid={this.props.cancelTestId}
             />
             <Button
               active
@@ -149,6 +158,7 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
               label={submitLabel}
               onClick={submit}
               disabled={isDisabled}
+              data-testid={this.props.submitTestId}
             />
             {showSubmitClose && (
               <Button
@@ -172,6 +182,8 @@ export const InfoPanel = withInjectables<Dependencies, InfoPanelProps>(
   {
     getProps: (di, props) => ({
       dockStore: di.inject(dockStoreInjectable),
+      showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+      showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
       ...props,
     }),
   },

@@ -13,8 +13,7 @@ import { Notifications } from "../notifications";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { clipboard } from "electron";
-
-// todo: make as external BrowserWindow (?)
+import { kebabCase } from "lodash/fp";
 
 export interface LogsDialogProps extends DialogProps {
   title: string;
@@ -26,6 +25,7 @@ export function LogsDialog({ title, logs, ...dialogProps }: LogsDialogProps) {
     <Dialog
       {...dialogProps}
       className="LogsDialog"
+      data-testid={`logs-dialog-for-${kebabCase(title)}`}
     >
       <Wizard
         header={<h5>{title}</h5>}
