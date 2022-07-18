@@ -18,10 +18,13 @@ import { frontEndRouteInjectionToken } from "../../common/front-end-routing/fron
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
+import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import sidebarStorageInjectable from "../../renderer/components/layout/sidebar-storage/sidebar-storage.injectable";
 import hostedClusterIdInjectable from "../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
+import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 
 describe("cluster - sidebar and tab navigation for core", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -29,6 +32,8 @@ describe("cluster - sidebar and tab navigation for core", () => {
   let rendered: RenderResult;
 
   beforeEach(() => {
+    useFakeTime("2015-10-21T07:28:00Z");
+
     applicationBuilder = getApplicationBuilder();
     rendererDi = applicationBuilder.dis.rendererDi;
 
@@ -36,6 +41,8 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
     applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(hostedClusterIdInjectable, () => "some-hosted-cluster-id");
+
+      rendererDi.override(storageSaveDelayInjectable, () => 250);
 
       rendererDi.override(
         directoryForLensLocalStorageInjectable,
@@ -261,7 +268,21 @@ describe("cluster - sidebar and tab navigation for core", () => {
             expect(rendered.getByTestId("some-child-page")).not.toBeNull();
           });
 
-          it("stores state for expanded sidebar items to file system", async () => {
+          it("when not enough time passes, does not store state for expanded sidebar items to file system yet", async () => {
+            advanceFakeTime(250 - 1);
+
+            const pathExistsFake = rendererDi.inject(pathExistsInjectable);
+
+            const actual = await pathExistsFake(
+              "/some-directory-for-lens-local-storage/some-hosted-cluster-id.json",
+            );
+
+            expect(actual).toBe(false);
+          });
+
+          it("when enough time passes, stores state for expanded sidebar items to file system", async () => {
+            advanceFakeTime(250);
+
             const readJsonFileFake = rendererDi.inject(readJsonFileInjectable);
 
             const actual = await readJsonFileFake(
