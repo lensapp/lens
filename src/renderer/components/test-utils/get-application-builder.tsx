@@ -12,7 +12,7 @@ import { Router } from "react-router";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
-import { getByText, fireEvent } from "@testing-library/react";
+import { queryByText, fireEvent } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
 import type { DiContainer } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
@@ -114,8 +114,9 @@ export interface ApplicationBuilder {
   };
 
   select: {
-    openMenu: (id: string) => void;
+    openMenu: (id: string) => ({ selectOption: (labelText: string) => void });
     selectOption: (menuId: string, labelText: string) => void;
+    getValue: (menuId: string) => string;
   };
 }
 
@@ -243,6 +244,20 @@ export const getApplicationBuilder = () => {
   const enableMainExtension = enableExtensionsFor(mainExtensionsState, mainDi);
   const disableRendererExtension = disableExtensionsFor(rendererExtensionsState, rendererDi);
   const disableMainExtension = disableExtensionsFor(mainExtensionsState, mainDi);
+
+  const selectOptionFor = (menuId: string) => (labelText: string) => {
+    const menuOptions = rendered.baseElement.querySelector<HTMLElement>(
+      `.${menuId}-options`,
+    );
+
+    assert(menuOptions, `Could not find select options for menu with ID "${menuId}"`);
+
+    const option = queryByText(menuOptions, labelText);
+
+    assert(option, `Could not find select option with label "${labelText}" for menu with ID "${menuId}"`);
+
+    userEvent.click(option);
+  };
 
   const builder: ApplicationBuilder = {
     dis,
@@ -391,6 +406,7 @@ export const getApplicationBuilder = () => {
       const namespaceStoreStub = {
         contextNamespaces: [],
         items: [],
+        selectNamespaces: () => {},
       } as unknown as NamespaceStore;
 
       const clusterFrameContextFake = new ClusterFrameContext(
@@ -500,25 +516,33 @@ export const getApplicationBuilder = () => {
 
     select: {
       openMenu: (menuId) => {
-        const selector = rendered.container.querySelector<HTMLElement>(
+        const select = rendered.baseElement.querySelector<HTMLElement>(
           `#${menuId}`,
         );
 
-        assert(selector);
+        assert(select, `Could not find select with ID "${menuId}"`);
 
-        openMenu(selector);
+        openMenu(select);
+
+        return {
+          selectOption: selectOptionFor(menuId),
+        };
       },
 
-      selectOption: (menuId, labelText) => {
-        const menuOptions = rendered.baseElement.querySelector<HTMLElement>(
-          `.${menuId}-options`,
+      selectOption: (menuId, labelText) => selectOptionFor(menuId)(labelText),
+
+      getValue: (menuId) => {
+        const select = rendered.baseElement.querySelector<HTMLInputElement>(
+          `#${menuId}`,
         );
 
-        assert(menuOptions);
+        assert(select, `Could not find select with ID "${menuId}"`);
 
-        const option = getByText(menuOptions, labelText);
+        const controlElement = select.closest(".Select__control");
 
-        userEvent.click(option);
+        assert(controlElement, `Could not find select value for menu with ID "${menuId}"`);
+
+        return controlElement.textContent || "";
       },
     },
   };
