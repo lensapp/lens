@@ -340,15 +340,35 @@ export class Cluster implements ClusterModel, ClusterState {
     }
 
     if (this.disconnected || !this.accessible) {
-      await this.reconnect();
+      try {
+        this.broadcastConnectUpdate("Starting connection ...");
+        await this.reconnect();
+      } catch (error) {
+        this.broadcastConnectUpdate(`Failed to start connection: ${error}`, true);
+
+        return;
+      }
     }
 
-    this.broadcastConnectUpdate("Refreshing connection status ...");
-    await this.refreshConnectionStatus();
+    try {
+      this.broadcastConnectUpdate("Refreshing connection status ...");
+      await this.refreshConnectionStatus();
+    } catch (error) {
+      this.broadcastConnectUpdate(`Failed to connection status: ${error}`, true);
+
+      return;
+    }
 
     if (this.accessible) {
-      this.broadcastConnectUpdate("Refreshing cluster accessibility ...");
-      await this.refreshAccessibility();
+      try {
+        this.broadcastConnectUpdate("Refreshing cluster accessibility ...");
+        await this.refreshAccessibility();
+      } catch (error) {
+        this.broadcastConnectUpdate(`Failed to refresh accessibility: ${error}`, true);
+
+        return;
+      }
+
       // download kubectl in background, so it's not blocking dashboard
       this.ensureKubectl()
         .catch(error => this.dependencies.logger.warn(`[CLUSTER]: failed to download kubectl for clusterId=${this.id}`, error));
