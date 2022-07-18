@@ -417,6 +417,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -931,6 +932,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -1445,6 +1447,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"

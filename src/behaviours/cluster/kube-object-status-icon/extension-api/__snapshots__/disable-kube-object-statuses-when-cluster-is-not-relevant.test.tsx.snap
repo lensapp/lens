@@ -300,6 +300,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -689,6 +690,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -1078,6 +1080,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"

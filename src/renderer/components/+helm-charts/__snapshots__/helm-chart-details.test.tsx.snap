@@ -169,7 +169,7 @@ exports[`<HelmChartDetails /> before getChartDetails resolves when getChartDetai
                 class="description flex align-center justify-space-between"
                 data-testid="selected-chart-description"
               >
-                
+
                 <button
                   class="Button primary"
                   type="button"
@@ -303,7 +303,7 @@ exports[`<HelmChartDetails /> before getChartDetails resolves when getChartDetai
               <p>
                 I am a readme
               </p>
-              
+
 
             </div>
           </div>

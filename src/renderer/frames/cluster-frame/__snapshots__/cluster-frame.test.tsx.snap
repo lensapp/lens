@@ -372,6 +372,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -852,6 +853,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -1391,6 +1393,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
