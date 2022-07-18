@@ -26,6 +26,7 @@ import type { MenuItemOpts } from "../../../main/menu/application-menu-items.inj
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
 import type { MenuItemConstructorOptions, MenuItem } from "electron";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
@@ -110,7 +111,7 @@ export interface ApplicationBuilder {
   };
 
   helmCharts: {
-    navigate: () => void;
+    navigate: NavigateToHelmCharts;
   };
 
   select: {
@@ -379,10 +380,10 @@ export const getApplicationBuilder = () => {
     },
 
     helmCharts: {
-      navigate: () => {
+      navigate: (parameters) => {
         const navigateToHelmCharts = rendererDi.inject(navigateToHelmChartsInjectable);
 
-        navigateToHelmCharts();
+        navigateToHelmCharts(parameters);
       },
     },
 
