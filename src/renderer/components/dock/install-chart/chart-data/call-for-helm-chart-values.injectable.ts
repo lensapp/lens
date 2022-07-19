@@ -14,6 +14,7 @@ export type CallForHelmChartValues = (
 const callForHelmChartValuesInjectable = getInjectable({
   id: "call-for-helm-chart-values",
   instantiate: (): CallForHelmChartValues => getChartValues,
+  causesSideEffects: true,
 });
 
 export default callForHelmChartValuesInjectable;

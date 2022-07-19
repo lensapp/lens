@@ -22,6 +22,8 @@ const callForHelmChartReadmeInjectable = getInjectable({
 
         return details.readme;
       },
+
+  causesSideEffects: true,
 });
 
 export default callForHelmChartReadmeInjectable;

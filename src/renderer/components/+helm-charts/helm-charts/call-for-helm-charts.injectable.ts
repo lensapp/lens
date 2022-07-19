@@ -10,8 +10,8 @@ export type CallForHelmCharts = () => Promise<HelmChart[]>;
 
 const callForHelmChartsInjectable = getInjectable({
   id: "call-for-helm-charts",
-
   instantiate: (): CallForHelmCharts => async () => await listCharts(),
+  causesSideEffects: true,
 });
 
 export default callForHelmChartsInjectable;

@@ -21,6 +21,8 @@ const callForHelmChartVersionsInjectable = getInjectable({
 
       return details.versions;
     },
+
+  causesSideEffects: true,
 });
 
 export default callForHelmChartVersionsInjectable;
