@@ -383,7 +383,7 @@
     "include-media": "^1.4.9",
     "jest": "^28.1.2",
     "jest-canvas-mock": "^2.3.1",
-    "jest-environment-jsdom": "^28.1.2",
+    "jest-environment-jsdom": "^28.1.3",
     "jest-fetch-mock": "^3.0.3",
     "jest-mock-extended": "^2.0.6",
     "make-plural": "^6.2.2",
