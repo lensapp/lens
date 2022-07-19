@@ -131,9 +131,8 @@ export class ContextHandler implements ClusterContextHandler {
 
   async resolveAuthProxyUrl(): Promise<string> {
     const kubeAuthProxy = await this.ensureServerHelper();
-    const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `https://127.0.0.1:${kubeAuthProxy.port}${kubeAuthProxy.apiPrefix}${path}`;
+    return `https://127.0.0.1:${kubeAuthProxy.port}${kubeAuthProxy.apiPrefix}`;
   }
 
   resolveAuthProxyCa() {
