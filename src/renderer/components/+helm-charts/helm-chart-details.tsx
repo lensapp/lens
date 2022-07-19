@@ -19,8 +19,6 @@ import { Tooltip, withStyles } from "@material-ui/core";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createInstallChartTabInjectable from "../dock/install-chart/create-install-chart-tab.injectable";
-import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 import { HelmChartIcon } from "./icon";
 import readmeOfSelectHelmChartInjectable from "./details/readme-of-selected-helm-chart.injectable";
 import versionsOfSelectedHelmChartInjectable from "./details/versions-of-selected-helm-chart.injectable";
@@ -41,7 +39,6 @@ const LargeTooltip = withStyles({
 
 interface Dependencies {
   createInstallChartTab: (helmChart: HelmChart) => void;
-  showCheckedErrorNotification: ShowCheckedErrorNotification;
   versions: IAsyncComputed<HelmChart[]>;
   readme: IAsyncComputed<string>;
   versionSelection: HelmChartDetailsVersionSelection;
@@ -189,7 +186,6 @@ export const HelmChartDetails = withInjectables<Dependencies, HelmChartDetailsPr
   getProps: (di, props) => ({
     ...props,
     createInstallChartTab: di.inject(createInstallChartTabInjectable),
-    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
     readme: di.inject(readmeOfSelectHelmChartInjectable, props.chart),
     versions: di.inject(versionsOfSelectedHelmChartInjectable, props.chart),
     versionSelection: di.inject(helmChartDetailsVersionSelectionInjectable, props.chart),
