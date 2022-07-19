@@ -321,7 +321,7 @@
     "@types/md5-file": "^4.0.2",
     "@types/mini-css-extract-plugin": "^2.4.0",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^16.11.43",
+    "@types/node": "^16.11.45",
     "@types/node-fetch": "^2.6.2",
     "@types/npm": "^2.0.32",
     "@types/proper-lockfile": "^4.1.2",
