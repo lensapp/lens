@@ -3,19 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ObservableMap } from "mobx";
+import { observable, ObservableMap, when } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync/manager";
 import mockFs from "mock-fs";
 import fs from "fs";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
-import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import clusterManagerInjectable from "../../cluster-manager.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import kubectlBinaryNameInjectable from "../../kubectl/binary-name.injectable";
@@ -23,6 +19,17 @@ import kubectlDownloadingNormalizedArchInjectable from "../../kubectl/normalized
 import normalizedPlatformInjectable from "../../../common/vars/normalized-platform.injectable";
 import { iter } from "../../../common/utils";
 import fsInjectable from "../../../common/fs/fs.injectable";
+import type { ComputeKubeconfigDiff } from "../kubeconfig-sync/compute-diff.injectable";
+import computeKubeconfigDiffInjectable from "../kubeconfig-sync/compute-diff.injectable";
+import watchInjectable from "../../../common/fs/watch.injectable";
+import type { ConfigToModels } from "../kubeconfig-sync/config-to-models.injectable";
+import configToModelsInjectable from "../kubeconfig-sync/config-to-models.injectable";
+import kubeconfigSyncManagerInjectable from "../kubeconfig-sync/manager.injectable";
+import type { KubeconfigSyncManager } from "../kubeconfig-sync/manager";
+import type { KubeconfigSyncValue } from "../../../common/user-store";
+import kubeconfigSyncsInjectable from "../../../common/user-store/kubeconfig-syncs.injectable";
+
+console.log("This is a reminder that mockFS breaks things and needs to be removed");
 
 jest.mock("electron", () => ({
   app: {
@@ -41,7 +48,10 @@ jest.mock("electron", () => ({
 }));
 
 describe("kubeconfig-sync.source tests", () => {
-  let computeDiff: ReturnType<typeof computeDiffFor>;
+  let computeKubeconfigDiff: ComputeKubeconfigDiff;
+  let configToModels: ConfigToModels;
+  let manager: KubeconfigSyncManager;
+  let kubeconfigSyncs: ObservableMap<string, KubeconfigSyncValue>;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -55,15 +65,18 @@ describe("kubeconfig-sync.source tests", () => {
     di.override(normalizedPlatformInjectable, () => "darwin");
 
     di.permitSideEffects(fsInjectable);
+    di.permitSideEffects(watchInjectable);
     di.unoverride(clusterStoreInjectable);
     di.permitSideEffects(clusterStoreInjectable);
     di.permitSideEffects(getConfigurationFileModelInjectable);
 
-    computeDiff = computeDiffFor({
-      directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
-      createCluster: di.inject(createClusterInjectionToken),
-      clusterManager: di.inject(clusterManagerInjectable),
-    });
+    kubeconfigSyncs = observable.map();
+
+    di.override(kubeconfigSyncsInjectable, () => kubeconfigSyncs);
+
+    computeKubeconfigDiff = di.inject(computeKubeconfigDiffInjectable);
+    configToModels = di.inject(configToModelsInjectable);
+    manager = di.inject(kubeconfigSyncManagerInjectable);
   });
 
   afterEach(() => {
@@ -108,13 +121,13 @@ describe("kubeconfig-sync.source tests", () => {
     });
   });
 
-  describe("computeDiff", () => {
+  describe("computeKubeconfigDiff", () => {
     it("should leave an empty source empty if there are no entries", () => {
       const contents = "";
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
       const filePath = "/bar";
 
-      computeDiff(contents, rootSource, filePath);
+      computeKubeconfigDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(0);
     });
@@ -151,7 +164,7 @@ describe("kubeconfig-sync.source tests", () => {
 
       fs.writeFileSync(filePath, contents);
 
-      computeDiff(contents, rootSource, filePath);
+      computeKubeconfigDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(1);
 
@@ -195,7 +208,7 @@ describe("kubeconfig-sync.source tests", () => {
 
       fs.writeFileSync(filePath, contents);
 
-      computeDiff(contents, rootSource, filePath);
+      computeKubeconfigDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(1);
 
@@ -204,7 +217,7 @@ describe("kubeconfig-sync.source tests", () => {
       expect(c.kubeConfigPath).toBe("/bar");
       expect(c.contextName).toBe("context-name");
 
-      computeDiff("{}", rootSource, filePath);
+      computeKubeconfigDiff("{}", rootSource, filePath);
 
       expect(rootSource.size).toBe(0);
     });
@@ -249,7 +262,7 @@ describe("kubeconfig-sync.source tests", () => {
 
       fs.writeFileSync(filePath, contents);
 
-      computeDiff(contents, rootSource, filePath);
+      computeKubeconfigDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(2);
 
@@ -289,7 +302,7 @@ describe("kubeconfig-sync.source tests", () => {
         currentContext: "foobar",
       });
 
-      computeDiff(newContents, rootSource, filePath);
+      computeKubeconfigDiff(newContents, rootSource, filePath);
 
       expect(rootSource.size).toBe(1);
 
@@ -299,6 +312,82 @@ describe("kubeconfig-sync.source tests", () => {
         expect(c.kubeConfigPath).toBe("/bar");
         expect(c.contextName).toBe("context-name");
       }
+    });
+  });
+
+  describe("given a config file at /foobar/config", () => {
+    beforeEach(() => {
+      fs.mkdirSync("/foobar");
+      fs.writeFileSync("/foobar/config", JSON.stringify({
+        clusters: [{
+          name: "cluster-name",
+          cluster: {
+            server: "1.2.3.4",
+          },
+          skipTLSVerify: false,
+        }],
+        users: [{
+          name: "user-name",
+        }],
+        contexts: [{
+          name: "context-name",
+          context: {
+            cluster: "cluster-name",
+            user: "user-name",
+          },
+        }, {
+          name: "context-the-second",
+          context: {
+            cluster: "missing-cluster",
+            user: "user-name",
+          },
+        }],
+        currentContext: "foobar",
+      }));
+    });
+
+    it("should not find any entities", () => {
+      expect(manager.source.get()).toEqual([]);
+    });
+
+    describe("when sync has started", () => {
+      beforeEach(() => {
+        manager.startSync();
+      });
+
+      it("should not find any entities", () => {
+        expect(manager.source.get()).toEqual([]);
+      });
+
+      describe("when a file sync target for /foobar/config is added", () => {
+        beforeEach(() => {
+          kubeconfigSyncs.set("/foobar/config", {});
+        });
+
+        it("should find a single entity", (done) => {
+          when(() => manager.source.get().length === 1, () => done());
+        });
+
+        describe("when a folder sync target for /foobar is added", () => {
+          beforeEach(() => {
+            kubeconfigSyncs.set("/foobar", {});
+          });
+
+          it("should still only find a single entity", (done) => {
+            when(() => manager.source.get().length === 1, () => done());
+          });
+        });
+      });
+
+      describe("when a folder sync target for /foobar is added", () => {
+        beforeEach(() => {
+          kubeconfigSyncs.set("/foobar", {});
+        });
+
+        it("should find a single entity", (done) => {
+          when(() => manager.source.get().length === 1, () => done());
+        });
+      });
     });
   });
 });

@@ -5,18 +5,18 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { KubeconfigSyncManager } from "./manager";
-import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
-import clusterManagerInjectable from "../../cluster-manager.injectable";
-import catalogEntityRegistryInjectable from "../../catalog/entity-registry.injectable";
+import kubeconfigSyncLoggerInjectable from "./logger.injectable";
+import watchKubeconfigFileChangesInjectable from "./watch-file-changes.injectable";
+import kubeconfigSyncsInjectable from "../../../common/user-store/kubeconfig-syncs.injectable";
 
 const kubeconfigSyncManagerInjectable = getInjectable({
   id: "kubeconfig-sync-manager",
 
   instantiate: (di) => new KubeconfigSyncManager({
     directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
-    createCluster: di.inject(createClusterInjectionToken),
-    clusterManager: di.inject(clusterManagerInjectable),
-    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    logger: di.inject(kubeconfigSyncLoggerInjectable),
+    watchKubeconfigFileChanges: di.inject(watchKubeconfigFileChangesInjectable),
+    kubeconfigSyncs: di.inject(kubeconfigSyncsInjectable),
   }),
 });
 
