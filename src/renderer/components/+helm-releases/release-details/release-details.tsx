@@ -41,6 +41,7 @@ import themeStoreInjectable from "../../../themes/store.injectable";
 import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
+import assert from "assert";
 
 export interface ReleaseDetailsProps {
   hideDetails(): void;
@@ -48,7 +49,7 @@ export interface ReleaseDetailsProps {
 
 interface Dependencies {
   release: IComputedValue<HelmRelease | null | undefined>;
-  releaseDetails: IAsyncComputed<HelmReleaseDetails>;
+  releaseDetails: IAsyncComputed<HelmReleaseDetails | undefined>;
   releaseValues: IAsyncComputed<string>;
   updateRelease: (name: string, namespace: string, payload: HelmReleaseUpdatePayload) => Promise<HelmReleaseUpdateDetails>;
   createUpgradeChartTab: (release: HelmRelease) => void;
@@ -70,7 +71,11 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
   }
 
   @computed get details() {
-    return this.props.releaseDetails.value.get();
+    const details = this.props.releaseDetails.value.get();
+
+    assert(details);
+
+    return details;
   }
 
   updateValues = async (release: HelmRelease) => {
@@ -207,7 +212,7 @@ class NonInjectedReleaseDetails extends Component<ReleaseDetailsProps & Dependen
   }
 
   renderContent(release: HelmRelease) {
-    if (!this.details) {
+    if (this.props.releaseDetails.pending.get()) {
       return <Spinner center/>;
     }
 
