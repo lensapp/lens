@@ -38,11 +38,14 @@ const installChartModelInjectable = getInjectable({
     const dockStore = di.inject(dockStoreInjectable);
     const navigateToHelmReleases = di.inject(navigateToHelmReleasesInjectable);
     const closeTab = () => dockStore.closeTab(tabId);
-    const callChartByTab = async () => await waitUntilDefined(() => store.getData(tabId));
+
+    const waitForChart = async () => {
+      await waitUntilDefined(() => store.getData(tabId));
+    };
 
     const model = new InstallChartModel({
       tabId,
-      callChartByTab,
+      waitForChart,
       callForCreateHelmRelease,
       closeTab,
       navigateToHelmReleases,
@@ -67,7 +70,7 @@ interface Dependencies {
   tabId: string;
   closeTab: () => void;
   navigateToHelmReleases: NavigateToHelmReleases;
-  callChartByTab: (tabId: string) => Promise<IChartInstallData>;
+  waitForChart: () => Promise<void>;
   callForCreateHelmRelease: CallForCreateHelmRelease;
   callForHelmChartValues: CallForHelmChartValues;
   callForHelmChartVersions: CallForHelmChartVersions;
@@ -187,9 +190,7 @@ export class InstallChartModel {
   }
 
   load = async () => {
-    const tabId = this.dependencies.tabId;
-
-    await this.dependencies.callChartByTab(tabId);
+    await this.dependencies.waitForChart();
 
     const [defaultConfiguration, versions] = await Promise.all([
       this.dependencies.callForHelmChartValues(
