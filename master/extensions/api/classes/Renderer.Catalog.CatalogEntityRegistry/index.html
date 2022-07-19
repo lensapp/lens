@@ -19,7 +19,7 @@
         
       
       <link rel="icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-7.1.8+insiders-2.9.2">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-7.1.8+insiders-2.9.2">
     
     
       
@@ -871,15 +871,15 @@
 <p>• <strong>new CatalogEntityRegistry</strong>()</p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="activeentity">activeEntity<a class="headerlink" href="#activeentity" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>activeEntity</strong>(): <code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;</p>
+<p>• <code>get</code> <strong>activeEntity</strong>(): <code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></p>
 <p>Currently active/visible entity</p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;</p>
+<p><code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></p>
 <hr />
 <h3 id="entities">entities<a class="headerlink" href="#entities" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>entities</strong>(): <code>Map</code>&lt;<code>string</code>, <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;&gt;</p>
+<p>• <code>get</code> <strong>entities</strong>(): <code>Map</code>&lt;<code>string</code>, <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>></p>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>Map</code>&lt;<code>string</code>, <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;&gt;</p>
+<p><code>Map</code>&lt;<code>string</code>, <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="addonbeforerun">addOnBeforeRun<a class="headerlink" href="#addonbeforerun" title="Permanent link">#</a></h3>
 <p>▸ <strong>addOnBeforeRun</strong>(<code>onBeforeRun</code>): <code>Disposer</code></p>
@@ -889,16 +889,16 @@ added then it will not be added again.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Description</th>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>onBeforeRun</code></td>
-<td style="text-align: left;"><code>CatalogEntityOnBeforeRun</code></td>
-<td style="text-align: left;">The function to be called with a <code>CatalogRunEvent</code> event target will be the catalog entity. onBeforeRun hook can call event.preventDefault() to stop run sequence</td>
+<td align="left"><code>onBeforeRun</code></td>
+<td align="left"><code>CatalogEntityOnBeforeRun</code></td>
+<td align="left">The function to be called with a <code>CatalogRunEvent</code> event target will be the catalog entity. onBeforeRun hook can call event.preventDefault() to stop run sequence</td>
 </tr>
 </tbody>
 </table>
@@ -907,39 +907,39 @@ added then it will not be added again.</p>
 <p>A function to remove that hook</p>
 <hr />
 <h3 id="getbyid">getById<a class="headerlink" href="#getbyid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getById</strong>(<code>id</code>): <code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;</p>
+<p>▸ <strong>getById</strong>(<code>id</code>): <code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Type</th>
+<th align="left">Name</th>
+<th align="left">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>id</code></td>
-<td style="text-align: left;"><code>string</code></td>
+<td align="left"><code>id</code></td>
+<td align="left"><code>string</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;</p>
+<p><code>undefined</code> | <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>></p>
 <hr />
 <h3 id="getitemsforapikind">getItemsForApiKind<a class="headerlink" href="#getitemsforapikind" title="Permanent link">#</a></h3>
-<p>▸ <strong>getItemsForApiKind</strong>&lt;<code>T</code>&gt;(<code>apiVersion</code>, <code>kind</code>): <code>T</code>[]</p>
+<p>▸ <strong>getItemsForApiKind</strong>&lt;<code>T</code>>(<code>apiVersion</code>, <code>kind</code>): <code>T</code>[]</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Type</th>
+<th align="left">Name</th>
+<th align="left">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>T</code></td>
-<td style="text-align: left;">extends <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>, <code>T</code>&gt;</td>
+<td align="left"><code>T</code></td>
+<td align="left">extends <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>, <code>T</code>></td>
 </tr>
 </tbody>
 </table>
@@ -947,18 +947,18 @@ added then it will not be added again.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Type</th>
+<th align="left">Name</th>
+<th align="left">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>apiVersion</code></td>
-<td style="text-align: left;"><code>string</code></td>
+<td align="left"><code>apiVersion</code></td>
+<td align="left"><code>string</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>kind</code></td>
-<td style="text-align: left;"><code>string</code></td>
+<td align="left"><code>kind</code></td>
+<td align="left"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -966,19 +966,19 @@ added then it will not be added again.</p>
 <p><code>T</code>[]</p>
 <hr />
 <h3 id="getitemsforcategory">getItemsForCategory<a class="headerlink" href="#getitemsforcategory" title="Permanent link">#</a></h3>
-<p>▸ <strong>getItemsForCategory</strong>&lt;<code>T</code>&gt;(<code>category</code>): <code>T</code>[]</p>
+<p>▸ <strong>getItemsForCategory</strong>&lt;<code>T</code>>(<code>category</code>): <code>T</code>[]</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Type</th>
+<th align="left">Name</th>
+<th align="left">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>T</code></td>
-<td style="text-align: left;">extends <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>, <code>T</code>&gt;</td>
+<td align="left"><code>T</code></td>
+<td align="left">extends <a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>, <code>T</code>></td>
 </tr>
 </tbody>
 </table>
@@ -986,14 +986,14 @@ added then it will not be added again.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Type</th>
+<th align="left">Name</th>
+<th align="left">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>category</code></td>
-<td style="text-align: left;"><a href="../Common.Catalog.CatalogCategory/"><code>CatalogCategory</code></a></td>
+<td align="left"><code>category</code></td>
+<td align="left"><a href="../Common.Catalog.CatalogCategory/"><code>CatalogCategory</code></a></td>
 </tr>
 </tbody>
 </table>
