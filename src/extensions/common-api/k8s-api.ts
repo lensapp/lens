@@ -67,6 +67,7 @@ export {
   LimitRange,
   HorizontalPodAutoscaler,
   PodDisruptionBudget,
+  PriorityClass,
   Service,
   Endpoints as Endpoint,
   Ingress, IngressApi,

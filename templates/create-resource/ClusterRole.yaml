@@ -196,3 +196,11 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - scheduling.k8s.io
+    resources:
+      - priorityclass
+    verbs:
+      - get
+      - list
+      - watch

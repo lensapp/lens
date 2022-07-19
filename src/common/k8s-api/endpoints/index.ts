@@ -29,6 +29,7 @@ export * from "./pod.api";
 export * from "./pod-disruption-budget.api";
 export * from "./pod-metrics.api";
 export * from "./pod-security-policy.api";
+export * from "./priority-class.api";
 export * from "./replica-set.api";
 export * from "./resource-quota.api";
 export * from "./role.api";
