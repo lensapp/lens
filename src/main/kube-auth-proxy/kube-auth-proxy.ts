@@ -16,7 +16,10 @@ import { TypedRegEx } from "typed-regex";
 import type { Spawn } from "../child-process/spawn.injectable";
 import type { Logger } from "../../common/logger";
 
-const startingServeRegex = TypedRegEx("starting to serve on (?<address>.+)", "i");
+const startingServeMatcher = "starting to serve on (?<address>.+)";
+const startingServeRegex = Object.assign(TypedRegEx(startingServeMatcher, "i"), {
+  rawMatcher: startingServeMatcher,
+});
 
 export interface KubeAuthProxyDependencies {
   readonly proxyBinPath: string;

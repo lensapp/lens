@@ -132,8 +132,7 @@ export class Kubectl {
 
       return this.path;
     } catch (err) {
-      logger.error("Failed to ensure kubectl, fallback to the bundled version");
-      logger.error(err);
+      logger.error("Failed to ensure kubectl, fallback to the bundled version", err);
 
       return this.getBundledPath();
     }
@@ -146,7 +145,7 @@ export class Kubectl {
 
       return this.dirname;
     } catch (err) {
-      logger.error(err);
+      logger.error("Failed to get biniary directory", err);
 
       return "";
     }

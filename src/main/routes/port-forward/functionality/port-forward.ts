@@ -9,7 +9,10 @@ import { spawn } from "child_process";
 import * as tcpPortUsed from "tcp-port-used";
 import { TypedRegEx } from "typed-regex";
 
-const internalPortRegex = TypedRegEx("^forwarding from (?<address>.+) ->", "i");
+const internalPortMatcher = "^forwarding from (?<address>.+) ->";
+const internalPortRegex = Object.assign(TypedRegEx(internalPortMatcher, "i"), {
+  rawMatcher: internalPortMatcher,
+});
 
 export interface PortForwardArgs {
   clusterId: string;
