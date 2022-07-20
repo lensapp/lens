@@ -23,6 +23,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import type { ListHelmCharts } from "../../../renderer/k8s/helm-charts.api/list.injectable";
 import listHelmChartsInjectable from "../../../renderer/k8s/helm-charts.api/list.injectable";
 import createHelmReleaseInjectable from "../../../renderer/k8s/helm-releases.api/create.injectable";
+import getHelmChartValuesInjectable from "../../../renderer/k8s/helm-charts.api/get-values.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
@@ -73,7 +74,7 @@ describe("opening dock tab for installing helm chart", () => {
       );
 
       rendererDi.override(
-        callForHelmChartVersionsInjectable,
+        getHelmChartValuesInjectable,
         () => callForHelmChartValuesMock,
       );
 

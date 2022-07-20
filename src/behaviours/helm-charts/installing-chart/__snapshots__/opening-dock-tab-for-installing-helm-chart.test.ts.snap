@@ -448,14 +448,8 @@ exports[`opening dock tab for installing helm chart given application is started
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
-                  >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
-                    </div>
-                  </div>
+                    class="Spinner singleColor center"
+                  />
                 </div>
                 <div
                   class="AddRemoveButtons flex gaps"
