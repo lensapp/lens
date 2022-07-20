@@ -467,6 +467,7 @@ exports[`workload overview when navigating to workload overview renders 1`] = `
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
