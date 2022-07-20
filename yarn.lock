@@ -12669,10 +12669,10 @@ typedoc-plugin-markdown@^3.13.1:
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@0.23.6:
-  version "0.23.6"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.6.tgz#9f604aea83e6b7bc40853ab93036a7f4dbc20a5b"
-  integrity sha512-YkL7zq6Tjnze7tlPcXQd527VPpcz30cvvzVTar6jJtiHt1DPWgH8c64x2s2xsGQ+SafQpAc90jYyrB6+rXLW1g==
+typedoc@0.23.8:
+  version "0.23.8"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.8.tgz#6837fb2732f73e7aa61b46a4fbe77a301473998d"
+  integrity sha512-NLRTY/7XSrhiowR3xnH/nlfTnHk+dkzhHWAMT8guoZ6RHCQZIu3pJREMCqzdkWVCC5+dr9We7TtNeprR3Qy6Ag==
   dependencies:
     lunr "^2.3.9"
     marked "^4.0.16"
