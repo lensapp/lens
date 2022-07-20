@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { setupIpcMainHandlers } from "./setup-ipc-main-handlers";
 import loggerInjectable from "../../../../common/logger.injectable";
-import clusterManagerInjectable from "../../../cluster-manager.injectable";
+import clusterManagerInjectable from "../../../cluster/manager.injectable";
 import applicationMenuItemsInjectable from "../../../menu/application-menu-items.injectable";
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";

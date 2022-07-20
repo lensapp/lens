@@ -88,6 +88,9 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
 import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "./kubectl/normalized-arch.injectable";
+import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
+import addKubeconfigSyncAsEntitySourceInjectable from "./start-main-application/runnables/kube-config-sync/add-source.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
@@ -125,7 +128,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(hotbarStoreInjectable, () => ({
       load: () => {},
       getActive: () => ({ name: "some-hotbar", items: [] }),
@@ -204,6 +207,8 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
   [
     initializeExtensionsInjectable,
+    initializeClusterManagerInjectable,
+    addKubeconfigSyncAsEntitySourceInjectable,
     setupIpcMainHandlersInjectable,
     setupLensProxyInjectable,
     setupShellInjectable,

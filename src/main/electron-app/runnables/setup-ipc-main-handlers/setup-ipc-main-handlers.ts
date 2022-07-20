@@ -12,7 +12,7 @@ import { appEventBus } from "../../../../common/app-event-bus/event-bus";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
-import type { ClusterManager } from "../../../cluster-manager";
+import type { ClusterManager } from "../../../cluster/manager";
 import { ResourceApplier } from "../../../resource-applier";
 import { remove } from "fs-extra";
 import type { IComputedValue } from "mobx";
