@@ -21,6 +21,7 @@ import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-t
 import { getExtensionFakeFor } from "../../renderer/components/test-utils/get-extension-fake";
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
+import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -42,6 +43,8 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
     applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(hostedClusterIdInjectable, () => "some-hosted-cluster-id");
+
+      rendererDi.override(storageSaveDelayInjectable, () => 250);
 
       rendererDi.override(
         directoryForLensLocalStorageInjectable,

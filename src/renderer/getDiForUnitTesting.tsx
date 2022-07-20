@@ -72,6 +72,7 @@ import { asyncComputed } from "@ogre-tools/injectable-react";
 import forceUpdateModalRootFrameComponentInjectable from "./application-update/force-update-modal/force-update-modal-root-frame-component.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
+import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -111,6 +112,9 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(historyInjectable, () => createMemoryHistory());
     di.override(legacyOnChannelListenInjectable, () => () => noop);
+
+    di.override(storageSaveDelayInjectable, () => 0);
+
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 

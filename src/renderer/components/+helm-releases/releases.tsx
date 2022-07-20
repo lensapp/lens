@@ -77,6 +77,7 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
       <div>
         <>
           Remove
+          {" "}
           <b>{releaseNames}</b>
           ?
         </>

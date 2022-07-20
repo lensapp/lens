@@ -21,6 +21,7 @@ interface Dependencies {
   writeJsonFile: (filePath: string, contentObject: JsonObject) => Promise<void>;
   getAbsolutePath: GetAbsolutePath;
   hostedClusterId: string | undefined;
+  saveDelay: number;
 }
 
 export type CreateStorage = <T>(key: string, defaultValue: T) => StorageLayer<T>;
@@ -36,6 +37,7 @@ export const createStorage = ({
   readJsonFile,
   writeJsonFile,
   hostedClusterId,
+  saveDelay,
 }: Dependencies): CreateStorage => (key, defaultValue) => {
   const { logPrefix } = StorageHelper;
 
@@ -59,7 +61,7 @@ export const createStorage = ({
 
       // bind auto-saving data changes to %storage-file.json
       reaction(() => toJS(storage.data), saveFile, {
-        delay: 250, // lazy, avoid excessive writes to fs
+        delay: saveDelay, // lazy, avoid excessive writes to fs
         equals: comparer.structural, // save only when something really changed
       });
 

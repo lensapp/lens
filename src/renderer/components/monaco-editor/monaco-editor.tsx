@@ -12,10 +12,11 @@ import type { MonacoTheme } from "./monaco-themes";
 import { type MonacoValidator, monacoValidators } from "./monaco-validators";
 import { debounce, merge } from "lodash";
 import { autoBind, cssNames, disposer } from "../../utils";
-import { UserStore } from "../../../common/user-store";
+import type { UserStore } from "../../../common/user-store";
 import type { ThemeStore } from "../../themes/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import themeStoreInjectable from "../../themes/store.injectable";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 
 export type MonacoEditorId = string;
 
@@ -39,6 +40,7 @@ export interface MonacoEditorProps {
 
 interface Dependencies {
   themeStore: ThemeStore;
+  userStore: UserStore;
 }
 
 export function createMonacoUri(id: MonacoEditorId): Uri {
@@ -99,7 +101,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
 
   @computed get options(): editor.IStandaloneEditorConstructionOptions {
     return merge({},
-      UserStore.getInstance().editorConfiguration,
+      this.props.userStore.editorConfiguration,
       this.props.options,
     );
   }
@@ -305,6 +307,7 @@ export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, Mon
     getProps: (di, props) => ({
       ...props,
       themeStore: di.inject(themeStoreInjectable),
+      userStore: di.inject(userStoreInjectable),
     }),
   },
 );

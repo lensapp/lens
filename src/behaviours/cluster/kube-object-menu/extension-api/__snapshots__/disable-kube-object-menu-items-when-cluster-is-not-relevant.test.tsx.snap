@@ -298,6 +298,7 @@ exports[`disable kube object menu items when cluster is not relevant given exten
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -692,6 +693,7 @@ exports[`disable kube object menu items when cluster is not relevant given exten
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -1086,6 +1088,7 @@ exports[`disable kube object menu items when cluster is not relevant given not y
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"

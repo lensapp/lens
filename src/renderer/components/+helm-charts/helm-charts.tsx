@@ -12,12 +12,15 @@ import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.ap
 import { HelmChartDetails } from "./helm-chart-details";
 import { ItemListLayout } from "../item-object-list/list-layout";
 import type { IComputedValue } from "mobx";
+import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import helmChartsRouteParametersInjectable from "./helm-charts-route-parameters.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import { HelmChartIcon } from "./icon";
+import helmChartsInjectable from "./helm-charts/helm-charts.injectable";
+import selectedHelmChartInjectable from "./helm-charts/selected-helm-chart.injectable";
 
 enum columnId {
   name = "name",
@@ -34,27 +37,15 @@ interface Dependencies {
   };
 
   navigateToHelmCharts: NavigateToHelmCharts;
+
+  charts: IAsyncComputed<HelmChart[]>;
+  selectedChart: IComputedValue<HelmChart | undefined>;
 }
 
 @observer
 class NonInjectedHelmCharts extends Component<Dependencies> {
-  componentDidMount() {
-    helmChartStore.loadAll();
-  }
-
-  get selectedChart() {
-    const chartName = this.props.routeParameters.chartName.get();
-    const repo = this.props.routeParameters.repo.get();
-
-    if (!chartName || !repo) {
-      return undefined;
-    }
-
-    return helmChartStore.getByName(chartName, repo);
-  }
-
   onDetails = (chart: HelmChart) => {
-    if (chart === this.selectedChart) {
+    if (chart === this.props.selectedChart.get()) {
       this.hideDetails();
     } else {
       this.showDetails(chart);
@@ -78,6 +69,8 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
   };
 
   render() {
+    const selectedChart = this.props.selectedChart.get();
+
     return (
       <SiblingsInTabLayout>
         <div data-testid="page-for-helm-charts" style={{ display: "none" }}/>
@@ -87,7 +80,7 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
           tableId="helm_charts"
           className="HelmCharts"
           store={helmChartStore}
-          getItems={() => helmChartStore.items}
+          getItems={() => this.props.charts.value.get()}
           isSelectable={false}
           sortingCallbacks={{
             [columnId.name]: chart => chart.getName(),
@@ -105,6 +98,7 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
               placeholder: "Search Helm Charts...",
             },
           })}
+          customizeTableRowProps={(item) => ({ testId: `helm-chart-row-for-${item.getFullName("-")}` })}
           renderTableHeader={[
             { className: "icon", showWithColumn: columnId.name },
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
@@ -124,12 +118,12 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
             { title: chart.getRepository(), className: chart.getRepository().toLowerCase() },
             { className: "menu" },
           ]}
-          detailsItem={this.selectedChart}
+          detailsItem={selectedChart}
           onDetails={this.onDetails}
         />
-        {this.selectedChart && (
+        {selectedChart && (
           <HelmChartDetails
-            chart={this.selectedChart}
+            chart={selectedChart}
             hideDetails={this.hideDetails}
           />
         )}
@@ -145,6 +139,8 @@ export const HelmCharts = withInjectables<Dependencies>(
     getProps: (di) => ({
       routeParameters: di.inject(helmChartsRouteParametersInjectable),
       navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
+      charts: di.inject(helmChartsInjectable),
+      selectedChart: di.inject(selectedHelmChartInjectable),
     }),
   },
 );

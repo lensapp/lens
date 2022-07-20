@@ -7,7 +7,7 @@ import { v4 as getRandomId } from "uuid";
 
 const getRandomIdInjectable = getInjectable({
   id: "get-random-id",
-  instantiate: () => getRandomId,
+  instantiate: () => () => getRandomId(),
   causesSideEffects: true,
 });
 

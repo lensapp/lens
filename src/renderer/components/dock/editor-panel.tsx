@@ -22,6 +22,7 @@ export interface EditorPanelProps {
   autoFocus?: boolean; // default: true
   onChange: MonacoEditorProps["onChange"];
   onError?: MonacoEditorProps["onError"];
+  hidden?: boolean;
 }
 
 interface Dependencies {
@@ -36,6 +37,7 @@ const NonInjectedEditorPanel = observer(({
   autoFocus = true,
   className,
   onError,
+  hidden,
 }: Dependencies & EditorPanelProps) => {
   const editor = createRef<MonacoEditorRef>();
 
@@ -59,7 +61,7 @@ const NonInjectedEditorPanel = observer(({
       autoFocus={autoFocus}
       id={tabId}
       value={value}
-      className={cssNames(styles.EditorPanel, className)}
+      className={cssNames(styles.EditorPanel, className, { hidden })}
       onChange={onChange}
       onError={onError}
       ref={editor}

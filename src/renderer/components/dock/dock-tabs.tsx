@@ -11,8 +11,8 @@ import { DockTab } from "./dock-tab";
 import type { DockTab as DockTabModel } from "./dock/store";
 import { TabKind } from "./dock/store";
 import { TerminalTab } from "./terminal/dock-tab";
-import { useResizeObserver } from "../../hooks";
 import { cssVar } from "../../utils";
+import { useResizeObserver } from "../../hooks";
 
 export interface DockTabsProps {
   tabs: DockTabModel[];

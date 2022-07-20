@@ -18,8 +18,7 @@ const installChartArgsValidator = Joi.object<InstallChartArgs, true, InstallChar
     .required()
     .unknown(true),
   name: Joi
-    .string()
-    .required(),
+    .string(),
   namespace: Joi
     .string()
     .required(),

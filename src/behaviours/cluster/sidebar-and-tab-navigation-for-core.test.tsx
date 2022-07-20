@@ -24,6 +24,7 @@ import { navigateToRouteInjectionToken } from "../../common/front-end-routing/na
 import sidebarStorageInjectable from "../../renderer/components/layout/sidebar-storage/sidebar-storage.injectable";
 import hostedClusterIdInjectable from "../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 
 describe("cluster - sidebar and tab navigation for core", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -40,6 +41,8 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
     applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(hostedClusterIdInjectable, () => "some-hosted-cluster-id");
+
+      rendererDi.override(storageSaveDelayInjectable, () => 250);
 
       rendererDi.override(
         directoryForLensLocalStorageInjectable,

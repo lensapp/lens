@@ -441,6 +441,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -983,6 +984,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -1547,6 +1549,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -1992,6 +1995,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -2414,6 +2418,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -2978,6 +2983,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"
@@ -3520,6 +3526,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             >
               <div
                 class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
                 id="tab-terminal"
                 role="tab"
                 tabindex="0"

@@ -348,6 +348,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -836,6 +837,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
@@ -1324,6 +1326,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
               >
                 <div
                   class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
                   id="tab-terminal"
                   role="tab"
                   tabindex="0"
