@@ -5,8 +5,6 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import installChartTabStoreInjectable from "./store.injectable";
 import { waitUntilDefined } from "../../../../common/utils";
-import type { CallForHelmChartValues } from "./chart-data/call-for-helm-chart-values.injectable";
-import callForHelmChartValuesInjectable from "./chart-data/call-for-helm-chart-values.injectable";
 import type { IChartInstallData, InstallChartTabStore } from "./store";
 import React from "react";
 import {
@@ -16,8 +14,6 @@ import {
   runInAction,
 } from "mobx";
 import assert from "assert";
-import type { CallForCreateHelmRelease } from "../../+helm-releases/create-release/call-for-create-helm-release.injectable";
-import callForCreateHelmReleaseInjectable from "../../+helm-releases/create-release/call-for-create-helm-release.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { NavigateToHelmReleases } from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
@@ -26,15 +22,19 @@ import type { CallForHelmChartVersions } from "../../+helm-charts/details/versio
 import callForHelmChartVersionsInjectable from "../../+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
 import type { HelmChart } from "../../../k8s/helm-chart";
 import type { HelmReleaseUpdateDetails } from "../../../k8s/helm-releases.api/update.injectable";
+import type { GetHelmChartValues } from "../../../k8s/helm-charts.api/get-values.injectable";
+import getHelmChartValuesInjectable from "../../../k8s/helm-charts.api/get-values.injectable";
+import type { CreateHelmRelease } from "../../../k8s/helm-releases.api/create.injectable";
+import createHelmReleaseInjectable from "../../../k8s/helm-releases.api/create.injectable";
 
 const installChartModelInjectable = getInjectable({
   id: "install-chart-model",
 
   instantiate: async (di, tabId: string) => {
     const store = di.inject(installChartTabStoreInjectable);
-    const callForHelmChartValues = di.inject(callForHelmChartValuesInjectable);
+    const callForHelmChartValues = di.inject(getHelmChartValuesInjectable);
     const callForHelmChartVersions = di.inject(callForHelmChartVersionsInjectable);
-    const callForCreateHelmRelease = di.inject(callForCreateHelmReleaseInjectable);
+    const callForCreateHelmRelease = di.inject(createHelmReleaseInjectable);
     const dockStore = di.inject(dockStoreInjectable);
     const navigateToHelmReleases = di.inject(navigateToHelmReleasesInjectable);
     const closeTab = () => dockStore.closeTab(tabId);
@@ -71,8 +71,8 @@ interface Dependencies {
   closeTab: () => void;
   navigateToHelmReleases: NavigateToHelmReleases;
   waitForChart: () => Promise<void>;
-  callForCreateHelmRelease: CallForCreateHelmRelease;
-  callForHelmChartValues: CallForHelmChartValues;
+  callForCreateHelmRelease: CreateHelmRelease;
+  callForHelmChartValues: GetHelmChartValues;
   callForHelmChartVersions: CallForHelmChartVersions;
   store: InstallChartTabStore;
 }

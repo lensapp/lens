@@ -8,14 +8,7 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import type { CallForHelmCharts } from "../../../renderer/components/+helm-charts/helm-charts/call-for-helm-charts.injectable";
-import callForHelmChartsInjectable from "../../../renderer/components/+helm-charts/helm-charts/call-for-helm-charts.injectable";
-import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
-import type { CallForHelmChartValues } from "../../../renderer/components/dock/install-chart/chart-data/call-for-helm-chart-values.injectable";
-import callForHelmChartValuesInjectable from "../../../renderer/components/dock/install-chart/chart-data/call-for-helm-chart-values.injectable";
-import type { CallForCreateHelmRelease } from "../../../renderer/components/+helm-releases/create-release/call-for-create-helm-release.injectable";
-import callForCreateHelmReleaseInjectable from "../../../renderer/components/+helm-releases/create-release/call-for-create-helm-release.injectable";
 import currentPathInjectable from "../../../renderer/routes/current-path.injectable";
 import namespaceStoreInjectable from "../../../renderer/components/+namespaces/store.injectable";
 import type { NamespaceStore } from "../../../renderer/components/+namespaces/store";
@@ -30,6 +23,13 @@ import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/h
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { HelmChart } from "../../../renderer/k8s/helm-chart";
+import type { ListHelmCharts } from "../../../renderer/k8s/helm-charts.api/list.injectable";
+import listHelmChartsInjectable from "../../../renderer/k8s/helm-charts.api/list.injectable";
+import type { GetHelmChartValues } from "../../../renderer/k8s/helm-charts.api/get-values.injectable";
+import type { CreateHelmRelease } from "../../../renderer/k8s/helm-releases.api/create.injectable";
+import getHelmChartValuesInjectable from "../../../renderer/k8s/helm-charts.api/get-values.injectable";
+import createHelmReleaseInjectable from "../../../renderer/k8s/helm-releases.api/create.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
@@ -39,11 +39,11 @@ jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;
   let rendererDi: DiContainer;
-  let callForHelmChartsMock: AsyncFnMock<CallForHelmCharts>;
+  let listHelmChartsMock: AsyncFnMock<ListHelmCharts>;
   let callForHelmChartVersionsMock: AsyncFnMock<CallForHelmChartVersions>;
   let callForHelmChartReadmeMock: AsyncFnMock<CallForHelmChartReadme>;
-  let callForHelmChartValuesMock: AsyncFnMock<CallForHelmChartValues>;
-  let callForCreateHelmReleaseMock: AsyncFnMock<CallForCreateHelmRelease>;
+  let getHelmChartValuesMock: AsyncFnMock<GetHelmChartValues>;
+  let createHelmReleaseMock: AsyncFnMock<CreateHelmRelease>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -52,11 +52,11 @@ describe("installing helm chart from new tab", () => {
 
     overrideFsWithFakes(rendererDi);
 
-    callForHelmChartsMock = asyncFn();
+    listHelmChartsMock = asyncFn();
     callForHelmChartVersionsMock = asyncFn();
     callForHelmChartReadmeMock = asyncFn();
-    callForHelmChartValuesMock = asyncFn();
-    callForCreateHelmReleaseMock = asyncFn();
+    getHelmChartValuesMock = asyncFn();
+    createHelmReleaseMock = asyncFn();
 
     builder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(
@@ -67,8 +67,8 @@ describe("installing helm chart from new tab", () => {
       rendererDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 
       rendererDi.override(
-        callForHelmChartsInjectable,
-        () => callForHelmChartsMock,
+        listHelmChartsInjectable,
+        () => listHelmChartsMock,
       );
 
       rendererDi.override(
@@ -82,13 +82,13 @@ describe("installing helm chart from new tab", () => {
       );
 
       rendererDi.override(
-        callForHelmChartValuesInjectable,
-        () => callForHelmChartValuesMock,
+        getHelmChartValuesInjectable,
+        () => getHelmChartValuesMock,
       );
 
       rendererDi.override(
-        callForCreateHelmReleaseInjectable,
-        () => callForCreateHelmReleaseMock,
+        createHelmReleaseInjectable,
+        () => createHelmReleaseMock,
       );
 
       // TODO: Replace store mocking with mock for the actual side-effect (where the namespaces are coming from)
@@ -145,7 +145,7 @@ describe("installing helm chart from new tab", () => {
       // TODO: Make TerminalWindow unit testable to allow realistic behaviour
       dockStore.closeTab("terminal");
 
-      await callForHelmChartsMock.resolve([
+      await listHelmChartsMock.resolve([
         HelmChart.create({
           apiVersion: "some-api-version",
           name: "some-name",
@@ -242,7 +242,7 @@ describe("installing helm chart from new tab", () => {
       });
 
       it("calls for default configuration of the chart", () => {
-        expect(callForHelmChartValuesMock).toHaveBeenCalledWith(
+        expect(getHelmChartValuesMock).toHaveBeenCalledWith(
           "some-repository",
           "some-name",
           "some-version",
@@ -263,7 +263,7 @@ describe("installing helm chart from new tab", () => {
       });
 
       it("given default configuration resolves but versions have not resolved yet, still shows the spinner", async () => {
-        await callForHelmChartValuesMock.resolve(
+        await getHelmChartValuesMock.resolve(
           "some-default-configuration",
         );
 
@@ -282,7 +282,7 @@ describe("installing helm chart from new tab", () => {
 
       describe("when default configuration and versions resolve", () => {
         beforeEach(async () => {
-          await callForHelmChartValuesMock.resolve(
+          await getHelmChartValuesMock.resolve(
             "some-default-configuration",
           );
 
@@ -379,7 +379,7 @@ describe("installing helm chart from new tab", () => {
           });
 
           it("calls for installation with default configuration", () => {
-            expect(callForCreateHelmReleaseMock).toHaveBeenCalledWith({
+            expect(createHelmReleaseMock).toHaveBeenCalledWith({
               chart: "some-name",
               name: undefined,
               namespace: "default",
@@ -391,7 +391,7 @@ describe("installing helm chart from new tab", () => {
 
           describe("when installation resolves", () => {
             beforeEach(async () => {
-              await callForCreateHelmReleaseMock.resolve({
+              await createHelmReleaseMock.resolve({
                 log: "some-execution-output",
 
                 release: {
@@ -554,7 +554,7 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("calls for default configuration of the second chart", () => {
-              expect(callForHelmChartValuesMock).toHaveBeenCalledWith(
+              expect(getHelmChartValuesMock).toHaveBeenCalledWith(
                 "some-repository",
                 "some-other-name",
                 "some-version",
@@ -576,7 +576,7 @@ describe("installing helm chart from new tab", () => {
 
             describe("when configuration and versions resolve", () => {
               beforeEach(async () => {
-                await callForHelmChartValuesMock.resolve(
+                await getHelmChartValuesMock.resolve(
                   "some-other-default-configuration",
                 );
 
@@ -601,7 +601,7 @@ describe("installing helm chart from new tab", () => {
                 fireEvent.click(installButton);
 
                 expect(
-                  callForCreateHelmReleaseMock,
+                  createHelmReleaseMock,
                 ).toHaveBeenCalledWith({
                   chart: "some-other-name",
                   name: undefined,
@@ -614,7 +614,7 @@ describe("installing helm chart from new tab", () => {
 
               describe("when selecting the dock tab for installing first chart", () => {
                 beforeEach(() => {
-                  callForHelmChartValuesMock.mockClear();
+                  getHelmChartValuesMock.mockClear();
                   callForHelmChartVersionsMock.mockClear();
 
                   const tab = rendered.getByTestId(
@@ -630,7 +630,7 @@ describe("installing helm chart from new tab", () => {
 
                 it("does not call for default configuration", () => {
                   expect(
-                    callForHelmChartValuesMock,
+                    getHelmChartValuesMock,
                   ).not.toHaveBeenCalled();
                 });
 
@@ -654,7 +654,7 @@ describe("installing helm chart from new tab", () => {
                   fireEvent.click(installButton);
 
                   expect(
-                    callForCreateHelmReleaseMock,
+                    createHelmReleaseMock,
                   ).toHaveBeenCalledWith({
                     chart: "some-name",
                     name: undefined,
@@ -674,7 +674,7 @@ describe("installing helm chart from new tab", () => {
 
           beforeEach(() => {
             callForHelmChartVersionsMock.mockClear();
-            callForHelmChartValuesMock.mockClear();
+            getHelmChartValuesMock.mockClear();
 
             const menuId =
                       "install-chart-version-select-for-some-first-tab-id";
@@ -702,7 +702,7 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("calls for default configuration for the version of chart", () => {
-              expect(callForHelmChartValuesMock).toHaveBeenCalledWith(
+              expect(getHelmChartValuesMock).toHaveBeenCalledWith(
                 "some-repository",
                 "some-name",
                 "some-other-version",
@@ -741,7 +741,7 @@ describe("installing helm chart from new tab", () => {
 
             describe("when default configuration resolves", () => {
               beforeEach(async () => {
-                await callForHelmChartValuesMock.resolve(
+                await getHelmChartValuesMock.resolve(
                   "some-default-configuration-for-other-version",
                 );
               });
@@ -766,7 +766,7 @@ describe("installing helm chart from new tab", () => {
                 fireEvent.click(installButton);
 
                 expect(
-                  callForCreateHelmReleaseMock,
+                  createHelmReleaseMock,
                 ).toHaveBeenCalledWith({
                   chart: "some-name",
                   name: undefined,
@@ -823,7 +823,7 @@ describe("installing helm chart from new tab", () => {
 
               fireEvent.click(installButton);
 
-              expect(callForCreateHelmReleaseMock).toHaveBeenCalledWith(
+              expect(createHelmReleaseMock).toHaveBeenCalledWith(
                 {
                   chart: "some-name",
                   name: undefined,
@@ -886,7 +886,7 @@ describe("installing helm chart from new tab", () => {
               )
               .selectOption("some-other-version");
 
-            await callForHelmChartValuesMock.resolve(
+            await getHelmChartValuesMock.resolve(
               "some-default-configuration-for-other-version",
             );
 
@@ -942,7 +942,7 @@ describe("installing helm chart from new tab", () => {
 
             fireEvent.click(installButton);
 
-            expect(callForCreateHelmReleaseMock).toHaveBeenCalledWith({
+            expect(createHelmReleaseMock).toHaveBeenCalledWith({
               chart: "some-name",
               name: undefined,
               namespace: "default",
@@ -959,7 +959,7 @@ describe("installing helm chart from new tab", () => {
               )
               .selectOption("some-other-version");
 
-            await callForHelmChartValuesMock.resolve(
+            await getHelmChartValuesMock.resolve(
               "some-default-configuration-for-other-version",
             );
 
@@ -1008,7 +1008,7 @@ describe("installing helm chart from new tab", () => {
 
             fireEvent.click(installButton);
 
-            expect(callForCreateHelmReleaseMock).toHaveBeenCalledWith({
+            expect(createHelmReleaseMock).toHaveBeenCalledWith({
               chart: "some-name",
               name: "some-custom-name",
               namespace: "default",

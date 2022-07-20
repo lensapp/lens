@@ -8,12 +8,8 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import type { CallForHelmCharts } from "../../../renderer/components/+helm-charts/helm-charts/call-for-helm-charts.injectable";
-import callForHelmChartsInjectable from "../../../renderer/components/+helm-charts/helm-charts/call-for-helm-charts.injectable";
-import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
+import { HelmChart } from "../../../renderer/k8s/helm-chart";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
-import callForHelmChartValuesInjectable from "../../../renderer/components/dock/install-chart/chart-data/call-for-helm-chart-values.injectable";
-import callForCreateHelmReleaseInjectable from "../../../renderer/components/+helm-releases/create-release/call-for-create-helm-release.injectable";
 import type { CallForHelmChartReadme } from "../../../renderer/components/+helm-charts/details/readme/call-for-helm-chart-readme.injectable";
 import callForHelmChartReadmeInjectable from "../../../renderer/components/+helm-charts/details/readme/call-for-helm-chart-readme.injectable";
 import type { CallForHelmChartVersions } from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
@@ -24,6 +20,9 @@ import directoryForLensLocalStorageInjectable from "../../../common/directory-fo
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import type { ListHelmCharts } from "../../../renderer/k8s/helm-charts.api/list.injectable";
+import listHelmChartsInjectable from "../../../renderer/k8s/helm-charts.api/list.injectable";
+import createHelmReleaseInjectable from "../../../renderer/k8s/helm-releases.api/create.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
@@ -33,7 +32,7 @@ jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
 describe("opening dock tab for installing helm chart", () => {
   let builder: ApplicationBuilder;
   let rendererDi: DiContainer;
-  let callForHelmChartsMock: AsyncFnMock<CallForHelmCharts>;
+  let listHelmChartsMock: AsyncFnMock<ListHelmCharts>;
   let callForHelmChartVersionsMock: AsyncFnMock<CallForHelmChartVersions>;
   let callForHelmChartReadmeMock: AsyncFnMock<CallForHelmChartReadme>;
   let callForHelmChartValuesMock: jest.Mock;
@@ -45,7 +44,7 @@ describe("opening dock tab for installing helm chart", () => {
 
     overrideFsWithFakes(rendererDi);
 
-    callForHelmChartsMock = asyncFn();
+    listHelmChartsMock = asyncFn();
     callForHelmChartVersionsMock = asyncFn();
     callForHelmChartReadmeMock = asyncFn();
     callForHelmChartValuesMock = jest.fn();
@@ -59,8 +58,8 @@ describe("opening dock tab for installing helm chart", () => {
       rendererDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 
       rendererDi.override(
-        callForHelmChartsInjectable,
-        () => callForHelmChartsMock,
+        listHelmChartsInjectable,
+        () => listHelmChartsMock,
       );
 
       rendererDi.override(
@@ -74,12 +73,12 @@ describe("opening dock tab for installing helm chart", () => {
       );
 
       rendererDi.override(
-        callForHelmChartValuesInjectable,
+        callForHelmChartVersionsInjectable,
         () => callForHelmChartValuesMock,
       );
 
       rendererDi.override(
-        callForCreateHelmReleaseInjectable,
+        createHelmReleaseInjectable,
         () => jest.fn(),
       );
 
@@ -112,12 +111,12 @@ describe("opening dock tab for installing helm chart", () => {
     });
 
     it("calls for charts", () => {
-      expect(callForHelmChartsMock).toHaveBeenCalled();
+      expect(listHelmChartsMock).toHaveBeenCalled();
     });
 
     describe("when charts resolve", () => {
       beforeEach(async () => {
-        await callForHelmChartsMock.resolve([
+        await listHelmChartsMock.resolve([
           HelmChart.create({
             apiVersion: "some-api-version",
             name: "some-name",

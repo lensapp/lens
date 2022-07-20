@@ -4,15 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import callForHelmChartsInjectable from "./call-for-helm-charts.injectable";
+import listHelmChartsInjectable from "../../../k8s/helm-charts.api/list.injectable";
 
 const helmChartsInjectable = getInjectable({
   id: "helm-charts",
 
   instantiate: (di) => {
-    const callForHelmCharts = di.inject(callForHelmChartsInjectable);
+    const listHelmCharts = di.inject(listHelmChartsInjectable);
 
-    return asyncComputed(async () => await callForHelmCharts(), []);
+    return asyncComputed(async () => await listHelmCharts(), []);
   },
 });
 

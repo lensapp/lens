@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getChartDetails } from "../../../../../common/k8s-api/endpoints/helm-charts.api";
+import getHelmChartDetailsInjectable from "../../../../k8s/helm-charts.api/get-details.injectable";
 
 export type CallForHelmChartReadme = (
   repo: string,
@@ -13,16 +13,16 @@ export type CallForHelmChartReadme = (
 
 const callForHelmChartReadmeInjectable = getInjectable({
   id: "call-for-helm-chart-readme",
+  instantiate: (di): CallForHelmChartReadme => {
+    const getHelmChartDetails = di.inject(getHelmChartDetailsInjectable);
 
-  instantiate:
-    (): CallForHelmChartReadme =>
-      async (repository: string, name: string, version: string) => {
-        // TODO: Dismantle wrong abstraction
-        const details = await getChartDetails(repository, name, { version });
+    return async (repository, name, version) => {
+      // TODO: Dismantle wrong abstraction
+      const details = await getHelmChartDetails(repository, name, { version });
 
-        return details.readme;
-      },
-
+      return details.readme;
+    };
+  },
   causesSideEffects: true,
 });
 

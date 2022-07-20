@@ -7,10 +7,8 @@ import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
+import { HelmChart } from "../../../renderer/k8s/helm-chart";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
-import type { CallForHelmChartValues } from "../../../renderer/components/dock/install-chart/chart-data/call-for-helm-chart-values.injectable";
-import callForHelmChartValuesInjectable from "../../../renderer/components/dock/install-chart/chart-data/call-for-helm-chart-values.injectable";
 import namespaceStoreInjectable from "../../../renderer/components/+namespaces/store.injectable";
 import type { NamespaceStore } from "../../../renderer/components/+namespaces/store";
 import type { CallForHelmChartVersions } from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
@@ -22,7 +20,9 @@ import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/h
 import { TabKind } from "../../../renderer/components/dock/dock/store";
 import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 import type { DiContainer } from "@ogre-tools/injectable";
-import callForCreateHelmReleaseInjectable from "../../../renderer/components/+helm-releases/create-release/call-for-create-helm-release.injectable";
+import type { GetHelmChartValues } from "../../../renderer/k8s/helm-charts.api/get-values.injectable";
+import getHelmChartValuesInjectable from "../../../renderer/k8s/helm-charts.api/get-values.injectable";
+import createHelmReleaseInjectable from "../../../renderer/k8s/helm-releases.api/create.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
@@ -33,7 +33,7 @@ describe("installing helm chart from previously opened tab", () => {
   let builder: ApplicationBuilder;
   let rendererDi: DiContainer;
   let callForHelmChartVersionsMock: AsyncFnMock<CallForHelmChartVersions>;
-  let callForHelmChartValuesMock: AsyncFnMock<CallForHelmChartValues>;
+  let getHelmChartValuesMock: AsyncFnMock<GetHelmChartValues>;
   let storagesAreReady: () => Promise<void>;
 
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe("installing helm chart from previously opened tab", () => {
     overrideFsWithFakes(rendererDi);
 
     callForHelmChartVersionsMock = asyncFn();
-    callForHelmChartValuesMock = asyncFn();
+    getHelmChartValuesMock = asyncFn();
 
     builder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(
@@ -62,17 +62,12 @@ describe("installing helm chart from previously opened tab", () => {
       );
 
       rendererDi.override(
-        callForHelmChartValuesInjectable,
-        () => callForHelmChartValuesMock,
+        getHelmChartValuesInjectable,
+        () => getHelmChartValuesMock,
       );
 
       rendererDi.override(
-        callForHelmChartValuesInjectable,
-        () => callForHelmChartValuesMock,
-      );
-
-      rendererDi.override(
-        callForCreateHelmReleaseInjectable,
+        createHelmReleaseInjectable,
         () => jest.fn(),
       );
 
@@ -164,7 +159,7 @@ describe("installing helm chart from previously opened tab", () => {
     });
 
     it("calls for default configuration of the chart", () => {
-      expect(callForHelmChartValuesMock).toHaveBeenCalledWith(
+      expect(getHelmChartValuesMock).toHaveBeenCalledWith(
         "some-repository",
         "some-name",
         "some-other-version",
@@ -180,7 +175,7 @@ describe("installing helm chart from previously opened tab", () => {
 
     describe("when configuration and version resolves", () => {
       beforeEach(async () => {
-        await callForHelmChartValuesMock.resolve(
+        await getHelmChartValuesMock.resolve(
           "some-default-configuration",
         );
 
