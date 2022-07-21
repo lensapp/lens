@@ -121,6 +121,8 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
   customizeRemoveDialog?: (selectedItems: Item[]) => Partial<ConfirmDialogParams>;
   renderFooter?: (parent: NonInjectedItemListLayout<Item, PreLoadStores>) => React.ReactNode;
 
+  spinnerTestId?: string;
+
   /**
    * Message to display when a store failed to load
    *
@@ -321,6 +323,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
           onDetails={this.props.onDetails}
           customizeRemoveDialog={this.props.customizeRemoveDialog}
           failedToLoadMessage={this.props.failedToLoadMessage}
+          spinnerTestId={this.props.spinnerTestId}
         />
 
         {this.props.renderFooter?.(this)}
