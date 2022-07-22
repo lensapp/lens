@@ -4,11 +4,11 @@
  */
 
 import React from "react";
-import { autorun, makeObservable, observable } from "mobx";
+import { autorun, computed, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import yaml from "js-yaml";
 import type { DockTab, TabId } from "../dock/store";
-import type { EditingResource, EditResourceTabStore } from "./store";
+import type { EditResourceTabStore } from "./store";
 import { InfoPanel } from "../info-panel";
 import { Badge } from "../../badge";
 import { EditorPanel } from "../editor-panel";
@@ -31,7 +31,6 @@ interface Dependencies {
 }
 
 interface SaveDraftArgs {
-  tabData: EditingResource;
   resource: KubeObject;
   store: KubeObjectStore;
 }
@@ -39,7 +38,7 @@ interface SaveDraftArgs {
 @observer
 class NonInjectedEditResource extends React.Component<EditResourceProps & Dependencies> {
   @observable error = "";
-  @observable draft = "";
+  @observable configurationWhenOpened = "";
 
   constructor(props: EditResourceProps & Dependencies) {
     super(props);
@@ -61,9 +60,9 @@ class NonInjectedEditResource extends React.Component<EditResourceProps & Depend
         },
         ({ tabData, resource }) => {
           if (typeof tabData.draft === "string") {
-            this.draft = tabData.draft;
+            this.configurationWhenOpened = tabData.draft;
           } else {
-            this.draft = tabData.firstDraft = yaml.dump(resource.toPlainObject());
+            this.configurationWhenOpened = tabData.firstDraft = yaml.dump(resource.toPlainObject());
           }
         },
       ),
@@ -101,14 +100,15 @@ class NonInjectedEditResource extends React.Component<EditResourceProps & Depend
     return this.props.editResourceStore.getData(this.tabId);
   }
 
-  async save({ resource, store, tabData }: SaveDraftArgs) {
+  async save({ resource, store }: SaveDraftArgs) {
     if (this.error) {
       return null;
     }
 
-    const currentVersion = yaml.load(this.draft);
-    const firstVersion = yaml.load(tabData.firstDraft ?? this.draft);
-    const patches = createPatch(firstVersion, currentVersion);
+    const currentVersion = yaml.load(this.configurationWhenOpened);
+    const firstVersion = yaml.load(this.configurationInView ?? this.configurationWhenOpened);
+    const patches = createPatch(currentVersion, firstVersion);
+
     const updatedResource = await store.patch(resource, patches);
 
     this.props.editResourceStore.clearInitialDraft(this.tabId);
@@ -123,8 +123,12 @@ class NonInjectedEditResource extends React.Component<EditResourceProps & Depend
     );
   }
 
+  @computed get configurationInView() {
+    return this.props.editResourceStore.getData(this.tabId)?.draft;
+  }
+
   render() {
-    const { tabId, error, draft, tabData, resource, store } = this;
+    const { tabId, error, configurationWhenOpened, tabData, resource, store } = this;
 
     if (!tabData || !resource || !store) {
       return <Spinner center />;
@@ -135,7 +139,7 @@ class NonInjectedEditResource extends React.Component<EditResourceProps & Depend
         <InfoPanel
           tabId={tabId}
           error={error}
-          submit={() => this.save({ resource, store, tabData })}
+          submit={() => this.save({ resource, store })}
           submitLabel="Save"
           submittingMessage="Applying.."
           controls={(
@@ -151,7 +155,7 @@ class NonInjectedEditResource extends React.Component<EditResourceProps & Depend
         />
         <EditorPanel
           tabId={tabId}
-          value={draft}
+          value={configurationWhenOpened}
           onChange={draft => {
             this.error = "";
             tabData.draft = draft;
