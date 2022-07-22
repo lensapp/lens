@@ -103,6 +103,8 @@ interface Dependencies {
 }
 
 export class ReleaseDetailsModel {
+  id = `${this.dependencies.targetRelease.namespace}/${this.dependencies.targetRelease.name}`;
+
   constructor(private dependencies: Dependencies) {}
 
   private detailedRelease = observable.box<DetailedHelmRelease | undefined>();
@@ -269,12 +271,6 @@ export class ReleaseDetailsModel {
 
     this.close();
   };
-
-  @computed get id() {
-    const { name, namespace } = this.dependencies.targetRelease;
-
-    return `${namespace}/${name}`;
-  }
 }
 
 export interface MinimalResourceGroup {
