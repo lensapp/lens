@@ -2988,15 +2988,7 @@ valid if one of the input validators matches the input</p>
 <tbody>
 <tr>
 <td align="left"><code>baseValidator</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>baseValidator.condition</code></td>
-<td align="left"><code>undefined</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code></td>
-</tr>
-<tr>
-<td align="left"><code>baseValidator.message</code></td>
-<td align="left"><code>null</code> | <code>string</code> | <code>number</code> | <code>boolean</code> | {} | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>> | <code>Iterable</code>&lt;<code>ReactNode</code>> | <code>ReactPortal</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>ReactNode</code></td>
+<td align="left"><code>Simplify</code>&lt;<code>Except</code>&lt;<code>Pick</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>, <code>"message"</code> | <code>"condition"</code>>, <code>"message"</code>> &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<code>Pick</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>, <code>"message"</code> | <code>"condition"</code>>, <code>"message"</code>>>></td>
 </tr>
 <tr>
 <td align="left"><code>...validators</code></td>
