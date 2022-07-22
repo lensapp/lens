@@ -8,10 +8,6 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { conforms, eq, includes } from "lodash/fp";
 import { computed } from "mobx";
 
-function isNotEmpty<T>(item: T | null | undefined): item is T {
-  return !!item;
-}
-
 const kubeObjectStatusTextsForObjectInjectable = getInjectable({
   id: "kube-object-status-texts-for-object",
 
@@ -21,9 +17,7 @@ const kubeObjectStatusTextsForObjectInjectable = getInjectable({
     return computed(() =>
       allStatusTexts
         .get()
-        .filter(toKubeObjectRelated(kubeObject))
-        .map(item => item.resolve(kubeObject))
-        .filter(isNotEmpty),
+        .filter(toKubeObjectRelated(kubeObject)),
     );
   },
 

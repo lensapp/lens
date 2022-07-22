@@ -15,6 +15,7 @@ import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-statu
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
+import type { KubeObjectStatusText } from "./kube-object-status-text-injection-token";
 
 function statusClassName(level: KubeObjectStatusLevel): string {
   switch (level) {
@@ -78,7 +79,7 @@ export interface KubeObjectStatusIconProps {
 }
 
 interface Dependencies {
-  statuses: IComputedValue<KubeObjectStatus[]>;
+  statuses: IComputedValue<KubeObjectStatusText[]>;
 }
 
 @observer
@@ -107,7 +108,11 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
   }
 
   render() {
-    const statuses = this.props.statuses.get();
+    const statusTexts = this.props.statuses.get();
+
+    const statuses = statusTexts
+      .map((statusText) => statusText.resolve(this.props.object))
+      .filter(isNotEmpty);
 
     if (statuses.length === 0) {
       return null;
@@ -132,6 +137,10 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
       />
     );
   }
+}
+
+function isNotEmpty<T>(item: T | null | undefined): item is T {
+  return !!item;
 }
 
 export const KubeObjectStatusIcon = withInjectables<Dependencies, KubeObjectStatusIconProps>(

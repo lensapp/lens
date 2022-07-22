@@ -8,16 +8,18 @@ import React from "react";
 import { useFakeTime } from "../../../common/test-utils/use-fake-time";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { IObservableValue } from "mobx";
-import { observable, computed, runInAction } from "mobx";
-import { KubeObjectStatusIcon } from "../../../renderer/components/kube-object-status-icon";
-import { kubeObjectStatusTextInjectionToken } from "../../../renderer/components/kube-object-status-icon/kube-object-status-text-injection-token";
+import type { IAtom } from "mobx";
+import { createAtom, computed } from "mobx";
 import { frontEndRouteInjectionToken } from "../../../common/front-end-routing/front-end-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../renderer/routes/route-specific-component-injection-token";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import type { RenderResult } from "@testing-library/react";
+import { act } from "@testing-library/react";
+import { observer } from "mobx-react";
+import { kubeObjectStatusTextInjectionToken } from "../../../renderer/components/kube-object-status-icon/kube-object-status-text-injection-token";
+import { KubeObjectStatusIcon } from "../../../renderer/components/kube-object-status-icon";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
@@ -29,8 +31,13 @@ jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
 
           return (
             <>
-              <Target tooltip={tooltip.children ? undefined : tooltip} {...props} />
-              <div data-testid={testId && `tooltip-content-for-${testId}`}>{tooltip.children || tooltip}</div>
+              <Target
+                tooltip={tooltip.children ? undefined : tooltip}
+                {...props}
+              />
+              <div data-testid={testId && `tooltip-content-for-${testId}`}>
+                {tooltip.children || tooltip}
+              </div>
             </>
           );
         }
@@ -41,9 +48,9 @@ jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
 
 describe("show status for a kube object", () => {
   let builder: ApplicationBuilder;
-  let infoStatusIsShown: IObservableValue<boolean>;
-  let warningStatusIsShown: IObservableValue<boolean>;
-  let criticalStatusIsShown: IObservableValue<boolean>;
+  let infoStatusIsShown: boolean;
+  let warningStatusIsShown: boolean;
+  let criticalStatusIsShown: boolean;
 
   beforeEach(() => {
     useFakeTime("2015-10-21T07:28:00Z");
@@ -52,33 +59,66 @@ describe("show status for a kube object", () => {
 
     const rendererDi = builder.dis.rendererDi;
 
-    infoStatusIsShown = observable.box(false);
-    warningStatusIsShown = observable.box(false);
-    criticalStatusIsShown = observable.box(false);
+    infoStatusIsShown = false;
 
-    const infoStatusInjectable = getStatusTextInjectable(
-      KubeObjectStatusLevel.INFO,
-      "info",
-      "some-kind",
-      ["some-api-version"],
-      infoStatusIsShown,
-    );
+    const infoStatusInjectable = getInjectable({
+      id: "some-info-status",
+      injectionToken: kubeObjectStatusTextInjectionToken,
 
-    const warningStatusInjectable = getStatusTextInjectable(
-      KubeObjectStatusLevel.WARNING,
-      "warning",
-      "some-kind",
-      ["some-api-version"],
-      warningStatusIsShown,
-    );
+      instantiate: () => ({
+        apiVersions: ["some-api-version"],
+        kind: "some-kind",
+        enabled: computed(() => true),
 
-    const criticalStatusInjectable = getStatusTextInjectable(
-      KubeObjectStatusLevel.CRITICAL,
-      "critical",
-      "some-kind",
-      ["some-api-version"],
-      criticalStatusIsShown,
-    );
+        resolve: (resource) => infoStatusIsShown ? ({
+          level: KubeObjectStatusLevel.INFO,
+          text: `Some info status for ${resource.getName()}`,
+          timestamp: "2015-10-19T07:28:00Z",
+        }) : null,
+      }),
+    });
+
+    warningStatusIsShown = false;
+
+    const warningStatusInjectable = getInjectable({
+      id: "some-warning-status",
+      injectionToken: kubeObjectStatusTextInjectionToken,
+
+      instantiate: () => ({
+        apiVersions: ["some-api-version"],
+        kind: "some-kind",
+        enabled: computed(() => true),
+
+        resolve: (resource) => warningStatusIsShown ? ({
+          level: KubeObjectStatusLevel.WARNING,
+          text: `Some warning status for ${resource.getName()}`,
+          timestamp: "2015-10-19T07:28:00Z",
+        }) : null,
+      }),
+    });
+
+    criticalStatusIsShown = false;
+
+    const criticalStatusInjectable = getInjectable({
+      id: "some-critical-status",
+      injectionToken: kubeObjectStatusTextInjectionToken,
+
+      instantiate: () => ({
+        apiVersions: ["some-api-version"],
+        kind: "some-kind",
+        enabled: computed(() => true),
+
+        resolve: (resource) => {
+          return criticalStatusIsShown
+            ? {
+              level: KubeObjectStatusLevel.CRITICAL,
+              text: `Some critical status for ${resource.getName()}`,
+              timestamp: "2015-10-19T07:28:00Z",
+            }
+            : null;
+        },
+      }),
+    });
 
     rendererDi.register(
       testRouteInjectable,
@@ -86,6 +126,7 @@ describe("show status for a kube object", () => {
       infoStatusInjectable,
       warningStatusInjectable,
       criticalStatusInjectable,
+      someAtomInjectable,
     );
 
     builder.setEnvironmentToClusterFrame();
@@ -94,11 +135,16 @@ describe("show status for a kube object", () => {
   describe("given application starts and in test page", () => {
     let rendererDi: DiContainer;
     let rendered: RenderResult;
+    let rerenderParent: () => void;
 
     beforeEach(async () => {
       rendered = await builder.render();
 
       rendererDi = builder.dis.rendererDi;
+
+      const someAtom = rendererDi.inject(someAtomInjectable);
+
+      rerenderParent = rerenderParentFor(someAtom);
 
       const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
       const testRoute = rendererDi.inject(testRouteInjectable);
@@ -121,6 +167,8 @@ describe("show status for a kube object", () => {
     describe("when status for irrelevant kube object kind emerges", () => {
       beforeEach(() => {
         rendererDi.register(statusForIrrelevantKubeObjectKindInjectable);
+
+        rerenderParent();
       });
 
       it("renders", () => {
@@ -139,6 +187,8 @@ describe("show status for a kube object", () => {
     describe("when status for irrelevant kube object api version emerges", () => {
       beforeEach(() => {
         rendererDi.register(statusForIrrelevantKubeObjectApiVersionInjectable);
+
+        rerenderParent();
       });
 
       it("renders", () => {
@@ -156,9 +206,9 @@ describe("show status for a kube object", () => {
 
     describe("when info status emerges", () => {
       beforeEach(() => {
-        runInAction(() => {
-          infoStatusIsShown.set(true);
-        });
+        infoStatusIsShown = true;
+
+        rerenderParent();
       });
 
       it("renders", () => {
@@ -178,13 +228,17 @@ describe("show status for a kube object", () => {
           "tooltip-content-for-kube-object-status-icon-for-some-uid",
         );
 
-        expect(tooltipContent).toHaveTextContent("Some info status for some-name");
+        expect(tooltipContent).toHaveTextContent(
+          "Some info status for some-name",
+        );
       });
     });
 
     describe("when warning status emerges", () => {
       beforeEach(() => {
-        warningStatusIsShown.set(true);
+        warningStatusIsShown = true;
+
+        rerenderParent();
       });
 
       it("renders", () => {
@@ -196,13 +250,17 @@ describe("show status for a kube object", () => {
           "tooltip-content-for-kube-object-status-icon-for-some-uid",
         );
 
-        expect(tooltipContent).toHaveTextContent("Some warning status for some-name");
+        expect(tooltipContent).toHaveTextContent(
+          "Some warning status for some-name",
+        );
       });
     });
 
     describe("when critical status emerges", () => {
       beforeEach(() => {
-        criticalStatusIsShown.set(true);
+        criticalStatusIsShown = true;
+
+        rerenderParent();
       });
 
       it("renders", () => {
@@ -214,7 +272,9 @@ describe("show status for a kube object", () => {
           "tooltip-content-for-kube-object-status-icon-for-some-uid",
         );
 
-        expect(tooltipContent).toHaveTextContent("Some critical status for some-name");
+        expect(tooltipContent).toHaveTextContent(
+          "Some critical status for some-name",
+        );
       });
     });
   });
@@ -232,76 +292,85 @@ const testRouteInjectable = getInjectable({
   injectionToken: frontEndRouteInjectionToken,
 });
 
+const rerenderParentFor = (atom: IAtom) => () => {
+  act(() => {
+    atom.reportChanged();
+  });
+};
+
+const TestComponent = observer(({ someAtom }: { someAtom: IAtom }) => {
+  void someAtom.reportObserved();
+
+  return (
+    <KubeObjectStatusIcon
+      object={getKubeObjectStub("some-kind", "some-api-version")}
+    />
+  );
+});
+
 const testRouteComponentInjectable = getInjectable({
   id: "test-route-component",
 
-  instantiate: (di) => ({
-    route: di.inject(testRouteInjectable),
+  instantiate: (di) => {
+    const someAtom = di.inject(someAtomInjectable);
 
-    Component: () => (
-      <KubeObjectStatusIcon
-        object={getKubeObjectStub("some-kind", "some-api-version")}
-      />
-    ),
-  }),
+    return {
+      route: di.inject(testRouteInjectable),
+      Component: () => <TestComponent someAtom={someAtom} />,
+    };
+  },
 
   injectionToken: routeSpecificComponentInjectionToken,
 });
 
-const getKubeObjectStub = (kind: string, apiVersion: string) => KubeObject.create({
-  apiVersion,
-  kind,
-  metadata: {
-    uid: "some-uid",
-    name: "some-name",
-    resourceVersion: "some-resource-version",
-    namespace: "some-namespace",
-    selfLink: "/foo",
-  },
+const someAtomInjectable = getInjectable({
+  id: "some-atom",
+  instantiate: () => createAtom("some-atom"),
 });
 
-const getStatusTextInjectable = (
-  level: KubeObjectStatusLevel,
-  title: string,
-  kind: string,
-  apiVersions: string[],
-  statusIsShown?: IObservableValue<boolean>,
-) =>
-  getInjectable({
-    id: title,
-
-    instantiate: () => ({
-      apiVersions,
-      kind,
-
-      resolve: (kubeObject: KubeObject) => {
-        if (statusIsShown && !statusIsShown.get()) {
-          return null;
-        }
-
-        return {
-          level,
-          text: `Some ${title} status for ${kubeObject.getName()}`,
-          timestamp: "2015-10-19T07:28:00Z",
-        };
-      },
-
-      enabled: computed(() => true),
-    }),
-
-    injectionToken: kubeObjectStatusTextInjectionToken,
+const getKubeObjectStub = (kind: string, apiVersion: string) =>
+  KubeObject.create({
+    apiVersion,
+    kind,
+    metadata: {
+      uid: "some-uid",
+      name: "some-name",
+      resourceVersion: "some-resource-version",
+      namespace: "some-namespace",
+      selfLink: "/foo",
+    },
   });
 
-const statusForIrrelevantKubeObjectKindInjectable = getStatusTextInjectable(
-  KubeObjectStatusLevel.INFO,
-  "irrelevant",
-  "some-other-kind",
-  ["some-api-version"],
-);
+const statusForIrrelevantKubeObjectKindInjectable = getInjectable({
+  id: "status-for-irrelevant-kube-object-kind",
+  injectionToken: kubeObjectStatusTextInjectionToken,
 
-const statusForIrrelevantKubeObjectApiVersionInjectable = getStatusTextInjectable(
-  KubeObjectStatusLevel.INFO,
-  "irrelevant",
-  "some-kind",
-  ["some-other-api-version"],
-);
+  instantiate: () => ({
+    apiVersions: ["some-api-version"],
+    kind: "some-other-kind",
+    enabled: computed(() => true),
+
+    resolve: () => ({
+      level: KubeObjectStatusLevel.INFO,
+      text: "irrelevant",
+      timestamp: "2015-10-19T07:28:00Z",
+    }),
+  }),
+});
+
+const statusForIrrelevantKubeObjectApiVersionInjectable = getInjectable({
+  id: "status-for-irrelevant-kube-object-api-version",
+  injectionToken: kubeObjectStatusTextInjectionToken,
+
+  instantiate: () => ({
+    apiVersions: ["some-other-api-version"],
+    kind: "some-kind",
+    enabled: computed(() => true),
+
+    resolve: () => ({
+      level: KubeObjectStatusLevel.INFO,
+      text: "irrelevant",
+      timestamp: "2015-10-19T07:28:00Z",
+    }),
+  }),
+});
