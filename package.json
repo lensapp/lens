@@ -412,7 +412,7 @@
     "tar-stream": "^2.2.0",
     "ts-loader": "^9.3.1",
     "ts-node": "^10.8.1",
-    "type-fest": "^2.17.0",
+    "type-fest": "^2.14.0",
     "typed-emitter": "^1.4.0",
     "typedoc": "0.23.8",
     "typedoc-plugin-markdown": "^3.13.1",
