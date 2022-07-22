@@ -70,7 +70,7 @@ const releaseDetailsModelInjectable = getInjectable({
 
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, release: TargetHelmRelease) =>
-      `${release?.namespace}/${release?.name}`,
+      `${release.namespace}/${release.name}`,
   }),
 });
 
