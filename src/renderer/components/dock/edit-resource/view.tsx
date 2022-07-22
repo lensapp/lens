@@ -154,7 +154,7 @@ class NonInjectedEditResource extends React.Component<EditResourceProps & Depend
           value={draft}
           onChange={draft => {
             this.error = "";
-            tabData.draft = draft;
+            this.draft = tabData.draft = draft;
           }}
           onError={error => this.error = String(error)}
         />
