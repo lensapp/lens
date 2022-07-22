@@ -60,7 +60,7 @@ export class CatalogEntityRegistry {
     // If the entity was not found but there are rawEntities to be processed,
     // try to process them and return the entity.
     // This might happen if an extension registered a new Catalog category.
-    if (this.activeEntityId.get() && !entity && this.rawEntities.length > 0) {
+    if (this.activeEntityId && !entity && this.rawEntities.length > 0) {
       this.processRawEntities();
 
       return this.getActiveEntityById();
