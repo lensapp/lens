@@ -6,8 +6,11 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import kubeObjectStatusTextsInjectable from "./kube-object-status-texts.injectable";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { conforms, eq, includes } from "lodash/fp";
-import type { KubeObjectStatusRegistration } from "./kube-object-status-registration";
 import { computed } from "mobx";
+
+function isNotEmpty<T>(item: T | null | undefined): item is T {
+  return !!item;
+}
 
 const kubeObjectStatusTextsForObjectInjectable = getInjectable({
   id: "kube-object-status-texts-for-object",
@@ -19,8 +22,8 @@ const kubeObjectStatusTextsForObjectInjectable = getInjectable({
       allStatusTexts
         .get()
         .filter(toKubeObjectRelated(kubeObject))
-        .map(toStatus(kubeObject))
-        .filter(Boolean),
+        .map(item => item.resolve(kubeObject))
+        .filter(isNotEmpty),
     );
   },
 
@@ -34,9 +37,5 @@ const toKubeObjectRelated = (kubeObject: KubeObject) =>
     kind: eq(kubeObject.kind),
     apiVersions: includes(kubeObject.apiVersion),
   });
-
-const toStatus =
-  (kubeObject: KubeObject) => (item: KubeObjectStatusRegistration) =>
-    item.resolve(kubeObject);
 
 export default kubeObjectStatusTextsForObjectInjectable;

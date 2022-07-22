@@ -119,6 +119,7 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
       <Icon
         material={maxLevel}
         className={cssNames("KubeObjectStatusIcon", maxLevel)}
+        data-testid={`kube-object-status-icon-for-${this.props.object.getId()}`}
         tooltip={{
           children: (
             <div className="KubeObjectStatusTooltip">
