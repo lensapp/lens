@@ -68,6 +68,11 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
   bindEvents() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
+        // TODO: replace with better handling
+        if (clusterId && !this.props.entityRegistry.getById(clusterId)) {
+          return this.props.navigateToCatalog(); // redirect to catalog when the clusterId does not correspond to an entity
+        }
+
         this.props.clusterFrames.setVisibleCluster(clusterId);
         this.props.clusterFrames.initView(clusterId);
         requestClusterActivation(clusterId, false); // activate and fetch cluster's state from main
