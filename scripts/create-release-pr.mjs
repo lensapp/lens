@@ -83,7 +83,6 @@ if (basename(process.cwd()) === "scripts") {
 
 
 const currentVersion = new SemVer(readJsonSync("./package.json").version);
-const currentVersionMilestone = `${currentVersion.major}.${currentVersion.minor}.${currentVersion.patch}`;
 
 console.log(`current version: ${currentVersion.format()}`);
 console.log("fetching tags...");
@@ -111,6 +110,9 @@ npmVersionArgs.push("--git-tag-version false");
 execSync(npmVersionArgs.join(" "), { stdio: "ignore" });
 
 const newVersion = new SemVer(readJsonSync("./package.json").version);
+const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
+
+console.log(`new version: ${newVersion.format()}`);
 
 const getMergedPrsArgs = [
   "gh",
@@ -124,7 +126,7 @@ const getMergedPrsArgs = [
 
 console.log("retreiving last 500 PRs to create release PR body...");
 const mergedPrs = JSON.parse(execSync(getMergedPrsArgs.join(" "), { encoding: "utf-8" }));
-const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone && pr.milestone.title === currentVersionMilestone);
+const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone?.title === newVersionMilestone);
 const relaventPrsQuery = await Promise.all(
   milestoneRelevantPrs.map(async pr => ({
     pr,
