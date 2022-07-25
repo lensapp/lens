@@ -7,7 +7,7 @@ import "./kube-object-status-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames, formatDuration, getOrInsert } from "../../utils";
+import { cssNames, formatDuration, getOrInsert, isDefined } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeObjectStatusTextsForObjectInjectable from "./kube-object-status-texts-for-object.injectable";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
@@ -112,7 +112,7 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
 
     const statuses = statusTexts
       .map((statusText) => statusText.resolve(this.props.object))
-      .filter(isNotEmpty);
+      .filter(isDefined);
 
     if (statuses.length === 0) {
       return null;
@@ -137,10 +137,6 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
       />
     );
   }
-}
-
-function isNotEmpty<T>(item: T | null | undefined): item is T {
-  return !!item;
 }
 
 export const KubeObjectStatusIcon = withInjectables<Dependencies, KubeObjectStatusIconProps>(
