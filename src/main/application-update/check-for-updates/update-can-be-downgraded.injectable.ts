@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import selectedUpdateChannelInjectable from "../../../common/application-update/selected-update-channel/selected-update-channel.injectable";
-import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../../../common/vars/app-version.injectable";
 import { SemVer } from "semver";
 
 const updateCanBeDowngradedInjectable = getInjectable({

@@ -54,7 +54,6 @@ import { createClusterInjectionToken } from "../../common/cluster/create-cluster
 import path from "path";
 import spawnInjectable from "../child-process/spawn.injectable";
 import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
@@ -112,7 +111,6 @@ describe("kube auth proxy tests", () => {
     di.override(normalizedPlatformInjectable, () => "darwin");
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
 
     mockFs(mockMinikubeConfig);
 

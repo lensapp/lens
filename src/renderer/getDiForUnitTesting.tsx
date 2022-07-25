@@ -41,7 +41,7 @@ import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable, computed } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
-import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../common/vars/app-version.injectable";
 import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";

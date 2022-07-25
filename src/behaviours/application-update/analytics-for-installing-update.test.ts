@@ -16,7 +16,7 @@ import processCheckingForUpdatesInjectable from "../../main/application-update/c
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
-import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../../common/vars/app-version.injectable";
 import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
