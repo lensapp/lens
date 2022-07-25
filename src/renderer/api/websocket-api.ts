@@ -94,16 +94,8 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     }
   }
 
-  protected getIsConnected(): this is (WebSocketApi<Events> & { socket: WebSocket }) {
-    return this.socket?.readyState === WebSocket.OPEN && this.isOnline;
-  }
-
-  get isConnected() {
-    return this.getIsConnected();
-  }
-
-  get isOnline() {
-    return navigator.onLine;
+  isConnected(): this is (WebSocketApi<Events> & { socket: WebSocket }) {
+    return this.socket?.readyState === WebSocket.OPEN;
   }
 
   connect(url: string) {
@@ -120,7 +112,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   ping() {
-    if (this.isConnected) {
+    if (this.isConnected()) {
       this.send(this.params.pingMessage);
     }
   }
@@ -151,7 +143,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   send(command: string) {
-    if (this.getIsConnected()) {
+    if (this.isConnected()) {
       this.socket.send(command);
     } else {
       this.pendingCommands.push(command);
@@ -159,11 +151,13 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   protected flush() {
-    for (const command of this.pendingCommands) {
+    const commands = this.pendingCommands;
+
+    this.pendingCommands = [];
+
+    for (const command of commands) {
       this.send(command);
     }
-
-    this.pendingCommands.length = 0;
   }
 
   protected _onOpen(evt: Event) {
