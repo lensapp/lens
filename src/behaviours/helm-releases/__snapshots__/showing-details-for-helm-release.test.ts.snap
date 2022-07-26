@@ -7336,10 +7336,11 @@ exports[`showing details for helm release given application is started when navi
                   User-supplied values only
                 </span>
               </label>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-helm-release-configuration"
-                value="some-configuration"
-              />
+              >
+                some-configuration
+              </textarea>
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
@@ -8555,10 +8556,11 @@ exports[`showing details for helm release given application is started when navi
                   User-supplied values only
                 </span>
               </label>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-helm-release-configuration"
-                value="some-new-configuration"
-              />
+              >
+                some-new-configuration
+              </textarea>
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
@@ -9774,10 +9776,11 @@ exports[`showing details for helm release given application is started when navi
                   User-supplied values only
                 </span>
               </label>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-helm-release-configuration"
-                value="some-new-configuration"
-              />
+              >
+                some-new-configuration
+              </textarea>
               <button
                 class="Button waiting primary"
                 data-testid="helm-release-configuration-save-button"
@@ -10820,10 +10823,11 @@ exports[`showing details for helm release given application is started when navi
                   User-supplied values only
                 </span>
               </label>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-helm-release-configuration"
-                value="some-new-configuration"
-              />
+              >
+                some-new-configuration
+              </textarea>
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
@@ -11867,10 +11871,11 @@ exports[`showing details for helm release given application is started when navi
                   User-supplied values only
                 </span>
               </label>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-helm-release-configuration"
-                value="some-new-configuration"
-              />
+              >
+                some-new-configuration
+              </textarea>
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
@@ -13087,10 +13092,11 @@ exports[`showing details for helm release given application is started when navi
                   User-supplied values only
                 </span>
               </label>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-helm-release-configuration"
-                value="some-other-configuration"
-              />
+              >
+                some-other-configuration
+              </textarea>
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"

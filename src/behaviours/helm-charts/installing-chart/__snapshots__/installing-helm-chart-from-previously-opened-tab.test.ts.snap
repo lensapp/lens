@@ -1243,10 +1243,11 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-stored-configuration"
-              />
+              >
+                some-stored-configuration
+              </textarea>
             </div>
           </div>
         </div>
