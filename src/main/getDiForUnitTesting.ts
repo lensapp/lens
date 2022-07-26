@@ -124,6 +124,16 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    const globalOverrideFilePaths = getGlobalOverridePaths();
+
+    const globalOverrides = globalOverrideFilePaths.map(
+      (filePath) => require(filePath).default,
+    );
+
+    globalOverrides.forEach(globalOverride => {
+      di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
+    });
+
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
@@ -210,6 +220,14 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
+
+const getGlobalOverridePaths = memoize(() =>
+  glob.sync(
+    "../{common,extensions,main}/**/*.global-override-for-injectable.{ts,tsx}",
+
+    { cwd: __dirname },
+  ),
+);
 
 // TODO: Reorganize code in Runnables to get rid of requirement for override
 const overrideRunnablesHavingSideEffects = (di: DiContainer) => {

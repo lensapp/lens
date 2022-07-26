@@ -11123,6 +11123,49 @@ exports[`installing helm chart from new tab given tab for installing chart was n
       </div>
     </div>
   </div>
+  <div
+    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    data-testid="helm-release-details-for-default/some-release"
+    style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+  >
+    <div
+      class="drawer-wrapper flex column"
+    >
+      <div
+        class="drawer-title flex align-center"
+      >
+        <div
+          class="drawer-title-text flex gaps align-center"
+        >
+          
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          data-testid="close-helm-release-detail"
+          tabindex="0"
+          tooltip="Close"
+        >
+          <span
+            class="icon"
+            data-icon-name="close"
+          >
+            close
+          </span>
+        </i>
+      </div>
+      <div
+        class="drawer-content flex column box grow"
+      >
+        <div
+          class="Spinner singleColor center"
+          data-testid="helm-release-detail-content-spinner"
+        />
+      </div>
+    </div>
+    <div
+      class="ResizingAnchor horizontal leading"
+    />
+  </div>
 </body>
 `;
 

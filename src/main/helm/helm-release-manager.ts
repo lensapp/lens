@@ -191,7 +191,6 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
   ];
   const kubectlArgs = [
     "get",
-    "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
     "-f", "-",
     "--output", "json",

@@ -96,6 +96,16 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    const globalOverrideFilePaths = getGlobalOverridePaths();
+
+    const globalOverrides = globalOverrideFilePaths.map(
+      (filePath) => require(filePath).default,
+    );
+
+    globalOverrides.forEach(globalOverride => {
+      di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
+    });
+
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(platformInjectable, () => "darwin");
     di.override(startTopbarStateSyncInjectable, () => ({
@@ -227,6 +237,14 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
+
+const getGlobalOverridePaths = memoize(() =>
+  glob.sync(
+    "../{common,extensions,renderer}/**/*.global-override-for-injectable.{ts,tsx}",
+
+    { cwd: __dirname },
+  ),
+);
 
 const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
   injectables.forEach(injectable => {
