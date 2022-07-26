@@ -22,5 +22,7 @@ export const controlWhenStoragesAreReady = (di: DiContainer) => {
   // TODO: Remove when typing is added to the library
   (di as any).decorateFunction(createStorageInjectable, decorated);
 
-  return async () => void await Promise.all(storagesAreReady);
+  return async () => {
+    await Promise.all(storagesAreReady);
+  };
 };
