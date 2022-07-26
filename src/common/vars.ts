@@ -5,7 +5,6 @@
 
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
 import path from "path";
-import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import type { ThemeId } from "../renderer/themes/store";
 import { lazyInitialized } from "./utils/lazy-initialized";
@@ -139,7 +138,6 @@ export const lensTwitterWeblinkId = "lens-twitter-link";
 export const lensBlogWeblinkId = "lens-blog-link";
 export const kubernetesDocumentationWeblinkId = "kubernetes-documentation-link";
 
-export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = "https://docs.k8slens.dev/main" as string;
 
 export const sentryDsn = packageInfo.config?.sentryDsn ?? "";

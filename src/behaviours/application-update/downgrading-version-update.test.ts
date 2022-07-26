@@ -13,7 +13,7 @@ import checkForPlatformUpdatesInjectable from "../../main/application-update/che
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../../common/vars/app-version.injectable";
 import { updateChannels } from "../../common/application-update/update-channels";
 
 describe("downgrading version update", () => {

@@ -80,7 +80,7 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
-import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../common/vars/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import execFileInjectable from "../common/fs/exec-file.injectable";

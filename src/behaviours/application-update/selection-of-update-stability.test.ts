@@ -21,7 +21,7 @@ import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import appVersionInjectable from "../../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../../common/vars/app-version.injectable";
 
 describe("selection of update stability", () => {
   let applicationBuilder: ApplicationBuilder;

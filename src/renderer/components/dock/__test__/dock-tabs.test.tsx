@@ -17,7 +17,6 @@ import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
 import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 
@@ -84,7 +83,6 @@ describe("<DockTabs />", () => {
     );
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
 
     dockStore = di.inject(dockStoreInjectable);
 
