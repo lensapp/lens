@@ -127,6 +127,7 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
                 value={this.desiredPort === 0 ? "" : String(this.desiredPort)}
                 placeholder={"Random"}
                 onChange={this.changePort}
+                autoFocus
               />
             </div>
             <Checkbox
