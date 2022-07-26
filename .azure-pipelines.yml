@@ -60,6 +60,7 @@ jobs:
         displayName: Build
 
   - job: macOS
+    timeoutInMinutes: 90
     pool:
       vmImage: macOS-11
     strategy:
