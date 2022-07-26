@@ -157,6 +157,10 @@ export class ContextHandler implements ClusterContextHandler {
       headers.Host = this.clusterUrl.hostname;
     }
 
+    if (headers.Host.includes(":")) {
+      headers.Host = "[" + headers.Host + "]";
+    }
+
     return {
       target: {
         protocol: "https:",
