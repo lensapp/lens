@@ -172,10 +172,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
             <section
               id="extensions"
             >
-              <h2>
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
                 Metrics tab
-                 
-                preferences
               </h2>
               <section
                 class="small"
@@ -472,10 +472,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
             <section
               id="extensions"
             >
-              <h2>
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
                 Metrics tab
-                 
-                preferences
               </h2>
               <section
                 class="small"
@@ -772,10 +772,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
             <section
               id="extensions"
             >
-              <h2>
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
                 Metrics tab
-                 
-                preferences
               </h2>
               <section
                 class="small"
@@ -1095,10 +1095,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
             <section
               id="extensions"
             >
-              <h2>
-                some-test-extension-id
-                 
-                preferences
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                some-test-extension-id preferences
               </h2>
               <section
                 class="small"
@@ -2717,10 +2717,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
             <section
               id="extensions"
             >
-              <h2>
-                some-test-extension-id
-                 
-                preferences
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                some-test-extension-id preferences
               </h2>
               <section
                 class="small"
@@ -2994,9 +2994,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
               <section
                 id="extensions"
               >
-                <h2>
-                   
-                  preferences
+                <h2
+                  data-testid="extension-preferences-page-title"
+                >
+                  Extension preferences
                 </h2>
                 <div
                   class="flex items-center"
@@ -3263,10 +3264,10 @@ exports[`preferences - navigation to extension specific preferences when navigat
             <section
               id="extensions"
             >
-              <h2>
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
                 Metrics tab
-                 
-                preferences
               </h2>
               <section
                 class="small"
@@ -3551,10 +3552,10 @@ exports[`preferences - navigation to extension specific preferences when navigat
             <section
               id="extensions"
             >
-              <h2>
-                extension-using-someone-else-tab-id
-                 
-                preferences
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                extension-using-someone-else-tab-id preferences
               </h2>
               <section
                 class="small"
