@@ -1111,9 +1111,74 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
             style="flex-basis: 300px;"
           >
             <div
-              class="Spinner singleColor center"
-              data-testid="edit-resource-tab-spinner"
-            />
+              class="EditResource flex column"
+            >
+              <div
+                class="InfoPanel flex gaps align-center"
+              >
+                <div
+                  class="controls"
+                >
+                  <div
+                    class="resource-info flex gaps align-center"
+                  >
+                    <span>
+                      Kind:
+                    </span>
+                    <div
+                      class="badge"
+                    >
+                      Namespace
+                    </div>
+                    <span>
+                      Name:
+                    </span>
+                    <div
+                      class="badge"
+                    >
+                      some-name
+                    </div>
+                    <span>
+                      Namespace:
+                    </span>
+                    <div
+                      class="badge"
+                    >
+                      default
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex gaps align-center"
+                />
+                <button
+                  class="Button plain"
+                  data-testid="cancel-edit-resource-from-tab-for-some-first-tab-id"
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button
+                  class="Button active outlined"
+                  data-testid="save-edit-resource-from-tab-for-some-first-tab-id"
+                  type="button"
+                >
+                  Save
+                </button>
+                <button
+                  class="Button primary active"
+                  data-testid="save-and-close-edit-resource-from-tab-for-some-first-tab-id"
+                  type="button"
+                >
+                  Save & Close
+                </button>
+              </div>
+              <textarea
+                data-testid="monaco-editor-for-some-first-tab-id"
+              >
+                some-saved-configuration
+              </textarea>
+            </div>
           </div>
         </div>
       </div>

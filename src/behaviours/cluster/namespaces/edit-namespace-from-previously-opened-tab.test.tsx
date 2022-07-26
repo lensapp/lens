@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
+import { act } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import React from "react";
@@ -146,9 +147,12 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
           },
         });
 
-        await callForNamespaceMock.resolve({
-          callWasSuccessful: true,
-          response: someNamespace,
+        // TODO: Figure out why act is needed here. In CI it works without it.
+        await act(async () => {
+          await callForNamespaceMock.resolve({
+            callWasSuccessful: true,
+            response: someNamespace,
+          });
         });
       });
 
