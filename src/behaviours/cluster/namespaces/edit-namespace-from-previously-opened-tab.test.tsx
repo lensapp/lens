@@ -75,7 +75,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     beforeEach(async () => {
       const writeJsonFile = builder.dis.rendererDi.inject(writeJsonFileInjectable);
 
-      writeJsonFile(
+      await writeJsonFile(
         "/some-directory-for-lens-local-storage/some-cluster-id.json",
         {
           dock: {
@@ -106,23 +106,23 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
       await storagesAreReady();
     });
 
-    fit("renders", () => {
+    it("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    fit("shows dock tab for editing namespace", () => {
+    it("shows dock tab for editing namespace", () => {
       expect(
         rendered.getByTestId("dock-tab-for-some-first-tab-id"),
       ).toBeInTheDocument();
     });
 
-    fit("shows spinner in the dock tab", () => {
+    it("shows spinner in the dock tab", () => {
       expect(
         rendered.getByTestId("edit-resource-tab-spinner"),
       ).toBeInTheDocument();
     });
 
-    fit("calls for namespace", () => {
+    it("calls for namespace", () => {
       expect(callForNamespaceMock).toHaveBeenCalledWith(
         "/apis/some-api-version/namespaces/some-uid",
       );
@@ -152,11 +152,11 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
         });
       });
 
-      fit("renders", () => {
+      it("renders", () => {
         expect(rendered.baseElement).toMatchSnapshot();
       });
 
-      fit("has the saved configuration in editor", () => {
+      it("has the saved configuration in editor", () => {
         const input = rendered.getByTestId(
           "monaco-editor-for-some-first-tab-id",
         ) as HTMLTextAreaElement;
