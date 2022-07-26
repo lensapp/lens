@@ -33,7 +33,7 @@ export const Badge = withTooltip(observer(({
   small,
   flat,
   label,
-  expandable = false,
+  expandable = true,
   disabled,
   scrollable,
   className,
