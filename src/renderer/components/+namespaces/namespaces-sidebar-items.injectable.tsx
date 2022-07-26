@@ -16,7 +16,7 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToNamespacesInjectable from "../../../common/front-end-routing/routes/cluster/namespaces/navigate-to-namespaces.injectable";
 
 const namespacesSidebarItemsInjectable = getInjectable({
-  id: "namespaces",
+  id: "namespaces-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(namespacesRouteInjectable);

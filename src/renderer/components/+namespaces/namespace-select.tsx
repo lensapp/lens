@@ -6,15 +6,15 @@
 import "./namespace-select.scss";
 
 import React, { useEffect, useState } from "react";
+import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import type { SelectProps } from "../select";
 import { Select } from "../select";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
-import type { NamespaceStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "./store.injectable";
+import namespacesInjectable from "./namespaces.injectable";
 
 export type NamespaceSelectSort = (left: string, right: string) => number;
 
@@ -25,12 +25,12 @@ export interface NamespaceSelectProps<IsMulti extends boolean> extends Omit<Sele
 }
 
 interface Dependencies {
-  namespaceStore: NamespaceStore;
+  namespaces: IComputedValue<string[]>;
 }
 
-function getOptions(namespaceStore: NamespaceStore, sort: NamespaceSelectSort | undefined) {
+function getOptions(namespaces: IComputedValue<string[]>, sort: NamespaceSelectSort | undefined) {
   return computed(() => {
-    const baseOptions = namespaceStore.items.map(ns => ns.getName());
+    const baseOptions = namespaces.get();
 
     if (sort) {
       baseOptions.sort(sort);
@@ -44,16 +44,16 @@ function getOptions(namespaceStore: NamespaceStore, sort: NamespaceSelectSort | 
 }
 
 const NonInjectedNamespaceSelect = observer(({
-  namespaceStore,
+  namespaces,
   showIcons,
   formatOptionLabel,
   sort,
   className,
   ...selectProps
 }: Dependencies & NamespaceSelectProps<boolean>) => {
-  const [baseOptions, setBaseOptions] = useState(getOptions(namespaceStore, sort));
+  const [baseOptions, setBaseOptions] = useState(getOptions(namespaces, sort));
 
-  useEffect(() => setBaseOptions(getOptions(namespaceStore, sort)), [sort]);
+  useEffect(() => setBaseOptions(getOptions(namespaces, sort)), [sort]);
 
   return (
     <Select
@@ -77,7 +77,7 @@ const NonInjectedNamespaceSelect = observer(({
 const InjectedNamespaceSelect = withInjectables<Dependencies, NamespaceSelectProps<boolean>>(NonInjectedNamespaceSelect, {
   getProps: (di, props) => ({
     ...props,
-    namespaceStore: di.inject(namespaceStoreInjectable),
+    namespaces: di.inject(namespacesInjectable),
   }),
 });
 

@@ -190,7 +190,9 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
     if (this.form.noValidate || this.form.checkValidity()) {
       this.next();
     }
-  }, 100);
+  }, 100, {
+    leading: true,
+  });
 
   renderLoading() {
     return (

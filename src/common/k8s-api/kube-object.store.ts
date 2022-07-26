@@ -12,7 +12,7 @@ import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
 import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
-import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-api";
+import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback, ResourceDescriptor } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
 import type { RequestInit } from "node-fetch";
 import type { Patch } from "rfc6902";
@@ -327,12 +327,12 @@ export abstract class KubeObjectStore<
     if (error) this.reset();
   }
 
-  protected async loadItem(params: { name: string; namespace?: string }): Promise<K | null> {
+  protected async loadItem(params: ResourceDescriptor): Promise<K | null> {
     return this.api.get(params);
   }
 
   @action
-  async load(params: { name: string; namespace?: string }): Promise<K> {
+  async load(params: ResourceDescriptor): Promise<K> {
     const { name, namespace } = params;
     let item: K | null | undefined = this.getByName(name, namespace);
 
@@ -356,11 +356,11 @@ export abstract class KubeObjectStore<
     return this.load({ name, namespace });
   }
 
-  protected async createItem(params: { name: string; namespace?: string }, data?: PartialDeep<K>): Promise<K | null> {
+  protected async createItem(params: ResourceDescriptor, data?: PartialDeep<K>): Promise<K | null> {
     return this.api.create(params, data);
   }
 
-  async create(params: { name: string; namespace?: string }, data?: PartialDeep<K>): Promise<K> {
+  async create(params: ResourceDescriptor, data?: PartialDeep<K>): Promise<K> {
     const newItem = await this.createItem(params, data);
 
     assert(newItem, "Failed to create item from kube");
