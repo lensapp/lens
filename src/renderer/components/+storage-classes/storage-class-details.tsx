@@ -38,6 +38,7 @@ class NonInjectedStorageClassDetails extends React.Component<StorageClassDetails
     disposeOnUnmount(this, [
       this.props.subscribeStores([
         this.props.persistentVolumeStore,
+        this.props.storageClassStore,
       ]),
     ]);
   }
