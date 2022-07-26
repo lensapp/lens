@@ -36,23 +36,24 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
 
   return object.entries(hard)
     .filter(hasDefinedTupleValue)
-    .map(([name, value]) => {
-      const current = transformUnit(name, value);
-      const max = transformUnit(name, value);
+    .map(([name, rawMax]) => {
+      const rawCurrent = used[name] ?? "0";
+      const current = transformUnit(name, rawCurrent);
+      const max = transformUnit(name, rawMax);
       const usage = max === 0 ? 100 : Math.ceil(current / max * 100); // special case 0 max as always 100% usage
 
       return (
         <div key={name} className={cssNames("param", kebabCase(name))}>
           <span className="title">{name}</span>
           <span className="value">
-            {`${used[name]} / ${value}`}
+            {`${rawCurrent} / ${rawMax}`}
           </span>
           <LineProgress
             max={max}
             value={current}
             tooltip={(
               <p>
-                {`Set: ${value}. Usage: ${usage}%`}
+                {`Set: ${rawMax}. Usage: ${usage}%`}
               </p>
             )}
           />
