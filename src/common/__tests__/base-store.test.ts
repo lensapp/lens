@@ -7,14 +7,9 @@ import mockFs from "mock-fs";
 import { BaseStore } from "../base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
-
-import directoryForUserDataInjectable
-  from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import getConfigurationFileModelInjectable
-  from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable
-  from "../get-configuration-file-model/app-version/app-version.injectable";
+import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 
 jest.mock("electron", () => ({
   ipcMain: {
@@ -86,7 +81,6 @@ describe("BaseStore", () => {
 
     mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
-    mainDi.permitSideEffects(appVersionInjectable);
 
     TestStore.resetInstance();
 

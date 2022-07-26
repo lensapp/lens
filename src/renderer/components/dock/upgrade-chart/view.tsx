@@ -16,7 +16,7 @@ import { Spinner } from "../../spinner";
 import { Badge } from "../../badge";
 import { EditorPanel } from "../editor-panel";
 import { helmChartStore, type ChartVersion } from "../../+helm-charts/helm-chart.store";
-import type { HelmRelease, HelmReleaseUpdateDetails, HelmReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
+import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
@@ -24,6 +24,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import upgradeChartTabStoreInjectable from "./store.injectable";
 import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
 import releasesInjectable from "../../+helm-releases/releases.injectable";
+import type { CallForHelmReleaseUpdate } from "../../+helm-releases/update-release/call-for-helm-release-update/call-for-helm-release-update.injectable";
+import { first } from "lodash/fp";
 
 export interface UpgradeChartProps {
   className?: string;
@@ -33,7 +35,7 @@ export interface UpgradeChartProps {
 interface Dependencies {
   releases: IAsyncComputed<HelmRelease[]>;
   upgradeChartTabStore: UpgradeChartTabStore;
-  updateRelease: (name: string, namespace: string, payload: HelmReleaseUpdatePayload) => Promise<HelmReleaseUpdateDetails>;
+  updateRelease: CallForHelmReleaseUpdate;
 }
 
 @observer
@@ -96,7 +98,7 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
     const versions = await helmChartStore.getVersions(release.getChart());
 
     this.versions.replace(versions);
-    this.version = this.versions[0];
+    this.version = first(this.versions);
   }
 
   onChange = action((value: string) => {

@@ -18,7 +18,7 @@ import { createClusterInjectionToken } from "../cluster/create-cluster-injection
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../vars/app-version.injectable";
 import assert from "assert";
 import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
 import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
@@ -93,7 +93,6 @@ describe("cluster-store", () => {
     mainDi.override(normalizedPlatformInjectable, () => "darwin");
 
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
-    mainDi.permitSideEffects(appVersionInjectable);
     mainDi.permitSideEffects(clusterStoreInjectable);
     mainDi.permitSideEffects(fsInjectable);
 

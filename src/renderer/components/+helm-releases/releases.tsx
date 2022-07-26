@@ -16,7 +16,6 @@ import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { kebabCase } from "lodash/fp";
 import { HelmReleaseMenu } from "./release-menu";
 import { ReleaseRollbackDialog } from "./dialog/dialog";
-import { ReleaseDetails } from "./release-details/release-details";
 import removableReleasesInjectable from "./removable-releases.injectable";
 import type { RemovableHelmRelease } from "./removable-releases";
 import type { IComputedValue } from "mobx";
@@ -145,6 +144,7 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
           isConfigurable
           tableId="helm_releases"
           className="HelmReleases"
+          customizeTableRowProps={(item) => ({ testId: `helm-release-row-for-${item.getId()}` })}
           sortingCallbacks={{
             [columnId.name]: release => release.getName(),
             [columnId.namespace]: release => release.getNs(),
@@ -204,10 +204,7 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
             message: this.renderRemoveDialogMessage(selectedItems),
           })}
           onDetails={this.onDetails}
-        />
-
-        <ReleaseDetails
-          hideDetails={this.hideDetails}
+          spinnerTestId="helm-releases-spinner"
         />
 
         <ReleaseRollbackDialog/>

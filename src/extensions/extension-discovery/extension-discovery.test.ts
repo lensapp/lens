@@ -19,6 +19,7 @@ import directoryForUserDataInjectable
 import mockFs from "mock-fs";
 import { delay } from "../../renderer/utils";
 import { observable, when } from "mobx";
+import appVersionInjectable from "../../common/vars/app-version.injectable";
 
 jest.setTimeout(60_000);
 
@@ -56,6 +57,7 @@ describe("ExtensionDiscovery", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
+    di.override(appVersionInjectable, () => "5.0.0");
 
     mockFs();
 

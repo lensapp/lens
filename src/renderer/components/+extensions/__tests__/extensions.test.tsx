@@ -21,7 +21,6 @@ import extensionDiscoveryInjectable from "../../../../extensions/extension-disco
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import assert from "assert";
 import type { InstallFromInput } from "../install-from-input/install-from-input";
 import installFromInputInjectable from "../install-from-input/install-from-input.injectable";
@@ -64,7 +63,6 @@ describe("Extensions", () => {
     di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
 
     mockFs({
       "some-directory-for-user-data": {},

@@ -41,7 +41,7 @@ import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable, computed } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
-import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../common/vars/app-version.injectable";
 import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
@@ -96,6 +96,16 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    const globalOverrideFilePaths = getGlobalOverridePaths();
+
+    const globalOverrides = globalOverrideFilePaths.map(
+      (filePath) => require(filePath).default,
+    );
+
+    globalOverrides.forEach(globalOverride => {
+      di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
+    });
+
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(platformInjectable, () => "darwin");
     di.override(startTopbarStateSyncInjectable, () => ({
@@ -227,6 +237,14 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
+
+const getGlobalOverridePaths = memoize(() =>
+  glob.sync(
+    "../{common,extensions,renderer}/**/*.global-override-for-injectable.{ts,tsx}",
+
+    { cwd: __dirname },
+  ),
+);
 
 const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
   injectables.forEach(injectable => {

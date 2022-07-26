@@ -14,7 +14,6 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import { LensExtension } from "../../../extensions/lens-extension";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
@@ -44,7 +43,6 @@ describe("protocol router tests", () => {
     } as unknown as ExtensionsStore));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 

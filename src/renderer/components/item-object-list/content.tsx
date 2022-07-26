@@ -60,6 +60,8 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
   // other
   customizeRemoveDialog?: (selectedItems: Item[]) => Partial<ConfirmDialogParams>;
 
+  spinnerTestId?: string;
+
   /**
    * Message to display when a store failed to load
    *
@@ -221,7 +223,7 @@ class NonInjectedItemListLayoutContent<
     }
 
     if (!this.props.getIsReady()) {
-      return <Spinner center />;
+      return <Spinner center data-testid={this.props.spinnerTestId} />;
     }
 
     if (this.props.getFilters().length > 0) {

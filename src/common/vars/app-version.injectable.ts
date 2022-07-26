@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import packageJsonInjectable from "../../vars/package-json.injectable";
+import packageJsonInjectable from "./package-json.injectable";
 
 const appVersionInjectable = getInjectable({
   id: "app-version",

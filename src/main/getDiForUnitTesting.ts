@@ -80,7 +80,7 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
-import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../common/vars/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import execFileInjectable from "../common/fs/exec-file.injectable";
@@ -124,6 +124,16 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
+    const globalOverrideFilePaths = getGlobalOverridePaths();
+
+    const globalOverrides = globalOverrideFilePaths.map(
+      (filePath) => require(filePath).default,
+    );
+
+    globalOverrides.forEach(globalOverride => {
+      di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
+    });
+
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
@@ -210,6 +220,14 @@ const getInjectableFilePaths = memoize(() => [
   ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
   ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
 ]);
+
+const getGlobalOverridePaths = memoize(() =>
+  glob.sync(
+    "../{common,extensions,main}/**/*.global-override-for-injectable.{ts,tsx}",
+
+    { cwd: __dirname },
+  ),
+);
 
 // TODO: Reorganize code in Runnables to get rid of requirement for override
 const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
