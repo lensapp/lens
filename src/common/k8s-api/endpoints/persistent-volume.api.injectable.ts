@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PersistentVolumeApi } from "./persistent-volume.api";
+import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 
 const persistentVolumeApiInjectable = getInjectable({
   id: "persistent-volume-api",
@@ -14,6 +15,8 @@ const persistentVolumeApiInjectable = getInjectable({
 
     return new PersistentVolumeApi();
   },
+
+  injectionToken: kubeApiInjectionToken,
 });
 
 export default persistentVolumeApiInjectable;

@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { ServiceApi } from "./service.api";
+import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 
 const serviceApiInjectable = getInjectable({
   id: "service-api",
@@ -14,6 +15,8 @@ const serviceApiInjectable = getInjectable({
 
     return new ServiceApi();
   },
+
+  injectionToken: kubeApiInjectionToken,
 });
 
 export default serviceApiInjectable;
