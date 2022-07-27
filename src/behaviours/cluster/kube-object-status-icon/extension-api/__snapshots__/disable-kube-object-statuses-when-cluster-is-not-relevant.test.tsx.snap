@@ -267,6 +267,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
       >
         <i
           class="Icon KubeObjectStatusIcon error material focusable"
+          data-testid="kube-object-status-icon-for-some-uid"
           id="tooltip_target_156"
         >
           <span

@@ -6,7 +6,6 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import kubeObjectStatusTextsInjectable from "./kube-object-status-texts.injectable";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { conforms, eq, includes } from "lodash/fp";
-import type { KubeObjectStatusRegistration } from "./kube-object-status-registration";
 import { computed } from "mobx";
 
 const kubeObjectStatusTextsForObjectInjectable = getInjectable({
@@ -18,9 +17,7 @@ const kubeObjectStatusTextsForObjectInjectable = getInjectable({
     return computed(() =>
       allStatusTexts
         .get()
-        .filter(toKubeObjectRelated(kubeObject))
-        .map(toStatus(kubeObject))
-        .filter(Boolean),
+        .filter(toKubeObjectRelated(kubeObject)),
     );
   },
 
@@ -34,9 +31,5 @@ const toKubeObjectRelated = (kubeObject: KubeObject) =>
     kind: eq(kubeObject.kind),
     apiVersions: includes(kubeObject.apiVersion),
   });
-
-const toStatus =
-  (kubeObject: KubeObject) => (item: KubeObjectStatusRegistration) =>
-    item.resolve(kubeObject);
 
 export default kubeObjectStatusTextsForObjectInjectable;

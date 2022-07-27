@@ -10,7 +10,7 @@ import type { IComputedValue } from "mobx";
 export interface KubeObjectStatusText {
   kind: string;
   apiVersions: string[];
-  resolve: (object: KubeObject) => KubeObjectStatus;
+  resolve: (object: KubeObject) => KubeObjectStatus | null;
   enabled: IComputedValue<boolean>;
 }
 
