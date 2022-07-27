@@ -16,19 +16,18 @@ interface Dependencies {
   model: IComputedValue<{
     preferenceItems: RegisteredAppPreference[];
     extensionName?: string;
+    preferencePageTitle?: string;
   }>;
 }
 
 const NonInjectedExtensions = ({ model }: Dependencies) => {
-  const { extensionName, preferenceItems } = model.get();
+  const { extensionName, preferenceItems, preferencePageTitle } = model.get();
 
   return (
     <Preferences data-testid="extension-preferences-page">
       <section id="extensions">
-        <h2>
-          {extensionName}
-          {" "}
-          preferences
+        <h2 data-testid="extension-preferences-page-title">
+          {preferencePageTitle}
         </h2>
         {!extensionName && (
           <div

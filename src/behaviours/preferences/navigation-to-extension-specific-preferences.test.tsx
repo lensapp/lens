@@ -225,6 +225,18 @@ describe("preferences - navigation to extension specific preferences", () => {
 
           expect(actual).not.toBeInTheDocument();
         });
+        it("shows page title", () => {
+          const pageTitle = rendered.queryByTestId("extension-preferences-page-title");
+
+          expect(pageTitle).toBeInTheDocument();
+        });
+        it("shows page title same as tab title", () => {
+          const pageTitle = rendered.queryByTestId("extension-preferences-page-title");
+          const tabs = extensionStubWithWithRegisteredTab.appPreferenceTabs;
+          const tabTitle = tabs && tabs[0].title;
+
+          expect(pageTitle?.innerHTML).toBe(tabTitle);
+        });
       });
     });
 
