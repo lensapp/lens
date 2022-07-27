@@ -10,7 +10,6 @@ import { getApplicationBuilder } from "../../../renderer/components/test-utils/g
 import navigateToNamespacesInjectable from "../../../common/front-end-routing/routes/cluster/namespaces/navigate-to-namespaces.injectable";
 import React from "react";
 import createEditResourceTabInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-tab.injectable";
-import { KubeObject } from "../../../common/k8s-api/kube-object";
 import getRandomIdForEditResourceTabInjectable from "../../../renderer/components/dock/edit-resource/get-random-id-for-edit-resource-tab.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
@@ -192,7 +191,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
         describe("when clicking to edit namespace", () => {
           beforeEach(() => {
             // TODO: Make implementation match the description (tests above)
-            const namespaceStub = KubeObject.create(someNamespaceDataStub);
+            const namespaceStub = new Namespace(someNamespaceDataStub);
 
             const createEditResourceTab = rendererDi.inject(createEditResourceTabInjectable);
 
@@ -743,7 +742,7 @@ metadata:
                 callForNamespaceMock.mockClear();
 
                 // TODO: Make implementation match the description
-                const namespaceStub = KubeObject.create(someOtherNamespaceDataStub);
+                const namespaceStub = new Namespace(someOtherNamespaceDataStub);
 
                 const createEditResourceTab = rendererDi.inject(createEditResourceTabInjectable);
 
