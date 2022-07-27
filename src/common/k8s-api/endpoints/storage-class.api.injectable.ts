@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { StorageClassApi } from "./storage-class.api";
+import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 
 const storageClassApiInjectable = getInjectable({
   id: "storage-class-api",
@@ -14,6 +15,8 @@ const storageClassApiInjectable = getInjectable({
 
     return new StorageClassApi();
   },
+
+  injectionToken: kubeApiInjectionToken,
 });
 
 export default storageClassApiInjectable;

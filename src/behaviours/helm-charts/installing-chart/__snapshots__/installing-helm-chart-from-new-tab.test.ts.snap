@@ -2644,10 +2644,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -3651,10 +3652,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                 class="Spinner singleColor center"
                 data-testid="install-chart-configuration-spinner"
               />
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -4624,10 +4626,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration-for-other-version"
-              />
+              >
+                some-default-configuration-for-other-version
+              </textarea>
             </div>
           </div>
         </div>
@@ -5597,10 +5600,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -6590,10 +6594,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="@some-invalid-configuration@"
-              />
+              >
+                @some-invalid-configuration@
+              </textarea>
             </div>
           </div>
         </div>
@@ -7565,10 +7570,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -8567,10 +8573,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -9548,10 +9555,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -13030,10 +13038,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -15102,10 +15111,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-second-tab-id"
-                value="some-other-default-configuration"
-              />
+              >
+                some-other-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -16122,10 +16132,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -17095,10 +17106,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-valid-configuration"
-              />
+              >
+                some-valid-configuration
+              </textarea>
             </div>
           </div>
         </div>
@@ -18068,10 +18080,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Install
                 </button>
               </div>
-              <input
+              <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
-                value="some-default-configuration"
-              />
+              >
+                some-default-configuration
+              </textarea>
             </div>
           </div>
         </div>

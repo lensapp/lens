@@ -39,6 +39,7 @@ export interface OptionalProps {
   showNotifications?: boolean;
   showStatusPanel?: boolean;
   submitTestId?: string;
+  submitAndCloseTestId?: string;
   cancelTestId?: string;
   submittingTestId?: string;
 }
@@ -167,6 +168,7 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
                 label={`${submitLabel} & Close`}
                 onClick={submitAndClose}
                 disabled={isDisabled}
+                data-testid={this.props.submitAndCloseTestId}
               />
             )}
           </>

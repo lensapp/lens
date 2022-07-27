@@ -5,7 +5,7 @@
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
-import type { IObservableArray, ObservableSet } from "mobx";
+import type { ObservableSet } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
@@ -36,7 +36,6 @@ import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-f
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
 import type { NamespaceStore } from "../+namespaces/store";
-import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import historyInjectable from "../../navigation/history.injectable";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
@@ -61,6 +60,8 @@ import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
 import { catalogEntityFromCluster } from "../../../main/cluster-manager";
+import namespaceStoreInjectable from "../+namespaces/store.injectable";
+import { isAllowedResource } from "../../../common/cluster/is-allowed-resource";
 
 type Callback = (dis: DiContainers) => void | Promise<void>;
 
@@ -208,7 +209,7 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  let allowedResourcesState: IObservableArray<KubeResource>;
+  let allowedResourcesState: KubeResource[];
   let rendered: RenderResult;
 
   const enableExtensionsFor = <T extends ObservableSet>(
@@ -398,16 +399,27 @@ export const getApplicationBuilder = () => {
 
       const clusterStub = {
         accessibleNamespaces: [],
+        isAllowedResource: isAllowedResource(allowedResourcesState),
       } as unknown as Cluster;
 
       rendererDi.override(activeKubernetesClusterInjectable, () =>
         computed(() => catalogEntityFromCluster(clusterStub)),
       );
 
+      // TODO: Figure out a way to remove this stub.
       const namespaceStoreStub = {
+        isLoaded: true,
         contextNamespaces: [],
+        contextItems: [],
+        api: {
+          kind: "Namespace",
+        },
         items: [],
         selectNamespaces: () => {},
+        getByPath: () => undefined,
+        pickOnlySelected: () => [],
+        isSelectedAll: () => false,
+        getTotalCount: () => 0,
       } as unknown as NamespaceStore;
 
       const clusterFrameContextFake = new ClusterFrameContext(

@@ -12,7 +12,7 @@ class FakeMonacoEditor extends React.Component<MonacoEditorProps> {
     const { id, value, onChange, onError, language = "yaml" } = this.props;
 
     return (
-      <input
+      <textarea
         data-testid={`monaco-editor-for-${id}`}
 
         onChange={(event) => {

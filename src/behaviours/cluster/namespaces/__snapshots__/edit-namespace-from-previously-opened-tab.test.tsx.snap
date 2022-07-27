@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`installing helm chart from previously opened tab given tab for installing chart was previously opened, when application is started renders 1`] = `
+exports[`cluster/namespaces - edit namespaces from previously opened tab given tab was previously opened, when application is started renders 1`] = `
 <body>
   <div>
     <div
@@ -156,6 +156,33 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   class="link-text box grow"
                 >
                   Storage
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-namespaces"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-namespaces"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="layers"
+                  >
+                    layers
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Namespaces
                 </span>
               </a>
             </div>
@@ -422,9 +449,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   >
                     <span
                       class="icon"
-                      data-icon-name="install_desktop"
+                      data-icon-name="edit"
                     >
-                      install_desktop
+                      edit
                     </span>
                   </i>
                   <div
@@ -436,7 +463,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
                       <span
                         class="title"
                       >
-                        Helm Install: some-repository/some-name
+                        Namespace: some-namespace
                       </span>
                       <div
                         class="close"
@@ -453,6 +480,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -478,6 +508,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
@@ -491,6 +524,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
@@ -503,16 +539,19 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
-            class="tab-content install-chart"
+            class="tab-content edit-resource"
             data-testid="dock-tab-content-for-some-first-tab-id"
             style="flex-basis: 300px;"
           >
             <div
               class="Spinner singleColor center"
-              data-testid="install-chart-tab-spinner"
+              data-testid="edit-resource-tab-spinner"
             />
           </div>
         </div>
@@ -522,7 +561,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
 </body>
 `;
 
-exports[`installing helm chart from previously opened tab given tab for installing chart was previously opened, when application is started when configuration and version resolves renders 1`] = `
+exports[`cluster/namespaces - edit namespaces from previously opened tab given tab was previously opened, when application is started when call for namespace resolves with namespace renders 1`] = `
 <body>
   <div>
     <div
@@ -678,6 +717,33 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   class="link-text box grow"
                 >
                   Storage
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-namespaces"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-namespaces"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="layers"
+                  >
+                    layers
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Namespaces
                 </span>
               </a>
             </div>
@@ -944,9 +1010,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   >
                     <span
                       class="icon"
-                      data-icon-name="install_desktop"
+                      data-icon-name="edit"
                     >
-                      install_desktop
+                      edit
                     </span>
                   </i>
                   <div
@@ -958,7 +1024,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
                       <span
                         class="title"
                       >
-                        Helm Install: some-repository/some-name
+                        Namespace: some-namespace
                       </span>
                       <div
                         class="close"
@@ -975,6 +1041,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1000,6 +1069,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
@@ -1013,6 +1085,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
@@ -1025,15 +1100,18 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
-            class="tab-content install-chart"
+            class="tab-content edit-resource"
             data-testid="dock-tab-content-for-some-first-tab-id"
             style="flex-basis: 300px;"
           >
             <div
-              class="InstallChart flex column"
+              class="EditResource flex column"
             >
               <div
                 class="InfoPanel flex gaps align-center"
@@ -1042,186 +1120,31 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   class="controls"
                 >
                   <div
-                    class="install-controls flex gaps align-center"
+                    class="resource-info flex gaps align-center"
                   >
                     <span>
-                      Chart
+                      Kind:
                     </span>
                     <div
                       class="badge"
-                      title="Repo/Name"
                     >
-                      some-repository/some-name
-                    </div>
-                    <span>
-                      Version
-                    </span>
-                    <div
-                      class="Select theme-outlined chart-version css-b62m3t-container"
-                    >
-                      <span
-                        class="css-1f43avz-a11yText-A11yText"
-                        id="react-select-install-chart-version-select-for-some-first-tab-id-live-region"
-                      />
-                      <span
-                        aria-atomic="false"
-                        aria-live="polite"
-                        aria-relevant="additions text"
-                        class="css-1f43avz-a11yText-A11yText"
-                      />
-                      <div
-                        class="Select__control css-1s2u09g-control"
-                      >
-                        <div
-                          class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
-                        >
-                          <div
-                            class="Select__single-value css-qc6sy-singleValue"
-                          >
-                            some-other-version
-                          </div>
-                          <div
-                            class="Select__input-container css-6j8wv5-Input"
-                            data-value=""
-                          >
-                            <input
-                              aria-autocomplete="list"
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              autocapitalize="none"
-                              autocomplete="off"
-                              autocorrect="off"
-                              class="Select__input"
-                              id="install-chart-version-select-for-some-first-tab-id"
-                              role="combobox"
-                              spellcheck="false"
-                              style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                              tabindex="0"
-                              type="text"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                        <div
-                          class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                        >
-                          <span
-                            class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                          />
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="css-tj5bde-Svg"
-                              focusable="false"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              width="20"
-                            >
-                              <path
-                                d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <span>
                       Namespace
+                    </div>
+                    <span>
+                      Name:
                     </span>
                     <div
-                      class="Select theme-outlined NamespaceSelect css-b62m3t-container"
+                      class="badge"
                     >
-                      <span
-                        class="css-1f43avz-a11yText-A11yText"
-                        id="react-select-install-chart-namespace-select-for-some-first-tab-id-live-region"
-                      />
-                      <span
-                        aria-atomic="false"
-                        aria-live="polite"
-                        aria-relevant="additions text"
-                        class="css-1f43avz-a11yText-A11yText"
-                      />
-                      <div
-                        class="Select__control css-1s2u09g-control"
-                      >
-                        <div
-                          class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
-                        >
-                          <div
-                            class="Select__single-value css-qc6sy-singleValue"
-                          >
-                            some-other-namespace
-                          </div>
-                          <div
-                            class="Select__input-container css-6j8wv5-Input"
-                            data-value=""
-                          >
-                            <input
-                              aria-autocomplete="list"
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              autocapitalize="none"
-                              autocomplete="off"
-                              autocorrect="off"
-                              class="Select__input"
-                              id="install-chart-namespace-select-for-some-first-tab-id"
-                              role="combobox"
-                              spellcheck="false"
-                              style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                              tabindex="0"
-                              type="text"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                        <div
-                          class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                        >
-                          <span
-                            class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                          />
-                          <div
-                            aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="css-tj5bde-Svg"
-                              focusable="false"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              width="20"
-                            >
-                              <path
-                                d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
+                      some-name
                     </div>
+                    <span>
+                      Namespace:
+                    </span>
                     <div
-                      class="Input"
+                      class="badge"
                     >
-                      <label
-                        class="input-area flex gaps align-center"
-                        id=""
-                      >
-                        <input
-                          class="input box grow"
-                          data-testid="install-chart-custom-name-input-for-some-first-tab-id"
-                          placeholder="Name (optional)"
-                          spellcheck="false"
-                          title="Release name"
-                          value="some-stored-custom-name"
-                        />
-                      </label>
-                      <div
-                        class="input-info flex gaps"
-                      />
+                      default
                     </div>
                   </div>
                 </div>
@@ -1230,23 +1153,30 @@ exports[`installing helm chart from previously opened tab given tab for installi
                 />
                 <button
                   class="Button plain"
-                  data-testid="cancel-install-chart-from-tab-for-some-first-tab-id"
+                  data-testid="cancel-edit-resource-from-tab-for-some-first-tab-id"
                   type="button"
                 >
                   Cancel
                 </button>
                 <button
-                  class="Button primary active"
-                  data-testid="install-chart-from-tab-for-some-first-tab-id"
+                  class="Button active outlined"
+                  data-testid="save-edit-resource-from-tab-for-some-first-tab-id"
                   type="button"
                 >
-                  Install
+                  Save
+                </button>
+                <button
+                  class="Button primary active"
+                  data-testid="save-and-close-edit-resource-from-tab-for-some-first-tab-id"
+                  type="button"
+                >
+                  Save & Close
                 </button>
               </div>
               <textarea
                 data-testid="monaco-editor-for-some-first-tab-id"
               >
-                some-stored-configuration
+                some-saved-configuration
               </textarea>
             </div>
           </div>
