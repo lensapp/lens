@@ -5,9 +5,10 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeObject } from "../../../../../../common/k8s-api/kube-object";
 import { parseKubeApi } from "../../../../../../common/k8s-api/kube-api-parse";
-import getKubeApiFromPathInjectable from "../../../../../../common/k8s-api/kube-api/get-kube-api-from-path.injectable";
 import type { AsyncResult } from "../../../../../../common/utils/async-result";
 import { getErrorMessage } from "../../../../../../common/utils/get-error-message";
+import apiManagerInjectable from "../../../../../../common/k8s-api/api-manager/manager.injectable";
+import { waitUntilDefined } from "../../../../../../common/utils";
 
 export type CallForResource = (
   selfLink: string
@@ -17,10 +18,11 @@ const callForResourceInjectable = getInjectable({
   id: "call-for-resource",
 
   instantiate: (di): CallForResource => {
-    const getKubeApiFromPath = di.inject(getKubeApiFromPathInjectable);
+    const apiManager = di.inject(apiManagerInjectable);
 
     return async (apiPath: string) => {
-      const api = getKubeApiFromPath(apiPath);
+      const api = await waitUntilDefined(() => apiManager.getApi(apiPath));
+
       const parsed = parseKubeApi(apiPath);
 
       if (!api || !parsed.name) {
