@@ -270,7 +270,7 @@ exports[`extensions - navigation using application menu when navigating to exten
                 Extensions
               </h1>
               <div
-                class="notice mb-14 mt-3"
+                class="notice"
               >
                 <p>
                   Add new features via Lens Extensions. Check out the 
@@ -292,9 +292,7 @@ exports[`extensions - navigation using application menu when navigating to exten
                   .
                 </p>
               </div>
-              <section
-                class="mt-2"
-              >
+              <section>
                 <div
                   class="SubTitle"
                 >
@@ -302,16 +300,12 @@ exports[`extensions - navigation using application menu when navigating to exten
                    
                 </div>
                 <div
-                  class="flex"
+                  class="inputs"
                 >
-                  <div
-                    class="flex-1"
-                  />
-                  <div
-                    class="flex-initial"
-                  >
+                  <div />
+                  <div>
                     <button
-                      class="Button w-80 h-full primary"
+                      class="Button button primary"
                       type="button"
                     >
                       Install
@@ -319,7 +313,7 @@ exports[`extensions - navigation using application menu when navigating to exten
                   </div>
                 </div>
                 <small
-                  class="mt-3"
+                  class="proTip"
                 >
                   <b>
                     Pro-Tip
