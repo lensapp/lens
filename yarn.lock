@@ -10378,17 +10378,17 @@ pkg-up@^3.1.0:
   dependencies:
     find-up "^3.0.0"
 
-playwright-core@1.23.4:
-  version "1.23.4"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.23.4.tgz#e8a45e549faf6bfad24a0e9998e451979514d41e"
-  integrity sha512-h5V2yw7d8xIwotjyNrkLF13nV9RiiZLHdXeHo+nVJIYGVlZ8U2qV0pMxNJKNTvfQVT0N8/A4CW6/4EW2cOcTiA==
+playwright-core@1.24.1:
+  version "1.24.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.24.1.tgz#032eefaa8f674a4253a6c35a86787f2cbfcd8829"
+  integrity sha512-1RoSDe/oTQS1Ct7Pb8i+vcFKbKYpmVIBXk0IUiD8RvCUMnNl7EJF1OSQ9E8TZ5RYamWkW2Psir9e8Doyz1FnhQ==
 
-playwright@^1.23.4:
-  version "1.23.4"
-  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.23.4.tgz#a9641a8d523fafdc58a5a2b59efe3496dec49c8d"
-  integrity sha512-NUPOLMpd8WydmwZFllST/YZ7cImgDDDrvcaq7Gj2vAjNg0jYCndFJt6HHtbkOPSIlRo4BaQYlbFx6meq1r1FXQ==
+playwright@^1.24.1:
+  version "1.24.1"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.24.1.tgz#2d047dc28468e80952cd4cee3ae2223a3ad94abb"
+  integrity sha512-ALAdckGTTZq6cPD/NlWE+OO5cgNBi9BHKk6FoDztlcVNJ07F1buwydTuf8wBu1Jzi+SGOpEfLR/83+2fS84ksQ==
   dependencies:
-    playwright-core "1.23.4"
+    playwright-core "1.24.1"
 
 plist@^3.0.1, plist@^3.0.4:
   version "3.0.5"
