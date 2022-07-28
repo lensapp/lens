@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./extensions.scss";
+import styles from "./extensions.module.scss";
 import type {
   IComputedValue } from "mobx";
 import {
@@ -82,7 +82,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
           <section>
             <h1>Extensions</h1>
 
-            <Notice className="mb-14 mt-3">
+            <Notice className={styles.notice}>
               <p>
                 {"Add new features via Lens Extensions. Check out the "}
                 <a
@@ -111,8 +111,6 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
               installFromSelectFileDialog={this.props.installFromSelectFileDialog}
               installPath={this.installPath}
             />
-
-            {userExtensions.length > 0 && <hr />}
 
             <InstalledExtensions
               extensions={userExtensions}

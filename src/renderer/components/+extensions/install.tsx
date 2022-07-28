@@ -46,16 +46,15 @@ const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
   installFromSelectFileDialog,
   extensionInstallationStateStore,
 }) => (
-  <section className="mt-2">
+  <section>
     <SubTitle
       title={`Name or file path or URL to an extension package (${supportedFormats.join(
         ", ",
       )})`}
     />
-    <div className="flex">
-      <div className="flex-1">
+    <div className={styles.inputs}>
+      <div>
         <Input
-          className="box grow mr-6"
           theme="round-black"
           disabled={
             extensionInstallationStateStore.anyPreInstallingOrInstalling
@@ -69,6 +68,7 @@ const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
           iconRight={(
             <Icon
               className={styles.icon}
+              smallest
               material="folder_open"
               onClick={prevDefault(installFromSelectFileDialog)}
               tooltip="Browse"
@@ -76,11 +76,11 @@ const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
           )}
         />
       </div>
-      <div className="flex-initial">
+      <div>
         <Button
+          className={styles.button}
           primary
           label="Install"
-          className="w-80 h-full"
           disabled={
             extensionInstallationStateStore.anyPreInstallingOrInstalling
           }
@@ -89,7 +89,7 @@ const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
         />
       </div>
     </div>
-    <small className="mt-3">
+    <small className={styles.proTip}>
       <b>Pro-Tip</b>
       : you can drag-n-drop tarball-file to this area
     </small>

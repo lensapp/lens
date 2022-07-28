@@ -1,4 +1,29 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.inputs {
+  display: grid;
+  justify-content: space-between;
+  gap: calc(var(--unit) * 2);
+  grid-template-columns: 1fr 220px;
+}
+
 .icon {
-  @apply h-5 w-5 mr-3 cursor-pointer;
-  background-color: transparent!important;
+  margin-left: var(--margin);
+}
+
+.proTip {
+  margin-top: calc(var(--margin) / 2);
+  opacity: 0.7;
+}
+
+.button {
+  width: 100%;
+  height: 100%;
+
+  &:focus {
+    box-shadow: none;
+  }
 }
