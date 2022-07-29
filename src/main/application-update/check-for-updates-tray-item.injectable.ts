@@ -59,9 +59,11 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
       click: pipeline(
         async () => {
-          await processCheckingForUpdates("tray");
+          const { updateIsReadyToBeInstalled } = await processCheckingForUpdates("tray");
 
-          await showApplicationWindow();
+          if (updateIsReadyToBeInstalled) {
+            await showApplicationWindow();
+          }
         },
 
         withErrorLoggingFor(() => "[TRAY]: Checking for updates failed."),

@@ -63,7 +63,7 @@ describe("installing update", () => {
 
   describe("when started", () => {
     let rendered: RenderResult;
-    let processCheckingForUpdates: (source: string) => Promise<void>;
+    let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
     beforeEach(async () => {
       rendered = await applicationBuilder.render();
@@ -84,10 +84,8 @@ describe("installing update", () => {
     });
 
     describe("when user checks for updates", () => {
-      let processCheckingForUpdatesPromise: Promise<void>;
-
-      beforeEach(async () => {
-        processCheckingForUpdatesPromise = processCheckingForUpdates("irrelevant");
+      beforeEach(() => {
+        processCheckingForUpdates("irrelevant");
       });
 
       it("checks for updates", () => {
@@ -112,8 +110,6 @@ describe("installing update", () => {
           await checkForPlatformUpdatesMock.resolve({
             updateWasDiscovered: false,
           });
-
-          await processCheckingForUpdatesPromise;
         });
 
         it("shows tray icon for normal", () => {
@@ -137,8 +133,6 @@ describe("installing update", () => {
             updateWasDiscovered: true,
             version: "some-version",
           });
-
-          await processCheckingForUpdatesPromise;
         });
 
         it("starts downloading the update", () => {
@@ -243,7 +237,6 @@ describe("installing update", () => {
                   "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
                 );
               });
-
             });
           });
         });
