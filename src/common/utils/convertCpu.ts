@@ -8,6 +8,8 @@ import { TypedRegEx } from "typed-regex";
 // Helper to convert CPU K8S units to numbers
 
 const unitConverters = new Map([
+  ["n", 1000 ** -3],
+  ["u", 1000 ** -2],
   ["m", 1000 ** -1], // milli
   ["", 1000 ** 0], // no units
   ["k", 1000 ** 1],
@@ -28,11 +30,11 @@ export function cpuUnitsToNumber(value: string) {
   }
 
   const { digits, unit } = match;
-  const convertion = unitConverters.get(unit);
+  const conversion = unitConverters.get(unit);
 
-  if (convertion === undefined) {
+  if (conversion === undefined) {
     return undefined;
   }
 
-  return parseInt(digits) * convertion;
+  return parseInt(digits) * conversion;
 }
