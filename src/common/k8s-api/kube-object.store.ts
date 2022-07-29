@@ -355,7 +355,7 @@ export abstract class KubeObjectStore<
   async loadFromPath(resourcePath: string) {
     const { namespace, name } = parseKubeApi(resourcePath);
 
-    assert(name && namespace, "Both name and namesapce must be part of resourcePath");
+    assert(name, "name must be part of resourcePath");
 
     return this.load({ name, namespace });
   }
