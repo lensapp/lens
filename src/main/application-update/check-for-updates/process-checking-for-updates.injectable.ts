@@ -9,7 +9,6 @@ import discoveredUpdateVersionInjectable from "../../../common/application-updat
 import { runInAction } from "mobx";
 import downloadUpdateInjectable from "../download-update/download-update.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates-starting-from-channel.injectable";
-import withOrphanPromiseInjectable from "../../../common/utils/with-orphan-promise/with-orphan-promise.injectable";
 import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import { getCurrentDateTime } from "../../../common/utils/date/get-current-date-time";
 
@@ -22,7 +21,6 @@ const processCheckingForUpdatesInjectable = getInjectable({
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const checkForUpdatesStartingFromChannel = di.inject(checkForUpdatesStartingFromChannelInjectable);
-    const withOrphanPromise = di.inject(withOrphanPromiseInjectable);
     const emitEvent = di.inject(emitEventInjectable);
 
     return async (source: string) => {
@@ -44,7 +42,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
           checkingForUpdatesState.set(false);
         });
 
-        return;
+        return { updateIsReadyToBeInstalled: false };
       }
 
       const { version, actualUpdateChannel } = result;
@@ -56,7 +54,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
           checkingForUpdatesState.set(false);
         });
 
-        return;
+        return { updateIsReadyToBeInstalled: true };
       }
 
       emitEvent({
@@ -74,7 +72,9 @@ const processCheckingForUpdatesInjectable = getInjectable({
         checkingForUpdatesState.set(false);
       });
 
-      withOrphanPromise(async () => await downloadUpdate())();
+      const { downloadWasSuccessful } = await downloadUpdate();
+
+      return { updateIsReadyToBeInstalled: downloadWasSuccessful };
     };
   },
 });
