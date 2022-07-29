@@ -19,7 +19,7 @@ import logger from "../../../common/logger";
 export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
 }
 
-function transformUnit(name: string, value: string): number {
+function transformUnit(name: string, value: string): number | undefined {
   if (name.includes("memory") || name.includes("storage")) {
     return unitsToBytes(value);
   }
@@ -40,7 +40,21 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
       const rawCurrent = used[name] ?? "0";
       const current = transformUnit(name, rawCurrent);
       const max = transformUnit(name, rawMax);
-      const usage = max === 0 ? 100 : Math.ceil(current / max * 100); // special case 0 max as always 100% usage
+
+      if (current === undefined || max === undefined) {
+        return (
+          <div key={name} className={cssNames("param", kebabCase(name))}>
+            <span className="title">{name}</span>
+            <span className="value">
+              {`${rawCurrent} / ${rawMax}`}
+            </span>
+          </div>
+        );
+      }
+
+      const usage = max === 0
+        ? 100 // special case 0 max as always 100% usage
+        : current / max * 100;
 
       return (
         <div key={name} className={cssNames("param", kebabCase(name))}>
@@ -53,7 +67,7 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
             value={current}
             tooltip={(
               <p>
-                {`Set: ${rawMax}. Usage: ${usage}%`}
+                {`Set: ${rawMax}. Usage: ${+usage.toFixed(2)}%`}
               </p>
             )}
           />
