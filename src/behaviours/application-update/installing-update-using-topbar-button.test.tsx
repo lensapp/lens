@@ -105,6 +105,11 @@ describe("encourage user to update when sufficient time passed since update was 
           expect(button).toHaveAttribute("data-warning-level", "light");
         });
 
+        // TODO: Implement after starting main and renderer is separated in ApplicationBuilder
+        xit("given closing the application window, when starting the application window again, still shows the button", () => {
+          expect(button).toBeInTheDocument();
+        });
+
         describe("given some time passes, when checking for updates again", () => {
           beforeEach(() => {
             advanceFakeTime(daysToMilliseconds(2));
