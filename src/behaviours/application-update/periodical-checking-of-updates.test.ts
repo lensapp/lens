@@ -7,8 +7,6 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
-import type { AsyncFnMock } from "@async-fn/jest";
-import asyncFn from "@async-fn/jest";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
@@ -17,7 +15,7 @@ const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 
 describe("periodical checking of updates", () => {
   let applicationBuilder: ApplicationBuilder;
-  let processCheckingForUpdatesMock: AsyncFnMock<() => Promise<void>>;
+  let processCheckingForUpdatesMock: jest.Mock;
 
   beforeEach(() => {
     useFakeTime("2015-10-21T07:28:00Z");
@@ -28,7 +26,7 @@ describe("periodical checking of updates", () => {
       mainDi.unoverride(periodicalCheckForUpdatesInjectable);
       mainDi.permitSideEffects(periodicalCheckForUpdatesInjectable);
 
-      processCheckingForUpdatesMock = asyncFn();
+      processCheckingForUpdatesMock = jest.fn();
 
       mainDi.override(
         processCheckingForUpdatesInjectable,

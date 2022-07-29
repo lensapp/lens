@@ -73,15 +73,14 @@ describe("encourage user to update when sufficient time passed since update was 
     });
 
     describe("given the update check", () => {
-      let processCheckingForUpdates: (source: string) => Promise<void>;
-      let processCheckingForUpdatesPromise: Promise<void>;
+      let processCheckingForUpdates: (source: string) => Promise<{ updateWasDiscoveredAndDownloaded: boolean }>;
 
       beforeEach(async () => {
         processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(
           processCheckingForUpdatesInjectable,
         );
 
-        processCheckingForUpdatesPromise = processCheckingForUpdates("irrelevant");
+        processCheckingForUpdates("irrelevant");
       });
 
       describe("when update downloaded", () => {
@@ -94,7 +93,6 @@ describe("encourage user to update when sufficient time passed since update was 
           });
 
           await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
-          await processCheckingForUpdatesPromise;
 
           button = rendered.getByTestId("update-button");
         });
