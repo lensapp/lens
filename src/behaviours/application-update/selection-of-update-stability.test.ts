@@ -67,7 +67,7 @@ describe("selection of update stability", () => {
 
   describe("when started", () => {
     let rendered: RenderResult;
-    let processCheckingForUpdates: (source: string) => Promise<{ updateWasDiscoveredAndDownloaded: boolean }>;
+    let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
     beforeEach(async () => {
       rendered = await applicationBuilder.render();

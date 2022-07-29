@@ -42,7 +42,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
           checkingForUpdatesState.set(false);
         });
 
-        return { updateWasDiscoveredAndDownloaded: false };
+        return { updateIsReadyToBeInstalled: false };
       }
 
       const { version, actualUpdateChannel } = result;
@@ -54,7 +54,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
           checkingForUpdatesState.set(false);
         });
 
-        return { updateWasDiscoveredAndDownloaded: true };
+        return { updateIsReadyToBeInstalled: true };
       }
 
       emitEvent({
@@ -74,7 +74,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
 
       const { downloadWasSuccessful } = await downloadUpdate();
 
-      return { updateWasDiscoveredAndDownloaded: downloadWasSuccessful };
+      return { updateIsReadyToBeInstalled: downloadWasSuccessful };
     };
   },
 });

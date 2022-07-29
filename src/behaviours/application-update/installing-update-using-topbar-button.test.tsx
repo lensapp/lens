@@ -73,7 +73,7 @@ describe("encourage user to update when sufficient time passed since update was 
     });
 
     describe("given the update check", () => {
-      let processCheckingForUpdates: (source: string) => Promise<{ updateWasDiscoveredAndDownloaded: boolean }>;
+      let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
       beforeEach(async () => {
         processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(
