@@ -14,6 +14,7 @@ import { Icon } from "../../icon";
 import type { LogTabViewModel } from "./logs-view-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
+import callForAllLogsInjectable from "./call-for-all-logs.injectable";
 
 export interface LogControlsProps {
   model: LogTabViewModel;
@@ -21,9 +22,10 @@ export interface LogControlsProps {
 
 interface Dependencies {
   openSaveFileDialog: (filename: string, contents: BlobPart | BlobPart[], type: string) => void;
+  callForAllLogs: (name: string, namespace: string) => Promise<string>;
 }
 
-const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependencies & LogControlsProps) => {
+const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAllLogs }: Dependencies & LogControlsProps) => {
   const tabData = model.logTabData.get();
   const pod = model.pod.get();
 
@@ -43,6 +45,18 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependen
     model.updateLogTabData({ showPrevious: !previous });
     model.reloadLogs();
   };
+
+  const downloadAllLogs = async () => {
+    const pod = model.pod.get();
+  
+    if (pod) {
+      const logs = await callForAllLogs(pod.getName(), pod.getNs());
+  
+      console.log(logs);
+    }
+  
+    // openSaveFileDialog("logs.txt", logs, "text/plain");
+  }
 
   const downloadLogs = () => {
     const fileName = pod.getName();
@@ -83,6 +97,13 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependen
           tooltip="Download"
           className="download-icon"
         />
+
+        <Icon
+          material="refresh"
+          onClick={downloadAllLogs}
+          tooltip="Download"
+          className="download-icon"
+        />
       </div>
     </div>
   );
@@ -91,6 +112,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model }: Dependen
 export const LogControls = withInjectables<Dependencies, LogControlsProps>(NonInjectedLogControls, {
   getProps: (di, props) => ({
     openSaveFileDialog: di.inject(openSaveFileDialogInjectable),
+    callForAllLogs: di.inject(callForAllLogsInjectable),
     ...props,
   }),
 });
