@@ -8,7 +8,7 @@ import "./kube-object-details.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
-import { computed, observable, reaction, makeObservable } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { Drawer } from "../drawer";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
@@ -51,11 +51,11 @@ class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
     makeObservable(this);
   }
 
-  @computed get path() {
+  get path() {
     return this.props.kubeDetailsUrlParam.get();
   }
 
-  @computed get object() {
+  get object() {
     return this.props.kubeObject.get();
   }
 
@@ -102,43 +102,32 @@ class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
   }
 
   renderContents(object: KubeObject) {
-    const { isLoading, loadingError } = this;
     const details = this.props.detailComponents.get();
 
-    const getContents = () => {
-      if (details.length === 0) {
-        const crd = this.props.customResourceDefinitionStore.getByObject(object);
+    if (details.length === 0) {
+      const crd = this.props.customResourceDefinitionStore.getByObject(object);
 
-        /**
+      /**
        * This is a fallback so that if a custom resource object doesn't have
        * any defined details we should try and display at least some details
        */
-        if (crd) {
-          return (
-            <CustomResourceDetails
-              key={object.getId()}
-              object={object}
-              crd={crd}
-            />
-          );
-        } else {
-          // if we still don't have any details to show, just show the standard object metadata
-          return <KubeObjectMeta key={object.getId()} object={object} />;
-        }
+      if (crd) {
+        return (
+          <CustomResourceDetails
+            key={object.getId()}
+            object={object}
+            crd={crd}
+          />
+        );
+      } else {
+        // if we still don't have any details to show, just show the standard object metadata
+        return <KubeObjectMeta key={object.getId()} object={object} />;
       }
+    }
 
-      return details.map((DetailComponent, index) => (
-        <DetailComponent key={index} object={object} />
-      ));
-    };
-
-    return (
-      <>
-        {isLoading && <Spinner center/>}
-        {loadingError && <div className="box center">{loadingError}</div>}
-        {getContents()}
-      </>
-    );
+    return details.map((DetailComponent, index) => (
+      <DetailComponent key={index} object={object} />
+    ));
   }
 
   render() {
@@ -152,6 +141,8 @@ class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
         toolbar={object && <KubeObjectMenu object={object} toolbar={true}/>}
         onClose={this.props.hideDetails}
       >
+        {isLoading && <Spinner center/>}
+        {loadingError && <div className="box center">{loadingError}</div>}
         {object && this.renderContents(object)}
       </Drawer>
     );
