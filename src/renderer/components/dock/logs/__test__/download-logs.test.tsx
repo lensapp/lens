@@ -64,7 +64,7 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
   });
 };
 
-describe("download logs", () => {
+describe("download logs options in pod logs dock tab", () => {
   let builder: ApplicationBuilder;
 
   beforeEach(() => {
@@ -111,8 +111,11 @@ describe("download logs", () => {
     });
 
     it("renders", () => {
-      // expect(rendered.getByText("Storage")).toBeInTheDocument();
       expect(rendered.baseElement).toMatchSnapshot();
+    });
+
+    it("contains download dropdown button", () =>  {
+      expect(rendered.getByTestId("download-logs-dropdown")).toBeInTheDocument();
     });
   });
 });

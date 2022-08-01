@@ -15,6 +15,7 @@ import type { LogTabViewModel } from "./logs-view-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
 import callForAllLogsInjectable from "./call-for-all-logs.injectable";
+import { DownloadLogsDropdown } from "./download-logs-dropdown";
 
 export interface LogControlsProps {
   model: LogTabViewModel;
@@ -53,18 +54,24 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
       const logs = await callForAllLogs(pod.getName(), pod.getNs());
   
       console.log(logs);
+
+      return !!logs;
     }
+
+    return false;
   
     // openSaveFileDialog("logs.txt", logs, "text/plain");
   }
 
-  const downloadLogs = () => {
+  const downloadLogs = (): Promise<boolean> => {
     const fileName = pod.getName();
     const logsToDownload: string[] = showTimestamps
       ? model.logs.get()
       : model.logsWithoutTimestamps.get();
 
     openSaveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
+
+    return new Promise(resolve => resolve(true));
   };
 
   return (
@@ -91,6 +98,12 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
           onChange={togglePrevious}
           className="show-previous"
         />
+
+        <DownloadLogsDropdown
+          downloadVisibleLogs={downloadLogs}
+          downloadAllLogs={downloadAllLogs}
+        />
+
         <Icon
           material="get_app"
           onClick={downloadLogs}

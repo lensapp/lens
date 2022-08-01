@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`download logs when opening pod logs renders 1`] = `
+exports[`download logs options in pod logs dock tab when opening pod logs renders 1`] = `
 <body>
   <div>
     <div
@@ -823,9 +823,26 @@ exports[`download logs when opening pod logs renders 1`] = `
                       Show previous terminated container
                     </span>
                   </label>
+                  <button
+                    class="dropdown"
+                    data-testid="download-logs-dropdown"
+                    id="download-logs-dropdown"
+                  >
+                    Download
+                    <i
+                      class="Icon material focusable smallest"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="arrow_drop_down"
+                      >
+                        arrow_drop_down
+                      </span>
+                    </i>
+                  </button>
                   <i
                     class="Icon download-icon material interactive focusable"
-                    id="tooltip_target_29"
+                    id="tooltip_target_30"
                     tabindex="0"
                   >
                     <span
@@ -838,7 +855,7 @@ exports[`download logs when opening pod logs renders 1`] = `
                   </i>
                   <i
                     class="Icon download-icon material interactive focusable"
-                    id="tooltip_target_30"
+                    id="tooltip_target_31"
                     tabindex="0"
                   >
                     <span
