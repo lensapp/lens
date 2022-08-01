@@ -23,11 +23,6 @@ import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 describe("cluster - sidebar and tab navigation for extensions", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendererDi: DiContainer;

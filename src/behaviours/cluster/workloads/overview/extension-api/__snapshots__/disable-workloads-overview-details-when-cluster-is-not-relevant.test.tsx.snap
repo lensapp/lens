@@ -448,7 +448,6 @@ exports[`disable workloads overview details when cluster is not relevant given e
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_129"
                           tabindex="0"
                         >
                           <span
@@ -457,8 +456,10 @@ exports[`disable workloads overview details when cluster is not relevant given e
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -482,12 +483,13 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_131"
                 tabindex="0"
               >
                 <span
@@ -496,11 +498,12 @@ exports[`disable workloads overview details when cluster is not relevant given e
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_132"
                 tabindex="0"
               >
                 <span
@@ -509,8 +512,10 @@ exports[`disable workloads overview details when cluster is not relevant given e
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -963,7 +968,6 @@ exports[`disable workloads overview details when cluster is not relevant given e
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_71"
                           tabindex="0"
                         >
                           <span
@@ -972,8 +976,10 @@ exports[`disable workloads overview details when cluster is not relevant given e
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -997,12 +1003,13 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_73"
                 tabindex="0"
               >
                 <span
@@ -1011,11 +1018,12 @@ exports[`disable workloads overview details when cluster is not relevant given e
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_74"
                 tabindex="0"
               >
                 <span
@@ -1024,8 +1032,10 @@ exports[`disable workloads overview details when cluster is not relevant given e
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -1478,7 +1488,6 @@ exports[`disable workloads overview details when cluster is not relevant given n
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_13"
                           tabindex="0"
                         >
                           <span
@@ -1487,8 +1496,10 @@ exports[`disable workloads overview details when cluster is not relevant given n
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1512,12 +1523,13 @@ exports[`disable workloads overview details when cluster is not relevant given n
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_15"
                 tabindex="0"
               >
                 <span
@@ -1526,11 +1538,12 @@ exports[`disable workloads overview details when cluster is not relevant given n
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_16"
                 tabindex="0"
               >
                 <span
@@ -1539,8 +1552,10 @@ exports[`disable workloads overview details when cluster is not relevant given n
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>

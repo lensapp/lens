@@ -18,11 +18,6 @@ import showSuccessNotificationInjectable from "../../renderer/components/notific
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 describe("add custom helm repository in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let showSuccessNotificationMock: jest.Mock;

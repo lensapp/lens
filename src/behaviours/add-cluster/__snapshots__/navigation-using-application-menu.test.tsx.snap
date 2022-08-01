@@ -288,7 +288,11 @@ exports[`add-cluster - navigation using application menu when navigating to add 
             </p>
             <div
               class="flex column"
-            />
+            >
+              <textarea
+                data-testid="monaco-editor-for-undefined"
+              />
+            </div>
             <div
               class="actions-panel"
             >
@@ -299,6 +303,7 @@ exports[`add-cluster - navigation using application menu when navigating to add 
               >
                 Add clusters
               </button>
+              <div />
             </div>
           </div>
           <div

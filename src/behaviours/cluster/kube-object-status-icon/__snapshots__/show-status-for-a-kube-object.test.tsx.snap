@@ -319,7 +319,6 @@ exports[`show status for a kube object given application starts and in test page
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -347,7 +346,6 @@ exports[`show status for a kube object given application starts and in test page
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -363,7 +361,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -378,7 +375,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Open"
               >
                 <span
                   class="icon"
@@ -758,7 +754,6 @@ exports[`show status for a kube object given application starts and in test page
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -786,7 +781,6 @@ exports[`show status for a kube object given application starts and in test page
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -802,7 +796,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -817,7 +810,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Open"
               >
                 <span
                   class="icon"
@@ -1197,7 +1189,6 @@ exports[`show status for a kube object given application starts and in test page
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -1225,7 +1216,6 @@ exports[`show status for a kube object given application starts and in test page
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1241,7 +1231,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -1256,7 +1245,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Open"
               >
                 <span
                   class="icon"
@@ -1596,7 +1584,6 @@ exports[`show status for a kube object given application starts and in test page
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -1624,7 +1611,6 @@ exports[`show status for a kube object given application starts and in test page
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1640,7 +1626,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -1655,7 +1640,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Open"
               >
                 <span
                   class="icon"
@@ -1995,7 +1979,6 @@ exports[`show status for a kube object given application starts and in test page
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -2023,7 +2006,6 @@ exports[`show status for a kube object given application starts and in test page
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -2039,7 +2021,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -2054,7 +2035,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Open"
               >
                 <span
                   class="icon"
@@ -2434,7 +2414,6 @@ exports[`show status for a kube object given application starts and in test page
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -2462,7 +2441,6 @@ exports[`show status for a kube object given application starts and in test page
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -2478,7 +2456,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -2493,7 +2470,6 @@ exports[`show status for a kube object given application starts and in test page
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Open"
               >
                 <span
                   class="icon"

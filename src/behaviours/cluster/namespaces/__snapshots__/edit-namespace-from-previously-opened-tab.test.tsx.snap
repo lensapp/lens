@@ -471,7 +471,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -499,7 +498,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -515,7 +513,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -530,7 +527,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -1032,7 +1028,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -1060,7 +1055,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1076,7 +1070,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -1091,7 +1084,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"

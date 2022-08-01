@@ -281,7 +281,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 some-kind: some-name
                 <i
                   class="Icon material interactive focusable"
-                  id="tooltip_target_161"
                   tabindex="0"
                 >
                   <span
@@ -290,8 +289,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   >
                     content_copy
                   </span>
-                  <div />
                 </i>
+                <div>
+                  Copy
+                </div>
               </div>
               <ul
                 class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
@@ -299,7 +300,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               />
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_162"
                 tabindex="0"
               >
                 <span
@@ -308,8 +308,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 >
                   close
                 </span>
-                <div />
               </i>
+              <div>
+                Close
+              </div>
             </div>
             <div
               class="drawer-content flex column box grow"
@@ -379,7 +381,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_153"
                           tabindex="0"
                         >
                           <span
@@ -388,8 +389,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -413,12 +416,13 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_155"
                 tabindex="0"
               >
                 <span
@@ -427,11 +431,12 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_156"
                 tabindex="0"
               >
                 <span
@@ -440,8 +445,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -732,7 +739,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 some-kind: some-name
                 <i
                   class="Icon material interactive focusable"
-                  id="tooltip_target_91"
                   tabindex="0"
                 >
                   <span
@@ -741,8 +747,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   >
                     content_copy
                   </span>
-                  <div />
                 </i>
+                <div>
+                  Copy
+                </div>
               </div>
               <ul
                 class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
@@ -750,7 +758,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               />
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_92"
                 tabindex="0"
               >
                 <span
@@ -759,8 +766,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 >
                   close
                 </span>
-                <div />
               </i>
+              <div>
+                Close
+              </div>
             </div>
             <div
               class="drawer-content flex column box grow"
@@ -868,7 +877,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_83"
                           tabindex="0"
                         >
                           <span
@@ -877,8 +885,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -902,12 +912,13 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_85"
                 tabindex="0"
               >
                 <span
@@ -916,11 +927,12 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_86"
                 tabindex="0"
               >
                 <span
@@ -929,8 +941,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -1221,7 +1235,6 @@ exports[`disable kube object detail items when cluster is not relevant given not
                 some-kind: some-name
                 <i
                   class="Icon material interactive focusable"
-                  id="tooltip_target_21"
                   tabindex="0"
                 >
                   <span
@@ -1230,8 +1243,10 @@ exports[`disable kube object detail items when cluster is not relevant given not
                   >
                     content_copy
                   </span>
-                  <div />
                 </i>
+                <div>
+                  Copy
+                </div>
               </div>
               <ul
                 class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
@@ -1239,7 +1254,6 @@ exports[`disable kube object detail items when cluster is not relevant given not
               />
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_22"
                 tabindex="0"
               >
                 <span
@@ -1248,8 +1262,10 @@ exports[`disable kube object detail items when cluster is not relevant given not
                 >
                   close
                 </span>
-                <div />
               </i>
+              <div>
+                Close
+              </div>
             </div>
             <div
               class="drawer-content flex column box grow"
@@ -1357,7 +1373,6 @@ exports[`disable kube object detail items when cluster is not relevant given not
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_13"
                           tabindex="0"
                         >
                           <span
@@ -1366,8 +1381,10 @@ exports[`disable kube object detail items when cluster is not relevant given not
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1391,12 +1408,13 @@ exports[`disable kube object detail items when cluster is not relevant given not
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_15"
                 tabindex="0"
               >
                 <span
@@ -1405,11 +1423,12 @@ exports[`disable kube object detail items when cluster is not relevant given not
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_16"
                 tabindex="0"
               >
                 <span
@@ -1418,8 +1437,10 @@ exports[`disable kube object detail items when cluster is not relevant given not
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>

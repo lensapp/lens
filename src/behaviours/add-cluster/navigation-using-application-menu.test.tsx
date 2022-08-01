@@ -6,16 +6,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import React from "react";
-
-// TODO: Make components free of side effects by making them deterministic
-jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (Target: any) => ({ tooltip, tooltipOverrideDisabled, ...props }: any) => <Target {...props} />,
-}));
-
-jest.mock("../../renderer/components/monaco-editor/monaco-editor", () => ({
-  MonacoEditor: () => null,
-}));
 
 describe("add-cluster - navigation using application menu", () => {
   let applicationBuilder: ApplicationBuilder;

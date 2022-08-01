@@ -1046,7 +1046,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some already active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -1055,6 +1054,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some already active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -1633,7 +1637,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some already active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -1642,6 +1645,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some already active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -2269,7 +2277,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some already active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -2278,6 +2285,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some already active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -2854,7 +2866,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some already active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -2863,6 +2874,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some already active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -4017,7 +4033,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some already active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -4026,6 +4041,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some already active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                         <div
                           class="item flex gaps align-center justify-space-between repo"
@@ -4047,7 +4067,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some to be added repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -4056,6 +4075,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some to be added repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -4634,7 +4658,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some already active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -4643,6 +4666,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some already active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                         <div
                           class="item flex gaps align-center justify-space-between repo"
@@ -4664,7 +4692,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some to be added repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -4673,6 +4700,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some to be added repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -5310,7 +5342,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some already active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -5319,6 +5350,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some already active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                         <div
                           class="item flex gaps align-center justify-space-between repo"
@@ -5340,7 +5376,6 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some to be added repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -5349,6 +5384,11 @@ exports[`add helm repository from list in preferences when navigating to prefere
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some to be added repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />

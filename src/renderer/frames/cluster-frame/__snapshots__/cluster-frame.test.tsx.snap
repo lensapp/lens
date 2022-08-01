@@ -403,7 +403,6 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_56"
                         tabindex="0"
                       >
                         <span
@@ -412,8 +411,10 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -437,12 +438,13 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_58"
               tabindex="0"
             >
               <span
@@ -451,11 +453,12 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_59"
               tabindex="0"
             >
               <span
@@ -464,8 +467,10 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -884,7 +889,6 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_16"
                         tabindex="0"
                       >
                         <span
@@ -893,8 +897,10 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -918,12 +924,13 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_18"
               tabindex="0"
             >
               <span
@@ -932,11 +939,12 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_19"
               tabindex="0"
             >
               <span
@@ -945,8 +953,10 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -1424,7 +1434,6 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_94"
                         tabindex="0"
                       >
                         <span
@@ -1433,8 +1442,10 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1458,12 +1469,13 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_96"
               tabindex="0"
             >
               <span
@@ -1472,11 +1484,12 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_97"
               tabindex="0"
             >
               <span
@@ -1485,8 +1498,10 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>

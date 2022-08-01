@@ -8,7 +8,6 @@ import { fireEvent } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import navigateToNamespacesInjectable from "../../../common/front-end-routing/routes/cluster/namespaces/navigate-to-namespaces.injectable";
-import React from "react";
 import createEditResourceTabInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-tab.injectable";
 import getRandomIdForEditResourceTabInjectable from "../../../renderer/components/dock/edit-resource/get-random-id-for-edit-resource-tab.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
@@ -25,30 +24,6 @@ import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
-
-jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip:
-    (Target: any) =>
-      ({ tooltip, ...props }: any) => {
-        if (tooltip) {
-          const testId = props["data-testid"];
-
-          return (
-            <>
-              <Target
-                tooltip={tooltip.children ? undefined : tooltip}
-                {...props}
-              />
-              <div data-testid={testId && `tooltip-content-for-${testId}`}>
-                {tooltip.children || tooltip}
-              </div>
-            </>
-          );
-        }
-
-        return <Target {...props} />;
-      },
-}));
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
   let builder: ApplicationBuilder;

@@ -24,11 +24,6 @@ import showSuccessNotificationInjectable from "../../renderer/components/notific
 import showCheckedErrorInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
 import getRandomUpgradeChartTabIdInjectable from "../../renderer/components/dock/upgrade-chart/get-random-upgrade-chart-tab-id.injectable";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 describe("showing details for helm release", () => {
   let builder: ApplicationBuilder;
   let callForHelmReleasesMock: AsyncFnMock<CallForHelmReleases>;

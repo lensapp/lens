@@ -21,31 +21,6 @@ import { observer } from "mobx-react";
 import { kubeObjectStatusTextInjectionToken } from "../../../renderer/components/kube-object-status-icon/kube-object-status-text-injection-token";
 import { KubeObjectStatusIcon } from "../../../renderer/components/kube-object-status-icon";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip:
-    (Target: any) =>
-      ({ tooltip, ...props }: any) => {
-        if (tooltip) {
-          const testId = props["data-testid"];
-
-          return (
-            <>
-              <Target
-                tooltip={tooltip.children ? undefined : tooltip}
-                {...props}
-              />
-              <div data-testid={testId && `tooltip-content-for-${testId}`}>
-                {tooltip.children || tooltip}
-              </div>
-            </>
-          );
-        }
-
-        return <Target {...props} />;
-      },
-}));
-
 describe("show status for a kube object", () => {
   let builder: ApplicationBuilder;
   let infoStatusIsShown: boolean;
