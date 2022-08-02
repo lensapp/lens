@@ -20,7 +20,7 @@ const unitConverters = new Map([
   ["E", 1000 ** 6],
 ]);
 
-const cpuUnitsRegex = TypedRegEx("^(?<digits>\\d+)(?<unit>.*)$");
+const cpuUnitsRegex = TypedRegEx("^(?<digits>[+-]?[0-9.]+(e[-+]?[0-9]+)?)(?<unit>[EinumkKMGTP]*)$");
 
 export function cpuUnitsToNumber(value: string) {
   const match = cpuUnitsRegex.captures(value);
@@ -29,12 +29,12 @@ export function cpuUnitsToNumber(value: string) {
     return undefined;
   }
 
-  const { digits, unit } = match;
+  const { digits = "", unit } = match;
   const conversion = unitConverters.get(unit);
 
   if (conversion === undefined) {
     return undefined;
   }
 
-  return parseInt(digits) * conversion;
+  return parseFloat(digits) * conversion;
 }
