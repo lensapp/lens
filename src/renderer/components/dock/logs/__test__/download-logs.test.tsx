@@ -4,8 +4,9 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { RenderResult } from "@testing-library/react";
+import { act, RenderResult, waitFor } from "@testing-library/react";
 import { SearchStore } from "../../../../search-store/search-store";
+import openSaveFileDialogInjectable from "../../../../utils/save-file.injectable";
 import { ApplicationBuilder, getApplicationBuilder } from "../../../test-utils/get-application-builder";
 import type { TabId } from "../../dock/store";
 import dockStoreInjectable from "../../dock/store.injectable";
@@ -47,8 +48,6 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
       namespace: "sadsadaasdad",
       showPrevious: false,
       showTimestamps: false,
-      // logs: computed(() => ["some-logs"]),
-      // timestampSplitLogs: logs,
     }),
     getPodById: (id) => {
       if (id === selectedPod.getId()) {
@@ -66,6 +65,7 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
 
 describe("download logs options in pod logs dock tab", () => {
   let builder: ApplicationBuilder;
+  let openSaveFileDialogMock: jest.MockedFunction<() => void>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -81,7 +81,11 @@ describe("download logs options in pod logs dock tab", () => {
           .mockReturnValueOnce("some-first-tab-id")
           .mockReturnValueOnce("some-second-tab-id"),
       );
+
+      openSaveFileDialogMock = jest.fn();
+      rendererDi.override(openSaveFileDialogInjectable, () => openSaveFileDialogMock);
     });
+
   });
 
   describe("when opening pod logs", () => {
@@ -116,6 +120,63 @@ describe("download logs options in pod logs dock tab", () => {
 
     it("contains download dropdown button", () =>  {
       expect(rendered.getByTestId("download-logs-dropdown")).toBeInTheDocument();
+    });
+
+    describe("when clicking on button", () => {
+      beforeEach(() => {
+        const button = rendered.getByTestId("download-logs-dropdown");
+        act(() => button.click());
+      });
+
+      it("shows download visible logs menu item", () => {
+        expect(rendered.getByTestId("download-visible-logs")).toBeInTheDocument();
+      });
+
+      it("shows download all logs menu item", () => {
+        expect(rendered.getByTestId("download-all-logs")).toBeInTheDocument();
+      });
+
+      it("when selected 'download visible logs', shows save dialog with proper attributes", async () => {
+        const downloadMenuItem = rendered.getByTestId("download-visible-logs");
+
+        downloadMenuItem.click()
+        
+        await waitFor(() =>
+          expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain")
+        );
+      });
+
+      it("when selected 'download all logs', shows save dialog with proper attributes", async () => {
+        const downloadMenuItem = rendered.getByTestId("download-all-logs");
+
+        downloadMenuItem.click()
+
+        await waitFor(() =>
+          expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "all-logs", "text/plain")
+        );
+      });
+
+      it("when selected 'download all logs', block download dropdown for interaction", async () => {
+        const downloadMenuItem = rendered.getByTestId("download-all-logs");
+        
+        downloadMenuItem.click()
+
+        await waitFor(() =>
+          expect(rendered.getByTestId("download-logs-dropdown")).toHaveAttribute("disabled")
+        );
+      });
+
+      it("when save file dialog opens, restore download button for interaction", async () => {
+        const downloadMenuItem = rendered.getByTestId("download-all-logs");
+
+        downloadMenuItem.click()
+
+        await waitFor(() =>
+          expect(openSaveFileDialogMock).toHaveBeenCalled()
+        );
+          
+        expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled")
+      });
     });
   });
 });
