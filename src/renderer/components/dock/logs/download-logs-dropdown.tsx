@@ -10,8 +10,8 @@ import { Icon } from "../../icon";
 import { Menu, MenuItem } from "../../menu";
 
 interface DownloadLogsDropdownProps {
-  downloadVisibleLogs: () => Promise<any>
-  downloadAllLogs: () => Promise<any>
+  downloadVisibleLogs: () => Promise<any>;
+  downloadAllLogs: () => Promise<any>;
 }
 
 export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: DownloadLogsDropdownProps) {
@@ -24,12 +24,13 @@ export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: D
 
   const downloadLogs = async (download: () => Promise<void>) => {
     setWaiting(true);
+
     try {
       await download();
     } finally {
       setWaiting(false);
     }
-  }
+  };
 
   return (
     <>

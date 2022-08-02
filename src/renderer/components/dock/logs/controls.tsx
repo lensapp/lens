@@ -55,7 +55,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
       
       openSaveFileDialog(`${pod.getName()}.log`, logs, "text/plain");
     }
-  }
+  };
 
   const downloadLogs = () => {
     return new Promise((resolve) => {

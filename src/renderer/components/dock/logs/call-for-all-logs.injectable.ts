@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import { getInjectable } from "@ogre-tools/injectable";
 import callForLogsInjectable from "./call-for-logs.injectable";
 
@@ -15,7 +19,7 @@ const callForAllLogsInjectable = getInjectable({
 
       return logs;
     };
-  }
+  },
 });
 
 export default callForAllLogsInjectable;
