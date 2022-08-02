@@ -58,7 +58,7 @@ export class Ingresses extends React.Component {
             computeRouteDeclarations(ingress).map(decl => (
               decl.displayAsLink
                 ? (
-                  <span key={decl.url}>
+                  <div key={decl.url} className="ingressRule">
                     <a
                       href={decl.url}
                       rel="noreferrer"
@@ -68,12 +68,12 @@ export class Ingresses extends React.Component {
                       {decl.url}
                     </a>
                     {` ⇢ ${decl.service}`}
-                  </span>
+                  </div>
                 )
                 : (
-                  <span key={decl.url}>
+                  <div key={decl.url} className="ingressRule">
                     {`${decl.url} ⇢ ${decl.service}`}
-                  </span>
+                  </div>
                 )
             )),
             <KubeObjectAge key="age" object={ingress} />,
