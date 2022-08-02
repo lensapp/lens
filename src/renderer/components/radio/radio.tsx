@@ -85,6 +85,7 @@ export function Radio<T>({
         type="radio"
         checked={checked}
         onChange={() => ctx.onSelect(value)}
+        disabled={disabled || ctx.disabled}
       />
       <i className="tick flex center"/>
       {label ? <div className="label">{label}</div> : null}
