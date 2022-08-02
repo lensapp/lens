@@ -3,15 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { TableSortCallback } from "./table";
+import type { TableOrderBy, TableSortCallback } from "./table";
 import { Ordering, rectifyOrdering, sortCompare, tuple } from "../../utils";
 
-export function getSorted<T>(rawItems: T[], sortingCallback: TableSortCallback<T> | undefined, orderByRaw: string): T[] {
+export function getSorted<T>(rawItems: T[], sortingCallback: TableSortCallback<T> | undefined, orderBy: TableOrderBy = "asc"): T[] {
   if (typeof sortingCallback !== "function") {
     return rawItems;
   }
 
-  const orderBy = orderByRaw === "asc" || orderByRaw === "desc" ? orderByRaw : "asc";
   const sortData = rawItems.map((item, index) => ({
     index,
     sortBy: sortingCallback(item),
