@@ -58,7 +58,7 @@ export class Ingresses extends React.Component {
             computeRouteDeclarations(ingress).map(decl => (
               decl.displayAsLink
                 ? (
-                  <div key={decl.url}>
+                  <div key={decl.url} className="ingressRule">
                     <a
                       href={decl.url}
                       rel="noreferrer"
@@ -71,7 +71,7 @@ export class Ingresses extends React.Component {
                   </div>
                 )
                 : (
-                  <div key={decl.url}>
+                  <div key={decl.url} className="ingressRule">
                     {`${decl.url} ⇢ ${decl.service}`}
                   </div>
                 )

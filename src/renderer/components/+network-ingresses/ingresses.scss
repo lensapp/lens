@@ -18,12 +18,12 @@
         display: none;
       }
 
-      > div {
+      .ingressRule {
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
-      > div + div {
+      .ingressRule + .ingressRule {
         margin-top: 6px;
       }
     }
