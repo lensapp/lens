@@ -489,7 +489,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -566,7 +565,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -594,7 +592,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -610,7 +607,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -625,7 +621,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -1145,7 +1140,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -1222,7 +1216,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -1250,7 +1243,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1266,7 +1258,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -1281,7 +1272,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -1806,7 +1796,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -1883,7 +1872,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -1911,7 +1899,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1927,7 +1914,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -1942,7 +1928,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -2536,7 +2521,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -2613,7 +2597,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -2663,7 +2646,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -2691,7 +2673,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -2707,7 +2688,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -2722,7 +2702,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -3242,7 +3221,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -3319,7 +3297,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -3369,7 +3346,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -3397,7 +3373,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -3413,7 +3388,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -3428,7 +3402,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -4020,7 +3993,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -4097,7 +4069,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -4147,7 +4118,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -4175,7 +4145,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -4191,7 +4160,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -4206,7 +4174,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -4800,7 +4767,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -4877,7 +4843,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -4905,7 +4870,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -4921,7 +4885,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -4936,7 +4899,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -5001,10 +4963,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   >
                     <i
                       class="Icon material focusable"
-                      tooltip="YAMLException: end of the stream or a document separator is expected (1:1)
-
- 1 | @some-invalid-configuration@
------^"
                     >
                       <span
                         class="icon"
@@ -5548,7 +5506,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -5625,7 +5582,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -5653,7 +5609,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -5669,7 +5624,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -5684,7 +5638,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -6287,7 +6240,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -6364,7 +6316,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -6392,7 +6343,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -6408,7 +6358,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -6423,7 +6372,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -7017,7 +6965,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -7094,7 +7041,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -7122,7 +7068,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -7138,7 +7083,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -7153,7 +7097,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -7747,7 +7690,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -7824,7 +7766,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -7852,7 +7793,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -7868,7 +7808,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -7883,7 +7822,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -8477,7 +8415,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -8531,7 +8468,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -9042,7 +8978,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -9119,7 +9054,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -9147,7 +9081,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -9163,7 +9096,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -9178,7 +9110,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -9781,7 +9712,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -9835,7 +9765,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -10346,7 +10275,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -10400,7 +10328,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -10911,7 +10838,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    tooltip="Add Namespace"
                     type="button"
                   >
                     <i
@@ -10988,7 +10914,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -11016,7 +10941,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -11032,7 +10956,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -11047,7 +10970,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"

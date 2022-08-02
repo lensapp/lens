@@ -24,11 +24,6 @@ import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-stor
 import type { DiContainer } from "@ogre-tools/injectable";
 import callForCreateHelmReleaseInjectable from "../../../renderer/components/+helm-releases/create-release/call-for-create-helm-release.injectable";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 describe("installing helm chart from previously opened tab", () => {
   let builder: ApplicationBuilder;
   let rendererDi: DiContainer;

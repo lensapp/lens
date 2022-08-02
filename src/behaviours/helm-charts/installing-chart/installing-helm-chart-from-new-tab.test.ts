@@ -31,11 +31,6 @@ import dockStoreInjectable from "../../../renderer/components/dock/dock/store.in
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;
   let rendererDi: DiContainer;

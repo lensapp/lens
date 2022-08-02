@@ -1046,7 +1046,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -1055,6 +1054,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -1631,7 +1635,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -1640,6 +1643,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -1820,7 +1828,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                 More
                 <i
                   class="Icon material focusable small"
-                  tooltip="More"
                 >
                   <span
                     class="icon"
@@ -1829,6 +1836,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     add
                   </span>
                 </i>
+                <div>
+                  More
+                </div>
               </button>
             </div>
           </div>
@@ -2325,7 +2335,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -2334,6 +2343,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -2918,7 +2932,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -2927,6 +2940,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -3107,7 +3125,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                 More
                 <i
                   class="Icon material focusable small"
-                  tooltip="More"
                 >
                   <span
                     class="icon"
@@ -3116,6 +3133,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     add
                   </span>
                 </i>
+                <div>
+                  More
+                </div>
               </button>
             </div>
           </div>
@@ -3612,7 +3632,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -3621,6 +3640,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -3801,7 +3825,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                 More
                 <i
                   class="Icon material focusable small"
-                  tooltip="More"
                 >
                   <span
                     class="icon"
@@ -3810,6 +3833,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     remove
                   </span>
                 </i>
+                <div>
+                  More
+                </div>
               </button>
               <div
                 data-testid="maximal-options-for-custom-helm-repository-dialog"
@@ -3861,7 +3887,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   <i
                     class="Icon material interactive focusable"
                     tabindex="0"
-                    tooltip="Browse"
                   >
                     <span
                       class="icon"
@@ -3870,6 +3895,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                       folder
                     </span>
                   </i>
+                  <div>
+                    Browse
+                  </div>
                 </div>
                 <div
                   class="flex gaps align-center"
@@ -3896,7 +3924,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   <i
                     class="Icon material interactive focusable"
                     tabindex="0"
-                    tooltip="Browse"
                   >
                     <span
                       class="icon"
@@ -3905,6 +3932,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                       folder
                     </span>
                   </i>
+                  <div>
+                    Browse
+                  </div>
                 </div>
                 <div
                   class="flex gaps align-center"
@@ -3931,7 +3961,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   <i
                     class="Icon material interactive focusable"
                     tabindex="0"
-                    tooltip="Browse"
                   >
                     <span
                       class="icon"
@@ -3940,6 +3969,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                       folder
                     </span>
                   </i>
+                  <div>
+                    Browse
+                  </div>
                 </div>
                 <div
                   class="SubTitle"
@@ -4482,7 +4514,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -4491,6 +4522,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -4671,7 +4707,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                 More
                 <i
                   class="Icon material focusable small"
-                  tooltip="More"
                 >
                   <span
                     class="icon"
@@ -4680,6 +4715,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     add
                   </span>
                 </i>
+                <div>
+                  More
+                </div>
               </button>
             </div>
           </div>
@@ -5176,7 +5214,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -5185,6 +5222,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -5365,7 +5407,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                 More
                 <i
                   class="Icon material focusable small"
-                  tooltip="More"
                 >
                   <span
                     class="icon"
@@ -5374,6 +5415,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     remove
                   </span>
                 </i>
+                <div>
+                  More
+                </div>
               </button>
               <div
                 data-testid="maximal-options-for-custom-helm-repository-dialog"
@@ -5425,7 +5469,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   <i
                     class="Icon material interactive focusable"
                     tabindex="0"
-                    tooltip="Browse"
                   >
                     <span
                       class="icon"
@@ -5434,6 +5477,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                       folder
                     </span>
                   </i>
+                  <div>
+                    Browse
+                  </div>
                 </div>
                 <div
                   class="flex gaps align-center"
@@ -5460,7 +5506,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   <i
                     class="Icon material interactive focusable"
                     tabindex="0"
-                    tooltip="Browse"
                   >
                     <span
                       class="icon"
@@ -5469,6 +5514,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                       folder
                     </span>
                   </i>
+                  <div>
+                    Browse
+                  </div>
                 </div>
                 <div
                   class="flex gaps align-center"
@@ -5495,7 +5543,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   <i
                     class="Icon material interactive focusable"
                     tabindex="0"
-                    tooltip="Browse"
                   >
                     <span
                       class="icon"
@@ -5504,6 +5551,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                       folder
                     </span>
                   </i>
+                  <div>
+                    Browse
+                  </div>
                 </div>
                 <div
                   class="SubTitle"
@@ -6046,7 +6096,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -6055,6 +6104,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -6235,7 +6289,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                 More
                 <i
                   class="Icon material focusable small"
-                  tooltip="More"
                 >
                   <span
                     class="icon"
@@ -6244,6 +6297,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     add
                   </span>
                 </i>
+                <div>
+                  More
+                </div>
               </button>
             </div>
           </div>
@@ -6740,7 +6796,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-Some active repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -6749,6 +6804,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-Some active repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -8101,7 +8161,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                 More
                 <i
                   class="Icon material focusable small"
-                  tooltip="More"
                 >
                   <span
                     class="icon"
@@ -8110,6 +8169,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     add
                   </span>
                 </i>
+                <div>
+                  More
+                </div>
               </button>
             </div>
           </div>

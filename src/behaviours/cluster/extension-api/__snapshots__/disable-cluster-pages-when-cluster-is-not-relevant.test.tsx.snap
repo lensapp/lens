@@ -324,7 +324,6 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_129"
                           tabindex="0"
                         >
                           <span
@@ -333,8 +332,10 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -358,12 +359,13 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_131"
                 tabindex="0"
               >
                 <span
@@ -372,11 +374,12 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_132"
                 tabindex="0"
               >
                 <span
@@ -385,8 +388,10 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -839,7 +844,6 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_71"
                           tabindex="0"
                         >
                           <span
@@ -848,8 +852,10 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -873,12 +879,13 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_73"
                 tabindex="0"
               >
                 <span
@@ -887,11 +894,12 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_74"
                 tabindex="0"
               >
                 <span
@@ -900,8 +908,10 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -1354,7 +1364,6 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_13"
                           tabindex="0"
                         >
                           <span
@@ -1363,8 +1372,10 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1388,12 +1399,13 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_15"
                 tabindex="0"
               >
                 <span
@@ -1402,11 +1414,12 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_16"
                 tabindex="0"
               >
                 <span
@@ -1415,8 +1428,10 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>

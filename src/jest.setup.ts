@@ -44,3 +44,4 @@ global.ResizeObserver = class {
 };
 
 jest.mock("./renderer/components/monaco-editor/monaco-editor");
+jest.mock("./renderer/components/tooltip/withTooltip");

@@ -503,7 +503,6 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_14"
                         tabindex="0"
                       >
                         <span
@@ -512,8 +511,10 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -537,12 +538,13 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_16"
               tabindex="0"
             >
               <span
@@ -551,11 +553,12 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_17"
               tabindex="0"
             >
               <span
@@ -564,8 +567,10 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -1135,7 +1140,6 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_52"
                         tabindex="0"
                       >
                         <span
@@ -1144,8 +1148,10 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1169,12 +1175,13 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_54"
               tabindex="0"
             >
               <span
@@ -1183,11 +1190,12 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_55"
               tabindex="0"
             >
               <span
@@ -1196,8 +1204,10 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>

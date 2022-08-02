@@ -25,11 +25,6 @@ import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/h
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 describe("opening dock tab for installing helm chart", () => {
   let builder: ApplicationBuilder;
   let rendererDi: DiContainer;

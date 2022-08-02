@@ -496,7 +496,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -505,6 +504,9 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -1175,7 +1177,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1184,6 +1185,9 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -1854,7 +1858,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1863,6 +1866,9 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -1887,7 +1893,6 @@ exports[`opening dock tab for installing helm chart given application is started
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Copy"
           >
             <span
               class="icon"
@@ -1896,11 +1901,13 @@ exports[`opening dock tab for installing helm chart given application is started
               content_copy
             </span>
           </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -1909,6 +1916,9 @@ exports[`opening dock tab for installing helm chart given application is started
             close
           </span>
         </i>
+        <div>
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -2586,7 +2596,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -2595,6 +2604,9 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -2619,7 +2631,6 @@ exports[`opening dock tab for installing helm chart given application is started
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Copy"
           >
             <span
               class="icon"
@@ -2628,11 +2639,13 @@ exports[`opening dock tab for installing helm chart given application is started
               content_copy
             </span>
           </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -2641,6 +2654,9 @@ exports[`opening dock tab for installing helm chart given application is started
             close
           </span>
         </i>
+        <div>
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -3497,7 +3513,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -3506,6 +3521,9 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -3530,7 +3548,6 @@ exports[`opening dock tab for installing helm chart given application is started
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Copy"
           >
             <span
               class="icon"
@@ -3539,11 +3556,13 @@ exports[`opening dock tab for installing helm chart given application is started
               content_copy
             </span>
           </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -3552,6 +3571,9 @@ exports[`opening dock tab for installing helm chart given application is started
             close
           </span>
         </i>
+        <div>
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -4418,7 +4440,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -4427,6 +4448,9 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -4451,7 +4475,6 @@ exports[`opening dock tab for installing helm chart given application is started
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Copy"
           >
             <span
               class="icon"
@@ -4460,11 +4483,13 @@ exports[`opening dock tab for installing helm chart given application is started
               content_copy
             </span>
           </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -4473,6 +4498,9 @@ exports[`opening dock tab for installing helm chart given application is started
             close
           </span>
         </i>
+        <div>
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -5329,7 +5357,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -5338,6 +5365,9 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -5362,7 +5392,6 @@ exports[`opening dock tab for installing helm chart given application is started
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Copy"
           >
             <span
               class="icon"
@@ -5371,11 +5400,13 @@ exports[`opening dock tab for installing helm chart given application is started
               content_copy
             </span>
           </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -5384,6 +5415,9 @@ exports[`opening dock tab for installing helm chart given application is started
             close
           </span>
         </i>
+        <div>
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -6273,7 +6307,6 @@ exports[`opening dock tab for installing helm chart given application is started
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -6282,6 +6315,9 @@ exports[`opening dock tab for installing helm chart given application is started
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -6298,7 +6334,6 @@ exports[`opening dock tab for installing helm chart given application is started
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -6307,11 +6342,13 @@ exports[`opening dock tab for installing helm chart given application is started
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -6320,10 +6357,12 @@ exports[`opening dock tab for installing helm chart given application is started
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -6332,6 +6371,9 @@ exports[`opening dock tab for installing helm chart given application is started
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div

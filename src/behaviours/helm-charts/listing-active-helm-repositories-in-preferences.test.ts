@@ -17,11 +17,6 @@ import type { Logger } from "../../common/logger";
 import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 describe("listing active helm repositories in preferences", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;

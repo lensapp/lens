@@ -329,7 +329,6 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_137"
                           tabindex="0"
                         >
                           <span
@@ -338,8 +337,10 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -363,12 +364,13 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_139"
                 tabindex="0"
               >
                 <span
@@ -377,11 +379,12 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_140"
                 tabindex="0"
               >
                 <span
@@ -390,8 +393,10 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -724,7 +729,6 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_75"
                           tabindex="0"
                         >
                           <span
@@ -733,8 +737,10 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -758,12 +764,13 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_77"
                 tabindex="0"
               >
                 <span
@@ -772,11 +779,12 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_78"
                 tabindex="0"
               >
                 <span
@@ -785,8 +793,10 @@ exports[`disable kube object menu items when cluster is not relevant given exten
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -1119,7 +1129,6 @@ exports[`disable kube object menu items when cluster is not relevant given not y
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_13"
                           tabindex="0"
                         >
                           <span
@@ -1128,8 +1137,10 @@ exports[`disable kube object menu items when cluster is not relevant given not y
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1153,12 +1164,13 @@ exports[`disable kube object menu items when cluster is not relevant given not y
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_15"
                 tabindex="0"
               >
                 <span
@@ -1167,11 +1179,12 @@ exports[`disable kube object menu items when cluster is not relevant given not y
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_16"
                 tabindex="0"
               >
                 <span
@@ -1180,8 +1193,10 @@ exports[`disable kube object menu items when cluster is not relevant given not y
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>

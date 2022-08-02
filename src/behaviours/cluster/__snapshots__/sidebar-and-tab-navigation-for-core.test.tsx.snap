@@ -472,7 +472,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_177"
                         tabindex="0"
                       >
                         <span
@@ -481,8 +480,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -506,12 +507,13 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_179"
               tabindex="0"
             >
               <span
@@ -520,11 +522,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_180"
               tabindex="0"
             >
               <span
@@ -533,8 +536,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -1015,7 +1020,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_215"
                         tabindex="0"
                       >
                         <span
@@ -1024,8 +1028,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1049,12 +1055,13 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_217"
               tabindex="0"
             >
               <span
@@ -1063,11 +1070,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_218"
               tabindex="0"
             >
               <span
@@ -1076,8 +1084,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -1580,7 +1590,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_272"
                         tabindex="0"
                       >
                         <span
@@ -1589,8 +1598,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1614,12 +1625,13 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_274"
               tabindex="0"
             >
               <span
@@ -1628,11 +1640,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_275"
               tabindex="0"
             >
               <span
@@ -1641,8 +1654,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -2026,7 +2041,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_332"
                         tabindex="0"
                       >
                         <span
@@ -2035,8 +2049,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2060,12 +2076,13 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_334"
               tabindex="0"
             >
               <span
@@ -2074,11 +2091,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_335"
               tabindex="0"
             >
               <span
@@ -2087,8 +2105,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -2449,7 +2469,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_14"
                         tabindex="0"
                       >
                         <span
@@ -2458,8 +2477,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2483,12 +2504,13 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_16"
               tabindex="0"
             >
               <span
@@ -2497,11 +2519,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_17"
               tabindex="0"
             >
               <span
@@ -2510,8 +2533,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -3014,7 +3039,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_82"
                         tabindex="0"
                       >
                         <span
@@ -3023,8 +3047,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -3048,12 +3074,13 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_84"
               tabindex="0"
             >
               <span
@@ -3062,11 +3089,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_85"
               tabindex="0"
             >
               <span
@@ -3075,8 +3103,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -3557,7 +3587,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_139"
                         tabindex="0"
                       >
                         <span
@@ -3566,8 +3595,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -3591,12 +3622,13 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_141"
               tabindex="0"
             >
               <span
@@ -3605,11 +3637,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_142"
               tabindex="0"
             >
               <span
@@ -3618,8 +3651,10 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
