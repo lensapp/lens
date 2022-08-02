@@ -49,29 +49,24 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
 
   const downloadAllLogs = async () => {
     const pod = model.pod.get();
-  
+    
     if (pod) {
       const logs = await callForAllLogs(pod.getName(), pod.getNs());
-  
-      console.log(logs);
-
-      return !!logs;
+      
+      openSaveFileDialog(`${pod.getName()}.log`, logs, "text/plain");
     }
-
-    return false;
-  
-    // openSaveFileDialog("logs.txt", logs, "text/plain");
   }
 
-  const downloadLogs = (): Promise<boolean> => {
-    const fileName = pod.getName();
-    const logsToDownload: string[] = showTimestamps
-      ? model.logs.get()
-      : model.logsWithoutTimestamps.get();
+  const downloadLogs = () => {
+    return new Promise((resolve) => {
+      const fileName = pod.getName();
+      const logsToDownload: string[] = showTimestamps
+        ? model.logs.get()
+        : model.logsWithoutTimestamps.get();
 
-    openSaveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
-
-    return new Promise(resolve => resolve(true));
+      openSaveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
+      resolve(true);
+    });
   };
 
   return (
