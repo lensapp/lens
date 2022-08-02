@@ -1,5 +1,5 @@
-.dropDown {
-  --accent-color: var(--colorOk);
+.dropdown {
+  --accent-color: var(--colorInfo);
 
   border: 1px solid var(--accent-color);
   border-radius: 4px;
@@ -8,13 +8,11 @@
   align-items: center;
   padding: calc(var(--padding) / 4) var(--padding);
   gap: 6px;
-  cursor: default;
   position: relative;
 
-  &.waiting {
+  &:disabled {
     cursor: progress;
-    pointer-events: none;
-    opacity: .5;
+    opacity: .7;
   }
 
   &:hover::before{
@@ -22,7 +20,7 @@
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 2px var(--blue);
+    box-shadow: 0 0 0 2px var(--accent-color);
     border-color: transparent;
   }
 
@@ -33,8 +31,7 @@
     width: 100%;
     height: 100%;
     left: 0;
-    opacity: 0.15;
-    z-index: -1;
+    opacity: 0;
     transition: opacity 0.1s;
   }
 }
