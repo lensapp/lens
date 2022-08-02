@@ -6,13 +6,12 @@
 import styles from "./download-logs-dropdown.module.scss";
 
 import React, { useState } from "react";
-import { cssNames } from "../../../utils";
 import { Icon } from "../../icon";
 import { Menu, MenuItem } from "../../menu";
 
 interface DownloadLogsDropdownProps {
-  downloadVisibleLogs: () => Promise<boolean>
-  downloadAllLogs: () => Promise<boolean>
+  downloadVisibleLogs: () => Promise<any>
+  downloadAllLogs: () => Promise<any>
 }
 
 export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: DownloadLogsDropdownProps) {
@@ -23,10 +22,13 @@ export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: D
     setOpened(!opened);
   };
 
-  const downloadLogs = async (download: () => Promise<boolean>) => {
+  const downloadLogs = async (download: () => Promise<void>) => {
     setWaiting(true);
-    await download();
-    setWaiting(false);
+    try {
+      await download();
+    } finally {
+      setWaiting(false);
+    }
   }
 
   return (
@@ -34,7 +36,8 @@ export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: D
       <button
         data-testid="download-logs-dropdown"
         id="download-logs-dropdown"
-        className={cssNames(styles.dropdown, { [styles.waiting]: waiting })}
+        className={styles.dropdown}
+        disabled={waiting}
       >
         Download
         <Icon material="arrow_drop_down" smallest/>
