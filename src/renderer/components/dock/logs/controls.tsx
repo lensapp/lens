@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 
 import { cssNames } from "../../../utils";
 import { Checkbox } from "../../checkbox";
-import { Icon } from "../../icon";
 import type { LogTabViewModel } from "./logs-view-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
@@ -97,20 +96,6 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
         <DownloadLogsDropdown
           downloadVisibleLogs={downloadLogs}
           downloadAllLogs={downloadAllLogs}
-        />
-
-        <Icon
-          material="get_app"
-          onClick={downloadLogs}
-          tooltip="Download"
-          className="download-icon"
-        />
-
-        <Icon
-          material="refresh"
-          onClick={downloadAllLogs}
-          tooltip="Download"
-          className="download-icon"
         />
       </div>
     </div>
