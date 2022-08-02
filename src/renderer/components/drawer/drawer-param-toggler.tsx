@@ -33,13 +33,17 @@ export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps,
       <div className="DrawerParamToggler">
         <div className="flex gaps align-center params">
           <div className="param-label">{label}</div>
-          <div className="param-link" onClick={this.toggle}>
+          <div
+            className="param-link"
+            onClick={this.toggle}
+            data-testid="drawer-param-toggler"
+          >
             <span className="param-link-text">{link}</span>
             <Icon material={icon}/>
           </div>
         </div>
         <div className={cssNames("param-content", { open })}>
-          {children}
+          {open && children}
         </div>
       </div>
     );
