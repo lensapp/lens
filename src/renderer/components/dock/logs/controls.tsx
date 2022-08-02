@@ -15,6 +15,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
 import callForAllLogsInjectable from "./call-for-all-logs.injectable";
 import { DownloadLogsDropdown } from "./download-logs-dropdown";
+import type { Pod, PodLogsQuery } from "../../../../common/k8s-api/endpoints";
 
 export interface LogControlsProps {
   model: LogTabViewModel;
@@ -22,7 +23,7 @@ export interface LogControlsProps {
 
 interface Dependencies {
   openSaveFileDialog: (filename: string, contents: BlobPart | BlobPart[], type: string) => void;
-  callForAllLogs: (name: string, namespace: string) => Promise<string>;
+  callForAllLogs: (pod: Pod, query?: PodLogsQuery) => Promise<string>;
 }
 
 const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAllLogs }: Dependencies & LogControlsProps) => {
@@ -50,7 +51,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
     const pod = model.pod.get();
     
     if (pod) {
-      const logs = await callForAllLogs(pod.getName(), pod.getNs());
+      const logs = await callForAllLogs(pod, { timestamps: showTimestamps, previous });
       
       openSaveFileDialog(`${pod.getName()}.log`, logs, "text/plain");
     }

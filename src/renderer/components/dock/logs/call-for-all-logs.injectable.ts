@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { Pod, PodLogsQuery } from "../../../../common/k8s-api/endpoints";
 import callForLogsInjectable from "./call-for-logs.injectable";
 
 const callForAllLogsInjectable = getInjectable({
@@ -11,11 +12,10 @@ const callForAllLogsInjectable = getInjectable({
   instantiate: (di) => {
     const callForLogs = di.inject(callForLogsInjectable);
 
-    return async (name: string, namespace: string) => {
-      const logs = await callForLogs({
-        name,
-        namespace,
-      });
+    return async (pod: Pod, query?: PodLogsQuery) => {
+      const namespace = pod.getNs();
+      const name = pod.getName();
+      const logs = await callForLogs({ name, namespace }, query);
 
       return logs;
     };
