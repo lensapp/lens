@@ -25,6 +25,8 @@ import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
+import { overrideAppEventBusInjectable } from "../../../common/test-utils/override-app-event-bus";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
   withTooltip:
@@ -76,6 +78,8 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
       );
 
       rendererDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
+
+      overrideAppEventBusInjectable(rendererDi, appEventBusInjectable);
 
       storagesAreReady = controlWhenStoragesAreReady(rendererDi);
 

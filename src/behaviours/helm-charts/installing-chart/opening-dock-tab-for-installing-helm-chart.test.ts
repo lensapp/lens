@@ -24,6 +24,8 @@ import directoryForLensLocalStorageInjectable from "../../../common/directory-fo
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { overrideAppEventBusInjectable } from "../../../common/test-utils/override-app-event-bus";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
@@ -88,6 +90,8 @@ describe("opening dock tab for installing helm chart", () => {
           .fn(() => "some-irrelevant-tab-id")
           .mockReturnValueOnce("some-tab-id"),
       );
+
+      overrideAppEventBusInjectable(rendererDi, appEventBusInjectable);
     });
 
     builder.setEnvironmentToClusterFrame();

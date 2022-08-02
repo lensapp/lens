@@ -27,7 +27,9 @@ import installFromInputInjectable from "../install-from-input/install-from-input
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { observable, when } from "mobx";
+import appVersionInjectable from "../../../../common/vars/app-version.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
+import { overrideAppEventBusInjectable } from "../../../../common/test-utils/override-app-event-bus";
 
 mockWindow();
 
@@ -62,10 +64,10 @@ describe("Extensions", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
+    overrideAppEventBusInjectable(di, appEventBusInjectable);
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(appVersionInjectable);
-    di.permitSideEffects(appEventBusInjectable);
 
     mockFs({
       "some-directory-for-user-data": {},

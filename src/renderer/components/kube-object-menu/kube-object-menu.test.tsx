@@ -26,6 +26,7 @@ import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 import { kubeObjectMenuItemInjectionToken } from "./kube-object-menu-item-injection-token";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import { overrideAppEventBusInjectable } from "../../../common/test-utils/override-app-event-bus";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../tooltip/tooltip");
@@ -69,7 +70,7 @@ describe("kube-object-menu", () => {
 
     di.override(createEditResourceTabInjectable, () => () => "irrelevant");
 
-    di.permitSideEffects(appEventBusInjectable);
+    overrideAppEventBusInjectable(di, appEventBusInjectable);
   });
 
   it("given no cluster, does not crash", () => {

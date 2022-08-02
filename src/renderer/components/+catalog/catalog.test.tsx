@@ -26,6 +26,7 @@ import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import { computed } from "mobx";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
+import { overrideAppEventBusInjectable } from "../../../common/test-utils/override-app-event-bus";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -105,11 +106,7 @@ describe("<Catalog />", () => {
 
     di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
 
-    emitEvent = jest.fn();
-
-    di.override(appEventBusInjectable, () => ({
-      emit: emitEvent,
-    }));
+    emitEvent = overrideAppEventBusInjectable(di, appEventBusInjectable);
 
     catalogEntityStore = di.inject(catalogEntityStoreInjectable);
     Object.assign(catalogEntityStore, {

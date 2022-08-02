@@ -23,6 +23,8 @@ import callForHelmReleaseInjectable from "../../renderer/components/+helm-releas
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showCheckedErrorInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
 import getRandomUpgradeChartTabIdInjectable from "../../renderer/components/dock/upgrade-chart/get-random-upgrade-chart-tab-id.injectable";
+import { overrideAppEventBusInjectable } from "../../common/test-utils/override-app-event-bus";
+import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../renderer/components/tooltip/withTooltip", () => ({
@@ -98,6 +100,8 @@ describe("showing details for helm release", () => {
             selectNamespaces: () => {},
           } as unknown as NamespaceStore),
       );
+
+      overrideAppEventBusInjectable(rendererDi, appEventBusInjectable);
     });
   });
 

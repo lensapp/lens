@@ -30,6 +30,8 @@ import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/h
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { overrideAppEventBusInjectable } from "../../../common/test-utils/override-app-event-bus";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 
 // TODO: Make tooltips free of side effects by making it deterministic
 jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
@@ -111,6 +113,8 @@ describe("installing helm chart from new tab", () => {
           .mockReturnValueOnce("some-first-tab-id")
           .mockReturnValueOnce("some-second-tab-id"),
       );
+
+      overrideAppEventBusInjectable(rendererDi, appEventBusInjectable);
     });
 
     builder.setEnvironmentToClusterFrame();
