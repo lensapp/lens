@@ -840,32 +840,6 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                       </span>
                     </i>
                   </button>
-                  <i
-                    class="Icon download-icon material interactive focusable"
-                    id="tooltip_target_30"
-                    tabindex="0"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="get_app"
-                    >
-                      get_app
-                    </span>
-                    <div />
-                  </i>
-                  <i
-                    class="Icon download-icon material interactive focusable"
-                    id="tooltip_target_31"
-                    tabindex="0"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="refresh"
-                    >
-                      refresh
-                    </span>
-                    <div />
-                  </i>
                 </div>
               </div>
             </div>
