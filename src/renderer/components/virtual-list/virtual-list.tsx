@@ -87,7 +87,7 @@ function VirtualListInner<T extends { getId(): string } | string>({
   useEffect(() => {
     try {
       if (prevItems.current.length !== items.length || !isEqual(prevRowHeights.current, rowHeights)) {
-        listRef.current?.resetAfterIndex(0, false);
+        listRef.current?.resetAfterIndex(0);
       }
     } finally {
       prevItems.current = items;
