@@ -163,28 +163,6 @@ class NonInjectedPods extends React.Component<Dependencies> {
     const { podStore } = this.props;
 
     const columns = [
-      columnHelper.display({
-        id: "select",
-        header: ({ table }) => (
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <div className="px-1">
-            <IndeterminateCheckbox
-              {...{
-                checked: row.getIsSelected(),
-                onChange: row.getToggleSelectedHandler(),
-              }}
-            />
-          </div>
-        ),
-      }),
       columnHelper.accessor(row => row.getName(), {
         id: "name",
         header: "Name",
