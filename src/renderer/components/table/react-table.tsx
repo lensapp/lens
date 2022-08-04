@@ -5,31 +5,15 @@
 
 import styles from "./react-table.module.scss";
 import React from "react";
-import {
-  flexRender,
-  useReactTable,
-  getSortedRowModel,
-} from '@tanstack/react-table'
-import type { TableOptions, Table, SortingState } from "@tanstack/react-table";
+import { flexRender } from '@tanstack/react-table'
+import type { Table } from "@tanstack/react-table";
 
-interface TableProps<T> extends TableOptions<T> {
+interface TableProps<T> {
+  table: Table<T>;
   className?: string;
 }
 
-export function Table<Data>({ columns, data, getCoreRowModel, className }: TableProps<Data>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel,
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-  });
-
+export function Table<Data>({ className, table }: TableProps<Data>) {
   return (
     <div className={className}>
       <table>
