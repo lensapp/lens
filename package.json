@@ -291,7 +291,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@sentry/types": "^6.19.7",
-    "@swc/core": "^1.2.218",
+    "@swc/core": "^1.2.223",
     "@swc/jest": "^0.2.22",
     "@testing-library/dom": "^7.31.2",
     "@testing-library/jest-dom": "^5.16.4",
