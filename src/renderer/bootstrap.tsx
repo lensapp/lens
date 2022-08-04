@@ -46,6 +46,7 @@ import kubernetesClusterCategoryInjectable from "../common/catalog/categories/ku
 import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
+import catalogCategoryRegistryInjectable from "../common/catalog/category-registry.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -116,6 +117,7 @@ export async function bootstrap(di: DiContainer) {
   initializers.initCatalog({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
     openDeleteClusterDialog: di.inject(openDeleteClusterDialogInjectable),
+    catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
   });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
