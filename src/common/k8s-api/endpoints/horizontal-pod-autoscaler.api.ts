@@ -210,8 +210,6 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
   }
 }
 
-
-
 function getMetricName(metric: HorizontalPodAutoscalerMetricSpec | HorizontalPodAutoscalerMetricStatus): string | undefined {
   switch (metric.type) {
     case HpaMetricType.Resource:
@@ -232,12 +230,12 @@ function getMetricName(metric: HorizontalPodAutoscalerMetricSpec | HorizontalPod
 function getResourceMetricValue(currentMetric: ResourceMetricStatus | undefined, targetMetric: ResourceMetricSource): MetricCurrentTarget {
   return {
     current: (
-      currentMetric?.currentAverageUtilization
+      typeof currentMetric?.currentAverageUtilization === "number"
         ? `${currentMetric.currentAverageUtilization}%`
         : currentMetric?.currentAverageValue
     ),
     target: (
-      targetMetric?.targetAverageUtilization
+      typeof targetMetric?.targetAverageUtilization === "number"
         ? `${targetMetric.targetAverageUtilization}%`
         : targetMetric?.targetAverageValue
     ),
@@ -280,12 +278,12 @@ function getExternalMetricValue(currentMetric: ExternalMetricStatus | undefined,
 function getContainerResourceMetricValue(currentMetric: ContainerResourceMetricStatus | undefined, targetMetric: ContainerResourceMetricSource): MetricCurrentTarget {
   return {
     current: (
-      currentMetric?.currentAverageUtilization
+      typeof currentMetric?.currentAverageUtilization === "number"
         ? `${currentMetric.currentAverageUtilization}%`
         : currentMetric?.currentAverageValue
     ),
     target: (
-      targetMetric?.targetAverageUtilization
+      typeof targetMetric?.targetAverageUtilization === "number"
         ? `${targetMetric.targetAverageUtilization}%`
         : targetMetric?.targetAverageValue
     ),
