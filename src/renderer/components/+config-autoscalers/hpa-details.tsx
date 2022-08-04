@@ -63,27 +63,13 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
         case HpaMetricType.Resource: {
           const metricSpec = metric.resource ?? metric.containerResource;
           const addition = metricSpec.targetAverageUtilization
-            ? "(as a percentage of request)"
+            ? " (as a percentage of request)"
             : "";
 
-          return (
-            <>
-              Resource
-              {metricSpec.name}
-              {" "}
-              on Pods
-              {addition}
-            </>
-          );
+          return `Resource ${metricSpec.name} on Pods${addition}`;
         }
         case HpaMetricType.Pods:
-          return (
-            <>
-              {metric.pods.metricName}
-              {" "}
-              on Pods
-            </>
-          );
+          return `${metric.pods.metricName} on Pods`;
 
         case HpaMetricType.Object: {
           return (
@@ -95,15 +81,7 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
           );
         }
         case HpaMetricType.External:
-          return (
-            <>
-              {metric.external.metricName}
-              {" "}
-              on
-              {" "}
-              {JSON.stringify(metric.external.metricSelector)}
-            </>
-          );
+          return `${metric.external.metricName} on ${JSON.stringify(metric.external.metricSelector)}`;
       }
     };
 
