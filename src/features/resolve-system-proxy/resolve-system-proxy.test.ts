@@ -12,28 +12,28 @@ import resolveSystemProxyFromElectronInjectable from "../../main/utils/resolve-s
 import { getPromiseStatus } from "../../common/test-utils/get-promise-status";
 
 describe("resolve-system-proxy", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let actualPromise: Promise<string>;
   let resolveSystemProxyFromElectronMock: AsyncFnMock<ResolveSystemProxy>;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     resolveSystemProxyFromElectronMock = asyncFn();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(
         resolveSystemProxyFromElectronInjectable,
         () => resolveSystemProxyFromElectronMock,
       );
     });
 
-    await applicationBuilder.render();
+    await builder.render();
   });
 
   describe("given in main, when called with URL", () => {
     beforeEach(async () => {
-      const resolveSystemProxyInMain = applicationBuilder.dis.mainDi.inject(
+      const resolveSystemProxyInMain = builder.mainDi.inject(
         resolveSystemProxyInjectionToken,
       );
 
@@ -59,7 +59,9 @@ describe("resolve-system-proxy", () => {
 
   describe("given in renderer, when called with URL", () => {
     beforeEach(async () => {
-      const resolveSystemProxyInRenderer = applicationBuilder.dis.rendererDi.inject(
+      const windowDi = builder.applicationWindow.only.di;
+
+      const resolveSystemProxyInRenderer = windowDi.inject(
         resolveSystemProxyInjectionToken,
       );
 

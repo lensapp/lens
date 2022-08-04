@@ -5,27 +5,24 @@
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
-import type { ObservableSet } from "mobx";
+import type { IComputedValue, ObservableMap } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
-import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
-import { queryByText, fireEvent } from "@testing-library/react";
+import { fireEvent, queryByText } from "@testing-library/react";
 import type { KubeResource } from "../../../common/rbac";
-import type { DiContainer } from "@ogre-tools/injectable";
-import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../../../common/cluster-store/cluster-store";
+import type { DiContainer, Injectable } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, compact, join, get, filter, map, matches, last } from "lodash/fp";
+import { compact, filter, first, flatMap, get, join, last, map, matches } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
 import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
-import type { MenuItemConstructorOptions, MenuItem } from "electron";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import type { MenuItem, MenuItemConstructorOptions } from "electron";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
@@ -39,7 +36,6 @@ import type { NamespaceStore } from "../+namespaces/store";
 import historyInjectable from "../../navigation/history.injectable";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
-import applicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/application-window.injectable";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
 import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
@@ -52,7 +48,6 @@ import type { NavigateToRouteOptions } from "../../../common/front-end-routing/n
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import type { LensExtension } from "../../../extensions/lens-extension";
-
 import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
 import { renderFor } from "./renderFor";
 import { RootFrame } from "../../frames/root-frame/root-frame";
@@ -62,34 +57,50 @@ import activeKubernetesClusterInjectable from "../../cluster-frame-context/activ
 import { catalogEntityFromCluster } from "../../../main/cluster-manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import { isAllowedResource } from "../../../common/cluster/is-allowed-resource";
+import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
+import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
+import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
+import { applicationWindowInjectionToken } from "../../../main/start-main-application/lens-window/application-window/application-window-injection-token";
+import sendToChannelInElectronBrowserWindowInjectable from "../../../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
+import closeAllWindowsInjectable from "../../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
+import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
+import type { FakeExtensionOptions } from "./get-extension-fake";
+import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
 
-type Callback = (dis: DiContainers) => void | Promise<void>;
+type Callback = (di: DiContainer) => void | Promise<void>;
 
-type EnableExtensions<T> = (...extensions: T[]) => void;
-type DisableExtensions<T> = (...extensions: T[]) => void;
+type LensWindowWithHelpers = LensWindow & { rendered: RenderResult; di: DiContainer };
 
 export interface ApplicationBuilder {
-  dis: DiContainers;
+  mainDi: DiContainer;
   setEnvironmentToClusterFrame: () => ApplicationBuilder;
 
   extensions: {
-    renderer: {
-      enable: EnableExtensions<LensRendererExtension>;
-      disable: DisableExtensions<LensRendererExtension>;
-    };
+    enable: (...extensions: FakeExtensionOptions[]) => void;
+    disable: (...extensions: FakeExtensionOptions[]) => void;
 
-    main: {
-      enable: EnableExtensions<LensMainExtension>;
-      disable: DisableExtensions<LensMainExtension>;
-    };
+    get: (id: string) => {
+      main: LensMainExtension;
 
-    enable: (...extensions: { renderer: LensRendererExtension; main: LensMainExtension }[]) => void;
-    disable: (...extensions: { renderer: LensRendererExtension; main: LensMainExtension }[]) => void;
+      applicationWindows: Record<string, LensRendererExtension> & {
+        only: LensRendererExtension;
+      };
+    };
+  };
+
+  applicationWindow: {
+    closeAll: () => void;
+    only: LensWindowWithHelpers;
+    get: (id: string) => LensWindowWithHelpers;
+    getAll: () => LensWindowWithHelpers[];
+    create: (id: string) => LensWindowWithHelpers;
   };
 
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
-  beforeRender: (callback: Callback) => ApplicationBuilder;
+  beforeWindowStart: (callback: Callback) => ApplicationBuilder;
+
+  startHidden: () => Promise<void>;
   render: () => Promise<RenderResult>;
 
   tray: {
@@ -116,15 +127,10 @@ export interface ApplicationBuilder {
   };
 
   select: {
-    openMenu: (id: string) => ({ selectOption: (labelText: string) => void });
+    openMenu: (id: string) => { selectOption: (labelText: string) => void };
     selectOption: (menuId: string, labelText: string) => void;
     getValue: (menuId: string) => string;
   };
-}
-
-interface DiContainers {
-  rendererDi: DiContainer;
-  mainDi: DiContainer;
 }
 
 interface Environment {
@@ -137,64 +143,22 @@ export const getApplicationBuilder = () => {
     doGeneralOverrides: true,
   });
 
+  mainDi.register(mainExtensionsStateInjectable);
+
   const overrideChannelsForWindow = overrideChannels(mainDi);
 
-  const rendererDi = getRendererDi({
-    doGeneralOverrides: true,
-  });
-
-  overrideChannelsForWindow(rendererDi);
-
-  const dis = { rendererDi, mainDi };
-
-  const clusterStoreStub = {
-    provideInitialFromMain: () => {},
-    getById: (): null => null,
-  } as unknown as ClusterStore;
-
-  rendererDi.override(clusterStoreInjectable, () => clusterStoreStub);
-  rendererDi.override(storesAndApisCanBeCreatedInjectable, () => true);
-  mainDi.override(clusterStoreInjectable, () => clusterStoreStub);
-
   const beforeApplicationStartCallbacks: Callback[] = [];
-  const beforeRenderCallbacks: Callback[] = [];
-
-  const rendererExtensionsState = observable.set<LensRendererExtension>();
-  const mainExtensionsState = observable.set<LensMainExtension>();
-
-  rendererDi.override(subscribeStoresInjectable, () => () => () => {});
-
-  const environments = {
-    application: {
-      RootComponent: RootFrame,
-
-      onAllowKubeResource: () => {
-        throw new Error(
-          "Tried to allow kube resource when environment is not cluster frame.",
-        );
-      },
-    } as Environment,
-
-    clusterFrame: {
-      RootComponent: ClusterFrame,
-      onAllowKubeResource: () => {},
-    } as Environment,
-  };
+  const beforeWindowStartCallbacks: Callback[] = [];
 
   let environment = environments.application;
 
-  rendererDi.override(
-    currentlyInClusterFrameInjectable,
-    () => environment === environments.clusterFrame,
-  );
+  mainDi.override(mainExtensionsInjectable, (di) => {
+    const mainExtensionsState = di.inject(mainExtensionsStateInjectable);
 
-  rendererDi.override(rendererExtensionsInjectable, () =>
-    computed(() => [...rendererExtensionsState]),
-  );
-
-  mainDi.override(mainExtensionsInjectable, () =>
-    computed(() => [...mainExtensionsState]),
-  );
+    return computed(() =>
+      [...mainExtensionsState.values()],
+    );
+  });
 
   let trayMenuIconPath: string;
 
@@ -209,60 +173,135 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  let allowedResourcesState: KubeResource[];
-  let rendered: RenderResult;
+  const allowedResourcesState = observable.array<KubeResource>();
 
-  const enableExtensionsFor = <T extends ObservableSet>(
-    extensionState: T,
-    di: DiContainer,
-  ) => {
-    const getExtension = (extension: LensExtension) =>
-      di.inject(extensionInjectable, extension);
+  const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
 
-    return (...extensionInstances: LensExtension[]) => {
-      const addAndEnableExtensions = () => {
-        extensionInstances.forEach(instance => {
-          const extension = getExtension(instance);
+  const createElectronWindowFake: CreateElectronWindow = (configuration) => {
+    const windowId = configuration.id;
 
-          extension.register();
-        });
+    const windowDi = getRendererDi({ doGeneralOverrides: true });
 
-        runInAction(() => {
-          extensionInstances.forEach((extension) => {
-            extensionState.add(extension);
-          });
-        });
-      };
+    overrideChannelsForWindow(windowDi, windowId);
 
-      if (rendered) {
-        addAndEnableExtensions();
-      } else {
-        builder.beforeRender(addAndEnableExtensions);
-      }
+    windowDi.register(rendererExtensionsStateInjectable);
+
+    windowDi.override(
+      currentlyInClusterFrameInjectable,
+      () => environment === environments.clusterFrame,
+    );
+
+    windowDi.override(rendererExtensionsInjectable, (di) => {
+      const rendererExtensionState = di.inject(rendererExtensionsStateInjectable);
+
+      return computed(() => [...rendererExtensionState.values()]);
+    });
+
+    let rendered: RenderResult;
+
+    windowHelpers.set(windowId, { di: windowDi, getRendered: () => rendered });
+
+    return {
+      show: () => {},
+      close: () => {},
+      loadFile: async () => {},
+      loadUrl: async () => {
+        for (const callback of beforeWindowStartCallbacks) {
+          await callback(windowDi);
+        }
+
+        const startFrame = windowDi.inject(startFrameInjectable);
+
+        await startFrame();
+
+        const history = windowDi.inject(historyInjectable);
+
+        const render = renderFor(windowDi);
+
+        rendered = render(
+          <Router history={history}>
+            <environment.RootComponent />
+          </Router>,
+        );
+      },
+
+      send: (arg) => {
+        const sendFake = mainDi.inject(sendToChannelInElectronBrowserWindowInjectable) as any;
+
+        sendFake(windowId, null, arg);
+      },
+
+      reload: () => {
+        throw new Error("Tried to reload application window which is not implemented yet.");
+      },
     };
   };
 
-  const enableRendererExtension = enableExtensionsFor(rendererExtensionsState, rendererDi);
-  const enableMainExtension = enableExtensionsFor(mainExtensionsState, mainDi);
-  const disableRendererExtension = disableExtensionsFor(rendererExtensionsState, rendererDi);
-  const disableMainExtension = disableExtensionsFor(mainExtensionsState, mainDi);
+  mainDi.override(createElectronWindowInjectable, () => createElectronWindowFake);
 
-  const selectOptionFor = (menuId: string) => (labelText: string) => {
-    const menuOptions = rendered.baseElement.querySelector<HTMLElement>(
-      `.${menuId}-options`,
-    );
-
-    assert(menuOptions, `Could not find select options for menu with ID "${menuId}"`);
-
-    const option = queryByText(menuOptions, labelText);
-
-    assert(option, `Could not find select option with label "${labelText}" for menu with ID "${menuId}"`);
-
-    userEvent.click(option);
-  };
+  let applicationHasStarted = false;
 
   const builder: ApplicationBuilder = {
-    dis,
+    mainDi,
+
+    applicationWindow: {
+      closeAll: () => {
+        const closeAll = mainDi.inject(closeAllWindowsInjectable);
+
+        closeAll();
+
+        document.documentElement.innerHTML = "";
+      },
+
+      get only() {
+        const applicationWindows = builder.applicationWindow.getAll();
+
+        if (applicationWindows.length > 1) {
+          throw new Error(
+            "Tried to get only application window when there are multiple windows.",
+          );
+        }
+
+        const applicationWindow = first(applicationWindows);
+
+        if (!applicationWindow) {
+          throw new Error(
+            "Tried to get only application window when there are no windows.",
+          );
+        }
+
+        return applicationWindow;
+      },
+
+      getAll: () =>
+        mainDi
+          .injectMany(applicationWindowInjectionToken)
+          .map(toWindowWithHelpersFor(windowHelpers)),
+
+      get: (id) => {
+        const applicationWindows = builder.applicationWindow.getAll();
+
+        const applicationWindow = applicationWindows.find(
+          (window) => window.id === id,
+        );
+
+        if (!applicationWindow) {
+          throw new Error(`Tried to get application window with ID "${id}" but it was not found.`);
+        }
+
+        return applicationWindow;
+      },
+
+      create: (id) => {
+        const createApplicationWindow = mainDi.inject(
+          createApplicationWindowInjectable,
+        );
+
+        createApplicationWindow(id);
+
+        return builder.applicationWindow.get(id);
+      },
+    },
 
     applicationMenu: {
       click: (path: string) => {
@@ -340,29 +379,39 @@ export const getApplicationBuilder = () => {
 
     preferences: {
       close: () => {
+        const rendered = builder.applicationWindow.only.rendered;
+
         const link = rendered.getByTestId("close-preferences");
 
         fireEvent.click(link);
       },
 
       navigate: () => {
-        const navigateToPreferences = rendererDi.inject(navigateToPreferencesInjectable);
+        const windowDi = builder.applicationWindow.only.di;
+
+        const navigateToPreferences = windowDi.inject(
+          navigateToPreferencesInjectable,
+        );
 
         navigateToPreferences();
       },
 
       navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => {
-        const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
+        const windowDi = builder.applicationWindow.only.di;
+
+        const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
 
         navigateToRoute(route, params);
       },
 
       navigation: {
         click: (id: string) => {
+          const { di: windowDi, rendered } = builder.applicationWindow.only;
+
           const link = rendered.queryByTestId(`tab-link-for-${id}`);
 
           if (!link) {
-            const preferencesNavigationItems = rendererDi.inject(
+            const preferencesNavigationItems = windowDi.inject(
               preferenceNavigationItemsInjectable,
             );
 
@@ -382,7 +431,11 @@ export const getApplicationBuilder = () => {
 
     helmCharts: {
       navigate: (parameters) => {
-        const navigateToHelmCharts = rendererDi.inject(navigateToHelmChartsInjectable);
+        const windowDi = builder.applicationWindow.only.di;
+
+        const navigateToHelmCharts = windowDi.inject(
+          navigateToHelmChartsInjectable,
+        );
 
         navigateToHelmCharts(parameters);
       },
@@ -391,81 +444,129 @@ export const getApplicationBuilder = () => {
     setEnvironmentToClusterFrame: () => {
       environment = environments.clusterFrame;
 
-      allowedResourcesState = observable.array();
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(allowedResourcesInjectable, () =>
+          computed(() => new Set([...allowedResourcesState])),
+        );
 
-      rendererDi.override(allowedResourcesInjectable, () =>
-        computed(() => new Set([...allowedResourcesState])),
-      );
+        const clusterStub = {
+          accessibleNamespaces: [],
+          isAllowedResource: isAllowedResource(allowedResourcesState),
+        } as unknown as Cluster;
 
-      const clusterStub = {
-        accessibleNamespaces: [],
-        isAllowedResource: isAllowedResource(allowedResourcesState),
-      } as unknown as Cluster;
+        windowDi.override(activeKubernetesClusterInjectable, () =>
+          computed(() => catalogEntityFromCluster(clusterStub)),
+        );
 
-      rendererDi.override(activeKubernetesClusterInjectable, () =>
-        computed(() => catalogEntityFromCluster(clusterStub)),
-      );
+        // TODO: Figure out a way to remove this stub.
+        const namespaceStoreStub = {
+          isLoaded: true,
+          contextNamespaces: [],
+          contextItems: [],
+          api: {
+            kind: "Namespace",
+          },
+          items: [],
+          selectNamespaces: () => {},
+          getByPath: () => undefined,
+          pickOnlySelected: () => [],
+          isSelectedAll: () => false,
+          getTotalCount: () => 0,
+        } as unknown as NamespaceStore;
 
-      // TODO: Figure out a way to remove this stub.
-      const namespaceStoreStub = {
-        isLoaded: true,
-        contextNamespaces: [],
-        contextItems: [],
-        api: {
-          kind: "Namespace",
-        },
-        items: [],
-        selectNamespaces: () => {},
-        getByPath: () => undefined,
-        pickOnlySelected: () => [],
-        isSelectedAll: () => false,
-        getTotalCount: () => 0,
-      } as unknown as NamespaceStore;
+        const clusterFrameContextFake = new ClusterFrameContext(
+          clusterStub,
 
-      const clusterFrameContextFake = new ClusterFrameContext(
-        clusterStub,
+          {
+            namespaceStore: namespaceStoreStub,
+          },
+        );
 
-        {
-          namespaceStore: namespaceStoreStub,
-        },
-      );
+        windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
+        windowDi.override(hostedClusterInjectable, () => clusterStub);
+        windowDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
+        windowDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
 
-      rendererDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
-      rendererDi.override(hostedClusterInjectable, () => clusterStub);
-      rendererDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
-      rendererDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
-
-      // Todo: get rid of global state.
-      KubeObjectStore.defaultContext.set(clusterFrameContextFake);
+        // Todo: get rid of global state.
+        KubeObjectStore.defaultContext.set(clusterFrameContextFake);
+      });
 
       return builder;
     },
 
     extensions: {
-      renderer: {
-        enable: enableRendererExtension,
-        disable: disableRendererExtension,
-      },
+      get: (id: string) => {
+        const windowInstances = pipeline(
+          builder.applicationWindow.getAll(),
 
-      main: {
-        enable: enableMainExtension,
-        disable: disableMainExtension,
+          map((window): [string, LensRendererExtension] => [
+            window.id,
+            findExtensionInstance(window.di, rendererExtensionsInjectable, id),
+          ]),
+
+          items => Object.fromEntries(items),
+        );
+
+        return {
+          main: findExtensionInstance(mainDi, mainExtensionsInjectable, id),
+
+          applicationWindows: {
+            get only() {
+              return findExtensionInstance(
+                builder.applicationWindow.only.di,
+                rendererExtensionsInjectable,
+                id,
+              );
+            },
+
+            ...windowInstances,
+          },
+        };
       },
 
       enable: (...extensions) => {
-        const rendererExtensions = extensions.map(extension => extension.renderer);
-        const mainExtensions = extensions.map(extension => extension.main);
+        builder.beforeWindowStart((windowDi) => {
+          const rendererExtensionInstances = extensions.map((options) =>
+            getExtensionFakeForRenderer(
+              windowDi,
+              options.id,
+              options.name,
+              options.rendererOptions || {},
+            ),
+          );
 
-        enableRendererExtension(...rendererExtensions);
-        enableMainExtension(...mainExtensions);
+          rendererExtensionInstances.forEach(
+            enableExtensionFor(windowDi, rendererExtensionsStateInjectable),
+          );
+        });
+
+        builder.beforeApplicationStart((mainDi) => {
+          const mainExtensionInstances = extensions.map((extension) =>
+            getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
+          );
+
+          mainExtensionInstances.forEach(
+            enableExtensionFor(mainDi, mainExtensionsStateInjectable),
+          );
+        });
       },
 
       disable: (...extensions) => {
-        const rendererExtensions = extensions.map(extension => extension.renderer);
-        const mainExtensions = extensions.map(extension => extension.main);
+        builder.beforeWindowStart(windowDi => {
+          extensions
+            .map((ext) => ext.id)
+            .forEach(
+              disableExtensionFor(windowDi, rendererExtensionsStateInjectable),
+            );
+        });
 
-        disableRendererExtension(...rendererExtensions);
-        disableMainExtension(...mainExtensions);
+        builder.beforeApplicationStart(mainDi => {
+          extensions
+            .map((ext) => ext.id)
+            .forEach(
+              disableExtensionFor(mainDi, mainExtensionsStateInjectable),
+            );
+        });
       },
     },
 
@@ -479,56 +580,72 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    beforeApplicationStart(callback: (dis: DiContainers) => void) {
+    beforeApplicationStart(callback) {
+      if (applicationHasStarted) {
+        callback(mainDi);
+      }
+
       beforeApplicationStartCallbacks.push(callback);
 
       return builder;
     },
 
-    beforeRender(callback: (dis: DiContainers) => void) {
-      beforeRenderCallbacks.push(callback);
+    beforeWindowStart(callback) {
+      const alreadyRenderedWindows = builder.applicationWindow.getAll();
+
+      alreadyRenderedWindows.forEach((window) => {
+        callback(window.di);
+      });
+
+      beforeWindowStartCallbacks.push(callback);
 
       return builder;
+    },
+
+    startHidden: async () => {
+      mainDi.inject(lensProxyPortInjectable).set(42);
+
+      for (const callback of beforeApplicationStartCallbacks) {
+        await callback(mainDi);
+      }
+
+      const startMainApplication = mainDi.inject(
+        startMainApplicationInjectable,
+      );
+
+      await startMainApplication(false);
+
+      applicationHasStarted = true;
     },
 
     async render() {
       mainDi.inject(lensProxyPortInjectable).set(42);
 
       for (const callback of beforeApplicationStartCallbacks) {
-        await callback(dis);
+        await callback(mainDi);
       }
 
-      const startMainApplication = mainDi.inject(startMainApplicationInjectable);
-
-      await startMainApplication();
-
-      const applicationWindow = mainDi.inject(applicationWindowInjectable);
-
-      await applicationWindow.start();
-
-      const startFrame = rendererDi.inject(startFrameInjectable);
-
-      await startFrame();
-
-      for (const callback of beforeRenderCallbacks) {
-        await callback(dis);
-      }
-
-      const history = rendererDi.inject(historyInjectable);
-
-      const render = renderFor(rendererDi);
-
-      rendered = render(
-        <Router history={history}>
-          <environment.RootComponent />
-        </Router>,
+      const startMainApplication = mainDi.inject(
+        startMainApplicationInjectable,
       );
 
-      return rendered;
+      await startMainApplication(true);
+
+      applicationHasStarted = true;
+
+      const applicationWindow = builder.applicationWindow.get(
+        "first-application-window",
+      );
+
+      assert(applicationWindow);
+
+      return applicationWindow.rendered;
     },
 
     select: {
       openMenu: (menuId) => {
+        const rendered = builder.applicationWindow.only.rendered;
+
         const select = rendered.baseElement.querySelector<HTMLElement>(
           `#${menuId}`,
         );
@@ -538,13 +655,15 @@ export const getApplicationBuilder = () => {
         openMenu(select);
 
         return {
-          selectOption: selectOptionFor(menuId),
+          selectOption: selectOptionFor(builder, menuId),
         };
       },
 
-      selectOption: (menuId, labelText) => selectOptionFor(menuId)(labelText),
+      selectOption: (menuId, labelText) => selectOptionFor(builder, menuId)(labelText),
 
       getValue: (menuId) => {
+        const rendered = builder.applicationWindow.only.rendered;
+
         const select = rendered.baseElement.querySelector<HTMLInputElement>(
           `#${menuId}`,
         );
@@ -582,22 +701,134 @@ function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
   ];
 }
 
-const disableExtensionsFor = <T extends ObservableSet>(
-  extensionState: T,
+export const rendererExtensionsStateInjectable = getInjectable({
+  id: "renderer-extensions-state",
+  instantiate: () => observable.map<string, LensRendererExtension>(),
+});
+
+const mainExtensionsStateInjectable = getInjectable({
+  id: "main-extensions-state",
+  instantiate: () => observable.map<string, LensMainExtension>(),
+});
+
+const findExtensionInstance = <T extends LensExtension> (di: DiContainer, injectable: Injectable<IComputedValue<T[]>, any, any>, id: string) => {
+  const instance = di.inject(injectable).get().find(ext => ext.id === id);
+
+  if (!instance) {
+    throw new Error(`Tried to get extension with ID ${id}, but it didn't exist`);
+  }
+
+  return instance;
+};
+
+type ApplicationWindowHelpers = Map<string, { di: DiContainer; getRendered: () => RenderResult }>;
+
+const toWindowWithHelpersFor =
+  (windowHelpers: ApplicationWindowHelpers) => (applicationWindow: LensWindow) => ({
+    ...applicationWindow,
+
+    get rendered() {
+      const helpers = windowHelpers.get(applicationWindow.id);
+
+      if (!helpers) {
+        throw new Error(
+          `Tried to get rendered for application window "${applicationWindow.id}" before it was started.`,
+        );
+      }
+
+      return helpers.getRendered();
+    },
+
+    get di() {
+      const helpers = windowHelpers.get(applicationWindow.id);
+
+      if (!helpers) {
+        throw new Error(
+          `Tried to get di for application window "${applicationWindow.id}" before it was started.`,
+        );
+      }
+
+      return helpers.di;
+    },
+  });
+
+const environments = {
+  application: {
+    RootComponent: RootFrame,
+
+    onAllowKubeResource: () => {
+      throw new Error(
+        "Tried to allow kube resource when environment is not cluster frame.",
+      );
+    },
+  } as Environment,
+
+  clusterFrame: {
+    RootComponent: ClusterFrame,
+    onAllowKubeResource: () => {},
+  } as Environment,
+};
+
+const selectOptionFor = (builder: ApplicationBuilder, menuId: string) => (labelText: string) => {
+  const rendered = builder.applicationWindow.only.rendered;
+
+  const menuOptions = rendered.baseElement.querySelector<HTMLElement>(
+    `.${menuId}-options`,
+  );
+
+  assert(menuOptions, `Could not find select options for menu with ID "${menuId}"`);
+
+  const option = queryByText(menuOptions, labelText);
+
+  assert(option, `Could not find select option with label "${labelText}" for menu with ID "${menuId}"`);
+
+  userEvent.click(option);
+};
+
+const enableExtensionFor = (
   di: DiContainer,
+  stateInjectable: Injectable<ObservableMap<string, any>, any, any>,
 ) => {
-  const getExtension = (instance: LensExtension) =>
-    di.inject(extensionInjectable, instance);
+  const extensionState = di.inject(stateInjectable);
 
-  return (...extensionInstances: LensExtension[]) => {
-    extensionInstances.forEach((instance) => {
-      const extension = getExtension(instance);
+  const getExtension = (extension: LensExtension) =>
+    di.inject(extensionInjectable, extension);
 
-      runInAction(() => {
-        extension.deregister();
+  return (extensionInstance: LensExtension) => {
+    const extension = getExtension(extensionInstance);
 
-        extensionState.delete(instance);
-      });
+    runInAction(() => {
+      extension.register();
+      extensionState.set(extensionInstance.id, extensionInstance);
     });
   };
 };
+
+const disableExtensionFor =
+  (
+    di: DiContainer,
+    stateInjectable: Injectable<ObservableMap<string, any>, unknown, void>,
+  ) =>
+    (id: string) => {
+      const getExtension = (extension: LensExtension) =>
+        di.inject(extensionInjectable, extension);
+
+      const extensionsState = di.inject(stateInjectable);
+
+      const instance = extensionsState.get(id);
+
+      if (!instance) {
+        throw new Error(
+          `Tried to disable extension with ID "${id}", but it wasn't enabled`,
+        );
+      }
+
+      const injectable = getExtension(instance);
+
+      runInAction(() => {
+        injectable.deregister();
+
+        extensionsState.delete(id);
+      });
+    };
+

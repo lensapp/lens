@@ -20,7 +20,7 @@ import { useFakeTime } from "../../common/test-utils/use-fake-time";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 
 describe("installing update", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let quitAndInstallUpdateMock: jest.Mock;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
@@ -29,9 +29,9 @@ describe("installing update", () => {
   beforeEach(() => {
     useFakeTime("2015-10-21T07:28:00Z");
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       quitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
@@ -66,9 +66,9 @@ describe("installing update", () => {
     let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
 
-      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(
+      processCheckingForUpdates = builder.mainDi.inject(
         processCheckingForUpdatesInjectable,
       );
     });
@@ -78,7 +78,7 @@ describe("installing update", () => {
     });
 
     it("shows normal tray icon", () => {
-      expect(applicationBuilder.tray.getIconPath()).toBe(
+      expect(builder.tray.getIconPath()).toBe(
         "/some-static-files-directory/icons/trayIconTemplate.png",
       );
     });
@@ -96,7 +96,7 @@ describe("installing update", () => {
       });
 
       it("shows tray icon for checking for updates", () => {
-        expect(applicationBuilder.tray.getIconPath()).toBe(
+        expect(builder.tray.getIconPath()).toBe(
           "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
         );
       });
@@ -113,7 +113,7 @@ describe("installing update", () => {
         });
 
         it("shows tray icon for normal", () => {
-          expect(applicationBuilder.tray.getIconPath()).toBe(
+          expect(builder.tray.getIconPath()).toBe(
             "/some-static-files-directory/icons/trayIconTemplate.png",
           );
         });
@@ -140,7 +140,7 @@ describe("installing update", () => {
         });
 
         it("still shows tray icon for downloading", () => {
-          expect(applicationBuilder.tray.getIconPath()).toBe(
+          expect(builder.tray.getIconPath()).toBe(
             "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
           );
         });
@@ -159,7 +159,7 @@ describe("installing update", () => {
           });
 
           it("still shows normal tray icon", () => {
-            expect(applicationBuilder.tray.getIconPath()).toBe(
+            expect(builder.tray.getIconPath()).toBe(
               "/some-static-files-directory/icons/trayIconTemplate.png",
             );
           });
@@ -179,7 +179,7 @@ describe("installing update", () => {
           });
 
           it("shows tray icon for update being available", () => {
-            expect(applicationBuilder.tray.getIconPath()).toBe(
+            expect(builder.tray.getIconPath()).toBe(
               "/some-static-files-directory/icons/trayIconUpdateAvailableTemplate.png",
             );
           });
@@ -196,7 +196,7 @@ describe("installing update", () => {
             });
 
             it("shows tray icon for checking for updates", () => {
-              expect(applicationBuilder.tray.getIconPath()).toBe(
+              expect(builder.tray.getIconPath()).toBe(
                 "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
               );
             });
@@ -214,7 +214,7 @@ describe("installing update", () => {
               });
 
               it("shows tray icon for update being available", () => {
-                expect(applicationBuilder.tray.getIconPath()).toBe(
+                expect(builder.tray.getIconPath()).toBe(
                   "/some-static-files-directory/icons/trayIconUpdateAvailableTemplate.png",
                 );
               });
@@ -233,7 +233,7 @@ describe("installing update", () => {
               });
 
               it("shows tray icon for downloading update", () => {
-                expect(applicationBuilder.tray.getIconPath()).toBe(
+                expect(builder.tray.getIconPath()).toBe(
                   "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
                 );
               });

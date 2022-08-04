@@ -24,7 +24,7 @@ describe("downgrading version update", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    applicationBuilder.beforeApplicationStart(mainDi => {
       checkForPlatformUpdatesMock = asyncFn();
 
       mainDi.override(
@@ -36,7 +36,7 @@ describe("downgrading version update", () => {
       mainDi.override(publishIsConfiguredInjectable, () => true);
     });
 
-    mainDi = applicationBuilder.dis.mainDi;
+    mainDi = applicationBuilder.mainDi;
   });
 
   [

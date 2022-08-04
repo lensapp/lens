@@ -48,43 +48,43 @@ describe("showing details for helm release", () => {
     showSuccessNotificationMock = jest.fn();
     showCheckedErrorNotificationMock = jest.fn();
 
-    builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(
         getRandomUpgradeChartTabIdInjectable,
         () => () => "some-tab-id",
       );
 
-      rendererDi.override(
+      windowDi.override(
         showSuccessNotificationInjectable,
         () => showSuccessNotificationMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         showCheckedErrorInjectable,
         () => showCheckedErrorNotificationMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmReleasesInjectable,
         () => callForHelmReleasesMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmReleaseInjectable,
         () => callForHelmReleaseMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmReleaseConfigurationInjectable,
         () => callForHelmReleaseConfigurationMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmReleaseUpdateInjectable,
         () => callForHelmReleaseUpdateMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         namespaceStoreInjectable,
         () =>
           ({
@@ -105,9 +105,9 @@ describe("showing details for helm release", () => {
 
     describe("when navigating to helm releases", () => {
       beforeEach(() => {
-        const rendererDi = builder.dis.rendererDi;
+        const windowDi = builder.applicationWindow.only.di;
 
-        const navigateToHelmReleases = rendererDi.inject(
+        const navigateToHelmReleases = windowDi.inject(
           navigateToHelmReleasesInjectable,
         );
 

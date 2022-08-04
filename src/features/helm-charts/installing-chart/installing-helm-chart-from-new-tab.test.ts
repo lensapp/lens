@@ -23,7 +23,6 @@ import type { CallForHelmChartReadme } from "../../../renderer/components/+helm-
 import callForHelmChartReadmeInjectable from "../../../renderer/components/+helm-charts/details/readme/call-for-helm-chart-readme.injectable";
 import type { CallForHelmChartVersions } from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
 import callForHelmChartVersionsInjectable from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
-import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
@@ -33,7 +32,6 @@ import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;
-  let rendererDi: DiContainer;
   let callForHelmChartsMock: AsyncFnMock<CallForHelmCharts>;
   let callForHelmChartVersionsMock: AsyncFnMock<CallForHelmChartVersions>;
   let callForHelmChartReadmeMock: AsyncFnMock<CallForHelmChartReadme>;
@@ -43,9 +41,7 @@ describe("installing helm chart from new tab", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    rendererDi = builder.dis.rendererDi;
-
-    overrideFsWithFakes(rendererDi);
+    builder.setEnvironmentToClusterFrame();
 
     callForHelmChartsMock = asyncFn();
     callForHelmChartVersionsMock = asyncFn();
@@ -53,41 +49,41 @@ describe("installing helm chart from new tab", () => {
     callForHelmChartValuesMock = asyncFn();
     callForCreateHelmReleaseMock = asyncFn();
 
-    builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
       );
 
-      rendererDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
+      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartsInjectable,
         () => callForHelmChartsMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartVersionsInjectable,
         () => callForHelmChartVersionsMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartReadmeInjectable,
         () => callForHelmChartReadmeMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartValuesInjectable,
         () => callForHelmChartValuesMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForCreateHelmReleaseInjectable,
         () => callForCreateHelmReleaseMock,
       );
 
       // TODO: Replace store mocking with mock for the actual side-effect (where the namespaces are coming from)
-      rendererDi.override(
+      windowDi.override(
         namespaceStoreInjectable,
         () =>
           ({
@@ -100,31 +96,32 @@ describe("installing helm chart from new tab", () => {
           } as unknown as NamespaceStore),
       );
 
-      rendererDi.override(getRandomInstallChartTabIdInjectable, () =>
+      windowDi.override(getRandomInstallChartTabIdInjectable, () =>
         jest
           .fn(() => "some-irrelevant-tab-id")
           .mockReturnValueOnce("some-first-tab-id")
           .mockReturnValueOnce("some-second-tab-id"),
       );
     });
-
-    builder.setEnvironmentToClusterFrame();
   });
 
   describe("given tab for installing chart was not previously opened and application is started, when navigating to helm charts", () => {
     let rendered: RenderResult;
+    let windowDi: DiContainer;
 
     beforeEach(async () => {
       rendered = await builder.render();
+
+      windowDi = builder.applicationWindow.only.di;
 
       builder.helmCharts.navigate({
         chartName: "some-name",
         repo: "some-repository",
       });
 
-      const writeJsonFile = rendererDi.inject(writeJsonFileInjectable);
+      const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
-      writeJsonFile(
+      await writeJsonFile(
         "/some-directory-for-lens-local-storage/some-cluster-id.json",
         {
           dock: {
@@ -135,7 +132,7 @@ describe("installing helm chart from new tab", () => {
         },
       );
 
-      const dockStore = rendererDi.inject(dockStoreInjectable);
+      const dockStore = windowDi.inject(dockStoreInjectable);
 
       // TODO: Make TerminalWindow unit testable to allow realistic behaviour
       dockStore.closeTab("terminal");
@@ -211,7 +208,7 @@ describe("installing helm chart from new tab", () => {
       await callForHelmChartReadmeMock.resolve("some-readme");
     });
 
-    it("renders", () => {
+    fit("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
@@ -435,7 +432,7 @@ describe("installing helm chart from new tab", () => {
               });
 
               it("shows the details of installed release", () => {
-                const currentPath = rendererDi
+                const currentPath = windowDi
                   .inject(currentPathInjectable)
                   .get();
 
@@ -723,7 +720,7 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("stores the selected version", async () => {
-              const readJsonFile = rendererDi.inject(readJsonFileInjectable);
+              const readJsonFile = windowDi.inject(readJsonFileInjectable);
 
               const actual = await readJsonFile(
                 "/some-directory-for-lens-local-storage/some-cluster-id.json",
@@ -800,7 +797,7 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("stores the selected namespace", async () => {
-              const readJsonFile = rendererDi.inject(readJsonFileInjectable);
+              const readJsonFile = windowDi.inject(readJsonFileInjectable);
 
               const actual = await readJsonFile(
                 "/some-directory-for-lens-local-storage/some-cluster-id.json",
@@ -913,7 +910,7 @@ describe("installing helm chart from new tab", () => {
           });
 
           it("stores the changed configuration", async () => {
-            const readJsonFile = rendererDi.inject(readJsonFileInjectable);
+            const readJsonFile = windowDi.inject(readJsonFileInjectable);
 
             const actual = await readJsonFile(
               "/some-directory-for-lens-local-storage/some-cluster-id.json",
@@ -981,7 +978,7 @@ describe("installing helm chart from new tab", () => {
           });
 
           it("stores the changed custom name", async () => {
-            const readJsonFile = rendererDi.inject(readJsonFileInjectable);
+            const readJsonFile = windowDi.inject(readJsonFileInjectable);
 
             const actual = await readJsonFile(
               "/some-directory-for-lens-local-storage/some-cluster-id.json",

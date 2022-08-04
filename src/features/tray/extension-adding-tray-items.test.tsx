@@ -6,7 +6,6 @@ import type { IObservableValue } from "mobx";
 import { computed, runInAction, observable } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getExtensionFakeFor } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("preferences: extension adding tray items", () => {
   describe("when extension with tray items is enabled", () => {
@@ -22,13 +21,11 @@ describe("preferences: extension adding tray items", () => {
 
       builder.preferences.navigate();
 
-      const getExtensionFake = getExtensionFakeFor(builder);
-
       someObservableForVisibility = observable.box(false);
       someObservableForEnabled = observable.box(false);
       someObservableLabel = observable.box("Some label");
 
-      const testExtension = getExtensionFake({
+      const testExtension = {
         id: "some-extension-id",
         name: "some-extension",
 
@@ -82,7 +79,7 @@ describe("preferences: extension adding tray items", () => {
             },
           ],
         },
-      });
+      };
 
       builder.extensions.enable(testExtension);
     });

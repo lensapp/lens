@@ -19,15 +19,12 @@ import callForHelmChartReadmeInjectable from "../../../renderer/components/+helm
 import type { CallForHelmChartVersions } from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
 import callForHelmChartVersionsInjectable from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
 import { flushPromises } from "../../../common/test-utils/flush-promises";
-import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
-import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("opening dock tab for installing helm chart", () => {
   let builder: ApplicationBuilder;
-  let rendererDi: DiContainer;
   let callForHelmChartsMock: AsyncFnMock<CallForHelmCharts>;
   let callForHelmChartVersionsMock: AsyncFnMock<CallForHelmChartVersions>;
   let callForHelmChartReadmeMock: AsyncFnMock<CallForHelmChartReadme>;
@@ -36,49 +33,45 @@ describe("opening dock tab for installing helm chart", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    rendererDi = builder.dis.rendererDi;
-
-    overrideFsWithFakes(rendererDi);
-
     callForHelmChartsMock = asyncFn();
     callForHelmChartVersionsMock = asyncFn();
     callForHelmChartReadmeMock = asyncFn();
     callForHelmChartValuesMock = jest.fn();
 
-    builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
       );
 
-      rendererDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
+      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartsInjectable,
         () => callForHelmChartsMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartVersionsInjectable,
         () => callForHelmChartVersionsMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartReadmeInjectable,
         () => callForHelmChartReadmeMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForHelmChartValuesInjectable,
         () => callForHelmChartValuesMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         callForCreateHelmReleaseInjectable,
         () => jest.fn(),
       );
 
-      rendererDi.override(getRandomInstallChartTabIdInjectable, () =>
+      windowDi.override(getRandomInstallChartTabIdInjectable, () =>
         jest
           .fn(() => "some-irrelevant-tab-id")
           .mockReturnValueOnce("some-tab-id"),
@@ -96,7 +89,9 @@ describe("opening dock tab for installing helm chart", () => {
 
       builder.helmCharts.navigate();
 
-      const dockStore = rendererDi.inject(dockStoreInjectable);
+      const windowDi = builder.applicationWindow.only.di;
+
+      const dockStore = windowDi.inject(dockStoreInjectable);
 
       // TODO: Make TerminalWindow unit testable to allow realistic behaviour
       dockStore.closeTab("terminal");

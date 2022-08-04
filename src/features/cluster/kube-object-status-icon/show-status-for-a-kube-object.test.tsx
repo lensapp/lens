@@ -32,8 +32,6 @@ describe("show status for a kube object", () => {
 
     builder = getApplicationBuilder();
 
-    const rendererDi = builder.dis.rendererDi;
-
     infoStatusIsShown = false;
 
     const infoStatusInjectable = getInjectable({
@@ -95,34 +93,36 @@ describe("show status for a kube object", () => {
       }),
     });
 
-    rendererDi.register(
-      testRouteInjectable,
-      testRouteComponentInjectable,
-      infoStatusInjectable,
-      warningStatusInjectable,
-      criticalStatusInjectable,
-      someAtomInjectable,
-    );
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.register(
+        testRouteInjectable,
+        testRouteComponentInjectable,
+        infoStatusInjectable,
+        warningStatusInjectable,
+        criticalStatusInjectable,
+        someAtomInjectable,
+      );
+    });
 
     builder.setEnvironmentToClusterFrame();
   });
 
   describe("given application starts and in test page", () => {
-    let rendererDi: DiContainer;
+    let windowDi: DiContainer;
     let rendered: RenderResult;
     let rerenderParent: () => void;
 
     beforeEach(async () => {
       rendered = await builder.render();
 
-      rendererDi = builder.dis.rendererDi;
+      windowDi = builder.applicationWindow.only.di;
 
-      const someAtom = rendererDi.inject(someAtomInjectable);
+      const someAtom = windowDi.inject(someAtomInjectable);
 
       rerenderParent = rerenderParentFor(someAtom);
 
-      const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
-      const testRoute = rendererDi.inject(testRouteInjectable);
+      const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+      const testRoute = windowDi.inject(testRouteInjectable);
 
       navigateToRoute(testRoute);
     });
@@ -141,7 +141,7 @@ describe("show status for a kube object", () => {
 
     describe("when status for irrelevant kube object kind emerges", () => {
       beforeEach(() => {
-        rendererDi.register(statusForIrrelevantKubeObjectKindInjectable);
+        windowDi.register(statusForIrrelevantKubeObjectKindInjectable);
 
         rerenderParent();
       });
@@ -161,7 +161,7 @@ describe("show status for a kube object", () => {
 
     describe("when status for irrelevant kube object api version emerges", () => {
       beforeEach(() => {
-        rendererDi.register(statusForIrrelevantKubeObjectApiVersionInjectable);
+        windowDi.register(statusForIrrelevantKubeObjectApiVersionInjectable);
 
         rerenderParent();
       });

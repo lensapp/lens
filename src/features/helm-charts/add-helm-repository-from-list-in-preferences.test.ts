@@ -17,7 +17,7 @@ import showErrorNotificationInjectable from "../../renderer/components/notificat
 import type { AsyncResult } from "../../common/utils/async-result";
 
 describe("add helm repository from list in preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
@@ -28,41 +28,33 @@ describe("add helm repository from list in preferences", () => {
   let callForPublicHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();
     callForPublicHelmRepositoriesMock = asyncFn();
+    showSuccessNotificationMock = jest.fn();
+    showErrorNotificationMock = jest.fn();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
-      showSuccessNotificationMock = jest.fn();
-
-      rendererDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
-
-      showErrorNotificationMock = jest.fn();
-
-      rendererDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
-
-      rendererDi.override(
-        callForPublicHelmRepositoriesInjectable,
-        () => callForPublicHelmRepositoriesMock,
-      );
-
-      mainDi.override(
-        getActiveHelmRepositoriesInjectable,
-        () => getActiveHelmRepositoriesMock,
-      );
+    builder.beforeApplicationStart((mainDi) => {
+      mainDi.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
     });
 
-    rendered = await applicationBuilder.render();
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
+      windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
+      windowDi.override(callForPublicHelmRepositoriesInjectable, () => callForPublicHelmRepositoriesMock);
+    });
+
+    rendered = await builder.render();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {
-    beforeEach(async () => {
-      applicationBuilder.preferences.navigate();
-      applicationBuilder.preferences.navigation.click("kubernetes");
+    beforeEach(() => {
+      builder.preferences.navigate();
+      builder.preferences.navigation.click("kubernetes");
     });
 
     it("renders", () => {
@@ -100,7 +92,7 @@ describe("add helm repository from list in preferences", () => {
 
       describe("when select for adding public repositories is clicked", () => {
         beforeEach(() => {
-          applicationBuilder.select.openMenu(
+          builder.select.openMenu(
             "selection-of-active-public-helm-repository",
           );
         });
@@ -113,7 +105,7 @@ describe("add helm repository from list in preferences", () => {
           beforeEach(async () => {
             getActiveHelmRepositoriesMock.mockClear();
 
-            applicationBuilder.select.selectOption(
+            builder.select.selectOption(
               "selection-of-active-public-helm-repository",
               "Some to be added repository",
             );
@@ -207,7 +199,7 @@ describe("add helm repository from list in preferences", () => {
 
               describe("when select for selecting active repositories is clicked", () => {
                 beforeEach(() => {
-                  applicationBuilder.select.openMenu(
+                  builder.select.openMenu(
                     "selection-of-active-public-helm-repository",
                   );
                 });
@@ -221,7 +213,7 @@ describe("add helm repository from list in preferences", () => {
                     execFileMock.mockClear();
                     getActiveHelmRepositoriesMock.mockClear();
 
-                    applicationBuilder.select.selectOption(
+                    builder.select.selectOption(
                       "selection-of-active-public-helm-repository",
                       "Some already active repository",
                     );

@@ -4,7 +4,6 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import { getApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
-import { getExtensionFakeFor } from "../../../../../renderer/components/test-utils/get-extension-fake";
 import React from "react";
 import getRandomIdInjectable from "../../../../../common/utils/get-random-id.injectable";
 import { workloadOverviewDetailInjectionToken } from "../../../../../renderer/components/+workloads-overview/workload-overview-details/workload-overview-detail-injection-token";
@@ -17,16 +16,22 @@ describe("order of workload overview details", () => {
   beforeEach(async () => {
     const builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.unoverride(getRandomIdInjectable);
-      rendererDi.permitSideEffects(getRandomIdInjectable);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.unoverride(getRandomIdInjectable);
+      windowDi.permitSideEffects(getRandomIdInjectable);
+
+      windowDi.register(
+        someCoreItemWithLowOrderNumberInjectable,
+        someCoreItemWithHighOrderNumberInjectable,
+        someCoreItemWithDefaultOrderNumberInjectable,
+      );
     });
 
     builder.setEnvironmentToClusterFrame();
 
     rendered = await builder.render();
 
-    const testExtension = getExtensionFakeFor(builder)({
+    const testExtension = {
       id: "some-extension-id",
       name: "some-extension",
 
@@ -66,16 +71,9 @@ describe("order of workload overview details", () => {
           },
         ],
       },
-    });
+    };
 
     builder.extensions.enable(testExtension);
-
-
-    builder.dis.rendererDi.register(
-      someCoreItemWithLowOrderNumberInjectable,
-      someCoreItemWithHighOrderNumberInjectable,
-      someCoreItemWithDefaultOrderNumberInjectable,
-    );
   });
 
   it("shows items in correct order", () => {

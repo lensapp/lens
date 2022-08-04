@@ -9,30 +9,32 @@ import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 
 describe("preferences - navigation to kubernetes preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ rendererDi, mainDi }) => {
-        rendererDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
-
+      builder.beforeApplicationStart((mainDi) => {
         mainDi.override(
           getActiveHelmRepositoriesInjectable,
           () => async () => ({ callWasSuccessful: true, response: [] }),
         );
       });
 
-      applicationBuilder.beforeRender(() => {
-        applicationBuilder.preferences.navigate();
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
       });
 
-      rendered = await applicationBuilder.render();
+      builder.beforeWindowStart(() => {
+        builder.preferences.navigate();
+      });
+
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -47,7 +49,7 @@ describe("preferences - navigation to kubernetes preferences", () => {
 
     describe("when navigating to kubernetes preferences using navigation", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click("kubernetes");
+        builder.preferences.navigation.click("kubernetes");
       });
 
       it("renders", () => {

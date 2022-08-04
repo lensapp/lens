@@ -18,9 +18,6 @@ import extensionsStoreInjectable from "../extensions/extensions-store/extensions
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../common/cluster-store/cluster-store";
-import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
 import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
@@ -41,7 +38,6 @@ import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.inject
 import { observable, computed } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import appVersionInjectable from "../common/vars/app-version.injectable";
-import provideInitialValuesForSyncBoxesInjectable from "./utils/sync-box/provide-initial-values-for-sync-boxes.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
@@ -189,12 +185,8 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    di.override(clusterStoreInjectable, () => ({ getById: (id): Cluster => ({}) as Cluster }) as ClusterStore);
-
     di.override(setupSystemCaInjectable, () => ({ run: () => {} }));
     di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
-    di.override(provideInitialValuesForSyncBoxesInjectable, () => ({ run: () => {} }));
 
     di.override(defaultShellInjectable, () => "some-default-shell");
 

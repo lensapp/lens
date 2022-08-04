@@ -44,34 +44,34 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
     showSuccessNotificationMock = jest.fn();
     showErrorNotificationMock = jest.fn();
 
-    builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
       );
 
-      rendererDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
+      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 
-      storagesAreReady = controlWhenStoragesAreReady(rendererDi);
+      storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
-      rendererDi.override(
+      windowDi.override(
         showSuccessNotificationInjectable,
         () => showSuccessNotificationMock,
       );
 
-      rendererDi.override(
+      windowDi.override(
         showErrorNotificationInjectable,
         () => showErrorNotificationMock,
       );
 
-      rendererDi.override(getRandomIdForEditResourceTabInjectable, () =>
+      windowDi.override(getRandomIdForEditResourceTabInjectable, () =>
         jest
           .fn(() => "some-irrelevant-random-id")
           .mockReturnValueOnce("some-first-tab-id")
           .mockReturnValueOnce("some-second-tab-id"),
       );
 
-      rendererDi.override(callForResourceInjectable, () => async (selfLink: string) => {
+      windowDi.override(callForResourceInjectable, () => async (selfLink: string) => {
         if (
           [
             "/apis/some-api-version/namespaces/some-uid",
@@ -84,7 +84,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
         return undefined;
       });
 
-      rendererDi.override(callForPatchResourceInjectable, () => async (namespace, ...args) => {
+      windowDi.override(callForPatchResourceInjectable, () => async (namespace, ...args) => {
         if (
           [
             "/apis/some-api-version/namespaces/some-uid",
@@ -103,22 +103,22 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
 
   describe("when navigating to namespaces", () => {
     let rendered: RenderResult;
-    let rendererDi: DiContainer;
+    let windowDi: DiContainer;
 
     beforeEach(async () => {
       rendered = await builder.render();
 
       await storagesAreReady();
 
-      rendererDi = builder.dis.rendererDi;
+      windowDi = builder.applicationWindow.only.di;
 
-      const navigateToNamespaces = rendererDi.inject(
+      const navigateToNamespaces = windowDi.inject(
         navigateToNamespacesInjectable,
       );
 
       navigateToNamespaces();
 
-      const dockStore = rendererDi.inject(dockStoreInjectable);
+      const dockStore = windowDi.inject(dockStoreInjectable);
 
       // TODO: Make TerminalWindow unit testable to allow realistic behaviour
       dockStore.closeTab("terminal");
@@ -168,7 +168,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
             // TODO: Make implementation match the description (tests above)
             const namespaceStub = new Namespace(someNamespaceDataStub);
 
-            const createEditResourceTab = rendererDi.inject(createEditResourceTabInjectable);
+            const createEditResourceTab = windowDi.inject(createEditResourceTabInjectable);
 
             createEditResourceTab(namespaceStub);
           });
@@ -510,7 +510,7 @@ metadata:
               });
 
               it("stores the changed configuration", async () => {
-                const readJsonFile = rendererDi.inject(
+                const readJsonFile = windowDi.inject(
                   readJsonFileInjectable,
                 );
 
@@ -719,7 +719,7 @@ metadata:
                 // TODO: Make implementation match the description
                 const namespaceStub = new Namespace(someOtherNamespaceDataStub);
 
-                const createEditResourceTab = rendererDi.inject(createEditResourceTabInjectable);
+                const createEditResourceTab = windowDi.inject(createEditResourceTabInjectable);
 
                 createEditResourceTab(namespaceStub);
               });

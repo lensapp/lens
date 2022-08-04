@@ -9,17 +9,20 @@ import platformInjectable from "../../common/vars/platform.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
 describe("Command Pallet: keyboard shortcut tests", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("when on macOS", () => {
     beforeEach(async () => {
-      applicationBuilder.dis.rendererDi.override(platformInjectable, () => "darwin");
-      rendered = await applicationBuilder.render();
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(platformInjectable, () => "darwin");
+      });
+
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -83,8 +86,11 @@ describe("Command Pallet: keyboard shortcut tests", () => {
 
   describe("when on linux", () => {
     beforeEach(async () => {
-      applicationBuilder.dis.rendererDi.override(platformInjectable, () => "linux");
-      rendered = await applicationBuilder.render();
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(platformInjectable, () => "linux");
+      });
+
+      rendered = await builder.render();
     });
 
     it("renders", () => {

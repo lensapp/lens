@@ -8,7 +8,6 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import type { TestExtensionRenderer } from "../../../renderer/components/test-utils/get-extension-fake";
-import { getExtensionFakeFor } from "../../../renderer/components/test-utils/get-extension-fake";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
 import React from "react";
 import extensionShouldBeEnabledForClusterFrameInjectable from "../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
@@ -24,13 +23,13 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
 
     builder.setEnvironmentToClusterFrame();
 
-    builder.dis.rendererDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-
-    const getExtensionFake = getExtensionFakeFor(builder);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
+    });
 
     isEnabledForClusterMock = asyncFn();
 
-    const testExtension = getExtensionFake({
+    const testExtension = {
       id: "test-extension-id",
       name: "test-extension",
 
@@ -43,13 +42,14 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
           },
         }],
       },
-    });
-
-    rendererTestExtension = testExtension.renderer;
+    };
 
     rendered = await builder.render();
 
     builder.extensions.enable(testExtension);
+
+    rendererTestExtension =
+      builder.extensions.get("test-extension-id").applicationWindows.only;
   });
 
   describe("given not yet known if extension should be enabled for the cluster, when navigating", () => {

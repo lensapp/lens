@@ -9,7 +9,6 @@ import React from "react";
 import type { TestExtensionRenderer } from "../../../renderer/components/test-utils/get-extension-fake";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getExtensionFakeFor } from "../../../renderer/components/test-utils/get-extension-fake";
 
 describe("reactively disable global pages", () => {
   let builder: ApplicationBuilder;
@@ -20,11 +19,9 @@ describe("reactively disable global pages", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    const getExtensionFake = getExtensionFakeFor(builder);
-
     someObservable = observable.box(false);
 
-    const testExtension = getExtensionFake({
+    const testExtension = {
       id: "test-extension-id",
       name: "test-extension",
 
@@ -37,13 +34,13 @@ describe("reactively disable global pages", () => {
           enabled: computed(() => someObservable.get()),
         }],
       },
-    });
+    };
 
     rendered = await builder.render();
 
     builder.extensions.enable(testExtension);
 
-    rendererTestExtension = testExtension.renderer;
+    rendererTestExtension = builder.extensions.get("test-extension-id").applicationWindows.only;
   });
 
   it("when navigating to the page, does not show the page", () => {

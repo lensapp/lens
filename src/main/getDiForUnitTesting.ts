@@ -17,9 +17,6 @@ import extensionsStoreInjectable from "../extensions/extensions-store/extensions
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../common/cluster-store/cluster-store";
-import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
 import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
@@ -62,9 +59,7 @@ import { observable } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
 import ipcMainInjectable from "./utils/channel/ipc-main/ipc-main.injectable";
-import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
-import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
@@ -144,7 +139,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
-    di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
     overrideOperatingSystem(di);
@@ -269,21 +263,6 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(checkForPlatformUpdatesInjectable, () => () => {
     throw new Error("Tried to check for platform updates without explicit override.");
   });
-
-  di.override(createElectronWindowForInjectable, () => () => ({
-    show: () => {},
-
-    close: () => {},
-
-    send: (arg) => {
-      const sendFake = di.inject(sendToChannelInElectronBrowserWindowInjectable) as any;
-
-      sendFake(null, arg);
-    },
-
-    loadFile: async () => {},
-    loadUrl: async () => {},
-  }));
 
   di.override(
     getElectronAppPathInjectable,
