@@ -12,13 +12,12 @@ import { onLoadOfApplicationInjectionToken } from "./runnable-tokens/on-load-of-
 import { afterApplicationIsLoadedInjectionToken } from "./runnable-tokens/after-application-is-loaded-injection-token";
 import splashWindowInjectable from "./lens-window/splash-window/splash-window.injectable";
 
-import applicationWindowInjectable from "./lens-window/application-window/application-window.injectable";
-import shouldStartHiddenInjectable from "../electron-app/features/should-start-hidden.injectable";
 import openDeepLinkInjectable from "../protocol-handler/lens-protocol-router-main/open-deep-link-for-url/open-deep-link.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { find, map, startsWith, toLower } from "lodash/fp";
 import commandLineArgumentsInjectable from "../utils/command-line-arguments.injectable";
 import waitForElectronToBeReadyInjectable from "../electron-app/features/wait-for-electron-to-be-ready.injectable";
+import createFirstApplicationWindowInjectable from "./lens-window/application-window/create-first-application-window.injectable";
 
 const startMainApplicationInjectable = getInjectable({
   id: "start-main-application",
@@ -27,9 +26,8 @@ const startMainApplicationInjectable = getInjectable({
     const runMany = runManyFor(di);
     const runManySync = runManySyncFor(di);
     const waitForElectronToBeReady = di.inject(waitForElectronToBeReadyInjectable);
-    const applicationWindow = di.inject(applicationWindowInjectable);
+    const createFirstApplicationWindow = di.inject(createFirstApplicationWindowInjectable);
     const splashWindow = di.inject(splashWindowInjectable);
-    const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
     const openDeepLink = di.inject(openDeepLinkInjectable);
     const commandLineArguments = di.inject(commandLineArgumentsInjectable);
 
@@ -38,7 +36,7 @@ const startMainApplicationInjectable = getInjectable({
     const onLoadOfApplication = runMany(onLoadOfApplicationInjectionToken);
     const afterApplicationIsLoaded = runMany(afterApplicationIsLoadedInjectionToken);
 
-    return () => {
+    return (shouldStartWindow: boolean) => {
       // Stuff happening before application is ready needs to be synchronous because of
       // https://github.com/electron/electron/issues/21370
       beforeElectronIsReady();
@@ -48,18 +46,20 @@ const startMainApplicationInjectable = getInjectable({
 
         await beforeApplicationIsLoading();
 
-        if (!shouldStartHidden) {
+        if (shouldStartWindow) {
           await splashWindow.start();
         }
 
         await onLoadOfApplication();
 
-        if (!shouldStartHidden) {
+        if (shouldStartWindow) {
           const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
 
           if (deepLinkUrl) {
             await openDeepLink(deepLinkUrl);
           } else {
+            const applicationWindow = createFirstApplicationWindow();
+
             await applicationWindow.start();
           }
 
