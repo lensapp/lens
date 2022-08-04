@@ -3,14 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { AppEvent } from "../app-event-bus/event-bus";
-import { appEventBus } from "../app-event-bus/event-bus";
+import type { AppEvent, AppEventBus } from "../app-event-bus/event-bus";
 import { assert, Console } from "console";
 import { stdout, stderr } from "process";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import appEventBusInjectable from "../app-event-bus/app-event-bus.injectable";
 
 console = new Console(stdout, stderr);
 
 describe("event bus tests", () => {
+  let appEventBus: AppEventBus;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting();
+
+    appEventBus = di.inject(appEventBusInjectable);
+  });
+
   describe("emit", () => {
     it("emits an event", () => {
       let event: AppEvent | undefined;

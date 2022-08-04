@@ -13,7 +13,7 @@ import { observer } from "mobx-react";
 import path from "path";
 import React from "react";
 import * as uuid from "uuid";
-import { appEventBus } from "../../../common/app-event-bus/event-bus";
+import type { AppEventBus } from "../../../common/app-event-bus/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { isDefined, iter } from "../../utils";
@@ -25,6 +25,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import getCustomKubeConfigDirectoryInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 
 interface Option {
   config: KubeConfig;
@@ -34,6 +35,7 @@ interface Option {
 interface Dependencies {
   getCustomKubeConfigDirectory: (directoryName: string) => string;
   navigateToCatalog: NavigateToCatalog;
+  appEventBus: AppEventBus;
 }
 
 function getContexts(config: KubeConfig): Map<string, Option> {
@@ -59,7 +61,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
   }
 
   componentDidMount() {
-    appEventBus.emit({ name: "cluster-add", action: "start" });
+    this.props.appEventBus.emit({ name: "cluster-add", action: "start" });
   }
 
   @computed get allErrors(): string[] {
@@ -85,7 +87,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
 
   addClusters = action(async () => {
     this.isWaiting = true;
-    appEventBus.emit({ name: "cluster-add", action: "click" });
+    this.props.appEventBus.emit({ name: "cluster-add", action: "click" });
 
     try {
       const absPath = this.props.getCustomKubeConfigDirectory(uuid.v4());
@@ -155,10 +157,8 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
 
 export const AddCluster = withInjectables<Dependencies>(NonInjectedAddCluster, {
   getProps: (di) => ({
-    getCustomKubeConfigDirectory: di.inject(
-      getCustomKubeConfigDirectoryInjectable,
-    ),
-
+    getCustomKubeConfigDirectory: di.inject(getCustomKubeConfigDirectoryInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
+    appEventBus: di.inject(appEventBusInjectable),
   }),
 });
