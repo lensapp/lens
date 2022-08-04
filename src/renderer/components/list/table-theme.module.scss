@@ -1,0 +1,45 @@
+.tableTheme {
+  table {
+    border-spacing: 0;
+    border-top: thin solid var(--hrColor);
+  }
+  
+  thead {
+    border-bottom: thin solid var(--hrColor);
+    color: var(--textColorAccent);
+    padding-top: 7px;
+    height: 33px;
+  }
+  
+  thead tr {
+    margin: 0 var(--margin);
+  }
+  
+  tr {
+    margin: calc(var(--margin) * 1.6) var(--margin);
+  }
+  
+  th {
+    white-space: nowrap;
+    text-align: left;
+    padding: 0 var(--padding);
+    font-weight: 500;
+  }
+  
+  .headIcon {
+    font-weight: normal;
+    color: var(--textColorAccent);
+  }
+  
+  .disabledArrow {
+    opacity: 0.3;
+  }
+  
+  td {
+    padding: 0 var(--padding);
+  }
+  
+  .actions {
+    @apply justify-end;
+  }  
+}

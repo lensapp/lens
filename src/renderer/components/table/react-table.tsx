@@ -4,103 +4,76 @@
  */
 
 import styles from "./react-table.module.scss";
-import React, { useCallback, useMemo } from "react";
-import type { Row, UseTableOptions } from "react-table";
-import { useFlexLayout, useSortBy, useTable } from "react-table";
-import { Icon } from "../icon";
-import { cssNames } from "../../utils";
+import React from "react";
+import {
+  flexRender,
+  useReactTable,
+  getSortedRowModel,
+} from '@tanstack/react-table'
+import type { TableOptions, Table, SortingState } from "@tanstack/react-table";
 
-export interface ReactTableProps<Data extends object> extends UseTableOptions<Data> {
-  headless?: boolean;
+interface TableProps<T> extends TableOptions<T> {
+  className?: string;
 }
 
-export function ReactTable<Data extends object>({ columns, data, headless }: ReactTableProps<Data>) {
-  const defaultColumn = useMemo(
-    () => ({
-      minWidth: 20,
-      width: 100,
-    }),
-    [],
-  );
+export function Table<Data>({ columns, data, getCoreRowModel, className }: TableProps<Data>) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel,
+    state: {
+      sorting,
     },
-    useFlexLayout,
-    useSortBy,
-  );
-
-  const renderRow = useCallback(
-    (row: Row<Data>) => {
-      prepareRow(row);
-
-      return (
-        <div className={styles.tr} key={row.id}>
-          {row.cells.map((cell, index) => (
-            <div
-              {...cell.getCellProps()}
-              key={cell.getCellProps().key}
-              className={cssNames(styles.td, columns[index].accessor)}
-            >
-              {cell.render("Cell")}
-            </div>
-          ))}
-        </div>
-      );
-    },
-    [columns, prepareRow],
-  );
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+  });
 
   return (
-    <div {...getTableProps()} className={styles.table}>
-      {!headless && (
-        <div className={styles.thead}>
-          {headerGroups.map(headerGroup => (
-            <div
-              {...headerGroup.getHeaderGroupProps()}
-              key={headerGroup.getHeaderGroupProps().key}
-              className={styles.tr}
-            >
-              {headerGroup.headers.map(column => (
-                <div
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  key={column.getHeaderProps().key}
-                  className={styles.th}
-                >
-                  {column.render("Header")}
-                  {/* Sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? <Icon material="arrow_drop_down" small/>
-                        : <Icon material="arrow_drop_up" small/>
-                      : !column.disableSortBy && (
-                        <Icon
-                          material="arrow_drop_down"
-                          small
-                          className={styles.disabledArrow}
-                        />
+    <div className={className}>
+      <table>
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th key={header.id}>
+                  {header.isPlaceholder ? null : (
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? styles.sortableColumn
+                          : '',
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
                       )}
-                  </span>
-                </div>
+                      {{
+                        asc: ' 🔼',
+                        desc: ' 🔽',
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
+                  )}
+                </th>
               ))}
-            </div>
+            </tr>
           ))}
-        </div>
-      )}
-
-      <div {...getTableBodyProps()}>
-        {rows.map(renderRow)}
-      </div>
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  );
+  )
 }
