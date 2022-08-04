@@ -4,26 +4,28 @@
  */
 
 import styles from "./list.module.scss";
+import themeStyles from "./table-theme.module.scss";
+
 import React, { useState } from "react";
 import { SearchInput } from "../input";
+import type { TableOptions } from '@tanstack/react-table'
+import { getCoreRowModel } from '@tanstack/react-table'
 
-import type { UseTableOptions } from "react-table";
-import { ReactTable } from "../table/react-table";
+import { Table } from "../table/react-table";
 
-export type SearchFilter<T> = (item: T) => string | number;
+export type SearchFilter<T> = (item: T) => string;
 
-export interface ListProps<T> extends UseTableOptions<any> {
-  items: T[];
+export interface ListProps<T> extends TableOptions<T> {
   filters: SearchFilter<T>[];
   title?: React.ReactNode;
 }
 
-export function List<T>({ columns, data, title, items, filters }: ListProps<T>) {
+export function List<T>({ columns, data, title, filters }: ListProps<T>) {
   const [search, setSearch] = useState<string>("");
   const query = search.toLowerCase();
 
   const filteredData = data.filter((item, index) => (
-    filters.some(getText => String(getText(items[index])).toLowerCase().includes(query))
+    filters.some(getText => String(getText(data[index])).toLowerCase().includes(query))
   ));
 
   return (
@@ -41,7 +43,12 @@ export function List<T>({ columns, data, title, items, filters }: ListProps<T>) 
           />
         </div>
       </div>
-      <ReactTable columns={columns} data={filteredData}/>
+      <Table
+        columns={columns}
+        data={filteredData}
+        getCoreRowModel={getCoreRowModel()}
+        className={themeStyles.tableTheme}
+      />
       {filteredData.length == 0 && (
         <div className={styles.notFound}>No data found</div>
       )}

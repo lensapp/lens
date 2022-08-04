@@ -3,15 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./pods.scss";
+// import "./pods.scss";
 
-import React, { Fragment } from "react";
-import { observer } from "mobx-react";
+import React, { Fragment, HTMLProps } from "react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
-import { cssNames, getConvertedParts, object, stopPropagation } from "../../utils";
+import { cssNames, Disposer, getConvertedParts, object, stopPropagation } from "../../utils";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
@@ -28,6 +28,10 @@ import type { PodStore } from "./store";
 import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import podStoreInjectable from "./store.injectable";
+import { List } from "../list/list";
+import { createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 
 enum columnId {
   name = "name",
@@ -47,10 +51,26 @@ interface Dependencies {
   eventStore: EventStore;
   podStore: PodStore;
   nodeApi: NodeApi;
+  subscribeToStores: SubscribeStores;
 }
+
+const columnHelper = createColumnHelper<Pod>()
 
 @observer
 class NonInjectedPods extends React.Component<Dependencies> {
+  componentDidMount() {
+    const { podStore, eventStore, subscribeToStores } = this.props;
+    const stores = Array.from(new Set([podStore, eventStore]));
+
+    const reactions: Disposer[] = [];
+
+    reactions.push(
+      subscribeToStores(stores),
+    );
+
+    disposeOnUnmount(this, reactions);
+  }
+
   renderState<T extends string>(name: string, ready: boolean, key: string, data: Partial<Record<T, string | number>> | undefined) {
     return data && (
       <>
@@ -99,7 +119,142 @@ class NonInjectedPods extends React.Component<Dependencies> {
       ));
   }
 
+  renderControlledBy(pod: Pod) {
+    const { apiManager, getDetailsUrl } = this.props;
+
+    return pod.getOwnerRefs().map(ref => {
+      const { kind, name } = ref;
+      const detailsLink = getDetailsUrl(apiManager.lookupApiLink(ref, pod));
+
+      return (
+        <Badge
+          flat
+          key={name}
+          className="owner"
+          tooltip={name}
+        >
+          <Link to={detailsLink} onClick={stopPropagation}>
+            {kind}
+          </Link>
+        </Badge>
+      );
+    })
+  }
+
+  renderNodeName(pod: Pod) {
+    const { getDetailsUrl, nodeApi } = this.props;
+
+    return pod.getNodeName() ? (
+      <Badge
+        flat
+        key="node"
+        className="node"
+        tooltip={pod.getNodeName()}
+        expandable={false}
+      >
+        <Link to={getDetailsUrl(nodeApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
+          {pod.getNodeName()}
+        </Link>
+      </Badge>
+    ) : ""
+  }
+
   render() {
+    const { podStore } = this.props;
+
+    const columns = [
+      columnHelper.display({
+        id: "select",
+        header: ({ table }) => (
+          <IndeterminateCheckbox
+            {...{
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            }}
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="px-1">
+            <IndeterminateCheckbox
+              {...{
+                checked: row.getIsSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
+            />
+          </div>
+        ),
+      }),
+      columnHelper.accessor(row => row.getName(), {
+        id: "name",
+        header: "Name",
+        cell: info => info.getValue(),
+      }),
+      columnHelper.display({
+        id: "warning",
+        cell: props => <KubeObjectStatusIcon key="icon" object={props.row.original} />,
+      }),
+      columnHelper.accessor(row => row.getNs(), {
+        id: "namespace",
+        header: "Namespace",
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor(row => this.renderContainersStatus(row), {
+        id: "containers",
+        header: "Containers",
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor(row => row.getRestartsCount(), {
+        id: "restarts",
+        header: "Restarts",
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor(row => this.renderControlledBy(row), {
+        id: "controlledBy",
+        header: "Controlled By",
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor(row => this.renderNodeName(row), {
+        id: "node",
+        header: "Node",
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor(row => row.getQosClass(), {
+        id: "qos",
+        header: "QoS",
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor(row => <KubeObjectAge key="age" object={row} />, {
+        id: "age",
+        header: "Age",
+        cell: info => info.renderValue(),
+      }),
+      columnHelper.accessor(row => row.getStatusMessage(), {
+        id: "status",
+        header: "Status",
+        cell: info => info.getValue(),
+      }),
+    ]
+
+    return (
+      <SiblingsInTabLayout>
+        <List
+          columns={columns}
+          data={podStore.contextItems}
+          title="Pods"
+          filters={[
+            // pod => pod.getSearchFields(),
+            pod => pod.getStatusMessage(),
+            pod => pod.status?.podIP || "",
+            pod => pod.getNodeName() || "",
+          ]}
+          getCoreRowModel={getCoreRowModel()}
+        />
+      </SiblingsInTabLayout>
+    );
+  }
+
+  render1() {
     const { apiManager, getDetailsUrl, podStore, eventStore, nodeApi } = this.props;
 
     return (
@@ -201,5 +356,30 @@ export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
     nodeApi: di.inject(nodeApiInjectable),
     eventStore: di.inject(eventStoreInjectable),
     podStore: di.inject(podStoreInjectable),
+    subscribeToStores: di.inject(subscribeStoresInjectable),
   }),
 });
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = '',
+  ...rest
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null!)
+
+  React.useEffect(() => {
+    if (typeof indeterminate === 'boolean') {
+      ref.current.indeterminate = !rest.checked && indeterminate
+    }
+  }, [ref, indeterminate])
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      className={className}
+      style={{ cursor: "pointer" }}
+      {...rest}
+    />
+  )
+}
