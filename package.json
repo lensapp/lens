@@ -248,7 +248,7 @@
     "mobx-observable-history": "^2.0.3",
     "mobx-react": "^7.5.2",
     "mobx-utils": "^6.0.4",
-    "mock-fs": "^5.1.2",
+    "mock-fs": "^5.1.4",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.34",
     "monaco-editor": "^0.29.1",
