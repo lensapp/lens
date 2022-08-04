@@ -18,6 +18,8 @@ import createKubectlInjectable from "../../main/kubectl/create-kubectl.injectabl
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
 import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { ContextHandler } from "../../main/context-handler/context-handler";
+import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
+import { KubernetesCluster } from "../../common/catalog-entities";
 
 describe("cluster connection status", () => {
   let clusterStore: ClusterStore;
@@ -39,6 +41,37 @@ describe("cluster connection status", () => {
       navigateToClusterView = applicationBuilder.dis.rendererDi.inject(navigateToClusterViewInjectable);
 
       const createCluster = applicationBuilder.dis.mainDi.inject(createClusterInjectable);
+
+      applicationBuilder.dis.rendererDi.inject(catalogEntityRegistryInjectable).updateItems([
+        new KubernetesCluster({
+          metadata: {
+            labels: {},
+            name: "minikube",
+            uid: "some-cluster-id",
+          },
+          spec: {
+            kubeconfigContext: "minikube",
+            kubeconfigPath: "/some/file/path",
+          },
+          status: {
+            phase: "disconnected",
+          },
+        }),
+        new KubernetesCluster({
+          metadata: {
+            labels: {},
+            name: "minikube-2",
+            uid: "some-cluster-id-2",
+          },
+          spec: {
+            kubeconfigContext: "minikube-2",
+            kubeconfigPath: "/some/file/path",
+          },
+          status: {
+            phase: "disconnected",
+          },
+        }),
+      ]);
 
       cluster = createCluster({
         contextName: "minikube",

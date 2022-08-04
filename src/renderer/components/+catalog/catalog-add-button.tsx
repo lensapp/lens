@@ -13,7 +13,9 @@ import { autoBind } from "../../../common/utils";
 import type { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
-import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
+import type { CatalogCategoryRegistry } from "../../../common/catalog";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 
 export interface CatalogAddButtonProps {
   category: CatalogCategory;
@@ -21,12 +23,16 @@ export interface CatalogAddButtonProps {
 
 type CategoryId = string;
 
+interface Dependencies {
+  catalogCategoryRegistry: CatalogCategoryRegistry;
+}
+
 @observer
-export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
+class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps & Dependencies> {
   @observable protected isOpen = false;
   @observable menuItems = new Map<CategoryId, CatalogEntityAddMenu[]>();
 
-  constructor(props: CatalogAddButtonProps) {
+  constructor(props: CatalogAddButtonProps & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -43,7 +49,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   }
 
   get categories() {
-    return catalogCategoryRegistry.filteredItems;
+    return this.props.catalogCategoryRegistry.filteredItems;
   }
 
   @action
@@ -133,3 +139,10 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     );
   }
 }
+
+export const CatalogAddButton = withInjectables<Dependencies, CatalogAddButtonProps>(NonInjectedCatalogAddButton, {
+  getProps: (di, props) => ({
+    ...props,
+    catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
+  }),
+});

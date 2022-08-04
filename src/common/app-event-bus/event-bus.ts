@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { EventEmitter } from "../event-emitter";
+import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import appEventBusInjectable from "./app-event-bus.injectable";
 
 export interface AppEvent {
   name: string;
@@ -12,4 +13,7 @@ export interface AppEvent {
   params?: Record<string, any>;
 }
 
-export const appEventBus = new EventEmitter<[AppEvent]>();
+/**
+ * @deprecated Switch to using appEventBusInjectable instead
+ */
+export const appEventBus = asLegacyGlobalForExtensionApi(appEventBusInjectable);

@@ -5,12 +5,11 @@
 
 import React from "react";
 import fs from "fs";
-import "../../common/catalog-entities/kubernetes-cluster";
 import { ClusterStore } from "../../common/cluster-store/cluster-store";
-import { catalogCategoryRegistry } from "../api/catalog-category-registry";
 import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
 import { loadConfigFromString } from "../../common/kube-helpers";
 import type { OpenDeleteClusterDialog } from "../components/delete-cluster-dialog/open.injectable";
+import type { CatalogCategoryRegistry } from "../../common/catalog";
 
 async function onClusterDelete(clusterId: string, openDeleteClusterDialog: OpenDeleteClusterDialog) {
   const cluster = ClusterStore.getInstance().getById(clusterId);
@@ -31,9 +30,14 @@ async function onClusterDelete(clusterId: string, openDeleteClusterDialog: OpenD
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
   openDeleteClusterDialog: OpenDeleteClusterDialog;
+  catalogCategoryRegistry: CatalogCategoryRegistry;
 }
 
-export function initCatalog({ openCommandDialog, openDeleteClusterDialog }: Dependencies) {
+export function initCatalog({
+  openCommandDialog,
+  openDeleteClusterDialog,
+  catalogCategoryRegistry,
+}: Dependencies) {
   catalogCategoryRegistry
     .getForGroupKind("entity.k8slens.dev", "WebLink")
     ?.on("catalogAddMenu", ctx => {

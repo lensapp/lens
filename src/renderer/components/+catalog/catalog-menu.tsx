@@ -9,21 +9,19 @@ import styles from "./catalog-menu.module.scss";
 import React from "react";
 import type { TreeItemProps } from "@material-ui/lab";
 import { TreeItem, TreeView } from "@material-ui/lab";
-import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";
 import { cssNames } from "../../utils";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
 import { CatalogCategoryLabel } from "./catalog-category-label";
+import type { CatalogCategoryRegistry } from "../../../common/catalog";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 
 export interface CatalogMenuProps {
   activeTab: string | undefined;
   onItemClick: (id: string) => void;
-}
-
-function getCategories() {
-  return catalogCategoryRegistry.filteredItems;
 }
 
 function getCategoryIcon(category: CatalogCategory) {
@@ -44,7 +42,15 @@ function Item(props: TreeItemProps) {
   );
 }
 
-export const CatalogMenu = observer((props: CatalogMenuProps) => {
+interface Dependencies {
+  catalogCategoryRegistry: CatalogCategoryRegistry;
+}
+
+const NonInjectedCatalogMenu = observer(({
+  activeTab = "browse",
+  onItemClick,
+  catalogCategoryRegistry,
+}: CatalogMenuProps & Dependencies) => {
   return (
     // Overwrite Material UI styles with injectFirst https://material-ui.com/guides/interoperability/#controlling-priority-4
     <StylesProvider injectFirst>
@@ -54,13 +60,13 @@ export const CatalogMenu = observer((props: CatalogMenuProps) => {
           defaultExpanded={["catalog"]}
           defaultCollapseIcon={<Icon material="expand_more"/>}
           defaultExpandIcon={<Icon material="chevron_right" />}
-          selected={props.activeTab || "browse"}
+          selected={activeTab}
         >
           <Item
             nodeId="browse"
             label="Browse"
             data-testid="*-tab"
-            onClick={() => props.onItemClick("*")}
+            onClick={() => onItemClick("*")}
           />
           <Item
             nodeId="catalog"
@@ -68,14 +74,14 @@ export const CatalogMenu = observer((props: CatalogMenuProps) => {
             className={cssNames(styles.bordered)}
           >
             {
-              getCategories().map(category => (
+              catalogCategoryRegistry.filteredItems.map(category => (
                 <Item
                   icon={getCategoryIcon(category)}
                   key={category.getId()}
                   nodeId={category.getId()}
                   label={<CatalogCategoryLabel category={category}/>}
                   data-testid={`${category.getId()}-tab`}
-                  onClick={() => props.onItemClick(category.getId())}
+                  onClick={() => onItemClick(category.getId())}
                 />
               ))
             }
@@ -84,4 +90,11 @@ export const CatalogMenu = observer((props: CatalogMenuProps) => {
       </div>
     </StylesProvider>
   );
+});
+
+export const CatalogMenu = withInjectables<Dependencies, CatalogMenuProps>(NonInjectedCatalogMenu, {
+  getProps: (di, props) => ({
+    ...props,
+    catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
+  }),
 });
