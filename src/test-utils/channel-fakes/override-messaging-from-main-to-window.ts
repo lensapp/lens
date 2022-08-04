@@ -3,30 +3,44 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type {  MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
-import type { MessageChannel } from "../../common/utils/channel/message-channel-injection-token";
 import sendToChannelInElectronBrowserWindowInjectable from "../../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
-import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import assert from "assert";
 import { tentativeParseJson } from "../../common/utils/tentative-parse-json";
+import { getOrInsert } from "../../common/utils";
+
+type ListenerSet = Set<MessageChannelListener<any>>;
+type WindowListenerMap = Map<string, ListenerSet>;
+type ListenerFakeMap = Map<string, WindowListenerMap>;
 
 export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
-  const messageChannelListenerFakesForRenderer = new Map<
-    string,
-    Set<MessageChannelListener<MessageChannel<any>>>
-  >();
+  const messageChannelListenerFakesForRenderer: ListenerFakeMap = new Map();
+
+  const getWindowListeners = (channelId: string, windowId: string) => {
+    const channelListeners = getOrInsert<string, WindowListenerMap>(
+      messageChannelListenerFakesForRenderer,
+      channelId,
+      new Map(),
+    );
+
+    return getOrInsert<string, ListenerSet>(
+      channelListeners,
+      windowId,
+      new Set(),
+    );
+  };
 
   mainDi.override(
     sendToChannelInElectronBrowserWindowInjectable,
 
     () =>
       (
+        windowId: string,
         browserWindow,
         { channel: channelId, frameInfo, data = [] }: SendToViewArgs,
       ) => {
-        const listeners =
-          messageChannelListenerFakesForRenderer.get(channelId) || new Set();
+        const windowListeners = getWindowListeners(channelId, windowId);
 
         if (frameInfo) {
           throw new Error(
@@ -40,7 +54,7 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
           );
         }
 
-        if (listeners.size === 0) {
+        if (windowListeners.size === 0) {
           throw new Error(
             `Tried to send message to channel "${channelId}" but there where no listeners. Current channels with listeners: "${[
               ...messageChannelListenerFakesForRenderer.keys(),
@@ -50,40 +64,26 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
 
         const message = tentativeParseJson(data[0]);
 
-        listeners.forEach((listener) => listener.handler(message));
+        windowListeners.forEach((listener) =>
+          listener.handler(message),
+        );
       },
   );
 
-  return (windowDi: DiContainer) => {
+  return (windowDi: DiContainer, windowId: string) => {
     windowDi.override(
       enlistMessageChannelListenerInjectableInRenderer,
 
       () => (listener) => {
-        if (!messageChannelListenerFakesForRenderer.has(listener.channel.id)) {
-          messageChannelListenerFakesForRenderer.set(
-            listener.channel.id,
-            new Set(),
-          );
-        }
-
-        const listeners = messageChannelListenerFakesForRenderer.get(
+        const windowListeners = getWindowListeners(
           listener.channel.id,
+          windowId,
         );
 
-        assert(listeners);
-
-        // TODO: Figure out typing
-        listeners.add(
-          listener as unknown as MessageChannelListener<MessageChannel<any>>,
-        );
+        windowListeners.add(listener);
 
         return () => {
-          // TODO: Figure out typing
-          listeners.delete(
-            listener as unknown as MessageChannelListener<
-              MessageChannel<any>
-            >,
-          );
+          windowListeners.delete(listener);
         };
       },
     );

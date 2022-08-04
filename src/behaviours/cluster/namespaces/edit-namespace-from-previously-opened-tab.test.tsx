@@ -29,17 +29,17 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
 
     callForNamespaceMock = asyncFn();
 
-    builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
       );
 
-      rendererDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
+      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 
-      storagesAreReady = controlWhenStoragesAreReady(rendererDi);
+      storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
-      rendererDi.override(callForResourceInjectable, () => callForNamespaceMock);
+      windowDi.override(callForResourceInjectable, () => callForNamespaceMock);
     });
 
     builder.allowKubeResource("namespaces");
@@ -49,33 +49,35 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      const writeJsonFile = builder.dis.rendererDi.inject(writeJsonFileInjectable);
+      builder.beforeWindowStart(async (windowDi) => {
+        const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
-      await writeJsonFile(
-        "/some-directory-for-lens-local-storage/some-cluster-id.json",
-        {
-          dock: {
-            height: 300,
-            tabs: [
-              {
-                id: "some-first-tab-id",
-                kind: TabKind.EDIT_RESOURCE,
-                title: "Namespace: some-namespace",
-                pinned: false,
+        await writeJsonFile(
+          "/some-directory-for-lens-local-storage/some-cluster-id.json",
+          {
+            dock: {
+              height: 300,
+              tabs: [
+                {
+                  id: "some-first-tab-id",
+                  kind: TabKind.EDIT_RESOURCE,
+                  title: "Namespace: some-namespace",
+                  pinned: false,
+                },
+              ],
+
+              isOpen: true,
+            },
+
+            edit_resource_store: {
+              "some-first-tab-id": {
+                resource: "/apis/some-api-version/namespaces/some-uid",
+                draft: "some-saved-configuration",
               },
-            ],
-
-            isOpen: true,
-          },
-
-          edit_resource_store: {
-            "some-first-tab-id": {
-              resource: "/apis/some-api-version/namespaces/some-uid",
-              draft: "some-saved-configuration",
             },
           },
-        },
-      );
+        );
+      });
 
       rendered = await builder.render();
 

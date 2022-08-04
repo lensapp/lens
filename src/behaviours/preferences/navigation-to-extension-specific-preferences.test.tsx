@@ -7,29 +7,25 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import type { FakeExtensionData, TestExtension } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import type { DiContainer } from "@ogre-tools/injectable";
-import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import extensionPreferencesRouteInjectable from "../../common/front-end-routing/routes/preferences/extension/extension-preferences-route.injectable";
-
+import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("preferences - navigation to extension specific preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeRender(() => {
-        applicationBuilder.preferences.navigate();
+      builder.beforeWindowStart(() => {
+        builder.preferences.navigate();
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -49,13 +45,15 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given multiple extensions with specific preferences, when navigating to extension specific preferences page", () => {
-      beforeEach(async () => {
-        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-        const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
-        const someOtherTestExtension = getRendererExtensionFake(someOtherExtensionStubWithExtensionSpecificPreferenceItems);
+      beforeEach(() => {
+        builder.extensions.enable(
+          extensionStubWithExtensionSpecificPreferenceItems,
+          someOtherExtensionStubWithExtensionSpecificPreferenceItems,
+        );
 
-        await applicationBuilder.extensions.renderer.enable(someTestExtension, someOtherTestExtension);
-        applicationBuilder.preferences.navigation.click("extension-some-test-extension-id");
+        builder.preferences.navigation.click(
+          "extension-some-test-extension-id",
+        );
       });
 
       it("renders", () => {
@@ -76,13 +74,12 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given multiple extensions with and without specific preferences", () => {
-      beforeEach(async () => {
-        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-        const someTestExtension = getRendererExtensionFake(extensionStubWithExtensionSpecificPreferenceItems);
-        const extensionWithoutPreferences = getRendererExtensionFake(extensionStubWithoutPreferences);
-        const extensionWithSpecificTab = getRendererExtensionFake(extensionStubWithShowInPreferencesTab);
-
-        await applicationBuilder.extensions.renderer.enable(someTestExtension, extensionWithoutPreferences, extensionWithSpecificTab);
+      beforeEach(() => {
+        builder.extensions.enable(
+          extensionStubWithExtensionSpecificPreferenceItems,
+          extensionStubWithoutPreferences,
+          extensionStubWithShowInPreferencesTab,
+        );
       });
 
       it("doesn't show link for extension without preferences", () => {
@@ -99,16 +96,8 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("when extension with specific preferences is enabled", () => {
-      let testExtension: TestExtension;
-
       beforeEach(() => {
-        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-
-        testExtension = getRendererExtensionFake(
-          extensionStubWithExtensionSpecificPreferenceItems,
-        );
-
-        applicationBuilder.extensions.renderer.enable(testExtension);
+        builder.extensions.enable(extensionStubWithExtensionSpecificPreferenceItems);
       });
 
       it("renders", () => {
@@ -129,7 +118,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to extension preferences using navigation", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-some-test-extension-id");
+          builder.preferences.navigation.click("extension-some-test-extension-id");
         });
 
         it("renders", () => {
@@ -168,7 +157,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
         describe("when extension is disabled", () => {
           beforeEach(() => {
-            applicationBuilder.extensions.renderer.disable(testExtension);
+            builder.extensions.disable(extensionStubWithExtensionSpecificPreferenceItems);
           });
 
           it("renders", () => {
@@ -180,7 +169,7 @@ describe("preferences - navigation to extension specific preferences", () => {
           });
 
           it("when extension is enabled again, does not show the error message anymore", () => {
-            applicationBuilder.extensions.renderer.enable(testExtension);
+            builder.extensions.enable(extensionStubWithExtensionSpecificPreferenceItems);
 
             expect(rendered.queryByTestId("error-for-extension-not-being-present")).not.toBeInTheDocument();
           });
@@ -189,11 +178,8 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given extension with registered tab", () => {
-      beforeEach(async () => {
-        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-        const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
-
-        await applicationBuilder.extensions.renderer.enable(extension);
+      beforeEach(() => {
+        builder.extensions.enable(extensionStubWithWithRegisteredTab);
       });
 
       it("shows extension tab in general area", () => {
@@ -210,7 +196,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to specific extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+          builder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
         });
         it("renders", () => {
           expect(rendered.container).toMatchSnapshot();
@@ -232,7 +218,7 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
         it("shows page title same as tab title", () => {
           const pageTitle = rendered.queryByTestId("extension-preferences-page-title");
-          const tabs = extensionStubWithWithRegisteredTab.appPreferenceTabs;
+          const tabs = extensionStubWithWithRegisteredTab.rendererOptions?.appPreferenceTabs;
           const tabTitle = tabs && tabs[0].title;
 
           expect(pageTitle?.innerHTML).toBe(tabTitle);
@@ -246,11 +232,8 @@ describe("preferences - navigation to extension specific preferences", () => {
         "tab-link-for-extension-hello-world-tab-page-id-nav-item-logs-extension-tab",
       ];
 
-      beforeEach(async () => {
-        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-        const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTabs);
-
-        await applicationBuilder.extensions.renderer.enable(extension);
+      beforeEach(() => {
+        builder.extensions.enable(extensionStubWithWithRegisteredTabs);
       });
 
       it.each(tabs)("shows '%s' tab in general area", (tab) => {
@@ -261,12 +244,8 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given extensions with tabs having same id", () => {
-      beforeEach(async () => {
-        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-        const extension = getRendererExtensionFake(extensionStubWithWithRegisteredTab);
-        const otherExtension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
-
-        await applicationBuilder.extensions.renderer.enable(extension, otherExtension);
+      beforeEach(() => {
+        builder.extensions.enable(extensionStubWithWithRegisteredTab, extensionStubWithWithSameRegisteredTab);
       });
 
       it("shows tab from the first extension", () => {
@@ -283,7 +262,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to first extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
+          builder.preferences.navigation.click("extension-registered-tab-page-id-nav-item-metrics-extension-tab");
         });
 
         it("renders", () => {
@@ -305,7 +284,7 @@ describe("preferences - navigation to extension specific preferences", () => {
 
       describe("when navigating to second extension tab", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
+          builder.preferences.navigation.click("extension-duplicated-tab-page-id-nav-item-metrics-extension-tab");
         });
 
         it("renders", () => {
@@ -329,27 +308,21 @@ describe("preferences - navigation to extension specific preferences", () => {
 
   describe("when navigating to extension specific tab", () => {
     let rendered: RenderResult;
-    let di: DiContainer;
 
     beforeEach(async () => {
-      di = getDiForUnitTesting({ doGeneralOverrides: true });
+      builder.beforeWindowStart((windowDi) => {
+        const extensionRoute = windowDi.inject(extensionPreferencesRouteInjectable);
 
-      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-      const extension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
-      const otherExtension = getRendererExtensionFake(extensionUsingSomeoneElseTab);
-
-      applicationBuilder.beforeRender(() => {
-        const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
         const params = { parameters: {
           extensionId: "duplicated-tab-page-id",
           tabId: "metrics-extension-tab",
         }};
 
-        applicationBuilder.preferences.navigateTo(extensionRoute, params);
+        builder.preferences.navigateTo(extensionRoute, params);
       });
 
-      await applicationBuilder.extensions.renderer.enable(extension, otherExtension);
-      rendered = await applicationBuilder.render();
+      builder.extensions.enable(extensionStubWithWithSameRegisteredTab, extensionUsingSomeoneElseTab);
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -367,27 +340,20 @@ describe("preferences - navigation to extension specific preferences", () => {
 
   describe("when navigating to someone else extension specific tab", () => {
     let rendered: RenderResult;
-    let di: DiContainer;
 
     beforeEach(async () => {
-      di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-      const extension = getRendererExtensionFake(extensionStubWithWithSameRegisteredTab);
-      const extensionUsingOtherTab = getRendererExtensionFake(extensionUsingSomeoneElseTab);
-
-      applicationBuilder.beforeRender(() => {
-        const extensionRoute = di.inject(extensionPreferencesRouteInjectable);
+      builder.beforeWindowStart((windowDi) => {
+        const extensionRoute = windowDi.inject(extensionPreferencesRouteInjectable);
         const params = { parameters: {
           extensionId: "extension-using-someone-else-tab-id",
           tabId: "metrics-extension-tab",
         }};
 
-        applicationBuilder.preferences.navigateTo(extensionRoute, params);
+        builder.preferences.navigateTo(extensionRoute, params);
       });
 
-      await applicationBuilder.extensions.renderer.enable(extension, extensionUsingOtherTab);
-      rendered = await applicationBuilder.render();
+      builder.extensions.enable(extensionStubWithWithSameRegisteredTab, extensionUsingSomeoneElseTab);
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -396,193 +362,208 @@ describe("preferences - navigation to extension specific preferences", () => {
   });
 });
 
-const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
+const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionOptions = {
   id: "some-test-extension-id",
   name: "some-test-extension-id",
-  appPreferences: [
-    {
-      title: "Some preference item",
-      id: "some-preference-item-id",
 
-      components: {
-        Hint: () => <div data-testid="some-preference-item-hint" />,
-        Input: () => <div data-testid="some-preference-item-input" />,
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "Some preference item",
+        id: "some-preference-item-id",
+
+        components: {
+          Hint: () => <div data-testid="some-preference-item-hint" />,
+          Input: () => <div data-testid="some-preference-item-input" />,
+        },
       },
-    },
 
-    {
-      title: "irrelevant",
-      id: "some-unrelated-preference-item-id",
-      showInPreferencesTab: "some-tab",
+      {
+        title: "irrelevant",
+        id: "some-unrelated-preference-item-id",
+        showInPreferencesTab: "some-tab",
 
-      components: {
-        Hint: () => <div />,
-        Input: () => <div />,
+        components: {
+          Hint: () => <div />,
+          Input: () => <div />,
+        },
       },
-    },
-  ],
+    ],
+  },
 };
 
-const someOtherExtensionStubWithExtensionSpecificPreferenceItems: FakeExtensionData = {
+const someOtherExtensionStubWithExtensionSpecificPreferenceItems: FakeExtensionOptions = {
   id: "some-other-test-extension-id",
   name: "some-other-test-extension-id",
 
-  appPreferences: [
-    {
-      title: "Test preference item",
-      id: "some-other-preference-item-id",
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "Test preference item",
+        id: "some-other-preference-item-id",
 
-      components: {
-        Hint: () => <div data-testid="some-other-preference-item-hint" />,
-        Input: () => <div data-testid="some-other-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="some-other-preference-item-hint" />,
+          Input: () => <div data-testid="some-other-preference-item-input" />,
+        },
       },
-    },
-  ],
+    ],
+  },
 };
 
-const extensionStubWithoutPreferences: FakeExtensionData = {
+const extensionStubWithoutPreferences: FakeExtensionOptions = {
   id: "without-preferences-id",
   name: "without-preferences-id",
 };
 
-const extensionStubWithShowInPreferencesTab: FakeExtensionData = {
+const extensionStubWithShowInPreferencesTab: FakeExtensionOptions = {
   id: "specified-preferences-page-id",
   name: "specified-preferences-page-name",
 
-  appPreferences: [
-    {
-      title: "Test preference item",
-      id: "very-other-preference-item-id",
-      showInPreferencesTab: "some-tab",
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "Test preference item",
+        id: "very-other-preference-item-id",
+        showInPreferencesTab: "some-tab",
 
-      components: {
-        Hint: () => <div data-testid="very-other-preference-item-hint" />,
-        Input: () => <div data-testid="very-other-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="very-other-preference-item-hint" />,
+          Input: () => <div data-testid="very-other-preference-item-input" />,
+        },
       },
-    },
-  ],
+    ],
+  },
 };
 
-const extensionStubWithWithRegisteredTab: FakeExtensionData = {
+const extensionStubWithWithRegisteredTab: FakeExtensionOptions = {
   id: "registered-tab-page-id",
   name: "registered-tab-page-id",
 
-  appPreferences: [
-    {
-      title: "License item",
-      id: "metrics-preference-item-id",
-      showInPreferencesTab: "metrics-extension-tab",
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "License item",
+        id: "metrics-preference-item-id",
+        showInPreferencesTab: "metrics-extension-tab",
 
-      components: {
-        Hint: () => <div data-testid="metrics-preference-item-hint" />,
-        Input: () => <div data-testid="metrics-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="metrics-preference-item-hint" />,
+          Input: () => <div data-testid="metrics-preference-item-input" />,
+        },
       },
-    },
-    {
-      title: "Menu item",
-      id: "menu-preference-item-id",
-      showInPreferencesTab: "menu-extension-tab",
+      {
+        title: "Menu item",
+        id: "menu-preference-item-id",
+        showInPreferencesTab: "menu-extension-tab",
 
-      components: {
-        Hint: () => <div data-testid="menu-preference-item-hint" />,
-        Input: () => <div data-testid="menu-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="menu-preference-item-hint" />,
+          Input: () => <div data-testid="menu-preference-item-input" />,
+        },
       },
-    },
-    {
-      title: "Survey item",
-      id: "survey-preference-item-id",
-      showInPreferencesTab: "survey-extension-tab",
+      {
+        title: "Survey item",
+        id: "survey-preference-item-id",
+        showInPreferencesTab: "survey-extension-tab",
 
-      components: {
-        Hint: () => <div data-testid="survey-preference-item-hint" />,
-        Input: () => <div data-testid="survey-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="survey-preference-item-hint" />,
+          Input: () => <div data-testid="survey-preference-item-input" />,
+        },
       },
-    },
-  ],
+    ],
 
-  appPreferenceTabs: [{
-    title: "Metrics tab",
-    id: "metrics-extension-tab",
-    orderNumber: 100,
-  }],
+    appPreferenceTabs: [{
+      title: "Metrics tab",
+      id: "metrics-extension-tab",
+      orderNumber: 100,
+    }],
+  },
 };
 
-const extensionStubWithWithRegisteredTabs: FakeExtensionData = {
+const extensionStubWithWithRegisteredTabs: FakeExtensionOptions = {
   id: "hello-world-tab-page-id",
   name: "hello-world-tab-page-id",
 
-  appPreferences: [
-    {
-      title: "Hello world",
-      id: "hello-preference-item-id",
-      showInPreferencesTab: "hello-extension-tab",
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "Hello world",
+        id: "hello-preference-item-id",
+        showInPreferencesTab: "hello-extension-tab",
 
-      components: {
-        Hint: () => <div data-testid="hello-preference-item-hint" />,
-        Input: () => <div data-testid="hello-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="hello-preference-item-hint" />,
+          Input: () => <div data-testid="hello-preference-item-input" />,
+        },
       },
-    },
-    {
-      title: "Logs",
-      id: "logs-preference-item-id",
-      showInPreferencesTab: "logs-extension-tab",
+      {
+        title: "Logs",
+        id: "logs-preference-item-id",
+        showInPreferencesTab: "logs-extension-tab",
 
-      components: {
-        Hint: () => <div data-testid="logs-preference-item-hint" />,
-        Input: () => <div data-testid="logs-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="logs-preference-item-hint" />,
+          Input: () => <div data-testid="logs-preference-item-input" />,
+        },
       },
-    },
-  ],
+    ],
 
-  appPreferenceTabs: [{
-    title: "Metrics tab",
-    id: "hello-extension-tab",
-    orderNumber: 100,
-  }, {
-    title: "Logs tab",
-    id: "logs-extension-tab",
-    orderNumber: 200,
-  }],
+    appPreferenceTabs: [{
+      title: "Metrics tab",
+      id: "hello-extension-tab",
+      orderNumber: 100,
+    }, {
+      title: "Logs tab",
+      id: "logs-extension-tab",
+      orderNumber: 200,
+    }],
+  },
 };
 
-const extensionStubWithWithSameRegisteredTab: FakeExtensionData = {
+const extensionStubWithWithSameRegisteredTab: FakeExtensionOptions = {
   id: "duplicated-tab-page-id",
   name: "duplicated-tab-page-id",
 
-  appPreferences: [
-    {
-      title: "Another metrics",
-      id: "another-metrics-preference-item-id",
-      showInPreferencesTab: "metrics-extension-tab",
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "Another metrics",
+        id: "another-metrics-preference-item-id",
+        showInPreferencesTab: "metrics-extension-tab",
 
-      components: {
-        Hint: () => <div data-testid="another-metrics-preference-item-hint" />,
-        Input: () => <div data-testid="another-metrics-preference-item-input" />,
+        components: {
+          Hint: () => <div data-testid="another-metrics-preference-item-hint" />,
+          Input: () => <div data-testid="another-metrics-preference-item-input" />,
+        },
       },
-    },
-  ],
+    ],
 
-  appPreferenceTabs: [{
-    title: "Metrics tab",
-    id: "metrics-extension-tab",
-    orderNumber: 100,
-  }],
+    appPreferenceTabs: [{
+      title: "Metrics tab",
+      id: "metrics-extension-tab",
+      orderNumber: 100,
+    }],
+  },
 };
 
-const extensionUsingSomeoneElseTab: FakeExtensionData = {
+const extensionUsingSomeoneElseTab: FakeExtensionOptions = {
   id: "extension-using-someone-else-tab-id",
   name: "extension-using-someone-else-tab-id",
 
-  appPreferences: [
-    {
-      title: "My preferences",
-      id: "my-preferences-item-id",
-      showInPreferencesTab: "metrics-extension-tab",
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "My preferences",
+        id: "my-preferences-item-id",
+        showInPreferencesTab: "metrics-extension-tab",
 
-      components: {
-        Hint: () => <div data-testid="my-preferences-item-hint" />,
-        Input: () => <div data-testid="my-preferences-item-input" />,
+        components: {
+          Hint: () => <div data-testid="my-preferences-item-hint" />,
+          Input: () => <div data-testid="my-preferences-item-input" />,
+        },
       },
-    },
-  ],
+    ],
+  },
 };

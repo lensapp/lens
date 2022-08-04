@@ -7,55 +7,40 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import type { IObservableArray } from "mobx";
 import { computed, observable } from "mobx";
-import type { DiContainer } from "@ogre-tools/injectable";
 import type { StatusBarItems } from "./status-bar-items.injectable";
 import statusBarItemsInjectable from "./status-bar-items.injectable";
-import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ApplicationBuilder } from "../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../test-utils/get-application-builder";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
 
-class SomeTestExtension extends LensRendererExtension {
-  constructor(statusBarItems: IObservableArray<any>) {
-    super({
-      id: "some-id",
-      absolutePath: "irrelevant",
-      isBundled: false,
-      isCompatible: false,
-      isEnabled: false,
-      manifest: { name: "some-id", version: "some-version", engines: { lens: "^5.5.0" }},
-      manifestPath: "irrelevant",
-    });
-
-    this.statusBarItems = statusBarItems;
-  }
-}
-
 describe("<StatusBar />", () => {
-  let di: DiContainer;
   let statusBarItems: IObservableArray<any>;
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(async () => {
     statusBarItems = observable.array([]);
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.unoverride(getRandomIdInjectable);
-      rendererDi.permitSideEffects(getRandomIdInjectable);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.unoverride(getRandomIdInjectable);
+      windowDi.permitSideEffects(getRandomIdInjectable);
+      windowDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     });
 
-    applicationBuilder.extensions.renderer.enable(new SomeTestExtension(statusBarItems));
-    
-    di = applicationBuilder.dis.rendererDi;
+    builder.extensions.enable({
+      id: "some-id",
+      name: "some-name",
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+      rendererOptions: {
+        statusBarItems,
+      },
+    });
   });
 
   it("renders w/o errors", async () => {
-    const { container } = await applicationBuilder.render();
+    const { container } = await builder.render();
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
@@ -71,19 +56,21 @@ describe("<StatusBar />", () => {
   ])("renders w/o errors when registrations are not type compliant (%p)", async val => {
     statusBarItems.replace([val]);
 
-    await expect(applicationBuilder.render()).resolves.toBeTruthy();
+    await expect(builder.render()).resolves.toBeTruthy();
   });
 
   it("renders items [{item: React.ReactNode}] (4.0.0-rc.1)", async () => {
     const testId = "testId";
     const text = "heee";
 
-    di.override(statusBarItemsInjectable, () => computed(() => ({
-      right: [ () => <span data-testid={testId} >{text}</span> ],
-      left: [],
-    }) as StatusBarItems));
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(statusBarItemsInjectable, () => computed(() => ({
+        right: [ () => <span data-testid={testId} >{text}</span> ],
+        left: [],
+      }) as StatusBarItems));
+    });
 
-    const { getByTestId } = await applicationBuilder.render();
+    const { getByTestId } = await builder.render();
 
     expect(getByTestId(testId)).toHaveTextContent(text);
   });
@@ -96,7 +83,7 @@ describe("<StatusBar />", () => {
       item: () => <span data-testid={testId} >{text}</span>,
     }]);
 
-    const { getByTestId } = await applicationBuilder.render();
+    const { getByTestId } = await builder.render();
 
     expect(getByTestId(testId)).toHaveTextContent(text);
   });
@@ -129,7 +116,7 @@ describe("<StatusBar />", () => {
       },
     ]);
 
-    const { getAllByTestId } = await applicationBuilder.render();
+    const { getAllByTestId } = await builder.render();
     const elems = getAllByTestId("sortedElem");
     const positions = elems.map(elem => elem.textContent);
 

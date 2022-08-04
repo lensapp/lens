@@ -16,7 +16,7 @@ import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+
 import type { AsyncResult } from "../../common/utils/async-result";
 
 describe("remove helm repository from list of active repositories in preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
   let execFileMock: AsyncFnMock<
@@ -24,30 +24,28 @@ describe("remove helm repository from list of active repositories in preferences
   >;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
-      rendererDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
-
-      mainDi.override(
-        getActiveHelmRepositoriesInjectable,
-        () => getActiveHelmRepositoriesMock,
-      );
-
+    builder.beforeApplicationStart((mainDi) => {
+      mainDi.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
     });
 
-    rendered = await applicationBuilder.render();
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+    });
+
+    rendered = await builder.render();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {
     beforeEach(async () => {
-      applicationBuilder.preferences.navigate();
-      applicationBuilder.preferences.navigation.click("kubernetes");
+      builder.preferences.navigate();
+      builder.preferences.navigation.click("kubernetes");
     });
 
     it("renders", () => {

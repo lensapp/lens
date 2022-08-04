@@ -8,7 +8,6 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
 import type { KubernetesCluster } from "../../../../../common/catalog-entities";
 import { getApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
-import { getExtensionFakeFor } from "../../../../../renderer/components/test-utils/get-extension-fake";
 import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import apiManagerInjectable from "../../../../../common/k8s-api/api-manager/manager.injectable";
 import navigateToWorkloadsOverviewInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/overview/navigate-to-workloads-overview.injectable";
@@ -24,21 +23,19 @@ describe("disable workloads overview details when cluster is not relevant", () =
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    builder.setEnvironmentToClusterFrame();
+
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(apiManagerInjectable, () => ({}));
     });
 
-    const rendererDi = builder.dis.rendererDi;
-
-    rendererDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-
-    builder.setEnvironmentToClusterFrame();
-
-    const getExtensionFake = getExtensionFakeFor(builder);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
+    });
 
     isEnabledForClusterMock = asyncFn();
 
-    const testExtension = getExtensionFake({
+    const testExtension = {
       id: "test-extension-id",
       name: "test-extension",
 
@@ -55,11 +52,13 @@ describe("disable workloads overview details when cluster is not relevant", () =
           },
         ],
       },
-    });
+    };
 
     rendered = await builder.render();
 
-    const navigateToWorkloadsOverview = rendererDi.inject(
+    const windowDi = builder.applicationWindow.only.di;
+
+    const navigateToWorkloadsOverview = windowDi.inject(
       navigateToWorkloadsOverviewInjectable,
     );
 

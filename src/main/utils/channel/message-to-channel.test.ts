@@ -5,15 +5,10 @@
 
 import type { MessageToChannel } from "../../../common/utils/channel/message-to-channel-injection-token";
 import { messageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
-import closeAllWindowsInjectable from "../../start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import type { MessageChannel } from "../../../common/utils/channel/message-channel-injection-token";
-import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import createLensWindowInjectable from "../../start-main-application/lens-window/application-window/create-lens-window.injectable";
-import type { LensWindow } from "../../start-main-application/lens-window/application-window/lens-window-injection-token";
-import { lensWindowInjectionToken } from "../../start-main-application/lens-window/application-window/lens-window-injection-token";
-import type { DiContainer } from "@ogre-tools/injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import type { LensWindow } from "../../start-main-application/lens-window/application-window/create-lens-window.injectable";
 import sendToChannelInElectronBrowserWindowInjectable from "../../start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
+import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 
 describe("message to channel from main", () => {
   let messageToChannel: MessageToChannel;
@@ -21,20 +16,21 @@ describe("message to channel from main", () => {
   let someOtherTestWindow: LensWindow;
   let sendToChannelInBrowserMock: jest.Mock;
 
-  beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+  beforeEach(async () => {
+    const builder = getApplicationBuilder();
 
     sendToChannelInBrowserMock = jest.fn();
-    di.override(sendToChannelInElectronBrowserWindowInjectable, () => sendToChannelInBrowserMock);
 
-    someTestWindow = createTestWindow(di, "some-test-window-id");
-    someOtherTestWindow = createTestWindow(di, "some-other-test-window-id");
+    builder.beforeApplicationStart(mainDi => {
+      mainDi.override(sendToChannelInElectronBrowserWindowInjectable, () => sendToChannelInBrowserMock);
+    });
 
-    messageToChannel = di.inject(messageToChannelInjectionToken);
+    await builder.startHidden();
 
-    const closeAllWindows = di.inject(closeAllWindowsInjectable);
+    someTestWindow = builder.applicationWindow.create("some-test-window-id");
+    someOtherTestWindow = builder.applicationWindow.create("some-other-test-window-id");
 
-    closeAllWindows();
+    messageToChannel = builder.mainDi.inject(messageToChannelInjectionToken);
   });
 
   it("given no visible windows, when messaging to channel, does not message to any window", () => {
@@ -53,6 +49,8 @@ describe("message to channel from main", () => {
 
       expect(sendToChannelInBrowserMock.mock.calls).toEqual([
         [
+          "some-test-window-id",
+
           null,
 
           {
@@ -68,6 +66,8 @@ describe("message to channel from main", () => {
 
       expect(sendToChannelInBrowserMock.mock.calls).toEqual([
         [
+          "some-test-window-id",
+
           null,
 
           {
@@ -83,6 +83,8 @@ describe("message to channel from main", () => {
 
       expect(sendToChannelInBrowserMock.mock.calls).toEqual([
         [
+          "some-test-window-id",
+
           null,
 
           {
@@ -98,6 +100,8 @@ describe("message to channel from main", () => {
 
       expect(sendToChannelInBrowserMock.mock.calls).toEqual([
         [
+          "some-test-window-id",
+
           null,
 
           {
@@ -117,6 +121,8 @@ describe("message to channel from main", () => {
 
     expect(sendToChannelInBrowserMock.mock.calls).toEqual([
       [
+        "some-test-window-id",
+
         null,
 
         {
@@ -126,6 +132,8 @@ describe("message to channel from main", () => {
       ],
 
       [
+        "some-other-test-window-id",
+
         null,
 
         {
@@ -138,30 +146,3 @@ describe("message to channel from main", () => {
 });
 
 const someChannel: MessageChannel<any> = { id: "some-channel" };
-
-const createTestWindow = (di: DiContainer, id: string) => {
-  const testWindowInjectable = getInjectable({
-    id,
-
-    instantiate: (di) => {
-      const createLensWindow = di.inject(createLensWindowInjectable);
-
-      return createLensWindow({
-        id,
-        title: "Some test window",
-        defaultHeight: 42,
-        defaultWidth: 42,
-        getContentSource: () => ({ url: "some-content-url" }),
-        resizable: true,
-        windowFrameUtilitiesAreShown: false,
-        centered: false,
-      });
-    },
-
-    injectionToken: lensWindowInjectionToken,
-  });
-
-  di.register(testWindowInjectable);
-
-  return di.inject(testWindowInjectable);
-};

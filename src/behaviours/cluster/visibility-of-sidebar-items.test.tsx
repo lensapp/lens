@@ -16,24 +16,24 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 
 describe("cluster - visibility of sidebar items", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.setEnvironmentToClusterFrame();
+    builder.setEnvironmentToClusterFrame();
 
-    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.register(testRouteInjectable);
-      rendererDi.register(testRouteComponentInjectable);
-      rendererDi.register(testSidebarItemsInjectable);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.register(testRouteInjectable);
+      windowDi.register(testRouteComponentInjectable);
+      windowDi.register(testSidebarItemsInjectable);
     });
   });
 
   describe("given kube resource for route is not allowed", () => {
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -48,7 +48,7 @@ describe("cluster - visibility of sidebar items", () => {
 
     describe("when kube resource becomes allowed", () => {
       beforeEach(() => {
-        applicationBuilder.allowKubeResource("namespaces");
+        builder.allowKubeResource("namespaces");
       });
 
       it("renders", () => {

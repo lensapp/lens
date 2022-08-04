@@ -2,8 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { FakeExtensionData, TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFakeFor } from "../renderer/components/test-utils/get-renderer-extension-fake";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
@@ -12,29 +10,29 @@ import queryParametersInjectable from "../renderer/routes/query-parameters.injec
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { IComputedValue } from "mobx";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import type { FakeExtensionOptions } from "../renderer/components/test-utils/get-extension-fake";
+import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
 
 describe("navigate to extension page", () => {
   let rendered: RenderResult;
-  let testExtension: TestExtension;
+  let testExtension: LensRendererExtension;
   let queryParameters: IComputedValue<object>;
   let currentPath: IComputedValue<string>;
 
   beforeEach(async () => {
-    const applicationBuilder = getApplicationBuilder();
-    const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
+    const builder = getApplicationBuilder();
 
-    testExtension = getRendererExtensionFake(
-      extensionWithPagesHavingParameters,
-    );
+    builder.extensions.enable(extensionWithPagesHavingParameters);
 
-    applicationBuilder.extensions.renderer.enable(testExtension);
+    rendered = await builder.render();
 
-    rendered = await applicationBuilder.render();
+    const windowDi = builder.applicationWindow.only.di;
 
-    const rendererDi = applicationBuilder.dis.rendererDi;
+    testExtension =
+      builder.extensions.get("some-extension-id").applicationWindows.only;
 
-    queryParameters = rendererDi.inject(queryParametersInjectable);
-    currentPath = rendererDi.inject(currentPathInjectable);
+    queryParameters = windowDi.inject(queryParametersInjectable);
+    currentPath = windowDi.inject(currentPathInjectable);
   });
 
   it("renders", () => {
@@ -125,57 +123,60 @@ describe("navigate to extension page", () => {
   });
 });
 
-const extensionWithPagesHavingParameters: FakeExtensionData = {
+const extensionWithPagesHavingParameters: FakeExtensionOptions = {
   id: "some-extension-id",
   name: "some-extension-name",
-  globalPages: [
-    {
-      components: {
-        Page: ({ params }) => (
-          <div>
-            <ul>
-              <li>{params.someStringParameter.get()}</li>
-              <li>{params.someNumberParameter.get()}</li>
-              <li>{params.someArrayParameter.get().join(",")}</li>
-            </ul>
 
-            <button
-              type="button"
-              data-testid="button-to-change-page-parameters"
-              onClick={() => {
-                params.someStringParameter.set("some-changed-string-value");
-                params.someNumberParameter.set(84);
-                params.someArrayParameter.set([
-                  "some-changed-array-value",
-                  "some-other-changed-array-value",
-                ]);
-              }}
-            >
-              Some button
-            </button>
-          </div>
-        ),
-      },
+  rendererOptions: {
+    globalPages: [
+      {
+        components: {
+          Page: ({ params }) => (
+            <div>
+              <ul>
+                <li>{params.someStringParameter.get()}</li>
+                <li>{params.someNumberParameter.get()}</li>
+                <li>{params.someArrayParameter.get().join(",")}</li>
+              </ul>
 
-      params: {
-        someStringParameter: "some-string-value",
-        someNumberParameter: {
-          defaultValue: 42,
-          stringify: (value) => value.toString(),
-          parse: (value) => (value ? Number(value) : undefined),
+              <button
+                type="button"
+                data-testid="button-to-change-page-parameters"
+                onClick={() => {
+                  params.someStringParameter.set("some-changed-string-value");
+                  params.someNumberParameter.set(84);
+                  params.someArrayParameter.set([
+                    "some-changed-array-value",
+                    "some-other-changed-array-value",
+                  ]);
+                }}
+              >
+                Some button
+              </button>
+            </div>
+          ),
         },
-        someArrayParameter: {
-          defaultValue: ["some-array-value", "some-other-array-value"],
-          stringify: (value) => value.join(","),
-          parse: (value: string[]) => (!isEmpty(value) ? value : undefined),
+
+        params: {
+          someStringParameter: "some-string-value",
+          someNumberParameter: {
+            defaultValue: 42,
+            stringify: (value) => value.toString(),
+            parse: (value) => (value ? Number(value) : undefined),
+          },
+          someArrayParameter: {
+            defaultValue: ["some-array-value", "some-other-array-value"],
+            stringify: (value) => value.join(","),
+            parse: (value: string[]) => (!isEmpty(value) ? value : undefined),
+          },
         },
       },
-    },
-    {
-      id: "some-child-page-id",
-      components: {
-        Page: () => <div>Child page</div>,
+      {
+        id: "some-child-page-id",
+        components: {
+          Page: () => <div>Child page</div>,
+        },
       },
-    },
-  ],
+    ],
+  },
 };

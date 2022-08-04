@@ -5,7 +5,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getExtensionFakeFor } from "../../../../renderer/components/test-utils/get-extension-fake";
 import { getInjectable } from "@ogre-tools/injectable";
 import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
 import type { IObservableValue } from "mobx";
@@ -26,19 +25,16 @@ describe("reactively hide kube object status", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    const rendererDi = builder.dis.rendererDi;
-
-    rendererDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-
-    rendererDi.register(testRouteInjectable, testRouteComponentInjectable);
-
     builder.setEnvironmentToClusterFrame();
 
-    const getExtensionFake = getExtensionFakeFor(builder);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
+      windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+    });
 
     someObservable = observable.box(false);
 
-    const testExtension = getExtensionFake({
+    const testExtension = {
       id: "test-extension-id",
       name: "test-extension",
 
@@ -57,12 +53,14 @@ describe("reactively hide kube object status", () => {
           },
         ],
       },
-    });
+    };
 
     rendered = await builder.render();
 
-    const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
-    const testRoute = rendererDi.inject(testRouteInjectable);
+    const windowDi = builder.applicationWindow.only.di;
+
+    const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+    const testRoute = windowDi.inject(testRouteInjectable);
 
     navigateToRoute(testRoute);
 

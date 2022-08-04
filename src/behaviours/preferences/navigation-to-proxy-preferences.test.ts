@@ -17,7 +17,7 @@ describe("preferences - navigation to proxy preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeRender(() => {
+      applicationBuilder.beforeWindowStart(() => {
         applicationBuilder.preferences.navigate();
       });
 

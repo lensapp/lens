@@ -8,23 +8,23 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import navigateToProxyPreferencesInjectable from "../../common/front-end-routing/routes/preferences/proxy/navigate-to-proxy-preferences.injectable";
 
 describe("preferences - navigation to application preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given in some child page of preferences, when rendered", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeRender(({ rendererDi }) => {
-        const navigateToProxyPreferences = rendererDi.inject(navigateToProxyPreferencesInjectable);
+      builder.beforeWindowStart((windowDi) => {
+        const navigateToProxyPreferences = windowDi.inject(navigateToProxyPreferencesInjectable);
 
         navigateToProxyPreferences();
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -39,7 +39,7 @@ describe("preferences - navigation to application preferences", () => {
 
     describe("when navigating to application preferences using navigation", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click("application");
+        builder.preferences.navigation.click("application");
       });
 
       it("renders", () => {

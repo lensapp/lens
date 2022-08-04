@@ -7,7 +7,6 @@ import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getExtensionFakeFor } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("preferences: extension adding preference tabs", () => {
   let builder: ApplicationBuilder;
@@ -25,11 +24,9 @@ describe("preferences: extension adding preference tabs", () => {
 
       builder.preferences.navigate();
 
-      const getExtensionFake = getExtensionFakeFor(builder);
-
       someObservable = observable.box(false);
 
-      const testExtension = getExtensionFake({
+      const testExtension = {
         id: "some-extension-id",
         name: "some-extension",
 
@@ -53,7 +50,7 @@ describe("preferences: extension adding preference tabs", () => {
             },
           ],
         },
-      });
+      };
 
       builder.extensions.enable(testExtension);
 

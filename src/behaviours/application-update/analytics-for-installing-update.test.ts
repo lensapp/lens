@@ -21,7 +21,7 @@ import periodicalCheckForUpdatesInjectable from "../../main/application-update/p
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("analytics for installing update", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let analyticsListenerMock: jest.Mock;
@@ -30,11 +30,11 @@ describe("analytics for installing update", () => {
   beforeEach(async () => {
     useFakeTime("2015-10-21T07:28:00Z");
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     analyticsListenerMock = jest.fn();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart(mainDi => {
       mainDi.override(appVersionInjectable, () => "42.0.0");
 
       checkForPlatformUpdatesMock = asyncFn();
@@ -56,7 +56,7 @@ describe("analytics for installing update", () => {
       eventBus.addListener(analyticsListenerMock);
     });
 
-    mainDi = applicationBuilder.dis.mainDi;
+    mainDi = builder.mainDi;
   });
 
   describe("given application is started and checking updates periodically", () => {
@@ -64,7 +64,7 @@ describe("analytics for installing update", () => {
       mainDi.unoverride(periodicalCheckForUpdatesInjectable);
       mainDi.permitSideEffects(periodicalCheckForUpdatesInjectable);
 
-      await applicationBuilder.render();
+      await builder.render();
 
     });
 
@@ -101,7 +101,7 @@ describe("analytics for installing update", () => {
     beforeEach(async () => {
       analyticsListenerMock.mockClear();
 
-      await applicationBuilder.render();
+      await builder.render();
     });
 
     it("sends event to analytics about the current version", () => {
@@ -119,7 +119,7 @@ describe("analytics for installing update", () => {
     it("when checking for updates using tray, sends event to analytics for being checked from tray", async () => {
       analyticsListenerMock.mockClear();
 
-      applicationBuilder.tray.click("check-for-updates");
+      builder.tray.click("check-for-updates");
 
       expect(analyticsListenerMock.mock.calls).toEqual([
         [
@@ -140,7 +140,7 @@ describe("analytics for installing update", () => {
     it("when checking for updates using application menu, sends event to analytics for being checked from application menu", async () => {
       analyticsListenerMock.mockClear();
 
-      applicationBuilder.applicationMenu.click("root.check-for-updates");
+      builder.applicationMenu.click("root.check-for-updates");
 
       expect(analyticsListenerMock.mock.calls).toEqual([
         [

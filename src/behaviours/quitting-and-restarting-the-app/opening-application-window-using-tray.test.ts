@@ -5,19 +5,18 @@
 
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { lensWindowInjectionToken } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
-import applicationWindowInjectable from "../../main/start-main-application/lens-window/application-window/application-window.injectable";
-import createElectronWindowForInjectable from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { ElectronWindow, LensWindowConfiguration } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
-import type { DiContainer } from "@ogre-tools/injectable";
+import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
 import focusApplicationInjectable from "../../main/electron-app/features/focus-application.injectable";
+import type { CreateElectronWindow } from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
+import createElectronWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
+import splashWindowInjectable from "../../main/start-main-application/lens-window/splash-window/splash-window.injectable";
 
 describe("opening application window using tray", () => {
   describe("given application has started", () => {
-    let applicationBuilder: ApplicationBuilder;
+    let builder: ApplicationBuilder;
     let createElectronWindowMock: jest.Mock;
     let expectWindowsToBeOpen: (windowIds: string[]) => void;
     let callForSplashWindowHtmlMock: AsyncFnMock<() => Promise<void>>;
@@ -30,71 +29,66 @@ describe("opening application window using tray", () => {
 
       focusApplicationMock = jest.fn();
 
-      applicationBuilder = getApplicationBuilder().beforeApplicationStart(
-        ({ mainDi }) => {
-          mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
+      builder = getApplicationBuilder();
 
-          mainDi.override(lensResourcesDirInjectable, () => "some-lens-resources-directory");
+      builder.beforeApplicationStart((mainDi) => {
+        mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
 
-          const loadFileMock = jest
-            .fn(callForSplashWindowHtmlMock)
-            .mockImplementationOnce(() => Promise.resolve());
+        mainDi.override(
+          lensResourcesDirInjectable,
+          () => "some-lens-resources-directory",
+        );
 
-          const loadUrlMock = jest
-            .fn(callForApplicationWindowHtmlMock)
-            .mockImplementationOnce(() => Promise.resolve());
+        const loadFileMock = jest
+          .fn(callForSplashWindowHtmlMock)
+          .mockImplementationOnce(() => Promise.resolve());
 
-          createElectronWindowMock = jest.fn((configuration: LensWindowConfiguration) =>
-            ({
-              splash: {
-                send: () => {},
-                close: () => {},
-                show: () => {},
-                loadFile: loadFileMock,
-                loadUrl: () => { throw new Error("Should never come here"); },
-              },
+        const loadUrlMock = jest
+          .fn(callForApplicationWindowHtmlMock)
+          .mockImplementationOnce(() => Promise.resolve());
 
-              "only-application-window": {
-                send: () => {},
-                close: () => {},
-                show: () => {},
-                loadFile: () => { throw new Error("Should never come here"); },
-                loadUrl: loadUrlMock,
-              },
-            }[configuration.id] as ElectronWindow));
+        createElectronWindowMock = jest.fn((toBeDecorated): CreateElectronWindow => (configuration) => {
+          const browserWindow = toBeDecorated(configuration);
 
-          mainDi.override(
-            createElectronWindowForInjectable,
+          if (configuration.id === "splash") {
+            return { ...browserWindow, loadFile: loadFileMock };
+          }
 
-            () => createElectronWindowMock,
-          );
+          if (configuration.id === "first-application-window") {
+            return { ...browserWindow, loadUrl: loadUrlMock };
+          }
 
-          expectWindowsToBeOpen = expectWindowsToBeOpenFor(mainDi);
-        },
-      );
+          return browserWindow;
+        });
 
-      await applicationBuilder.render();
+        (mainDi as any).decorateFunction(
+          createElectronWindowInjectable,
+          createElectronWindowMock,
+        );
+
+        expectWindowsToBeOpen = expectWindowsToBeOpenFor(builder);
+      });
+
+      await builder.render();
     });
 
-    it("only an application window is open", () => {
-      expectWindowsToBeOpen(["only-application-window"]);
+    it("only the first application window is open", () => {
+      expectWindowsToBeOpen(["first-application-window"]);
     });
 
     describe("when an attempt to reopen the already started application is made using tray", () => {
       beforeEach(() => {
-        applicationBuilder.tray.click("open-app");
+        builder.tray.click("open-app");
       });
 
       it("still shows only the application window", () => {
-        expectWindowsToBeOpen(["only-application-window"]);
+        expectWindowsToBeOpen(["first-application-window"]);
       });
     });
 
-    describe("when the application window is closed", () => {
+    describe("when the first application window is closed", () => {
       beforeEach(() => {
-        const applicationWindow = applicationBuilder.dis.mainDi.inject(
-          applicationWindowInjectable,
-        );
+        const applicationWindow = builder.applicationWindow.only;
 
         applicationWindow.close();
       });
@@ -110,7 +104,7 @@ describe("opening application window using tray", () => {
           callForSplashWindowHtmlMock.mockClear();
           callForApplicationWindowHtmlMock.mockClear();
 
-          applicationBuilder.tray.click("open-app");
+          builder.tray.click("open-app");
         });
 
         it("focuses the application", () => {
@@ -143,7 +137,7 @@ describe("opening application window using tray", () => {
               callForApplicationWindowHtmlMock.mockClear();
               callForSplashWindowHtmlMock.mockClear();
 
-              applicationBuilder.tray.click("open-app");
+              builder.tray.click("open-app");
             });
 
             it("does not load contents of splash window again", () => {
@@ -155,7 +149,7 @@ describe("opening application window using tray", () => {
             });
 
             it("shows just the blank application window to permit developer tool access", () => {
-              expectWindowsToBeOpen(["only-application-window"]);
+              expectWindowsToBeOpen(["first-application-window"]);
             });
           });
 
@@ -165,7 +159,7 @@ describe("opening application window using tray", () => {
             });
 
             it("shows just the application window", () => {
-              expectWindowsToBeOpen(["only-application-window"]);
+              expectWindowsToBeOpen(["first-application-window"]);
             });
 
             describe("when reopening the application using tray", () => {
@@ -173,11 +167,11 @@ describe("opening application window using tray", () => {
                 callForSplashWindowHtmlMock.mockClear();
                 callForApplicationWindowHtmlMock.mockClear();
 
-                applicationBuilder.tray.click("open-app");
+                builder.tray.click("open-app");
               });
 
               it("still shows just the application window", () => {
-                expectWindowsToBeOpen(["only-application-window"]);
+                expectWindowsToBeOpen(["first-application-window"]);
               });
 
               it("does not load HTML for splash window again", () => {
@@ -195,7 +189,7 @@ describe("opening application window using tray", () => {
           beforeEach(() => {
             createElectronWindowMock.mockClear();
 
-            applicationBuilder.tray.click("open-app");
+            builder.tray.click("open-app");
           });
 
           it("does not open any new windows", () => {
@@ -215,14 +209,14 @@ describe("opening application window using tray", () => {
           it("when opening of application window finishes, only an application window is open", async () => {
             await callForApplicationWindowHtmlMock.resolve();
 
-            expectWindowsToBeOpen(["only-application-window"]);
+            expectWindowsToBeOpen(["first-application-window"]);
           });
 
           describe("given opening of application window has not finished yet, but another attempt to open the application is made", () => {
             beforeEach(() => {
               createElectronWindowMock.mockClear();
 
-              applicationBuilder.tray.click("open-app");
+              builder.tray.click("open-app");
             });
 
             it("does not open any new windows", () => {
@@ -232,7 +226,7 @@ describe("opening application window using tray", () => {
             it("when opening finishes, only an application window is open", async () => {
               await callForApplicationWindowHtmlMock.resolve();
 
-              expectWindowsToBeOpen(["only-application-window"]);
+              expectWindowsToBeOpen(["first-application-window"]);
             });
           });
         });
@@ -241,10 +235,14 @@ describe("opening application window using tray", () => {
   });
 });
 
-const expectWindowsToBeOpenFor = (di: DiContainer) => (windowIds: string[]) => {
-  const windows = di.injectMany(lensWindowInjectionToken);
+const expectWindowsToBeOpenFor =
+  (builder: ApplicationBuilder) => (windowIds: string[]) => {
+    const windows: LensWindow[] = [
+      builder.mainDi.inject(splashWindowInjectable),
+      ...builder.applicationWindow.getAll(),
+    ];
 
-  expect(
-    windows.filter((window) => window.isVisible).map((window) => window.id),
-  ).toEqual(windowIds);
-};
+    expect(
+      windows.filter((window) => window.isVisible).map((window) => window.id),
+    ).toEqual(windowIds);
+  };

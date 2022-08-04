@@ -2,30 +2,27 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { FakeExtensionData, TestExtension } from "../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFakeFor } from "../renderer/components/test-utils/get-renderer-extension-fake";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import type { DiContainer } from "@ogre-tools/injectable";
+import type { FakeExtensionOptions } from "../renderer/components/test-utils/get-extension-fake";
 
 describe("extension special characters in page registrations", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
-  let testExtension: TestExtension;
+  let windowDi: DiContainer;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
-    const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
+    builder = getApplicationBuilder();
 
-    testExtension = getRendererExtensionFake(
-      extensionWithPagesHavingSpecialCharacters,
-    );
+    rendered = await builder.render();
 
-    applicationBuilder.extensions.renderer.enable(testExtension);
+    builder.extensions.enable(extensionWithPagesHavingSpecialCharacters);
 
-    rendered = await applicationBuilder.render();
+    windowDi = builder.applicationWindow.only.di;
   });
 
   it("renders", () => {
@@ -34,6 +31,9 @@ describe("extension special characters in page registrations", () => {
 
   describe("when navigating to route with ID having special characters", () => {
     beforeEach(() => {
+      const testExtension =
+        builder.extensions.get("some-extension-id").applicationWindows.only;
+
       testExtension.navigate("/some-page-id/");
     });
 
@@ -42,22 +42,25 @@ describe("extension special characters in page registrations", () => {
     });
 
     it("knows URL", () => {
-      const currentPath = applicationBuilder.dis.rendererDi.inject(currentPathInjectable);
+      const currentPath = windowDi.inject(currentPathInjectable);
 
       expect(currentPath.get()).toBe("/extension/some-extension-name--/some-page-id");
     });
   });
 });
 
-const extensionWithPagesHavingSpecialCharacters: FakeExtensionData = {
+const extensionWithPagesHavingSpecialCharacters: FakeExtensionOptions = {
   id: "some-extension-id",
   name: "@some-extension-name/",
-  globalPages: [
-    {
-      id: "/some-page-id/",
-      components: {
-        Page: () => <div>Some page</div>,
+
+  rendererOptions: {
+    globalPages: [
+      {
+        id: "/some-page-id/",
+        components: {
+          Page: () => <div>Some page</div>,
+        },
       },
-    },
-  ],
+    ],
+  },
 };
