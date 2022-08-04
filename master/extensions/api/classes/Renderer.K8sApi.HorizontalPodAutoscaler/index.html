@@ -905,13 +905,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#getcontainerresourcemetricvalue" class="md-nav__link">
-    getContainerResourceMetricValue
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#getcreationtimestamp" class="md-nav__link">
     getCreationTimestamp
   </a>
@@ -921,13 +914,6 @@
           <li class="md-nav__item">
   <a href="#getcurrentmetrics" class="md-nav__link">
     getCurrentMetrics
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getexternalmetricvalue" class="md-nav__link">
-    getExternalMetricValue
   </a>
   
 </li>
@@ -956,20 +942,6 @@
           <li class="md-nav__item">
   <a href="#getmaxpods" class="md-nav__link">
     getMaxPods
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getmetriccurrenttarget" class="md-nav__link">
-    getMetricCurrentTarget
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getmetricname" class="md-nav__link">
-    getMetricName
   </a>
   
 </li>
@@ -1010,22 +982,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#getobjectmetricvalue" class="md-nav__link">
-    getObjectMetricValue
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#getownerrefs" class="md-nav__link">
     getOwnerRefs
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getpodsmetricvalue" class="md-nav__link">
-    getPodsMetricValue
   </a>
   
 </li>
@@ -1040,13 +998,6 @@
           <li class="md-nav__item">
   <a href="#getreplicas" class="md-nav__link">
     getReplicas
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getresourcemetricvalue" class="md-nav__link">
-    getResourceMetricValue
   </a>
   
 </li>
@@ -1215,27 +1166,20 @@
 <li><a href="./#getage">getAge</a></li>
 <li><a href="./#getannotations">getAnnotations</a></li>
 <li><a href="./#getconditions">getConditions</a></li>
-<li><a href="./#getcontainerresourcemetricvalue">getContainerResourceMetricValue</a></li>
 <li><a href="./#getcreationtimestamp">getCreationTimestamp</a></li>
 <li><a href="./#getcurrentmetrics">getCurrentMetrics</a></li>
-<li><a href="./#getexternalmetricvalue">getExternalMetricValue</a></li>
 <li><a href="./#getfinalizers">getFinalizers</a></li>
 <li><a href="./#getid">getId</a></li>
 <li><a href="./#getlabels">getLabels</a></li>
 <li><a href="./#getmaxpods">getMaxPods</a></li>
-<li><a href="./#getmetriccurrenttarget">getMetricCurrentTarget</a></li>
-<li><a href="./#getmetricname">getMetricName</a></li>
 <li><a href="./#getmetricvalues">getMetricValues</a></li>
 <li><a href="./#getmetrics">getMetrics</a></li>
 <li><a href="./#getminpods">getMinPods</a></li>
 <li><a href="./#getname">getName</a></li>
 <li><a href="./#getns">getNs</a></li>
-<li><a href="./#getobjectmetricvalue">getObjectMetricValue</a></li>
 <li><a href="./#getownerrefs">getOwnerRefs</a></li>
-<li><a href="./#getpodsmetricvalue">getPodsMetricValue</a></li>
 <li><a href="./#getreadyconditions">getReadyConditions</a></li>
 <li><a href="./#getreplicas">getReplicas</a></li>
-<li><a href="./#getresourcemetricvalue">getResourceMetricValue</a></li>
 <li><a href="./#getresourceversion">getResourceVersion</a></li>
 <li><a href="./#getscopedname">getScopedName</a></li>
 <li><a href="./#getsearchfields">getSearchFields</a></li>
@@ -1409,8 +1353,48 @@
 <h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p>{ <code>isReady</code>: <code>boolean</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>"True"</code> | <code>"False"</code> | <code>"Unknown"</code> ; <code>tooltip</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
 <hr />
-<h3 id="getcontainerresourcemetricvalue">getContainerResourceMetricValue<a class="headerlink" href="#getcontainerresourcemetricvalue" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>getContainerResourceMetricValue</strong>(<code>currentMetric</code>, <code>targetMetric</code>): <code>MetricCurrentTarget</code></p>
+<h3 id="getcreationtimestamp">getCreationTimestamp<a class="headerlink" href="#getcreationtimestamp" title="Permanent link">#</a></h3>
+<p>▸ <strong>getCreationTimestamp</strong>(): <code>number</code></p>
+<p>This function computes the number of milliseconds from the UNIX EPOCH to the
+creation timestamp of this object.</p>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><code>number</code></p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getcreationtimestamp">getCreationTimestamp</a></p>
+<hr />
+<h3 id="getcurrentmetrics">getCurrentMetrics<a class="headerlink" href="#getcurrentmetrics" title="Permanent link">#</a></h3>
+<p>▸ <strong>getCurrentMetrics</strong>(): <code>HorizontalPodAutoscalerMetricStatus</code>[]</p>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>HorizontalPodAutoscalerMetricStatus</code>[]</p>
+<hr />
+<h3 id="getfinalizers">getFinalizers<a class="headerlink" href="#getfinalizers" title="Permanent link">#</a></h3>
+<p>▸ <strong>getFinalizers</strong>(): <code>string</code>[]</p>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getfinalizers">getFinalizers</a></p>
+<hr />
+<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
+<p>▸ <strong>getId</strong>(): <code>string</code></p>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getid">getId</a></p>
+<hr />
+<h3 id="getlabels">getLabels<a class="headerlink" href="#getlabels" title="Permanent link">#</a></h3>
+<p>▸ <strong>getLabels</strong>(): <code>string</code>[]</p>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getlabels">getLabels</a></p>
+<hr />
+<h3 id="getmaxpods">getMaxPods<a class="headerlink" href="#getmaxpods" title="Permanent link">#</a></h3>
+<p>▸ <strong>getMaxPods</strong>(): <code>number</code></p>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<p><code>number</code></p>
+<hr />
+<h3 id="getmetricvalues">getMetricValues<a class="headerlink" href="#getmetricvalues" title="Permanent link">#</a></h3>
+<p>▸ <strong>getMetricValues</strong>(<code>metric</code>): <code>string</code></p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1421,272 +1405,72 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>currentMetric</code></td>
-<td align="left"><code>undefined</code> | <code>ContainerResourceMetricSource</code></td>
-</tr>
-<tr>
-<td align="left"><code>targetMetric</code></td>
-<td align="left"><code>ContainerResourceMetricSource</code></td>
+<td align="left"><code>metric</code></td>
+<td align="left"><code>HorizontalPodAutoscalerMetricSpec</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>MetricCurrentTarget</code></p>
-<hr />
-<h3 id="getcreationtimestamp">getCreationTimestamp<a class="headerlink" href="#getcreationtimestamp" title="Permanent link">#</a></h3>
-<p>▸ <strong>getCreationTimestamp</strong>(): <code>number</code></p>
-<p>This function computes the number of milliseconds from the UNIX EPOCH to the
-creation timestamp of this object.</p>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>number</code></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getcreationtimestamp">getCreationTimestamp</a></p>
-<hr />
-<h3 id="getcurrentmetrics">getCurrentMetrics<a class="headerlink" href="#getcurrentmetrics" title="Permanent link">#</a></h3>
-<p>▸ <strong>getCurrentMetrics</strong>(): <code>HorizontalPodAutoscalerMetricSpec</code>[]</p>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p><code>HorizontalPodAutoscalerMetricSpec</code>[]</p>
-<hr />
-<h3 id="getexternalmetricvalue">getExternalMetricValue<a class="headerlink" href="#getexternalmetricvalue" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>getExternalMetricValue</strong>(<code>currentMetric</code>, <code>targetMetric</code>): <code>MetricCurrentTarget</code></p>
-<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>currentMetric</code></td>
-<td align="left"><code>undefined</code> | <code>ExternalMetricSource</code></td>
-</tr>
-<tr>
-<td align="left"><code>targetMetric</code></td>
-<td align="left"><code>ExternalMetricSource</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>MetricCurrentTarget</code></p>
-<hr />
-<h3 id="getfinalizers">getFinalizers<a class="headerlink" href="#getfinalizers" title="Permanent link">#</a></h3>
-<p>▸ <strong>getFinalizers</strong>(): <code>string</code>[]</p>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>string</code>[]</p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getfinalizers">getFinalizers</a></p>
-<hr />
-<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getId</strong>(): <code>string</code></p>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getid">getId</a></p>
-<hr />
-<h3 id="getlabels">getLabels<a class="headerlink" href="#getlabels" title="Permanent link">#</a></h3>
-<p>▸ <strong>getLabels</strong>(): <code>string</code>[]</p>
 <h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
-<p><code>string</code>[]</p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
-<p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getlabels">getLabels</a></p>
-<hr />
-<h3 id="getmaxpods">getMaxPods<a class="headerlink" href="#getmaxpods" title="Permanent link">#</a></h3>
-<p>▸ <strong>getMaxPods</strong>(): <code>number</code></p>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
-<p><code>number</code></p>
-<hr />
-<h3 id="getmetriccurrenttarget">getMetricCurrentTarget<a class="headerlink" href="#getmetriccurrenttarget" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>getMetricCurrentTarget</strong>(<code>metric</code>): <code>MetricCurrentTarget</code></p>
-<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>metric</code></td>
-<td align="left"><code>HorizontalPodAutoscalerMetricSpec</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
-<p><code>MetricCurrentTarget</code></p>
-<hr />
-<h3 id="getmetricname">getMetricName<a class="headerlink" href="#getmetricname" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>getMetricName</strong>(<code>metric</code>): <code>string</code></p>
-<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>metric</code></td>
-<td align="left"><code>HorizontalPodAutoscalerMetricSpec</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<hr />
-<h3 id="getmetricvalues">getMetricValues<a class="headerlink" href="#getmetricvalues" title="Permanent link">#</a></h3>
-<p>▸ <strong>getMetricValues</strong>(<code>metric</code>): <code>string</code></p>
-<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>metric</code></td>
-<td align="left"><code>HorizontalPodAutoscalerMetricSpec</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <hr />
 <h3 id="getmetrics">getMetrics<a class="headerlink" href="#getmetrics" title="Permanent link">#</a></h3>
 <p>▸ <strong>getMetrics</strong>(): <code>HorizontalPodAutoscalerMetricSpec</code>[]</p>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>HorizontalPodAutoscalerMetricSpec</code>[]</p>
 <hr />
 <h3 id="getminpods">getMinPods<a class="headerlink" href="#getminpods" title="Permanent link">#</a></h3>
 <p>▸ <strong>getMinPods</strong>(): <code>number</code></p>
-<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
 <hr />
 <h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">#</a></h3>
 <p>▸ <strong>getName</strong>(): <code>string</code></p>
-<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getname">getName</a></p>
 <hr />
 <h3 id="getns">getNs<a class="headerlink" href="#getns" title="Permanent link">#</a></h3>
 <p>▸ <strong>getNs</strong>(): <code>string</code></p>
-<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getns">getNs</a></p>
 <hr />
-<h3 id="getobjectmetricvalue">getObjectMetricValue<a class="headerlink" href="#getobjectmetricvalue" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>getObjectMetricValue</strong>(<code>currentMetric</code>, <code>targetMetric</code>): <code>MetricCurrentTarget</code></p>
-<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>currentMetric</code></td>
-<td align="left"><code>undefined</code> | <code>ObjectMetricSource</code></td>
-</tr>
-<tr>
-<td align="left"><code>targetMetric</code></td>
-<td align="left"><code>ObjectMetricSource</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
-<p><code>MetricCurrentTarget</code></p>
-<hr />
 <h3 id="getownerrefs">getOwnerRefs<a class="headerlink" href="#getownerrefs" title="Permanent link">#</a></h3>
 <p>▸ <strong>getOwnerRefs</strong>(): { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
-<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
 <p>{ <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
 <h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getownerrefs">getOwnerRefs</a></p>
 <hr />
-<h3 id="getpodsmetricvalue">getPodsMetricValue<a class="headerlink" href="#getpodsmetricvalue" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>getPodsMetricValue</strong>(<code>currentMetric</code>, <code>targetMetric</code>): <code>MetricCurrentTarget</code></p>
-<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>currentMetric</code></td>
-<td align="left"><code>undefined</code> | <code>PodsMetricSource</code></td>
-</tr>
-<tr>
-<td align="left"><code>targetMetric</code></td>
-<td align="left"><code>PodsMetricSource</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
-<p><code>MetricCurrentTarget</code></p>
-<hr />
 <h3 id="getreadyconditions">getReadyConditions<a class="headerlink" href="#getreadyconditions" title="Permanent link">#</a></h3>
 <p>▸ <strong>getReadyConditions</strong>(): { <code>isReady</code>: <code>boolean</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>"True"</code> | <code>"False"</code> | <code>"Unknown"</code> ; <code>tooltip</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
-<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p>{ <code>isReady</code>: <code>boolean</code> ; <code>lastTransitionTime?</code>: <code>string</code> ; <code>message?</code>: <code>string</code> ; <code>reason?</code>: <code>string</code> ; <code>status</code>: <code>"True"</code> | <code>"False"</code> | <code>"Unknown"</code> ; <code>tooltip</code>: <code>string</code> ; <code>type</code>: <code>string</code>  }[]</p>
 <hr />
 <h3 id="getreplicas">getReplicas<a class="headerlink" href="#getreplicas" title="Permanent link">#</a></h3>
 <p>▸ <strong>getReplicas</strong>(): <code>number</code></p>
-<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
-<hr />
-<h3 id="getresourcemetricvalue">getResourceMetricValue<a class="headerlink" href="#getresourcemetricvalue" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>getResourceMetricValue</strong>(<code>currentMetric</code>, <code>targetMetric</code>): <code>MetricCurrentTarget</code></p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>currentMetric</code></td>
-<td align="left"><code>undefined</code> | <code>ResourceMetricSource</code></td>
-</tr>
-<tr>
-<td align="left"><code>targetMetric</code></td>
-<td align="left"><code>ResourceMetricSource</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
-<p><code>MetricCurrentTarget</code></p>
 <hr />
 <h3 id="getresourceversion">getResourceVersion<a class="headerlink" href="#getresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>getResourceVersion</strong>(): <code>string</code></p>
-<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getresourceversion">getResourceVersion</a></p>
 <hr />
 <h3 id="getscopedname">getScopedName<a class="headerlink" href="#getscopedname" title="Permanent link">#</a></h3>
 <p>▸ <strong>getScopedName</strong>(): <code>string</code></p>
-<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getscopedname">getScopedName</a></p>
 <hr />
 <h3 id="getsearchfields">getSearchFields<a class="headerlink" href="#getsearchfields" title="Permanent link">#</a></h3>
 <p>▸ <strong>getSearchFields</strong>(): <code>string</code>[]</p>
-<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
 <h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getsearchfields">getSearchFields</a></p>
@@ -1695,7 +1479,7 @@ creation timestamp of this object.</p>
 <p>▸ <strong>getTimeDiffFromNow</strong>(): <code>number</code></p>
 <p><strong><code>deprecated</code></strong> This function computes a new "now" on every call which might cause subtle issues if called multiple times</p>
 <p>NOTE: Generally you can use <code>getCreationTimestamp</code> instead.</p>
-<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
+<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
 <h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#gettimedifffromnow">getTimeDiffFromNow</a></p>
@@ -1703,7 +1487,7 @@ creation timestamp of this object.</p>
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
 <p>▸ <strong>patch</strong>(<code>patch</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <p><strong><code>deprecated</code></strong> use KubeApi.patch instead</p>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1718,14 +1502,14 @@ creation timestamp of this object.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
+<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#patch">patch</a></p>
 <hr />
 <h3 id="toplainobject">toPlainObject<a class="headerlink" href="#toplainobject" title="Permanent link">#</a></h3>
 <p>▸ <strong>toPlainObject</strong>(): <code>JsonObject</code></p>
-<h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
+<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
 <p><code>JsonObject</code></p>
 <h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#toplainobject">toPlainObject</a></p>
@@ -1737,7 +1521,7 @@ creation timestamp of this object.</p>
 As fields such as <code>resourceVersion</code> will probably out of date. This is a
 common race condition.</p>
 <p><strong><code>deprecated</code></strong> use KubeApi.update instead</p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1752,7 +1536,7 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#update">update</a></p>
@@ -1782,7 +1566,7 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1797,14 +1581,14 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
+<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<code>Metadata</code>, <code>Status</code>, <code>Spec</code>></p>
 <h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#create">create</a></p>
 <hr />
 <h3 id="isjsonapidata">isJsonApiData<a class="headerlink" href="#isjsonapidata" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isJsonApiData</strong>(<code>object</code>): object is KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown></p>
-<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1819,7 +1603,7 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
+<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown></p>
 <h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#isjsonapidata">isJsonApiData</a></p>
@@ -1839,7 +1623,7 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1858,14 +1642,14 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_35">Returns<a class="headerlink" href="#returns_35" title="Permanent link">#</a></h4>
+<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiDataList&lt;T></p>
 <h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#isjsonapidatalist">isJsonApiDataList</a></p>
 <hr />
 <h3 id="iskubejsonapilistmetadata">isKubeJsonApiListMetadata<a class="headerlink" href="#iskubejsonapilistmetadata" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isKubeJsonApiListMetadata</strong>(<code>object</code>): object is KubeJsonApiListMetadata</p>
-<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1880,14 +1664,14 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_36">Returns<a class="headerlink" href="#returns_36" title="Permanent link">#</a></h4>
+<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiListMetadata</p>
 <h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#iskubejsonapilistmetadata">isKubeJsonApiListMetadata</a></p>
 <hr />
 <h3 id="iskubejsonapimetadata">isKubeJsonApiMetadata<a class="headerlink" href="#iskubejsonapimetadata" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isKubeJsonApiMetadata</strong>(<code>object</code>): object is KubeJsonApiObjectMetadata&lt;KubeObjectScope></p>
-<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1902,14 +1686,14 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_37">Returns<a class="headerlink" href="#returns_37" title="Permanent link">#</a></h4>
+<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiObjectMetadata&lt;KubeObjectScope></p>
 <h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#iskubejsonapimetadata">isKubeJsonApiMetadata</a></p>
 <hr />
 <h3 id="isnonsystem">isNonSystem<a class="headerlink" href="#isnonsystem" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isNonSystem</strong>(<code>item</code>): <code>boolean</code></p>
-<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1924,14 +1708,14 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_38">Returns<a class="headerlink" href="#returns_38" title="Permanent link">#</a></h4>
+<h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#isnonsystem">isNonSystem</a></p>
 <hr />
 <h3 id="ispartialjsonapidata">isPartialJsonApiData<a class="headerlink" href="#ispartialjsonapidata" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isPartialJsonApiData</strong>(<code>object</code>): object is Partial&lt;KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown>></p>
-<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1946,14 +1730,14 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_39">Returns<a class="headerlink" href="#returns_39" title="Permanent link">#</a></h4>
+<h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
 <p>object is Partial&lt;KubeJsonApiData&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>, unknown, unknown>></p>
 <h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#ispartialjsonapidata">isPartialJsonApiData</a></p>
 <hr />
 <h3 id="ispartialjsonapimetadata">isPartialJsonApiMetadata<a class="headerlink" href="#ispartialjsonapimetadata" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isPartialJsonApiMetadata</strong>(<code>object</code>): object is Partial&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>></p>
-<h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1968,14 +1752,14 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_40">Returns<a class="headerlink" href="#returns_40" title="Permanent link">#</a></h4>
+<h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
 <p>object is Partial&lt;KubeJsonApiObjectMetadata&lt;KubeObjectScope>></p>
 <h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#ispartialjsonapimetadata">isPartialJsonApiMetadata</a></p>
 <hr />
 <h3 id="stringifylabels">stringifyLabels<a class="headerlink" href="#stringifylabels" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>stringifyLabels</strong>(<code>labels?</code>): <code>string</code>[]</p>
-<h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1990,7 +1774,7 @@ common race condition.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_41">Returns<a class="headerlink" href="#returns_41" title="Permanent link">#</a></h4>
+<h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
 <h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#stringifylabels">stringifyLabels</a></p>
