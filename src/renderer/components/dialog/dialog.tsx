@@ -14,6 +14,7 @@ import { cssNames, noop, stopPropagation } from "../../utils";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import observableHistoryInjectable from "../../navigation/observable-history.injectable";
+import requestAnimationFrameInjectable from "../animate/request-animation-frame.injectable";
 
 // todo: refactor + handle animation-end in props.onClose()?
 
@@ -37,6 +38,7 @@ interface DialogState {
 
 interface Dependencies {
   navigation: ObservableHistory<unknown>;
+  requestAnimationFrame: (callback: () => void) => void;
 }
 
 @observer
@@ -95,7 +97,7 @@ class NonInjectedDialog extends React.PureComponent<DialogProps & Dependencies &
   }
 
   open() {
-    requestAnimationFrame(this.onOpen); // wait for render(), bind close-event to this.elem
+    this.props.requestAnimationFrame(this.onOpen); // wait for render(), bind close-event to this.elem
     this.setState({ isOpen: true });
     this.props.open?.();
   }
@@ -182,5 +184,6 @@ export const Dialog = withInjectables<Dependencies, DialogProps>((props) => <Non
   getProps: (di, props) => ({
     ...props,
     navigation: di.inject(observableHistoryInjectable),
+    requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
   }),
 });
