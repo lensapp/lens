@@ -11,7 +11,7 @@ import { SearchInput } from "../input";
 import type { TableOptions } from '@tanstack/react-table'
 import { getCoreRowModel } from '@tanstack/react-table'
 
-import { Table } from "../table/react-table";
+import { TableList } from "../table-list/table-list";
 
 export type SearchFilter<T> = (item: T) => string;
 
@@ -43,7 +43,7 @@ export function List<T>({ columns, data, title, filters }: ListProps<T>) {
           />
         </div>
       </div>
-      <Table
+      <TableList
         columns={columns}
         data={filteredData}
         getCoreRowModel={getCoreRowModel()}
