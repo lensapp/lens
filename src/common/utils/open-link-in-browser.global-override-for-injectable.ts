@@ -4,7 +4,6 @@
  */
 
 import { getGlobalOverride } from "../test-utils/get-global-override";
-import { noop } from "./noop";
 import openLinkInBrowserInjectable from "./open-link-in-browser.injectable";
 
-export default getGlobalOverride(openLinkInBrowserInjectable, () => noop);
+export default getGlobalOverride(openLinkInBrowserInjectable, () => async () => {});
