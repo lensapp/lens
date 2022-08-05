@@ -19,7 +19,7 @@ import logger from "../../../common/logger";
 export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
 }
 
-function transformUnit(name: string, value: string): number {
+function transformUnit(name: string, value: string): number | undefined {
   if (name.includes("memory") || name.includes("storage")) {
     return unitsToBytes(value);
   }
@@ -36,23 +36,38 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
 
   return object.entries(hard)
     .filter(hasDefinedTupleValue)
-    .map(([name, value]) => {
-      const current = transformUnit(name, value);
-      const max = transformUnit(name, value);
-      const usage = max === 0 ? 100 : Math.ceil(current / max * 100); // special case 0 max as always 100% usage
+    .map(([name, rawMax]) => {
+      const rawCurrent = used[name] ?? "0";
+      const current = transformUnit(name, rawCurrent);
+      const max = transformUnit(name, rawMax);
+
+      if (current === undefined || max === undefined) {
+        return (
+          <div key={name} className={cssNames("param", kebabCase(name))}>
+            <span className="title">{name}</span>
+            <span className="value">
+              {`${rawCurrent} / ${rawMax}`}
+            </span>
+          </div>
+        );
+      }
+
+      const usage = max === 0
+        ? 100 // special case 0 max as always 100% usage
+        : current / max * 100;
 
       return (
         <div key={name} className={cssNames("param", kebabCase(name))}>
           <span className="title">{name}</span>
           <span className="value">
-            {`${used[name]} / ${value}`}
+            {`${rawCurrent} / ${rawMax}`}
           </span>
           <LineProgress
             max={max}
             value={current}
             tooltip={(
               <p>
-                {`Set: ${value}. Usage: ${usage}%`}
+                {`Set: ${rawMax}. Usage: ${+usage.toFixed(2)}%`}
               </p>
             )}
           />

@@ -82,7 +82,7 @@ export class PodStore extends KubeObjectStore<Pod, PodApi> {
       }
 
       return {
-        cpu: total.cpu + cpuUnitsToNumber(cpu),
+        cpu: total.cpu + (cpuUnitsToNumber(cpu) ?? 0),
         memory: total.memory + unitsToBytes(memory),
       };
     }, empty);
