@@ -6,7 +6,6 @@
 import React from "react";
 import { autoBind, cssNames } from "../../utils";
 import type { PortForwardItem, PortForwardStore } from "../../port-forward";
-import { openPortForward } from "../../port-forward";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
@@ -15,6 +14,8 @@ import { Notifications } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
+import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
+import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
 
 export interface PortForwardMenuProps extends MenuActionsProps {
   portForward: PortForwardItem;
@@ -24,6 +25,7 @@ export interface PortForwardMenuProps extends MenuActionsProps {
 interface Dependencies {
   portForwardStore: PortForwardStore;
   openPortForwardDialog: (item: PortForwardItem) => void;
+  openPortForward: OpenPortForward;
 }
 
 class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependencies> extends React.Component<Props> {
@@ -94,7 +96,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
     return (
       <>
         { portForward.status === "Active" && (
-          <MenuItem onClick={() => openPortForward(portForward)}>
+          <MenuItem onClick={() => this.props.openPortForward(portForward)}>
             <Icon
               material="open_in_browser"
               interactive={toolbar}
@@ -139,6 +141,7 @@ export const PortForwardMenu = withInjectables<Dependencies, PortForwardMenuProp
     getProps: (di, props) => ({
       portForwardStore: di.inject(portForwardStoreInjectable),
       openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
+      openPortForward: di.inject(openPortForwardInjectable),
       ...props,
     }),
   },

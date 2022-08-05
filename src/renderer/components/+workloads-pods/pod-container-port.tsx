@@ -13,7 +13,7 @@ import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import type { ForwardedPort, PortForwardStore } from "../../port-forward";
-import { openPortForward, predictProtocol } from "../../port-forward";
+import { predictProtocol } from "../../port-forward";
 import { Spinner } from "../spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
@@ -21,6 +21,8 @@ import portForwardDialogModelInjectable from "../../port-forward/port-forward-di
 import logger from "../../../common/logger";
 import aboutPortForwardingInjectable from "../../port-forward/about-port-forwarding.injectable";
 import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error-port-forwarding.injectable";
+import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
+import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
 
 export interface PodContainerPortProps {
   pod: Pod;
@@ -32,6 +34,7 @@ interface Dependencies {
   openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean; onClose: () => void }) => void;
   aboutPortForwarding: () => void;
   notifyErrorPortForwarding: (message: string) => void;
+  openPortForward: OpenPortForward;
 }
 
 @observer
@@ -86,7 +89,7 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
 
   @action
   async portForward() {
-    const { pod, port } = this.props;
+    const { pod, port, openPortForward } = this.props;
     let portForward: ForwardedPort = {
       kind: "pod",
       name: pod.getName(),
@@ -178,7 +181,7 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {text}
         </span>
-        <Button primary onClick={portForwardAction}> 
+        <Button primary onClick={portForwardAction}>
           {" "}
           {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."}
           {" "}
@@ -200,6 +203,7 @@ export const PodContainerPort = withInjectables<Dependencies, PodContainerPortPr
       openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
       aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
       notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
+      openPortForward: di.inject(openPortForwardInjectable),
       ...props,
     }),
   },

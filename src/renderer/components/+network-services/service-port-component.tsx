@@ -13,7 +13,7 @@ import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import type { ForwardedPort, PortForwardStore } from "../../port-forward";
-import { openPortForward, predictProtocol } from "../../port-forward";
+import { predictProtocol } from "../../port-forward";
 import { Spinner } from "../spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
@@ -21,6 +21,8 @@ import portForwardDialogModelInjectable from "../../port-forward/port-forward-di
 import logger from "../../../common/logger";
 import aboutPortForwardingInjectable from "../../port-forward/about-port-forwarding.injectable";
 import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error-port-forwarding.injectable";
+import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
+import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
 
 export interface ServicePortComponentProps {
   service: Service;
@@ -32,6 +34,7 @@ interface Dependencies {
   openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean; onClose: () => void }) => void;
   aboutPortForwarding: () => void;
   notifyErrorPortForwarding: (message: string) => void;
+  openPortForward: OpenPortForward;
 }
 
 @observer
@@ -88,7 +91,7 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
 
   @action
   async portForward() {
-    const { service, port } = this.props;
+    const { service, port, openPortForward } = this.props;
     let portForward: ForwardedPort = {
       kind: "service",
       name: service.getName(),
@@ -180,7 +183,7 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {port.toString()}
         </span>
-        <Button primary onClick={portForwardAction}> 
+        <Button primary onClick={portForwardAction}>
           {" "}
           {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."}
           {" "}
@@ -202,6 +205,7 @@ export const ServicePortComponent = withInjectables<Dependencies, ServicePortCom
       openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
       aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
       notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
+      openPortForward: di.inject(openPortForwardInjectable),
       ...props,
     }),
   },
