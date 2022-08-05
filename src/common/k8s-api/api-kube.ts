@@ -11,4 +11,7 @@ export const apiKubeInjectionToken = getInjectionToken<KubeJsonApi>({
   id: "api-kube-injection-token",
 });
 
+/**
+ * @deprecated Switch to using apiKubeInjectionToken instead
+ */
 export const apiKube = asLegacyGlobalForExtensionApi(apiKubeInjectionToken);
