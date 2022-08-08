@@ -1,13 +1,12 @@
 import type { TableOptions, SortingState, Table as TableType } from "@tanstack/react-table";
 import { useReactTable, getCoreRowModel, getSortedRowModel } from "@tanstack/react-table";
 import React, { HTMLProps, useMemo } from "react";
-import { Table } from "../table/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
-
+import { VirtualTable } from "../table/virtual-table";
 
 interface TableProps<T> extends TableOptions<T> {
   className?: string;
@@ -76,7 +75,7 @@ export function TableList<Data>({
   });
 
   return (
-    <Table table={table} className={className} />
+    <VirtualTable table={table} className={className} />
   )
 }
 
