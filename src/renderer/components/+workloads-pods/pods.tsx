@@ -5,7 +5,7 @@
 
 // import "./pods.scss";
 
-import React, { Fragment, HTMLProps } from "react";
+import React, { Fragment } from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
@@ -337,27 +337,3 @@ export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
     subscribeToStores: di.inject(subscribeStoresInjectable),
   }),
 });
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = '',
-  ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!)
-
-  React.useEffect(() => {
-    if (typeof indeterminate === 'boolean') {
-      ref.current.indeterminate = !rest.checked && indeterminate
-    }
-  }, [ref, indeterminate])
-
-  return (
-    <input
-      type="checkbox"
-      ref={ref}
-      className={className}
-      style={{ cursor: "pointer" }}
-      {...rest}
-    />
-  )
-}
