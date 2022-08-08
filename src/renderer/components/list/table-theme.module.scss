@@ -1,14 +1,21 @@
 .tableTheme {
+  border: 1px solid lightgray;
+  height: calc(100% - 59px);
+  overflow: auto;
+
   table {
     border-spacing: 0;
     border-top: thin solid var(--hrColor);
+    table-layout: fixed;
+    width: 100%;
   }
   
   thead {
     border-bottom: thin solid var(--hrColor);
     color: var(--textColorAccent);
-    padding-top: 7px;
     height: 33px;
+    position: sticky;
+    top: 0;
   }
   
   thead tr {
@@ -37,9 +44,8 @@
   
   td {
     padding: 0 var(--padding);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  
-  .actions {
-    @apply justify-end;
-  }  
 }
