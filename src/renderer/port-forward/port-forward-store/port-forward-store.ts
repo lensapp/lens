@@ -9,19 +9,22 @@ import type { StorageLayer } from "../../utils";
 import { autoBind, disposer } from "../../utils";
 import type { ForwardedPort } from "../port-forward-item";
 import { PortForwardItem } from "../port-forward-item";
-import { apiBase } from "../../api";
 import { waitUntilFree } from "tcp-port-used";
 import logger from "../../../common/logger";
+import type { JsonApi } from "../../../common/k8s-api/json-api";
+import type { RequestActivePortForward } from "./request-active-port-forward.injectable";
 
 interface Dependencies {
-  storage: StorageLayer<ForwardedPort[] | undefined>;
+  readonly storage: StorageLayer<ForwardedPort[] | undefined>;
   notifyErrorPortForwarding: (message: string) => void;
+  readonly apiBase: JsonApi; // TODO: replace with individual dependencies
+  requestActivePortForward: RequestActivePortForward;
 }
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
   @observable portForwards: PortForwardItem[] = [];
 
-  constructor(private dependencies: Dependencies) {
+  constructor(protected readonly dependencies: Dependencies) {
     super();
     makeObservable(this);
     autoBind(this);
@@ -222,7 +225,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     const { port, forwardPort } = portForward;
 
     try {
-      await apiBase.del(
+      await this.dependencies.apiBase.del(
         `/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`,
         { query: { port, forwardPort }},
       );
@@ -272,10 +275,10 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     }
 
     const { port, forwardPort } = pf;
-    let response: PortForwardResult;
+    let response: { port: number };
 
     try {
-      response = await apiBase.post<PortForwardResult>(
+      response = await this.dependencies.apiBase.post(
         `/pods/port-forward/${pf.namespace}/${pf.kind}/${pf.name}`,
         { query: { port, forwardPort }},
       );
@@ -322,7 +325,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
     try {
       // check if the port-forward is active, and if so check if it has the same local port
-      const pf = await getActivePortForward(portForward);
+      const pf = await this.dependencies.requestActivePortForward(portForward);
 
       if (pf?.forwardPort && pf.forwardPort !== portForward.forwardPort) {
         logger.warn(
@@ -338,10 +341,6 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
   };
 }
 
-interface PortForwardResult {
-  port: number;
-}
-
 function portForwardsEqual(portForward: ForwardedPort) {
   return (pf: ForwardedPort) => (
     pf.kind == portForward.kind &&
@@ -349,22 +348,4 @@ function portForwardsEqual(portForward: ForwardedPort) {
     pf.namespace == portForward.namespace &&
     pf.port == portForward.port
   );
-}
-
-async function getActivePortForward(portForward: ForwardedPort): Promise<ForwardedPort | undefined> {
-  const { port, forwardPort } = portForward;
-  let response: PortForwardResult;
-
-  try {
-    response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort }});
-  } catch (error) {
-    logger.warn(`[PORT-FORWARD-STORE] Error getting active port-forward: ${error}`, portForward);
-
-    return undefined;
-  }
-
-  portForward.status = response?.port ? "Active" : "Disabled";
-  portForward.forwardPort = response?.port;
-
-  return portForward;
 }
