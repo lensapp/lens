@@ -7,7 +7,6 @@ import "./helm-charts.scss";
 
 import React, { Component } from "react";
 import { observer } from "mobx-react";
-import { helmChartStore } from "./helm-chart.store";
 import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { ItemListLayout } from "../item-object-list/list-layout";
@@ -21,6 +20,8 @@ import navigateToHelmChartsInjectable from "../../../common/front-end-routing/ro
 import { HelmChartIcon } from "./icon";
 import helmChartsInjectable from "./helm-charts/helm-charts.injectable";
 import selectedHelmChartInjectable from "./helm-charts/selected-helm-chart.injectable";
+import type { HelmChartStore } from "./store";
+import helmChartStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -35,11 +36,10 @@ interface Dependencies {
     chartName: IComputedValue<string>;
     repo: IComputedValue<string>;
   };
-
   navigateToHelmCharts: NavigateToHelmCharts;
-
   charts: IAsyncComputed<HelmChart[]>;
   selectedChart: IComputedValue<HelmChart | undefined>;
+  helmChartStore: HelmChartStore;
 }
 
 @observer
@@ -79,7 +79,7 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
           isConfigurable
           tableId="helm_charts"
           className="HelmCharts"
-          store={helmChartStore}
+          store={this.props.helmChartStore}
           getItems={() => this.props.charts.value.get()}
           isSelectable={false}
           sortingCallbacks={{
@@ -132,16 +132,14 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
   }
 }
 
-export const HelmCharts = withInjectables<Dependencies>(
-  NonInjectedHelmCharts,
-
-  {
-    getProps: (di) => ({
-      routeParameters: di.inject(helmChartsRouteParametersInjectable),
-      navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
-      charts: di.inject(helmChartsInjectable),
-      selectedChart: di.inject(selectedHelmChartInjectable),
-    }),
-  },
+export const HelmCharts = withInjectables<Dependencies>(NonInjectedHelmCharts, {
+  getProps: (di) => ({
+    routeParameters: di.inject(helmChartsRouteParametersInjectable),
+    navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
+    charts: di.inject(helmChartsInjectable),
+    selectedChart: di.inject(selectedHelmChartInjectable),
+    helmChartStore: di.inject(helmChartStoreInjectable),
+  }),
+},
 );
 

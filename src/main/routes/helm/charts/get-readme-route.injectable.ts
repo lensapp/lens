@@ -5,22 +5,22 @@
 import { getRouteInjectable } from "../../../router/router.injectable";
 import { apiPrefix } from "../../../../common/vars";
 import { route } from "../../../router/route";
-import getHelmChartInjectable from "../../../helm/helm-service/get-helm-chart.injectable";
+import getHelmChartReadmeInjectable from "../../../helm/helm-service/get-helm-chart-readme.injectable";
 
-const getChartRouteInjectable = getRouteInjectable({
-  id: "get-chart-route",
+const getHelmChartReadmeRouteInjectable = getRouteInjectable({
+  id: "get-helm-chart-readme-route",
 
   instantiate: (di) => {
-    const getHelmChart = di.inject(getHelmChartInjectable);
+    const getHelmChartReadme = di.inject(getHelmChartReadmeInjectable);
 
     return route({
       method: "get",
-      path: `${apiPrefix}/v2/charts/{repo}/{chart}`,
+      path: `${apiPrefix}/v2/charts/{repo}/{chart}/readme`,
     })(async ({ params, query }) => {
       const { repo, chart } = params;
 
       return {
-        response: await getHelmChart(
+        response: await getHelmChartReadme(
           repo,
           chart,
           query.get("version") ?? undefined,
@@ -30,4 +30,4 @@ const getChartRouteInjectable = getRouteInjectable({
   },
 });
 
-export default getChartRouteInjectable;
+export default getHelmChartReadmeRouteInjectable;

@@ -9,27 +9,27 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CallForHelmReleases } from "../../renderer/components/+helm-releases/call-for-helm-releases/call-for-helm-releases.injectable";
-import callForHelmReleasesInjectable from "../../renderer/components/+helm-releases/call-for-helm-releases/call-for-helm-releases.injectable";
+import type { RequestHelmReleases } from "../../common/k8s-api/endpoints/helm-releases.api/list.injectable";
+import requestHelmReleasesInjectable from "../../common/k8s-api/endpoints/helm-releases.api/list.injectable";
 import namespaceStoreInjectable from "../../renderer/components/+namespaces/store.injectable";
 import type { NamespaceStore } from "../../renderer/components/+namespaces/store";
-import type { CallForHelmReleaseConfiguration } from "../../renderer/components/+helm-releases/release-details/release-details-model/call-for-helm-release-configuration/call-for-helm-release-configuration.injectable";
-import callForHelmReleaseConfigurationInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/call-for-helm-release-configuration/call-for-helm-release-configuration.injectable";
-import type { CallForHelmReleaseUpdate } from "../../renderer/components/+helm-releases/update-release/call-for-helm-release-update/call-for-helm-release-update.injectable";
-import callForHelmReleaseUpdateInjectable from "../../renderer/components/+helm-releases/update-release/call-for-helm-release-update/call-for-helm-release-update.injectable";
+import type { RequestHelmReleaseConfiguration } from "../../common/k8s-api/endpoints/helm-releases.api/get-configuration.injectable";
+import requestHelmReleaseConfigurationInjectable from "../../common/k8s-api/endpoints/helm-releases.api/get-configuration.injectable";
+import type { RequestHelmReleaseUpdate } from "../../common/k8s-api/endpoints/helm-releases.api/update.injectable";
+import requestHelmReleaseUpdateInjectable from "../../common/k8s-api/endpoints/helm-releases.api/update.injectable";
 import { useFakeTime } from "../../common/test-utils/use-fake-time";
-import type { CallForHelmRelease, DetailedHelmRelease } from "../../renderer/components/+helm-releases/release-details/release-details-model/call-for-helm-release/call-for-helm-release.injectable";
-import callForHelmReleaseInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/call-for-helm-release/call-for-helm-release.injectable";
+import type { RequestHelmRelease, DetailedHelmRelease } from "../../renderer/components/+helm-releases/release-details/release-details-model/request-helm-release.injectable";
+import requestHelmReleaseInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/request-helm-release.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showCheckedErrorInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
 import getRandomUpgradeChartTabIdInjectable from "../../renderer/components/dock/upgrade-chart/get-random-upgrade-chart-tab-id.injectable";
 
 describe("showing details for helm release", () => {
   let builder: ApplicationBuilder;
-  let callForHelmReleasesMock: AsyncFnMock<CallForHelmReleases>;
-  let callForHelmReleaseMock: AsyncFnMock<CallForHelmRelease>;
-  let callForHelmReleaseConfigurationMock: AsyncFnMock<CallForHelmReleaseConfiguration>;
-  let callForHelmReleaseUpdateMock: AsyncFnMock<CallForHelmReleaseUpdate>;
+  let requestHelmReleasesMock: AsyncFnMock<RequestHelmReleases>;
+  let requestHelmReleaseMock: AsyncFnMock<RequestHelmRelease>;
+  let requestHelmReleaseConfigurationMock: AsyncFnMock<RequestHelmReleaseConfiguration>;
+  let requestHelmReleaseUpdateMock: AsyncFnMock<RequestHelmReleaseUpdate>;
   let showSuccessNotificationMock: jest.Mock;
   let showCheckedErrorNotificationMock: jest.Mock;
 
@@ -40,50 +40,22 @@ describe("showing details for helm release", () => {
 
     builder.setEnvironmentToClusterFrame();
 
-    callForHelmReleasesMock = asyncFn();
-    callForHelmReleaseMock = asyncFn();
-    callForHelmReleaseConfigurationMock = asyncFn();
-    callForHelmReleaseUpdateMock = asyncFn();
+    requestHelmReleasesMock = asyncFn();
+    requestHelmReleaseMock = asyncFn();
+    requestHelmReleaseConfigurationMock = asyncFn();
+    requestHelmReleaseUpdateMock = asyncFn();
 
     showSuccessNotificationMock = jest.fn();
     showCheckedErrorNotificationMock = jest.fn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(
-        getRandomUpgradeChartTabIdInjectable,
-        () => () => "some-tab-id",
-      );
-
-      windowDi.override(
-        showSuccessNotificationInjectable,
-        () => showSuccessNotificationMock,
-      );
-
-      windowDi.override(
-        showCheckedErrorInjectable,
-        () => showCheckedErrorNotificationMock,
-      );
-
-      windowDi.override(
-        callForHelmReleasesInjectable,
-        () => callForHelmReleasesMock,
-      );
-
-      windowDi.override(
-        callForHelmReleaseInjectable,
-        () => callForHelmReleaseMock,
-      );
-
-      windowDi.override(
-        callForHelmReleaseConfigurationInjectable,
-        () => callForHelmReleaseConfigurationMock,
-      );
-
-      windowDi.override(
-        callForHelmReleaseUpdateInjectable,
-        () => callForHelmReleaseUpdateMock,
-      );
-
+      windowDi.override(getRandomUpgradeChartTabIdInjectable, () => () => "some-tab-id");
+      windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
+      windowDi.override(showCheckedErrorInjectable, () => showCheckedErrorNotificationMock);
+      windowDi.override(requestHelmReleasesInjectable, () => requestHelmReleasesMock);
+      windowDi.override(requestHelmReleaseInjectable, () => requestHelmReleaseMock);
+      windowDi.override(requestHelmReleaseConfigurationInjectable, () => requestHelmReleaseConfigurationMock);
+      windowDi.override(requestHelmReleaseUpdateInjectable, () => requestHelmReleaseUpdateMock);
       windowDi.override(
         namespaceStoreInjectable,
         () =>
@@ -119,7 +91,7 @@ describe("showing details for helm release", () => {
       });
 
       it("calls for releases for each selected namespace", () => {
-        expect(callForHelmReleasesMock.mock.calls).toEqual([
+        expect(requestHelmReleasesMock.mock.calls).toEqual([
           ["some-namespace"],
           ["some-other-namespace"],
         ]);
@@ -132,15 +104,15 @@ describe("showing details for helm release", () => {
       });
 
       it("when releases resolve but there is none, renders", async () => {
-        await callForHelmReleasesMock.resolve([]);
-        await callForHelmReleasesMock.resolve([]);
+        await requestHelmReleasesMock.resolve([]);
+        await requestHelmReleasesMock.resolve([]);
 
         expect(rendered.baseElement).toMatchSnapshot();
       });
 
       describe("when releases resolve", () => {
         beforeEach(async () => {
-          await callForHelmReleasesMock.resolveSpecific(
+          await requestHelmReleasesMock.resolveSpecific(
             ([namespace]) => namespace === "some-namespace",
             [
               {
@@ -155,7 +127,7 @@ describe("showing details for helm release", () => {
             ],
           );
 
-          await callForHelmReleasesMock.resolveSpecific(
+          await requestHelmReleasesMock.resolveSpecific(
             ([namespace]) => namespace === "some-other-namespace",
             [
               {
@@ -201,7 +173,7 @@ describe("showing details for helm release", () => {
           });
 
           it("calls for release", () => {
-            expect(callForHelmReleaseMock).toHaveBeenCalledWith(
+            expect(requestHelmReleaseMock).toHaveBeenCalledWith(
               "some-name",
               "some-namespace",
             );
@@ -215,7 +187,7 @@ describe("showing details for helm release", () => {
 
           describe("when opening details for second release", () => {
             beforeEach(() => {
-              callForHelmReleaseMock.mockClear();
+              requestHelmReleaseMock.mockClear();
 
               const row = rendered.getByTestId(
                 "helm-release-row-for-some-other-namespace/some-other-name",
@@ -229,7 +201,7 @@ describe("showing details for helm release", () => {
             });
 
             it("calls for another release", () => {
-              expect(callForHelmReleaseMock).toHaveBeenCalledWith(
+              expect(requestHelmReleaseMock).toHaveBeenCalledWith(
                 "some-other-name",
                 "some-other-namespace",
               );
@@ -269,7 +241,7 @@ describe("showing details for helm release", () => {
 
             describe("when opening details for same release", () => {
               beforeEach(() => {
-                callForHelmReleaseMock.mockClear();
+                requestHelmReleaseMock.mockClear();
 
                 const row = rendered.getByTestId(
                   "helm-release-row-for-some-namespace/some-name",
@@ -283,7 +255,7 @@ describe("showing details for helm release", () => {
               });
 
               it("does not reload", () => {
-                expect(callForHelmReleaseMock).not.toHaveBeenCalled();
+                expect(requestHelmReleaseMock).not.toHaveBeenCalled();
               });
             });
           });
@@ -291,7 +263,7 @@ describe("showing details for helm release", () => {
 
           describe("when call for release resolves with error", () => {
             beforeEach(async () => {
-              await callForHelmReleaseMock.resolve({
+              await requestHelmReleaseMock.resolve({
                 callWasSuccessful: false,
                 error: "some-error",
               });
@@ -314,13 +286,13 @@ describe("showing details for helm release", () => {
             });
 
             it("does not call for release configuration", () => {
-              expect(callForHelmReleaseConfigurationMock).not.toHaveBeenCalled();
+              expect(requestHelmReleaseConfigurationMock).not.toHaveBeenCalled();
             });
           });
 
           describe("when call for release resolve with release", () => {
             beforeEach(async () => {
-              await callForHelmReleaseMock.resolve({
+              await requestHelmReleaseMock.resolve({
                 callWasSuccessful: true,
                 response: detailedReleaseFake,
               });
@@ -331,7 +303,7 @@ describe("showing details for helm release", () => {
             });
 
             it("calls for release configuration", () => {
-              expect(callForHelmReleaseConfigurationMock).toHaveBeenCalledWith(
+              expect(requestHelmReleaseConfigurationMock).toHaveBeenCalledWith(
                 "some-name",
                 "some-namespace",
                 true,
@@ -340,7 +312,7 @@ describe("showing details for helm release", () => {
 
             describe("when configuration resolves", () => {
               beforeEach(async () => {
-                await callForHelmReleaseConfigurationMock.resolve(
+                await requestHelmReleaseConfigurationMock.resolve(
                   "some-configuration",
                 );
               });
@@ -405,12 +377,12 @@ describe("showing details for helm release", () => {
                 });
 
                 it("does not save changes yet", () => {
-                  expect(callForHelmReleaseUpdateMock).not.toHaveBeenCalled();
+                  expect(requestHelmReleaseUpdateMock).not.toHaveBeenCalled();
                 });
 
                 describe("when toggling to see only user defined values", () => {
                   beforeEach(() => {
-                    callForHelmReleaseConfigurationMock.mockClear();
+                    requestHelmReleaseConfigurationMock.mockClear();
 
                     const toggle = rendered.getByTestId(
                       "user-supplied-values-only-checkbox",
@@ -420,7 +392,7 @@ describe("showing details for helm release", () => {
                   });
 
                   it("calls for only user defined configuration", () => {
-                    expect(callForHelmReleaseConfigurationMock).toHaveBeenCalledWith(
+                    expect(requestHelmReleaseConfigurationMock).toHaveBeenCalledWith(
                       "some-name",
                       "some-namespace",
                       false,
@@ -429,7 +401,7 @@ describe("showing details for helm release", () => {
 
                   describe("when configuration resolves", () => {
                     beforeEach(async () => {
-                      await callForHelmReleaseConfigurationMock.resolve(
+                      await requestHelmReleaseConfigurationMock.resolve(
                         "some-other-configuration",
                       );
                     });
@@ -447,7 +419,7 @@ describe("showing details for helm release", () => {
                     });
 
                     it("when toggling again, calls for all configuration", () => {
-                      callForHelmReleaseConfigurationMock.mockClear();
+                      requestHelmReleaseConfigurationMock.mockClear();
 
                       const toggle = rendered.getByTestId(
                         "user-supplied-values-only-checkbox",
@@ -455,7 +427,7 @@ describe("showing details for helm release", () => {
 
                       fireEvent.click(toggle);
 
-                      expect(callForHelmReleaseConfigurationMock).toHaveBeenCalledWith(
+                      expect(requestHelmReleaseConfigurationMock).toHaveBeenCalledWith(
                         "some-name",
                         "some-namespace",
                         true,
@@ -478,7 +450,7 @@ describe("showing details for helm release", () => {
                   });
 
                   it("calls for update", () => {
-                    expect(callForHelmReleaseUpdateMock).toHaveBeenCalledWith(
+                    expect(requestHelmReleaseUpdateMock).toHaveBeenCalledWith(
                       "some-name",
                       "some-namespace",
 
@@ -501,10 +473,10 @@ describe("showing details for helm release", () => {
 
                   describe("when update resolves with success", () => {
                     beforeEach(async () => {
-                      callForHelmReleasesMock.mockClear();
-                      callForHelmReleaseConfigurationMock.mockClear();
+                      requestHelmReleasesMock.mockClear();
+                      requestHelmReleaseConfigurationMock.mockClear();
 
-                      await callForHelmReleaseUpdateMock.resolve({
+                      await requestHelmReleaseUpdateMock.resolve({
                         updateWasSuccessful: true,
                       });
                     });
@@ -522,7 +494,7 @@ describe("showing details for helm release", () => {
                     });
 
                     it("reloads the configuration", () => {
-                      expect(callForHelmReleaseConfigurationMock).toHaveBeenCalledWith(
+                      expect(requestHelmReleaseConfigurationMock).toHaveBeenCalledWith(
                         "some-name",
                         "some-namespace",
                         true,
@@ -540,10 +512,10 @@ describe("showing details for helm release", () => {
 
                   describe("when update resolves with failure", () => {
                     beforeEach(async () => {
-                      callForHelmReleasesMock.mockClear();
-                      callForHelmReleaseConfigurationMock.mockClear();
+                      requestHelmReleasesMock.mockClear();
+                      requestHelmReleaseConfigurationMock.mockClear();
 
-                      await callForHelmReleaseUpdateMock.resolve({
+                      await requestHelmReleaseUpdateMock.resolve({
                         updateWasSuccessful: false,
                         error: "some-error",
                       });
@@ -562,7 +534,7 @@ describe("showing details for helm release", () => {
                     });
 
                     it("does not reload the configuration", () => {
-                      expect(callForHelmReleaseConfigurationMock).not.toHaveBeenCalled();
+                      expect(requestHelmReleaseConfigurationMock).not.toHaveBeenCalled();
                     });
 
                     it("does not show success notification", () => {

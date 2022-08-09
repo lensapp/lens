@@ -7,8 +7,8 @@ import { apiPrefix } from "../../../../common/vars";
 import { route } from "../../../router/route";
 import listHelmChartsInjectable from "../../../helm/helm-service/list-helm-charts.injectable";
 
-const listChartsRouteInjectable = getRouteInjectable({
-  id: "list-charts-route",
+const listHelmChartsRouteInjectable = getRouteInjectable({
+  id: "list-helm-charts-route",
 
   instantiate: (di) => {
     const listHelmCharts = di.inject(listHelmChartsInjectable);
@@ -22,4 +22,4 @@ const listChartsRouteInjectable = getRouteInjectable({
   },
 });
 
-export default listChartsRouteInjectable;
+export default listHelmChartsRouteInjectable;

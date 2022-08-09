@@ -7,8 +7,8 @@ import { action, computed, makeObservable } from "mobx";
 import type { TabId } from "../dock/store";
 import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
-import { getReleaseValues } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import assert from "assert";
+import type { RequestHelmReleaseConfiguration } from "../../../../common/k8s-api/endpoints/helm-releases.api/get-configuration.injectable";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -17,6 +17,7 @@ export interface IChartUpgradeData {
 
 export interface UpgradeChartTabStoreDependencies extends DockTabStoreDependencies {
   valuesStore: DockTabStore<string>;
+  requestHelmReleaseConfiguration: RequestHelmReleaseConfiguration;
 }
 
 export class UpgradeChartTabStore extends DockTabStore<IChartUpgradeData> {
@@ -44,7 +45,7 @@ export class UpgradeChartTabStore extends DockTabStore<IChartUpgradeData> {
     assert(data, "cannot reload values if no data");
 
     const { releaseName, releaseNamespace } = data;
-    const values = await getReleaseValues(releaseName, releaseNamespace, true);
+    const values = await this.dependencies.requestHelmReleaseConfiguration(releaseName, releaseNamespace, true);
 
     this.values.setData(tabId, values);
   }

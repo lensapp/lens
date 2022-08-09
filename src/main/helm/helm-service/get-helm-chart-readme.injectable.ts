@@ -7,8 +7,8 @@ import getActiveHelmRepositoryInjectable from "../repositories/get-active-helm-r
 import type { HelmRepo } from "../../../common/helm/helm-repo";
 import helmChartManagerInjectable from "../helm-chart-manager.injectable";
 
-const getHelmChartInjectable = getInjectable({
-  id: "get-helm-chart",
+const getHelmChartReadmeInjectable = getInjectable({
+  id: "get-helm-chart-readme",
 
   instantiate: (di) => {
     const getActiveHelmRepository = di.inject(getActiveHelmRepositoryInjectable);
@@ -21,16 +21,11 @@ const getHelmChartInjectable = getInjectable({
         return undefined;
       }
 
-      const chartManager = getChartManager(repo);
-
-      return {
-        readme: await chartManager.getReadme(chartName, version),
-        versions: await chartManager.chartVersions(chartName),
-      };
+      return getChartManager(repo).getReadme(chartName, version);
     };
   },
 
   causesSideEffects: true,
 });
 
-export default getHelmChartInjectable;
+export default getHelmChartReadmeInjectable;
