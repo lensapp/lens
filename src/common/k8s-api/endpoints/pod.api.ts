@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { MetricData } from "./metrics.api";
-import { metricsApi } from "./metrics.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions, ResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { RequireExactlyOne } from "type-fest";
@@ -31,41 +29,6 @@ export class PodApi extends KubeApi<Pod> {
 
     return this.request.get(path, { query });
   }
-}
-
-export function getMetricsForPods(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<PodMetricData> {
-  const podSelector = pods.map(pod => pod.getName()).join("|");
-  const opts = { category: "pods", pods: podSelector, namespace, selector };
-
-  return metricsApi.getMetrics({
-    cpuUsage: opts,
-    cpuRequests: opts,
-    cpuLimits: opts,
-    memoryUsage: opts,
-    memoryRequests: opts,
-    memoryLimits: opts,
-    fsUsage: opts,
-    fsWrites: opts,
-    fsReads: opts,
-    networkReceive: opts,
-    networkTransmit: opts,
-  }, {
-    namespace,
-  });
-}
-
-export interface PodMetricData extends Partial<Record<string, MetricData>> {
-  cpuUsage: MetricData;
-  memoryUsage: MetricData;
-  fsUsage: MetricData;
-  fsWrites: MetricData;
-  fsReads: MetricData;
-  networkReceive: MetricData;
-  networkTransmit: MetricData;
-  cpuRequests?: MetricData;
-  cpuLimits?: MetricData;
-  memoryRequests?: MetricData;
-  memoryLimits?: MetricData;
 }
 
 // Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#read-log-pod-v1-core

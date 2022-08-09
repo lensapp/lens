@@ -5,8 +5,6 @@
 
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { metricsApi } from "./metrics.api";
-import type { PodMetricData } from "./pod.api";
 import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
@@ -89,21 +87,4 @@ export class DaemonSetApi extends KubeApi<DaemonSet> {
       objectConstructor: DaemonSet,
     });
   }
-}
-
-export function getMetricsForDaemonSets(daemonsets: DaemonSet[], namespace: string, selector = ""): Promise<PodMetricData> {
-  const podSelector = daemonsets.map(daemonset => `${daemonset.getName()}-[[:alnum:]]{5}`).join("|");
-  const opts = { category: "pods", pods: podSelector, namespace, selector };
-
-  return metricsApi.getMetrics({
-    cpuUsage: opts,
-    memoryUsage: opts,
-    fsUsage: opts,
-    fsWrites: opts,
-    fsReads: opts,
-    networkReceive: opts,
-    networkTransmit: opts,
-  }, {
-    namespace,
-  });
 }
