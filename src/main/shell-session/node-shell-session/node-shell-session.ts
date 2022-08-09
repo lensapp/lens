@@ -10,11 +10,15 @@ import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-sessio
 import { ShellOpenError, ShellSession } from "../shell-session";
 import { get, once } from "lodash";
 import { Node, NodeApi } from "../../../common/k8s-api/endpoints";
-import { KubeJsonApi } from "../../../common/k8s-api/kube-json-api";
 import { TerminalChannels } from "../../../common/terminal/channels";
+import type { CreateKubeJsonApiForCluster } from "../../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
 
 export interface NodeShellSessionArgs extends ShellSessionArgs {
   nodeName: string;
+}
+
+export interface NodeShellSessionDependencies extends ShellSessionDependencies {
+  createKubeJsonApiForCluster: CreateKubeJsonApiForCluster;
 }
 
 export class NodeShellSession extends ShellSession {
@@ -24,7 +28,7 @@ export class NodeShellSession extends ShellSession {
   protected readonly nodeName: string;
   protected readonly cwd: string | undefined = undefined;
 
-  constructor(dependencies: ShellSessionDependencies, { nodeName, ...args }: NodeShellSessionArgs) {
+  constructor(protected readonly dependencies: NodeShellSessionDependencies, { nodeName, ...args }: NodeShellSessionArgs) {
     super(dependencies, args);
     this.nodeName = nodeName;
   }
@@ -65,7 +69,7 @@ export class NodeShellSession extends ShellSession {
     const args = ["exec", "-i", "-t", "-n", "kube-system", this.podName, "--"];
     const nodeApi = new NodeApi({
       objectConstructor: Node,
-      request: KubeJsonApi.forCluster(this.cluster.id),
+      request: this.dependencies.createKubeJsonApiForCluster(this.cluster.id),
     });
     const node = await nodeApi.get({ name: this.nodeName });
 

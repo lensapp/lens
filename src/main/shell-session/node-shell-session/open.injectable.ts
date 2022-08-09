@@ -6,11 +6,12 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type WebSocket from "ws";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
+import type { NodeShellSessionDependencies } from "./node-shell-session";
 import { NodeShellSession } from "./node-shell-session";
-import type { ShellSessionDependencies } from "../shell-session";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import createKubeJsonApiForClusterInjectable from "../../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
 
 export interface NodeShellSessionArgs {
   websocket: WebSocket;
@@ -25,10 +26,11 @@ const openNodeShellSessionInjectable = getInjectable({
   id: "open-node-shell-session",
   instantiate: (di): OpenNodeShellSession => {
     const createKubectl = di.inject(createKubectlInjectable);
-    const dependencies: ShellSessionDependencies = {
+    const dependencies: NodeShellSessionDependencies = {
       isMac: di.inject(isMacInjectable),
       isWindows: di.inject(isWindowsInjectable),
       logger: di.inject(loggerInjectable),
+      createKubeJsonApiForCluster: di.inject(createKubeJsonApiForClusterInjectable),
     };
 
     return (args) => {
