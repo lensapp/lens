@@ -62,11 +62,10 @@ export class ResourceApplier {
     }
   }
 
-  async apply(resource: KubernetesObject | any): Promise<string> {
-    resource = this.sanitizeObject(resource);
+  async create(resource: string): Promise<string> {
     appEventBus.emit({ name: "resource", action: "apply" });
 
-    return this.kubectlApply(yaml.dump(resource));
+    return this.kubectlApply(yaml.dump(this.sanitizeObject(resource)));
   }
 
   protected async kubectlApply(content: string): Promise<string> {
@@ -154,11 +153,7 @@ export class ResourceApplier {
 
     delete res.status;
     delete res.metadata?.resourceVersion;
-    const annotations = res.metadata?.annotations;
-
-    if (annotations) {
-      delete annotations["kubectl.kubernetes.io/last-applied-configuration"];
-    }
+    delete res.metadata?.annotations["kubectl.kubernetes.io/last-applied-configuration"];
 
     return res;
   }

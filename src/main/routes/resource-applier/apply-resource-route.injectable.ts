@@ -5,17 +5,19 @@
 import { getRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
 import { ResourceApplier } from "../../resource-applier";
-import { clusterRoute } from "../../router/route";
+import { payloadValidatedClusterRoute } from "../../router/route";
+import Joi from "joi";
 
-const applyResourceRouteInjectable = getRouteInjectable({
+const createResourceRouteInjectable = getRouteInjectable({
   id: "apply-resource-route",
 
-  instantiate: () => clusterRoute({
+  instantiate: () => payloadValidatedClusterRoute({
     method: "post",
     path: `${apiPrefix}/stack`,
+    payloadValidator: Joi.string(),
   })(async ({ cluster, payload }) => ({
-    response: await new ResourceApplier(cluster).apply(payload),
+    response: await new ResourceApplier(cluster).create(payload),
   })),
 });
 
-export default applyResourceRouteInjectable;
+export default createResourceRouteInjectable;
