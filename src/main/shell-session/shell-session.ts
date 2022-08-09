@@ -11,14 +11,13 @@ import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
 import os from "os";
-import { isMac, isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/app-event-bus/event-bus";
-import logger from "../logger";
 import { stat } from "fs/promises";
 import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
+import type { Logger } from "../../common/logger";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -104,6 +103,19 @@ export enum WebSocketCloseEvent {
   TlsHandshake = 1015,
 }
 
+export interface ShellSessionDependencies {
+  readonly isWindows: boolean;
+  readonly isMac: boolean;
+  readonly logger: Logger;
+}
+
+export interface ShellSessionArgs {
+  kubectl: Kubectl;
+  websocket: WebSocket;
+  cluster: Cluster;
+  tabId: string;
+}
+
 export abstract class ShellSession {
   abstract readonly ShellType: string;
 
@@ -130,6 +142,9 @@ export abstract class ShellSession {
   protected readonly kubectlBinDirP: Promise<string>;
   protected readonly kubeconfigPathP: Promise<string>;
   protected readonly terminalId: string;
+  protected readonly kubectl: Kubectl;
+  protected readonly websocket: WebSocket;
+  protected readonly cluster: Cluster;
 
   protected abstract get cwd(): string | undefined;
 
@@ -147,12 +162,15 @@ export abstract class ShellSession {
       })
     ));
 
-    logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
+    this.dependencies.logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
 
     return { shellProcess, resume };
   }
 
-  constructor(protected readonly kubectl: Kubectl, protected readonly websocket: WebSocket, protected readonly cluster: Cluster, terminalId: string) {
+  constructor(protected readonly dependencies: ShellSessionDependencies, { kubectl, websocket, cluster, tabId: terminalId }: ShellSessionArgs) {
+    this.kubectl = kubectl;
+    this.websocket = websocket;
+    this.cluster = cluster;
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;
@@ -165,7 +183,7 @@ export abstract class ShellSession {
   protected async getCwd(env: Record<string, string | undefined>): Promise<string> {
     const cwdOptions = [this.cwd];
 
-    if (isWindows) {
+    if (this.dependencies.isWindows) {
       cwdOptions.push(
         env.USERPROFILE,
         os.homedir(),
@@ -177,7 +195,7 @@ export abstract class ShellSession {
         os.homedir(),
       );
 
-      if (isMac) {
+      if (this.dependencies.isMac) {
         cwdOptions.push("/Users");
       } else {
         cwdOptions.push("/home");
@@ -214,7 +232,7 @@ export abstract class ShellSession {
     this.running = true;
     shellProcess.onData(data => this.send({ type: TerminalChannels.STDOUT, data }));
     shellProcess.onExit(({ exitCode }) => {
-      logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with exitcode=${exitCode}`);
+      this.dependencies.logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with exitcode=${exitCode}`);
 
       // This might already be false because of the kill() within the websocket.on("close") handler
       if (this.running) {
@@ -232,11 +250,11 @@ export abstract class ShellSession {
     this.websocket
       .on("message", (rawData: unknown): void => {
         if (!this.running) {
-          return void logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
+          return void this.dependencies.logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
         }
 
         if (!(rawData instanceof Buffer)) {
-          return void logger.error(`[SHELL-SESSION]: Received message non-buffer message.`, { rawData });
+          return void this.dependencies.logger.error(`[SHELL-SESSION]: Received message non-buffer message.`, { rawData });
         }
 
         const data = rawData.toString();
@@ -252,18 +270,18 @@ export abstract class ShellSession {
               shellProcess.resize(message.data.width, message.data.height);
               break;
             case TerminalChannels.PING:
-              logger.silly(`[SHELL-SESSION]: ${this.terminalId} ping!`);
+              this.dependencies.logger.silly(`[SHELL-SESSION]: ${this.terminalId} ping!`);
               break;
             default:
-              logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
+              this.dependencies.logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
               break;
           }
         } catch (error) {
-          logger.error(`[SHELL-SESSION]: failed to handle message for ${this.terminalId}`, error);
+          this.dependencies.logger.error(`[SHELL-SESSION]: failed to handle message for ${this.terminalId}`, error);
         }
       })
       .once("close", code => {
-        logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${WebSocketCloseEvent[code]}(${code})`, { cluster: this.cluster.getMeta() });
+        this.dependencies.logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${WebSocketCloseEvent[code]}(${code})`, { cluster: this.cluster.getMeta() });
 
         const stopShellSession = this.running
           && (
@@ -278,11 +296,11 @@ export abstract class ShellSession {
           this.running = false;
 
           try {
-            logger.info(`[SHELL-SESSION]: Killing shell process (pid=${shellProcess.pid}) for ${this.terminalId}`);
+            this.dependencies.logger.info(`[SHELL-SESSION]: Killing shell process (pid=${shellProcess.pid}) for ${this.terminalId}`);
             shellProcess.kill();
             ShellSession.processes.delete(this.terminalId);
           } catch (error) {
-            logger.warn(`[SHELL-SESSION]: failed to kill shell process (pid=${shellProcess.pid}) for ${this.terminalId}`, error);
+            this.dependencies.logger.warn(`[SHELL-SESSION]: failed to kill shell process (pid=${shellProcess.pid}) for ${this.terminalId}`, error);
           }
         }
       });
@@ -319,7 +337,7 @@ export abstract class ShellSession {
 
     delete env.DEBUG; // don't pass DEBUG into shells
 
-    if (isWindows) {
+    if (this.dependencies.isWindows) {
       env.SystemRoot = process.env.SystemRoot;
       env.PTYSHELL = shell || "powershell.exe";
       env.PATH = pathStr;
