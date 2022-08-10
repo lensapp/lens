@@ -6,13 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { AgentOptions } from "https";
 import { Agent } from "https";
 import type { RequestInit } from "node-fetch";
-import fetchInjectable from "../fetch/fetch.injectable";
-import loggerInjectable from "../logger.injectable";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
-import type { JsonApiDependencies } from "./json-api";
+import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import type { KubeApiOptions } from "./kube-api";
 import { KubeApi } from "./kube-api";
-import { KubeJsonApi } from "./kube-json-api";
 import type { KubeJsonApiDataFor, KubeObject, KubeObjectConstructor } from "./kube-object";
 
 export interface CreateKubeApiForRemoteClusterConfig {
@@ -52,10 +49,7 @@ const createKubeApiForRemoteClusterInjectable = getInjectable({
   id: "create-kube-api-for-remote-cluster",
   instantiate: (di): CreateKubeApiForRemoteCluster => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
-    const dependencies: JsonApiDependencies = {
-      fetch: di.inject(fetchInjectable),
-      logger: di.inject(loggerInjectable),
-    };
+    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
     return (config: CreateKubeApiForRemoteClusterConfig, kubeClass: KubeObjectConstructor<KubeObject, KubeJsonApiDataFor<KubeObject>>, apiClass = KubeApi) => {
       const reqInit: RequestInit = {};
@@ -86,7 +80,7 @@ const createKubeApiForRemoteClusterInjectable = getInjectable({
       }
 
       const token = config.user.token;
-      const request = new KubeJsonApi(dependencies, {
+      const request = createKubeJsonApi({
         serverAddress: config.cluster.server,
         apiBase: "",
         debug: isDevelopment,

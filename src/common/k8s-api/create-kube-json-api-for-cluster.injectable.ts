@@ -3,12 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import fetchInjectable from "../fetch/fetch.injectable";
-import loggerInjectable from "../logger.injectable";
 import { apiKubePrefix, isDebugging } from "../vars";
 import { apiBaseInjectionToken } from "./api-base";
-import type { JsonApiDependencies } from "./json-api";
-import { KubeJsonApi } from "./kube-json-api";
+import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
+import type { KubeJsonApi } from "./kube-json-api";
 
 export type CreateKubeJsonApiForCluster = (clusterId: string) => KubeJsonApi;
 
@@ -16,24 +14,20 @@ const createKubeJsonApiForClusterInjectable = getInjectable({
   id: "create-kube-json-api-for-cluster",
   instantiate: (di): CreateKubeJsonApiForCluster => {
     const apiBase = di.inject(apiBaseInjectionToken);
-    const dependencies: JsonApiDependencies = {
-      fetch: di.inject(fetchInjectable),
-      logger: di.inject(loggerInjectable),
-    };
+    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
-    return (clusterId) => {
-      const url = new URL(apiBase.config.serverAddress);
-
-      return new KubeJsonApi(dependencies, {
+    return (clusterId) => createKubeJsonApi(
+      {
         serverAddress: apiBase.config.serverAddress,
         apiBase: apiKubePrefix,
         debug: isDebugging,
-      }, {
+      },
+      {
         headers: {
-          "Host": `${clusterId}.localhost:${url.port}`,
+          "Host": `${clusterId}.localhost:${new URL(apiBase.config.serverAddress).port}`,
         },
-      });
-    };
+      },
+    );
   },
 });
 
