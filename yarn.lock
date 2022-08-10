@@ -1225,10 +1225,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@ogre-tools/fp@9.0.1", "@ogre-tools/fp@^9.0.1":
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.1.tgz#22c23bd209f6f56bf66a5ff4514930334a3a4782"
-  integrity sha512-7kORUcvR9DZz5/2qDSSKExGeisXzfmOafP+Z6l8C+WQXEmEQm7CmFMyBEyMkei0eNFzNghlKYgRFpsvBdU3KAg==
+"@ogre-tools/fp@9.0.2", "@ogre-tools/fp@^9.0.1":
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.2.tgz#9f7fbbf461c539850c5408456164a8fadb643704"
+  integrity sha512-HQa6YQK5EDR0Fv4tbvckrjO8VueE9uagX+TbgFE+Zq51E1cc/4VHQJGo5c6l+H/g+jvYKCfJMwbnMiFFxeDEfw==
   dependencies:
     lodash "^4.17.21"
 
@@ -11359,10 +11359,10 @@ react-router@5.3.3, react-router@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-select-event@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/react-select-event/-/react-select-event-5.5.0.tgz#148067f75846f6bf07254c453083f2d3d59935f6"
-  integrity sha512-BwGjWL9wJxfug32mcIjj9arw9C8vBuW/pGijocFsS0NA8n6QSTmgvs27N1tVk7Pb5cJ1iFpQ5EcjqtO61sA02g==
+react-select-event@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/react-select-event/-/react-select-event-5.5.1.tgz#d67e04a6a51428b1534b15ecb1b82afbe5edddcb"
+  integrity sha512-goAx28y0+iYrbqZA2FeRTreHHs/ZtSuKxtA+J5jpKT5RHPCbVZJ4MqACfPnWyFXsEec+3dP5bCrNTxIX8oYe9A==
   dependencies:
     "@testing-library/dom" ">=7"
 
