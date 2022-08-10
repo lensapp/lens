@@ -5,121 +5,95 @@
 
 import styles from "./kubeconfig-dialog.module.scss";
 import React from "react";
-import { makeObservable, observable } from "mobx";
+import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
-import yaml from "js-yaml";
-import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
 import { cssNames, saveFileDialog } from "../../utils";
 import { Button } from "../button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
-import { apiBase } from "../../api";
 import { MonacoEditor } from "../monaco-editor";
 import { clipboard } from "electron";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import kubeconfigDialogStateInjectable from "./state.injectable";
 
 export interface KubeconfigDialogData {
   title?: React.ReactNode;
-  loader: () => Promise<any>;
+  config: string;
 }
 
 export interface KubeConfigDialogProps extends Partial<DialogProps> {
 }
 
-const dialogState = observable.box<KubeconfigDialogData | undefined>();
+interface Dependencies {
+  state: IObservableValue<KubeconfigDialogData | undefined>;
+  showSuccessNotification: ShowNotification;
+}
 
 @observer
-export class KubeConfigDialog extends React.Component<KubeConfigDialogProps> {
-  @observable config = ""; // parsed kubeconfig in yaml format
-
-  constructor(props: KubeConfigDialogProps) {
+class NonInjectedKubeConfigDialog extends React.Component<KubeConfigDialogProps & Dependencies> {
+  constructor(props: KubeConfigDialogProps & Dependencies) {
     super(props);
-    makeObservable(this);
-  }
-
-  static open(data: KubeconfigDialogData) {
-    dialogState.set(data);
-  }
-
-  static close() {
-    dialogState.set(undefined);
   }
 
   close = () => {
-    KubeConfigDialog.close();
+    this.props.state.set(undefined);
   };
 
-  onOpen = (data: KubeconfigDialogData) => {
-    this.loadConfig(data);
+  copyToClipboard = (config: string) => {
+    clipboard.writeText(config);
+    this.props.showSuccessNotification("Config copied to clipboard");
   };
 
-  async loadConfig(data: KubeconfigDialogData) {
-    const config = await data.loader().catch(err => {
-      Notifications.error(err);
-      this.close();
-    });
-
-    this.config = config ? yaml.dump(config) : "";
-  }
-
-  copyToClipboard = () => {
-    clipboard.writeText(this.config);
-    Notifications.ok("Config copied to clipboard");
+  download = (config: string) => {
+    saveFileDialog("config", config, "text/yaml");
   };
 
-  download = () => {
-    saveFileDialog("config", this.config, "text/yaml");
-  };
-
-  renderContents(data: KubeconfigDialogData) {
-    const yamlConfig = this.config;
-
-    return (
-      <Wizard header={<h5>{data.title || "Kubeconfig File"}</h5>}>
-        <WizardStep
-          customButtons={(
-            <div className="actions flex gaps">
-              <Button plain onClick={this.copyToClipboard}>
-                <Icon material="assignment"/>
-                {" Copy to clipboard"}
-              </Button>
-              <Button plain onClick={this.download}>
-                <Icon material="cloud_download"/>
-                {" Download file"}
-              </Button>
-              <Button
-                plain
-                className="box right"
-                onClick={this.close}
-              >
-                Close
-              </Button>
-            </div>
-          )}
-          prev={this.close}
-        >
-          <MonacoEditor
-            readOnly
-            className={styles.editor}
-            value={yamlConfig}
-          />
-        </WizardStep>
-      </Wizard>
-    );
-  }
+  renderContents = (data: KubeconfigDialogData) => (
+    <Wizard header={<h5>{ data.title || "Kubeconfig File" }</h5>}>
+      <WizardStep
+        customButtons={ (
+          <div className="actions flex gaps">
+            <Button plain onClick={() => this.copyToClipboard(data.config)}>
+              <Icon material="assignment" />
+              {" Copy to clipboard"}
+            </Button>
+            <Button plain onClick={() => this.download(data.config)}>
+              <Icon material="cloud_download" />
+              {" Download file"}
+            </Button>
+            <Button
+              plain
+              className="box right"
+              onClick={this.close}
+            >
+              Close
+            </Button>
+          </div>
+        ) }
+        prev={this.close}
+      >
+        <MonacoEditor
+          readOnly
+          className={styles.editor}
+          value={data.config}
+        />
+      </WizardStep>
+    </Wizard>
+  );
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const data = dialogState.get();
+    const { className, state, ...dialogProps } = this.props;
+    const data = state.get();
 
     return (
       <Dialog
         {...dialogProps}
         className={cssNames(styles.KubeConfigDialog, className)}
-        isOpen={Boolean(data)}
-        onOpen={data && (() => this.onOpen(data))}
+        isOpen={!!data}
         close={this.close}
       >
         {data && this.renderContents(data)}
@@ -128,12 +102,10 @@ export class KubeConfigDialog extends React.Component<KubeConfigDialogProps> {
   }
 }
 
-export function openServiceAccountKubeConfig(account: ServiceAccount) {
-  const accountName = account.getName();
-  const namespace = account.getNs();
-
-  KubeConfigDialog.open({
-    title: `${accountName} kubeconfig`,
-    loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`),
-  });
-}
+export const KubeConfigDialog = withInjectables<Dependencies, KubeConfigDialogProps>(NonInjectedKubeConfigDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+    state: di.inject(kubeconfigDialogStateInjectable),
+  }),
+});

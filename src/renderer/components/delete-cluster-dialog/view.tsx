@@ -23,7 +23,7 @@ import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { DeleteClusterDialogState } from "./state.injectable";
 import deleteClusterDialogStateInjectable from "./state.injectable";
 
-export interface Dependencies {
+interface Dependencies {
   state: IObservableValue<DeleteClusterDialogState | undefined>;
   hotbarStore: HotbarStore;
 }
