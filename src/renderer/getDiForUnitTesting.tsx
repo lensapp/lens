@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import glob from "glob";
-import { memoize, noop, chunk } from "lodash/fp";
+import { noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import {
   createContainer,
@@ -73,6 +72,7 @@ import forceUpdateModalRootFrameComponentInjectable from "./application-update/f
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
+import type { GlobalOverride } from "../common/test-utils/get-global-override";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -85,9 +85,9 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
-  const filePaths = getInjectableFilePaths();
-
-  const injectables = filePaths.map(filePath => require(filePath).default);
+  const injectables: Injectable<any, any, any>[] = (global as any).rendererInjectablePaths.map(
+    (filePath: string) => require(filePath).default,
+  );
 
   chunk(100)(injectables).forEach(chunkInjectables => {
     di.register(...chunkInjectables);
@@ -96,10 +96,8 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
   di.preventSideEffects();
 
   if (doGeneralOverrides) {
-    const globalOverrideFilePaths = getGlobalOverridePaths();
-
-    const globalOverrides = globalOverrideFilePaths.map(
-      (filePath) => require(filePath).default,
+    const globalOverrides: GlobalOverride[] = (global as any).rendererGlobalOverridePaths.map(
+      (filePath: string) => require(filePath).default,
     );
 
     globalOverrides.forEach(globalOverride => {
@@ -231,20 +229,6 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
   return di;
 };
-
-const getInjectableFilePaths = memoize(() => [
-  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-]);
-
-const getGlobalOverridePaths = memoize(() =>
-  glob.sync(
-    "../{common,extensions,renderer}/**/*.global-override-for-injectable.{ts,tsx}",
-
-    { cwd: __dirname },
-  ),
-);
 
 const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
   injectables.forEach(injectable => {
