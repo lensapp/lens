@@ -1,0 +1,38 @@
+name: Build App
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - "*"
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        build-for: [mac, win, linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Download binaries
+        run: yarn download:binaries
+
+      - name: Build ${{ matrix.build-for }}
+        run: yarn build:${{ matrix.build-for }}
+
+      - name: Save Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./dist/${{ matrix.build-for }}/*
