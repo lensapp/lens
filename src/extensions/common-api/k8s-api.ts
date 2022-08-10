@@ -9,18 +9,28 @@
 
 export { ResourceStack } from "../../common/k8s/resource-stack";
 import apiManagerInjectable from "../../common/k8s-api/api-manager/manager.injectable";
+import createKubeApiForClusterInjectable from "../../common/k8s-api/create-kube-api-for-cluster.injectable";
+import createKubeApiForRemoteClusterInjectable from "../../common/k8s-api/create-kube-api-for-remote-cluster.injectable";
+import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
+export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
+export const forRemoteCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForRemoteClusterInjectable);
 
-export {
-  KubeApi,
-  forCluster,
-  forRemoteCluster,
-  type ILocalKubeApiConfig,
-  type IRemoteKubeApiConfig,
-  type IKubeApiCluster,
-} from "../../common/k8s-api/kube-api";
+export { KubeApi } from "../../common/k8s-api/kube-api";
+
+/**
+ * @deprecated This type is unused
+ */
+export interface IKubeApiCluster {
+  metadata: {
+    uid: string;
+  };
+}
+
+export type { CreateKubeApiForRemoteClusterConfig as IRemoteKubeApiConfig } from "../../common/k8s-api/create-kube-api-for-remote-cluster.injectable";
+export type { CreateKubeApiForLocalClusterConfig as ILocalKubeApiConfig } from "../../common/k8s-api/create-kube-api-for-cluster.injectable";
 
 export {
   KubeObject,

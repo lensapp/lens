@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import fetchMock from "jest-fetch-mock";
 import configurePackages from "./common/configure-packages";
 import { configure } from "mobx";
 import { setImmediate } from "timers";
@@ -19,9 +18,6 @@ configure({
   // ref https://github.com/mobxjs/mobx/issues/2784
   safeDescriptors: false,
 });
-
-// rewire global.fetch to call 'fetchMock'
-fetchMock.enableMocks();
 
 // Mock __non_webpack_require__ for tests
 globalThis.__non_webpack_require__ = jest.fn();

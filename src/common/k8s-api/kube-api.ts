@@ -5,22 +5,18 @@
 
 // Base class for building all kubernetes apis
 
-import { isFunction, merge } from "lodash";
+import { merge } from "lodash";
 import { stringify } from "querystring";
-import { apiKubePrefix, isDevelopment } from "../../common/vars";
-import { apiBase, apiKube } from "./index";
+import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata } from "./kube-object";
 import { KubeObject, KubeStatus, isKubeStatusData } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
-import type { KubeJsonApiData } from "./kube-json-api";
-import { KubeJsonApi } from "./kube-json-api";
+import type { KubeJsonApiData, KubeJsonApi } from "./kube-json-api";
 import type { Disposer } from "../utils";
 import { isDefined, noop, WrappedAbortController } from "../utils";
 import type { RequestInit } from "node-fetch";
-import type { AgentOptions } from "https";
-import { Agent } from "https";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
@@ -145,135 +141,7 @@ export interface KubeApiResourceList {
   resources: KubeApiResource[];
 }
 
-export interface ILocalKubeApiConfig {
-  metadata: {
-    uid: string;
-  };
-}
-
 export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
-
-/**
- * @deprecated
- */
-export interface IKubeApiCluster extends ILocalKubeApiConfig { }
-
-export interface IRemoteKubeApiConfig {
-  cluster: {
-    server: string;
-    caData?: string;
-    skipTLSVerify?: boolean;
-  };
-  user: {
-    token?: string | (() => Promise<string>);
-    clientCertificateData?: string;
-    clientKeyData?: string;
-  };
-  /**
-   * Custom instance of https.agent to use for the requests
-   *
-   * @remarks the custom agent replaced default agent, options skipTLSVerify,
-   * clientCertificateData, clientKeyData and caData are ignored.
-   */
-   agent?: Agent;
-}
-
-export function forCluster<
-  Object extends KubeObject,
-  Api extends KubeApi<Object>,
-  Data extends KubeJsonApiDataFor<Object>,
->(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => Api): Api;
-export function forCluster<
-  Object extends KubeObject,
-  Data extends KubeJsonApiDataFor<Object>,
->(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>): KubeApi<Object>;
-
-export function forCluster<
-  Object extends KubeObject,
-  Data extends KubeJsonApiDataFor<Object>,
->(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: (new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>) = KubeApi): KubeApi<Object> {
-  const url = new URL(apiBase.config.serverAddress);
-  const request = new KubeJsonApi({
-    serverAddress: apiBase.config.serverAddress,
-    apiBase: apiKubePrefix,
-    debug: isDevelopment,
-  }, {
-    headers: {
-      "Host": `${cluster.metadata.uid}.localhost:${url.port}`,
-    },
-  });
-
-  return new apiClass({
-    objectConstructor: kubeClass as KubeObjectConstructor<Object, KubeJsonApiDataFor<Object>>,
-    request,
-  });
-}
-
-export function forRemoteCluster<
-  Object extends KubeObject,
-  Api extends KubeApi<Object>,
-  Data extends KubeJsonApiDataFor<Object>,
->(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => Api): Api;
-export function forRemoteCluster<
-  Object extends KubeObject,
-  Data extends KubeJsonApiDataFor<Object>,
->(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>): KubeApi<Object>;
-
-export function forRemoteCluster<
-  Object extends KubeObject,
-  Api extends KubeApi<Object>,
-  Data extends KubeJsonApiDataFor<Object>,
->(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object> = KubeApi): KubeApi<Object> {
-  const reqInit: RequestInit = {};
-  const agentOptions: AgentOptions = {};
-
-  if (config.cluster.skipTLSVerify === true) {
-    agentOptions.rejectUnauthorized = false;
-  }
-
-  if (config.user.clientCertificateData) {
-    agentOptions.cert = config.user.clientCertificateData;
-  }
-
-  if (config.user.clientKeyData) {
-    agentOptions.key = config.user.clientKeyData;
-  }
-
-  if (config.cluster.caData) {
-    agentOptions.ca = config.cluster.caData;
-  }
-
-  if (Object.keys(agentOptions).length > 0) {
-    reqInit.agent = new Agent(agentOptions);
-  }
-
-  if (config.agent) {
-    reqInit.agent = config.agent;
-  }
-
-  const token = config.user.token;
-  const request = new KubeJsonApi({
-    serverAddress: config.cluster.server,
-    apiBase: "",
-    debug: isDevelopment,
-    ...(token ? {
-      getRequestOptions: async () => ({
-        headers: {
-          "Authorization": `Bearer ${isFunction(token) ? await token() : token}`,
-        },
-      }),
-    } : {}),
-  }, reqInit);
-
-  if (!apiClass) {
-    apiClass = KubeApi as new (apiOpts: KubeApiOptions<Object>) => Api;
-  }
-
-  return new apiClass({
-    objectConstructor: kubeClass as KubeObjectConstructor<Object, KubeJsonApiDataFor<Object>>,
-    request,
-  });
-}
 
 export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = (data: IKubeWatchEvent<T>, error: any) => void;
 
