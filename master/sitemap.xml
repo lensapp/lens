@@ -6,6 +6,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/architecture/decisions/</loc>
+         <lastmod>2022-08-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/extension-migration/</loc>
          <lastmod>2022-08-10</lastmod>
          <changefreq>daily</changefreq>
