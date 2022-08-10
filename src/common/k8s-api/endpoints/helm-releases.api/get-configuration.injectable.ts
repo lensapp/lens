@@ -15,7 +15,7 @@ export type RequestHelmReleaseConfiguration = (
 const requestConfigurationEnpoint = urlBuilderFor("/v2/releases/:namespace/:name/values");
 
 const requestHelmReleaseConfigurationInjectable = getInjectable({
-  id: "call-for-helm-release-configuration",
+  id: "request-helm-release-configuration",
 
   instantiate: (di): RequestHelmReleaseConfiguration => {
     const apiBase = di.inject(apiBaseInjectionToken);
