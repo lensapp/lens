@@ -41,7 +41,6 @@ describe("selection of update stability", () => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
-      showInfoNotificationMock = jest.fn(() => () => {});
 
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
