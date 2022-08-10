@@ -12,6 +12,10 @@
     "email": "info@k8slens.dev"
   },
   "scripts": {
+    "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
+    "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
+    "adr:update-readme": "adr update",
+    "adr:list": "adr list",
     "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
     "dev-build": "concurrently yarn:compile:*",
     "debug-build": "concurrently yarn:compile:main yarn:compile:extension-types",
@@ -354,6 +358,7 @@
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.31.0",
+    "adr": "^1.4.1",
     "ansi_up": "^5.1.0",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
