@@ -282,7 +282,8 @@
     "winston": "^3.8.1",
     "winston-console-format": "^1.0.8",
     "winston-transport-browserconsole": "^1.0.5",
-    "ws": "^8.8.1"
+    "ws": "^8.8.1",
+    "xterm-link-provider": "^1.3.1"
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",
