@@ -13,6 +13,7 @@ import spawnInjectable from "../child-process/spawn.injectable";
 import { getKubeAuthProxyCertificate } from "./get-kube-auth-proxy-certificate";
 import loggerInjectable from "../../common/logger.injectable";
 import baseBundledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
+import waitUntilPortIsUsedInjectable from "./wait-until-port-is-used/wait-until-port-is-used.injectable";
 
 export type CreateKubeAuthProxy = (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
 
@@ -29,6 +30,7 @@ const createKubeAuthProxyInjectable = getInjectable({
         proxyCert: getKubeAuthProxyCertificate(clusterUrl.hostname, selfsigned.generate),
         spawn: di.inject(spawnInjectable),
         logger: di.inject(loggerInjectable),
+        waitUntilPortIsUsed: di.inject(waitUntilPortIsUsedInjectable),
       };
 
       return new KubeAuthProxy(dependencies, cluster, environmentVariables);

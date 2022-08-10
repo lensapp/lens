@@ -15,6 +15,7 @@ import listNamespacesInjectable from "../../common/cluster/list-namespaces.injec
 import loggerInjectable from "../../common/logger.injectable";
 import detectorRegistryInjectable from "../cluster-detectors/detector-registry.injectable";
 import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
+import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -30,6 +31,7 @@ const createClusterInjectable = getInjectable({
       logger: di.inject(loggerInjectable),
       detectorRegistry: di.inject(detectorRegistryInjectable),
       createVersionDetector: di.inject(createVersionDetectorInjectable),
+      broadcastMessage: di.inject(broadcastMessageInjectable),
     };
 
     return (model, configData) => new Cluster(dependencies, model, configData);

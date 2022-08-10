@@ -8,10 +8,9 @@ import { ipcRenderer } from "electron";
 import * as proto from "../../../common/protocol-handler";
 import Url from "url-parse";
 import { onCorrect } from "../../../common/ipc";
+import type { LensProtocolRouterDependencies } from "../../../common/protocol-handler";
 import { foldAttemptResults, ProtocolHandlerInvalid, RouteAttempt } from "../../../common/protocol-handler";
 import { Notifications } from "../../components/notifications";
-import type { ExtensionLoader } from "../../../extensions/extension-loader";
-import type { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
 
 function verifyIpcArgs(args: unknown[]): args is [string, RouteAttempt] {
   if (args.length !== 2) {
@@ -32,11 +31,7 @@ function verifyIpcArgs(args: unknown[]): args is [string, RouteAttempt] {
   }
 }
 
-interface Dependencies {
-  extensionLoader: ExtensionLoader;
-  extensionsStore: ExtensionsStore;
-}
-
+interface Dependencies extends LensProtocolRouterDependencies {}
 
 export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
   constructor(protected dependencies: Dependencies) {

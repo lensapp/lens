@@ -4,15 +4,22 @@
  */
 
 import React from "react";
-import { findByTestId, findByText, render } from "@testing-library/react";
+import { findByTestId, findByText } from "@testing-library/react";
 import { NetworkPolicy } from "../../../../common/k8s-api/endpoints";
 import { NetworkPolicyDetails } from "../network-policy-details";
-
-jest.mock("../../kube-object-meta/kube-object-meta", () => ({
-  KubeObjectMeta: () => null,
-}));
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
 
 describe("NetworkPolicyDetails", () => {
+  let render: DiRender;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+  });
+
   it("should render w/o errors", () => {
     const policy = new NetworkPolicy({
       metadata: {} as never,

@@ -26,12 +26,6 @@ import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 import { kubeObjectMenuItemInjectionToken } from "./kube-object-menu-item-injection-token";
 
-// TODO: Make tooltips free of side effects by making it deterministic
-jest.mock("../tooltip/tooltip");
-jest.mock("../tooltip/withTooltip", () => ({
-  withTooltip: (target: any) => target,
-}));
-
 // TODO: make `animated={false}` not required to make tests deterministic
 describe("kube-object-menu", () => {
   let di: DiContainer;

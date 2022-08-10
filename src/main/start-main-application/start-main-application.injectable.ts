@@ -11,7 +11,6 @@ import { beforeApplicationIsLoadingInjectionToken } from "./runnable-tokens/befo
 import { onLoadOfApplicationInjectionToken } from "./runnable-tokens/on-load-of-application-injection-token";
 import { afterApplicationIsLoadedInjectionToken } from "./runnable-tokens/after-application-is-loaded-injection-token";
 import splashWindowInjectable from "./lens-window/splash-window/splash-window.injectable";
-
 import openDeepLinkInjectable from "../protocol-handler/lens-protocol-router-main/open-deep-link-for-url/open-deep-link.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { find, map, startsWith, toLower } from "lodash/fp";

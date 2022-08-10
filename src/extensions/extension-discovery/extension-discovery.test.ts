@@ -4,53 +4,29 @@
  */
 
 import type { FSWatcher } from "chokidar";
-import { watch } from "chokidar";
 import path from "path";
 import os from "os";
 import { Console } from "console";
-import * as fse from "fs-extra";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
-import installExtensionInjectable
-  from "../extension-installer/install-extension/install-extension.injectable";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
 import { delay } from "../../renderer/utils";
 import { observable, when } from "mobx";
 import appVersionInjectable from "../../common/vars/app-version.injectable";
-
-jest.setTimeout(60_000);
-
-jest.mock("../../common/ipc");
-jest.mock("chokidar", () => ({
-  watch: jest.fn(),
-}));
-
-jest.mock("fs-extra");
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
+import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
+import pathExistsInjectable from "../../common/fs/path-exists.injectable";
+import watchInjectable from "../../common/fs/watch/watch.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
-const mockedWatch = watch as jest.MockedFunction<typeof watch>;
-const mockedFse = fse as jest.Mocked<typeof fse>;
 
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
+  let readJsonFileMock: jest.Mock;
+  let pathExistsMock: jest.Mock;
+  let watchMock: jest.Mock;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -58,6 +34,15 @@ describe("ExtensionDiscovery", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
     di.override(appVersionInjectable, () => "5.0.0");
+
+    readJsonFileMock = jest.fn();
+    di.override(readJsonFileInjectable, () => readJsonFileMock);
+
+    pathExistsMock = jest.fn(() => Promise.resolve(true));
+    di.override(pathExistsInjectable, () => pathExistsMock);
+
+    watchMock = jest.fn();
+    di.override(watchInjectable, () => watchMock);
 
     mockFs();
 
@@ -72,7 +57,7 @@ describe("ExtensionDiscovery", () => {
     const letTestFinish = observable.box(false);
     let addHandler!: (filePath: string) => void;
 
-    mockedFse.readJson.mockImplementation((p) => {
+    readJsonFileMock.mockImplementation((p) => {
       expect(p).toBe(path.join(os.homedir(), ".k8slens/extensions/my-extension/package.json"));
 
       return {
@@ -84,8 +69,6 @@ describe("ExtensionDiscovery", () => {
       };
     });
 
-    mockedFse.pathExists.mockImplementation(() => true);
-
     const mockWatchInstance = {
       on: jest.fn((event: string, handler: typeof addHandler) => {
         if (event === "add") {
@@ -96,7 +79,7 @@ describe("ExtensionDiscovery", () => {
       }),
     } as unknown as FSWatcher;
 
-    mockedWatch.mockImplementationOnce(() => mockWatchInstance);
+    watchMock.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
@@ -139,7 +122,7 @@ describe("ExtensionDiscovery", () => {
       }),
     } as unknown as FSWatcher;
 
-    mockedWatch.mockImplementationOnce(() => mockWatchInstance);
+    watchMock.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;

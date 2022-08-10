@@ -7,10 +7,9 @@ import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Catalog } from "./catalog";
-import { mockWindow } from "../../../../__mocks__/windowMock";
 import type { CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
 import { CatalogEntity } from "../../../common/catalog";
-import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
+import type { CatalogEntityOnBeforeRun, CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -19,38 +18,15 @@ import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 import { computed } from "mobx";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
-
-mockWindow();
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-  ipcRenderer: {
-    on: jest.fn(),
-    invoke: jest.fn(),
-  },
-}));
-
-jest.mock("./hotbar-toggle-menu-item", () => ({
-  HotbarToggleMenuItem: () => <div>menu item</div>,
-}));
+import type { AsyncFnMock } from "@async-fn/jest";
+import asyncFn from "@async-fn/jest";
+import { flushPromises } from "../../../common/test-utils/flush-promises";
 
 class MockCatalogEntity extends CatalogEntity {
   public apiVersion = "api";
@@ -95,15 +71,12 @@ describe("<Catalog />", () => {
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
 
-    mockFs();
     CatalogEntityDetailRegistry.createInstance();
 
     render = renderFor(di);
     onRun = jest.fn();
     catalogEntityItem = createMockCatalogEntity(onRun);
     catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-
-    di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
 
     emitEvent = jest.fn();
 
@@ -119,60 +92,71 @@ describe("<Catalog />", () => {
 
   afterEach(() => {
     CatalogEntityDetailRegistry.resetInstance();
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
-    mockFs.restore();
   });
 
-  it("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", (done) => {
-    catalogEntityRegistry.addOnBeforeRun(
-      (event) => {
-        expect(event.target.getId()).toBe("a_catalogEntity_uid");
-        expect(event.target.getName()).toBe("a catalog entity");
+  describe("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", () => {
+    let onBeforeRunMock: AsyncFnMock<CatalogEntityOnBeforeRun>;
 
-        setTimeout(() => {
-          expect(onRun).toHaveBeenCalled();
-          done();
-        }, 500);
-      },
-    );
+    beforeEach(() => {
+      onBeforeRunMock = asyncFn();
+
+      catalogEntityRegistry.addOnBeforeRun(onBeforeRunMock);
+
+      render(<Catalog />);
+
+      userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    });
+
+    it("calls on before run event", () => {
+      const target = onBeforeRunMock.mock.calls[0][0].target;
+
+      const actual = { id: target.getId(), name: target.getName() };
+
+      expect(actual).toEqual({
+        id: "a_catalogEntity_uid",
+        name: "a catalog entity",
+      });
+    });
+
+    it("does not call onRun yet", () => {
+      expect(onRun).not.toHaveBeenCalled();
+    });
+
+    it("when before run event resolves, calls onRun", async () => {
+      await onBeforeRunMock.resolve();
+
+      expect(onRun).toHaveBeenCalled();
+    });
+  });
+
+  it("onBeforeRun prevents event => onRun wont be triggered", async () => {
+    const onBeforeRunMock = jest.fn((event) => event.preventDefault());
+
+    catalogEntityRegistry.addOnBeforeRun(onBeforeRunMock);
 
     render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+
+    await flushPromises();
+
+    expect(onRun).not.toHaveBeenCalled();
   });
 
-  it("onBeforeRun prevents event => onRun wont be triggered", (done) => {
-    catalogEntityRegistry.addOnBeforeRun(
-      (e) => {
-        setTimeout(() => {
-          expect(onRun).not.toHaveBeenCalled();
-          done();
-        }, 500);
-        e.preventDefault();
-      },
-    );
+  it("addOnBeforeRun throw an exception => onRun will be triggered", async () => {
+    const onBeforeRunMock = jest.fn(() => {
+      throw new Error("some error");
+    });
+
+    catalogEntityRegistry.addOnBeforeRun(onBeforeRunMock);
 
     render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
-  });
 
-  it("addOnBeforeRun throw an exception => onRun will be triggered", (done) => {
-    catalogEntityRegistry.addOnBeforeRun(
-      () => {
-        setTimeout(() => {
-          expect(onRun).toHaveBeenCalled();
-          done();
-        }, 500);
+    await flushPromises();
 
-        throw new Error("error!");
-      },
-    );
-
-    render(<Catalog />);
-
-    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+    expect(onRun).toHaveBeenCalled();
   });
 
   it("addOnRunHook return a promise and does not prevent run event => onRun()", (done) => {
@@ -189,40 +173,34 @@ describe("<Catalog />", () => {
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
-  it("addOnRunHook return a promise and prevents event wont be triggered", (done) => {
-    catalogEntityRegistry.addOnBeforeRun(
-      async (e) => {
-        expect(onRun).not.toBeCalled();
+  it("addOnRunHook return a promise and prevents event wont be triggered", async () => {
+    const onBeforeRunMock = asyncFn();
 
-        setTimeout(() => {
-          expect(onRun).not.toBeCalled();
-          done();
-        }, 500);
-
-        e.preventDefault();
-      },
-    );
+    catalogEntityRegistry.addOnBeforeRun(onBeforeRunMock);
 
     render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+
+    onBeforeRunMock.mock.calls[0][0].preventDefault();
+
+    await onBeforeRunMock.resolve();
+
+    expect(onRun).not.toHaveBeenCalled();
   });
 
-  it("addOnRunHook return a promise and reject => onRun will be triggered", (done) => {
-    catalogEntityRegistry.addOnBeforeRun(
-      async () => {
-        setTimeout(() => {
-          expect(onRun).toHaveBeenCalled();
-          done();
-        }, 500);
+  it("addOnRunHook return a promise and reject => onRun will be triggered", async () => {
+    const onBeforeRunMock = asyncFn();
 
-        throw new Error("rejection!");
-      },
-    );
+    catalogEntityRegistry.addOnBeforeRun(onBeforeRunMock);
 
     render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+
+    await onBeforeRunMock.reject();
+
+    expect(onRun).toHaveBeenCalled();
   });
 
   it("emits catalog open AppEvent", () => {

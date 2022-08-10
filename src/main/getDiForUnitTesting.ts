@@ -58,7 +58,6 @@ import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { observable } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
-import ipcMainInjectable from "./utils/channel/ipc-main/ipc-main.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
@@ -252,7 +251,6 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(shouldStartHiddenInjectable, () => false);
   di.override(showMessagePopupInjectable, () => () => {});
   di.override(waitForElectronToBeReadyInjectable, () => () => Promise.resolve());
-  di.override(ipcMainInjectable, () => ({}));
   di.override(getElectronThemeInjectable, () => () => "dark");
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
   di.override(electronQuitAndInstallUpdateInjectable, () => () => {});

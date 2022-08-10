@@ -19,7 +19,6 @@ exports[`kube-object-menu given kube object renders 1`] = `
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -28,6 +27,9 @@ exports[`kube-object-menu given kube object renders 1`] = `
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -59,7 +61,6 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -68,6 +69,9 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -148,7 +152,6 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -157,6 +160,9 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -185,7 +191,6 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -194,6 +199,9 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -277,7 +285,6 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -286,6 +293,9 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -369,7 +379,6 @@ exports[`kube-object-menu given kube object without namespace when removing kube
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -378,6 +387,9 @@ exports[`kube-object-menu given kube object without namespace when removing kube
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
