@@ -25,7 +25,7 @@
   cursor: pointer;
 }
 
-.badge:not(.isExpanded) {
+.badge:not(.scrollable):not(.isExpanded) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
