@@ -3,10 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { UpgradeChartTabStore } from "./store";
 import createDockTabStoreInjectable from "../dock-tab-store/create-dock-tab-store.injectable";
-import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
-import requestHelmReleaseConfigurationInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/get-configuration.injectable";
+
+export interface IChartUpgradeData {
+  releaseName: string;
+  releaseNamespace: string;
+}
 
 const upgradeChartTabStoreInjectable = getInjectable({
   id: "upgrade-chart-tab-store",
@@ -14,10 +16,8 @@ const upgradeChartTabStoreInjectable = getInjectable({
   instantiate: (di) => {
     const createDockTabStore = di.inject(createDockTabStoreInjectable);
 
-    return new UpgradeChartTabStore({
-      createStorage: di.inject(createStorageInjectable),
-      valuesStore: createDockTabStore<string>(),
-      requestHelmReleaseConfiguration: di.inject(requestHelmReleaseConfigurationInjectable),
+    return createDockTabStore<IChartUpgradeData>({
+      storageKey: "chart_releases",
     });
   },
 });

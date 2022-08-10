@@ -3,23 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { IChartUpgradeData } from "./store.injectable";
 import upgradeChartTabStoreInjectable from "./store.injectable";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import type { DockStore, DockTabCreateSpecific, TabId } from "../dock/store";
 import { TabKind } from "../dock/store";
-import type { UpgradeChartTabStore } from "./store";
 import { runInAction } from "mobx";
 import getRandomUpgradeChartTabIdInjectable from "./get-random-upgrade-chart-tab-id.injectable";
+import type { DockTabStore } from "../dock-tab-store/dock-tab.store";
 
 interface Dependencies {
-  upgradeChartStore: UpgradeChartTabStore;
+  upgradeChartStore: DockTabStore<IChartUpgradeData>;
   dockStore: DockStore;
   getRandomId: () => string;
 }
 
 const createUpgradeChartTab = ({ upgradeChartStore, dockStore, getRandomId }: Dependencies) => (release: HelmRelease, tabParams: DockTabCreateSpecific = {}): TabId => {
-  const tabId = upgradeChartStore.getTabIdByRelease(release.getName());
+  const tabId = upgradeChartStore.findTabIdFromData(val => (
+    val.releaseName === release.getName()
+    && val.releaseNamespace === release.getNs()
+  ));
 
   if (tabId) {
     dockStore.open();

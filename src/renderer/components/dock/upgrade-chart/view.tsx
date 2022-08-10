@@ -6,27 +6,20 @@
 import "./upgrade-chart.scss";
 
 import React from "react";
-import { action, makeObservable, observable, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { makeObservable, observable } from "mobx";
+import { observer } from "mobx-react";
 import { cssNames } from "../../../utils";
 import type { DockTab } from "../dock/store";
 import { InfoPanel } from "../info-panel";
-import type { UpgradeChartTabStore } from "./store";
 import { Spinner } from "../../spinner";
 import { Badge } from "../../badge";
 import { EditorPanel } from "../editor-panel";
-import type { HelmChartStore, ChartVersion } from "../../+helm-charts/store";
-import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import type { SelectOption } from "../../select";
 import { Select } from "../../select";
-import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import upgradeChartTabStoreInjectable from "./store.injectable";
-import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
-import releasesInjectable from "../../+helm-releases/releases.injectable";
-import type { RequestHelmReleaseUpdate } from "../../../../common/k8s-api/endpoints/helm-releases.api/update.injectable";
-import { first } from "lodash/fp";
-import helmChartStoreInjectable from "../../+helm-charts/store.injectable";
+import type { ChartVersion } from "../../+helm-charts/helm-charts/versions.injectable";
+import type { UpgradeChartModel } from "./upgrade-chart-model.injectable";
+import upgradeChartModelInjectable from "./upgrade-chart-model.injectable";
 
 export interface UpgradeChartProps {
   className?: string;
@@ -34,160 +27,78 @@ export interface UpgradeChartProps {
 }
 
 interface Dependencies {
-  releases: IAsyncComputed<HelmRelease[]>;
-  upgradeChartTabStore: UpgradeChartTabStore;
-  updateRelease: RequestHelmReleaseUpdate;
-  helmChartStore: HelmChartStore;
+  model: UpgradeChartModel;
 }
 
 @observer
 export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps & Dependencies> {
   @observable error?: string;
-  @observable versions = observable.array<ChartVersion>();
-  @observable version: ChartVersion | undefined = undefined;
 
   constructor(props: UpgradeChartProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(
-        () => this.release,
-        release => this.reloadVersions(release),
-        {
-          fireImmediately: true,
-        },
-      ),
-      reaction(
-        () => this.release?.getRevision(),
-        () => this.reloadValues(),
-        {
-          fireImmediately: true,
-        },
-      ),
-    ]);
-  }
-
-  get tabId() {
-    return this.props.tab.id;
-  }
-
-  get release() {
-    const tabData = this.props.upgradeChartTabStore.getData(this.tabId);
-
-    if (!tabData) return null;
-
-    return this.props.releases.value.get().find(release => release.getName() === tabData.releaseName);
-  }
-
-  get value() {
-    return this.props.upgradeChartTabStore.values.getData(this.tabId);
-  }
-
-  async reloadValues() {
-    this.props.upgradeChartTabStore.reloadValues(this.props.tab.id);
-  }
-
-  async reloadVersions(release: HelmRelease | null | undefined) {
-    if (!release) {
-      return;
-    }
-
-    this.version = undefined;
-    this.versions.clear();
-    const versions = await this.props.helmChartStore.getVersions(release.getChart());
-
-    this.versions.replace(versions);
-    this.version = first(this.versions);
-  }
-
-  onChange = action((value: string) => {
-    this.error = "";
-    this.props.upgradeChartTabStore.values.setData(this.tabId, value);
-  });
-
-  onError = action((error: Error | string) => {
-    this.error = error.toString();
-  });
-
   upgrade = async () => {
-    if (this.error || !this.release || !this.version || !this.value) {
-      return null;
+    const { model } = this.props;
+    const { completedSuccessfully } = await model.submit();
+
+    if (completedSuccessfully) {
+      return (
+        <p>
+          {"Release "}
+          <b>{model.release.getName()}</b>
+          {" successfully upgraded to version "}
+          <b>{model.version.value.get()}</b>
+        </p>
+      );
     }
 
-    const { version, repo } = this.version;
-    const releaseName = this.release.getName();
-    const releaseNs = this.release.getNs();
-
-    await this.props.updateRelease(releaseName, releaseNs, {
-      chart: this.release.getChart(),
-      values: this.value,
-      repo, version,
-    });
-
-    return (
-      <p>
-        {"Release "}
-        <b>{releaseName}</b>
-        {" successfully upgraded to version "}
-        <b>{version}</b>
-      </p>
-    );
+    return null;
   };
 
   render() {
-    const { tabId, release, value, error, onChange, onError, upgrade, versions, version } = this;
-    const { className } = this.props;
-
-    if (!release || !this.props.upgradeChartTabStore.isReady(tabId) || !version) {
-      return <Spinner center />;
-    }
-    const currentVersion = release.getVersion();
-    const versionOptions = versions.map(version => ({
-      value: version,
-      label: `${version.repo}/${release.getChart()}-${version.version}`,
-    }));
-    const controlsAndInfo = (
-      <div className="upgrade flex gaps align-center">
-        <span>Release</span>
-        {" "}
-        <Badge label={release.getName()} />
-        <span>Namespace</span>
-        {" "}
-        <Badge label={release.getNs()} />
-        <span>Version</span>
-        {" "}
-        <Badge label={currentVersion} />
-        <span>Upgrade version</span>
-        <Select<ChartVersion, SelectOption<ChartVersion>, false>
-          id="char-version-input"
-          className="chart-version"
-          menuPlacement="top"
-          themeName="outlined"
-          value={version}
-          options={versionOptions}
-          onChange={option => this.version = option?.value}
-        />
-      </div>
-    );
+    const { model, className, tab } = this.props;
+    const tabId = tab.id;
+    const { release } = model;
 
     return (
       <div className={cssNames("UpgradeChart flex column", className)}>
         <InfoPanel
           tabId={tabId}
-          error={error}
-          submit={upgrade}
+          error={model.configration.error.get()}
+          submit={this.upgrade}
           submitLabel="Upgrade"
           submittingMessage="Updating.."
-          controls={controlsAndInfo}
+          controls={(
+            <div className="upgrade flex gaps align-center">
+              <span>Release</span>
+              {" "}
+              <Badge label={release.getName()} />
+              <span>Namespace</span>
+              {" "}
+              <Badge label={release.getNs()} />
+              <span>Version</span>
+              {" "}
+              <Badge label={model.version.value.get()} />
+              <span>Upgrade version</span>
+              <Select<ChartVersion, SelectOption<ChartVersion>, false>
+                id="char-version-input"
+                className="chart-version"
+                menuPlacement="top"
+                themeName="outlined"
+                value={model.version.value.get()}
+                options={model.versionOptions.get()}
+                onChange={model.version.set}
+              />
+            </div>
+          )}
         />
         <EditorPanel
           tabId={tabId}
-          value={value ?? ""}
-          onChange={onChange}
-          onError={onError}
+          value={model.configration.value.get()}
+          onChange={model.configration.set}
+          onError={model.configration.setError}
         />
       </div>
     );
@@ -195,11 +106,9 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
 }
 
 export const UpgradeChart = withInjectables<Dependencies, UpgradeChartProps>(NonInjectedUpgradeChart, {
-  getProps: (di, props) => ({
+  getPlaceholder: () => <Spinner center />,
+  getProps: async (di, props) => ({
     ...props,
-    releases: di.inject(releasesInjectable),
-    updateRelease: di.inject(updateReleaseInjectable),
-    upgradeChartTabStore: di.inject(upgradeChartTabStoreInjectable),
-    helmChartStore: di.inject(helmChartStoreInjectable),
+    model: await di.inject(upgradeChartModelInjectable, props.tab),
   }),
 });

@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { capitalize } from "lodash";
-import helmChartStoreInjectable from "../+helm-charts/store.injectable";
+import { when } from "mobx";
+import helmChartVersionsInjectable from "../+helm-charts/helm-charts/versions.injectable";
 import type { HelmRelease, HelmReleaseDto } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { formatDuration } from "../../utils";
 
@@ -13,7 +14,7 @@ export type ToHelmRelease = (release: HelmReleaseDto) => HelmRelease;
 const toHelmReleaseInjectable = getInjectable({
   id: "to-helm-release",
   instantiate: (di): ToHelmRelease => {
-    const helmChartStore = di.inject(helmChartStoreInjectable);
+    const helmChartVersions = (release: HelmRelease) => di.inject(helmChartVersionsInjectable, release);
 
     return (release) => ({
       ...release,
@@ -71,14 +72,14 @@ const toHelmReleaseInjectable = getInjectable({
       // Helm does not store from what repository the release is installed,
       // so we have to try to guess it by searching charts
       async getRepo() {
-        const chartName = this.getChart();
-        const version = this.getVersion();
-        const versions = await helmChartStore.getVersions(chartName);
-        const chartVersion = versions.find(
-          (chartVersion) => chartVersion.version === version,
-        );
+        const versionsComputed = helmChartVersions(this);
 
-        return chartVersion ? chartVersion.repo : "";
+        await when(() => !versionsComputed.pending.get());
+
+        const version = this.getVersion();
+        const versions = versionsComputed.value.get();
+
+        return versions.find((chartVersion) => chartVersion.version === version)?.repo ?? "";
       },
     });
   },

@@ -23,6 +23,14 @@ import requestHelmReleaseInjectable from "../../renderer/components/+helm-releas
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showCheckedErrorInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
 import getRandomUpgradeChartTabIdInjectable from "../../renderer/components/dock/upgrade-chart/get-random-upgrade-chart-tab-id.injectable";
+import type { RequestHelmCharts } from "../../common/k8s-api/endpoints/helm-charts.api/list.injectable";
+import type { RequestHelmChartVersions } from "../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
+import type { RequestHelmChartReadme } from "../../common/k8s-api/endpoints/helm-charts.api/get-readme.injectable";
+import type { RequestHelmChartValues } from "../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
+import requestHelmChartsInjectable from "../../common/k8s-api/endpoints/helm-charts.api/list.injectable";
+import requestHelmChartVersionsInjectable from "../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
+import requestHelmChartReadmeInjectable from "../../common/k8s-api/endpoints/helm-charts.api/get-readme.injectable";
+import requestHelmChartValuesInjectable from "../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
 
 describe("showing details for helm release", () => {
   let builder: ApplicationBuilder;
@@ -30,6 +38,10 @@ describe("showing details for helm release", () => {
   let requestHelmReleaseMock: AsyncFnMock<RequestHelmRelease>;
   let requestHelmReleaseConfigurationMock: AsyncFnMock<RequestHelmReleaseConfiguration>;
   let requestHelmReleaseUpdateMock: AsyncFnMock<RequestHelmReleaseUpdate>;
+  let requestHelmChartsMock: AsyncFnMock<RequestHelmCharts>;
+  let requestHelmChartVersionsMock: AsyncFnMock<RequestHelmChartVersions>;
+  let requestHelmChartReadmeMock: AsyncFnMock<RequestHelmChartReadme>;
+  let requestHelmChartValuesMock: AsyncFnMock<RequestHelmChartValues>;
   let showSuccessNotificationMock: jest.Mock;
   let showCheckedErrorNotificationMock: jest.Mock;
 
@@ -44,6 +56,10 @@ describe("showing details for helm release", () => {
     requestHelmReleaseMock = asyncFn();
     requestHelmReleaseConfigurationMock = asyncFn();
     requestHelmReleaseUpdateMock = asyncFn();
+    requestHelmChartsMock = asyncFn();
+    requestHelmChartVersionsMock = asyncFn();
+    requestHelmChartReadmeMock = asyncFn();
+    requestHelmChartValuesMock = asyncFn();
 
     showSuccessNotificationMock = jest.fn();
     showCheckedErrorNotificationMock = jest.fn();
@@ -56,6 +72,10 @@ describe("showing details for helm release", () => {
       windowDi.override(requestHelmReleaseInjectable, () => requestHelmReleaseMock);
       windowDi.override(requestHelmReleaseConfigurationInjectable, () => requestHelmReleaseConfigurationMock);
       windowDi.override(requestHelmReleaseUpdateInjectable, () => requestHelmReleaseUpdateMock);
+      windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
+      windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
+      windowDi.override(requestHelmChartReadmeInjectable, () => requestHelmChartReadmeMock);
+      windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
       windowDi.override(
         namespaceStoreInjectable,
         () =>
@@ -449,6 +469,16 @@ describe("showing details for helm release", () => {
                     expect(rendered.baseElement).toMatchSnapshot();
                   });
 
+                  it("shows spinner", () => {
+                    const saveButton = rendered.getByTestId(
+                      "helm-release-configuration-save-button",
+                    );
+
+                    expect(saveButton).toHaveClass("waiting");
+                  });
+
+
+
                   it("calls for update", () => {
                     expect(requestHelmReleaseUpdateMock).toHaveBeenCalledWith(
                       "some-name",
@@ -461,14 +491,6 @@ describe("showing details for helm release", () => {
                         version: "",
                       },
                     );
-                  });
-
-                  it("shows spinner", () => {
-                    const saveButton = rendered.getByTestId(
-                      "helm-release-configuration-save-button",
-                    );
-
-                    expect(saveButton).toHaveClass("waiting");
                   });
 
                   describe("when update resolves with success", () => {

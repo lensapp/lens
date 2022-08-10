@@ -20,8 +20,7 @@ import navigateToHelmChartsInjectable from "../../../common/front-end-routing/ro
 import { HelmChartIcon } from "./icon";
 import helmChartsInjectable from "./helm-charts/helm-charts.injectable";
 import selectedHelmChartInjectable from "./helm-charts/selected-helm-chart.injectable";
-import type { HelmChartStore } from "./store";
-import helmChartStoreInjectable from "./store.injectable";
+import { noop } from "lodash";
 
 enum columnId {
   name = "name",
@@ -39,7 +38,6 @@ interface Dependencies {
   navigateToHelmCharts: NavigateToHelmCharts;
   charts: IAsyncComputed<HelmChart[]>;
   selectedChart: IComputedValue<HelmChart | undefined>;
-  helmChartStore: HelmChartStore;
 }
 
 @observer
@@ -69,17 +67,31 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
   };
 
   render() {
+    const { charts } = this.props;
     const selectedChart = this.props.selectedChart.get();
 
     return (
       <SiblingsInTabLayout>
         <div data-testid="page-for-helm-charts" style={{ display: "none" }}/>
 
-        <ItemListLayout
+        <ItemListLayout<HelmChart, false>
           isConfigurable
           tableId="helm_charts"
           className="HelmCharts"
-          store={this.props.helmChartStore}
+          store={{
+            get isLoaded() {
+              return !charts.pending.get();
+            },
+            failedLoading: false,
+            getTotalCount: () => charts.value.get().length,
+            isSelected: (item) => item === selectedChart,
+            toggleSelection: noop,
+            isSelectedAll: () => false,
+            toggleSelectionAll: () => false,
+            pickOnlySelected: () => [],
+            removeSelectedItems: async () => {},
+          }}
+          preloadStores={false}
           getItems={() => this.props.charts.value.get()}
           isSelectable={false}
           sortingCallbacks={{
@@ -138,8 +150,6 @@ export const HelmCharts = withInjectables<Dependencies>(NonInjectedHelmCharts, {
     navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
     charts: di.inject(helmChartsInjectable),
     selectedChart: di.inject(selectedHelmChartInjectable),
-    helmChartStore: di.inject(helmChartStoreInjectable),
   }),
-},
-);
+});
 
