@@ -6,6 +6,8 @@ Date: 2022-07-11
 
 2022-07-11 proposed
 
+2022-08-10 accepted
+
 ## Context
 
 Previously we have organized code under `main`, `renderer` and `common` top level directories. It means that given a feature which has code that needs to run in both environments, we had to split the feature in three different directories.
