@@ -6,7 +6,7 @@
 import "./wizard.scss";
 import React from "react";
 import { cssNames, prevDefault } from "../../utils";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Stepper } from "../stepper";
 import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
@@ -238,7 +238,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
         {customButtons ?? (
           <div className="buttons flex gaps align-center">
             {moreButtons}
-            <Button
+            <OpenLensButton
               className="back-btn"
               plain
               label={prevLabel || (isFirst?.() ? "Cancel" : "Back")}
@@ -246,7 +246,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
               onClick={this.prev}
               data-testid={testIdForPrev}
             />
-            <Button
+            <OpenLensButton
               primary
               type="submit"
               label={nextLabel || (isLast?.() ? "Submit" : "Next")}

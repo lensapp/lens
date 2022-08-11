@@ -7,7 +7,7 @@ import "./add-remove-buttons.scss";
 
 import React from "react";
 import { cssNames } from "../../utils";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Icon } from "../icon";
 
 export interface AddRemoveButtonsProps extends React.HTMLAttributes<any> {
@@ -37,7 +37,7 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
     ]
       .filter(button => button.onClick)
       .map(({ icon, ...props }) => (
-        <Button
+        <OpenLensButton
           key={icon}
           big
           round
@@ -45,7 +45,7 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
           {...props}
         >
           <Icon material={icon} />
-        </Button>
+        </OpenLensButton>
       ));
   }
 

@@ -262,7 +262,7 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
         </section>
 
         <section>
-          <Button
+          <OpenLensButton
             label={this.buttonLabel}
             waiting={this.inProgress}
             onClick={() => this.save()}

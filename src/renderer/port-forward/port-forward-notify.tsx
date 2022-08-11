@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { Button } from "../components/button";
+import { OpenLensButton } from "../components/button";
 import { Notifications } from "../components/notifications";
 import type { NavigateToPortForwards } from "../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 import type { NotificationsStore } from "../components/notifications/notifications.store";
@@ -30,7 +30,7 @@ export const aboutPortForwarding = ({
           You can manage your port forwards on the Port Forwarding Page.
         </p>
         <div className="flex gaps row align-left box grow">
-          <Button
+          <OpenLensButton
             active
             outlined
             label="Go to Port Forwarding"
@@ -71,7 +71,7 @@ export const notifyErrorPortForwarding = ({
           {msg}
         </p>
         <div className="flex gaps row align-left box grow">
-          <Button
+          <OpenLensButton
             active
             outlined
             label="Check Port Forwarding"

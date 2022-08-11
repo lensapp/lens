@@ -13,7 +13,7 @@ import { Badge } from "../../badge";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { prevDefault } from "../../../utils";
 import { Icon } from "../../icon";
-import { Button } from "../../button";
+import { OpenLensButton } from "../../button";
 import { LogsDialog } from "../../dialog/logs-dialog";
 import { Select } from "../../select";
 import { Input } from "../../input";
@@ -46,14 +46,14 @@ const NonInjectedInstallChart = observer(
           </p>
           <p>Installation complete!</p>
           <div className="flex gaps align-center">
-            <Button
+            <OpenLensButton
               autoFocus
               primary
               label="View Helm Release"
               onClick={prevDefault(model.navigateToInstalledRelease)}
               data-testid={`show-release-${installed.release.name}-for-${tabId}`}
             />
-            <Button
+            <OpenLensButton
               plain
               active
               label="Show Notes"

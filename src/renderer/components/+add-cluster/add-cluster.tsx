@@ -17,7 +17,7 @@ import { appEventBus } from "../../../common/app-event-bus/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { isDefined, iter } from "../../utils";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Notifications } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
 import { MonacoEditor } from "../monaco-editor";
@@ -138,7 +138,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
           </>
         )}
         <div className="actions-panel">
-          <Button
+          <OpenLensButton
             primary
             disabled={this.kubeContexts.size === 0}
             label={this.kubeContexts.size === 1 ? "Add cluster" : "Add clusters"}

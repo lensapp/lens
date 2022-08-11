@@ -9,7 +9,7 @@ import {
   disposer,
 } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
-import { Button } from "../../button";
+import { OpenLensButton } from "../../button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import React from "react";
@@ -110,7 +110,7 @@ export const attemptInstall =
                 {` ${name}@${oldVersion} will be removed before installation.`}
               </div>
             </div>
-            <Button
+            <OpenLensButton
               autoFocus
               label="Install"
               onClick={async () => {

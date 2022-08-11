@@ -73,6 +73,9 @@ import forceUpdateModalRootFrameComponentInjectable from "./application-update/f
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
+import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
+import { EventEmitter } from "./utils";
+import type { AppEvent } from "../common/app-event-bus/event-bus";
 
 export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
   const {
@@ -227,6 +230,8 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
       info: noop,
       silly: noop,
     }));
+
+    di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
   }
 
   return di;

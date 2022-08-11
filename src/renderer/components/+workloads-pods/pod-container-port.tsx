@@ -11,7 +11,7 @@ import type { ContainerPort, Pod } from "../../../common/k8s-api/endpoints";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import type { ForwardedPort, PortForwardStore } from "../../port-forward";
 import { predictProtocol } from "../../port-forward";
 import { Spinner } from "../spinner";
@@ -181,11 +181,11 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
         <span title="Open in a browser" onClick={() => this.portForward()}>
           {text}
         </span>
-        <Button primary onClick={portForwardAction}>
+        <OpenLensButton primary onClick={portForwardAction}>
           {" "}
           {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."}
           {" "}
-        </Button>
+        </OpenLensButton>
         {this.waiting && (
           <Spinner />
         )}

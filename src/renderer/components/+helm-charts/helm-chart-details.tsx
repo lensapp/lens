@@ -12,7 +12,7 @@ import { Drawer, DrawerItem } from "../drawer";
 import { autoBind, stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Select } from "../select";
 import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";
@@ -76,7 +76,7 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between" data-testid="selected-chart-description">
             {selectedChart.getDescription()}
-            <Button
+            <OpenLensButton
               primary
               label="Install"
               onClick={this.install}

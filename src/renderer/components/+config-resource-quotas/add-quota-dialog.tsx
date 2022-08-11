@@ -17,7 +17,7 @@ import type { IResourceQuotaValues } from "../../../common/k8s-api/endpoints";
 import { resourceQuotaApi } from "../../../common/k8s-api/endpoints";
 import { Select } from "../select";
 import { Icon } from "../icon";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Notifications } from "../notifications";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { SubTitle } from "../layout/sub-title";
@@ -218,7 +218,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
                 onKeyDown={this.onInputQuota}
                 className="box grow"
               />
-              <Button
+              <OpenLensButton
                 round
                 primary
                 onClick={this.setQuota}
@@ -227,7 +227,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
                   material={this.quotaSelectValue && this.quotas[this.quotaSelectValue] ? "edit" : "add"}
                   tooltip="Set quota"
                 />
-              </Button>
+              </OpenLensButton>
             </div>
             <div className="quota-entries">
               {this.quotaEntries.map(([quota, value]) => (

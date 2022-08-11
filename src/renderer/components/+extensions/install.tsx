@@ -6,7 +6,7 @@
 import styles from "./install.module.scss";
 import React from "react";
 import { prevDefault } from "../../utils";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
 import { Input, InputValidators } from "../input";
@@ -77,7 +77,7 @@ const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
         />
       </div>
       <div>
-        <Button
+        <OpenLensButton
           className={styles.button}
           primary
           label="Install"

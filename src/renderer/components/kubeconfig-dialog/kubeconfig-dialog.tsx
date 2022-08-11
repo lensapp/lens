@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
 import { cssNames, saveFileDialog } from "../../utils";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
@@ -81,21 +81,21 @@ export class KubeConfigDialog extends React.Component<KubeConfigDialogProps> {
         <WizardStep
           customButtons={(
             <div className="actions flex gaps">
-              <Button plain onClick={this.copyToClipboard}>
+              <OpenLensButton plain onClick={this.copyToClipboard}>
                 <Icon material="assignment"/>
                 {" Copy to clipboard"}
-              </Button>
-              <Button plain onClick={this.download}>
+              </OpenLensButton>
+              <OpenLensButton plain onClick={this.download}>
                 <Icon material="cloud_download"/>
                 {" Download file"}
-              </Button>
-              <Button
+              </OpenLensButton>
+              <OpenLensButton
                 plain
                 className="box right"
                 onClick={this.close}
               >
                 Close
-              </Button>
+              </OpenLensButton>
             </div>
           )}
           prev={this.close}

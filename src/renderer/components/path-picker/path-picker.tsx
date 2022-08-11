@@ -7,7 +7,7 @@ import type { FileFilter, OpenDialogOptions } from "electron";
 import { observer } from "mobx-react";
 import React from "react";
 import { cssNames } from "../../utils";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { requestOpenFilePickingDialog } from "../../ipc";
 
 export interface PathPickOpts {
@@ -53,7 +53,7 @@ export class PathPicker extends React.Component<PathPickerProps> {
     const { className, label, disabled } = this.props;
 
     return (
-      <Button
+      <OpenLensButton
         primary
         label={label}
         disabled={disabled}

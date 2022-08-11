@@ -14,7 +14,7 @@ import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigurationInput, MinimalResourceGroup, OnlyUserSuppliedValuesAreShownToggle, ReleaseDetailsModel } from "./release-details-model/release-details-model.injectable";
 import releaseDetailsModelInjectable from "./release-details-model/release-details-model.injectable";
-import { Button } from "../../button";
+import { OpenLensButton } from "../../button";
 import { kebabCase } from "lodash/fp";
 import { Badge } from "../../badge";
 import { SubTitle } from "../../layout/sub-title";
@@ -64,7 +64,7 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
             <div className="flex gaps align-center">
               <span>{model.release.chart}</span>
 
-              <Button
+              <OpenLensButton
                 primary
                 label="Upgrade"
                 className="box right upgrade"
@@ -196,7 +196,7 @@ const ReleaseValues = observer(({ configuration, onlyUserSuppliedValuesAreShown 
           onChange={configuration.onChange}
         />
 
-        <Button
+        <OpenLensButton
           primary
           label="Save"
           waiting={configuration.isSaving.get()}

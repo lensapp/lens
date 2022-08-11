@@ -9,7 +9,7 @@ import {  action, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { saveKubeconfig } from "./save-config";
 import { Notifications } from "../notifications";
 import { Dialog } from "../dialog";
@@ -226,12 +226,12 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
           )}
         </div>
         <div className={styles.dialogButtons}>
-          <Button
+          <OpenLensButton
             onClick={this.close}
             plain
             label="Cancel"
           />
-          <Button
+          <OpenLensButton
             onClick={() => this.onDelete(state)}
             autoFocus
             accent

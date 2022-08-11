@@ -17,7 +17,7 @@ import type { IObservableValue } from "mobx";
 import { action } from "mobx";
 import submitCustomHelmRepositoryInjectable from "./submit-custom-helm-repository.injectable";
 import hideDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/hide-dialog-for-adding-custom-helm-repository.injectable";
-import { Button } from "../../../../button";
+import { OpenLensButton } from "../../../../button";
 import { Icon } from "../../../../icon";
 import maximalCustomHelmRepoOptionsAreShownInjectable from "./maximal-custom-helm-repo-options-are-shown.injectable";
 import { SubTitle } from "../../../../layout/sub-title";
@@ -59,7 +59,7 @@ const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({ hel
           onChange={action(v => helmRepo.url = v)}
           data-testid="custom-helm-repository-url-input"
         />
-        <Button
+        <OpenLensButton
           plain
           className="accordion"
           data-testid="toggle-maximal-options-for-custom-helm-repository-button"
@@ -71,7 +71,7 @@ const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({ hel
             tooltip="More"
             material={maximalOptionsAreShown.get() ? "remove" : "add"}
           />
-        </Button>
+        </OpenLensButton>
 
         {maximalOptionsAreShown.get() && (
           <div data-testid="maximal-options-for-custom-helm-repository-dialog">

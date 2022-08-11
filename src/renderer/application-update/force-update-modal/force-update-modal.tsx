@@ -10,7 +10,7 @@ import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import installUpdateCountdownInjectable from "./install-update-countdown.injectable";
 import { Dialog } from "../../components/dialog";
-import { Button } from "../../components/button";
+import { OpenLensButton } from "../../components/button";
 import styles from "./force-update-modal.module.scss";
 
 interface Dependencies {
@@ -36,7 +36,7 @@ const NonInjectedForceUpdateModal = observer(
         </div>
 
         <div className={styles.footer}>
-          <Button
+          <OpenLensButton
             primary
             data-testid="update-now-from-must-update-immediately-modal"
             onClick={restartAndInstallUpdate}
@@ -49,7 +49,7 @@ const NonInjectedForceUpdateModal = observer(
               data-testid="countdown-to-automatic-update"
             />
             )
-          </Button>
+          </OpenLensButton>
         </div>
       </div>
     </Dialog>

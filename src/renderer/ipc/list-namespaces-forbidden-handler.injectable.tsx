@@ -7,7 +7,7 @@ import navigateToEntitySettingsInjectable from "../../common/front-end-routing/r
 import type { ListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
 import { Notifications } from "../components/notifications";
 import { ClusterStore } from "../../common/cluster-store/cluster-store";
-import { Button } from "../components/button";
+import { OpenLensButton } from "../components/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
@@ -56,7 +56,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
               {" does not have permissions to list namespaces. Please add the namespaces you have access to."}
             </p>
             <div className="flex gaps row align-left box grow">
-              <Button
+              <OpenLensButton
                 active
                 outlined
                 label="Go to Accessible Namespaces Settings"

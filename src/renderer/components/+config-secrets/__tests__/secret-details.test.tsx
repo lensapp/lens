@@ -4,9 +4,12 @@
  */
 
 import React from "react";
-import { render } from "@testing-library/react";
 import { SecretDetails } from "../secret-details";
 import { Secret, SecretType } from "../../../../common/k8s-api/endpoints";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 jest.mock("../../kube-object-meta/kube-object-meta", () => ({
   KubeObjectMeta: () => null,
@@ -14,6 +17,14 @@ jest.mock("../../kube-object-meta/kube-object-meta", () => ({
 
 
 describe("SecretDetails tests", () => {
+  let di: DiContainer;
+  let render: DiRender;
+
+  beforeEach(() => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    render = renderFor(di);
+  });
+
   it("should show the visibility toggle when the secret value is ''", () => {
     const secret = new Secret({
       apiVersion: "v1",
@@ -30,6 +41,7 @@ describe("SecretDetails tests", () => {
       },
       type: SecretType.Opaque,
     });
+
     const result = render(<SecretDetails object={secret}/>);
 
     expect(result.getByTestId("foobar-secret-entry").querySelector(".Icon")).toBeDefined();

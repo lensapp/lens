@@ -10,7 +10,7 @@ import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Input } from "../input";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Notifications } from "../notifications";
 import { base64, toggle } from "../../utils";
 import { Icon } from "../icon";
@@ -122,7 +122,7 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
       <>
         <DrawerTitle>Data</DrawerTitle>
         {secrets.map(this.renderSecret)}
-        <Button
+        <OpenLensButton
           primary
           label="Save"
           waiting={this.isSaving}

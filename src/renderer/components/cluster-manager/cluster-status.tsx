@@ -12,7 +12,7 @@ import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { IClassName } from "../../utils";
 import { isBoolean, hasTypedProperty, isObject, isString, cssNames } from "../../utils";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
@@ -134,7 +134,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
     if (this.hasErrors && !this.isReconnecting) {
       return (
         <>
-          <Button
+          <OpenLensButton
             primary
             label="Reconnect"
             className="box center"

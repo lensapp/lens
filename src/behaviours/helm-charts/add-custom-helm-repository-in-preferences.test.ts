@@ -24,8 +24,8 @@ describe("add custom helm repository in preferences", () => {
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
   let execFileMock: AsyncFnMock<
-    ReturnType<typeof execFileInjectable["instantiate"]>
-  >;
+     ReturnType<typeof execFileInjectable["instantiate"]>
+   >;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
 
   beforeEach(async () => {

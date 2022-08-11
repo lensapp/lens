@@ -12,7 +12,7 @@ import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
 import type { ButtonProps } from "../button";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
@@ -140,14 +140,14 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
           {message}
         </div>
         <div className="confirm-buttons">
-          <Button
+          <OpenLensButton
             plain
             className="cancel"
             label={labelCancel}
             onClick={prevDefault(this.close)}
             {...cancelButtonProps}
           />
-          <Button
+          <OpenLensButton
             autoFocus
             primary
             className="ok"

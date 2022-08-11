@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`foobar given A -element 1`] = `
+<body>
+  <div>
+    <a
+      data-testid="some-anchor"
+    />
+  </div>
+</body>
+`;

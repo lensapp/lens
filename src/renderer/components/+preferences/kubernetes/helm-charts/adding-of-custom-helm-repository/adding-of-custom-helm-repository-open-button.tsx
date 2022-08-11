@@ -4,7 +4,7 @@
  */
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { Button } from "../../../../button";
+import { OpenLensButton } from "../../../../button";
 import showDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/show-dialog-for-adding-custom-helm-repository.injectable";
 
 interface Dependencies {
@@ -12,7 +12,7 @@ interface Dependencies {
 }
 
 const NonInjectedActivationOfCustomHelmRepositoryOpenButton = ({ showDialog }: Dependencies) => (
-  <Button
+  <OpenLensButton
     primary
     label="Add Custom Helm Repo"
     onClick={showDialog}

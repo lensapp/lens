@@ -11,7 +11,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
 import { Input } from "../input";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { configMapStore } from "./legacy-store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "../../../common/k8s-api/endpoints";
@@ -104,7 +104,7 @@ export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
                   </div>
                 ))
               }
-              <Button
+              <OpenLensButton
                 primary
                 label="Save"
                 waiting={this.isSaving}

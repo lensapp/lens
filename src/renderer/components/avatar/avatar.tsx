@@ -11,6 +11,7 @@ import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
 import type { SingleOrMany } from "../../utils";
 import { cssNames, isDefined, iter } from "../../utils";
+import { OpenLensButton } from "../button";
 
 export interface AvatarProps {
   title: string;
@@ -77,7 +78,7 @@ export const Avatar = ({
   onClick,
   "data-testid": dataTestId,
 }: AvatarProps) => (
-  <div
+  <OpenLensButton
     className={cssNames(styles.Avatar, {
       [styles.circle]: variant == "circle",
       [styles.rounded]: variant == "rounded",
@@ -105,5 +106,5 @@ export const Avatar = ({
         />
       )
       : children || getLabelFromTitle(title)}
-  </div>
+  </OpenLensButton>
 );

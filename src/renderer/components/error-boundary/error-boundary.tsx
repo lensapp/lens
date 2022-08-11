@@ -8,7 +8,7 @@ import "./error-boundary.scss";
 import type { ErrorInfo } from "react";
 import React from "react";
 import { observer } from "mobx-react";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { navigation } from "../../navigation";
 import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
 import type { SingleOrMany } from "../../utils";
@@ -75,7 +75,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
               {error.stack}
             </code>
           </div>
-          <Button
+          <OpenLensButton
             className="box self-flex-start"
             primary
             label="Back"

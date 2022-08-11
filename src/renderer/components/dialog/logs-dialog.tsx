@@ -10,7 +10,7 @@ import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Notifications } from "../notifications";
-import { Button } from "../button";
+import { OpenLensButton } from "../button";
 import { Icon } from "../icon";
 import { clipboard } from "electron";
 import { kebabCase } from "lodash/fp";
@@ -35,7 +35,7 @@ export function LogsDialog({ title, logs, ...dialogProps }: LogsDialogProps) {
           scrollable={false}
           customButtons={(
             <div className="buttons flex gaps align-center justify-space-between">
-              <Button
+              <OpenLensButton
                 plain
                 onClick={() => {
                   clipboard.writeText(logs);
@@ -44,10 +44,10 @@ export function LogsDialog({ title, logs, ...dialogProps }: LogsDialogProps) {
               >
                 <Icon material="assignment"/>
                 {" Copy to clipboard"}
-              </Button>
-              <Button plain onClick={dialogProps.close}>
+              </OpenLensButton>
+              <OpenLensButton plain onClick={dialogProps.close}>
                 Close
-              </Button>
+              </OpenLensButton>
             </div>
           )}
         >
