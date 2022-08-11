@@ -4,6 +4,11 @@
  */
 import type { Injectable } from "@ogre-tools/injectable";
 
+export interface GlobalOverride {
+  injectable: Injectable<any, any, any>;
+  overridingInstantiate: any;
+}
+
 export const getGlobalOverride = <T extends Injectable<any, any, any>>(
   injectable: T,
   overridingInstantiate: T["instantiate"],
