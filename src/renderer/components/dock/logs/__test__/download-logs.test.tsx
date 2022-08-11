@@ -82,7 +82,6 @@ describe("download logs options in pod logs dock tab", () => {
         jest
           .fn(() => "some-irrelevant-random-id")
           .mockReturnValueOnce("some-first-tab-id")
-          .mockReturnValueOnce("some-second-tab-id"),
       );
 
       openSaveFileDialogMock = jest.fn();
