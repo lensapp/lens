@@ -6,78 +6,63 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { act, waitFor } from "@testing-library/react";
+import getPodByIdInjectable from "../../../+workloads-pods/get-pod-by-id.injectable";
+import getPodsByOwnerIdInjectable from "../../../+workloads-pods/get-pods-by-owner-id.injectable";
 import { SearchStore } from "../../../../search-store/search-store";
+import searchStoreInjectable from "../../../../search-store/search-store.injectable";
 import openSaveFileDialogInjectable from "../../../../utils/save-file.injectable";
 import type { ApplicationBuilder } from "../../../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../test-utils/get-application-builder";
-import type { TabId } from "../../dock/store";
 import dockStoreInjectable from "../../dock/store.injectable";
+import areLogsPresentInjectable from "../are-logs-present.injectable";
 import callForAllLogsInjectable from "../call-for-all-logs.injectable";
 import createPodLogsTabInjectable from "../create-pod-logs-tab.injectable";
+import getLogTabDataInjectable from "../get-log-tab-data.injectable";
+import getLogsWithoutTimestampsInjectable from "../get-logs-without-timestamps.injectable";
+import getLogsInjectable from "../get-logs.injectable";
 import getRandomIdForPodLogsTabInjectable from "../get-random-id-for-pod-logs-tab.injectable";
-import type { LogTabViewModelDependencies } from "../logs-view-model";
-import { LogTabViewModel } from "../logs-view-model";
-import logsViewModelInjectable from "../logs-view-model.injectable";
+import getTimestampSplitLogsInjectable from "../get-timestamp-split-logs.injectable";
+import loadLogsInjectable from "../load-logs.injectable";
+import reloadLogsInjectable from "../reload-logs.injectable";
+import setLogTabDataInjectable from "../set-log-tab-data.injectable";
+import stopLoadingLogsInjectable from "../stop-loading-logs.injectable";
 import { dockerPod } from "./pod.mock";
-
-function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependencies>): LogTabViewModel {
-  return new LogTabViewModel(tabId, {
-    getLogs: jest.fn(),
-    getLogsWithoutTimestamps: jest.fn(),
-    getTimestampSplitLogs: jest.fn(),
-    getLogTabData: jest.fn(),
-    setLogTabData: jest.fn(),
-    loadLogs: jest.fn(),
-    reloadLogs: jest.fn(),
-    renameTab: jest.fn(),
-    stopLoadingLogs: jest.fn(),
-    getPodById: jest.fn(),
-    getPodsByOwnerId: jest.fn(),
-    areLogsPresent: jest.fn(),
-    searchStore: new SearchStore(),
-    ...deps,
-  });
-}
-
-const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
-  const selectedPod = dockerPod;
-
-  const logs = new Map([["timestamp", "some-logs"]]);
-
-  return mockLogTabViewModel(tabId, {
-    getLogTabData: () => ({
-      selectedPodId: selectedPod.getId(),
-      selectedContainer: selectedPod.getContainers()[0].name,
-      namespace: "sadsadaasdad",
-      showPrevious: false,
-      showTimestamps: false,
-    }),
-    getPodById: (id) => {
-      if (id === selectedPod.getId()) {
-        return selectedPod;
-      }
-
-      return undefined;
-    },
-    getTimestampSplitLogs: () => [...logs],
-    getLogs: () => ["some-logs"],
-    getLogsWithoutTimestamps: () => ["some-logs"],
-    ...deps,
-  });
-};
 
 describe("download logs options in pod logs dock tab", () => {
   let builder: ApplicationBuilder;
   let openSaveFileDialogMock: jest.MockedFunction<() => void>;
+  const logs = new Map([["timestamp", "some-logs"]]);
 
   beforeEach(() => {
+    const selectedPod = dockerPod;
+
     builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(callForAllLogsInjectable, () => () => Promise.resolve("all-logs"));
-      rendererDi.override(logsViewModelInjectable, () => getOnePodViewModel("foobar"));
+
+      // Overriding internals of logsViewModelInjectable
+      rendererDi.override(getLogsInjectable, () => () => ["some-logs"]);
+      rendererDi.override(getLogsWithoutTimestampsInjectable, () => () => ["some-logs"]);
+      rendererDi.override(getTimestampSplitLogsInjectable, () => () => [...logs]);
+      rendererDi.override(reloadLogsInjectable, () => jest.fn());
+      rendererDi.override(getLogTabDataInjectable, () => () => ({
+        selectedPodId: selectedPod.getId(),
+        selectedContainer: selectedPod.getContainers()[0].name,
+        namespace: "default",
+        showPrevious: false,
+        showTimestamps: false,
+      }));
+      rendererDi.override(setLogTabDataInjectable, () => jest.fn());
+      rendererDi.override(loadLogsInjectable, () => jest.fn());
+      rendererDi.override(stopLoadingLogsInjectable, () => jest.fn());
+      rendererDi.override(areLogsPresentInjectable, () => jest.fn());
+      rendererDi.override(getPodByIdInjectable, () => (id) => id === selectedPod.getId() ? selectedPod : undefined),
+      rendererDi.override(getPodsByOwnerIdInjectable, () => jest.fn());
+      rendererDi.override(searchStoreInjectable, () => new SearchStore());
+
       rendererDi.override(getRandomIdForPodLogsTabInjectable, () => jest.fn(() => "some-irrelevant-random-id"));
 
       openSaveFileDialogMock = jest.fn();
