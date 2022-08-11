@@ -22,7 +22,7 @@ export interface ResourceMetricsProps<Keys extends string> {
   loader?: () => void;
   interval?: number;
   className?: string;
-  metrics: Record<Keys, MetricData> | null | undefined;
+  metrics: Partial<Record<Keys, MetricData>> | null | undefined;
   children: React.ReactChild | React.ReactChild[];
 }
 

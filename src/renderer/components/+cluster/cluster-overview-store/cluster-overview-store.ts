@@ -37,6 +37,10 @@ interface ClusterOverviewStoreDependencies {
 export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> implements ClusterOverviewStorageState {
   @observable metrics: ClusterMetricData | undefined = undefined;
 
+  get metricsLoaded() {
+    return !!this.metrics;
+  }
+
   get metricType(): MetricType {
     return this.dependencies.storage.get().metricType;
   }
