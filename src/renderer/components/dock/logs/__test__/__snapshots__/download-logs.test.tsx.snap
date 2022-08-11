@@ -443,7 +443,6 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_21"
                           tabindex="0"
                         >
                           <span
@@ -452,8 +451,10 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -477,12 +478,13 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_23"
                 tabindex="0"
               >
                 <span
@@ -491,11 +493,12 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_24"
                 tabindex="0"
               >
                 <span
@@ -504,8 +507,10 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                 >
                   keyboard_arrow_down
                 </span>
-                <div />
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -722,7 +727,6 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                       </div>
                       <i
                         class="Icon material interactive disabled focusable"
-                        id="tooltip_target_27"
                       >
                         <span
                           class="icon"
@@ -730,11 +734,12 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                         >
                           keyboard_arrow_up
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Previous
+                      </div>
                       <i
                         class="Icon material interactive disabled focusable"
-                        id="tooltip_target_28"
                       >
                         <span
                           class="icon"
@@ -742,8 +747,10 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                         >
                           keyboard_arrow_down
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Next
+                      </div>
                     </div>
                   </div>
                 </div>
