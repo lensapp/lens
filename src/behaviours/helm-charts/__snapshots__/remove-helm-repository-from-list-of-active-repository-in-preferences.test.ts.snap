@@ -1046,7 +1046,6 @@ exports[`remove helm repository from list of active repositories in preferences 
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-some-active-repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -1055,6 +1054,11 @@ exports[`remove helm repository from list of active repositories in preferences 
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-some-active-repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />
@@ -1631,7 +1635,6 @@ exports[`remove helm repository from list of active repositories in preferences 
                             class="Icon material interactive focusable"
                             data-testid="remove-helm-repository-some-active-repository"
                             tabindex="0"
-                            tooltip="Remove"
                           >
                             <span
                               class="icon"
@@ -1640,6 +1643,11 @@ exports[`remove helm repository from list of active repositories in preferences 
                               delete
                             </span>
                           </i>
+                          <div
+                            data-testid="tooltip-content-for-remove-helm-repository-some-active-repository"
+                          >
+                            Remove
+                          </div>
                         </div>
                       </div>
                       <div />

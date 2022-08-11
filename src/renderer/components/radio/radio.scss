@@ -21,6 +21,11 @@
       white-space: nowrap;
       transition: 250ms color;
 
+      &.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
       &:not(.checked):not(.disabled) {
         cursor: pointer;
         &:not(:active):focus {

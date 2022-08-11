@@ -473,7 +473,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -482,6 +481,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -498,7 +500,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -507,11 +508,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -520,10 +523,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -532,6 +537,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -1013,7 +1021,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -1022,6 +1029,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1038,7 +1048,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -1047,11 +1056,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -1060,10 +1071,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -1072,6 +1085,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -1593,7 +1609,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -1602,6 +1617,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1618,7 +1636,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -1627,11 +1644,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -1640,10 +1659,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -1652,6 +1673,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -2093,7 +2117,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -2102,6 +2125,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2118,7 +2144,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -2127,11 +2152,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -2140,10 +2167,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -2152,6 +2181,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -2593,7 +2625,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -2602,6 +2633,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2618,7 +2652,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -2627,11 +2660,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -2640,10 +2675,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -2652,6 +2689,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -3052,7 +3092,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -3061,6 +3100,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -3077,7 +3119,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -3086,11 +3127,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -3099,10 +3142,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -3111,6 +3156,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -3632,7 +3680,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -3641,6 +3688,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -3657,7 +3707,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -3666,11 +3715,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -3679,10 +3730,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -3691,6 +3744,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -4172,7 +4228,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                       <i
                         class="Icon material interactive focusable small"
                         tabindex="0"
-                        tooltip="Close ⌘+W"
                       >
                         <span
                           class="icon"
@@ -4181,6 +4236,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -4197,7 +4255,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 class="Icon new-dock-tab material interactive focusable"
                 id="menu-actions-for-dock"
                 tabindex="0"
-                tooltip="New tab"
               >
                 <span
                   class="icon"
@@ -4206,11 +4263,13 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                   add
                 </span>
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Fit to window"
             >
               <span
                 class="icon"
@@ -4219,10 +4278,12 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 fullscreen
               </span>
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
               tabindex="0"
-              tooltip="Open"
             >
               <span
                 class="icon"
@@ -4231,6 +4292,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 keyboard_arrow_up
               </span>
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>

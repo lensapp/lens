@@ -268,7 +268,6 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
         <i
           class="Icon KubeObjectStatusIcon error material focusable"
           data-testid="kube-object-status-icon-for-some-uid"
-          id="tooltip_target_156"
         >
           <span
             class="icon"
@@ -276,8 +275,35 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
           >
             error
           </span>
-          <div />
         </i>
+        <div
+          data-testid="tooltip-content-for-kube-object-status-icon-for-some-uid"
+        >
+          <div
+            class="KubeObjectStatusTooltip"
+          >
+            <div
+              class="level error"
+            >
+              <span
+                class="title"
+              >
+                Critical
+              </span>
+              <div
+                class="status msg"
+              >
+                - some-kube-object-status-text 
+                <span
+                  class="age"
+                >
+                   . 
+                  
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div
         class="footer"
@@ -332,7 +358,6 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_137"
                           tabindex="0"
                         >
                           <span
@@ -341,8 +366,10 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -366,12 +393,13 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_139"
                 tabindex="0"
               >
                 <span
@@ -380,11 +408,12 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_140"
                 tabindex="0"
               >
                 <span
@@ -393,8 +422,10 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -722,7 +753,6 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_75"
                           tabindex="0"
                         >
                           <span
@@ -731,8 +761,10 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -756,12 +788,13 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_77"
                 tabindex="0"
               >
                 <span
@@ -770,11 +803,12 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_78"
                 tabindex="0"
               >
                 <span
@@ -783,8 +817,10 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>
@@ -1112,7 +1148,6 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                       >
                         <i
                           class="Icon material interactive focusable small"
-                          id="tooltip_target_13"
                           tabindex="0"
                         >
                           <span
@@ -1121,8 +1156,10 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                           >
                             close
                           </span>
-                          <div />
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1146,12 +1183,13 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                   >
                     add
                   </span>
-                  <div />
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_15"
                 tabindex="0"
               >
                 <span
@@ -1160,11 +1198,12 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                 >
                   fullscreen
                 </span>
-                <div />
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
-                id="tooltip_target_16"
                 tabindex="0"
               >
                 <span
@@ -1173,8 +1212,10 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                 >
                   keyboard_arrow_up
                 </span>
-                <div />
               </i>
+              <div>
+                Open
+              </div>
             </div>
           </div>
         </div>

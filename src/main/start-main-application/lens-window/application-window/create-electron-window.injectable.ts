@@ -6,10 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
 import { BrowserWindow } from "electron";
-import { openBrowser } from "../../../../common/utils";
 import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
 import type { ElectronWindow } from "./create-lens-window.injectable";
 import type { RequireExactlyOne } from "type-fest";
+import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-browser.injectable";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
 
@@ -46,6 +46,7 @@ const createElectronWindowInjectable = getInjectable({
   instantiate: (di): CreateElectronWindow => {
     const logger = di.inject(loggerInjectable);
     const sendToChannelInLensWindow = di.inject(sendToChannelInElectronBrowserWindowInjectable);
+    const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
 
     return (configuration) => {
       const applicationWindowState = di.inject(
@@ -158,7 +159,7 @@ const createElectronWindowInjectable = getInjectable({
         })
 
         .setWindowOpenHandler((details) => {
-          openBrowser(details.url).catch((error) => {
+          openLinkInBrowser(details.url).catch((error) => {
             logger.error("[CREATE-ELECTRON-WINDOW]: failed to open browser", {
               error,
             });

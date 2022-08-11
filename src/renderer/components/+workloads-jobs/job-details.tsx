@@ -11,7 +11,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
-import { Link } from "react-router-dom";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import type { JobStore } from "./store";
@@ -23,7 +22,6 @@ import { makeObservable, observable, reaction } from "mobx";
 import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { ResourceMetrics } from "../resource-metrics";
-import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
@@ -32,9 +30,6 @@ import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import jobStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
-import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
@@ -45,8 +40,6 @@ interface Dependencies {
   podStore: PodStore;
   jobStore: JobStore;
   getActiveClusterEntity: GetActiveClusterEntity;
-  getDetailsUrl: GetDetailsUrl;
-  apiManager: ApiManager;
 }
 
 @observer
@@ -76,7 +69,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   };
 
   render() {
-    const { object: job, jobStore, getActiveClusterEntity, getDetailsUrl, apiManager } = this.props;
+    const { object: job, jobStore, getActiveClusterEntity } = this.props;
 
     if (!job) {
       return null;
@@ -92,7 +85,6 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
     const nodeSelector = job.getNodeSelectors();
     const images = job.getImages();
     const childPods = jobStore.getChildPods(job);
-    const ownerRefs = job.getOwnerRefs();
     const condition = job.getCondition();
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Job);
 
@@ -127,24 +119,6 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
           <DrawerItem name="Images">
             {
               images.map(image => <p key={image}>{image}</p>)
-            }
-          </DrawerItem>
-        )}
-        {ownerRefs.length > 0 && (
-          <DrawerItem name="Controlled by">
-            {
-              ownerRefs.map(ref => {
-                const { name, kind } = ref;
-                const detailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, job));
-
-                return (
-                  <p key={name}>
-                    {kind}
-                    {" "}
-                    <Link to={detailsUrl}>{name}</Link>
-                  </p>
-                );
-              })
             }
           </DrawerItem>
         )}
@@ -184,8 +158,6 @@ export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInje
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
-    getDetailsUrl: di.inject(getDetailsUrlInjectable),
-    apiManager: di.inject(apiManagerInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
   }),
 });

@@ -660,7 +660,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -669,6 +668,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -693,7 +695,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Copy"
           >
             <span
               class="icon"
@@ -702,11 +703,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               content_copy
             </span>
           </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -715,6 +718,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             close
           </span>
         </i>
+        <div>
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -1604,7 +1610,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -1613,6 +1618,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1629,7 +1637,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1638,11 +1645,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -1651,10 +1660,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -1663,6 +1674,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -2365,7 +2379,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -2374,6 +2387,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2390,7 +2406,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -2399,11 +2414,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -2412,10 +2429,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -2424,6 +2443,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -3370,7 +3392,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -3379,6 +3400,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -3395,7 +3419,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -3404,11 +3427,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -3417,10 +3442,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -3429,6 +3456,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -4349,7 +4379,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -4358,6 +4387,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -4374,7 +4406,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -4383,11 +4414,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -4396,10 +4429,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -4408,6 +4443,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -5323,7 +5361,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -5332,6 +5369,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -5348,7 +5388,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -5357,11 +5396,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -5370,10 +5411,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -5382,6 +5425,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -6297,7 +6343,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -6306,6 +6351,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -6322,7 +6370,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -6331,11 +6378,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -6344,10 +6393,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -6356,6 +6407,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -6564,10 +6618,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   >
                     <i
                       class="Icon material focusable"
-                      tooltip="YAMLException: end of the stream or a document separator is expected (1:1)
-
- 1 | @some-invalid-configuration@
------^"
                     >
                       <span
                         class="icon"
@@ -6576,6 +6626,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         error_outline
                       </span>
                     </i>
+                    <div>
+                      YAMLException: end of the stream or a document separator is expected (1:1)
+
+ 1 | @some-invalid-configuration@
+-----^
+                    </div>
                   </div>
                 </div>
                 <button
@@ -7291,7 +7347,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -7300,6 +7355,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -7316,7 +7374,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -7325,11 +7382,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -7338,10 +7397,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -7350,6 +7411,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -8296,7 +8360,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -8305,6 +8368,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -8321,7 +8387,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -8330,11 +8395,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -8343,10 +8410,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -8355,6 +8424,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -9270,7 +9342,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -9279,6 +9350,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -9295,7 +9369,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -9304,11 +9377,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -9317,10 +9392,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -9329,6 +9406,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -10299,7 +10379,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -10308,6 +10387,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -10324,7 +10406,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -10333,11 +10414,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -10346,10 +10429,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -10358,6 +10443,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -11115,7 +11203,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -11124,6 +11211,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>
@@ -11151,7 +11241,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
           class="Icon material interactive focusable"
           data-testid="close-helm-release-detail"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -11160,6 +11249,11 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             close
           </span>
         </i>
+        <div
+          data-testid="tooltip-content-for-close-helm-release-detail"
+        >
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -11907,7 +12001,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -11916,6 +12009,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -11932,7 +12028,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -11941,11 +12036,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -11954,10 +12051,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -11966,6 +12065,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -12761,7 +12863,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -12770,6 +12871,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -12786,7 +12890,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -12795,11 +12898,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -12808,10 +12913,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -12820,6 +12927,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -13066,7 +13176,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Copy"
           >
             <span
               class="icon"
@@ -13075,11 +13184,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               content_copy
             </span>
           </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"
           tabindex="0"
-          tooltip="Close"
         >
           <span
             class="icon"
@@ -13088,6 +13199,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             close
           </span>
         </i>
+        <div>
+          Close
+        </div>
       </div>
       <div
         class="drawer-content flex column box grow"
@@ -13977,7 +14091,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -13986,6 +14099,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -14024,7 +14140,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -14033,6 +14148,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -14049,7 +14167,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -14058,11 +14175,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -14071,10 +14190,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -14083,6 +14204,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -14785,7 +14909,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -14794,6 +14917,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -14832,7 +14958,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -14841,6 +14966,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -14857,7 +14985,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -14866,11 +14993,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -14879,10 +15008,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -14891,6 +15022,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -15808,7 +15942,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -15817,6 +15950,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -15855,7 +15991,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -15864,6 +15999,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -15880,7 +16018,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -15889,11 +16026,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -15902,10 +16041,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -15914,6 +16055,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -16829,7 +16973,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -16838,6 +16981,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -16854,7 +17000,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -16863,11 +17008,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -16876,10 +17023,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -16888,6 +17037,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -17803,7 +17955,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -17812,6 +17963,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -17828,7 +17982,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -17837,11 +17990,13 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -17850,10 +18005,12 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -17862,6 +18019,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -18754,7 +18914,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -18763,6 +18922,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
             </div>
           </div>

@@ -11,6 +11,8 @@ import terminalSpawningPoolInjectable from "./terminal-spawning-pool.injectable"
 import terminalConfigInjectable from "../../../../common/user-store/terminal-config.injectable";
 import terminalCopyOnSelectInjectable from "../../../../common/user-store/terminal-copy-on-select.injectable";
 import themeStoreInjectable from "../../../themes/store.injectable";
+import isMacInjectable from "../../../../common/vars/is-mac.injectable";
+import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-browser.injectable";
 
 export type CreateTerminal = (tabId: TabId, api: TerminalApi) => Terminal;
 
@@ -22,6 +24,8 @@ const createTerminalInjectable = getInjectable({
       terminalConfig: di.inject(terminalConfigInjectable),
       terminalCopyOnSelect: di.inject(terminalCopyOnSelectInjectable),
       themeStore: di.inject(themeStoreInjectable),
+      isMac: di.inject(isMacInjectable),
+      openLinkInBrowser: di.inject(openLinkInBrowserInjectable),
     };
 
     return (tabId, api) => new Terminal(dependencies, { tabId, api });

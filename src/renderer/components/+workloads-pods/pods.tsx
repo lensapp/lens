@@ -113,7 +113,7 @@ class NonInjectedPods extends React.Component<Dependencies> {
           sortingCallbacks={{
             [columnId.name]: pod => getConvertedParts(pod.getName()),
             [columnId.namespace]: pod => pod.getNs(),
-            [columnId.containers]: pod => pod.getContainers().length,
+            [columnId.containers]: pod => pod.getContainerStatuses().length,
             [columnId.restarts]: pod => pod.getRestartsCount(),
             [columnId.owners]: pod => pod.getOwnerRefs().map(ref => ref.kind),
             [columnId.qos]: pod => pod.getQosClass(),

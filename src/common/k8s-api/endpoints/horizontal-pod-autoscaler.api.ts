@@ -58,11 +58,11 @@ export interface ResourceMetricSource {
 }
 
 export interface BaseHorizontalPodAutoscalerMetricSpec {
-  resource: ResourceMetricSource;
-  object: ObjectMetricSource;
-  external: ExternalMetricSource;
-  pods: PodsMetricSource;
   containerResource: ContainerResourceMetricSource;
+  external: ExternalMetricSource;
+  object: ObjectMetricSource;
+  pods: PodsMetricSource;
+  resource: ResourceMetricSource;
 }
 
 export type HorizontalPodAutoscalerMetricSpec =
@@ -71,6 +71,55 @@ export type HorizontalPodAutoscalerMetricSpec =
   | OptionVarient<HpaMetricType.Object, BaseHorizontalPodAutoscalerMetricSpec, "object">
   | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricSpec, "pods">
   | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricSpec, "containerResource">;
+
+export interface ContainerResourceMetricStatus {
+  container: string;
+  currentAverageUtilization?: number;
+  currentAverageValue: string;
+  name: string;
+}
+
+export interface ExternalMetricStatus {
+  currentAverageValue?: string;
+  currentValue: string;
+  metricName: string;
+  metricSelector?: LabelSelector;
+}
+
+export interface ObjectMetricStatus {
+  averageValue?: string;
+  currentValue?: string;
+  metricName: string;
+  selector?: LabelSelector;
+  target: CrossVersionObjectReference;
+}
+
+export interface PodsMetricStatus {
+  currentAverageValue: string;
+  metricName: string;
+  selector?: LabelSelector;
+}
+
+export interface ResourceMetricStatus {
+  currentAverageUtilization?: number;
+  currentAverageValue: string;
+  name: string;
+}
+
+export interface BaseHorizontalPodAutoscalerMetricStatus {
+  containerResource: ContainerResourceMetricStatus;
+  external: ExternalMetricStatus;
+  object: ObjectMetricStatus;
+  pods: PodsMetricStatus;
+  resource: ResourceMetricStatus;
+}
+
+export type HorizontalPodAutoscalerMetricStatus =
+  | OptionVarient<HpaMetricType.Resource, BaseHorizontalPodAutoscalerMetricStatus, "resource">
+  | OptionVarient<HpaMetricType.External, BaseHorizontalPodAutoscalerMetricStatus, "external">
+  | OptionVarient<HpaMetricType.Object, BaseHorizontalPodAutoscalerMetricStatus, "object">
+  | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricStatus, "pods">
+  | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricStatus, "containerResource">;
 
 export interface CrossVersionObjectReference {
   kind: string;
@@ -89,7 +138,7 @@ export interface HorizontalPodAutoscalerStatus {
   conditions?: BaseKubeObjectCondition[];
   currentReplicas: number;
   desiredReplicas: number;
-  currentMetrics: HorizontalPodAutoscalerMetricSpec[];
+  currentMetrics?: HorizontalPodAutoscalerMetricStatus[];
 }
 
 interface MetricCurrentTarget {
@@ -142,114 +191,11 @@ export class HorizontalPodAutoscaler extends KubeObject<
     return this.status?.currentMetrics ?? [];
   }
 
-  protected getMetricName(metric: HorizontalPodAutoscalerMetricSpec): string {
-    switch (metric.type) {
-      case HpaMetricType.Resource:
-        return metric.resource.name;
-      case HpaMetricType.Pods:
-        return metric.pods.metricName;
-      case HpaMetricType.Object:
-        return metric.object.metricName;
-      case HpaMetricType.External:
-        return metric.external.metricName;
-      case HpaMetricType.ContainerResource:
-        return metric.containerResource.name;
-      default:
-        return `<unknown metric type: ${(metric as HorizontalPodAutoscalerMetricSpec).type}>`;
-    }
-  }
-
-  protected getResourceMetricValue(currentMetric: ResourceMetricSource | undefined, targetMetric: ResourceMetricSource): MetricCurrentTarget {
-    return {
-      current: (
-        currentMetric?.targetAverageUtilization
-          ? `${currentMetric.targetAverageUtilization}%`
-          : currentMetric?.targetAverageValue
-      ),
-      target: (
-        targetMetric?.targetAverageUtilization
-          ? `${targetMetric.targetAverageUtilization}%`
-          : targetMetric?.targetAverageValue
-      ),
-    };
-  }
-
-  protected getPodsMetricValue(currentMetric: PodsMetricSource | undefined, targetMetric: PodsMetricSource): MetricCurrentTarget {
-    return {
-      current: currentMetric?.targetAverageValue,
-      target: targetMetric?.targetAverageValue,
-    };
-  }
-
-  protected getObjectMetricValue(currentMetric: ObjectMetricSource | undefined, targetMetric: ObjectMetricSource): MetricCurrentTarget {
-    return {
-      current: (
-        currentMetric?.targetValue
-        ?? currentMetric?.averageValue
-      ),
-      target: (
-        targetMetric?.targetValue
-        ?? targetMetric?.averageValue
-      ),
-    };
-  }
-
-  protected getExternalMetricValue(currentMetric: ExternalMetricSource | undefined, targetMetric: ExternalMetricSource): MetricCurrentTarget {
-    return {
-      current: (
-        currentMetric?.targetValue
-        ?? currentMetric?.targetAverageValue
-      ),
-      target: (
-        targetMetric?.targetValue
-        ?? targetMetric?.targetAverageValue
-      ),
-    };
-  }
-
-  protected getContainerResourceMetricValue(currentMetric: ContainerResourceMetricSource | undefined, targetMetric: ContainerResourceMetricSource): MetricCurrentTarget {
-    return {
-      current: (
-        currentMetric?.targetAverageUtilization
-          ? `${currentMetric.targetAverageUtilization}%`
-          : currentMetric?.targetAverageValue
-      ),
-      target: (
-        targetMetric?.targetAverageUtilization
-          ? `${targetMetric.targetAverageUtilization}%`
-          : targetMetric?.targetAverageValue
-      ),
-    };
-  }
-
-  protected getMetricCurrentTarget(metric: HorizontalPodAutoscalerMetricSpec): MetricCurrentTarget {
-    const currentMetric = this.getMetrics()
-      .find(m => (
-        m.type === metric.type
-        && this.getMetricName(m) === this.getMetricName(metric)
-      ));
-
-    switch (metric.type) {
-      case HpaMetricType.Resource:
-        return this.getResourceMetricValue(currentMetric?.resource, metric.resource);
-      case HpaMetricType.Pods:
-        return this.getPodsMetricValue(currentMetric?.pods, metric.pods);
-      case HpaMetricType.Object:
-        return this.getObjectMetricValue(currentMetric?.object, metric.object);
-      case HpaMetricType.External:
-        return this.getExternalMetricValue(currentMetric?.external, metric.external);
-      case HpaMetricType.ContainerResource:
-        return this.getContainerResourceMetricValue(currentMetric?.containerResource, metric.containerResource);
-      default:
-        return {};
-    }
-  }
-
   getMetricValues(metric: HorizontalPodAutoscalerMetricSpec): string {
     const {
       current = "unknown",
       target = "unknown",
-    } = this.getMetricCurrentTarget(metric);
+    } = getMetricCurrentTarget(metric, this.getCurrentMetrics());
 
     return `${current} / ${target}`;
   }
@@ -261,5 +207,107 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
       objectConstructor: HorizontalPodAutoscaler,
       ...opts ?? {},
     });
+  }
+}
+
+function getMetricName(metric: HorizontalPodAutoscalerMetricSpec | HorizontalPodAutoscalerMetricStatus): string | undefined {
+  switch (metric.type) {
+    case HpaMetricType.Resource:
+      return metric.resource.name;
+    case HpaMetricType.Pods:
+      return metric.pods.metricName;
+    case HpaMetricType.Object:
+      return metric.object.metricName;
+    case HpaMetricType.External:
+      return metric.external.metricName;
+    case HpaMetricType.ContainerResource:
+      return metric.containerResource.name;
+    default:
+      return undefined;
+  }
+}
+
+function getResourceMetricValue(currentMetric: ResourceMetricStatus | undefined, targetMetric: ResourceMetricSource): MetricCurrentTarget {
+  return {
+    current: (
+      typeof currentMetric?.currentAverageUtilization === "number"
+        ? `${currentMetric.currentAverageUtilization}%`
+        : currentMetric?.currentAverageValue
+    ),
+    target: (
+      typeof targetMetric?.targetAverageUtilization === "number"
+        ? `${targetMetric.targetAverageUtilization}%`
+        : targetMetric?.targetAverageValue
+    ),
+  };
+}
+
+function getPodsMetricValue(currentMetric: PodsMetricStatus | undefined, targetMetric: PodsMetricSource): MetricCurrentTarget {
+  return {
+    current: currentMetric?.currentAverageValue,
+    target: targetMetric?.targetAverageValue,
+  };
+}
+
+function getObjectMetricValue(currentMetric: ObjectMetricStatus | undefined, targetMetric: ObjectMetricSource): MetricCurrentTarget {
+  return {
+    current: (
+      currentMetric?.currentValue
+        ?? currentMetric?.averageValue
+    ),
+    target: (
+      targetMetric?.targetValue
+        ?? targetMetric?.averageValue
+    ),
+  };
+}
+
+function getExternalMetricValue(currentMetric: ExternalMetricStatus | undefined, targetMetric: ExternalMetricSource): MetricCurrentTarget {
+  return {
+    current: (
+      currentMetric?.currentValue
+        ?? currentMetric?.currentAverageValue
+    ),
+    target: (
+      targetMetric?.targetValue
+        ?? targetMetric?.targetAverageValue
+    ),
+  };
+}
+
+function getContainerResourceMetricValue(currentMetric: ContainerResourceMetricStatus | undefined, targetMetric: ContainerResourceMetricSource): MetricCurrentTarget {
+  return {
+    current: (
+      typeof currentMetric?.currentAverageUtilization === "number"
+        ? `${currentMetric.currentAverageUtilization}%`
+        : currentMetric?.currentAverageValue
+    ),
+    target: (
+      typeof targetMetric?.targetAverageUtilization === "number"
+        ? `${targetMetric.targetAverageUtilization}%`
+        : targetMetric?.targetAverageValue
+    ),
+  };
+}
+
+function getMetricCurrentTarget(spec: HorizontalPodAutoscalerMetricSpec, status: HorizontalPodAutoscalerMetricStatus[]): MetricCurrentTarget {
+  const currentMetric = status.find(m => (
+    m.type === spec.type
+      && getMetricName(m) === getMetricName(spec)
+  ));
+
+  switch (spec.type) {
+    case HpaMetricType.Resource:
+      return getResourceMetricValue(currentMetric?.resource, spec.resource);
+    case HpaMetricType.Pods:
+      return getPodsMetricValue(currentMetric?.pods, spec.pods);
+    case HpaMetricType.Object:
+      return getObjectMetricValue(currentMetric?.object, spec.object);
+    case HpaMetricType.External:
+      return getExternalMetricValue(currentMetric?.external, spec.external);
+    case HpaMetricType.ContainerResource:
+      return getContainerResourceMetricValue(currentMetric?.containerResource, spec.containerResource);
+    default:
+      return {};
   }
 }

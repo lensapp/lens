@@ -444,7 +444,6 @@ exports[`installing helm chart from previously opened tab given tab for installi
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -453,6 +452,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -469,7 +471,6 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -478,11 +479,13 @@ exports[`installing helm chart from previously opened tab given tab for installi
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -491,10 +494,12 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -503,6 +508,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div
@@ -966,7 +974,6 @@ exports[`installing helm chart from previously opened tab given tab for installi
                         <i
                           class="Icon material interactive focusable small"
                           tabindex="0"
-                          tooltip="Close ⌘+W"
                         >
                           <span
                             class="icon"
@@ -975,6 +982,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                             close
                           </span>
                         </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -991,7 +1001,6 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   class="Icon new-dock-tab material interactive focusable"
                   id="menu-actions-for-dock"
                   tabindex="0"
-                  tooltip="New tab"
                 >
                   <span
                     class="icon"
@@ -1000,11 +1009,13 @@ exports[`installing helm chart from previously opened tab given tab for installi
                     add
                   </span>
                 </i>
+                <div>
+                  New tab
+                </div>
               </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Fit to window"
               >
                 <span
                   class="icon"
@@ -1013,10 +1024,12 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   fullscreen
                 </span>
               </i>
+              <div>
+                Fit to window
+              </div>
               <i
                 class="Icon material interactive focusable"
                 tabindex="0"
-                tooltip="Minimize"
               >
                 <span
                   class="icon"
@@ -1025,6 +1038,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
                   keyboard_arrow_down
                 </span>
               </i>
+              <div>
+                Minimize
+              </div>
             </div>
           </div>
           <div

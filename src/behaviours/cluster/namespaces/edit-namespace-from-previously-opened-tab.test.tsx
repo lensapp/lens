@@ -6,7 +6,6 @@ import type { RenderResult } from "@testing-library/react";
 import { act } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import React from "react";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
@@ -17,30 +16,6 @@ import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-stor
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
 import { Namespace } from "../../../common/k8s-api/endpoints";
-
-jest.mock("../../../renderer/components/tooltip/withTooltip", () => ({
-  withTooltip:
-    (Target: any) =>
-      ({ tooltip, ...props }: any) => {
-        if (tooltip) {
-          const testId = props["data-testid"];
-
-          return (
-            <>
-              <Target
-                tooltip={tooltip.children ? undefined : tooltip}
-                {...props}
-              />
-              <div data-testid={testId && `tooltip-content-for-${testId}`}>
-                {tooltip.children || tooltip}
-              </div>
-            </>
-          );
-        }
-
-        return <Target {...props} />;
-      },
-}));
 
 describe("cluster/namespaces - edit namespaces from previously opened tab", () => {
   let builder: ApplicationBuilder;

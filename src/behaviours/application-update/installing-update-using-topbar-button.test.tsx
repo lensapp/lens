@@ -73,15 +73,14 @@ describe("encourage user to update when sufficient time passed since update was 
     });
 
     describe("given the update check", () => {
-      let processCheckingForUpdates: (source: string) => Promise<void>;
-      let processCheckingForUpdatesPromise: Promise<void>;
+      let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
       beforeEach(async () => {
         processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(
           processCheckingForUpdatesInjectable,
         );
 
-        processCheckingForUpdatesPromise = processCheckingForUpdates("irrelevant");
+        processCheckingForUpdates("irrelevant");
       });
 
       describe("when update downloaded", () => {
@@ -94,7 +93,6 @@ describe("encourage user to update when sufficient time passed since update was 
           });
 
           await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
-          await processCheckingForUpdatesPromise;
 
           button = rendered.getByTestId("update-button");
         });
@@ -105,6 +103,11 @@ describe("encourage user to update when sufficient time passed since update was 
 
         it("has soft emotional indication in the button", () => {
           expect(button).toHaveAttribute("data-warning-level", "light");
+        });
+
+        // TODO: Implement after starting main and renderer is separated in ApplicationBuilder
+        xit("given closing the application window, when starting the application window again, still shows the button", () => {
+          expect(button).toBeInTheDocument();
         });
 
         describe("given some time passes, when checking for updates again", () => {

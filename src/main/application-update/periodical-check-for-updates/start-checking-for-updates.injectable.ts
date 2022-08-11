@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import periodicalCheckForUpdatesInjectable from "./periodical-check-for-updates.injectable";
-import { afterRootFrameIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/after-root-frame-is-ready-injection-token";
 import updatingIsEnabledInjectable from "../updating-is-enabled.injectable";
+import { afterApplicationIsLoadedInjectionToken } from "../../start-main-application/runnable-tokens/after-application-is-loaded-injection-token";
 
 const startCheckingForUpdatesInjectable = getInjectable({
   id: "start-checking-for-updates",
@@ -23,7 +23,7 @@ const startCheckingForUpdatesInjectable = getInjectable({
     };
   },
 
-  injectionToken: afterRootFrameIsReadyInjectionToken,
+  injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 
 export default startCheckingForUpdatesInjectable;

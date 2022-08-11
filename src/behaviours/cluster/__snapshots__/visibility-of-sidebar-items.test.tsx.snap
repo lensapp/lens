@@ -442,7 +442,6 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_13"
                         tabindex="0"
                       >
                         <span
@@ -451,8 +450,10 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -476,12 +477,13 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_15"
               tabindex="0"
             >
               <span
@@ -490,11 +492,12 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_16"
               tabindex="0"
             >
               <span
@@ -503,8 +506,10 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
@@ -999,7 +1004,6 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                     >
                       <i
                         class="Icon material interactive focusable small"
-                        id="tooltip_target_49"
                         tabindex="0"
                       >
                         <span
@@ -1008,8 +1012,10 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                         >
                           close
                         </span>
-                        <div />
                       </i>
+                      <div>
+                        Close ⌘+W
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1033,12 +1039,13 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 >
                   add
                 </span>
-                <div />
               </i>
+              <div>
+                New tab
+              </div>
             </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_51"
               tabindex="0"
             >
               <span
@@ -1047,11 +1054,12 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
               >
                 fullscreen
               </span>
-              <div />
             </i>
+            <div>
+              Fit to window
+            </div>
             <i
               class="Icon material interactive focusable"
-              id="tooltip_target_52"
               tabindex="0"
             >
               <span
@@ -1060,8 +1068,10 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
               >
                 keyboard_arrow_up
               </span>
-              <div />
             </i>
+            <div>
+              Open
+            </div>
           </div>
         </div>
       </div>
