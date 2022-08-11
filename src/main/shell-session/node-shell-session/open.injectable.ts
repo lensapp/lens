@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type WebSocket from "ws";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
@@ -20,11 +20,9 @@ export interface NodeShellSessionArgs {
   nodeName: string;
 }
 
-export type OpenNodeShellSession = (args: NodeShellSessionArgs) => Promise<void>;
-
 const openNodeShellSessionInjectable = getInjectable({
   id: "open-node-shell-session",
-  instantiate: (di): OpenNodeShellSession => {
+  instantiate: (di, params: NodeShellSessionArgs) => {
     const createKubectl = di.inject(createKubectlInjectable);
     const dependencies: NodeShellSessionDependencies = {
       isMac: di.inject(isMacInjectable),
@@ -32,14 +30,13 @@ const openNodeShellSessionInjectable = getInjectable({
       logger: di.inject(loggerInjectable),
       createKubeJsonApiForCluster: di.inject(createKubeJsonApiForClusterInjectable),
     };
+    const kubectl = createKubectl(params.cluster.version);
+    const session = new NodeShellSession(dependencies, { kubectl, ...params });
 
-    return (args) => {
-      const kubectl = createKubectl(args.cluster.version);
-      const session = new NodeShellSession(dependencies, { kubectl, ...args });
-
-      return session.open();
-    };
+    return session.open();
   },
+  // NOTE: this must be transient to bypass the circular dependency of `createKubeJsonApiForClusterInjectable` on the lens proxy port
+  lifecycle: lifecycleEnum.transient,
 });
 
 export default openNodeShellSessionInjectable;
