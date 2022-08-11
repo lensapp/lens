@@ -4,6 +4,7 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
+import { when } from "mobx";
 import { coerce } from "semver";
 import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
@@ -29,6 +30,7 @@ const helmChartVersionsInjectable = getInjectable({
     const helmCharts = di.inject(helmChartsInjectable);
 
     return asyncComputed(async () => {
+      await when(() => !helmCharts.pending.get());
       const rawVersions = await Promise.all((
         helmCharts.value.get()
           .filter(chart => chart.getName() === release.getChart())

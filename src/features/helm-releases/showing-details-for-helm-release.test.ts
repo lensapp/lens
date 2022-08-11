@@ -18,8 +18,8 @@ import requestHelmReleaseConfigurationInjectable from "../../common/k8s-api/endp
 import type { RequestHelmReleaseUpdate } from "../../common/k8s-api/endpoints/helm-releases.api/update.injectable";
 import requestHelmReleaseUpdateInjectable from "../../common/k8s-api/endpoints/helm-releases.api/update.injectable";
 import { useFakeTime } from "../../common/test-utils/use-fake-time";
-import type { RequestHelmRelease, DetailedHelmRelease } from "../../renderer/components/+helm-releases/release-details/release-details-model/request-helm-release.injectable";
-import requestHelmReleaseInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/request-helm-release.injectable";
+import type { RequestDetailedHelmRelease } from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
+import requestDetailedHelmReleaseInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showCheckedErrorInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
 import getRandomUpgradeChartTabIdInjectable from "../../renderer/components/dock/upgrade-chart/get-random-upgrade-chart-tab-id.injectable";
@@ -31,11 +31,12 @@ import requestHelmChartsInjectable from "../../common/k8s-api/endpoints/helm-cha
 import requestHelmChartVersionsInjectable from "../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
 import requestHelmChartReadmeInjectable from "../../common/k8s-api/endpoints/helm-charts.api/get-readme.injectable";
 import requestHelmChartValuesInjectable from "../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
+import { HelmChart } from "../../common/k8s-api/endpoints/helm-charts.api";
 
 describe("showing details for helm release", () => {
   let builder: ApplicationBuilder;
   let requestHelmReleasesMock: AsyncFnMock<RequestHelmReleases>;
-  let requestHelmReleaseMock: AsyncFnMock<RequestHelmRelease>;
+  let requestDetailedHelmReleaseMock: AsyncFnMock<RequestDetailedHelmRelease>;
   let requestHelmReleaseConfigurationMock: AsyncFnMock<RequestHelmReleaseConfiguration>;
   let requestHelmReleaseUpdateMock: AsyncFnMock<RequestHelmReleaseUpdate>;
   let requestHelmChartsMock: AsyncFnMock<RequestHelmCharts>;
@@ -53,7 +54,7 @@ describe("showing details for helm release", () => {
     builder.setEnvironmentToClusterFrame();
 
     requestHelmReleasesMock = asyncFn();
-    requestHelmReleaseMock = asyncFn();
+    requestDetailedHelmReleaseMock = asyncFn();
     requestHelmReleaseConfigurationMock = asyncFn();
     requestHelmReleaseUpdateMock = asyncFn();
     requestHelmChartsMock = asyncFn();
@@ -69,7 +70,7 @@ describe("showing details for helm release", () => {
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
       windowDi.override(showCheckedErrorInjectable, () => showCheckedErrorNotificationMock);
       windowDi.override(requestHelmReleasesInjectable, () => requestHelmReleasesMock);
-      windowDi.override(requestHelmReleaseInjectable, () => requestHelmReleaseMock);
+      windowDi.override(requestDetailedHelmReleaseInjectable, () => requestDetailedHelmReleaseMock);
       windowDi.override(requestHelmReleaseConfigurationInjectable, () => requestHelmReleaseConfigurationMock);
       windowDi.override(requestHelmReleaseUpdateInjectable, () => requestHelmReleaseUpdateMock);
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
@@ -139,7 +140,7 @@ describe("showing details for helm release", () => {
                 appVersion: "some-app-version",
                 name: "some-name",
                 namespace: "some-namespace",
-                chart: "some-chart",
+                chart: "some-chart-1.0.0",
                 status: "some-status",
                 updated: "some-updated",
                 revision: "some-revision",
@@ -154,7 +155,7 @@ describe("showing details for helm release", () => {
                 appVersion: "some-other-app-version",
                 name: "some-other-name",
                 namespace: "some-other-namespace",
-                chart: "some-other-chart",
+                chart: "some-other-chart-2.0.0",
                 status: "some-other-status",
                 updated: "some-other-updated",
                 revision: "some-other-revision",
@@ -193,7 +194,7 @@ describe("showing details for helm release", () => {
           });
 
           it("calls for release", () => {
-            expect(requestHelmReleaseMock).toHaveBeenCalledWith(
+            expect(requestDetailedHelmReleaseMock).toHaveBeenCalledWith(
               "some-name",
               "some-namespace",
             );
@@ -207,7 +208,7 @@ describe("showing details for helm release", () => {
 
           describe("when opening details for second release", () => {
             beforeEach(() => {
-              requestHelmReleaseMock.mockClear();
+              requestDetailedHelmReleaseMock.mockClear();
 
               const row = rendered.getByTestId(
                 "helm-release-row-for-some-other-namespace/some-other-name",
@@ -221,7 +222,7 @@ describe("showing details for helm release", () => {
             });
 
             it("calls for another release", () => {
-              expect(requestHelmReleaseMock).toHaveBeenCalledWith(
+              expect(requestDetailedHelmReleaseMock).toHaveBeenCalledWith(
                 "some-other-name",
                 "some-other-namespace",
               );
@@ -261,7 +262,7 @@ describe("showing details for helm release", () => {
 
             describe("when opening details for same release", () => {
               beforeEach(() => {
-                requestHelmReleaseMock.mockClear();
+                requestDetailedHelmReleaseMock.mockClear();
 
                 const row = rendered.getByTestId(
                   "helm-release-row-for-some-namespace/some-name",
@@ -275,15 +276,14 @@ describe("showing details for helm release", () => {
               });
 
               it("does not reload", () => {
-                expect(requestHelmReleaseMock).not.toHaveBeenCalled();
+                expect(requestDetailedHelmReleaseMock).not.toHaveBeenCalled();
               });
             });
           });
 
-
           describe("when call for release resolves with error", () => {
             beforeEach(async () => {
-              await requestHelmReleaseMock.resolve({
+              await requestDetailedHelmReleaseMock.resolve({
                 callWasSuccessful: false,
                 error: "some-error",
               });
@@ -312,9 +312,49 @@ describe("showing details for helm release", () => {
 
           describe("when call for release resolve with release", () => {
             beforeEach(async () => {
-              await requestHelmReleaseMock.resolve({
+              await requestDetailedHelmReleaseMock.resolve({
                 callWasSuccessful: true,
-                response: detailedReleaseFake,
+                response: {
+                  release: {
+                    appVersion: "some-app-version",
+                    chart: "some-chart-1.0.0",
+                    status: "some-status",
+                    updated: "some-updated",
+                    revision: "some-revision",
+                    name: "some-name",
+                    namespace: "some-namespace",
+                  },
+
+                  details: {
+                    name: "some-name",
+                    namespace: "some-namespace",
+                    version: "some-version",
+                    config: "some-config",
+                    manifest: "some-manifest",
+
+                    info: {
+                      deleted: "some-deleted",
+                      description: "some-description",
+                      first_deployed: "some-first-deployed",
+                      last_deployed: "some-last-deployed",
+                      notes: "some-notes",
+                      status: "some-status",
+                    },
+
+                    resources: [
+                      {
+                        kind: "some-kind",
+                        apiVersion: "some-api-version",
+                        metadata: {
+                          uid: "some-uid",
+                          name: "some-resource",
+                          namespace: "some-namespace",
+                          creationTimestamp: "2015-10-22T07:28:00Z",
+                        },
+                      },
+                    ],
+                  },
+                },
               });
             });
 
@@ -477,94 +517,115 @@ describe("showing details for helm release", () => {
                     expect(saveButton).toHaveClass("waiting");
                   });
 
-
-
-                  it("calls for update", () => {
-                    expect(requestHelmReleaseUpdateMock).toHaveBeenCalledWith(
-                      "some-name",
-                      "some-namespace",
-
-                      {
-                        chart: "some-chart",
-                        repo: "",
-                        values: "some-new-configuration",
-                        version: "",
-                      },
-                    );
-                  });
-
-                  describe("when update resolves with success", () => {
+                  describe("when requestHelmCharts resolves", () => {
                     beforeEach(async () => {
-                      requestHelmReleasesMock.mockClear();
-                      requestHelmReleaseConfigurationMock.mockClear();
-
-                      await requestHelmReleaseUpdateMock.resolve({
-                        updateWasSuccessful: true,
+                      await requestHelmChartsMock.resolve([HelmChart.create({
+                        apiVersion: "1.2.3",
+                        version: "1.0.0",
+                        created: "at-some-time",
+                        name: "some-chart",
+                        repo: "some-repo",
+                      })]);
+                    });
+                    describe("when requestHelmChartVersions resolves", () => {
+                      beforeEach(async () => {
+                        await requestHelmChartVersionsMock.resolve([HelmChart.create({
+                          apiVersion: "1.2.3",
+                          version: "1.0.0",
+                          created: "at-some-time",
+                          name: "some-chart",
+                          repo: "some-repo",
+                        })]);
                       });
-                    });
 
-                    it("renders", () => {
-                      expect(rendered.baseElement).toMatchSnapshot();
-                    });
+                      it("calls for update", () => {
+                        expect(requestHelmReleaseUpdateMock).toHaveBeenCalledWith(
+                          "some-name",
+                          "some-namespace",
 
-                    it("does not show spinner anymore", () => {
-                      const saveButton = rendered.getByTestId(
-                        "helm-release-configuration-save-button",
-                      );
-
-                      expect(saveButton).not.toHaveClass("waiting");
-                    });
-
-                    it("reloads the configuration", () => {
-                      expect(requestHelmReleaseConfigurationMock).toHaveBeenCalledWith(
-                        "some-name",
-                        "some-namespace",
-                        true,
-                      );
-                    });
-
-                    it("shows success notification", () => {
-                      expect(showSuccessNotificationMock).toHaveBeenCalled();
-                    });
-
-                    it("does not show error notification", () => {
-                      expect(showCheckedErrorNotificationMock).not.toHaveBeenCalled();
-                    });
-                  });
-
-                  describe("when update resolves with failure", () => {
-                    beforeEach(async () => {
-                      requestHelmReleasesMock.mockClear();
-                      requestHelmReleaseConfigurationMock.mockClear();
-
-                      await requestHelmReleaseUpdateMock.resolve({
-                        updateWasSuccessful: false,
-                        error: "some-error",
+                          {
+                            chart: "some-chart",
+                            repo: "some-repo",
+                            values: "some-new-configuration",
+                            version: "1.0.0",
+                          },
+                        );
                       });
-                    });
 
-                    it("renders", () => {
-                      expect(rendered.baseElement).toMatchSnapshot();
-                    });
+                      describe("when update resolves with success", () => {
+                        beforeEach(async () => {
+                          requestHelmReleasesMock.mockClear();
+                          requestHelmReleaseConfigurationMock.mockClear();
 
-                    it("does not show spinner anymore", () => {
-                      const saveButton = rendered.getByTestId(
-                        "helm-release-configuration-save-button",
-                      );
+                          await requestHelmReleaseUpdateMock.resolve({
+                            updateWasSuccessful: true,
+                          });
+                        });
 
-                      expect(saveButton).not.toHaveClass("waiting");
-                    });
+                        it("renders", () => {
+                          expect(rendered.baseElement).toMatchSnapshot();
+                        });
 
-                    it("does not reload the configuration", () => {
-                      expect(requestHelmReleaseConfigurationMock).not.toHaveBeenCalled();
-                    });
+                        it("does not show spinner anymore", () => {
+                          const saveButton = rendered.getByTestId(
+                            "helm-release-configuration-save-button",
+                          );
 
-                    it("does not show success notification", () => {
-                      expect(showSuccessNotificationMock).not.toHaveBeenCalled();
-                    });
+                          expect(saveButton).not.toHaveClass("waiting");
+                        });
 
-                    it("shows error notification", () => {
-                      expect(showCheckedErrorNotificationMock).toHaveBeenCalled();
+                        it("reloads the configuration", () => {
+                          expect(requestHelmReleaseConfigurationMock).toHaveBeenCalledWith(
+                            "some-name",
+                            "some-namespace",
+                            true,
+                          );
+                        });
+
+                        it("shows success notification", () => {
+                          expect(showSuccessNotificationMock).toHaveBeenCalled();
+                        });
+
+                        it("does not show error notification", () => {
+                          expect(showCheckedErrorNotificationMock).not.toHaveBeenCalled();
+                        });
+                      });
+
+                      describe("when update resolves with failure", () => {
+                        beforeEach(async () => {
+                          requestHelmReleasesMock.mockClear();
+                          requestHelmReleaseConfigurationMock.mockClear();
+
+                          await requestHelmReleaseUpdateMock.resolve({
+                            updateWasSuccessful: false,
+                            error: "some-error",
+                          });
+                        });
+
+                        it("renders", () => {
+                          expect(rendered.baseElement).toMatchSnapshot();
+                        });
+
+                        it("does not show spinner anymore", () => {
+                          const saveButton = rendered.getByTestId(
+                            "helm-release-configuration-save-button",
+                          );
+
+                          expect(saveButton).not.toHaveClass("waiting");
+                        });
+
+                        it("does not reload the configuration", () => {
+                          expect(requestHelmReleaseConfigurationMock).not.toHaveBeenCalled();
+                        });
+
+                        it("does not show success notification", () => {
+                          expect(showSuccessNotificationMock).not.toHaveBeenCalled();
+                        });
+
+                        it("shows error notification", () => {
+                          expect(showCheckedErrorNotificationMock).toHaveBeenCalled();
+                        });
+                      });
                     });
                   });
                 });
@@ -576,45 +637,3 @@ describe("showing details for helm release", () => {
     });
   });
 });
-
-const detailedReleaseFake: DetailedHelmRelease = {
-  release: {
-    appVersion: "some-app-version",
-    chart: "some-chart",
-    status: "some-status",
-    updated: "some-updated",
-    revision: "some-revision",
-    name: "some-name",
-    namespace: "some-namespace",
-  },
-
-  details: {
-    name: "some-name",
-    namespace: "some-namespace",
-    version: "some-version",
-    config: "some-config",
-    manifest: "some-manifest",
-
-    info: {
-      deleted: "some-deleted",
-      description: "some-description",
-      first_deployed: "some-first-deployed",
-      last_deployed: "some-last-deployed",
-      notes: "some-notes",
-      status: "some-status",
-    },
-
-    resources: [
-      {
-        kind: "some-kind",
-        apiVersion: "some-api-version",
-        metadata: {
-          uid: "some-uid",
-          name: "some-resource",
-          namespace: "some-namespace",
-          creationTimestamp: "2015-10-22T07:28:00Z",
-        },
-      },
-    ],
-  },
-};

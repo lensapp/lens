@@ -73,13 +73,14 @@ const toHelmReleaseInjectable = getInjectable({
       // so we have to try to guess it by searching charts
       async getRepo() {
         const versionsComputed = helmChartVersions(this);
+        const version = this.getVersion();
 
         await when(() => !versionsComputed.pending.get());
 
-        const version = this.getVersion();
-        const versions = versionsComputed.value.get();
-
-        return versions.find((chartVersion) => chartVersion.version === version)?.repo ?? "";
+        return versionsComputed.value
+          .get()
+          .find((chartVersion) => chartVersion.version === version)?.repo
+          ?? "";
       },
     });
   },

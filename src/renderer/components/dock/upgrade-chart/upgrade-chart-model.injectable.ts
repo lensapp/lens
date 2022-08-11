@@ -68,9 +68,11 @@ const upgradeChartModelInjectable = getInjectable({
       error: computed(() => configrationEditError.get()),
       setError: action((error) => configrationEditError.set(String(error))),
     };
-    const versionValue = observable.box<ChartVersion | undefined>(versions.value.get()[0]);
+    const versionValue = observable.box<ChartVersion>(undefined, {
+      deep: false,
+    });
     const version: UpgradeChartModel["version"] = {
-      value: computed(() => versionValue.get()),
+      value: computed(() => versionValue.get() ?? versions.value.get()[0]),
       set: action((option) => versionValue.set(option?.value)),
     };
     const versionOptions = computed(() => (
@@ -88,9 +90,9 @@ const upgradeChartModelInjectable = getInjectable({
       configration,
       version,
       submit: async () => {
-        const version = versionValue.get();
+        const selectedVersion = version.value.get();
 
-        if (!version || configrationEditError.get()) {
+        if (!selectedVersion || configrationEditError.get()) {
           return {
             completedSuccessfully: false,
           };
@@ -102,7 +104,7 @@ const upgradeChartModelInjectable = getInjectable({
           {
             chart: release.getChart(),
             values: configration.value.get(),
-            ...version,
+            ...selectedVersion,
           },
         );
         storedConfigration.invalidate();

@@ -80,7 +80,7 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
               <Badge label={release.getNs()} />
               <span>Version</span>
               {" "}
-              <Badge label={model.version.value.get()} />
+              <Badge label={release.getVersion()} />
               <span>Upgrade version</span>
               <Select<ChartVersion, SelectOption<ChartVersion>, false>
                 id="char-version-input"
