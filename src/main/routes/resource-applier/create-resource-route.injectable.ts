@@ -9,7 +9,7 @@ import { payloadValidatedClusterRoute } from "../../router/route";
 import Joi from "joi";
 
 const createResourceRouteInjectable = getRouteInjectable({
-  id: "apply-resource-route",
+  id: "create-resource-route",
 
   instantiate: () => payloadValidatedClusterRoute({
     method: "post",

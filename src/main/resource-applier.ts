@@ -4,7 +4,6 @@
  */
 
 import type { Cluster } from "../common/cluster/cluster";
-import type { KubernetesObject } from "@kubernetes/client-node";
 import { exec } from "child_process";
 import fs from "fs-extra";
 import * as yaml from "js-yaml";
@@ -15,6 +14,7 @@ import { appEventBus } from "../common/app-event-bus/event-bus";
 import { isChildProcessError } from "../common/utils";
 import type { Patch } from "rfc6902";
 import { promiseExecFile } from "../common/utils/promise-exec";
+import type { KubernetesObject } from "@kubernetes/client-node";
 
 export class ResourceApplier {
   constructor(protected cluster: Cluster) {}
@@ -65,7 +65,9 @@ export class ResourceApplier {
   async create(resource: string): Promise<string> {
     appEventBus.emit({ name: "resource", action: "apply" });
 
-    return this.kubectlApply(yaml.dump(this.sanitizeObject(resource)));
+    console.log({ resource });
+
+    return this.kubectlApply(this.sanitizeObject(resource));
   }
 
   protected async kubectlApply(content: string): Promise<string> {
@@ -148,13 +150,13 @@ export class ResourceApplier {
     });
   }
 
-  protected sanitizeObject(resource: KubernetesObject | any) {
-    const res = JSON.parse(JSON.stringify(resource));
+  protected sanitizeObject(resource: string) {
+    const res = yaml.load(resource) as Partial<KubernetesObject> & { status?: object };
 
     delete res.status;
     delete res.metadata?.resourceVersion;
-    delete res.metadata?.annotations["kubectl.kubernetes.io/last-applied-configuration"];
+    delete res.metadata?.annotations?.["kubectl.kubernetes.io/last-applied-configuration"];
 
-    return res;
+    return yaml.dump(res);
   }
 }
