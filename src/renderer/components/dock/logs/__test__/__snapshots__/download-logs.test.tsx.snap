@@ -412,8 +412,8 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
               >
                 <div
                   class="Tab flex gaps align-center DockTab active"
-                  data-testid="dock-tab-for-log-tab-some-first-tab-id"
-                  id="tab-log-tab-some-first-tab-id"
+                  data-testid="dock-tab-for-log-tab-some-irrelevant-random-id"
+                  id="tab-log-tab-some-irrelevant-random-id"
                   role="tab"
                   tabindex="0"
                 >
@@ -515,7 +515,7 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
           </div>
           <div
             class="tab-content pod-logs"
-            data-testid="dock-tab-content-for-log-tab-some-first-tab-id"
+            data-testid="dock-tab-content-for-log-tab-some-irrelevant-random-id"
             style="flex-basis: 300px;"
           >
             <div

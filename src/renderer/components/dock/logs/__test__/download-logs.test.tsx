@@ -78,11 +78,7 @@ describe("download logs options in pod logs dock tab", () => {
     builder.beforeApplicationStart(({ rendererDi }) => {
       rendererDi.override(callForAllLogsInjectable, () => () => Promise.resolve("all-logs"));
       rendererDi.override(logsViewModelInjectable, () => getOnePodViewModel("foobar"));
-      rendererDi.override(getRandomIdForPodLogsTabInjectable, () =>
-        jest
-          .fn(() => "some-irrelevant-random-id")
-          .mockReturnValueOnce("some-first-tab-id")
-      );
+      rendererDi.override(getRandomIdForPodLogsTabInjectable, () => jest.fn(() => "some-irrelevant-random-id"));
 
       openSaveFileDialogMock = jest.fn();
       rendererDi.override(openSaveFileDialogInjectable, () => openSaveFileDialogMock);
