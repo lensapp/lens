@@ -784,11 +784,9 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                 </div>
               </div>
               <div
-                class="LogControls flex gaps align-center justify-space-between wrap"
+                class="controls"
               >
-                <div
-                  class="time-range"
-                >
+                <div>
                   <span>
                     Logs from
                      

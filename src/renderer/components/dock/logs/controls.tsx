@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./controls.scss";
+import styles from "./controls.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
 
-import { cssNames } from "../../../utils";
 import { Checkbox } from "../../checkbox";
 import type { LogTabViewModel } from "./logs-view-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -72,8 +71,8 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForLog
   };
 
   return (
-    <div className={cssNames("LogControls flex gaps align-center justify-space-between wrap")}>
-      <div className="time-range">
+    <div className={styles.controls}>
+      <div>
         {since && (
           <span>
             Logs from
