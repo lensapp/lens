@@ -4208,7 +4208,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       Kind:
                     </span>
                     <div
-                      class="badge"
+                      class="badge clickable interactive"
                     >
                       Namespace
                     </div>
@@ -4216,7 +4216,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       Name:
                     </span>
                     <div
-                      class="badge"
+                      class="badge clickable interactive"
                     >
                       some-name
                     </div>
@@ -4224,7 +4224,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       Namespace:
                     </span>
                     <div
-                      class="badge"
+                      class="badge clickable interactive"
                     >
                       default
                     </div>
@@ -7856,7 +7856,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       Kind:
                     </span>
                     <div
-                      class="badge"
+                      class="badge clickable interactive"
                     >
                       Namespace
                     </div>
@@ -7864,7 +7864,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       Name:
                     </span>
                     <div
-                      class="badge"
+                      class="badge clickable interactive"
                     >
                       some-name
                     </div>
@@ -7872,7 +7872,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       Namespace:
                     </span>
                     <div
-                      class="badge"
+                      class="badge clickable interactive"
                     >
                       default
                     </div>

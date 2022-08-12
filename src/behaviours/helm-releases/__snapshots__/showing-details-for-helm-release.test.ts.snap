@@ -7389,7 +7389,7 @@ exports[`showing details for helm release given application is started when navi
               class="value"
             >
               <div
-                class="badge some-status"
+                class="badge some-status clickable interactive"
               >
                 Some-status
               </div>
