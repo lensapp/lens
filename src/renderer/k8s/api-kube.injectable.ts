@@ -10,6 +10,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/st
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
+import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
@@ -18,14 +19,15 @@ const apiKubeInjectable = getInjectable({
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const { port, host } = di.inject(windowLocationInjectable);
 
     const apiKube = createKubeJsonApi({
-      serverAddress: `http://127.0.0.1:${window.location.port}`,
+      serverAddress: `http://127.0.0.1:${port}`,
       apiBase: apiKubePrefix,
       debug: isDevelopment,
     }, {
       headers: {
-        "Host": window.location.host,
+        "Host": host,
       },
     });
 
