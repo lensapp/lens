@@ -13,7 +13,9 @@ import type { LogTabViewModel } from "./logs-view-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
 import { DownloadLogsDropdown } from "./download-logs-dropdown";
-import callForLogsInjectable, { CallForLogs } from "./call-for-logs.injectable";
+import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
+import downloadAllLogsInjectable from "./download-all-logs.injectable";
+import type { PodLogsQuery } from "../../../../common/k8s-api/endpoints";
 
 export interface LogControlsProps {
   model: LogTabViewModel;
@@ -21,10 +23,10 @@ export interface LogControlsProps {
 
 interface Dependencies {
   openSaveFileDialog: (filename: string, contents: BlobPart | BlobPart[], type: string) => void;
-  callForLogs: CallForLogs;
+  downloadAllLogs: (params: ResourceDescriptor, query: PodLogsQuery) => Promise<void>;
 }
 
-const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForLogs }: Dependencies & LogControlsProps) => {
+const NonInjectedLogControls = observer(({ openSaveFileDialog, model, downloadAllLogs }: Dependencies & LogControlsProps) => {
   const tabData = model.logTabData.get();
   const pod = model.pod.get();
 
@@ -43,19 +45,6 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForLog
   const togglePrevious = () => {
     model.updateLogTabData({ showPrevious: !previous });
     model.reloadLogs();
-  };
-
-  const downloadAllLogs = async () => {
-    const pod = model.pod.get();
-    
-    if (pod) {
-      const logs = await callForLogs(
-        { name: pod.getName(), namespace: pod.getNs() },
-        { timestamps: showTimestamps, previous }
-      )
-      
-      openSaveFileDialog(`${pod.getName()}.log`, logs, "text/plain");
-    }
   };
 
   const downloadLogs = () => {
@@ -97,7 +86,10 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForLog
 
         <DownloadLogsDropdown
           downloadVisibleLogs={downloadLogs}
-          downloadAllLogs={downloadAllLogs}
+          downloadAllLogs={() => downloadAllLogs(
+            { name: pod.getName(), namespace: pod.getNs() },
+            { timestamps: showTimestamps, previous }
+          )}
         />
       </div>
     </div>
@@ -107,7 +99,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForLog
 export const LogControls = withInjectables<Dependencies, LogControlsProps>(NonInjectedLogControls, {
   getProps: (di, props) => ({
     openSaveFileDialog: di.inject(openSaveFileDialogInjectable),
-    callForLogs: di.inject(callForLogsInjectable),
+    downloadAllLogs: di.inject(downloadAllLogsInjectable),
     ...props,
   }),
 });
