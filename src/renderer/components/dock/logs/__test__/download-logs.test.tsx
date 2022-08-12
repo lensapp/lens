@@ -15,7 +15,7 @@ import type { ApplicationBuilder } from "../../../test-utils/get-application-bui
 import { getApplicationBuilder } from "../../../test-utils/get-application-builder";
 import dockStoreInjectable from "../../dock/store.injectable";
 import areLogsPresentInjectable from "../are-logs-present.injectable";
-import callForAllLogsInjectable from "../call-for-all-logs.injectable";
+import callForLogsInjectable from "../call-for-logs.injectable";
 import createPodLogsTabInjectable from "../create-pod-logs-tab.injectable";
 import getLogTabDataInjectable from "../get-log-tab-data.injectable";
 import getLogsWithoutTimestampsInjectable from "../get-logs-without-timestamps.injectable";
@@ -41,7 +41,7 @@ describe("download logs options in pod logs dock tab", () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(callForAllLogsInjectable, () => () => Promise.resolve("all-logs"));
+      rendererDi.override(callForLogsInjectable, () => () => Promise.resolve("all-logs"));
 
       // Overriding internals of logsViewModelInjectable
       rendererDi.override(getLogsInjectable, () => () => ["some-logs"]);

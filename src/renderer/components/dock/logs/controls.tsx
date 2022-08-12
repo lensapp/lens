@@ -13,9 +13,8 @@ import { Checkbox } from "../../checkbox";
 import type { LogTabViewModel } from "./logs-view-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
-import callForAllLogsInjectable from "./call-for-all-logs.injectable";
 import { DownloadLogsDropdown } from "./download-logs-dropdown";
-import type { Pod, PodLogsQuery } from "../../../../common/k8s-api/endpoints";
+import callForLogsInjectable, { CallForLogs } from "./call-for-logs.injectable";
 
 export interface LogControlsProps {
   model: LogTabViewModel;
@@ -23,10 +22,10 @@ export interface LogControlsProps {
 
 interface Dependencies {
   openSaveFileDialog: (filename: string, contents: BlobPart | BlobPart[], type: string) => void;
-  callForAllLogs: (pod: Pod, query?: PodLogsQuery) => Promise<string>;
+  callForLogs: CallForLogs;
 }
 
-const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAllLogs }: Dependencies & LogControlsProps) => {
+const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForLogs }: Dependencies & LogControlsProps) => {
   const tabData = model.logTabData.get();
   const pod = model.pod.get();
 
@@ -51,7 +50,10 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
     const pod = model.pod.get();
     
     if (pod) {
-      const logs = await callForAllLogs(pod, { timestamps: showTimestamps, previous });
+      const logs = await callForLogs(
+        { name: pod.getName(), namespace: pod.getNs() },
+        { timestamps: showTimestamps, previous }
+      )
       
       openSaveFileDialog(`${pod.getName()}.log`, logs, "text/plain");
     }
@@ -106,7 +108,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, callForAll
 export const LogControls = withInjectables<Dependencies, LogControlsProps>(NonInjectedLogControls, {
   getProps: (di, props) => ({
     openSaveFileDialog: di.inject(openSaveFileDialogInjectable),
-    callForAllLogs: di.inject(callForAllLogsInjectable),
+    callForLogs: di.inject(callForLogsInjectable),
     ...props,
   }),
 });
