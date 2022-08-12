@@ -49,7 +49,7 @@ const upgradeChartModelInjectable = getInjectable({
     const tabData = await waitUntilDefined(() => upgradeChartTabStore.getData(tab.id));
     const release = await waitUntilDefined(() => releases.value.get().find(release => release.getName() === tabData.releaseName));
     const versions = di.inject(helmChartVersionsInjectable, release);
-    const storedConfigration = asyncComputed(() => requestHelmReleaseConfiguration(
+    const storedConfiguration = asyncComputed(() => requestHelmReleaseConfiguration(
       release.getName(),
       release.getNs(),
       true,
@@ -60,7 +60,7 @@ const upgradeChartModelInjectable = getInjectable({
     const configrationValue = observable.box<string>();
     const configrationEditError = observable.box<string>();
     const configration: UpgradeChartModel["configration"] = {
-      value: computed(() => configrationValue.get() ?? storedConfigration.value.get()),
+      value: computed(() => configrationValue.get() ?? storedConfiguration.value.get()),
       set: action((value) => {
         configrationValue.set(value);
         configrationEditError.set(undefined);
@@ -107,7 +107,7 @@ const upgradeChartModelInjectable = getInjectable({
             ...selectedVersion,
           },
         );
-        storedConfigration.invalidate();
+        storedConfiguration.invalidate();
 
         return {
           completedSuccessfully: true,
