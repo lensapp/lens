@@ -19,6 +19,7 @@ import searchStoreInjectable from "../../../search-store/search-store.injectable
 import getPodsByOwnerIdInjectable from "../../+workloads-pods/get-pods-by-owner-id.injectable";
 import getPodByIdInjectable from "../../+workloads-pods/get-pod-by-id.injectable";
 import downloadLogsInjectable from "./download-logs.injectable";
+import downloadAllLogsInjectable from "./download-all-logs.injectable";
 
 export interface InstantiateArgs {
   tabId: TabId;
@@ -41,6 +42,7 @@ const logsViewModelInjectable = getInjectable({
     getPodById: di.inject(getPodByIdInjectable),
     getPodsByOwnerId: di.inject(getPodsByOwnerIdInjectable),
     downloadLogs: di.inject(downloadLogsInjectable),
+    downloadAllLogs: di.inject(downloadAllLogsInjectable),
     searchStore: di.inject(searchStoreInjectable),
   }),
   lifecycle: lifecycleEnum.transient,

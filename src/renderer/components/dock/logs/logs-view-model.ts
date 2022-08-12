@@ -7,12 +7,13 @@ import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import type { TabId } from "../dock/store";
 import type { SearchStore } from "../../../search-store/search-store";
-import type { Pod } from "../../../../common/k8s-api/endpoints";
+import type { Pod, PodLogsQuery } from "../../../../common/k8s-api/endpoints";
 import { isDefined } from "../../../utils";
 import assert from "assert";
 import type { GetPodById } from "../../+workloads-pods/get-pod-by-id.injectable";
 import type { GetPodsByOwnerId } from "../../+workloads-pods/get-pods-by-owner-id.injectable";
 import type { LoadLogs } from "./load-logs.injectable";
+import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
 
 export interface LogTabViewModelDependencies {
   getLogs: (tabId: TabId) => string[];
@@ -28,6 +29,7 @@ export interface LogTabViewModelDependencies {
   getPodsByOwnerId: GetPodsByOwnerId;
   areLogsPresent: (tabId: TabId) => boolean;
   downloadLogs: (filename: string, logs: string[]) => void;
+  downloadAllLogs: (params: ResourceDescriptor, query: PodLogsQuery) => Promise<void>;
   searchStore: SearchStore;
 }
 
@@ -92,4 +94,16 @@ export class LogTabViewModel {
       this.dependencies.downloadLogs(`${fileName}.log`, logsToDownload);
     }
   };
+
+  downloadAllLogs = async () => {
+    const pod = this.pod.get();
+    const tabData = this.logTabData.get();
+
+    if (pod && tabData) {
+      const params = { name: pod.getName(), namespace: pod.getNs() };
+      const query = { timestamps: tabData.showTimestamps, previous: tabData.showPrevious }
+
+      this.dependencies.downloadAllLogs(params, query);
+    }
+  }
 }
