@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestInit, Response } from "node-fetch";
-import type { JsonValue } from "type-fest";
 import type { AsyncResult } from "../utils/async-result";
 import fetchInjectable from "./fetch.injectable";
 
@@ -12,7 +11,7 @@ export interface DownloadJsonOptions {
   signal?: AbortSignal | null | undefined;
 }
 
-export type DownloadJson = (url: string, opts?: DownloadJsonOptions) => Promise<AsyncResult<JsonValue, string>>;
+export type DownloadJson = (url: string, opts?: DownloadJsonOptions) => Promise<AsyncResult<unknown, string>>;
 
 const downloadJsonInjectable = getInjectable({
   id: "download-json",

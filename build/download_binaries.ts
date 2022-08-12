@@ -8,15 +8,19 @@ import { open } from "fs/promises";
 import type { WriteStream } from "fs-extra";
 import { constants, ensureDir, unlink } from "fs-extra";
 import path from "path";
-import fetch from "node-fetch";
+import type * as FetchModule from "node-fetch";
 import { promisify } from "util";
 import { pipeline as _pipeline, Transform, Writable } from "stream";
 import type { SingleBar } from "cli-progress";
 import { MultiBar } from "cli-progress";
 import { extract } from "tar-stream";
 import gunzip from "gunzip-maybe";
-import { getBinaryName, normalizedPlatform } from "../src/common/vars";
-import { isErrnoException } from "../src/common/utils";
+import { getBinaryName } from "../src/common/vars";
+import { isErrnoException, setTimeoutFor } from "../src/common/utils";
+
+type Response = FetchModule.Response;
+type RequestInfo = FetchModule.RequestInfo;
+type RequestInit = FetchModule.RequestInit;
 
 const pipeline = promisify(_pipeline);
 
@@ -29,6 +33,10 @@ interface BinaryDownloaderArgs {
   readonly baseDir: string;
 }
 
+interface BinaryDownloaderDependencies {
+  fetch: (url: RequestInfo, init?: RequestInit) => Promise<Response>;
+}
+
 abstract class BinaryDownloader {
   protected abstract readonly url: string;
   protected readonly bar: SingleBar;
@@ -38,7 +46,7 @@ abstract class BinaryDownloader {
     return [file];
   }
 
-  constructor(public readonly args: BinaryDownloaderArgs, multiBar: MultiBar) {
+  constructor(protected readonly dependencies: BinaryDownloaderDependencies, public readonly args: BinaryDownloaderArgs, multiBar: MultiBar) {
     this.bar = multiBar.create(1, 0, args);
     this.target = path.join(args.baseDir, args.platform, args.fileArch, args.binaryName);
   }
@@ -49,8 +57,10 @@ abstract class BinaryDownloader {
     }
 
     const controller = new AbortController();
-    const stream = await fetch(this.url, {
-      timeout: 15 * 60 * 1000, // 15min
+
+    setTimeoutFor(controller, 15 * 60 * 1000);
+
+    const stream = await this.dependencies.fetch(this.url, {
       signal: controller.signal,
     });
     const total = Number(stream.headers.get("content-length"));
@@ -71,6 +81,10 @@ abstract class BinaryDownloader {
        * was throwing someplace else and not here
        */
       const handle = fileHandle = await open(this.target, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL);
+
+      if (!stream.body) {
+        throw new Error("no body on stream");
+      }
 
       await pipeline(
         stream.body,
@@ -108,10 +122,10 @@ abstract class BinaryDownloader {
 class LensK8sProxyDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
+  constructor(deps: BinaryDownloaderDependencies, args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("lens-k8s-proxy", { forPlatform: args.platform });
 
-    super({ ...args, binaryName }, bar);
+    super(deps, { ...args, binaryName }, bar);
     this.url = `https://github.com/lensapp/lens-k8s-proxy/releases/download/v${args.version}/lens-k8s-proxy-${args.platform}-${args.downloadArch}`;
   }
 }
@@ -119,10 +133,10 @@ class LensK8sProxyDownloader extends BinaryDownloader {
 class KubectlDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
+  constructor(deps: BinaryDownloaderDependencies, args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("kubectl", { forPlatform: args.platform });
 
-    super({ ...args, binaryName }, bar);
+    super(deps, { ...args, binaryName }, bar);
     this.url = `https://storage.googleapis.com/kubernetes-release/release/v${args.version}/bin/${args.platform}/${args.downloadArch}/${binaryName}`;
   }
 }
@@ -130,10 +144,10 @@ class KubectlDownloader extends BinaryDownloader {
 class HelmDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
+  constructor(deps: BinaryDownloaderDependencies, args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("helm", { forPlatform: args.platform });
 
-    super({ ...args, binaryName }, bar);
+    super(deps, { ...args, binaryName }, bar);
     this.url = `https://get.helm.sh/helm-v${args.version}-${args.platform}-${args.downloadArch}.tar.gz`;
   }
 
@@ -160,7 +174,24 @@ class HelmDownloader extends BinaryDownloader {
 
 type SupportedPlatform = "darwin" | "linux" | "windows";
 
+const importFetchModule = new Function('return import("node-fetch")') as () => Promise<typeof FetchModule>;
+
 async function main() {
+  const deps: BinaryDownloaderDependencies = {
+    fetch: (await importFetchModule()).default,
+  };
+  const normalizedPlatform = (() => {
+    switch (process.platform) {
+      case "darwin":
+        return "darwin";
+      case "linux":
+        return "linux";
+      case "win32":
+        return "windows";
+      default:
+        throw new Error(`platform=${process.platform} is unsupported`);
+    }
+  })();
   const multiBar = new MultiBar({
     align: "left",
     clearOnComplete: false,
@@ -171,21 +202,21 @@ async function main() {
   });
   const baseDir = path.join(__dirname, "..", "binaries", "client");
   const downloaders: BinaryDownloader[] = [
-    new LensK8sProxyDownloader({
+    new LensK8sProxyDownloader(deps, {
       version: packageInfo.config.k8sProxyVersion,
       platform: normalizedPlatform,
       downloadArch: "amd64",
       fileArch: "x64",
       baseDir,
     }, multiBar),
-    new KubectlDownloader({
+    new KubectlDownloader(deps, {
       version: packageInfo.config.bundledKubectlVersion,
       platform: normalizedPlatform,
       downloadArch: "amd64",
       fileArch: "x64",
       baseDir,
     }, multiBar),
-    new HelmDownloader({
+    new HelmDownloader(deps, {
       version: packageInfo.config.bundledHelmVersion,
       platform: normalizedPlatform,
       downloadArch: "amd64",
@@ -196,21 +227,21 @@ async function main() {
 
   if (normalizedPlatform !== "windows") {
     downloaders.push(
-      new LensK8sProxyDownloader({
+      new LensK8sProxyDownloader(deps, {
         version: packageInfo.config.k8sProxyVersion,
         platform: normalizedPlatform,
         downloadArch: "arm64",
         fileArch: "arm64",
         baseDir,
       }, multiBar),
-      new KubectlDownloader({
+      new KubectlDownloader(deps, {
         version: packageInfo.config.bundledKubectlVersion,
         platform: normalizedPlatform,
         downloadArch: "arm64",
         fileArch: "arm64",
         baseDir,
       }, multiBar),
-      new HelmDownloader({
+      new HelmDownloader(deps, {
         version: packageInfo.config.bundledHelmVersion,
         platform: normalizedPlatform,
         downloadArch: "arm64",

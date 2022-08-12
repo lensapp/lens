@@ -53,6 +53,7 @@ integration: build
 
 .PHONY: build
 build: node_modules binaries/client
+	yarn run compile:node-fetch
 	$(MAKE) build-extensions -B
 	yarn run build:tray-icons
 	yarn run compile
