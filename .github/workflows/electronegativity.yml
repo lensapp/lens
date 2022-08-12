@@ -19,7 +19,7 @@ jobs:
       - uses: doyensec/electronegativity-action@v1.1
         with:
           input: src/
-          electron-version: "15.5.7"
+          electron-version: "19.0.4"
           severity: medium
 
       - name: Upload sarif
