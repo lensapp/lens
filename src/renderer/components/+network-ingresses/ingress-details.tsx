@@ -20,9 +20,9 @@ import { computeRuleDeclarations } from "../../../common/k8s-api/endpoints/ingre
 import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
-import type { IngressMetricData, RequestIngressMetrics } from "../../../common/k8s-api/endpoints/metrics.api/get-ingress-metrics.injectable";
+import type { IngressMetricData, RequestIngressMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import requestIngressMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-ingress-metrics.injectable";
+import requestIngressMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
 
 export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 }

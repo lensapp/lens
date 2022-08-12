@@ -27,8 +27,8 @@ import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.inj
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
 import navigateInjectable from "../../../navigation/navigate.injectable";
-import type { RequestKubeObjectCreation } from "../../../../common/k8s-api/endpoints/resource-applier.api/update.injectable";
-import requestKubeObjectCreationInjectable from "../../../../common/k8s-api/endpoints/resource-applier.api/update.injectable";
+import type { RequestKubeObjectCreation } from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
+import requestKubeObjectCreationInjectable from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
 
 export interface CreateResourceProps {
   tabId: string;

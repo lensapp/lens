@@ -13,10 +13,10 @@ import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { JsonObject } from "type-fest";
 import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
-import requestKubeObjectPatchInjectable from "./endpoints/resource-applier.api/patch.injectable";
+import requestKubeObjectPatchInjectable from "./endpoints/resource-applier.api/request-patch.injectable";
 import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import { apiKubeInjectionToken } from "./api-kube";
-import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/update.injectable";
+import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/request-update.injectable";
 import { dump } from "js-yaml";
 
 export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>

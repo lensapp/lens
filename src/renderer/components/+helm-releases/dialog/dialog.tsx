@@ -20,8 +20,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import releaseRollbackDialogStateInjectable from "./state.injectable";
 import type { RollbackRelease } from "../rollback-release/rollback-release.injectable";
 import rollbackReleaseInjectable from "../rollback-release/rollback-release.injectable";
-import type { HelmReleaseRevision, RequestHelmReleaseHistory } from "../../../../common/k8s-api/endpoints/helm-releases.api/get-history.injectable";
-import requestHelmReleaseHistoryInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/get-history.injectable";
+import type { HelmReleaseRevision, RequestHelmReleaseHistory } from "../../../../common/k8s-api/endpoints/helm-releases.api/request-history.injectable";
+import requestHelmReleaseHistoryInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-history.injectable";
 
 export interface ReleaseRollbackDialogProps extends DialogProps {
 }

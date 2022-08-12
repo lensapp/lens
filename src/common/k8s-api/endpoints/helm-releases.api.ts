@@ -4,7 +4,7 @@
  */
 
 import type { ItemObject } from "../../item.store";
-import type { HelmReleaseDetails } from "./helm-releases.api/get-details.injectable";
+import type { HelmReleaseDetails } from "./helm-releases.api/request-details.injectable";
 
 export interface HelmReleaseUpdateDetails {
   log: string;

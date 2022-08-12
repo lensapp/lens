@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import { when } from "mobx";
 import { coerce } from "semver";
-import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
+import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { sortCompareChartVersions } from "../../../utils";
 import helmChartsInjectable from "./helm-charts.injectable";

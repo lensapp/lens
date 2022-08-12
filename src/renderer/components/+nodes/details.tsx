@@ -29,8 +29,8 @@ import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../common/k8s-api/endpoints/metrics.api/get-cluster-metrics-by-node-names.injectable";
-import requestClusterMetricsByNodeNamesInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-cluster-metrics-by-node-names.injectable";
+import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import requestClusterMetricsByNodeNamesInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }

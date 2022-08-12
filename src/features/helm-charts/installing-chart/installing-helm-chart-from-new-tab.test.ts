@@ -10,8 +10,8 @@ import type { ApplicationBuilder } from "../../../renderer/components/test-utils
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
-import type { RequestCreateHelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api/create.injectable";
-import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/create.injectable";
+import type { RequestCreateHelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
+import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import currentPathInjectable from "../../../renderer/routes/current-path.injectable";
 import namespaceStoreInjectable from "../../../renderer/components/+namespaces/store.injectable";
 import type { NamespaceStore } from "../../../renderer/components/+namespaces/store";
@@ -21,14 +21,14 @@ import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/h
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { RequestHelmCharts } from "../../../common/k8s-api/endpoints/helm-charts.api/list.injectable";
-import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
-import type { RequestHelmChartReadme } from "../../../common/k8s-api/endpoints/helm-charts.api/get-readme.injectable";
-import type { RequestHelmChartValues } from "../../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
-import requestHelmChartsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/list.injectable";
-import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
-import requestHelmChartReadmeInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/get-readme.injectable";
-import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
+import type { RequestHelmCharts } from "../../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
+import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import type { RequestHelmChartReadme } from "../../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
+import type { RequestHelmChartValues } from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
+import requestHelmChartsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
+import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import requestHelmChartReadmeInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
+import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
 
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;

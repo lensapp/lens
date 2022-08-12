@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmReleaseDto } from "../../../../../common/k8s-api/endpoints/helm-releases.api";
-import requestHelmReleasesInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/list.injectable";
-import type { HelmReleaseDetails } from "../../../../../common/k8s-api/endpoints/helm-releases.api/get-details.injectable";
-import requestHelmReleaseDetailsInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/get-details.injectable";
+import requestHelmReleasesInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
+import type { HelmReleaseDetails } from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-details.injectable";
+import requestHelmReleaseDetailsInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-details.injectable";
 import type { AsyncResult } from "../../../../../common/utils/async-result";
 
 export interface DetailedHelmRelease {

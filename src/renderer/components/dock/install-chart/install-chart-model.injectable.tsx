@@ -10,17 +10,17 @@ import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts
 import React from "react";
 import { action, computed, observable, runInAction } from "mobx";
 import assert from "assert";
-import type { RequestCreateHelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api/create.injectable";
-import requestCreateHelmReleaseInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/create.injectable";
+import type { RequestCreateHelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
+import requestCreateHelmReleaseInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import type { HelmReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { NavigateToHelmReleases } from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import type { SingleValue } from "react-select";
-import type { RequestHelmChartValues } from "../../../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
-import requestHelmChartValuesInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
-import type { RequestHelmChartVersions } from "../../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
-import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
+import type { RequestHelmChartValues } from "../../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
+import requestHelmChartValuesInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
+import type { RequestHelmChartVersions } from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 
 const installChartModelInjectable = getInjectable({
   id: "install-chart-model",

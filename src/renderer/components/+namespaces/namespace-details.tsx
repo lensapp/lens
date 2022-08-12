@@ -31,8 +31,8 @@ import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-activ
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import limitRangeStoreInjectable from "../+config-limit-ranges/store.injectable";
 import resourceQuotaStoreInjectable from "../+config-resource-quotas/store.injectable";
-import type { PodMetricInNamespaceData, RequestPodMetricsInNamespace } from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-in-namespace.injectable";
-import requestPodMetricsInNamespaceInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-in-namespace.injectable";
+import type { PodMetricInNamespaceData, RequestPodMetricsInNamespace } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-in-namespace.injectable";
+import requestPodMetricsInNamespaceInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-in-namespace.injectable";
 
 export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }

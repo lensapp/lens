@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Deployment } from "../deployment.api";
 import type { MetricData } from "../metrics.api";
-import requestMetricsInjectable from "./get.injectable";
+import type { Pod } from "../pod.api";
+import requestMetricsInjectable from "./request-metrics.injectable";
 
-export interface DeploymentPodMetricData {
+export interface PodMetricData {
   cpuUsage: MetricData;
   memoryUsage: MetricData;
   fsUsage: MetricData;
@@ -15,22 +15,30 @@ export interface DeploymentPodMetricData {
   fsReads: MetricData;
   networkReceive: MetricData;
   networkTransmit: MetricData;
+  cpuRequests: MetricData;
+  cpuLimits: MetricData;
+  memoryRequests: MetricData;
+  memoryLimits: MetricData;
 }
 
-export type RequestPodMetricsForDeployments = (deployments: Deployment[], namespace: string, selector?: string) => Promise<DeploymentPodMetricData>;
+export type RequestPodMetrics = (pods: Pod[], namespace: string, selector?: string) => Promise<PodMetricData>;
 
-const requestPodMetricsForDeploymentsInjectable = getInjectable({
-  id: "request-pod-metrics-for-deployments",
-  instantiate: (di): RequestPodMetricsForDeployments => {
+const requestPodMetricsInjectable = getInjectable({
+  id: "request-pod-metrics",
+  instantiate: (di): RequestPodMetrics => {
     const requestMetrics = di.inject(requestMetricsInjectable);
 
-    return (deployments, namespace, selector = "") => {
-      const podSelector = deployments.map(deployment => `${deployment.getName()}-[[:alnum:]]{9,}-[[:alnum:]]{5}`).join("|");
+    return (pods, namespace, selector = "pod, namespace") => {
+      const podSelector = pods.map(pod => pod.getName()).join("|");
       const opts = { category: "pods", pods: podSelector, namespace, selector };
 
       return requestMetrics({
         cpuUsage: opts,
+        cpuRequests: opts,
+        cpuLimits: opts,
         memoryUsage: opts,
+        memoryRequests: opts,
+        memoryLimits: opts,
         fsUsage: opts,
         fsWrites: opts,
         fsReads: opts,
@@ -43,4 +51,4 @@ const requestPodMetricsForDeploymentsInjectable = getInjectable({
   },
 });
 
-export default requestPodMetricsForDeploymentsInjectable;
+export default requestPodMetricsInjectable;

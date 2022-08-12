@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { DaemonSet } from "../daemon-set.api";
 import type { MetricData } from "../metrics.api";
-import type { ReplicaSet } from "../replica-set.api";
-import requestMetricsInjectable from "./get.injectable";
+import requestMetricsInjectable from "./request-metrics.injectable";
 
-export interface ReplicaSetPodMetricData {
+export interface DaemonSetPodMetricData {
   cpuUsage: MetricData;
   memoryUsage: MetricData;
   fsUsage: MetricData;
@@ -17,15 +17,15 @@ export interface ReplicaSetPodMetricData {
   networkTransmit: MetricData;
 }
 
-export type RequestPodMetricsForReplicaSets = (replicaSets: ReplicaSet[], namespace: string, selector?: string) => Promise<ReplicaSetPodMetricData>;
+export type RequestPodMetricsForDaemonSets = (daemonsets: DaemonSet[], namespace: string, selector?: string) => Promise<DaemonSetPodMetricData>;
 
-const requestPodMetricsForReplicaSetsInjectable = getInjectable({
-  id: "request-pod-metrics-for-replica-sets",
-  instantiate: (di): RequestPodMetricsForReplicaSets => {
+const requestPodMetricsForDaemonSetsInjectable = getInjectable({
+  id: "request-pod-metrics-for-daemon-sets",
+  instantiate: (di): RequestPodMetricsForDaemonSets => {
     const requestMetrics = di.inject(requestMetricsInjectable);
 
-    return (replicaSets, namespace, selector = "") => {
-      const podSelector = replicaSets.map(replicaSet => `${replicaSet.getName()}-[[:alnum:]]{5}`).join("|");
+    return (daemonSets, namespace, selector = "") => {
+      const podSelector = daemonSets.map(daemonSet => `${daemonSet.getName()}-[[:alnum:]]{5}`).join("|");
       const opts = { category: "pods", pods: podSelector, namespace, selector };
 
       return requestMetrics({
@@ -43,4 +43,4 @@ const requestPodMetricsForReplicaSetsInjectable = getInjectable({
   },
 });
 
-export default requestPodMetricsForReplicaSetsInjectable;
+export default requestPodMetricsForDaemonSetsInjectable;

@@ -31,8 +31,8 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import jobStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { JobPodMetricData, RequestPodMetricsForJobs } from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-jobs.injectable";
-import requestPodMetricsForJobsInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-jobs.injectable";
+import type { JobPodMetricData, RequestPodMetricsForJobs } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-jobs.injectable";
+import requestPodMetricsForJobsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-jobs.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }

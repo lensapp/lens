@@ -24,8 +24,6 @@ const requestHelmReleaseConfigurationInjectable = getInjectable({
       apiBase.get(requestConfigurationEnpoint.compile({ name, namespace }, { all }))
     );
   },
-
-  causesSideEffects: true,
 });
 
 export default requestHelmReleaseConfigurationInjectable;

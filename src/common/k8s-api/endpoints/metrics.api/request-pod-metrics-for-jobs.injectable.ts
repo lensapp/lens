@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { Job } from "../job.api";
 import type { MetricData } from "../metrics.api";
-import requestMetricsInjectable from "./get.injectable";
+import requestMetricsInjectable from "./request-metrics.injectable";
 
-export interface PodMetricInNamespaceData {
+export interface JobPodMetricData {
   cpuUsage: MetricData;
   memoryUsage: MetricData;
   fsUsage: MetricData;
@@ -16,15 +17,16 @@ export interface PodMetricInNamespaceData {
   networkTransmit: MetricData;
 }
 
-export type RequestPodMetricsInNamespace = (namespace: string, selector?: string) => Promise<PodMetricInNamespaceData>;
+export type RequestPodMetricsForJobs = (jobs: Job[], namespace: string, selector?: string) => Promise<JobPodMetricData>;
 
-const requestPodMetricsInNamespaceInjectable = getInjectable({
-  id: "request-pod-metrics-in-namespace",
-  instantiate: (di): RequestPodMetricsInNamespace => {
+const requestPodMetricsForJobsInjectable = getInjectable({
+  id: "request-pod-metrics-for-jobs",
+  instantiate: (di): RequestPodMetricsForJobs => {
     const requestMetrics = di.inject(requestMetricsInjectable);
 
-    return (namespace, selector) => {
-      const opts = { category: "pods", pods: ".*", namespace, selector };
+    return (jobs, namespace, selector) => {
+      const podSelector = jobs.map(job => `${job.getName()}-[[:alnum:]]{5}`).join("|");
+      const opts = { category: "pods", pods: podSelector, namespace, selector };
 
       return requestMetrics({
         cpuUsage: opts,
@@ -41,4 +43,4 @@ const requestPodMetricsInNamespaceInjectable = getInjectable({
   },
 });
 
-export default requestPodMetricsInNamespaceInjectable;
+export default requestPodMetricsForJobsInjectable;

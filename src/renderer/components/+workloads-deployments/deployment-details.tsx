@@ -33,8 +33,8 @@ import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectabl
 import deploymentStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { DeploymentPodMetricData, RequestPodMetricsForDeployments } from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-deployments.injectable";
-import requestPodMetricsForDeploymentsInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-deployments.injectable";
+import type { DeploymentPodMetricData, RequestPodMetricsForDeployments } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-deployments.injectable";
+import requestPodMetricsForDeploymentsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-deployments.injectable";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }

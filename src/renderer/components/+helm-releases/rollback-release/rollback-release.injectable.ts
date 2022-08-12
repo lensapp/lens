@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import requestHelmReleaseRollbackInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/rollback.injectable";
+import requestHelmReleaseRollbackInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-rollback.injectable";
 import releasesInjectable from "../releases.injectable";
 
 export type RollbackRelease = (name: string, namespace: string, revision: number) => Promise<void>;

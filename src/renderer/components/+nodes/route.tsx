@@ -20,11 +20,11 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
 import { makeObservable, observable } from "mobx";
 import { KubeObjectAge } from "../kube-object/age";
-import type { NodeMetricData, RequestAllNodeMetrics } from "../../../common/k8s-api/endpoints/metrics.api/get-metrics-for-all-nodes.injectable";
+import type { NodeMetricData, RequestAllNodeMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-metrics-for-all-nodes.injectable";
 import type { NodeStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import nodeStoreInjectable from "./store.injectable";
-import requestAllNodeMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-metrics-for-all-nodes.injectable";
+import requestAllNodeMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics-for-all-nodes.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import type { EventStore } from "../+events/store";
 

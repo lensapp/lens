@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { MetricData } from "../metrics.api";
 import type { PersistentVolumeClaim } from "../persistent-volume-claim.api";
-import requestMetricsInjectable from "./get.injectable";
+import requestMetricsInjectable from "./request-metrics.injectable";
 
 export interface PersistentVolumeClaimMetricData {
   diskUsage: MetricData;

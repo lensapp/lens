@@ -29,8 +29,8 @@ import type { ReplicaSetStore } from "./store";
 import replicaSetStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { ReplicaSetPodMetricData, RequestPodMetricsForReplicaSets } from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-replica-sets.injectable";
-import requestPodMetricsForReplicaSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-replica-sets.injectable";
+import type { ReplicaSetPodMetricData, RequestPodMetricsForReplicaSets } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-replica-sets.injectable";
+import requestPodMetricsForReplicaSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-replica-sets.injectable";
 
 export interface ReplicaSetDetailsProps extends KubeObjectDetailsProps<ReplicaSet> {
 }

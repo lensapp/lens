@@ -16,11 +16,11 @@ import directoryForLensLocalStorageInjectable from "../../../common/directory-fo
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
 import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
-import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/create.injectable";
-import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
-import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/get-versions.injectable";
-import type { RequestHelmChartValues } from "../../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
-import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/get-values.injectable";
+import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
+import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import type { RequestHelmChartValues } from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
+import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
 
 describe("installing helm chart from previously opened tab", () => {
   let builder: ApplicationBuilder;

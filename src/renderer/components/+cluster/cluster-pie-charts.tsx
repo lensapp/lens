@@ -23,7 +23,7 @@ import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-ove
 import nodeStoreInjectable from "../+nodes/store.injectable";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";
-import type { ClusterMetricData } from "../../../common/k8s-api/endpoints/metrics.api/get-cluster-metrics-by-node-names.injectable";
+import type { ClusterMetricData } from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 
 function createLabels(rawLabelData: [string, number | undefined][]): string[] {
   return rawLabelData.map(([key, value]) => `${key}: ${value?.toFixed(2) || "N/A"}`);

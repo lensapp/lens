@@ -30,8 +30,8 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import statefulSetStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { RequestPodMetricsForStatefulSets, StatefulSetPodMetricData } from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-stateful-sets.injectable";
-import requestPodMetricsForStatefulSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-stateful-sets.injectable";
+import type { RequestPodMetricsForStatefulSets, StatefulSetPodMetricData } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-stateful-sets.injectable";
+import requestPodMetricsForStatefulSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-stateful-sets.injectable";
 
 export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
 }

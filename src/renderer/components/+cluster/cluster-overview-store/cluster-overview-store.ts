@@ -9,8 +9,8 @@ import type { Cluster, ClusterApi } from "../../../../common/k8s-api/endpoints";
 import type { StorageLayer } from "../../../utils";
 import { autoBind } from "../../../utils";
 import type { NodeStore } from "../../+nodes/store";
-import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../../common/k8s-api/endpoints/metrics.api/get-cluster-metrics-by-node-names.injectable";
-import type { RequestMetricsParams } from "../../../../common/k8s-api/endpoints/metrics.api/get.injectable";
+import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import type { RequestMetricsParams } from "../../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import { normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
 
 export enum MetricType {

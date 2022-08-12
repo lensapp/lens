@@ -30,8 +30,8 @@ import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { DaemonSetPodMetricData, RequestPodMetricsForDaemonSets } from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-daemon-sets.injectable";
-import requestPodMetricsForDaemonSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/get-pod-metrics-for-daemon-sets.injectable";
+import type { DaemonSetPodMetricData, RequestPodMetricsForDaemonSets } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-daemon-sets.injectable";
+import requestPodMetricsForDaemonSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-daemon-sets.injectable";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
