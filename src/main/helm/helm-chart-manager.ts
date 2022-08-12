@@ -5,7 +5,7 @@
 
 import fs from "fs";
 import * as yaml from "js-yaml";
-import { iter, put, sortCharts } from "../../common/utils";
+import { iter, put, sortBySemverVersion } from "../../common/utils";
 import { execHelm } from "./exec";
 import type { SetRequired } from "type-fest";
 import { assert } from "console";
@@ -118,7 +118,7 @@ function normalizeHelmCharts(repoName: string, entries: RepoHelmChartList): Repo
         Object.entries(entries),
         ([name, charts]) => [
           name,
-          sortCharts(
+          sortBySemverVersion(
             charts.map(chart => ({
               ...chart,
               created: Date.parse(chart.created).toString(),

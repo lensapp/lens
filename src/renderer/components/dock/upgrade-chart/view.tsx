@@ -17,9 +17,9 @@ import { EditorPanel } from "../editor-panel";
 import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { ChartVersion } from "../../+helm-charts/helm-charts/versions.injectable";
 import type { UpgradeChartModel } from "./upgrade-chart-model.injectable";
 import upgradeChartModelInjectable from "./upgrade-chart-model.injectable";
+import type { HelmChartVersion } from "../../+helm-charts/helm-charts/versions";
 
 export interface UpgradeChartProps {
   className?: string;
@@ -82,7 +82,7 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
               {" "}
               <Badge label={release.getVersion()} />
               <span>Upgrade version</span>
-              <Select<ChartVersion, SelectOption<ChartVersion>, false>
+              <Select<HelmChartVersion, SelectOption<HelmChartVersion>, false>
                 id="char-version-input"
                 className="chart-version"
                 menuPlacement="top"

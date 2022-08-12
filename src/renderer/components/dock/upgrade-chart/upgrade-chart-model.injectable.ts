@@ -7,7 +7,7 @@ import { asyncComputed } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import { action, computed, observable, when } from "mobx";
 import type { SingleValue } from "react-select";
-import type { ChartVersion } from "../../+helm-charts/helm-charts/versions.injectable";
+import type { HelmChartVersion } from "../../+helm-charts/helm-charts/versions";
 import helmChartVersionsInjectable from "../../+helm-charts/helm-charts/versions.injectable";
 import releasesInjectable from "../../+helm-releases/releases.injectable";
 import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
@@ -20,7 +20,7 @@ import upgradeChartTabStoreInjectable from "./store.injectable";
 
 export interface UpgradeChartModel {
   readonly release: HelmRelease;
-  readonly versionOptions: IComputedValue<SelectOption<ChartVersion>[]>;
+  readonly versionOptions: IComputedValue<SelectOption<HelmChartVersion>[]>;
   readonly configration: {
     readonly value: IComputedValue<string>;
     set: (value: string) => void;
@@ -28,8 +28,8 @@ export interface UpgradeChartModel {
     setError: (error: unknown) => void;
   };
   readonly version: {
-    readonly value: IComputedValue<ChartVersion | undefined>;
-    set: (value: SingleValue<SelectOption<ChartVersion>>) => void;
+    readonly value: IComputedValue<HelmChartVersion | undefined>;
+    set: (value: SingleValue<SelectOption<HelmChartVersion>>) => void;
   };
   submit: () => Promise<UpgradeChartSubmitResult>;
 }
@@ -68,7 +68,7 @@ const upgradeChartModelInjectable = getInjectable({
       error: computed(() => configrationEditError.get()),
       setError: action((error) => configrationEditError.set(String(error))),
     };
-    const versionValue = observable.box<ChartVersion>(undefined, {
+    const versionValue = observable.box<HelmChartVersion>(undefined, {
       deep: false,
     });
     const version: UpgradeChartModel["version"] = {

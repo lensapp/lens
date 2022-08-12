@@ -5,40 +5,20 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import { when } from "mobx";
-import { coerce } from "semver";
-import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import { sortCompareChartVersions } from "../../../utils";
 import helmChartsInjectable from "./helm-charts.injectable";
-
-export interface ChartVersion {
-  repo: string;
-  version: string;
-}
-
-const sortChartVersions = (versions: ChartVersion[]) => (
-  versions
-    .map(chartVersion => ({ ...chartVersion, __version: coerce(chartVersion.version, { loose: true }) }))
-    .sort(sortCompareChartVersions)
-    .map(({ __version, ...chartVersion }) => chartVersion)
-);
+import requestVersionsOfHelmChartInjectable from "./request-versions-of-chart-for-release.injectable";
 
 const helmChartVersionsInjectable = getInjectable({
   id: "helm-chart-versions-loader",
   instantiate: (di, release) => {
-    const requestHelmChartVersions = di.inject(requestHelmChartVersionsInjectable);
     const helmCharts = di.inject(helmChartsInjectable);
+    const requestVersionsOfHelmChart = di.inject(requestVersionsOfHelmChartInjectable);
 
     return asyncComputed(async () => {
       await when(() => !helmCharts.pending.get());
-      const rawVersions = await Promise.all((
-        helmCharts.value.get()
-          .filter(chart => chart.getName() === release.getChart())
-          .map(chart => chart.getRepository())
-          .map(repo => requestHelmChartVersions(repo, release.getChart()))
-      ));
 
-      return sortChartVersions(rawVersions.flat());
+      return requestVersionsOfHelmChart(release, helmCharts.value.get());
     }, []);
   },
   lifecycle: lifecycleEnum.keyedSingleton({
