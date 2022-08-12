@@ -19,22 +19,24 @@ const requestActivePortForwardInjectable = getInjectable({
     const apiBase = di.inject(apiBaseInjectionToken);
     const logger = di.inject(loggerInjectable);
 
-    return async (portForward) => {
-      const { port, forwardPort } = portForward;
-      let response: { port: number };
-
+    return async ({ port, forwardPort, namespace, kind, name, ...rest }) => {
       try {
-        response = await apiBase.get(requestActiveEndpoint.compile(portForward), { query: { port, forwardPort }});
+        const response: { port: number } = await apiBase.get(requestActiveEndpoint.compile({ namespace, kind, name }), { query: { port, forwardPort }});
+
+        return {
+          status: response.port ? "Active" : "Disabled",
+          forwardPort: response.port,
+          port,
+          namespace,
+          kind,
+          name,
+          ...rest,
+        };
       } catch (error) {
-        logger.warn(`[PORT-FORWARD-STORE] Error getting active port-forward: ${error}`, portForward);
+        logger.warn(`[PORT-FORWARD-STORE] Error getting active port-forward: ${error}`, { namespace, kind, name });
 
         return undefined;
       }
-
-      portForward.status = response?.port ? "Active" : "Disabled";
-      portForward.forwardPort = response?.port;
-
-      return portForward;
     };
   },
 });
