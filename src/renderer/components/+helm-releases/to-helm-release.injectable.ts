@@ -7,6 +7,7 @@ import { capitalize } from "lodash";
 import { when } from "mobx";
 import helmChartVersionsInjectable from "../+helm-charts/helm-charts/versions.injectable";
 import type { HelmRelease, HelmReleaseDto } from "../../../common/k8s-api/endpoints/helm-releases.api";
+import getMillisecondsFromUnixEpochInjectable from "../../../common/utils/date/get-milliseconds-from-unix-epoch.injectable";
 import { formatDuration } from "../../utils";
 
 export type ToHelmRelease = (release: HelmReleaseDto) => HelmRelease;
@@ -15,6 +16,7 @@ const toHelmReleaseInjectable = getInjectable({
   id: "to-helm-release",
   instantiate: (di): ToHelmRelease => {
     const helmChartVersions = (release: HelmRelease) => di.inject(helmChartVersionsInjectable, release);
+    const getMillisecondsFromUnixEpoch = di.inject(getMillisecondsFromUnixEpochInjectable);
 
     return (release) => ({
       ...release,
@@ -60,7 +62,7 @@ const toHelmReleaseInjectable = getInjectable({
       getUpdated(humanize = true, compact = true) {
         const updated = this.updated.replace(/\s\w*$/, ""); // 2019-11-26 10:58:09 +0300 MSK -> 2019-11-26 10:58:09 +0300 to pass into Date()
         const updatedDate = new Date(updated).getTime();
-        const diff = Date.now() - updatedDate;
+        const diff = getMillisecondsFromUnixEpoch() - updatedDate;
 
         if (humanize) {
           return formatDuration(diff, compact);

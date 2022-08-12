@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import moment from "moment";
+import getSecondsFromUnixEpochInjectable from "../../../utils/date/get-seconds-from-unix-epoch.injectable";
 import { apiBaseInjectionToken } from "../../api-base";
 import type { MetricData } from "../metrics.api";
 
@@ -47,14 +47,14 @@ const requestMetricsInjectable = getInjectable({
   id: "request-metrics",
   instantiate: (di) => {
     const apiBase = di.inject(apiBaseInjectionToken);
+    const getSecondsFromUnixEpoch = di.inject(getSecondsFromUnixEpochInjectable);
 
     return (async (query: object, params: RequestMetricsParams = {}) => {
       const { range = 3600, step = 60, namespace } = params;
       let { start, end } = params;
 
       if (!start && !end) {
-        const timeNow = Date.now() / 1000;
-        const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
+        const now = getSecondsFromUnixEpoch();
 
         start = now - range;
         end = now;
