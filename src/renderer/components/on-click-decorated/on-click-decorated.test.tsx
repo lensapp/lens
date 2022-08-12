@@ -14,7 +14,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { OnClickDecorated } from "./on-click-decorated";
 
-describe("foobar", () => {
+describe("<OnClickDecorated />", () => {
   let di: DiContainer;
   let render: DiRender;
 

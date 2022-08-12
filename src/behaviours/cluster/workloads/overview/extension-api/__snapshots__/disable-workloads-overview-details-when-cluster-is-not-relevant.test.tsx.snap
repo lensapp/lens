@@ -276,6 +276,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Overview"
               data-testid="tab-link-for-overview"
               role="tab"
               tabindex="0"
@@ -801,6 +802,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Overview"
               data-testid="tab-link-for-overview"
               role="tab"
               tabindex="0"
@@ -1321,6 +1323,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Overview"
               data-testid="tab-link-for-overview"
               role="tab"
               tabindex="0"

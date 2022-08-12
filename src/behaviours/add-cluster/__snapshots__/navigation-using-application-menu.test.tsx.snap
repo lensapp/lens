@@ -299,11 +299,9 @@ exports[`add-cluster - navigation using application menu when navigating to add 
               <button
                 class="Button primary"
                 disabled=""
-                type="button"
               >
                 Add clusters
               </button>
-              <div />
             </div>
           </div>
           <div

@@ -328,7 +328,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -454,8 +453,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -906,7 +905,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -1017,8 +1015,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -1495,7 +1493,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -1606,8 +1603,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -1823,7 +1820,6 @@ exports[`add custom helm repository in preferences when navigating to preference
               <button
                 class="Button accordion plain"
                 data-testid="toggle-maximal-options-for-custom-helm-repository-button"
-                type="button"
               >
                 More
                 <i
@@ -1848,7 +1844,6 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button back-btn plain"
               data-testid="custom-helm-repository-cancel-button"
-              type="button"
             >
               Cancel
             </button>
@@ -2195,7 +2190,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -2306,8 +2300,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -2792,7 +2786,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -2903,8 +2896,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -3120,7 +3113,6 @@ exports[`add custom helm repository in preferences when navigating to preference
               <button
                 class="Button accordion plain"
                 data-testid="toggle-maximal-options-for-custom-helm-repository-button"
-                type="button"
               >
                 More
                 <i
@@ -3145,7 +3137,6 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button back-btn plain"
               data-testid="custom-helm-repository-cancel-button"
-              type="button"
             >
               Cancel
             </button>
@@ -3492,7 +3483,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -3603,8 +3593,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -3820,7 +3810,6 @@ exports[`add custom helm repository in preferences when navigating to preference
               <button
                 class="Button accordion plain"
                 data-testid="toggle-maximal-options-for-custom-helm-repository-button"
-                type="button"
               >
                 More
                 <i
@@ -4027,7 +4016,6 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button back-btn plain"
               data-testid="custom-helm-repository-cancel-button"
-              type="button"
             >
               Cancel
             </button>
@@ -4374,7 +4362,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -4485,8 +4472,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -4702,7 +4689,6 @@ exports[`add custom helm repository in preferences when navigating to preference
               <button
                 class="Button accordion plain"
                 data-testid="toggle-maximal-options-for-custom-helm-repository-button"
-                type="button"
               >
                 More
                 <i
@@ -4727,7 +4713,6 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button back-btn plain"
               data-testid="custom-helm-repository-cancel-button"
-              type="button"
             >
               Cancel
             </button>
@@ -5074,7 +5059,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -5185,8 +5169,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -5402,7 +5386,6 @@ exports[`add custom helm repository in preferences when navigating to preference
               <button
                 class="Button accordion plain"
                 data-testid="toggle-maximal-options-for-custom-helm-repository-button"
-                type="button"
               >
                 More
                 <i
@@ -5609,12 +5592,11 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button back-btn plain"
               data-testid="custom-helm-repository-cancel-button"
-              type="button"
             >
               Cancel
             </button>
             <button
-              class="Button primary"
+              class="Button waiting primary"
               data-testid="custom-helm-repository-submit-button"
               type="submit"
             >
@@ -5956,7 +5938,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -6067,8 +6048,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -6284,7 +6265,6 @@ exports[`add custom helm repository in preferences when navigating to preference
               <button
                 class="Button accordion plain"
                 data-testid="toggle-maximal-options-for-custom-helm-repository-button"
-                type="button"
               >
                 More
                 <i
@@ -6309,7 +6289,6 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button back-btn plain"
               data-testid="custom-helm-repository-cancel-button"
-              type="button"
             >
               Cancel
             </button>
@@ -6656,7 +6635,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -6767,8 +6745,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -7253,7 +7231,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -7379,8 +7356,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -7839,7 +7816,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -7965,8 +7941,8 @@ exports[`add custom helm repository in preferences when navigating to preference
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -8156,7 +8132,6 @@ exports[`add custom helm repository in preferences when navigating to preference
               <button
                 class="Button accordion plain"
                 data-testid="toggle-maximal-options-for-custom-helm-repository-button"
-                type="button"
               >
                 More
                 <i
@@ -8181,7 +8156,6 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button back-btn plain"
               data-testid="custom-helm-repository-cancel-button"
-              type="button"
             >
               Cancel
             </button>

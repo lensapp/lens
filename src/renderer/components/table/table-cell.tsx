@@ -11,6 +11,7 @@ import React from "react";
 import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
+import { OnClickDecorated } from "../on-click-decorated/on-click-decorated";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
@@ -70,6 +71,8 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
    * indicator, might come from parent <TableHead>, don't use this prop outside (!)
    */
   _nowrap?: boolean;
+
+  telemetryTitle?: string;
 }
 
 export class TableCell extends React.Component<TableCellProps> {
@@ -132,6 +135,7 @@ export class TableCell extends React.Component<TableCellProps> {
       children,
       title,
       showWithColumn,
+      telemetryTitle,
       ...cellProps
     } = this.props;
 
@@ -144,7 +148,9 @@ export class TableCell extends React.Component<TableCellProps> {
     const content = title || children;
 
     return (
-      <div
+      <OnClickDecorated
+        tagName="div"
+        data-telemetry-title={telemetryTitle}
         {...cellProps}
         className={classNames}
         onClick={this.onClick}
@@ -152,7 +158,7 @@ export class TableCell extends React.Component<TableCellProps> {
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}
-      </div>
+      </OnClickDecorated>
     );
   }
 }

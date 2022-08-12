@@ -8,6 +8,7 @@ import type { DOMAttributes } from "react";
 import React from "react";
 import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
+import { OnClickDecorated } from "../on-click-decorated/on-click-decorated";
 
 const TabsContext = React.createContext<TabsContextValue>({});
 
@@ -124,7 +125,8 @@ export class Tab extends React.PureComponent<TabProps> {
     });
 
     return (
-      <div
+      <OnClickDecorated
+        tagName="div"
         {...elemProps}
         className={className}
         tabIndex={0}
@@ -138,7 +140,7 @@ export class Tab extends React.PureComponent<TabProps> {
         <div className="label">
           {label}
         </div>
-      </div>
+      </OnClickDecorated>
     );
   }
 }

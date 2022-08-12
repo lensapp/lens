@@ -103,6 +103,7 @@ class NonInjectedItemListLayoutContent<
       copyClassNameFromHeadCells, customizeTableRowProps = () => ({}), detailsItem,
     } = this.props;
     const { isSelected } = store;
+    const telemetryTitle = `Table Row ${this.props.tableId?.split("_").join(" ")}`;
 
     return (
       <TableRow
@@ -134,7 +135,12 @@ class NonInjectedItemListLayoutContent<
           }
 
           if (!headCell || this.showColumn(headCell)) {
-            return <TableCell key={index} {...cellProps} />;
+            return (
+              <TableCell
+                key={index}
+                {...cellProps}
+                telemetryTitle={telemetryTitle} />
+            );
           }
 
           return null;

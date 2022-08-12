@@ -328,7 +328,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -454,8 +453,8 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -906,7 +905,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -1032,8 +1030,8 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -1484,7 +1482,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -1954,7 +1951,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -2080,8 +2076,8 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -2532,7 +2528,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -3002,7 +2997,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -3128,8 +3122,8 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -3580,7 +3574,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -3691,8 +3684,8 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         </div>
                         <button
                           class="Button primary"
+                          data-telemetry-title="Add Custom Helm Repo Custom Title"
                           data-testid="add-custom-helm-repo-button"
-                          type="button"
                         >
                           Add Custom Helm Repo
                         </button>
@@ -4203,7 +4196,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -4673,7 +4665,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>
@@ -5143,7 +5134,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                   >
                     <button
                       class="Button PathPicker primary"
-                      type="button"
                     >
                       Sync Files and Folders
                     </button>

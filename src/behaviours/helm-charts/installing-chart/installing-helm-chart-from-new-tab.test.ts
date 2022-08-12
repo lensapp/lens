@@ -5,7 +5,7 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
-import { fireEvent } from "@testing-library/react";
+import {  fireEvent } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import type { CallForHelmCharts } from "../../../renderer/components/+helm-charts/helm-charts/call-for-helm-charts.injectable";
@@ -54,6 +54,13 @@ describe("installing helm chart from new tab", () => {
     callForCreateHelmReleaseMock = asyncFn();
 
     builder.beforeApplicationStart(({ rendererDi }) => {
+      /*rendererDi.override(
+        onClickTelemetryDecoratorInjectable,
+        () => ({
+          onClick: (f) => (e) => { return f(e); },
+        }),
+      );*/
+
       rendererDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
@@ -370,6 +377,8 @@ describe("installing helm chart from new tab", () => {
           });
 
           it("install button is disabled", () => {
+            fireEvent.click(installButton);
+
             expect(installButton).toHaveAttribute("disabled");
           });
 

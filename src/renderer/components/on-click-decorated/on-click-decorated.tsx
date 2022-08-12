@@ -15,16 +15,21 @@ interface Dependencies {
 
 interface ClickDecoratedProps extends HTMLAttributes<any> {
   onClick?: MouseEventHandler<any>;
-  tagName: "button" | "a";
+  tagName: "button" | "a" | "div";
 }
 
-const NonInjectedOnClickDecorated = ({ decorators, tagName: TagName, onClick, ...props }: Dependencies & ClickDecoratedProps) => {
+const NonInjectedOnClickDecorated = React.forwardRef<HTMLButtonElement & HTMLAnchorElement & HTMLDivElement, Dependencies & ClickDecoratedProps>(({ decorators, tagName: TagName, onClick, ...props }, ref) => {
   const onClickDecorators = decorators.map(decorator => decorator.onClick);
 
   const decoratedOnClick = onClick ? flow(...onClickDecorators)(onClick) : undefined;
 
-  return <TagName {...props} onClick={decoratedOnClick} />;
-};
+  return (
+    <TagName
+      {...props}
+      ref={ref}
+      onClick={decoratedOnClick} />
+  );
+});
 
 export const OnClickDecorated = withInjectables<Dependencies, ClickDecoratedProps>(
   NonInjectedOnClickDecorated,

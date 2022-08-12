@@ -17,6 +17,7 @@ const NonInjectedActivationOfCustomHelmRepositoryOpenButton = ({ showDialog }: D
     label="Add Custom Helm Repo"
     onClick={showDialog}
     data-testid="add-custom-helm-repo-button"
+    data-telemetry-title="Add Custom Helm Repo Custom Title"
   />
 );
 

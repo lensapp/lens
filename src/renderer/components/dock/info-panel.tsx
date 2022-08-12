@@ -10,7 +10,7 @@ import React, { Component } from "react";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import { OpenLensButton } from "../button";
+import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import type { DockStore, TabId } from "./dock/store";
@@ -146,13 +146,13 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
         )}
         {showButtons && (
           <>
-            <OpenLensButton
+            <Button
               plain
               label="Cancel"
               onClick={close}
               data-testid={this.props.cancelTestId}
             />
-            <OpenLensButton
+            <Button
               active
               outlined={showSubmitClose}
               primary={!showSubmitClose}// one button always should be primary (blue)
@@ -162,7 +162,7 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
               data-testid={this.props.submitTestId}
             />
             {showSubmitClose && (
-              <OpenLensButton
+              <Button
                 primary
                 active
                 label={`${submitLabel} & Close`}

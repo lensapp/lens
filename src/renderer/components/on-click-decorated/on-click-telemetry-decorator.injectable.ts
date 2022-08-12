@@ -38,7 +38,10 @@ function getEventName(el: HTMLElement, pathname: string, parentLevels = 3) {
 }
 
 function captureMouseEvent(eventBus: EventEmitter<[AppEvent]>, event: React.MouseEvent) {
-  const name = getEventName(event.target as HTMLElement, window.location.pathname);
+  const eventTarget = event.target as HTMLElement;
+  const customTitle = eventTarget?.dataset.telemetryTitle;
+
+  const name = customTitle ?? getEventName(eventTarget, window.location.pathname);
 
   eventBus.emit({
     name,

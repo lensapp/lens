@@ -305,6 +305,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Overview"
             data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
@@ -853,6 +854,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Overview"
             data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
@@ -1441,6 +1443,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Overview"
             data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
@@ -2030,6 +2033,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Child 1"
             data-testid="tab-link-for-some-extension-name-some-child-id"
             role="tab"
             tabindex="0"
@@ -2043,6 +2047,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center"
             data-is-active-test="false"
+            data-telemetry-title="Tab Child 2"
             data-testid="tab-link-for-some-extension-name-some-other-child-id"
             role="tab"
             tabindex="0"
@@ -2538,6 +2543,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center"
             data-is-active-test="false"
+            data-telemetry-title="Tab Child 1"
             data-testid="tab-link-for-some-extension-name-some-child-id"
             role="tab"
             tabindex="0"
@@ -2551,6 +2557,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Child 2"
             data-testid="tab-link-for-some-extension-name-some-other-child-id"
             role="tab"
             tabindex="0"
@@ -3005,6 +3012,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Child 1"
             data-testid="tab-link-for-some-extension-name-some-child-id"
             role="tab"
             tabindex="0"
@@ -3018,6 +3026,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center"
             data-is-active-test="false"
+            data-telemetry-title="Tab Child 2"
             data-testid="tab-link-for-some-extension-name-some-other-child-id"
             role="tab"
             tabindex="0"
@@ -3512,6 +3521,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Overview"
             data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
@@ -4060,6 +4070,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
+            data-telemetry-title="Tab Overview"
             data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"

@@ -468,7 +468,6 @@ exports[`force user to update when too long since update was downloaded when app
           <button
             class="Button primary"
             data-testid="update-now-from-must-update-immediately-modal"
-            type="button"
           >
             Update
              

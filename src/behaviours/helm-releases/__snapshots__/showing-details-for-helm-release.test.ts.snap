@@ -276,6 +276,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -289,6 +290,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -1028,6 +1030,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -1041,6 +1044,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -1785,6 +1789,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -1798,6 +1803,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -2152,41 +2158,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -2233,41 +2247,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -2710,6 +2732,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -2723,6 +2746,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -3077,41 +3101,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -3158,41 +3190,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -3682,6 +3722,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -3695,6 +3736,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -4049,41 +4091,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -4130,41 +4180,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -4607,6 +4665,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -4620,6 +4679,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -4974,41 +5034,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -5055,41 +5123,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -5579,6 +5655,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -5592,6 +5669,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -5946,41 +6024,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -6027,41 +6113,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -6551,6 +6645,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -6564,6 +6659,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -6918,41 +7014,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -6999,41 +7103,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -7323,7 +7435,6 @@ exports[`showing details for helm release given application is started when navi
                 <button
                   class="Button box right upgrade primary"
                   data-testid="helm-release-upgrade-button"
-                  type="button"
                 >
                   Upgrade
                 </button>
@@ -7430,7 +7541,6 @@ exports[`showing details for helm release given application is started when navi
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
-                type="button"
               >
                 Save
               </button>
@@ -7789,6 +7899,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -7802,6 +7913,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -8156,41 +8268,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -8237,41 +8357,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -8561,7 +8689,6 @@ exports[`showing details for helm release given application is started when navi
                 <button
                   class="Button box right upgrade primary"
                   data-testid="helm-release-upgrade-button"
-                  type="button"
                 >
                   Upgrade
                 </button>
@@ -8668,7 +8795,6 @@ exports[`showing details for helm release given application is started when navi
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
-                type="button"
               >
                 Save
               </button>
@@ -9027,6 +9153,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -9040,6 +9167,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -9394,41 +9522,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -9475,41 +9611,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -9799,7 +9943,6 @@ exports[`showing details for helm release given application is started when navi
                 <button
                   class="Button box right upgrade primary"
                   data-testid="helm-release-upgrade-button"
-                  type="button"
                 >
                   Upgrade
                 </button>
@@ -9906,7 +10049,6 @@ exports[`showing details for helm release given application is started when navi
               <button
                 class="Button waiting primary"
                 data-testid="helm-release-configuration-save-button"
-                type="button"
               >
                 Save
               </button>
@@ -10265,6 +10407,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -10278,6 +10421,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -10864,7 +11008,6 @@ exports[`showing details for helm release given application is started when navi
                 <button
                   class="Button box right upgrade primary"
                   data-testid="helm-release-upgrade-button"
-                  type="button"
                 >
                   Upgrade
                 </button>
@@ -10971,7 +11114,6 @@ exports[`showing details for helm release given application is started when navi
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
-                type="button"
               >
                 Save
               </button>
@@ -11330,6 +11472,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -11343,6 +11486,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -11929,7 +12073,6 @@ exports[`showing details for helm release given application is started when navi
                 <button
                   class="Button box right upgrade primary"
                   data-testid="helm-release-upgrade-button"
-                  type="button"
                 >
                   Upgrade
                 </button>
@@ -12038,7 +12181,6 @@ exports[`showing details for helm release given application is started when navi
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
                 disabled=""
-                type="button"
               >
                 Save
               </button>
@@ -12397,6 +12539,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -12410,6 +12553,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -12764,41 +12908,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -12845,41 +12997,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -13169,7 +13329,6 @@ exports[`showing details for helm release given application is started when navi
                 <button
                   class="Button box right upgrade primary"
                   data-testid="helm-release-upgrade-button"
-                  type="button"
                 >
                   Upgrade
                 </button>
@@ -13276,7 +13435,6 @@ exports[`showing details for helm release given application is started when navi
               <button
                 class="Button primary"
                 data-testid="helm-release-configuration-save-button"
-                type="button"
               >
                 Save
               </button>
@@ -13635,6 +13793,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -13648,6 +13807,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -14002,41 +14162,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -14083,41 +14251,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -14618,6 +14794,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -14631,6 +14808,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -14985,41 +15163,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -15066,41 +15252,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -15590,6 +15784,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center"
               data-is-active-test="false"
+              data-telemetry-title="Tab Charts"
               data-testid="tab-link-for-charts"
               role="tab"
               tabindex="0"
@@ -15603,6 +15798,7 @@ exports[`showing details for helm release given application is started when navi
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
+              data-telemetry-title="Tab Releases"
               data-testid="tab-link-for-releases"
               role="tab"
               tabindex="0"
@@ -15957,41 +16153,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-app-version
                               </div>
                               <div
                                 class="TableCell some-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>
@@ -16038,41 +16242,49 @@ exports[`showing details for helm release given application is started when navi
                               </div>
                               <div
                                 class="TableCell name"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-name
                               </div>
                               <div
                                 class="TableCell namespace"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-namespace
                               </div>
                               <div
                                 class="TableCell chart"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-chart
                               </div>
                               <div
                                 class="TableCell revision"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaN
                               </div>
                               <div
                                 class="TableCell version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 
                               </div>
                               <div
                                 class="TableCell app-version"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 some-other-app-version
                               </div>
                               <div
                                 class="TableCell some-other-status status"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 Some-other-status
                               </div>
                               <div
                                 class="TableCell updated"
+                                data-telemetry-title="Table Row helm releases"
                               >
                                 NaNy
                               </div>

@@ -25,48 +25,61 @@ export interface ButtonProps extends ButtonHTMLAttributes<any> {
   round?: boolean;
   href?: string; // render as hyperlink
   target?: "_blank"; // in case of using @href
-  Component?: React.ComponentType<any>;
 }
 
-const PlainButton = (props: React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) => <button {...props} />;
-const PlainAnchor = (props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) => <a {...props} />;
-
-export const Button = withTooltip((props: ButtonProps) => {
+const prepareProps = (props: ButtonProps) => {
   const {
     waiting, label, primary, accent, plain, hidden, active, big,
-    round, outlined, light, children, Component, ...btnProps
+    round, outlined, light, children, ...btnProps
   } = props;
-
-  if (hidden) return null;
-
-  const ButtonComponent = Component ?? (props.href ? PlainAnchor : PlainButton);
 
   btnProps.className = cssNames("Button", btnProps.className, {
     waiting, primary, accent, plain, active, big, round, outlined, light,
   });
 
+  return btnProps;
+};
+
+export const Button = withTooltip((props: ButtonProps) => {
+  const { label, children, hidden } = props;
+
+  if (hidden) return null;
+
+  const btnProps = prepareProps(props);
+
   // render as link
   if (props.href) {
     return (
-      <ButtonComponent
+      <a
         {...btnProps}>
         {label}
         {children}
-      </ButtonComponent>
+      </a>
     );
   }
 
   // render as button
   return (
-    <ButtonComponent
+    <button
       type="button"
       {...btnProps}>
       {label}
       {children}
-    </ButtonComponent>
+    </button>
   );
 });
 
 export const OpenLensButton = (props: ButtonProps & TooltipDecoratorProps) => {
-  return <Button {...props} Component={(props) => <OnClickDecorated {...props} tagName={props.href ? "a" : "button"} />} />;
+  const { label, children, hidden } = props;
+
+  if (hidden) return null;
+
+  const buttonProps = prepareProps(props);
+
+  return (
+    <OnClickDecorated {...buttonProps} tagName={props.href ? "a" : "button"}>
+      {label}
+      {children}
+    </OnClickDecorated>
+  );
 };

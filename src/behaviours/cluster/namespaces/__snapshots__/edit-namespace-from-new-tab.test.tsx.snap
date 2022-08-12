@@ -489,7 +489,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -502,9 +502,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -1140,7 +1137,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -1153,9 +1150,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -1796,7 +1790,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -1809,9 +1803,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -2521,7 +2512,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -2534,9 +2525,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -3221,7 +3209,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -3234,9 +3222,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -3993,7 +3978,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -4006,9 +3991,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -4767,7 +4749,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -4780,9 +4762,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -5506,7 +5485,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -5519,9 +5498,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -6240,7 +6216,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -6253,9 +6229,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -6965,7 +6938,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -6978,9 +6951,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -7690,7 +7660,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -7703,9 +7673,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -8415,7 +8382,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -8428,9 +8395,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -8978,7 +8942,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -8991,9 +8955,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -9712,7 +9673,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -9725,9 +9686,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -10275,7 +10233,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -10288,9 +10246,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
@@ -10838,7 +10793,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 >
                   <button
                     class="Button add-button primary big round"
-                    type="button"
+                    tooltip="Add Namespace"
                   >
                     <i
                       class="Icon material focusable"
@@ -10851,9 +10806,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       </span>
                     </i>
                   </button>
-                  <div>
-                    Add Namespace
-                  </div>
                 </div>
               </div>
             </div>
