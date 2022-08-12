@@ -5,13 +5,7 @@
 
 import type { JsonApi } from "./json-api";
 import { getInjectionToken } from "@ogre-tools/injectable";
-import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
 export const apiBaseInjectionToken = getInjectionToken<JsonApi>({
   id: "api-base-token",
 });
-
-/**
- * @deprecated switch to using apiBaseInjectionToken instead
- */
-export const apiBase = asLegacyGlobalForExtensionApi(apiBaseInjectionToken);

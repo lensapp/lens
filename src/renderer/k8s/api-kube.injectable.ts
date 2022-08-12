@@ -4,12 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { onApiError } from "../api/on-api-error";
 import { apiKubePrefix } from "../../common/vars";
 import { apiKubeInjectionToken } from "../../common/k8s-api/api-kube";
 import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/stores-apis-can-be-created.token";
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
+import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
@@ -17,6 +17,7 @@ const apiKubeInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "apiKube is only available in certain environments");
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
+    const showErrorNotification = di.inject(showErrorNotificationInjectable);
 
     const apiKube = createKubeJsonApi({
       serverAddress: `http://127.0.0.1:${window.location.port}`,
@@ -28,7 +29,14 @@ const apiKubeInjectable = getInjectable({
       },
     });
 
-    apiKube.onError.addListener(onApiError);
+    apiKube.onError.addListener((error, res) => {
+      switch (res.status) {
+        case 403:
+          error.isUsedForNotification = true;
+          showErrorNotification(error);
+          break;
+      }
+    });
 
     return apiKube;
   },

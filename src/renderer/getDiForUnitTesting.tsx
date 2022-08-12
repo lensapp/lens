@@ -32,7 +32,6 @@ import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
-import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable, computed, runInAction } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
@@ -109,7 +108,6 @@ export const getDiForUnitTesting = (
     [
       startTopbarStateSyncInjectable,
       setupSystemCaInjectable,
-      setupOnApiErrorListenersInjectable,
     ].forEach((injectable) => {
       di.override(injectable, () => ({
         id: injectable.id,
