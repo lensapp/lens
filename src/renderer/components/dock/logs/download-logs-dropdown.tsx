@@ -10,7 +10,7 @@ import { Icon } from "../../icon";
 import { Menu, MenuItem } from "../../menu";
 
 interface DownloadLogsDropdownProps {
-  downloadVisibleLogs: () => Promise<any>;
+  downloadVisibleLogs: () => void;
   downloadAllLogs: () => Promise<any>;
 }
 
@@ -51,7 +51,7 @@ export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: D
         open={toggle}
       >
         <MenuItem
-          onClick={() => downloadLogs(downloadVisibleLogs)}
+          onClick={downloadVisibleLogs}
           data-testid="download-visible-logs"
         >
           Visible logs

@@ -27,6 +27,7 @@ export interface LogTabViewModelDependencies {
   getPodById: GetPodById;
   getPodsByOwnerId: GetPodsByOwnerId;
   areLogsPresent: (tabId: TabId) => boolean;
+  downloadLogs: (filename: string, logs: string[]) => void;
   searchStore: SearchStore;
 }
 
@@ -77,4 +78,18 @@ export class LogTabViewModel {
   reloadLogs = () => this.dependencies.reloadLogs(this.tabId, this.pod, this.logTabData);
   renameTab = (title: string) => this.dependencies.renameTab(this.tabId, title);
   stopLoadingLogs = () => this.dependencies.stopLoadingLogs(this.tabId);
+
+  downloadLogs = () => {
+    const pod = this.pod.get();
+    const tabData = this.logTabData.get();
+
+    if (pod && tabData) {
+      const fileName = pod.getName();
+      const logsToDownload: string[] = tabData.showTimestamps
+        ? this.logs.get()
+        : this.logsWithoutTimestamps.get();
+
+      this.dependencies.downloadLogs(`${fileName}.log`, logsToDownload);
+    }
+  };
 }

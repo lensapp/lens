@@ -26,7 +26,7 @@ interface Dependencies {
   downloadAllLogs: (params: ResourceDescriptor, query: PodLogsQuery) => Promise<void>;
 }
 
-const NonInjectedLogControls = observer(({ openSaveFileDialog, model, downloadAllLogs }: Dependencies & LogControlsProps) => {
+const NonInjectedLogControls = observer(({ model, downloadAllLogs }: Dependencies & LogControlsProps) => {
   const tabData = model.logTabData.get();
   const pod = model.pod.get();
 
@@ -45,18 +45,6 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, downloadAl
   const togglePrevious = () => {
     model.updateLogTabData({ showPrevious: !previous });
     model.reloadLogs();
-  };
-
-  const downloadLogs = () => {
-    return new Promise((resolve) => {
-      const fileName = pod.getName();
-      const logsToDownload: string[] = showTimestamps
-        ? model.logs.get()
-        : model.logsWithoutTimestamps.get();
-
-      openSaveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
-      resolve(true);
-    });
   };
 
   return (
@@ -85,7 +73,7 @@ const NonInjectedLogControls = observer(({ openSaveFileDialog, model, downloadAl
         />
 
         <DownloadLogsDropdown
-          downloadVisibleLogs={downloadLogs}
+          downloadVisibleLogs={model.downloadLogs}
           downloadAllLogs={() => downloadAllLogs(
             { name: pod.getName(), namespace: pod.getNs() },
             { timestamps: showTimestamps, previous }
