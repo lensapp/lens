@@ -96,8 +96,6 @@ export class DistributionDetector extends BaseClusterDetector {
   }
 
   public async getKubernetesVersion() {
-    if (this.cluster.version) return this.cluster.version;
-
     const response = await this.k8sRequest("/version");
 
     return response.gitVersion;
