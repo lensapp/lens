@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { apiKubePrefix, isDebugging } from "../vars";
+import { apiKubePrefix } from "../vars";
+import isDebuggingInjectable from "../vars/is-debugging.injectable";
 import { apiBaseInjectionToken } from "./api-base";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import type { KubeJsonApi } from "./kube-json-api";
@@ -15,6 +16,7 @@ const createKubeJsonApiForClusterInjectable = getInjectable({
   instantiate: (di): CreateKubeJsonApiForCluster => {
     const apiBase = di.inject(apiBaseInjectionToken);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
+    const isDebugging = di.inject(isDebuggingInjectable);
 
     return (clusterId) => createKubeJsonApi(
       {

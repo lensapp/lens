@@ -23,6 +23,9 @@ export const isWindows = process.platform === "win32";
  */
 export const isLinux = process.platform === "linux";
 
+/**
+ * @deprecated switch to using `isDebuggingInjectable`
+ */
 export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
 
 /**
