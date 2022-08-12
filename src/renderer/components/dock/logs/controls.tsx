@@ -5,28 +5,18 @@
 
 import styles from "./controls.module.scss";
 
-import React from "react";
 import { observer } from "mobx-react";
+import React from "react";
 
 import { Checkbox } from "../../checkbox";
-import type { LogTabViewModel } from "./logs-view-model";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
 import { DownloadLogsDropdown } from "./download-logs-dropdown";
-import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
-import downloadAllLogsInjectable from "./download-all-logs.injectable";
-import type { PodLogsQuery } from "../../../../common/k8s-api/endpoints";
+import type { LogTabViewModel } from "./logs-view-model";
 
 export interface LogControlsProps {
   model: LogTabViewModel;
 }
 
-interface Dependencies {
-  openSaveFileDialog: (filename: string, contents: BlobPart | BlobPart[], type: string) => void;
-  downloadAllLogs: (params: ResourceDescriptor, query: PodLogsQuery) => Promise<void>;
-}
-
-const NonInjectedLogControls = observer(({ model, downloadAllLogs }: Dependencies & LogControlsProps) => {
+export const LogControls = observer(({ model }: LogControlsProps) => {
   const tabData = model.logTabData.get();
   const pod = model.pod.get();
 
@@ -74,20 +64,10 @@ const NonInjectedLogControls = observer(({ model, downloadAllLogs }: Dependencie
 
         <DownloadLogsDropdown
           downloadVisibleLogs={model.downloadLogs}
-          downloadAllLogs={() => downloadAllLogs(
-            { name: pod.getName(), namespace: pod.getNs() },
-            { timestamps: showTimestamps, previous }
-          )}
+          downloadAllLogs={model.downloadAllLogs}
         />
       </div>
     </div>
   );
 });
 
-export const LogControls = withInjectables<Dependencies, LogControlsProps>(NonInjectedLogControls, {
-  getProps: (di, props) => ({
-    openSaveFileDialog: di.inject(openSaveFileDialogInjectable),
-    downloadAllLogs: di.inject(downloadAllLogsInjectable),
-    ...props,
-  }),
-});
