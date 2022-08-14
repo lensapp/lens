@@ -194,6 +194,7 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
     "--kubeconfig", kubeconfigPath,
     "-f", "-",
     "--output", "json",
+    "--namespace", namespace,
   ];
 
   try {
