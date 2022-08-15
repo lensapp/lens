@@ -829,23 +829,28 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                       Show previous terminated container
                     </span>
                   </label>
-                  <button
-                    class="dropdown"
-                    data-testid="download-logs-dropdown"
-                    id="download-logs-dropdown"
-                  >
-                    Download
-                    <i
-                      class="Icon material focusable smallest"
+                  <div>
+                    <div
+                      id="download-logs-dropdown"
                     >
-                      <span
-                        class="icon"
-                        data-icon-name="arrow_drop_down"
+                      <button
+                        class="dropdown"
+                        data-testid="download-logs-dropdown"
                       >
-                        arrow_drop_down
-                      </span>
-                    </i>
-                  </button>
+                        Download
+                        <i
+                          class="Icon material focusable smallest"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
