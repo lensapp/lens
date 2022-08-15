@@ -43,7 +43,7 @@ export const Badge = withTooltip(observer(({
   const elem = useRef<HTMLDivElement>(null);
   const elemHasBeenSet = useRef(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isExpandable, setIsExpandable] = useState(expandable);
+  const [isExpandable, setIsExpandable] = useState(false);
 
   useEffect(() => {
     if (elemHasBeenSet.current) {
@@ -54,11 +54,9 @@ export const Badge = withTooltip(observer(({
       elemHasBeenSet.current = true;
     }
 
-    setIsExpandable((
-      expandable && elem.current
-        ? elem.current.clientWidth < elem.current.scrollWidth
-        : false
-    ));
+    const { clientWidth = 0, scrollWidth = 0 } = elem.current ?? {};
+
+    setIsExpandable(expandable && (clientWidth < scrollWidth));
   }, [expandable, elem.current]);
 
   const onMouseUp = action(() => {
