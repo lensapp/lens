@@ -183,6 +183,36 @@ describe("download logs options in pod logs dock tab", () => {
         })
       })
 
+      describe("when call for logs resolves with no logs", () => {
+        beforeEach(() => {
+          callForLogsMock.mockResolvedValue("");
+        })
+
+        describe("when selected 'download visible logs'", () => {
+          beforeEach(() => {
+            const button = rendered.getByTestId("download-visible-logs");
+            button.click();
+          });
+
+          it("shows save dialog with proper attributes", () => {
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain")
+          });
+        })
+
+        describe("when selected 'download all logs'", () => {
+          beforeEach(async () => {
+            await act(async () => {
+              const button = rendered.getByTestId("download-all-logs");
+              button.click();
+            });
+          });
+
+          it("doesn't show save dialog", async () => {
+            expect(openSaveFileDialogMock).not.toHaveBeenCalled()
+          });
+        })
+      })
+
       describe("when call for logs rejects", () => {
         beforeEach(() => {
           callForLogsMock.mockRejectedValue("error");

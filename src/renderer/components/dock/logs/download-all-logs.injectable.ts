@@ -16,8 +16,6 @@ const downloadAllLogsInjectable = getInjectable({
     return async (params: ResourceDescriptor, query: PodLogsQuery) => {
       const logs = await callForLogs(params, query).catch(error => {
         logger.error("Can't download logs: ", error);
-
-        return "";
       })
 
       if (logs) {
