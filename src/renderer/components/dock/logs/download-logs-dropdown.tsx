@@ -7,7 +7,8 @@ import styles from "./download-logs-dropdown.module.scss";
 
 import React, { useState } from "react";
 import { Icon } from "../../icon";
-import { Menu, MenuItem } from "../../menu";
+import { MenuItem } from "../../menu";
+import { Dropdown } from "../../dropdown/dropdown";
 
 interface DownloadLogsDropdownProps {
   downloadVisibleLogs: () => void;
@@ -16,53 +17,37 @@ interface DownloadLogsDropdownProps {
 
 export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: DownloadLogsDropdownProps) {
   const [waiting, setWaiting] = useState(false);
-  const [opened, setOpened] = useState(false);
-  
-  const toggle = () => {
-    setOpened(!opened);
-  };
 
-  const downloadLogs = async (download: () => Promise<void>) => {
+  const downloadAll = async () => {
     setWaiting(true);
 
     try {
-      await download();
+      await downloadAllLogs();
     } finally {
       setWaiting(false);
     }
-  };
+  }
 
   return (
-    <>
-      <button
-        data-testid="download-logs-dropdown"
-        id="download-logs-dropdown"
-        className={styles.dropdown}
-        disabled={waiting}
-      >
-        Download
-        <Icon material="arrow_drop_down" smallest/>
-      </button>
-      <Menu
-        usePortal
-        htmlFor="download-logs-dropdown"
-        isOpen={opened}
-        close={toggle}
-        open={toggle}
-      >
-        <MenuItem
-          onClick={downloadVisibleLogs}
-          data-testid="download-visible-logs"
+    <Dropdown
+      id="download-logs-dropdown"
+      contentForToggle={(
+        <button
+          data-testid="download-logs-dropdown"
+          className={styles.dropdown}
+          disabled={waiting}
         >
-          Visible logs
-        </MenuItem>
-        <MenuItem
-          onClick={() => downloadLogs(downloadAllLogs)}
-          data-testid="download-all-logs"
-        >
-          All logs
-        </MenuItem>
-      </Menu>
-    </>
+          Download
+          <Icon material="arrow_drop_down" smallest/>
+        </button>
+      )}
+    >
+      <MenuItem onClick={downloadVisibleLogs} data-testid="download-visible-logs">
+        Visible logs
+      </MenuItem>
+      <MenuItem onClick={downloadAll} data-testid="download-all-logs">
+        All logs
+      </MenuItem>
+    </Dropdown>
   );
 }
