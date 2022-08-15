@@ -8,7 +8,7 @@ const downloadLogsInjectable = getInjectable({
     const openSaveFileDialog = di.inject(openSaveFileDialogInjectable)
 
     return (filename: string, logs: string[]) => {
-      openSaveFileDialog(filename, logs.join("/n"), "text/plain");
+      openSaveFileDialog(filename, logs.join("\n"), "text/plain");
     }
   },
 });
