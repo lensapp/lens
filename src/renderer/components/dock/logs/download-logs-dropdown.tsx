@@ -12,7 +12,7 @@ import { Dropdown } from "../../dropdown/dropdown";
 
 interface DownloadLogsDropdownProps {
   downloadVisibleLogs: () => void;
-  downloadAllLogs: () => Promise<any>;
+  downloadAllLogs: () => Promise<void> | undefined;
 }
 
 export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: DownloadLogsDropdownProps) {
