@@ -65,7 +65,13 @@ describe("download logs options in pod logs dock tab", () => {
       rendererDi.override(loadLogsInjectable, () => jest.fn());
       rendererDi.override(stopLoadingLogsInjectable, () => jest.fn());
       rendererDi.override(areLogsPresentInjectable, () => jest.fn());
-      rendererDi.override(getPodByIdInjectable, () => (id) => id === selectedPod.getId() ? selectedPod : undefined),
+      rendererDi.override(getPodByIdInjectable, () => (id) => {
+        if (id === selectedPod.getId()) {
+          return selectedPod;
+        }
+  
+        return undefined;
+      });
       rendererDi.override(getPodsByOwnerIdInjectable, () => jest.fn());
       rendererDi.override(searchStoreInjectable, () => new SearchStore());
       
