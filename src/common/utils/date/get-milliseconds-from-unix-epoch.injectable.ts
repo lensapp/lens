@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 
 const getMillisecondsFromUnixEpochInjectable = getInjectable({
-  id: "get-current-time",
+  id: "get-milliseconds-from-unix-epoch",
   instantiate: () => () => Date.now(),
   causesSideEffects: true,
 });
