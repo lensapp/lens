@@ -15,7 +15,7 @@ import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
-import { UpdateButton } from "../../update-button";
+import { UpdateButton } from "../../../../features/application-update/child-features/application-update-using-top-bar/renderer/update-button";
 import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
 import topBarNextEnabledInjectable from "./next-enabled.injectable";
 import openAppContextMenuInjectable from "./open-app-context-menu.injectable";

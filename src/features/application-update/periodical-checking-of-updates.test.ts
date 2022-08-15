@@ -6,9 +6,9 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
-import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import publishIsConfiguredInjectable from "./main/publish-is-configured.injectable";
+import processCheckingForUpdatesInjectable from "./main/check-for-updates/process-checking-for-updates.injectable";
+import periodicalCheckForUpdatesInjectable from "./main/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;

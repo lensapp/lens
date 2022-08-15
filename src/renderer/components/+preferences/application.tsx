@@ -24,11 +24,11 @@ import { Preferences } from "./preferences";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import themeStoreInjectable from "../../themes/store.injectable";
 import { defaultThemeId } from "../../../common/vars";
-import { updateChannels } from "../../../common/application-update/update-channels";
+import { updateChannels } from "../../../features/application-update/common/update-channels";
 import { map, toPairs } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
-import type { SelectedUpdateChannel } from "../../../common/application-update/selected-update-channel/selected-update-channel.injectable";
-import selectedUpdateChannelInjectable from "../../../common/application-update/selected-update-channel/selected-update-channel.injectable";
+import type { SelectedUpdateChannel } from "../../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
 
 interface Dependencies {
   appPreferenceItems: IComputedValue<RegisteredAppPreference[]>;
