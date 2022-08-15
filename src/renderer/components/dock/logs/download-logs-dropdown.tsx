@@ -26,7 +26,7 @@ export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: D
     } finally {
       setWaiting(false);
     }
-  }
+  };
 
   return (
     <Dropdown

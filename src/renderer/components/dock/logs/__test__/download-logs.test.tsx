@@ -15,7 +15,8 @@ import type { ApplicationBuilder } from "../../../test-utils/get-application-bui
 import { getApplicationBuilder } from "../../../test-utils/get-application-builder";
 import dockStoreInjectable from "../../dock/store.injectable";
 import areLogsPresentInjectable from "../are-logs-present.injectable";
-import callForLogsInjectable, { CallForLogs } from "../call-for-logs.injectable";
+import type { CallForLogs } from "../call-for-logs.injectable";
+import callForLogsInjectable from "../call-for-logs.injectable";
 import createPodLogsTabInjectable from "../create-pod-logs-tab.injectable";
 import getLogTabDataInjectable from "../get-log-tab-data.injectable";
 import getLogsWithoutTimestampsInjectable from "../get-logs-without-timestamps.injectable";
@@ -125,23 +126,25 @@ describe("download logs options in pod logs dock tab", () => {
       describe("when call for logs resolves with logs", () => {
         beforeEach(() => {
           callForLogsMock.mockResolvedValue("all-logs");
-        })
+        });
 
         describe("when selected 'download visible logs'", () => {
           beforeEach(() => {
             const button = rendered.getByTestId("download-visible-logs");
+
             button.click();
           });
 
           it("shows save dialog with proper attributes", () => {
-            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain")
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain");
           });
-        })
+        });
 
         describe("when selected 'download all logs'", () => {
           beforeEach(async () => {
             await act(async () => {
               const button = rendered.getByTestId("download-all-logs");
+
               button.click();
             });
           });
@@ -149,18 +152,18 @@ describe("download logs options in pod logs dock tab", () => {
           it("logs have been called with query", () => {
             expect(callForLogsMock).toHaveBeenCalledWith(
               { name: "dockerExporter", namespace: "default" },
-              { "previous": true, "timestamps": false }
+              { "previous": true, "timestamps": false },
             );
-          })
+          });
 
           it("shows save dialog with proper attributes", async () => {
-            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "all-logs", "text/plain")
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "all-logs", "text/plain");
           });
 
           it("doesn't block download dropdown for interaction after click", async () => {
-            expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled")
+            expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled");
           });
-        })
+        });
 
         describe("blocking user interaction after menu item click", () => {
           it("block download dropdown for interaction when selected 'download all logs'", async () => {
@@ -169,8 +172,8 @@ describe("download logs options in pod logs dock tab", () => {
             act(() => downloadMenuItem.click());
 
             await waitFor(() => {
-              expect(rendered.getByTestId("download-logs-dropdown")).toHaveAttribute("disabled")
-            })
+              expect(rendered.getByTestId("download-logs-dropdown")).toHaveAttribute("disabled");
+            });
           });
 
           it("doesn't block dropdown for interaction when selected 'download visible logs'", () => {
@@ -178,63 +181,67 @@ describe("download logs options in pod logs dock tab", () => {
 
             act(() => downloadMenuItem.click());
 
-            expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled")
-          })
-        })
-      })
+            expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled");
+          });
+        });
+      });
 
       describe("when call for logs resolves with no logs", () => {
         beforeEach(() => {
           callForLogsMock.mockResolvedValue("");
-        })
+        });
 
         describe("when selected 'download visible logs'", () => {
           beforeEach(() => {
             const button = rendered.getByTestId("download-visible-logs");
+
             button.click();
           });
 
           it("shows save dialog with proper attributes", () => {
-            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain")
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain");
           });
-        })
+        });
 
         describe("when selected 'download all logs'", () => {
           beforeEach(async () => {
             await act(async () => {
               const button = rendered.getByTestId("download-all-logs");
+
               button.click();
             });
           });
 
           it("doesn't show save dialog", async () => {
-            expect(openSaveFileDialogMock).not.toHaveBeenCalled()
+            expect(openSaveFileDialogMock).not.toHaveBeenCalled();
           });
-        })
-      })
+        });
+      });
 
       describe("when call for logs rejects", () => {
         beforeEach(() => {
           callForLogsMock.mockRejectedValue("error");
-        })
+        });
 
         describe("when selected 'download visible logs'", () => {
           beforeEach(async () => {
             await act(async () => {
               const button = rendered.getByTestId("download-visible-logs");
+
               button.click();
             });
           });
 
           it("shows save dialog with proper attributes", () => {
-            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain")
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain");
           });
-        })
+        });
 
         describe("when selected 'download all logs'", () => {
           beforeEach(async () => {
             await act(async () => {
               const button = rendered.getByTestId("download-all-logs");
+
               button.click();
             });
           });
@@ -242,15 +249,15 @@ describe("download logs options in pod logs dock tab", () => {
           it("logs have been called", () => {
             expect(callForLogsMock).toHaveBeenCalledWith(
               { name: "dockerExporter", namespace: "default" },
-              { "previous": true, "timestamps": false }
+              { "previous": true, "timestamps": false },
             );
-          })
+          });
 
           it("doesn't show save dialog", async () => {
-            expect(openSaveFileDialogMock).not.toHaveBeenCalled()
+            expect(openSaveFileDialogMock).not.toHaveBeenCalled();
           });
-        })
-      })
+        });
+      });
     });
   });
 });

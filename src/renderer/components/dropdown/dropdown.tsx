@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React, { HTMLAttributes, useState } from "react";
+import type { HTMLAttributes } from "react";
+import React, { useState } from "react";
 import { Menu } from "../menu";
 
 interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
