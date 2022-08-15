@@ -814,9 +814,10 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
                     </span>
                   </label>
                   <label
-                    class="Checkbox flex align-center show-previous"
+                    class="Checkbox flex align-center show-previous checked"
                   >
                     <input
+                      checked=""
                       type="checkbox"
                     />
                     <i

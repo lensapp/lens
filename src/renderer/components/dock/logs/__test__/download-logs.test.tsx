@@ -15,7 +15,7 @@ import type { ApplicationBuilder } from "../../../test-utils/get-application-bui
 import { getApplicationBuilder } from "../../../test-utils/get-application-builder";
 import dockStoreInjectable from "../../dock/store.injectable";
 import areLogsPresentInjectable from "../are-logs-present.injectable";
-import callForLogsInjectable from "../call-for-logs.injectable";
+import callForLogsInjectable, { CallForLogs } from "../call-for-logs.injectable";
 import createPodLogsTabInjectable from "../create-pod-logs-tab.injectable";
 import getLogTabDataInjectable from "../get-log-tab-data.injectable";
 import getLogsWithoutTimestampsInjectable from "../get-logs-without-timestamps.injectable";
@@ -29,8 +29,11 @@ import stopLoadingLogsInjectable from "../stop-loading-logs.injectable";
 import { dockerPod } from "./pod.mock";
 
 describe("download logs options in pod logs dock tab", () => {
+  let rendered: RenderResult;
+  let rendererDi: DiContainer;
   let builder: ApplicationBuilder;
   let openSaveFileDialogMock: jest.MockedFunction<() => void>;
+  let callForLogsMock: jest.MockedFunction<CallForLogs>;
   const logs = new Map([["timestamp", "some-logs"]]);
 
   beforeEach(() => {
@@ -40,8 +43,10 @@ describe("download logs options in pod logs dock tab", () => {
 
     builder.setEnvironmentToClusterFrame();
 
+    callForLogsMock = jest.fn();
+
     builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(callForLogsInjectable, () => () => Promise.resolve("all-logs"));
+      rendererDi.override(callForLogsInjectable, () => callForLogsMock);
 
       // Overriding internals of logsViewModelInjectable
       rendererDi.override(getLogsInjectable, () => () => ["some-logs"]);
@@ -52,7 +57,7 @@ describe("download logs options in pod logs dock tab", () => {
         selectedPodId: selectedPod.getId(),
         selectedContainer: selectedPod.getContainers()[0].name,
         namespace: "default",
-        showPrevious: false,
+        showPrevious: true,
         showTimestamps: false,
       }));
       rendererDi.override(setLogTabDataInjectable, () => jest.fn());
@@ -62,7 +67,7 @@ describe("download logs options in pod logs dock tab", () => {
       rendererDi.override(getPodByIdInjectable, () => (id) => id === selectedPod.getId() ? selectedPod : undefined),
       rendererDi.override(getPodsByOwnerIdInjectable, () => jest.fn());
       rendererDi.override(searchStoreInjectable, () => new SearchStore());
-
+      
       rendererDi.override(getRandomIdForPodLogsTabInjectable, () => jest.fn(() => "some-irrelevant-random-id"));
 
       openSaveFileDialogMock = jest.fn();
@@ -72,9 +77,6 @@ describe("download logs options in pod logs dock tab", () => {
   });
 
   describe("when opening pod logs", () => {
-    let rendered: RenderResult;
-    let rendererDi: DiContainer;
-    
     beforeEach(async () => {
       rendered = await builder.render();
       rendererDi = builder.dis.rendererDi;
@@ -120,47 +122,105 @@ describe("download logs options in pod logs dock tab", () => {
         expect(rendered.getByTestId("download-all-logs")).toBeInTheDocument();
       });
 
-      it("when selected 'download visible logs', shows save dialog with proper attributes", async () => {
-        const downloadMenuItem = rendered.getByTestId("download-visible-logs");
+      describe("when call for logs resolves with logs", () => {
+        beforeEach(() => {
+          callForLogsMock.mockResolvedValue("all-logs");
+        })
 
-        downloadMenuItem.click();
-        
-        await waitFor(() =>
-          expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain"),
-        );
-      });
+        describe("when selected 'download visible logs'", () => {
+          beforeEach(() => {
+            const button = rendered.getByTestId("download-visible-logs");
+            button.click();
+          });
 
-      it("when selected 'download all logs', shows save dialog with proper attributes", async () => {
-        const downloadMenuItem = rendered.getByTestId("download-all-logs");
+          it("shows save dialog with proper attributes", () => {
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain")
+          });
+        })
 
-        downloadMenuItem.click();
+        describe("when selected 'download all logs'", () => {
+          beforeEach(async () => {
+            await act(async () => {
+              const button = rendered.getByTestId("download-all-logs");
+              button.click();
+            });
+          });
 
-        await waitFor(() =>
-          expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "all-logs", "text/plain"),
-        );
-      });
+          it("logs have been called with query", () => {
+            expect(callForLogsMock).toHaveBeenCalledWith(
+              { name: "dockerExporter", namespace: "default" },
+              { "previous": true, "timestamps": false }
+            );
+          })
 
-      it("when selected 'download all logs', block download dropdown for interaction", async () => {
-        const downloadMenuItem = rendered.getByTestId("download-all-logs");
-        
-        downloadMenuItem.click();
+          it("shows save dialog with proper attributes", async () => {
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "all-logs", "text/plain")
+          });
 
-        await waitFor(() =>
-          expect(rendered.getByTestId("download-logs-dropdown")).toHaveAttribute("disabled"),
-        );
-      });
+          it("doesn't block download dropdown for interaction after click", async () => {
+            expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled")
+          });
+        })
 
-      it("when save file dialog opens, restore download button for interaction", async () => {
-        const downloadMenuItem = rendered.getByTestId("download-all-logs");
+        describe("blocking user interaction", () => {
+          it("block download dropdown for interaction when selected 'download all logs'", async () => {
+            const downloadMenuItem = rendered.getByTestId("download-all-logs");
 
-        downloadMenuItem.click();
+            act(() => downloadMenuItem.click());
 
-        await waitFor(() =>
-          expect(openSaveFileDialogMock).toHaveBeenCalled(),
-        );
-          
-        expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled");
-      });
+            await waitFor(() => {
+              expect(rendered.getByTestId("download-logs-dropdown")).toHaveAttribute("disabled")
+            })
+          });
+
+          it("doesn't block dropdown for interaction when selected 'download visible logs'", () => {
+            const downloadMenuItem = rendered.getByTestId("download-visible-logs");
+
+            act(() => downloadMenuItem.click());
+
+            expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled")
+          })
+        })
+      })
+
+      describe("when call for logs rejects", () => {
+        beforeEach(() => {
+          callForLogsMock.mockRejectedValue("error");
+        })
+
+        describe("when selected 'download visible logs'", () => {
+          beforeEach(async () => {
+            await act(async () => {
+              const button = rendered.getByTestId("download-visible-logs");
+              button.click();
+            });
+          });
+
+          it("shows save dialog with proper attributes", () => {
+            expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain")
+          });
+        })
+
+        describe("when selected 'download all logs'", () => {
+          beforeEach(async () => {
+            await act(async () => {
+              const button = rendered.getByTestId("download-all-logs");
+              button.click();
+            });
+          });
+
+          it("logs have been called", () => {
+            expect(callForLogsMock).toHaveBeenCalledWith(
+              { name: "dockerExporter", namespace: "default" },
+              { "previous": true, "timestamps": false }
+            );
+          })
+
+          it("doesn't show save dialog", async () => {
+            expect(openSaveFileDialogMock).not.toHaveBeenCalled()
+          });
+        })
+      })
     });
   });
 });
