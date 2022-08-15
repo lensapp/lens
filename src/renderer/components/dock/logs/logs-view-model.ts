@@ -95,7 +95,7 @@ export class LogTabViewModel {
     }
   };
 
-  downloadAllLogs = async () => {
+  downloadAllLogs = () => {
     const pod = this.pod.get();
     const tabData = this.logTabData.get();
 
@@ -103,7 +103,9 @@ export class LogTabViewModel {
       const params = { name: pod.getName(), namespace: pod.getNs() };
       const query = { timestamps: tabData.showTimestamps, previous: tabData.showPrevious }
 
-      this.dependencies.downloadAllLogs(params, query);
+      return this.dependencies.downloadAllLogs(params, query);
     }
+
+    return;
   }
 }
