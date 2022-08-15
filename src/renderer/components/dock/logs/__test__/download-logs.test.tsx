@@ -162,7 +162,7 @@ describe("download logs options in pod logs dock tab", () => {
           });
         })
 
-        describe("blocking user interaction", () => {
+        describe("blocking user interaction after menu item click", () => {
           it("block download dropdown for interaction when selected 'download all logs'", async () => {
             const downloadMenuItem = rendered.getByTestId("download-all-logs");
 
