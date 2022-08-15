@@ -10,7 +10,7 @@ import { withErrorSuppression } from "../../../../../../common/utils/with-error-
 import { pipeline } from "@ogre-tools/fp";
 import withErrorLoggingInjectable from "../../../../../../common/utils/with-error-logging/with-error-logging.injectable";
 import quitAndInstallUpdateInjectable from "../../../../main/quit-and-install-update.injectable";
-import updateIsReadyToBeInstalledInjectable from "../../../../main/update-is-ready-to-be-installed.injectable";
+import updateIsReadyToBeInstalledInjectable from "../update-is-ready-to-be-installed.injectable";
 
 const installApplicationUpdateTrayItemInjectable = getInjectable({
   id: "install-update-tray-item",

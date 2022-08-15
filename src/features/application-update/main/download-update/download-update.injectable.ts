@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import downloadPlatformUpdateInjectable from "../download-platform-update/download-platform-update.injectable";
+import downloadPlatformUpdateInjectable from "./download-platform-update/download-platform-update.injectable";
 import updateIsBeingDownloadedInjectable from "../../common/update-is-being-downloaded/update-is-being-downloaded.injectable";
 import discoveredUpdateVersionInjectable from "../../common/discovered-update-version/discovered-update-version.injectable";
 import { action, runInAction } from "mobx";

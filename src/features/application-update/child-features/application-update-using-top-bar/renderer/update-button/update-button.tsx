@@ -14,7 +14,7 @@ import { Icon } from "../../../../../../renderer/components/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
-import restartAndInstallUpdateInjectable from "./restart-and-install-update.injectable";
+import restartAndInstallUpdateInjectable from "../../../../renderer/restart-and-install-update.injectable";
 import updateWarningLevelInjectable from "./update-warning-level.injectable";
 
 interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {}
