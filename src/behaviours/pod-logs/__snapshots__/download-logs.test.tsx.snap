@@ -785,6 +785,7 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
               </div>
               <div
                 class="controls"
+                data-testid="log-controls"
               >
                 <div>
                   <span>
