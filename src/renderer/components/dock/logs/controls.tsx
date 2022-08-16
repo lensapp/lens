@@ -38,7 +38,7 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
   };
 
   return (
-    <div className={styles.controls}>
+    <div className={styles.controls} data-testid="log-controls">
       <div>
         {since && (
           <span>
