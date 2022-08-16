@@ -38,7 +38,6 @@ import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
-import openAppContextMenuInjectable from "./components/layout/top-bar/open-app-context-menu.injectable";
 import goBackInjectable from "./components/layout/top-bar/go-back.injectable";
 import goForwardInjectable from "./components/layout/top-bar/go-forward.injectable";
 import closeWindowInjectable from "./components/layout/top-bar/close-window.injectable";
@@ -149,7 +148,6 @@ export const getDiForUnitTesting = (
 
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(watchHistoryStateInjectable, () => () => () => {});
-    di.override(openAppContextMenuInjectable, () => () => {});
     di.override(goBackInjectable, () => () => {});
     di.override(goForwardInjectable, () => () => {});
     di.override(closeWindowInjectable, () => () => {});

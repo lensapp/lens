@@ -18,7 +18,7 @@ import closeWindowInjectable from "./close-window.injectable";
 import goBackInjectable from "./go-back.injectable";
 import goForwardInjectable from "./go-forward.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
-import openAppContextMenuInjectable from "./open-app-context-menu.injectable";
+import openAppContextMenuInjectable from "./top-bar-items/context-menu/open-app-context-menu/open-app-context-menu.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
 import topBarStateInjectable from "./state.injectable";
 import platformInjectable from "../../../../common/vars/platform.injectable";
