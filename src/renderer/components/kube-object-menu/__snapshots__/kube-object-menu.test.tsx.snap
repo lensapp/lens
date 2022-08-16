@@ -122,6 +122,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove
@@ -248,6 +249,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove
@@ -340,6 +342,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove
@@ -432,6 +435,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove

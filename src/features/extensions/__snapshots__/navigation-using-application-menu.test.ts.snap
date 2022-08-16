@@ -306,6 +306,7 @@ exports[`extensions - navigation using application menu when navigating to exten
                   <div>
                     <button
                       class="Button button primary"
+                      data-waiting="false"
                       type="button"
                     >
                       Install
