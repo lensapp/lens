@@ -72,6 +72,8 @@ export function TableList<Data>({
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
   });
 
   return (
