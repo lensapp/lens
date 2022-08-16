@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { app } from "electron";
+import electronAppInjectable from "../electron-app/electron-app.injectable";
 
 const buildVersionInjectable = getInjectable({
   id: "build-version",
-  instantiate: () => app.getVersion(),
+  instantiate: (di) => di.inject(electronAppInjectable).getVersion(),
 });
 
 export default buildVersionInjectable;

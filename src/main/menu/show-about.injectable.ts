@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { showAbout } from "./menu";
 import showMessagePopupInjectable from "../electron-app/features/show-message-popup.injectable";
 import appVersionInjectable from "../../common/vars/app-version.injectable";
-import buildVersionInjectable from "../../common/vars/build-version.injectable";
+import buildVersionInjectable from "./build-version.injectable";
 
 const showAboutInjectable = getInjectable({
   id: "show-about",
