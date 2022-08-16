@@ -77,9 +77,7 @@ const createElectronWindowInjectable = getInjectable({
         webPreferences: {
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
-          webviewTag: true,
           contextIsolation: false,
-          nativeWindowOpen: false,
         },
       });
 
@@ -89,20 +87,16 @@ const createElectronWindowInjectable = getInjectable({
         .on("focus", () => {
           configuration.onFocus?.();
         })
-
         .on("blur", () => {
           configuration.onBlur?.();
         })
-
         .on("closed", () => {
           configuration.onClose();
           applicationWindowState.unmanage();
         })
-
         .webContents.on("dom-ready", () => {
           configuration.onDomReady?.();
         })
-
         .on("did-fail-load", (_event, code, desc) => {
           logger.error(
             `[CREATE-ELECTRON-WINDOW]: Failed to load window "${configuration.id}"`,
@@ -112,52 +106,11 @@ const createElectronWindowInjectable = getInjectable({
             },
           );
         })
-
         .on("did-finish-load", () => {
           logger.info(
             `[CREATE-ELECTRON-WINDOW]: Window "${configuration.id}" loaded`,
           );
         })
-
-        .on("will-attach-webview", (event, webPreferences, params) => {
-          logger.debug(
-            `[CREATE-ELECTRON-WINDOW]: Attaching webview to window "${configuration.id}"`,
-          );
-          // Following is security recommendations because we allow webview tag (webviewTag: true)
-          // suggested by https://www.electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
-          // and https://www.electronjs.org/docs/tutorial/security#10-do-not-use-allowpopups
-
-          if (webPreferences.preload) {
-            logger.warn(
-              "[CREATE-ELECTRON-WINDOW]: Strip away preload scripts of webview",
-            );
-            delete webPreferences.preload;
-          }
-
-          // @ts-expect-error some electron version uses webPreferences.preloadURL/webPreferences.preload
-          if (webPreferences.preloadURL) {
-            logger.warn(
-              "[CREATE-ELECTRON-WINDOW]: Strip away preload scripts of webview",
-            );
-            delete webPreferences.preload;
-          }
-
-          if (params.allowpopups) {
-            logger.warn(
-              "[CREATE-ELECTRON-WINDOW]: We do not allow allowpopups props, stop webview from renderer",
-            );
-
-            // event.preventDefault() will destroy the guest page.
-            event.preventDefault();
-
-            return;
-          }
-
-          // Always disable Node.js integration for all webviews
-          webPreferences.nodeIntegration = false;
-          webPreferences.nativeWindowOpen = false;
-        })
-
         .setWindowOpenHandler((details) => {
           openLinkInBrowser(details.url).catch((error) => {
             logger.error("[CREATE-ELECTRON-WINDOW]: failed to open browser", {
