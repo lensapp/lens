@@ -47,6 +47,9 @@ export function TableList<Data>({
               }}
             />
           ),
+          enableResizing: false,
+          minSize: 21,
+          size: 21,
         })
       )
     }
@@ -56,6 +59,8 @@ export function TableList<Data>({
         columnHelper.display({
           id: "config",
           header: () => <ColumnConfigMenu table={table}/>,
+          size: 30,
+          enableResizing: false,
         })
       )
     }
@@ -74,6 +79,9 @@ export function TableList<Data>({
     getSortedRowModel: getSortedRowModel(),
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
+    defaultColumn: {
+      size: 100,
+    }
   });
 
   return (

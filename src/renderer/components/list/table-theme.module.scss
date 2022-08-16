@@ -1,11 +1,8 @@
 .tableTheme {
-  border: 1px solid lightgray;
   height: calc(100% - 59px);
   overflow: auto;
 
   table {
-    border-spacing: 0;
-    border-top: thin solid var(--hrColor);
     table-layout: fixed;
     width: 100%;
   }

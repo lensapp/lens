@@ -171,21 +171,27 @@ class NonInjectedPods extends React.Component<Dependencies> {
       columnHelper.display({
         id: "warning",
         cell: props => <KubeObjectStatusIcon key="icon" object={props.row.original} />,
+        size: 30,
+        enableResizing: false,
       }),
       columnHelper.accessor(row => row.getNs(), {
         id: "namespace",
         header: "Namespace",
         cell: info => info.getValue(),
+        minSize: 110,
+        size: 110,
       }),
       columnHelper.accessor(row => this.renderContainersStatus(row), {
         id: "containers",
         header: "Containers",
         cell: info => info.getValue(),
+        minSize: 137,
       }),
       columnHelper.accessor(row => row.getRestartsCount(), {
         id: "restarts",
         header: "Restarts",
         cell: info => info.getValue(),
+        minSize: 105,
       }),
       columnHelper.accessor(row => this.renderControlledBy(row), {
         id: "controlledBy",
