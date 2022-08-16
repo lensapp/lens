@@ -15,7 +15,7 @@ import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed, observable } from "mobx";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
 import closeWindowInjectable from "./close-window.injectable";
-import goBackInjectable from "./go-back.injectable";
+import goBackInjectable from "./top-bar-items/navigation-to-back/go-back/go-back.injectable";
 import goForwardInjectable from "./go-forward.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
 import openAppContextMenuInjectable from "./top-bar-items/context-menu/open-app-context-menu/open-app-context-menu.injectable";

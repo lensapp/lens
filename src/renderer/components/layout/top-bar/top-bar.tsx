@@ -15,9 +15,7 @@ import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 import { UpdateButton } from "../../../../features/application-update/child-features/application-update-using-top-bar/renderer/update-button";
-import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
 import topBarNextEnabledInjectable from "./next-enabled.injectable";
-import goBackInjectable from "./go-back.injectable";
 import goForwardInjectable from "./go-forward.injectable";
 import closeWindowInjectable from "./close-window.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
@@ -33,9 +31,7 @@ interface Dependencies {
   items2: IComputedValue<TopBarItem[]>;
   isWindows: boolean;
   isLinux: boolean;
-  prevEnabled: IComputedValue<Boolean>;
   nextEnabled: IComputedValue<Boolean>;
-  goBack: () => void;
   goForward: () => void;
   minimizeWindow: () => void;
   toggleMaximizeWindow: () => void;
@@ -48,9 +44,7 @@ const NonInjectedTopBar = observer(({
   items2,
   isWindows,
   isLinux,
-  prevEnabled,
   nextEnabled,
-  goBack,
   goForward,
   closeWindow,
   minimizeWindow,
@@ -79,12 +73,6 @@ const NonInjectedTopBar = observer(({
           return <Component key={item.id} />;
         })}
 
-        <Icon
-          data-testid="history-back"
-          material="arrow_back"
-          onClick={goBack}
-          disabled={!prevEnabled.get()}
-        />
         <Icon
           data-testid="history-forward"
           material="arrow_forward"
@@ -160,9 +148,7 @@ export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
     items2: di.inject(topBarItems2Injectable),
     isLinux: di.inject(isLinuxInjectable),
     isWindows: di.inject(isWindowsInjectable),
-    prevEnabled: di.inject(topBarPrevEnabledInjectable),
     nextEnabled: di.inject(topBarNextEnabledInjectable),
-    goBack: di.inject(goBackInjectable),
     goForward: di.inject(goForwardInjectable),
     closeWindow: di.inject(closeWindowInjectable),
     minimizeWindow: di.inject(maximizeWindowInjectable),
