@@ -7,7 +7,6 @@ import splashWindowInjectable from "./splash-window/splash-window.injectable";
 import { identity, some } from "lodash/fp";
 import focusApplicationInjectable from "../../electron-app/features/focus-application.injectable";
 import getCurrentApplicationWindowInjectable from "./application-window/get-current-application-window.injectable";
-import type { LensWindow } from "./application-window/create-lens-window.injectable";
 import createFirstApplicationWindowInjectable from "./application-window/create-first-application-window.injectable";
 const someIsTruthy = some(identity);
 
@@ -23,11 +22,7 @@ const showApplicationWindowInjectable = getInjectable({
     return async () => {
       focusApplication();
 
-      let applicationWindow: LensWindow | undefined = getApplicationWindow();
-
-      if (!applicationWindow) {
-        applicationWindow = createFirstApplicationWindow();
-      }
+      const applicationWindow = getApplicationWindow() ?? createFirstApplicationWindow();
 
       if (applicationWindow.isStarting) {
         applicationWindow.show();
