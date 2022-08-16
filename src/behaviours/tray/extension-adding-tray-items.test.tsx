@@ -13,6 +13,7 @@ describe("preferences: extension adding tray items", () => {
     let builder: ApplicationBuilder;
     let someObservableForVisibility: IObservableValue<boolean>;
     let someObservableForEnabled: IObservableValue<boolean>;
+    let someObservableLabel: IObservableValue<string>;
 
     beforeEach(async () => {
       builder = getApplicationBuilder();
@@ -25,6 +26,7 @@ describe("preferences: extension adding tray items", () => {
 
       someObservableForVisibility = observable.box(false);
       someObservableForEnabled = observable.box(false);
+      someObservableLabel = observable.box("Some label");
 
       const testExtension = getExtensionFake({
         id: "some-extension-id",
@@ -33,43 +35,87 @@ describe("preferences: extension adding tray items", () => {
         mainOptions: {
           trayMenus: [
             {
+              id: "some-controlled-visibility",
               label: "some-controlled-visibility",
               click: () => {},
               visible: computed(() => someObservableForVisibility.get()),
             },
 
             {
+              id: "some-uncontrolled-visibility",
               label: "some-uncontrolled-visibility",
               click: () => {},
             },
 
             {
+              id: "some-controlled-enabled",
               label: "some-controlled-enabled",
               click: () => {},
               enabled: computed(() => someObservableForEnabled.get()),
             },
 
             {
+              id: "some-uncontrolled-enabled",
               label: "some-uncontrolled-enabled",
               click: () => {},
             },
 
             {
+              id: "some-statically-enabled",
               label: "some-statically-enabled",
               click: () => {},
               enabled: true,
             },
 
             {
+              id: "some-statically-disabled",
               label: "some-statically-disabled",
               click: () => {},
               enabled: false,
+            },
+
+            {
+              id: "some-item-with-controlled-label",
+              label: computed(() => someObservableLabel.get()),
+              click: () => {},
+              enabled: true,
             },
           ],
         },
       });
 
       builder.extensions.enable(testExtension);
+    });
+
+    describe("given controlled label", () => {
+      it("has the label", () => {
+        const item = builder.tray.get(
+          "some-item-with-controlled-label-tray-menu-item-for-extension-some-extension",
+        );
+
+        expect(item?.label).toBe("Some label");
+      });
+
+      it("when label changes, updates the label", () => {
+        runInAction(() => {
+          someObservableLabel.set("Some new label");
+        });
+
+        const item = builder.tray.get(
+          "some-item-with-controlled-label-tray-menu-item-for-extension-some-extension",
+        );
+
+        expect(item?.label).toBe("Some new label");
+
+      });
+    });
+
+    it("given item is statically disabled, item is disabled", () => {
+      const item = builder.tray.get(
+        "some-statically-disabled-tray-menu-item-for-extension-some-extension",
+      );
+
+      expect(item?.enabled).toBe(false);
     });
 
     it("shows item which doesn't control the visibility", () => {

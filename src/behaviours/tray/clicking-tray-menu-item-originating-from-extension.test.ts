@@ -8,6 +8,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
+import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
 
 describe("clicking tray menu item originating from extension", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -20,6 +21,7 @@ describe("clicking tray menu item originating from extension", () => {
       logErrorMock = jest.fn();
 
       mainDi.override(loggerInjectable, () => ({ error: logErrorMock }) as unknown as Logger);
+      mainDi.override(getRandomIdInjectable, () => () => "some-random-id");
     });
 
     await applicationBuilder.render();
@@ -42,7 +44,7 @@ describe("clicking tray menu item originating from extension", () => {
 
     it("when item is clicked, triggers the click handler", () => {
       applicationBuilder.tray.click(
-        "some-label-tray-menu-item-for-extension-some-extension-id",
+        "some-random-id-tray-menu-item-for-extension-some-extension-id",
       );
 
       expect(clickMock).toHaveBeenCalled();
@@ -55,13 +57,13 @@ describe("clicking tray menu item originating from extension", () => {
         });
 
         applicationBuilder.tray.click(
-          "some-label-tray-menu-item-for-extension-some-extension-id",
+          "some-random-id-tray-menu-item-for-extension-some-extension-id",
         );
       });
 
       it("logs the error", () => {
         expect(logErrorMock).toHaveBeenCalledWith(
-          '[TRAY]: Clicking of tray item "some-label" from extension "some-extension-id" failed.',
+          '[TRAY]: Clicking of tray item "some-random-id" from extension "some-extension-id" failed.',
           expect.any(Error),
         );
       });
@@ -72,13 +74,13 @@ describe("clicking tray menu item originating from extension", () => {
         clickMock.mockImplementation(() => Promise.reject("some-rejection"));
 
         applicationBuilder.tray.click(
-          "some-label-tray-menu-item-for-extension-some-extension-id",
+          "some-random-id-tray-menu-item-for-extension-some-extension-id",
         );
       });
 
       it("logs the error", () => {
         expect(logErrorMock).toHaveBeenCalledWith(
-          '[TRAY]: Clicking of tray item "some-label" from extension "some-extension-id" failed.',
+          '[TRAY]: Clicking of tray item "some-random-id" from extension "some-extension-id" failed.',
           "some-rejection",
         );
       });
@@ -92,7 +94,7 @@ describe("clicking tray menu item originating from extension", () => {
       it("does not have the tray menu item from extension", () => {
         expect(
           applicationBuilder.tray.get(
-            "some-label-tray-menu-item-for-extension-some-extension-id",
+            "some-random-id-tray-menu-item-for-extension-some-extension-id",
           ),
         ).toBeNull();
       });
@@ -103,7 +105,7 @@ describe("clicking tray menu item originating from extension", () => {
 
         expect(
           applicationBuilder.tray.get(
-            "some-label-tray-menu-item-for-extension-some-extension-id",
+            "some-random-id-tray-menu-item-for-extension-some-extension-id",
           ),
         ).not.toBeNull();
       });
