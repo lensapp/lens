@@ -187,7 +187,6 @@ export const getDiForUnitTesting = (
     }) as unknown as HotbarStore);
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-
     di.override(defaultShellInjectable, () => "some-default-shell");
 
     di.override(userStoreInjectable, () => ({
