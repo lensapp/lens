@@ -6,25 +6,25 @@ import React from "react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import { Icon } from "../../../../icon";
-import navigateToCatalogInjectable from "../../../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import routeIsActiveInjectable from "../../../../../routes/route-is-active.injectable";
-import catalogRouteInjectable from "../../../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
 import { observer } from "mobx-react";
+import welcomeRouteInjectable from "../../../../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
+import navigateToWelcomeInjectable from "../../../../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 
 interface Dependencies {
-  catalogRouteIsActive: IComputedValue<boolean>;
+  disabled: IComputedValue<boolean>;
   goHome: () => void;
 }
 
 const NonInjectedNavigationToHome = observer(({
-  catalogRouteIsActive,
+  disabled,
   goHome,
 }: Dependencies) => (
   <Icon
     data-testid="home-button"
     material="home"
     onClick={goHome}
-    disabled={catalogRouteIsActive.get()}
+    disabled={disabled.get()}
   />
 ));
 
@@ -33,12 +33,12 @@ export const NavigationToHome = withInjectables<Dependencies>(
 
   {
     getProps: (di) => ({
-      catalogRouteIsActive: di.inject(
+      disabled: di.inject(
         routeIsActiveInjectable,
-        di.inject(catalogRouteInjectable),
+        di.inject(welcomeRouteInjectable),
       ),
 
-      goHome: di.inject(navigateToCatalogInjectable),
+      goHome: di.inject(navigateToWelcomeInjectable),
     }),
   },
 );

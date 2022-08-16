@@ -47,9 +47,6 @@ exports[`extendability-using-extension-api given an extension with a weakly type
             </span>
           </i>
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -254,9 +251,6 @@ exports[`extendability-using-extension-api given an extension with top-bar items
             Some-content
           </div>
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -456,9 +450,6 @@ exports[`extendability-using-extension-api given an extension with top-bar items
             </span>
           </i>
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -658,9 +649,6 @@ exports[`extendability-using-extension-api renders 1`] = `
             </span>
           </i>
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
