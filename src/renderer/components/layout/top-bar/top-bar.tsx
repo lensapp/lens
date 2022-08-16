@@ -13,7 +13,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
-import { UpdateButton } from "../../../../features/application-update/child-features/application-update-using-top-bar/renderer/update-button";
 import closeWindowInjectable from "./close-window.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
@@ -65,8 +64,6 @@ const NonInjectedTopBar = observer(({
 
           return <Component key={item.id} />;
         })}
-
-        <UpdateButton />
       </div>
       <div className={styles.items}>
         {renderRegisteredItems(items.get())}
