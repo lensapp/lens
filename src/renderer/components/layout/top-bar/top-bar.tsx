@@ -8,23 +8,20 @@ import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { cssNames } from "../../../utils";
-import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 import closeWindowInjectable from "./close-window.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
 import watchHistoryStateInjectable from "../../../remote-helpers/watch-history-state.injectable";
-import topBarItems2Injectable from "./top-bar-items/top-bar-items2.injectable";
+import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import type { TopBarItem } from "./top-bar-items/top-bar-item-injection-token";
 import welcomeRouteInjectable from "../../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
 import navigateToWelcomeInjectable from "../../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 
 interface Dependencies {
-  items: IComputedValue<TopBarRegistration[]>;
-  items2: IComputedValue<TopBarItem[]>;
+  items: IComputedValue<TopBarItem[]>;
   isWindows: boolean;
   isLinux: boolean;
   minimizeWindow: () => void;
@@ -36,7 +33,6 @@ interface Dependencies {
 const NonInjectedTopBar = observer(
   ({
     items,
-    items2,
     isWindows,
     isLinux,
     closeWindow,
@@ -61,7 +57,7 @@ const NonInjectedTopBar = observer(
         ref={elem}
       >
         <div className={styles.items}>
-          {items2.get().map((item) => {
+          {items.get().map((item) => {
             const Component = item.Component;
 
             return <Component key={item.id} />;
@@ -69,8 +65,6 @@ const NonInjectedTopBar = observer(
         </div>
 
         <div className={styles.items}>
-          {renderRegisteredItems(items.get())}
-
           {(isWindows || isLinux) && (
             <div
               className={cssNames(styles.windowButtons, {
@@ -129,19 +123,9 @@ const NonInjectedTopBar = observer(
   },
 );
 
-const renderRegisteredItems = (items: TopBarRegistration[]) =>
-  items.map((registration, index) => {
-    if (!registration?.components?.Item) {
-      return null;
-    }
-
-    return <registration.components.Item key={index} />;
-  });
-
 export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
   getProps: (di) => ({
     items: di.inject(topBarItemsInjectable),
-    items2: di.inject(topBarItems2Injectable),
     isLinux: di.inject(isLinuxInjectable),
     isWindows: di.inject(isWindowsInjectable),
     closeWindow: di.inject(closeWindowInjectable),

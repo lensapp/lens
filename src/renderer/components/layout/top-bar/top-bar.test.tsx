@@ -11,7 +11,6 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { computed, observable } from "mobx";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
 import closeWindowInjectable from "./close-window.injectable";
@@ -21,8 +20,7 @@ import openAppContextMenuInjectable from "./top-bar-items/context-menu/open-app-
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
 import topBarStateInjectable from "./state.injectable";
 import platformInjectable from "../../../../common/vars/platform.injectable";
-import goForwardInjectable
-  from "./top-bar-items/navigation-to-forward/go-forward/go-forward.injectable";
+import goForwardInjectable from "./top-bar-items/navigation-to-forward/go-forward/go-forward.injectable";
 
 describe("<TopBar/>", () => {
   let di: DiContainer;
@@ -55,6 +53,7 @@ describe("<TopBar/>", () => {
         nextEnabled: true,
       }));
     });
+
     it("renders w/o errors", () => {
       const { container } = render(<TopBar/>);
 
@@ -94,23 +93,6 @@ describe("<TopBar/>", () => {
       fireEvent.click(nextButton);
 
       expect(goForward).toBeCalled();
-    });
-
-    it("renders items", async () => {
-      const testId = "testId";
-      const text = "an item";
-
-      di.override(topBarItemsInjectable, () => computed(() => [
-        {
-          components: {
-            Item: () => <span data-testid={testId}>{text}</span>,
-          },
-        },
-      ]));
-
-      const { findByTestId } = render(<TopBar/>);
-
-      expect(await findByTestId(testId)).toHaveTextContent(text);
     });
 
     describe("on macos", () => {

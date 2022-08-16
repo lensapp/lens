@@ -248,16 +248,15 @@ exports[`extendability-using-extension-api given an extension with top-bar items
               arrow_forward
             </span>
           </i>
-        </div>
-        <div
-          class="items"
-        >
           <div
             data-testid="some-top-bar-item"
           >
             Some-content
           </div>
         </div>
+        <div
+          class="items"
+        />
       </div>
       <main>
         <div
