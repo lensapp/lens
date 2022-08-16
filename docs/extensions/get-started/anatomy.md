@@ -55,7 +55,7 @@ Some of the most-important fields include:
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens-extension-samples",
   "engines": {
-    "node": "^14.18.12",
+    "node": "^16.14.2",
     "lens": "5.4"
   },
   "main": "dist/main.js",
@@ -72,7 +72,7 @@ Some of the most-important fields include:
     "ts-loader": "^8.0.4",
     "typescript": "^4.5.5",
     "@types/react": "^17.0.44",
-    "@types/node": "^14.18.12",
+    "@types/node": "^16.14.2",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.11"
   }

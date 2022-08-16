@@ -115,6 +115,7 @@ export class ClusterFrameHandler {
         (view: LensView) => {
           logger.info(`[LENS-VIEW]: cluster id=${clusterId} should now be visible`);
           view.frame.classList.remove("hidden");
+          view.frame.focus();
           ipcRenderer.send(clusterVisibilityHandler, clusterId);
         },
       );

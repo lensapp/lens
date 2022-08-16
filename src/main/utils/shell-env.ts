@@ -6,7 +6,7 @@
 import shellEnvironment from "shell-env";
 import logger from "../logger";
 
-export type EnvironmentVariables = Record<string, string>;
+export type EnvironmentVariables = Partial<Record<string, string>>;
 
 let shellSyncFailed = false;
 

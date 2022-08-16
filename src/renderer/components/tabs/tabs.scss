@@ -54,11 +54,10 @@
       position: absolute;
       right: 0;
       bottom: 0;
-      width: 0;
-      height: $unit * 0.5;
-      transition: width 150ms;
+      height: 3px;
+      transition: opacity 150ms;
       background: currentColor;
-      color: var(--halfGray)
+      opacity: 0;
     }
 
     &:focus {
@@ -76,6 +75,7 @@
         left: 0;
         right: auto;
         color: var(--line-color-active);
+        opacity: 1;
       }
     }
   }

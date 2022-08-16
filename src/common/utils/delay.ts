@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { AbortController } from "abort-controller";
-
 /**
  * Return a promise that will be resolved after at least `timeout` ms have
  * passed. If `failFast` is provided then the promise is also resolved if it has

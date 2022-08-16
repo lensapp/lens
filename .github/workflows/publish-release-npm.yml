@@ -23,11 +23,11 @@ jobs:
 
       - name: Generate NPM package
         run: |
-           make build-npm
+          make build-npm
 
       - name: publish new release
         if: contains(github.ref, 'refs/tags/v')
         run: |
-           make publish-npm
+          make publish-npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
