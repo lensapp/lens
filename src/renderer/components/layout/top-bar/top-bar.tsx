@@ -25,6 +25,8 @@ import closeWindowInjectable from "./close-window.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
 import watchHistoryStateInjectable from "../../../remote-helpers/watch-history-state.injectable";
+import topBarItems2Injectable from "./top-bar-items/top-bar-items2.injectable";
+import type { TopBarItem } from "./top-bar-items/top-bar-item-injection-token";
 import welcomeRouteInjectable from "../../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
 import navigateToWelcomeInjectable from "../../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 
@@ -32,6 +34,7 @@ interface Dependencies {
   navigateToWelcomePage: () => void;
   welcomeRouteIsActive: IComputedValue<boolean>;
   items: IComputedValue<TopBarRegistration[]>;
+  items2: IComputedValue<TopBarItem[]>;
   isWindows: boolean;
   isLinux: boolean;
   prevEnabled: IComputedValue<Boolean>;
@@ -47,6 +50,9 @@ interface Dependencies {
 
 const NonInjectedTopBar = observer(({
   items,
+  items2,
+  navigateToCatalog,
+  catalogRouteIsActive,
   navigateToWelcomePage,
   welcomeRouteIsActive,
   isWindows,
@@ -79,9 +85,14 @@ const NonInjectedTopBar = observer(({
     <div
       className={styles.topBar}
       onDoubleClick={windowSizeToggle}
-      ref={elem}
-    >
+      ref={elem}>
       <div className={styles.items}>
+        {items2.get().map((item) => {
+          const Component = item.Component;
+
+          return <Component key={item.id} />;
+        })}
+
         {(isWindows || isLinux) && (
           <div className={styles.winMenu}>
             <div onClick={openAppContextMenu} data-testid="window-menu">
@@ -183,6 +194,7 @@ export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
   getProps: (di) => ({
     navigateToWelcomePage: di.inject(navigateToWelcomeInjectable),
     items: di.inject(topBarItemsInjectable),
+    items2: di.inject(topBarItems2Injectable),
     isLinux: di.inject(isLinuxInjectable),
     isWindows: di.inject(isWindowsInjectable),
     prevEnabled: di.inject(topBarPrevEnabledInjectable),
