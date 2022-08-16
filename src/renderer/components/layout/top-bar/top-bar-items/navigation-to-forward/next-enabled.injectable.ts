@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import topBarStateInjectable from "./state.injectable";
+import topBarStateInjectable from "../../state.injectable";
 
 const topBarNextEnabledInjectable = getInjectable({
   id: "top-bar-next-enabled",

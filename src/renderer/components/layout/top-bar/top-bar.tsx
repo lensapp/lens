@@ -7,7 +7,6 @@ import styles from "./top-bar.module.scss";
 import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
-import { Icon } from "../../icon";
 import { cssNames } from "../../../utils";
 import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -15,8 +14,6 @@ import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 import { UpdateButton } from "../../../../features/application-update/child-features/application-update-using-top-bar/renderer/update-button";
-import topBarNextEnabledInjectable from "./next-enabled.injectable";
-import goForwardInjectable from "./go-forward.injectable";
 import closeWindowInjectable from "./close-window.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
@@ -31,8 +28,6 @@ interface Dependencies {
   items2: IComputedValue<TopBarItem[]>;
   isWindows: boolean;
   isLinux: boolean;
-  nextEnabled: IComputedValue<Boolean>;
-  goForward: () => void;
   minimizeWindow: () => void;
   toggleMaximizeWindow: () => void;
   closeWindow: () => void;
@@ -44,8 +39,6 @@ const NonInjectedTopBar = observer(({
   items2,
   isWindows,
   isLinux,
-  nextEnabled,
-  goForward,
   closeWindow,
   minimizeWindow,
   toggleMaximizeWindow,
@@ -73,12 +66,6 @@ const NonInjectedTopBar = observer(({
           return <Component key={item.id} />;
         })}
 
-        <Icon
-          data-testid="history-forward"
-          material="arrow_forward"
-          onClick={goForward}
-          disabled={!nextEnabled.get()}
-        />
         <UpdateButton />
       </div>
       <div className={styles.items}>
@@ -148,8 +135,6 @@ export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
     items2: di.inject(topBarItems2Injectable),
     isLinux: di.inject(isLinuxInjectable),
     isWindows: di.inject(isWindowsInjectable),
-    nextEnabled: di.inject(topBarNextEnabledInjectable),
-    goForward: di.inject(goForwardInjectable),
     closeWindow: di.inject(closeWindowInjectable),
     minimizeWindow: di.inject(maximizeWindowInjectable),
     toggleMaximizeWindow: di.inject(toggleMaximizeWindowInjectable),

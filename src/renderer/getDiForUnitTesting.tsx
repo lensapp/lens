@@ -38,7 +38,6 @@ import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
-import goForwardInjectable from "./components/layout/top-bar/go-forward.injectable";
 import closeWindowInjectable from "./components/layout/top-bar/close-window.injectable";
 import maximizeWindowInjectable from "./components/layout/top-bar/maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./components/layout/top-bar/toggle-maximize-window.injectable";
@@ -147,7 +146,6 @@ export const getDiForUnitTesting = (
 
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(watchHistoryStateInjectable, () => () => () => {});
-    di.override(goForwardInjectable, () => () => {});
     di.override(closeWindowInjectable, () => () => {});
     di.override(maximizeWindowInjectable, () => () => {});
     di.override(toggleMaximizeWindowInjectable, () => () => {});
