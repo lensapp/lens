@@ -14,7 +14,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
-import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { UpdateButton } from "../../../../features/application-update/child-features/application-update-using-top-bar/renderer/update-button";
 import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
 import topBarNextEnabledInjectable from "./next-enabled.injectable";
@@ -30,8 +29,6 @@ import welcomeRouteInjectable from "../../../../common/front-end-routing/routes/
 import navigateToWelcomeInjectable from "../../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 
 interface Dependencies {
-  navigateToWelcomePage: () => void;
-  welcomeRouteIsActive: IComputedValue<boolean>;
   items: IComputedValue<TopBarRegistration[]>;
   items2: IComputedValue<TopBarItem[]>;
   isWindows: boolean;
@@ -49,10 +46,6 @@ interface Dependencies {
 const NonInjectedTopBar = observer(({
   items,
   items2,
-  navigateToCatalog,
-  catalogRouteIsActive,
-  navigateToWelcomePage,
-  welcomeRouteIsActive,
   isWindows,
   isLinux,
   prevEnabled,
@@ -65,10 +58,6 @@ const NonInjectedTopBar = observer(({
   watchHistoryState,
 }: Dependencies) => {
   const elem = useRef<HTMLDivElement | null>(null);
-
-  const goHome = () => {
-    navigateToWelcomePage();
-  };
 
   const windowSizeToggle = (evt: React.MouseEvent) => {
     if (elem.current === evt.target) {
@@ -90,12 +79,6 @@ const NonInjectedTopBar = observer(({
           return <Component key={item.id} />;
         })}
 
-        <Icon
-          data-testid="home-button"
-          material="home"
-          onClick={goHome}
-          disabled={welcomeRouteIsActive.get()}
-        />
         <Icon
           data-testid="history-back"
           material="arrow_back"
@@ -173,19 +156,12 @@ const renderRegisteredItems = (items: TopBarRegistration[]) => (
 
 export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
   getProps: (di) => ({
-    navigateToWelcomePage: di.inject(navigateToWelcomeInjectable),
     items: di.inject(topBarItemsInjectable),
     items2: di.inject(topBarItems2Injectable),
     isLinux: di.inject(isLinuxInjectable),
     isWindows: di.inject(isWindowsInjectable),
     prevEnabled: di.inject(topBarPrevEnabledInjectable),
     nextEnabled: di.inject(topBarNextEnabledInjectable),
-
-    welcomeRouteIsActive: di.inject(
-      routeIsActiveInjectable,
-      di.inject(welcomeRouteInjectable),
-    ),
-
     goBack: di.inject(goBackInjectable),
     goForward: di.inject(goForwardInjectable),
     closeWindow: di.inject(closeWindowInjectable),
