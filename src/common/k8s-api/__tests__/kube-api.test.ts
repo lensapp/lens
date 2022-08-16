@@ -217,9 +217,11 @@ describe("KubeApi", () => {
         });
 
         it("sets fields in the api instance", () => {
-          expect(ingressApi.apiVersionPreferred).toBe("v1");
-          expect(ingressApi.apiPrefix).toBe("/apis");
-          expect(ingressApi.apiGroup).toBe("networking.k8s.io");
+          expect(ingressApi).toEqual(expect.objectContaining({
+            apiVersionPreferred: "v1",
+            apiPrefix: "/apis",
+            apiGroup: "networking.k8s.io",
+          }));
         });
 
         it("registers the api with the changes info", () => {
@@ -424,9 +426,11 @@ describe("KubeApi", () => {
           });
 
           it("sets fields in the api instance", () => {
-            expect(ingressApi.apiVersionPreferred).toBe("v1beta1");
-            expect(ingressApi.apiPrefix).toBe("/apis");
-            expect(ingressApi.apiGroup).toBe("extensions");
+            expect(ingressApi).toEqual(expect.objectContaining({
+              apiVersionPreferred: "v1beta1",
+              apiPrefix: "/apis",
+              apiGroup: "extensions",
+            }));
           });
 
           it("registers the api with the changes info", () => {
