@@ -13,19 +13,18 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
-import closeAllWindowsInjectable from "../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
-import applicationWindowInjectable from "../../main/start-main-application/lens-window/application-window/application-window.injectable";
-import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
+import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
+import getCurrentApplicationWindowInjectable from "../../main/start-main-application/lens-window/application-window/get-current-application-window.injectable";
 
 describe("installing update using tray", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
 
@@ -48,7 +47,7 @@ describe("installing update using tray", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -56,23 +55,20 @@ describe("installing update using tray", () => {
     });
 
     it("user cannot install update yet", () => {
-      expect(applicationBuilder.tray.get("install-update")).toBeNull();
+      expect(builder.tray.get("install-update")).toBeNull();
     });
 
     describe("given all application windows are closed, when checking for updates", () => {
-      let applicationWindow: LensWindow;
-      let closeAllWindows: () => void;
+      let getCurrentApplicationWindow: () => LensWindow | undefined;
 
       beforeEach(() => {
-        const mainDi = applicationBuilder.dis.mainDi;
+        getCurrentApplicationWindow = builder.mainDi.inject(
+          getCurrentApplicationWindowInjectable,
+        );
 
-        closeAllWindows = mainDi.inject(closeAllWindowsInjectable);
+        builder.applicationWindow.closeAll();
 
-        applicationWindow = mainDi.inject(applicationWindowInjectable);
-
-        closeAllWindows();
-
-        applicationBuilder.tray.click("check-for-updates");
+        builder.tray.click("check-for-updates");
       });
 
       describe("when check for update resolves with new update", () => {
@@ -84,37 +80,44 @@ describe("installing update using tray", () => {
         });
 
         it("does not show application window yet", () => {
-          expect(applicationWindow.isVisible).toBe(false);
+          const actual = getCurrentApplicationWindow();
+
+          expect(actual).toBeUndefined();
         });
 
         describe("when download of update resolves with success", () => {
           beforeEach(async () => {
-
             await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
           });
 
           it("shows the application window", () => {
-            expect(applicationWindow.isVisible).toBe(true);
+            const actual = getCurrentApplicationWindow();
+
+            expect(actual).not.toBeUndefined();
           });
 
           it("given closing application window again and checking for updates again using tray, when check resolves with same version that was earlier downloaded, shows the application window", async () => {
-            closeAllWindows();
+            builder.applicationWindow.closeAll();
 
-            applicationBuilder.tray.click("check-for-updates");
+            builder.tray.click("check-for-updates");
 
             await checkForPlatformUpdatesMock.resolve({
               updateWasDiscovered: true,
               version: "some-version",
             });
 
-            expect(applicationWindow.isVisible).toBe(true);
+            const actual = getCurrentApplicationWindow();
+
+            expect(actual).not.toBeUndefined();
           });
         });
 
         it("when download of update resolves with failure, does not show the application window", async () => {
           await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: false });
 
-          expect(applicationWindow.isVisible).toBe(false);
+          const actual = getCurrentApplicationWindow();
+
+          expect(actual).toBeUndefined();
         });
       });
 
@@ -123,29 +126,31 @@ describe("installing update using tray", () => {
           updateWasDiscovered: false,
         });
 
-        expect(applicationWindow.isVisible).toBe(false);
+        const actual = getCurrentApplicationWindow();
+
+        expect(actual).toBeUndefined();
       });
     });
 
     describe("when user checks for updates using tray", () => {
       beforeEach(() => {
-        applicationBuilder.tray.click("check-for-updates");
+        builder.tray.click("check-for-updates");
       });
 
       it("user cannot check for updates again", () => {
         expect(
-          applicationBuilder.tray.get("check-for-updates")?.enabled,
+          builder.tray.get("check-for-updates")?.enabled,
         ).toBe(false);
       });
 
       it("name of tray item for checking updates indicates that checking is happening", () => {
         expect(
-          applicationBuilder.tray.get("check-for-updates")?.label,
+          builder.tray.get("check-for-updates")?.label,
         ).toBe("Checking for updates...");
       });
 
       it("user cannot install update yet", () => {
-        expect(applicationBuilder.tray.get("install-update")).toBeNull();
+        expect(builder.tray.get("install-update")).toBeNull();
       });
 
       it("renders", () => {
@@ -160,18 +165,18 @@ describe("installing update using tray", () => {
         });
 
         it("user cannot install update", () => {
-          expect(applicationBuilder.tray.get("install-update")).toBeNull();
+          expect(builder.tray.get("install-update")).toBeNull();
         });
 
         it("user can check for updates again", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.enabled,
+            builder.tray.get("check-for-updates")?.enabled,
           ).toBe(true);
         });
 
         it("name of tray item for checking updates no longer indicates that checking is happening", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.label,
+            builder.tray.get("check-for-updates")?.label,
           ).toBe("Check for updates");
         });
 
@@ -190,13 +195,13 @@ describe("installing update using tray", () => {
 
         it("user cannot check for updates again yet", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.enabled,
+            builder.tray.get("check-for-updates")?.enabled,
           ).toBe(false);
         });
 
         it("name of tray item for checking updates indicates that downloading is happening", () => {
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.label,
+            builder.tray.get("check-for-updates")?.label,
           ).toBe("Downloading update some-version (0%)...");
         });
 
@@ -204,12 +209,12 @@ describe("installing update using tray", () => {
           downloadPlatformUpdateMock.mock.calls[0][0]({ percentage: 42.424242 });
 
           expect(
-            applicationBuilder.tray.get("check-for-updates")?.label,
+            builder.tray.get("check-for-updates")?.label,
           ).toBe("Downloading update some-version (42%)...");
         });
 
         it("user still cannot install update", () => {
-          expect(applicationBuilder.tray.get("install-update")).toBeNull();
+          expect(builder.tray.get("install-update")).toBeNull();
         });
 
         it("renders", () => {
@@ -223,19 +228,19 @@ describe("installing update using tray", () => {
 
           it("user cannot install update", () => {
             expect(
-              applicationBuilder.tray.get("install-update"),
+              builder.tray.get("install-update"),
             ).toBeNull();
           });
 
           it("user can check for updates again", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.enabled,
+              builder.tray.get("check-for-updates")?.enabled,
             ).toBe(true);
           });
 
           it("name of tray item for checking updates no longer indicates that downloading is happening", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.label,
+              builder.tray.get("check-for-updates")?.label,
             ).toBe("Check for updates");
           });
 
@@ -251,19 +256,19 @@ describe("installing update using tray", () => {
 
           it("user can install update", () => {
             expect(
-              applicationBuilder.tray.get("install-update")?.label,
+              builder.tray.get("install-update")?.label,
             ).toBe("Install update some-version");
           });
 
           it("user can check for updates again", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.enabled,
+              builder.tray.get("check-for-updates")?.enabled,
             ).toBe(true);
           });
 
           it("name of tray item for checking updates no longer indicates that downloading is happening", () => {
             expect(
-              applicationBuilder.tray.get("check-for-updates")?.label,
+              builder.tray.get("check-for-updates")?.label,
             ).toBe("Check for updates");
           });
 

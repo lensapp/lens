@@ -12,8 +12,8 @@ export const overrideChannels = (mainDi: DiContainer) => {
   const overrideMessagingFromWindowToForWindow = overrideMessagingFromWindowToMain(mainDi);
   const overrideRequestingFromWindowToMainForWindow = overrideRequestingFromWindowToMain(mainDi);
 
-  return (windowDi: DiContainer) => {
-    overrideMessagingFromMainToWindowForWindow(windowDi);
+  return (windowDi: DiContainer, windowId: string) => {
+    overrideMessagingFromMainToWindowForWindow(windowDi, windowId);
     overrideMessagingFromWindowToForWindow(windowDi);
     overrideRequestingFromWindowToMainForWindow(windowDi);
   };

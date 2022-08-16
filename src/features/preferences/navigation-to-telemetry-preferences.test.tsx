@@ -6,27 +6,26 @@ import type { RenderResult } from "@testing-library/react";
 import React from "react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { FakeExtensionData } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import navigateToTelemetryPreferencesInjectable from "../../common/front-end-routing/routes/preferences/telemetry/navigate-to-telemetry-preferences.injectable";
 import sentryDnsUrlInjectable from "../../renderer/components/+preferences/sentry-dns-url.injectable";
+import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("preferences - navigation to telemetry preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeRender(() => {
-        applicationBuilder.preferences.navigate();
+      builder.beforeWindowStart(() => {
+        builder.preferences.navigate();
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -47,11 +46,8 @@ describe("preferences - navigation to telemetry preferences", () => {
 
     describe("when extension with telemetry preference items gets enabled", () => {
       beforeEach(() => {
-        const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-        const testExtensionWithTelemetryPreferenceItems = getRendererExtensionFake(extensionStubWithTelemetryPreferenceItems);
-
-        applicationBuilder.extensions.renderer.enable(
-          testExtensionWithTelemetryPreferenceItems,
+        builder.extensions.enable(
+          extensionStubWithTelemetryPreferenceItems,
         );
       });
 
@@ -67,7 +63,7 @@ describe("preferences - navigation to telemetry preferences", () => {
 
       describe("when clicking link to telemetry preferences from navigation", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.navigation.click("telemetry");
+          builder.preferences.navigation.click("telemetry");
         });
 
         it("renders", () => {
@@ -91,23 +87,21 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("given extensions but no telemetry preference items, does not show link for telemetry preferences", () => {
-      const getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
-      const testExtensionWithTelemetryPreferenceItems = getRendererExtensionFake({
+      builder.extensions.enable({
         id: "some-test-extension-id",
         name: "some-test-extension-name",
-        appPreferences: [
-          {
-            title: "irrelevant",
-            id: "irrelevant",
-            showInPreferencesTab: "not-telemetry",
-            components: { Hint: () => <div />, Input: () => <div /> },
-          },
-        ],
-      });
 
-      applicationBuilder.extensions.renderer.enable(
-        testExtensionWithTelemetryPreferenceItems,
-      );
+        rendererOptions: {
+          appPreferences: [
+            {
+              title: "irrelevant",
+              id: "irrelevant",
+              showInPreferencesTab: "not-telemetry",
+              components: { Hint: () => <div />, Input: () => <div /> },
+            },
+          ],
+        },
+      });
 
       const actual = rendered.queryByTestId("tab-link-for-telemetry");
 
@@ -119,18 +113,18 @@ describe("preferences - navigation to telemetry preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-        rendererDi.override(sentryDnsUrlInjectable, () => "some-sentry-dns-url");
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(sentryDnsUrlInjectable, () => "some-sentry-dns-url");
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
 
-      applicationBuilder.preferences.navigate();
+      builder.preferences.navigate();
     });
 
     describe("when navigating to telemetry preferences", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click("telemetry");
+        builder.preferences.navigation.click("telemetry");
       });
 
       it("renders", () => {
@@ -149,13 +143,15 @@ describe("preferences - navigation to telemetry preferences", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-        rendererDi.override(sentryDnsUrlInjectable, () => null);
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(sentryDnsUrlInjectable, () => null);
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
 
-      const navigateToTelemetryPreferences = applicationBuilder.dis.rendererDi.inject(navigateToTelemetryPreferencesInjectable);
+      const windowDi = builder.applicationWindow.only.di;
+
+      const navigateToTelemetryPreferences = windowDi.inject(navigateToTelemetryPreferencesInjectable);
 
       navigateToTelemetryPreferences();
     });
@@ -172,19 +168,22 @@ describe("preferences - navigation to telemetry preferences", () => {
   });
 });
 
-const extensionStubWithTelemetryPreferenceItems: FakeExtensionData = {
+const extensionStubWithTelemetryPreferenceItems: FakeExtensionOptions = {
   id: "some-test-extension-id",
   name: "some-test-extension-name",
-  appPreferences: [
-    {
-      title: "Some telemetry-preference item",
-      id: "some-telemetry-preference-item-id",
-      showInPreferencesTab: "telemetry",
 
-      components: {
-        Hint: () => <div data-testid="some-preference-item-hint" />,
-        Input: () => <div data-testid="some-preference-item-input" />,
+  rendererOptions: {
+    appPreferences: [
+      {
+        title: "Some telemetry-preference item",
+        id: "some-telemetry-preference-item-id",
+        showInPreferencesTab: "telemetry",
+
+        components: {
+          Hint: () => <div data-testid="some-preference-item-hint" />,
+          Input: () => <div data-testid="some-preference-item-input" />,
+        },
       },
-    },
-  ],
+    ],
+  },
 };

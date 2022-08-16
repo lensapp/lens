@@ -35,10 +35,7 @@ describe("force user to update when too long since update was downloaded", () =>
 
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
-      rendererDi.unoverride(forceUpdateModalRootFrameComponentInjectable);
-      rendererDi.permitSideEffects(forceUpdateModalRootFrameComponentInjectable);
-
+    applicationBuilder.beforeApplicationStart(mainDi => {
       checkForPlatformUpdatesMock = asyncFn();
 
       mainDi.override(checkForPlatformUpdatesInjectable, () => checkForPlatformUpdatesMock);
@@ -50,13 +47,17 @@ describe("force user to update when too long since update was downloaded", () =>
       quitAndInstallUpdateMock = jest.fn();
 
       mainDi.override(quitAndInstallUpdateInjectable, () => quitAndInstallUpdateMock);
-
-      rendererDi.override(timeAfterUpdateMustBeInstalledInjectable, () => TIME_AFTER_UPDATE_MUST_BE_INSTALLED);
-
-      rendererDi.override(secondsAfterInstallStartsInjectable, () => TIME_AFTER_INSTALL_STARTS / 1000);
     });
 
-    mainDi = applicationBuilder.dis.mainDi;
+    applicationBuilder.beforeWindowStart(windowDi => {
+      windowDi.unoverride(forceUpdateModalRootFrameComponentInjectable);
+      windowDi.permitSideEffects(forceUpdateModalRootFrameComponentInjectable);
+
+      windowDi.override(timeAfterUpdateMustBeInstalledInjectable, () => TIME_AFTER_UPDATE_MUST_BE_INSTALLED);
+      windowDi.override(secondsAfterInstallStartsInjectable, () => TIME_AFTER_INSTALL_STARTS / 1000);
+    });
+
+    mainDi = applicationBuilder.mainDi;
   });
 
   describe("when application is started", () => {

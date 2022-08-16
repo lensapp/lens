@@ -20,8 +20,7 @@ import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.inje
 import isMacInjectable from "../../common/vars/is-mac.injectable";
 import { computed } from "mobx";
 import showAboutInjectable from "./show-about.injectable";
-import applicationWindowInjectable from "../start-main-application/lens-window/application-window/application-window.injectable";
-import reloadWindowInjectable from "../start-main-application/lens-window/reload-window.injectable";
+import reloadCurrentApplicationWindowInjectable from "../start-main-application/lens-window/reload-current-application-window.injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 import processCheckingForUpdatesInjectable from "../application-update/check-for-updates/process-checking-for-updates.injectable";
 import openLinkInBrowserInjectable from "../../common/utils/open-link-in-browser.injectable";
@@ -44,9 +43,8 @@ const applicationMenuItemsInjectable = getInjectable({
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
     const showAbout = di.inject(showAboutInjectable);
-    const applicationWindow = di.inject(applicationWindowInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
-    const reloadApplicationWindow = di.inject(reloadWindowInjectable, applicationWindow);
+    const reloadApplicationWindow = di.inject(reloadCurrentApplicationWindowInjectable);
     const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
     const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
     const navigateToCatalog = di.inject(navigateToCatalogInjectable);

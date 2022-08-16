@@ -19,7 +19,7 @@ import showErrorNotificationInjectable from "../../renderer/components/notificat
 import type { AsyncResult } from "../../common/utils/async-result";
 
 describe("add custom helm repository in preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
@@ -31,41 +31,35 @@ describe("add custom helm repository in preferences", () => {
   beforeEach(async () => {
     jest.useFakeTimers();
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();
+    showSuccessNotificationMock = jest.fn();
+    showErrorNotificationMock = jest.fn();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
-      rendererDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
-
-      showSuccessNotificationMock = jest.fn();
-
-      rendererDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
-
-      showErrorNotificationMock = jest.fn();
-
-      rendererDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
-
-      // TODO: Figure out how to make async validators unit testable
-      rendererDi.override(isPathInjectable, () => ({ debounce: 0, validate: async () => {} }));
-
-      mainDi.override(
-        getActiveHelmRepositoriesInjectable,
-        () => getActiveHelmRepositoriesMock,
-      );
-
+    builder.beforeApplicationStart((mainDi) => {
+      mainDi.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
     });
 
-    rendered = await applicationBuilder.render();
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+      windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
+      windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
+
+      // TODO: Figure out how to make async validators unit testable
+      windowDi.override(isPathInjectable, () => ({ debounce: 0, validate: async () => {} }));
+    });
+
+    rendered = await builder.render();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {
     beforeEach(async () => {
-      applicationBuilder.preferences.navigate();
-      applicationBuilder.preferences.navigation.click("kubernetes");
+      builder.preferences.navigate();
+      builder.preferences.navigation.click("kubernetes");
     });
 
     it("renders", () => {

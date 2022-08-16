@@ -14,15 +14,15 @@ import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-t
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 
 describe("periodical checking of updates", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let processCheckingForUpdatesMock: jest.Mock;
 
   beforeEach(() => {
     useFakeTime("2015-10-21T07:28:00Z");
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.unoverride(periodicalCheckForUpdatesInjectable);
       mainDi.permitSideEffects(periodicalCheckForUpdatesInjectable);
 
@@ -39,12 +39,12 @@ describe("periodical checking of updates", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      builder.beforeApplicationStart((mainDi) => {
         mainDi.override(electronUpdaterIsActiveInjectable, () => true);
         mainDi.override(publishIsConfiguredInjectable, () => true);
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -74,12 +74,12 @@ describe("periodical checking of updates", () => {
 
   describe("given updater is enabled but no configuration exist, when started", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      builder.beforeApplicationStart((mainDi) => {
         mainDi.override(electronUpdaterIsActiveInjectable, () => true);
         mainDi.override(publishIsConfiguredInjectable, () => false);
       });
 
-      await applicationBuilder.render();
+      await builder.render();
     });
 
     it("does not check for updates", () => {
@@ -95,12 +95,12 @@ describe("periodical checking of updates", () => {
 
   describe("given updater is not enabled but and configuration exist, when started", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      builder.beforeApplicationStart((mainDi) => {
         mainDi.override(electronUpdaterIsActiveInjectable, () => false);
         mainDi.override(publishIsConfiguredInjectable, () => true);
       });
 
-      await applicationBuilder.render();
+      await builder.render();
     });
 
     it("does not check for updates", () => {

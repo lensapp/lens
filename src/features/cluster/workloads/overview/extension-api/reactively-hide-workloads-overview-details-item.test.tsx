@@ -9,7 +9,6 @@ import React from "react";
 import navigateToWorkloadsOverviewInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/overview/navigate-to-workloads-overview.injectable";
 import type { ApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
-import { getExtensionFakeFor } from "../../../../../renderer/components/test-utils/get-extension-fake";
 
 describe("reactively hide workloads overview details item", () => {
   let builder: ApplicationBuilder;
@@ -19,15 +18,11 @@ describe("reactively hide workloads overview details item", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    const rendererDi = builder.dis.rendererDi;
-
     builder.setEnvironmentToClusterFrame();
-
-    const getExtensionFake = getExtensionFakeFor(builder);
 
     someObservable = observable.box(false);
 
-    const testExtension = getExtensionFake({
+    const testExtension = {
       id: "test-extension-id",
       name: "test-extension",
 
@@ -44,11 +39,13 @@ describe("reactively hide workloads overview details item", () => {
           },
         ],
       },
-    });
+    };
 
     rendered = await builder.render();
 
-    const navigateToWorkloadsOverview = rendererDi.inject(
+    const windowDi = builder.applicationWindow.only.di;
+
+    const navigateToWorkloadsOverview = windowDi.inject(
       navigateToWorkloadsOverviewInjectable,
     );
 

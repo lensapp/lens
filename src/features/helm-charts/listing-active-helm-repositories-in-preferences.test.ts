@@ -18,7 +18,7 @@ import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 
 describe("listing active helm repositories in preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let readYamlFileMock: AsyncFnMock<ReadYamlFile>;
   let execFileMock: AsyncFnMock<ReturnType<typeof execFileInjectable["instantiate"]>>;
@@ -26,31 +26,33 @@ describe("listing active helm repositories in preferences", () => {
   let showErrorNotificationMock: jest.Mock;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     readYamlFileMock = asyncFn();
     execFileMock = asyncFn();
+    showErrorNotificationMock = jest.fn();
 
     loggerStub = { error: jest.fn() } as unknown as Logger;
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
-      showErrorNotificationMock = jest.fn();
-
-      rendererDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
-      rendererDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
       mainDi.override(loggerInjectable, () => loggerStub);
     });
 
-    rendered = await applicationBuilder.render();
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
+      windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+    });
+
+    rendered = await builder.render();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {
     beforeEach(async () => {
-      applicationBuilder.preferences.navigate();
-      applicationBuilder.preferences.navigation.click("kubernetes");
+      builder.preferences.navigate();
+      builder.preferences.navigation.click("kubernetes");
     });
 
     it("renders", () => {

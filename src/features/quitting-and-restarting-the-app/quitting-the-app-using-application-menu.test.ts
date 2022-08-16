@@ -6,7 +6,6 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { ClusterManager } from "../../main/cluster-manager";
-import { lensWindowInjectionToken } from "../../main/start-main-application/lens-window/application-window/lens-window-injection-token";
 import exitAppInjectable from "../../main/electron-app/features/exit-app.injectable";
 import clusterManagerInjectable from "../../main/cluster-manager.injectable";
 import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
@@ -14,15 +13,17 @@ import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-t
 
 describe("quitting the app using application menu", () => {
   describe("given application has started", () => {
-    let applicationBuilder: ApplicationBuilder;
+    let builder: ApplicationBuilder;
     let clusterManagerStub: ClusterManager;
     let exitAppMock: jest.Mock;
 
     beforeEach(async () => {
       useFakeTime("2015-10-21T07:28:00Z");
 
-      applicationBuilder = getApplicationBuilder().beforeApplicationStart(
-        ({ mainDi }) => {
+      builder = getApplicationBuilder();
+
+      builder.beforeApplicationStart(
+        (mainDi) => {
           mainDi.unoverride(stopServicesAndExitAppInjectable);
 
           clusterManagerStub = { stop: jest.fn() } as unknown as ClusterManager;
@@ -33,38 +34,24 @@ describe("quitting the app using application menu", () => {
         },
       );
 
-      await applicationBuilder.render();
+      await builder.render();
     });
 
-    it("only an application window is open", () => {
-      const windows = applicationBuilder.dis.mainDi.injectMany(
-        lensWindowInjectionToken,
-      );
+    it("first application window is open", () => {
+      const windows = builder.applicationWindow.getAll();
 
-      expect(
-        windows.map((window) => ({ id: window.id, visible: window.isVisible })),
-      ).toEqual([
-        { id: "only-application-window", visible: true },
-        { id: "splash", visible: false },
-      ]);
+      expect(windows.map((window) => window.id)).toEqual(["first-application-window"]);
     });
 
     describe("when application is quit", () => {
       beforeEach(() => {
-        applicationBuilder.applicationMenu.click("root.quit");
+        builder.applicationMenu.click("root.quit");
       });
 
       it("closes all windows", () => {
-        const windows = applicationBuilder.dis.mainDi.injectMany(
-          lensWindowInjectionToken,
-        );
+        const windows = builder.applicationWindow.getAll();
 
-        expect(
-          windows.map((window) => ({ id: window.id, visible: window.isVisible })),
-        ).toEqual([
-          { id: "only-application-window", visible: false },
-          { id: "splash", visible: false },
-        ]);
+        expect(windows).toEqual([]);
       });
 
       it("disconnects all clusters", () => {

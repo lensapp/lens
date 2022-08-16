@@ -14,15 +14,10 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("app-paths", () => {
-  let applicationBuilder: ApplicationBuilder;
-  let rendererDi: DiContainer;
-  let mainDi: DiContainer;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
-
-    rendererDi = applicationBuilder.dis.rendererDi;
-    mainDi = applicationBuilder.dis.mainDi;
+    builder = getApplicationBuilder();
 
     const defaultAppPathsStub: AppPaths = {
       appData: "some-app-data",
@@ -43,7 +38,7 @@ describe("app-paths", () => {
       userData: "some-irrelevant-user-data",
     };
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(
         getElectronAppPathInjectable,
         () =>
@@ -64,12 +59,18 @@ describe("app-paths", () => {
   });
 
   describe("normally", () => {
+    let windowDi: DiContainer;
+    let mainDi: DiContainer;
+
     beforeEach(async () => {
-      await applicationBuilder.render();
+      await builder.render();
+
+      windowDi = builder.applicationWindow.only.di;
+      mainDi = builder.mainDi;
     });
 
     it("given in renderer, when injecting app paths, returns application specific app paths", () => {
-      const actual = rendererDi.inject(appPathsInjectionToken);
+      const actual = windowDi.inject(appPathsInjectionToken);
 
       expect(actual).toEqual({
         appData: "some-app-data",
@@ -116,19 +117,23 @@ describe("app-paths", () => {
   });
 
   describe("when running integration tests", () => {
+    let windowDi: DiContainer;
+
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      builder.beforeApplicationStart((mainDi) => {
         mainDi.override(
           directoryForIntegrationTestingInjectable,
           () => "some-integration-testing-app-data",
         );
       });
 
-      await applicationBuilder.render();
+      await builder.render();
+
+      windowDi = builder.applicationWindow.only.di;
     });
 
     it("given in renderer, when injecting path for app data, has integration specific app data path", () => {
-      const { appData, userData } = rendererDi.inject(appPathsInjectionToken);
+      const { appData, userData } = windowDi.inject(appPathsInjectionToken);
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
@@ -137,7 +142,7 @@ describe("app-paths", () => {
     });
 
     it("given in main, when injecting path for app data, has integration specific app data path", () => {
-      const { appData, userData } = rendererDi.inject(appPathsInjectionToken);
+      const { appData, userData } = windowDi.inject(appPathsInjectionToken);
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",

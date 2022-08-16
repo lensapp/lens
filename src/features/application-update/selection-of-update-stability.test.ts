@@ -22,26 +22,25 @@ import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-upda
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
 import appVersionInjectable from "../../common/vars/app-version.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 
 describe("selection of update stability", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let quitAndInstallUpdateMock: jest.Mock;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
   let showInfoNotificationMock: jest.Mock;
+  let mainDi: DiContainer;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi, rendererDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       quitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
-      showInfoNotificationMock = jest.fn(() => () => {});
-
-      rendererDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
 
       mainDi.override(setUpdateOnQuitInjectable, () => setUpdateOnQuitMock);
 
@@ -63,6 +62,14 @@ describe("selection of update stability", () => {
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
     });
+
+    builder.beforeWindowStart((windowDi) => {
+      showInfoNotificationMock = jest.fn(() => () => {});
+
+      windowDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
+    });
+
+    mainDi = builder.mainDi;
   });
 
   describe("when started", () => {
@@ -70,9 +77,9 @@ describe("selection of update stability", () => {
     let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
 
-      processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+      processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
     });
 
     it("renders", () => {
@@ -86,7 +93,7 @@ describe("selection of update stability", () => {
       };
 
       beforeEach(() => {
-        selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
+        selectedUpdateChannel = mainDi.inject(
           selectedUpdateChannelInjectable,
         );
 
@@ -177,7 +184,7 @@ describe("selection of update stability", () => {
       };
 
       beforeEach(() => {
-        selectedUpdateChannel = applicationBuilder.dis.mainDi.inject(
+        selectedUpdateChannel = mainDi.inject(
           selectedUpdateChannelInjectable,
         );
 
@@ -224,7 +231,7 @@ describe("selection of update stability", () => {
   });
 
   it("given valid update channel selection is stored, when checking for updates, checks for updates from the update channel", async () => {
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       // TODO: Switch to more natural way of setting initial value
       // TODO: UserStore is currently responsible for getting and setting initial value
       const selectedUpdateChannel = mainDi.inject(selectedUpdateChannelInjectable);
@@ -232,9 +239,9 @@ describe("selection of update stability", () => {
       selectedUpdateChannel.setValue(updateChannels.beta.id);
     });
 
-    await applicationBuilder.render();
+    await builder.render();
 
-    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+    const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
     processCheckingForUpdates("irrelevant");
 
@@ -242,7 +249,7 @@ describe("selection of update stability", () => {
   });
 
   it("given invalid update channel selection is stored, when checking for updates, checks for updates from the update channel", async () => {
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       // TODO: Switch to more natural way of setting initial value
       // TODO: UserStore is currently responsible for getting and setting initial value
       const selectedUpdateChannel = mainDi.inject(selectedUpdateChannelInjectable);
@@ -250,9 +257,9 @@ describe("selection of update stability", () => {
       selectedUpdateChannel.setValue("something-invalid" as UpdateChannelId);
     });
 
-    await applicationBuilder.render();
+    await builder.render();
 
-    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+    const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
     processCheckingForUpdates("irrelevant");
 
@@ -260,13 +267,13 @@ describe("selection of update stability", () => {
   });
 
   it('given no update channel selection is stored and currently using stable release, when user checks for updates, checks for updates from "latest" update channel by default', async () => {
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(appVersionInjectable, () => "1.0.0");
     });
 
-    await applicationBuilder.render();
+    await builder.render();
 
-    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+    const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
     processCheckingForUpdates("irrelevant");
 
@@ -277,13 +284,13 @@ describe("selection of update stability", () => {
   });
 
   it('given no update channel selection is stored and currently using alpha release, when checking for updates, checks for updates from "alpha" channel', async () => {
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(appVersionInjectable, () => "1.0.0-alpha");
     });
 
-    await applicationBuilder.render();
+    await builder.render();
 
-    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+    const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
     processCheckingForUpdates("irrelevant");
 
@@ -291,13 +298,13 @@ describe("selection of update stability", () => {
   });
 
   it('given no update channel selection is stored and currently using beta release, when checking for updates, checks for updates from "beta" channel', async () => {
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(appVersionInjectable, () => "1.0.0-beta");
     });
 
-    await applicationBuilder.render();
+    await builder.render();
 
-    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+    const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
     processCheckingForUpdates("irrelevant");
 
@@ -305,7 +312,7 @@ describe("selection of update stability", () => {
   });
 
   it("given update channel selection is stored and currently using prerelease, when checking for updates, checks for updates from stored channel", async () => {
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    builder.beforeApplicationStart((mainDi) => {
       mainDi.override(appVersionInjectable, () => "1.0.0-alpha");
 
       // TODO: Switch to more natural way of setting initial value
@@ -315,9 +322,9 @@ describe("selection of update stability", () => {
       selectedUpdateChannel.setValue(updateChannels.beta.id);
     });
 
-    await applicationBuilder.render();
+    await builder.render();
 
-    const processCheckingForUpdates = applicationBuilder.dis.mainDi.inject(processCheckingForUpdatesInjectable);
+    const processCheckingForUpdates = mainDi.inject(processCheckingForUpdatesInjectable);
 
     processCheckingForUpdates("irrelevant");
 

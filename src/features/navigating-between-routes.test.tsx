@@ -20,32 +20,34 @@ import { navigateToRouteInjectionToken } from "../common/front-end-routing/navig
 import routePathParametersInjectable from "../renderer/routes/route-path-parameters.injectable";
 
 describe("navigating between routes", () => {
-  let rendererDi: DiContainer;
   let rendered: RenderResult;
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
-    rendererDi = applicationBuilder.dis.rendererDi;
+    builder = getApplicationBuilder();
   });
 
   describe("given route without path parameters", () => {
+    let windowDi: DiContainer;
+
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-        rendererDi.register(testRouteWithoutPathParametersInjectable);
-        rendererDi.register(testRouteWithoutPathParametersComponentInjectable);
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.register(testRouteWithoutPathParametersInjectable);
+        windowDi.register(testRouteWithoutPathParametersComponentInjectable);
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
+
+      windowDi = builder.applicationWindow.only.di;
     });
 
     describe("when navigating to route", () => {
       let route: Route;
 
       beforeEach(() => {
-        const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
+        const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
 
-        route = rendererDi.inject(testRouteWithoutPathParametersInjectable);
+        route = windowDi.inject(testRouteWithoutPathParametersInjectable);
 
         navigateToRoute(route);
       });
@@ -55,35 +57,35 @@ describe("navigating between routes", () => {
       });
 
       it("knows current route", () => {
-        const currentRoute = rendererDi.inject(currentRouteInjectable);
+        const currentRoute = windowDi.inject(currentRouteInjectable);
 
         expect(currentRoute.get()).toBe(route);
       });
 
       it("knows current path", () => {
-        const currentPath = rendererDi.inject(currentPathInjectable);
+        const currentPath = windowDi.inject(currentPathInjectable);
 
         expect(currentPath.get()).toBe("/some-path");
       });
 
       it("does not have query parameters", () => {
-        const queryParameters = rendererDi.inject(queryParametersInjectable);
+        const queryParameters = windowDi.inject(queryParametersInjectable);
 
         expect(queryParameters.get()).toEqual({});
       });
 
       it("does not have path parameters", () => {
-        const pathParameters = rendererDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
 
         expect(pathParameters.get()).toEqual({});
       });
     });
 
     it("when navigating to route with query parameters, knows query parameters", () => {
-      const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
-      const queryParameters = rendererDi.inject(queryParametersInjectable);
+      const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+      const queryParameters = windowDi.inject(queryParametersInjectable);
 
-      const route = rendererDi.inject(testRouteWithoutPathParametersInjectable);
+      const route = windowDi.inject(testRouteWithoutPathParametersInjectable);
 
       navigateToRoute(route, {
         query: {
@@ -100,23 +102,26 @@ describe("navigating between routes", () => {
   });
 
   describe("given route with optional path parameters", () => {
+    let windowDi: DiContainer;
+
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-        rendererDi.register(routeWithOptionalPathParametersInjectable);
-        rendererDi.register(routeWithOptionalPathParametersComponentInjectable);
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.register(routeWithOptionalPathParametersInjectable);
+        windowDi.register(routeWithOptionalPathParametersComponentInjectable);
       });
 
+      rendered = await builder.render();
 
-      rendered = await applicationBuilder.render();
+      windowDi = builder.applicationWindow.only.di;
     });
 
     describe("when navigating to route with path parameters", () => {
       let route: Route<any>;
 
       beforeEach(() => {
-        route = rendererDi.inject(routeWithOptionalPathParametersInjectable);
+        route = windowDi.inject(routeWithOptionalPathParametersInjectable);
 
-        const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
+        const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
 
         navigateToRoute(route, {
           parameters: {
@@ -131,13 +136,13 @@ describe("navigating between routes", () => {
       });
 
       it("knows current route", () => {
-        const currentRoute = rendererDi.inject(currentRouteInjectable);
+        const currentRoute = windowDi.inject(currentRouteInjectable);
 
         expect(currentRoute.get()).toBe(route);
       });
 
       it("knows current path", () => {
-        const currentPath = rendererDi.inject(currentPathInjectable);
+        const currentPath = windowDi.inject(currentPathInjectable);
 
         expect(currentPath.get()).toBe(
           "/some-path/some-value/some-other-value",
@@ -145,7 +150,7 @@ describe("navigating between routes", () => {
       });
 
       it("knows path parameters", () => {
-        const pathParameters = rendererDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: "some-value",
@@ -158,27 +163,27 @@ describe("navigating between routes", () => {
       let route: Route<any>;
 
       beforeEach(() => {
-        route = rendererDi.inject(routeWithOptionalPathParametersInjectable);
+        route = windowDi.inject(routeWithOptionalPathParametersInjectable);
 
-        const navigateToRoute = rendererDi.inject(navigateToRouteInjectionToken);
+        const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
 
         navigateToRoute(route);
       });
 
       it("knows current route", () => {
-        const currentRoute = rendererDi.inject(currentRouteInjectable);
+        const currentRoute = windowDi.inject(currentRouteInjectable);
 
         expect(currentRoute.get()).toBe(route);
       });
 
       it("knows current path", () => {
-        const currentPath = rendererDi.inject(currentPathInjectable);
+        const currentPath = windowDi.inject(currentPathInjectable);
 
         expect(currentPath.get()).toBe("/some-path");
       });
 
       it("knows path parameters", () => {
-        const pathParameters = rendererDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: undefined,

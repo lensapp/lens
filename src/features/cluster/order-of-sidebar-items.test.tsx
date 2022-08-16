@@ -14,19 +14,21 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 
 describe("cluster - order of sidebar items", () => {
   let rendered: RenderResult;
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.register(testSidebarItemsInjectable);
+    builder.setEnvironmentToClusterFrame();
+
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.register(testSidebarItemsInjectable);
     });
   });
 
   describe("when rendered", () => {
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {

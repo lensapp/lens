@@ -4,11 +4,10 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
-import type { GetRendererExtensionFake, TestExtension } from "../../renderer/components/test-utils/get-renderer-extension-fake";
-import { getRendererExtensionFakeFor } from "../../renderer/components/test-utils/get-renderer-extension-fake";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
+import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("status-bar-items-originating-from-extensions", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -16,50 +15,53 @@ describe("status-bar-items-originating-from-extensions", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.unoverride(getRandomIdInjectable);
-      rendererDi.permitSideEffects(getRandomIdInjectable);
+    applicationBuilder.beforeWindowStart((windowDi) => {
+      windowDi.unoverride(getRandomIdInjectable);
+      windowDi.permitSideEffects(getRandomIdInjectable);
     });
   });
 
   describe("when application starts", () => {
     let rendered: RenderResult;
-    let getRendererExtensionFake: GetRendererExtensionFake;
 
     beforeEach(async () => {
       rendered = await applicationBuilder.render();
-      getRendererExtensionFake = getRendererExtensionFakeFor(applicationBuilder);
     });
 
     it("when multiple extensions with status bar items are loaded, shows items in correct order", () => {
-      const testExtension1 = getRendererExtensionFake({
+      const testExtension1 = {
         id: "some-id",
         name: "some-name",
 
-        statusBarItems: [
-          {
-            components: {
-              Item: () => <div data-testid="some-testId">extension1</div>,
-              position: "right",
+        rendererOptions: {
+          statusBarItems: [
+            {
+              components: {
+                Item: () => <div data-testid="some-testId">extension1</div>,
+                position: "right" as const,
+              },
             },
-          },
-        ],
-      });
+          ],
+        },
+      };
 
-      const testExtension2 = getRendererExtensionFake({
+      const testExtension2 = {
         id: "some-other-id",
         name: "some-other-name",
-        statusBarItems: [
-          {
-            components: {
-              Item: () => <div data-testid="some-testId">extension2</div>,
-              position: "right",
-            },
-          },
-        ],
-      });
 
-      applicationBuilder.extensions.renderer.enable(testExtension1, testExtension2);
+        rendererOptions: {
+          statusBarItems: [
+            {
+              components: {
+                Item: () => <div data-testid="some-testId">extension2</div>,
+                position: "right" as const,
+              },
+            },
+          ],
+        },
+      };
+
+      applicationBuilder.extensions.enable(testExtension1, testExtension2);
 
       const rightSide = rendered.getByTestId("status-bar-right");
 
@@ -72,41 +74,44 @@ describe("status-bar-items-originating-from-extensions", () => {
     });
 
     describe("when extension with status bar items is loaded", () => {
-      let testExtension: TestExtension;
+      let testExtensionOptions: FakeExtensionOptions;
 
       beforeEach(() => {
-        testExtension = getRendererExtensionFake({
+        testExtensionOptions = {
           id: "some-id",
           name: "some-name",
-          statusBarItems: [
-            {
-              item: () => <span data-testid="some-testId">right1</span>,
-            },
-            {
-              item: () => <span data-testid="some-testId">right2</span>,
-            },
-            {
-              components: {
-                Item: () => <div data-testid="some-testId">right3</div>,
-                position: "right",
-              },
-            },
-            {
-              components: {
-                Item: () => <div data-testid="some-testId">left1</div>,
-                position: "left",
-              },
-            },
-            {
-              components: {
-                Item: () => <div data-testid="some-testId">left2</div>,
-                position: "left",
-              },
-            },
-          ],
-        });
 
-        applicationBuilder.extensions.renderer.enable(testExtension);
+          rendererOptions: {
+            statusBarItems: [
+              {
+                item: () => <span data-testid="some-testId">right1</span>,
+              },
+              {
+                item: () => <span data-testid="some-testId">right2</span>,
+              },
+              {
+                components: {
+                  Item: () => <div data-testid="some-testId">right3</div>,
+                  position: "right" as const,
+                },
+              },
+              {
+                components: {
+                  Item: () => <div data-testid="some-testId">left1</div>,
+                  position: "left" as const,
+                },
+              },
+              {
+                components: {
+                  Item: () => <div data-testid="some-testId">left2</div>,
+                  position: "left" as const,
+                },
+              },
+            ],
+          },
+        };
+
+        applicationBuilder.extensions.enable(testExtensionOptions);
       });
 
       it("renders", () => {
@@ -134,7 +139,7 @@ describe("status-bar-items-originating-from-extensions", () => {
       });
 
       it("when the extension is removed, shows there are no extension status bar items", () => {
-        applicationBuilder.extensions.renderer.disable(testExtension);
+        applicationBuilder.extensions.disable(testExtensionOptions);
 
         const actual = rendered.queryAllByTestId("some-testId");
 

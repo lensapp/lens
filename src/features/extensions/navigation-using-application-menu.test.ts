@@ -12,18 +12,20 @@ import focusWindowInjectable from "../../renderer/navigation/focus-window.inject
 jest.mock("../../renderer/components/input/input");
 
 describe("extensions - navigation using application menu", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let focusWindowMock: jest.Mock;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().beforeApplicationStart(({ rendererDi }) => {
+    builder = getApplicationBuilder();
+
+    builder.beforeWindowStart((windowDi) => {
       focusWindowMock = jest.fn();
 
-      rendererDi.override(focusWindowInjectable, () => focusWindowMock);
+      windowDi.override(focusWindowInjectable, () => focusWindowMock);
     });
 
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
   });
 
   it("renders", () => {
@@ -38,7 +40,7 @@ describe("extensions - navigation using application menu", () => {
 
   describe("when navigating to extensions using application menu", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.extensions");
+      builder.applicationMenu.click("root.extensions");
     });
 
     it("focuses the window", () => {

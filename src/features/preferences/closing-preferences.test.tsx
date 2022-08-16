@@ -24,19 +24,19 @@ import navigateToFrontPageInjectable from "../../common/front-end-routing/naviga
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 
 describe("preferences - closing-preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.register(testPreferencesRouteInjectable);
-      rendererDi.register(testPreferencesRouteComponentInjectable);
-      rendererDi.register(testFrontPageRouteInjectable);
-      rendererDi.register(testFrontPageRouteComponentInjectable);
-      rendererDi.register(testNavigationItemInjectable);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.register(testPreferencesRouteInjectable);
+      windowDi.register(testPreferencesRouteComponentInjectable);
+      windowDi.register(testFrontPageRouteInjectable);
+      windowDi.register(testFrontPageRouteComponentInjectable);
+      windowDi.register(testNavigationItemInjectable);
 
-      rendererDi.override(navigateToFrontPageInjectable, (di) => {
+      windowDi.override(navigateToFrontPageInjectable, (di) => {
         const navigateToRoute = di.inject(navigateToRouteInjectionToken);
         const testFrontPage = di.inject(testFrontPageRouteInjectable);
 
@@ -49,11 +49,11 @@ describe("preferences - closing-preferences", () => {
 
   describe("given already in a page and then navigated to preferences", () => {
     let rendered: RenderResult;
-    let rendererDi: DiContainer;
+    let windowDi: DiContainer;
 
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-        rendererDi.override(observableHistoryInjectable, () => {
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/some-test-path"],
             initialIndex: 0,
@@ -65,10 +65,10 @@ describe("preferences - closing-preferences", () => {
         });
       });
 
-      rendered = await applicationBuilder.render();
-      rendererDi = applicationBuilder.dis.rendererDi;
+      rendered = await builder.render();
+      windowDi = builder.applicationWindow.only.di;
 
-      applicationBuilder.preferences.navigate();
+      builder.preferences.navigate();
     });
 
     it("renders", () => {
@@ -77,7 +77,7 @@ describe("preferences - closing-preferences", () => {
 
     describe("when preferences are closed", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.close();
+        builder.preferences.close();
       });
 
       it("renders", () => {
@@ -85,7 +85,7 @@ describe("preferences - closing-preferences", () => {
       });
 
       it("navigates back to the original page", () => {
-        const currentPath = rendererDi.inject(currentPathInjectable).get();
+        const currentPath = windowDi.inject(currentPathInjectable).get();
 
         expect(currentPath).toBe("/some-test-path");
       });
@@ -93,7 +93,7 @@ describe("preferences - closing-preferences", () => {
 
     describe("when navigating to a tab in preferences", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click(
+        builder.preferences.navigation.click(
           "some-test-preference-navigation-item-id",
         );
       });
@@ -104,7 +104,7 @@ describe("preferences - closing-preferences", () => {
 
       describe("when preferences are closed", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.close();
+          builder.preferences.close();
         });
 
         it("renders", () => {
@@ -112,7 +112,7 @@ describe("preferences - closing-preferences", () => {
         });
 
         it("navigates back to the original page", () => {
-          const currentPath = rendererDi.inject(currentPathInjectable).get();
+          const currentPath = windowDi.inject(currentPathInjectable).get();
 
           expect(currentPath).toBe("/some-test-path");
         });
@@ -122,11 +122,11 @@ describe("preferences - closing-preferences", () => {
 
   describe("given accessing preferences directly", () => {
     let rendered: RenderResult;
-    let rendererDi: DiContainer;
+    let windowDi: DiContainer;
 
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-        rendererDi.override(observableHistoryInjectable, () => {
+      builder.beforeWindowStart((windowDi) => {
+        windowDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/preferences/app"],
             initialIndex: 0,
@@ -138,9 +138,9 @@ describe("preferences - closing-preferences", () => {
         });
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
 
-      rendererDi = applicationBuilder.dis.rendererDi;
+      windowDi = builder.applicationWindow.only.di;
     });
 
     it("renders", () => {
@@ -149,7 +149,7 @@ describe("preferences - closing-preferences", () => {
 
     describe("when preferences are closed", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.close();
+        builder.preferences.close();
       });
 
       it("renders", () => {
@@ -157,7 +157,7 @@ describe("preferences - closing-preferences", () => {
       });
 
       it("navigates back to the front page", () => {
-        const currentPath = rendererDi.inject(currentPathInjectable).get();
+        const currentPath = windowDi.inject(currentPathInjectable).get();
 
         expect(currentPath).toBe("/some-front-page");
       });
@@ -165,7 +165,7 @@ describe("preferences - closing-preferences", () => {
 
     describe("when navigating to a tab in preferences", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click(
+        builder.preferences.navigation.click(
           "some-test-preference-navigation-item-id",
         );
       });
@@ -176,7 +176,7 @@ describe("preferences - closing-preferences", () => {
 
       describe("when preferences are closed", () => {
         beforeEach(() => {
-          applicationBuilder.preferences.close();
+          builder.preferences.close();
         });
 
         it("renders", () => {
@@ -184,7 +184,7 @@ describe("preferences - closing-preferences", () => {
         });
 
         it("navigates back to the front page", () => {
-          const currentPath = rendererDi.inject(currentPathInjectable).get();
+          const currentPath = windowDi.inject(currentPathInjectable).get();
 
           expect(currentPath).toBe("/some-front-page");
         });
