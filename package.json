@@ -208,7 +208,7 @@
     }
   },
   "dependencies": {
-    "@astronautlabs/jsonpath": "^1.1.0",
+    "@astronautlabs/jsonpath": "https://github.com/Nokel81/jsonpath#upgrade-deps",
     "@hapi/call": "^9.0.0",
     "@hapi/subtext": "^7.0.4",
     "@kubernetes/client-node": "^0.17.0",
