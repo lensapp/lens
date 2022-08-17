@@ -207,6 +207,9 @@
       "role": "Viewer"
     }
   },
+  "resolutions": {
+    "@astronautlabs/jsonpath/underscore": "^1.12.1"
+  },
   "dependencies": {
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.0",
