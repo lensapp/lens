@@ -12,40 +12,61 @@ exports[`extendability-using-extension-api given an extension with a weakly type
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive focusable"
-            data-testid="home-button"
-            tabindex="0"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive focusable"
+              data-testid="home-button"
+              tabindex="0"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
@@ -211,44 +232,69 @@ exports[`extendability-using-extension-api given an extension with top-bar items
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive focusable"
-            data-testid="home-button"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
           <div
-            data-testid="some-top-bar-item"
+            class="preventedDragging"
           >
-            Some-content
+            <i
+              class="Icon material interactive focusable"
+              data-testid="home-button"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <div
+              data-testid="some-top-bar-item"
+            >
+              Some-content
+            </div>
           </div>
         </div>
       </div>
@@ -415,40 +461,61 @@ exports[`extendability-using-extension-api given an extension with top-bar items
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive focusable"
-            data-testid="home-button"
-            tabindex="0"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive focusable"
+              data-testid="home-button"
+              tabindex="0"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
@@ -614,40 +681,61 @@ exports[`extendability-using-extension-api renders 1`] = `
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive focusable"
-            data-testid="home-button"
-            tabindex="0"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive focusable"
+              data-testid="home-button"
+              tabindex="0"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
