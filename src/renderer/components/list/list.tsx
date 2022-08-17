@@ -7,10 +7,11 @@ import styles from "./list.module.scss";
 import themeStyles from "./table-theme.module.scss";
 
 import React, { useState } from "react";
-import { SearchInput } from "../input";
+import { SearchInput, SearchInputUrl } from "../input";
 import type { TableOptions } from '@tanstack/react-table'
 
 import { TableList } from "../table-list/table-list";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 
 export type SearchFilter<T> = (item: T) => string;
 
@@ -28,18 +29,24 @@ export function List<T>({ columns, data, title, filters }: ListProps<T>) {
   ));
 
   return (
-    <>
-      <div className="flex align-center justify-between mb-6">
-        <div className="mr-6">
+    <div className={styles.listLayout}>
+      <div className={styles.header}>
+        <div>
           {title}
         </div>
         <div>
+          Showing {filteredData.length} items
+        </div>
+        <div className={styles.controls}>
+          <NamespaceSelectFilter id="object-list-layout-namespace-select-input" />
+          <SearchInputUrl />
+{/* 
           <SearchInput
             value={search}
             theme="round-black"
             onChange={setSearch}
             className={styles.searchInput}
-          />
+          /> */}
         </div>
       </div>
       <TableList
@@ -50,6 +57,6 @@ export function List<T>({ columns, data, title, filters }: ListProps<T>) {
       {filteredData.length == 0 && (
         <div className={styles.notFound}>No data found</div>
       )}
-    </>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { TableOptions, SortingState, Table as TableType, ColumnDef } from "@tanstack/react-table";
+import type { SortingState, Table as TableType, ColumnDef } from "@tanstack/react-table";
 import { useReactTable, getCoreRowModel, getSortedRowModel } from "@tanstack/react-table";
 import React, { HTMLProps, useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";

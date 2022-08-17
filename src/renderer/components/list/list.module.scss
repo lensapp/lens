@@ -6,3 +6,18 @@
 .searchInput>label {
   box-shadow: none!important;
 }
+
+.listLayout {
+  background: var(--contentColor);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls {
+  display: flex;
+  gap: calc(var(--padding) * 2);
+}
