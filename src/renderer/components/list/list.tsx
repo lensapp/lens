@@ -9,7 +9,6 @@ import themeStyles from "./table-theme.module.scss";
 import React, { useState } from "react";
 import { SearchInput } from "../input";
 import type { TableOptions } from '@tanstack/react-table'
-import { getCoreRowModel } from '@tanstack/react-table'
 
 import { TableList } from "../table-list/table-list";
 
@@ -46,7 +45,6 @@ export function List<T>({ columns, data, title, filters }: ListProps<T>) {
       <TableList
         columns={columns}
         data={filteredData}
-        getCoreRowModel={getCoreRowModel()}
         className={themeStyles.tableTheme}
       />
       {filteredData.length == 0 && (

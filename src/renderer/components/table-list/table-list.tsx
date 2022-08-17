@@ -1,4 +1,4 @@
-import type { TableOptions, SortingState, Table as TableType } from "@tanstack/react-table";
+import type { TableOptions, SortingState, Table as TableType, ColumnDef } from "@tanstack/react-table";
 import { useReactTable, getCoreRowModel, getSortedRowModel } from "@tanstack/react-table";
 import React, { HTMLProps, useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -8,10 +8,13 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
 import { VirtualTable } from "../table/virtual-table";
 
-interface TableProps<T> extends TableOptions<T> {
+interface TableProps<T> {
+  columns: ColumnDef<T, any>[];
+  data: T[];
   className?: string;
   selectable?: boolean;
   configurable?: boolean;
+  columnsResizable?: boolean;
 }
 
 export function TableList<Data>({
@@ -20,6 +23,7 @@ export function TableList<Data>({
   className,
   selectable = true,
   configurable = true,
+  columnsResizable = true,
 }: TableProps<Data>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const tableColumns = useMemo(() => {
@@ -77,7 +81,7 @@ export function TableList<Data>({
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    enableColumnResizing: true,
+    enableColumnResizing: columnsResizable,
     columnResizeMode: 'onChange',
     defaultColumn: {
       size: 100,
