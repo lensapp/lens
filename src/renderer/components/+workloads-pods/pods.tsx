@@ -29,9 +29,10 @@ import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.inject
 import eventStoreInjectable from "../+events/store.injectable";
 import podStoreInjectable from "./store.injectable";
 import { List } from "../list/list";
-import { createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
+import { ColumnDef, createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeToStoresDisposersInjectable from "../../kube-watch-api/subscribe-to-stores-disposers.injectable";
 
 enum columnId {
   name = "name",
@@ -51,7 +52,7 @@ interface Dependencies {
   eventStore: EventStore;
   podStore: PodStore;
   nodeApi: NodeApi;
-  subscribeToStores: SubscribeStores;
+  subscribeToWatchStores: SubscribeStores;
 }
 
 const columnHelper = createColumnHelper<Pod>()
@@ -59,16 +60,9 @@ const columnHelper = createColumnHelper<Pod>()
 @observer
 class NonInjectedPods extends React.Component<Dependencies> {
   componentDidMount() {
-    const { podStore, eventStore, subscribeToStores } = this.props;
-    const stores = Array.from(new Set([podStore, eventStore]));
+    const storeDisposer = this.props.subscribeToWatchStores([this.props.podStore, this.props.eventStore]);
 
-    const reactions: Disposer[] = [];
-
-    reactions.push(
-      subscribeToStores(stores),
-    );
-
-    disposeOnUnmount(this, reactions);
+    disposeOnUnmount(this, storeDisposer)
   }
 
   renderState<T extends string>(name: string, ready: boolean, key: string, data: Partial<Record<T, string | number>> | undefined) {
@@ -161,6 +155,27 @@ class NonInjectedPods extends React.Component<Dependencies> {
 
   render() {
     const { podStore } = this.props;
+
+    // const cols = React.useMemo<ColumnDef<Pod>[]>(() => ([
+    //   {
+    //     header: "Name",
+    //     cell: (pod) => pod.getValue()
+    //   },
+    //   {
+    //     id: "warning",
+    //     cell: props => <KubeObjectStatusIcon key="icon" object={props.row.original} />,
+    //     enableSorting: false,
+    //     enableResizing: false,
+    //     minSize: 30,
+    //     size: 30
+    //   },
+    //   {
+    //     header: "Namespace",
+    //     cell: info => info.getValue(),
+    //     minSize: 110
+    //   },
+
+    // ]), []);
 
     const columns = [
       columnHelper.accessor(row => row.getName(), {
@@ -340,6 +355,6 @@ export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
     nodeApi: di.inject(nodeApiInjectable),
     eventStore: di.inject(eventStoreInjectable),
     podStore: di.inject(podStoreInjectable),
-    subscribeToStores: di.inject(subscribeStoresInjectable),
+    subscribeToWatchStores: di.inject(subscribeToStoresDisposersInjectable)
   }),
 });
