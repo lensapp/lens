@@ -481,7 +481,7 @@ export class KubeApi<
     });
   }
 
-  async list({ namespace, reqInit }: KubeApiListOptions = {}, query?: KubeApiQueryParams): Promise<Object[] | null> {
+  async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: KubeApiQueryParams): Promise<Object[] | null> {
     await this.checkPreferredVersion();
 
     const url = this.getUrl({ namespace });
