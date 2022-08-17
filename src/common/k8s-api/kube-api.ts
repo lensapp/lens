@@ -393,18 +393,45 @@ export class KubeApi<
     });
   }
 
-  getUrl({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<KubeApiQueryParams>) {
+  /**
+   * This method differs from {@link formatUrlForNotListing} because this treats `""` as "all namespaces"
+   * @param namespace The namespace to list in or `""` for all namespaces
+   */
+  formatUrlForListing(namespace: string) {
+    return createKubeApiURL({
+      apiPrefix: this.apiPrefix,
+      apiVersion: this.apiVersionWithGroup,
+      resource: this.apiResource,
+      namespace: this.isNamespaced
+        ? namespace ?? "default"
+        : undefined,
+    });
+  }
+
+  /**
+   * Format a URL pathname and query for acting upon a specific resource.
+   */
+  formatUrlForNotListing(resource?: Partial<ResourceDescriptor>, query?: Partial<KubeApiQueryParams>): string;
+
+  formatUrlForNotListing({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<KubeApiQueryParams>) {
     const resourcePath = createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
       resource: this.apiResource,
       namespace: this.isNamespaced
-        ? namespace ?? "default" // allow `""` to mean all namespaces
+        ? namespace || "default"
         : undefined,
       name,
     });
 
     return resourcePath + (query ? `?${stringify(this.normalizeQuery(query))}` : "");
+  }
+
+  /**
+   * @deprecated use {@link formatUrlForNotListing} instead
+   */
+  getUrl(resource?: Partial<ResourceDescriptor>, query?: Partial<KubeApiQueryParams>) {
+    return this.formatUrlForNotListing(resource, query);
   }
 
   protected normalizeQuery(query: Partial<KubeApiQueryParams> = {}) {
@@ -484,7 +511,7 @@ export class KubeApi<
   async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: KubeApiQueryParams): Promise<Object[] | null> {
     await this.checkPreferredVersion();
 
-    const url = this.getUrl({ namespace });
+    const url = this.formatUrlForListing(namespace);
     const res = await this.request.get(url, { query }, reqInit);
     const parsed = this.parseResponse(res, namespace);
 
@@ -502,7 +529,7 @@ export class KubeApi<
   async get(desc: ResourceDescriptor, query?: KubeApiQueryParams): Promise<Object | null> {
     await this.checkPreferredVersion();
 
-    const url = this.getUrl(desc);
+    const url = this.formatUrlForNotListing(desc);
     const res = await this.request.get(url, { query });
     const parsed = this.parseResponse(res);
 
@@ -516,7 +543,7 @@ export class KubeApi<
   async create({ name, namespace }: Partial<ResourceDescriptor>, partialData?: PartialDeep<Object>): Promise<Object | null> {
     await this.checkPreferredVersion();
 
-    const apiUrl = this.getUrl({ namespace });
+    const apiUrl = this.formatUrlForNotListing({ namespace });
     const data = merge(partialData, {
       kind: this.kind,
       apiVersion: this.apiVersionWithGroup,
@@ -537,7 +564,7 @@ export class KubeApi<
 
   async update({ name, namespace }: ResourceDescriptor, data: PartialDeep<Object>): Promise<Object | null> {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl({ namespace, name });
+    const apiUrl = this.formatUrlForNotListing({ namespace, name });
 
     const res = await this.request.put(apiUrl, {
       data: merge(data, {
@@ -562,7 +589,7 @@ export class KubeApi<
   async patch(desc: ResourceDescriptor, data: PartialDeep<Object> | Patch, strategy: KubeApiPatchType): Promise<Object | null>;
   async patch(desc: ResourceDescriptor, data: PartialDeep<Object> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<Object | null> {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl(desc);
+    const apiUrl = this.formatUrlForNotListing(desc);
 
     const res = await this.request.patch(apiUrl, { data }, {
       headers: {
@@ -580,7 +607,7 @@ export class KubeApi<
 
   async delete({ propagationPolicy = "Background", ...desc }: DeleteResourceDescriptor) {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl(desc);
+    const apiUrl = this.formatUrlForNotListing(desc);
 
     return this.request.del(apiUrl, {
       query: {
@@ -590,7 +617,7 @@ export class KubeApi<
   }
 
   getWatchUrl(namespace?: string, query: KubeApiQueryParams = {}) {
-    return this.getUrl({ namespace }, {
+    return this.formatUrlForNotListing({ namespace }, {
       watch: 1,
       resourceVersion: this.getResourceVersion(namespace),
       ...query,

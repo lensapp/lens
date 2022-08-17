@@ -80,7 +80,7 @@ describe("createKubeApiForRemoteCluster", () => {
 
       it("should request pods from default namespace", () => {
         expect(fetchMock.mock.lastCall).toMatchObject([
-          "https://127.0.0.1:6443/api/v1/namespaces/default/pods",
+          "https://127.0.0.1:6443/api/v1/pods",
           {
             headers: {
               "content-type": "application/json",
@@ -93,7 +93,7 @@ describe("createKubeApiForRemoteCluster", () => {
       describe("when request resolves with data", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
-            ["https://127.0.0.1:6443/api/v1/namespaces/default/pods"],
+            ["https://127.0.0.1:6443/api/v1/pods"],
             new Response(JSON.stringify({
               kind: "PodList",
               apiVersion: "v1",
@@ -1491,6 +1491,140 @@ describe("KubeApi", () => {
 
         it("the call should resolve to a Pod", async () => {
           expect(await updateRequest).toBeInstanceOf(Pod);
+        });
+      });
+    });
+  });
+
+  describe("listing pods", () => {
+    let api: PodApi;
+
+    beforeEach(() => {
+      api = new PodApi({
+        request,
+      });
+    });
+
+    describe("when listing pods with no descriptor", () => {
+      let listRequest: Promise<Pod[] | null>;
+
+      beforeEach(async () => {
+        listRequest = api.list();
+
+        await flushPromises();
+      });
+
+      it("should request that the pods from all namespaces", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with empty data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/pods"],
+            new Response(JSON.stringify({
+              kind: "PodList",
+              apiVersion: "v1",
+              metadata: {},
+              items: [],
+            })),
+          );
+        });
+
+        it("the call should resolve to an empty list", async () => {
+          expect(await listRequest).toEqual([]);
+        });
+      });
+    });
+
+    describe("when listing pods with descriptor with namespace=''", () => {
+      let listRequest: Promise<Pod[] | null>;
+
+      beforeEach(async () => {
+        listRequest = api.list({
+          namespace: "",
+        });
+
+        await flushPromises();
+      });
+
+      it("should request that the pods from all namespaces", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with empty data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/pods"],
+            new Response(JSON.stringify({
+              kind: "PodList",
+              apiVersion: "v1",
+              metadata: {},
+              items: [],
+            })),
+          );
+        });
+
+        it("the call should resolve to an empty list", async () => {
+          expect(await listRequest).toEqual([]);
+        });
+      });
+    });
+
+    describe("when listing pods with descriptor with namespace='default'", () => {
+      let listRequest: Promise<Pod[] | null>;
+
+      beforeEach(async () => {
+        listRequest = api.list({
+          namespace: "default",
+        });
+
+        await flushPromises();
+      });
+
+      it("should request that the pods from just the default namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with empty data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods"],
+            new Response(JSON.stringify({
+              kind: "PodList",
+              apiVersion: "v1",
+              metadata: {},
+              items: [],
+            })),
+          );
+        });
+
+        it("the call should resolve to an empty list", async () => {
+          expect(await listRequest).toEqual([]);
         });
       });
     });
