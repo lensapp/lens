@@ -4,51 +4,52 @@
  */
 
 import styles from "./top-bar.module.scss";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window/toggle-maximize-window.injectable";
 import watchHistoryStateInjectable from "../../../remote-helpers/watch-history-state.injectable";
-import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
+import topBarItemsOnRightSideInjectable from "./top-bar-items/top-bar-items-on-right-side.injectable";
 import type { TopBarItem } from "./top-bar-items/top-bar-item-injection-token";
-import welcomeRouteInjectable from "../../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
-import navigateToWelcomeInjectable from "../../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
+import { Map } from "../../map/map";
+import Gutter from "../../gutter/gutter";
+import topBarItemsOnLeftSideInjectable from "./top-bar-items/top-bar-items-on-left-side.injectable";
 
 interface Dependencies {
-  items: IComputedValue<TopBarItem[]>;
+  itemsOnLeft: IComputedValue<TopBarItem[]>;
+  itemsOnRight: IComputedValue<TopBarItem[]>;
   toggleMaximizeWindow: () => void;
   watchHistoryState: () => () => void;
 }
 
 const NonInjectedTopBar = observer(
   ({
-    items,
+    itemsOnLeft,
+    itemsOnRight,
     toggleMaximizeWindow,
     watchHistoryState,
   }: Dependencies) => {
-    const elem = useRef<HTMLDivElement | null>(null);
-
-    const windowSizeToggle = (evt: React.MouseEvent) => {
-      if (elem.current === evt.target) {
-        toggleMaximizeWindow();
-      }
-    };
-
     useEffect(() => watchHistoryState(), []);
 
     return (
-      <div
-        className={styles.topBar}
-        onDoubleClick={windowSizeToggle}
-        ref={elem}
-      >
+      <div className={styles.topBar} onDoubleClick={toggleMaximizeWindow}>
         <div className={styles.items}>
-          {items.get().map((item) => {
-            const Component = item.Component;
+          <Map
+            items={itemsOnLeft.get()}
+            getSeparator={() => <Gutter size="sm" />}
+          >
+            {toItemWhichWorksWithWindowDraggingAndDoubleClicking}
+          </Map>
 
-            return <Component key={item.id} />;
-          })}
+          <div className={styles.separator} />
+
+          <Map
+            items={itemsOnRight.get()}
+            getSeparator={() => <Gutter size="sm" />}
+          >
+            {toItemWhichWorksWithWindowDraggingAndDoubleClicking}
+          </Map>
         </div>
       </div>
     );
@@ -57,8 +58,22 @@ const NonInjectedTopBar = observer(
 
 export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
   getProps: (di) => ({
-    items: di.inject(topBarItemsInjectable),
+    itemsOnLeft: di.inject(topBarItemsOnLeftSideInjectable),
+    itemsOnRight: di.inject(topBarItemsOnRightSideInjectable),
     toggleMaximizeWindow: di.inject(toggleMaximizeWindowInjectable),
     watchHistoryState: di.inject(watchHistoryStateInjectable),
   }),
 });
+
+const toItemWhichWorksWithWindowDraggingAndDoubleClicking = (
+  item: TopBarItem,
+) => (
+  <div
+    className={styles.preventedDragging}
+    onDoubleClick={(event) => {
+      return event.stopPropagation();
+    }}
+  >
+    <item.Component />
+  </div>
+);

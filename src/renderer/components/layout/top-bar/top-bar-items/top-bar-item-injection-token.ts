@@ -13,8 +13,10 @@ export interface TopBarItem {
   Component: React.ComponentType;
 }
 
-const topBarItemInjectionToken = getInjectionToken<TopBarItem>({
-  id: "top-bar-item-injection-token",
+export const topBarItemOnRightSideInjectionToken = getInjectionToken<TopBarItem>({
+  id: "top-bar-item-on-right-side-injection-token",
 });
 
-export default topBarItemInjectionToken;
+export const topBarItemOnLeftSideInjectionToken = getInjectionToken<TopBarItem>({
+  id: "top-bar-item-on-left-side-injection-token",
+});

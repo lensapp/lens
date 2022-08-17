@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import topBarItemInjectionToken from "../../../../../../renderer/components/layout/top-bar/top-bar-items/top-bar-item-injection-token";
+import { topBarItemOnRightSideInjectionToken } from "../../../../../../renderer/components/layout/top-bar/top-bar-items/top-bar-item-injection-token";
 import { UpdateButton } from "./update-button";
 import updateWarningLevelInjectable from "./update-warning-level.injectable";
 
@@ -22,7 +22,7 @@ const updateApplicationTopBarItemInjectable = getInjectable({
     };
   },
 
-  injectionToken: topBarItemInjectionToken,
+  injectionToken: topBarItemOnRightSideInjectionToken,
 });
 
 export default updateApplicationTopBarItemInjectable;

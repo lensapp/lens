@@ -7,7 +7,7 @@ import { reject } from "lodash/fp";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import { pipeline } from "@ogre-tools/fp";
-import topBarItemInjectionToken from "../../../../renderer/components/layout/top-bar/top-bar-items/top-bar-item-injection-token";
+import { topBarItemOnRightSideInjectionToken } from "../../../../renderer/components/layout/top-bar/top-bar-items/top-bar-item-injection-token";
 import { computed } from "mobx";
 
 const legacyExtensionApiRegistratorForTopBarItemsInjectable = getInjectable({
@@ -28,7 +28,7 @@ const legacyExtensionApiRegistratorForTopBarItemsInjectable = getInjectable({
           return getInjectable({
             id,
 
-            injectionToken: topBarItemInjectionToken,
+            injectionToken: topBarItemOnRightSideInjectionToken,
 
             instantiate: () => ({
               id,

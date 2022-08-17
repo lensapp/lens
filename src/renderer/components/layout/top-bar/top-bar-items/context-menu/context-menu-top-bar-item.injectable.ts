@@ -7,7 +7,7 @@ import isLinuxInjectable from "../../../../../../common/vars/is-linux.injectable
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
 import { computed } from "mobx";
 import { ContextMenu } from "./context-menu";
-import topBarItemInjectionToken from "../top-bar-item-injection-token";
+import { topBarItemOnLeftSideInjectionToken } from "../top-bar-item-injection-token";
 
 const contextMenuTopBarItemInjectable = getInjectable({
   id: "context-menu-top-bar-item",
@@ -24,7 +24,7 @@ const contextMenuTopBarItemInjectable = getInjectable({
     };
   },
 
-  injectionToken: topBarItemInjectionToken,
+  injectionToken: topBarItemOnLeftSideInjectionToken,
 });
 
 export default contextMenuTopBarItemInjectable;

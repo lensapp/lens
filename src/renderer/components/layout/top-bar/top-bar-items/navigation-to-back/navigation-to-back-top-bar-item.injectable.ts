@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import topBarItemInjectionToken from "../top-bar-item-injection-token";
+import { topBarItemOnLeftSideInjectionToken } from "../top-bar-item-injection-token";
 import { NavigationToBack } from "./navigation-to-back";
 
 const navigationToBackTopBarItemInjectable = getInjectable({
@@ -17,7 +17,7 @@ const navigationToBackTopBarItemInjectable = getInjectable({
     Component: NavigationToBack,
   }),
 
-  injectionToken: topBarItemInjectionToken,
+  injectionToken: topBarItemOnLeftSideInjectionToken,
 });
 
 export default navigationToBackTopBarItemInjectable;
