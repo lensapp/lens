@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { JSONPath } from "@astronautlabs/jsonpath";
+import jsonpath from "jsonpath";
 import { TypedRegEx } from "typed-regex";
 
 const slashDashSearch = /[\\-]/g;
@@ -90,9 +90,9 @@ function formatJSONValue(value: unknown) {
  */
 export function safeJSONPathValue(obj: object, path: string): string {
   try {
-    const parsedPath = JSONPath.parse(convertKubectlJsonPathToNodeJsonPath(path));
+    const parsedPath = jsonpath.parse(convertKubectlJsonPathToNodeJsonPath(path));
     const isSlice = parsedPath.some((exp: any) => exp.expression.type === "slice" || "wildcard");
-    const value = JSONPath.query(obj, JSONPath.stringify(parsedPath), isSlice ? Infinity : 1);
+    const value = jsonpath.query(obj, jsonpath.stringify(parsedPath), isSlice ? Infinity : 1);
 
     if (isSlice) {
       return value.map(formatJSONValue).join(", ");
