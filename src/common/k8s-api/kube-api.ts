@@ -394,16 +394,12 @@ export class KubeApi<
   }
 
   getUrl({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<KubeApiQueryParams>) {
-    if (!this.isNamespaced && namespace) {
-      throw new Error("Tried to delete cluster scoped resource in a namespace");
-    }
-
     const resourcePath = createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
       resource: this.apiResource,
       namespace: this.isNamespaced
-        ? namespace || "default"
+        ? namespace ?? "default" // allow `""` to mean all namespaces
         : undefined,
       name,
     });
@@ -611,6 +607,8 @@ export class KubeApi<
       timeout,
       watchId = `${this.kind.toLowerCase()}-${this.watchId++}`,
     } = opts ?? {};
+
+    console.log(`watching ${this.apiBase} in namespace="${namespace}"`);
 
     // Create AbortController for this request
     const abortController = new WrappedAbortController(opts?.abortController);
