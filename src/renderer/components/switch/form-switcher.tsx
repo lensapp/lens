@@ -7,6 +7,7 @@ import React from "react";
 import type { FormControlLabelProps } from "@material-ui/core/FormControlLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { makeStyles } from "@material-ui/styles";
+import { Switch } from "./switch";
 
 const useStyles = makeStyles({
   root: {
@@ -23,15 +24,12 @@ const useStyles = makeStyles({
 /**
  * @deprecated Use <Switch/> instead from "../switch.tsx".
  */
-export function FormSwitch(props: FormControlLabelProps) {
+export function FormSwitch(props: FormControlLabelProps & { children?: React.ReactNode }) {
   const classes = useStyles();
 
-  return (
-    <FormControlLabel
-      control={props.control}
-      labelPlacement="start"
-      label={props.label}
-      className={classes.root}
-    />
-  );
+  const ClonedElement = React.cloneElement(props.control, {
+    children: props.label,
+  });
+
+  return ClonedElement;
 }
