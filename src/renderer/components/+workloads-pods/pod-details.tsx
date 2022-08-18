@@ -116,6 +116,9 @@ export class PodDetails extends React.Component<PodDetailsProps> {
         >
           {podIPs.map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
+        <DrawerItem name="Service Account">
+          {pod.getServiceAccountName()}
+        </DrawerItem>
         <DrawerItem name="Priority Class">
           {pod.getPriorityClassName()}
         </DrawerItem>
