@@ -416,7 +416,7 @@
     "sass-loader": "^12.6.0",
     "sharp": "^0.30.7",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.1.6",
+    "tailwindcss": "^3.1.8",
     "tar-stream": "^2.2.0",
     "ts-loader": "^9.3.1",
     "ts-node": "^10.9.1",
