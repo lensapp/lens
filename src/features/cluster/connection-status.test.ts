@@ -32,17 +32,18 @@ describe("cluster connection status", () => {
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.dis.mainDi.override(createKubeconfigManagerInjectable, () => () => ({} as KubeconfigManager));
-    applicationBuilder.dis.mainDi.override(createKubectlInjectable, () => () => ({} as Kubectl));
-    applicationBuilder.dis.mainDi.override(createContextHandlerInjectable, () => () => ({} as ContextHandler));
+    applicationBuilder.mainDi.override(createKubeconfigManagerInjectable, () => () => ({} as KubeconfigManager));
+    applicationBuilder.mainDi.override(createKubectlInjectable, () => () => ({} as Kubectl));
+    applicationBuilder.mainDi.override(createContextHandlerInjectable, () => () => ({} as ContextHandler));
 
-    applicationBuilder.beforeRender(() => {
-      clusterStore = applicationBuilder.dis.mainDi.inject(clusterStoreInjectable);
-      navigateToClusterView = applicationBuilder.dis.rendererDi.inject(navigateToClusterViewInjectable);
+    applicationBuilder.beforeWindowStart((windowDi) => {
+      clusterStore = applicationBuilder.mainDi.inject(clusterStoreInjectable);
+      navigateToClusterView = windowDi.inject(navigateToClusterViewInjectable);
+      windowDi.override(clusterStoreInjectable, () => clusterStore);
 
-      const createCluster = applicationBuilder.dis.mainDi.inject(createClusterInjectable);
+      const createCluster = applicationBuilder.mainDi.inject(createClusterInjectable);
 
-      applicationBuilder.dis.rendererDi.inject(catalogEntityRegistryInjectable).updateItems([
+      windowDi.inject(catalogEntityRegistryInjectable).updateItems([
         new KubernetesCluster({
           metadata: {
             labels: {},

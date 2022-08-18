@@ -150,6 +150,8 @@ export const getApplicationBuilder = () => {
 
   let environment = environments.application;
 
+  mainDi.register(mainExtensionsStateInjectable);
+
   mainDi.override(mainExtensionsInjectable, (di) => {
     const mainExtensionsState = di.inject(mainExtensionsStateInjectable);
 
