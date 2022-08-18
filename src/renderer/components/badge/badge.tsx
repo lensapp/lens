@@ -41,19 +41,10 @@ export const Badge = withTooltip(observer(({
   ...elemProps
 }: BadgeProps) => {
   const elem = useRef<HTMLDivElement>(null);
-  const elemHasBeenSet = useRef(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExpandable, setIsExpandable] = useState(false);
 
   useEffect(() => {
-    if (elemHasBeenSet.current) {
-      return;
-    }
-
-    if (elem.current) {
-      elemHasBeenSet.current = true;
-    }
-
     const { clientWidth = 0, scrollWidth = 0 } = elem.current ?? {};
 
     setIsExpandable(expandable && (clientWidth < scrollWidth));
