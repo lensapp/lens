@@ -4,14 +4,18 @@
  */
 
 import React from "react";
-import type { FormControlLabelProps } from "@material-ui/core/FormControlLabel";
+
+interface FormControlLabelProps {
+  control: React.ReactElement<any, any>;
+  label: React.ReactNode;
+}
 
 /**
  * @deprecated Use <Switch/> instead from "../switch.tsx".
  */
 export function FormSwitch(props: FormControlLabelProps & { children?: React.ReactNode }) {
   const ClonedElement = React.cloneElement(props.control, {
-    children: props.label,
+    children: <span>{props.label}</span>,
   });
 
   return ClonedElement;
