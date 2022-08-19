@@ -7,7 +7,7 @@ import { capitalize } from "lodash";
 import { when } from "mobx";
 import helmChartVersionsInjectable from "../+helm-charts/helm-charts/versions.injectable";
 import type { HelmRelease, HelmReleaseDto } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import getMillisecondsFromUnixEpochInjectable from "../../../common/utils/date/get-milliseconds-from-unix-epoch.injectable";
+import { getMillisecondsFromUnixEpoch } from "../../../common/utils/date/get-current-date-time";
 import { formatDuration } from "../../utils";
 
 export type ToHelmRelease = (release: HelmReleaseDto) => HelmRelease;
@@ -16,7 +16,6 @@ const toHelmReleaseInjectable = getInjectable({
   id: "to-helm-release",
   instantiate: (di): ToHelmRelease => {
     const helmChartVersions = (release: HelmRelease) => di.inject(helmChartVersionsInjectable, release);
-    const getMillisecondsFromUnixEpoch = di.inject(getMillisecondsFromUnixEpochInjectable);
 
     return (release) => ({
       ...release,

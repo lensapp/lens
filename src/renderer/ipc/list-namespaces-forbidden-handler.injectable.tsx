@@ -11,7 +11,7 @@ import { Button } from "../components/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
-import getMillisecondsFromUnixEpochInjectable from "../../common/utils/date/get-milliseconds-from-unix-epoch.injectable";
+import { getMillisecondsFromUnixEpoch } from "../../common/utils/date/get-current-date-time";
 
 const listNamespacesForbiddenHandlerInjectable = getInjectable({
   id: "list-namespaces-forbidden-handler",
@@ -19,7 +19,6 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
   instantiate: (di) => {
     const navigateToEntitySettings = di.inject(navigateToEntitySettingsInjectable);
     const notificationsStore = di.inject(notificationsStoreInjectable);
-    const getMillisecondsFromUnixEpoch = di.inject(getMillisecondsFromUnixEpochInjectable);
     const notificationLastDisplayedAt = new Map<string, number>();
     const intervalBetweenNotifications = 1000 * 60; // 60s
 

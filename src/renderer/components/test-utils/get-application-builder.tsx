@@ -57,7 +57,6 @@ import activeKubernetesClusterInjectable from "../../cluster-frame-context/activ
 import { catalogEntityFromCluster } from "../../../main/cluster/manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import { isAllowedResource } from "../../../common/cluster/is-allowed-resource";
-import getMillisecondsFromUnixEpochInjectable from "../../../common/utils/date/get-milliseconds-from-unix-epoch.injectable";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
@@ -112,12 +111,6 @@ export interface ApplicationBuilder {
 
   applicationMenu: {
     click: (path: string) => void;
-  };
-  time: {
-    advanceBy: {
-      seconds: (value: number) => void;
-      milliseconds: (value: number) => void;
-    };
   };
   preferences: {
     close: () => void;
@@ -195,7 +188,6 @@ export const getApplicationBuilder = () => {
     runInAction(() => {
       windowDi.register(rendererExtensionsStateInjectable);
     });
-    windowDi.override(getMillisecondsFromUnixEpochInjectable, () => () => currentTimeMs);
 
     windowDi.override(
       currentlyInClusterFrameInjectable,
@@ -251,22 +243,9 @@ export const getApplicationBuilder = () => {
   mainDi.override(createElectronWindowInjectable, () => createElectronWindowFake);
 
   let applicationHasStarted = false;
-  let currentTimeMs = Date.parse("2000-01-01 12:00:00am");
-
-  mainDi.override(getMillisecondsFromUnixEpochInjectable, () => () => currentTimeMs);
 
   const builder: ApplicationBuilder = {
     mainDi,
-    time: {
-      advanceBy: {
-        milliseconds: (value) => {
-          currentTimeMs += value;
-        },
-        seconds: (value) => {
-          currentTimeMs += (value * 1000);
-        },
-      },
-    },
     applicationWindow: {
       closeAll: () => {
         const closeAll = mainDi.inject(closeAllWindowsInjectable);
