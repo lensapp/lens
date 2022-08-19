@@ -5,7 +5,6 @@
 import type { Mutable } from "type-fest";
 import fileSystemProvisionerStoreInjectable from "../../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import { lensExtensionDependencies } from "../../../extensions/lens-extension";
-import type { ApplicationBuilder } from "./get-application-builder";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
 import navigateForExtensionInjectable from "../../../main/start-main-application/lens-window/navigate-for-extension.injectable";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
@@ -27,21 +26,7 @@ export interface FakeExtensionOptions {
   mainOptions?: Partial<LensMainExtension>;
 }
 
-export type GetExtensionFake = (arg: FakeExtensionOptions) => {
-  main: TestExtensionMain;
-  renderer: TestExtensionRenderer;
-};
-
-export const getExtensionFakeFor =
-  (builder: ApplicationBuilder): GetExtensionFake =>
-    ({ id, name, mainOptions = {}, rendererOptions = {}}) => {
-      const mainInstance = getExtensionFakeForMain(builder.dis.mainDi, id, name, mainOptions);
-      const rendererInstance = getExtensionFakeForRenderer(builder.dis.rendererDi, id, name, rendererOptions);
-
-      return { main: mainInstance, renderer: rendererInstance };
-    };
-
-const getExtensionFakeForMain = (di: DiContainer, id: string, name: string, options: Partial<LensMainExtension>) => {
+export const getExtensionFakeForMain = (di: DiContainer, id: string, name: string, options: Partial<LensMainExtension>) => {
   const instance = new TestExtensionMain({
     id,
     absolutePath: "irrelevant",
@@ -71,7 +56,7 @@ const getExtensionFakeForMain = (di: DiContainer, id: string, name: string, opti
   return instance;
 };
 
-const getExtensionFakeForRenderer = (di: DiContainer, id: string, name: string, options: Partial<LensRendererExtension>) => {
+export const getExtensionFakeForRenderer = (di: DiContainer, id: string, name: string, options: Partial<LensRendererExtension>) => {
   const instance = new TestExtensionRenderer({
     id,
     absolutePath: "irrelevant",

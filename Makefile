@@ -17,8 +17,7 @@ else
 endif
 
 node_modules: yarn.lock
-	yarn install --frozen-lockfile --network-timeout=100000
-	yarn check --verify-tree --integrity
+	yarn install --check-files --frozen-lockfile --network-timeout=100000
 
 binaries/client: node_modules
 	yarn download:binaries

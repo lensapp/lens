@@ -48,10 +48,15 @@ global.ResizeObserver = class {
 jest.mock("./renderer/components/monaco-editor/monaco-editor");
 jest.mock("./renderer/components/tooltip/withTooltip");
 
-const getInjectables = (environment: "renderer" | "main", filePathGlob: string) =>
-  glob.sync(`./{common,extensions,${environment}}/**/${filePathGlob}`, {
+const getInjectables = (environment: "renderer" | "main", filePathGlob: string) => [
+  ...glob.sync(`./{common,extensions,${environment}}/**/${filePathGlob}`, {
     cwd: __dirname,
-  }).map(x => path.resolve(__dirname, x));
+  }),
+
+  ...glob.sync(`./features/**/{${environment},common}/**/${filePathGlob}`, {
+    cwd: __dirname,
+  }),
+].map(x => path.resolve(__dirname, x));
 
 (global as any).rendererInjectablePaths = getInjectables("renderer", "*.injectable.{ts,tsx}");
 (global as any).rendererGlobalOverridePaths = getInjectables("renderer", "*.global-override-for-injectable.{ts,tsx}");

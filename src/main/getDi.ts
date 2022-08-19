@@ -18,6 +18,7 @@ export const getDi = () => {
       require.context("./", true, /\.injectable\.(ts|tsx)$/),
       require.context("../extensions", true, /\.injectable\.(ts|tsx)$/),
       require.context("../common", true, /\.injectable\.(ts|tsx)$/),
+      require.context("../features", true, /.*\/(main|common)\/.*\.injectable\.(ts|tsx)$/),
     ],
   });
 

@@ -140,7 +140,14 @@ const createElectronWindowInjectable = getInjectable({
 
         show: () => browserWindow.show(),
         close: () => browserWindow.close(),
-        send: (args) => sendToChannelInLensWindow(browserWindow, args),
+        send: (args) => sendToChannelInLensWindow(configuration.id, browserWindow, args),
+
+        reload: () => {
+          const wc = browserWindow.webContents;
+
+          wc.reload();
+          wc.clearHistory();
+        },
       };
     };
   },

@@ -5,13 +5,13 @@
 import { pipeline } from "@ogre-tools/fp";
 import { getInjectable } from "@ogre-tools/injectable";
 import { filter } from "lodash/fp";
-import { lensWindowInjectionToken } from "./application-window/lens-window-injection-token";
+import { applicationWindowInjectionToken } from "./application-window/application-window-injection-token";
 
 const getVisibleWindowsInjectable = getInjectable({
   id: "get-visible-windows",
 
   instantiate: (di) => {
-    const getAllLensWindows = () => di.injectMany(lensWindowInjectionToken);
+    const getAllLensWindows = () => di.injectMany(applicationWindowInjectionToken);
 
     return () =>
       pipeline(

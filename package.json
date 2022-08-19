@@ -207,6 +207,9 @@
       "role": "Viewer"
     }
   },
+  "resolutions": {
+    "@astronautlabs/jsonpath/underscore": "^1.12.1"
+  },
   "dependencies": {
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.0",
@@ -257,7 +260,7 @@
     "moment-timezone": "^0.5.34",
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
-    "node-fetch": "lensapp/node-fetch#2.x",
+    "node-fetch": "^2.6.7",
     "node-pty": "0.10.1",
     "npm": "^6.14.17",
     "p-limit": "^3.1.0",
@@ -343,7 +346,7 @@
     "@types/request": "^2.48.7",
     "@types/request-promise-native": "^1.0.18",
     "@types/semver": "^7.3.10",
-    "@types/sharp": "^0.30.4",
+    "@types/sharp": "^0.30.5",
     "@types/spdy": "^3.4.5",
     "@types/tar": "^4.0.5",
     "@types/tar-stream": "^2.2.2",
@@ -399,7 +402,7 @@
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.19",
     "playwright": "^1.24.2",
-    "postcss": "^8.4.14",
+    "postcss": "^8.4.16",
     "postcss-loader": "^6.2.1",
     "randomcolor": "^0.6.2",
     "react-beautiful-dnd": "^13.1.0",
@@ -413,7 +416,7 @@
     "sass-loader": "^12.6.0",
     "sharp": "^0.30.7",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.1.6",
+    "tailwindcss": "^3.1.8",
     "tar-stream": "^2.2.0",
     "ts-loader": "^9.3.1",
     "ts-node": "^10.9.1",
