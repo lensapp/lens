@@ -16,7 +16,7 @@ import requestHelmReleaseConfigurationInjectable from "../../../../common/k8s-ap
 import { waitUntilDefined } from "../../../utils";
 import type { SelectOption } from "../../select";
 import type { DockTab } from "../dock/store";
-import upgradeChartTabStoreInjectable from "./store.injectable";
+import upgradeChartTabDataInjectable from "./tab-data.injectable";
 
 export interface UpgradeChartModel {
   readonly release: HelmRelease;
@@ -41,13 +41,19 @@ export interface UpgradeChartSubmitResult {
 const upgradeChartModelInjectable = getInjectable({
   id: "upgrade-chart-model",
   instantiate: async (di, tab): Promise<UpgradeChartModel> => {
-    const upgradeChartTabStore = di.inject(upgradeChartTabStoreInjectable);
     const releases = di.inject(releasesInjectable);
     const requestHelmReleaseConfiguration = di.inject(requestHelmReleaseConfigurationInjectable);
     const updateRelease = di.inject(updateReleaseInjectable);
+    const tabData = await di.inject(upgradeChartTabDataInjectable, tab.id);
 
-    const tabData = await waitUntilDefined(() => upgradeChartTabStore.getData(tab.id));
-    const release = await waitUntilDefined(() => releases.value.get().find(release => release.getName() === tabData.releaseName));
+    const release = await waitUntilDefined(() => (
+      releases.value
+        .get()
+        .find(release => (
+          release.getName() === tabData.releaseName
+          && release.getNs() === tabData.releaseNamespace
+        ))
+    ));
     const versions = di.inject(helmChartVersionsInjectable, release);
     const storedConfiguration = asyncComputed(() => requestHelmReleaseConfiguration(
       release.getName(),

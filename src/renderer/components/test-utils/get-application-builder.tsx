@@ -6,7 +6,7 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import type { IComputedValue, ObservableMap } from "mobx";
-import { computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
@@ -120,7 +120,10 @@ export interface ApplicationBuilder {
       click: (id: string) => void;
     };
   };
-
+  namespaces: {
+    add: (namespace: string) => void;
+    select: (namespace: string) => void;
+  };
   helmCharts: {
     navigate: NavigateToHelmCharts;
   };
@@ -244,6 +247,9 @@ export const getApplicationBuilder = () => {
 
   let applicationHasStarted = false;
 
+  const namespaces = observable.array<string>();
+  const selectedNamespaces = observable.array<string>();
+
   const builder: ApplicationBuilder = {
     mainDi,
     applicationWindow: {
@@ -304,7 +310,10 @@ export const getApplicationBuilder = () => {
         return builder.applicationWindow.get(id);
       },
     },
-
+    namespaces: {
+      add: action((namespace) => namespaces.push(namespace)),
+      select: action((namespace) => selectedNamespaces.push(namespace)),
+    },
     applicationMenu: {
       click: (path: string) => {
         const applicationMenuItems = mainDi.inject(
@@ -470,7 +479,8 @@ export const getApplicationBuilder = () => {
         // TODO: Figure out a way to remove this stub.
         const namespaceStoreStub = {
           isLoaded: true,
-          contextNamespaces: [],
+          contextNamespaces: selectedNamespaces,
+          allowedNamespaces: namespaces,
           contextItems: [],
           api: {
             kind: "Namespace",

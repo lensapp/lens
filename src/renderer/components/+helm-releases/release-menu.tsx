@@ -61,7 +61,10 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
             <span className="title">Rollback</span>
           </MenuItem>
         )}
-        <MenuItem onClick={this.upgrade}>
+        <MenuItem
+          onClick={this.upgrade}
+          data-testid={`upgrade-chart-menu-item-for-${release.getId()}`}
+        >
           <Icon
             material="refresh"
             interactive={toolbar}
@@ -79,6 +82,10 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
     return (
       <MenuActions
         id={`menu-actions-for-release-menu-for-${release.getId()}`}
+        triggerIcon={{
+          material: "more_vert",
+          "data-testid": `menu-actions-icon-for-release-menu-for-${release.getId()}`,
+        }}
         {...menuProps}
         className={cssNames("HelmReleaseMenu", className)}
         removeAction={this.remove}

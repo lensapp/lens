@@ -6,7 +6,6 @@
 import "./upgrade-chart.scss";
 
 import React from "react";
-import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../../utils";
 import type { DockTab } from "../dock/store";
@@ -32,13 +31,6 @@ interface Dependencies {
 
 @observer
 export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps & Dependencies> {
-  @observable error?: string;
-
-  constructor(props: UpgradeChartProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
   upgrade = async () => {
     const { model } = this.props;
     const { completedSuccessfully } = await model.submit();
@@ -63,7 +55,10 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
     const { release } = model;
 
     return (
-      <div className={cssNames("UpgradeChart flex column", className)}>
+      <div
+        className={cssNames("UpgradeChart flex column", className)}
+        data-testid={`upgrade-chart-dock-tab-contents-for-${release.getId()}`}
+      >
         <InfoPanel
           tabId={tabId}
           error={model.configration.error.get()}

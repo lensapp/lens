@@ -11,7 +11,7 @@ import { isDefined } from "../../../utils";
 
 const requestVersionsEndpoint = urlBuilderFor("/v2/charts/:repo/:name/versions");
 
-export type RequestHelmChartVersions = (repo: string, name: string) => Promise<HelmChart[]>;
+export type RequestHelmChartVersions = (repo: string, chartName: string) => Promise<HelmChart[]>;
 
 const requestHelmChartVersionsInjectable = getInjectable({
   id: "request-helm-chart-versions",
