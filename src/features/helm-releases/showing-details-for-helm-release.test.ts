@@ -11,8 +11,6 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RequestHelmReleases } from "../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import requestHelmReleasesInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
-import namespaceStoreInjectable from "../../renderer/components/+namespaces/store.injectable";
-import type { NamespaceStore } from "../../renderer/components/+namespaces/store";
 import type { RequestHelmReleaseConfiguration } from "../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import requestHelmReleaseConfigurationInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import type { RequestHelmReleaseUpdate } from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
@@ -77,16 +75,12 @@ describe("showing details for helm release", () => {
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartReadmeInjectable, () => requestHelmChartReadmeMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
-      windowDi.override(
-        namespaceStoreInjectable,
-        () =>
-          ({
-            contextNamespaces: ["some-namespace", "some-other-namespace"],
-            items: [],
-            selectNamespaces: () => {},
-          } as unknown as NamespaceStore),
-      );
     });
+
+    builder.namespaces.add("some-namespace");
+    builder.namespaces.select("some-namespace");
+    builder.namespaces.add("some-namespace");
+    builder.namespaces.select("some-other-namespace");
   });
 
   describe("given application is started", () => {

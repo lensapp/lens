@@ -66,6 +66,7 @@ import closeAllWindowsInjectable from "../../../main/start-main-application/lens
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
+import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -247,8 +248,8 @@ export const getApplicationBuilder = () => {
 
   let applicationHasStarted = false;
 
-  const namespaces = observable.array<string>();
-  const selectedNamespaces = observable.array<string>();
+  const namespaces = observable.set<string>();
+  const selectedNamespaces = observable.set<string>();
 
   const builder: ApplicationBuilder = {
     mainDi,
@@ -311,8 +312,8 @@ export const getApplicationBuilder = () => {
       },
     },
     namespaces: {
-      add: action((namespace) => namespaces.push(namespace)),
-      select: action((namespace) => selectedNamespaces.push(namespace)),
+      add: action((namespace) => namespaces.add(namespace)),
+      select: action((namespace) => selectedNamespaces.add(namespace)),
     },
     applicationMenu: {
       click: (path: string) => {
@@ -476,22 +477,26 @@ export const getApplicationBuilder = () => {
           computed(() => catalogEntityFromCluster(clusterStub)),
         );
 
+        windowDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
+
         // TODO: Figure out a way to remove this stub.
         const namespaceStoreStub = {
           isLoaded: true,
-          contextNamespaces: selectedNamespaces,
-          allowedNamespaces: namespaces,
-          contextItems: [],
-          api: {
-            kind: "Namespace",
+          get contextNamespaces() {
+            return Array.from(selectedNamespaces);
           },
-          items: [],
+          get allowedNamespaces() {
+            return Array.from(namespaces);
+          },
+          contextItems: [],
+          api: windowDi.inject(namespaceApiInjectable),
+          items: observable.array(),
           selectNamespaces: () => {},
           getByPath: () => undefined,
           pickOnlySelected: () => [],
           isSelectedAll: () => false,
           getTotalCount: () => 0,
-        } as unknown as NamespaceStore;
+        } as Partial<NamespaceStore> as NamespaceStore;
 
         const clusterFrameContextFake = new ClusterFrameContext(
           clusterStub,
@@ -503,7 +508,6 @@ export const getApplicationBuilder = () => {
 
         windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
-        windowDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
         windowDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
 
         // Todo: get rid of global state.
