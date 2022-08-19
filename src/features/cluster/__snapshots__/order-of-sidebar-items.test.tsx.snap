@@ -484,6 +484,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -493,7 +494,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -1096,6 +1099,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -1105,7 +1109,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>

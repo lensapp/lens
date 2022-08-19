@@ -457,6 +457,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -466,7 +467,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -990,6 +993,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -999,7 +1003,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -1559,6 +1565,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -1568,7 +1575,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -2047,6 +2056,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -2056,7 +2066,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -2535,6 +2547,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -2544,7 +2557,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -2986,6 +3001,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -2995,7 +3011,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -3555,6 +3573,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -3564,7 +3583,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -4088,6 +4109,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -4097,7 +4119,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>

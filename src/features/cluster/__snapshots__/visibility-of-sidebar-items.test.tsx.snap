@@ -429,6 +429,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -438,7 +439,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -974,6 +977,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -983,7 +987,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
