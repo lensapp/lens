@@ -15,7 +15,7 @@ const {
     forCluster, StatefulSet, DaemonSet, Deployment,
   },
   Component: {
-    SubTitle, FormSwitch, Switcher, Button,
+    SubTitle, Switch, Button,
   },
 } = Renderer;
 
@@ -207,17 +207,14 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
         )}
         <section>
           <SubTitle title="Prometheus" />
-          <FormSwitch
-            control={(
-              <Switcher
-                disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
-                checked={!!this.featureStates.prometheus && this.props.cluster.status.phase == "connected"}
-                onChange={v => this.togglePrometheus(v.target.checked)}
-                name="prometheus"
-              />
-            )}
-            label="Enable bundled Prometheus metrics stack"
-          />
+          <Switch
+            disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
+            checked={!!this.featureStates.prometheus && this.props.cluster.status.phase == "connected"}
+            onChange={checked => this.togglePrometheus(checked)}
+            name="prometheus"
+          >
+            Enable bundled Prometheus metrics stack
+          </Switch>
           <small className="hint">
             Enable timeseries data visualization (Prometheus stack) for your cluster.
           </small>
@@ -225,17 +222,14 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
 
         <section>
           <SubTitle title="Kube State Metrics" />
-          <FormSwitch
-            control={(
-              <Switcher
-                disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
-                checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.phase == "connected"}
-                onChange={v => this.toggleKubeStateMetrics(v.target.checked)}
-                name="node-exporter"
-              />
-            )}
-            label="Enable bundled kube-state-metrics stack"
-          />
+          <Switch
+            disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
+            checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.phase == "connected"}
+            onChange={checked => this.toggleKubeStateMetrics(checked)}
+            name="kube-state-metrics"
+          >
+            Enable bundled kube-state-metrics stack
+          </Switch>
           <small className="hint">
             Enable Kubernetes API object metrics for your cluster.
             Enable this only if you don&apos;t have existing kube-state-metrics stack installed.
@@ -244,17 +238,14 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
 
         <section>
           <SubTitle title="Node Exporter" />
-          <FormSwitch
-            control={(
-              <Switcher
-                disabled={this.featureStates.nodeExporter === undefined || !this.isTogglable}
-                checked={!!this.featureStates.nodeExporter && this.props.cluster.status.phase == "connected"}
-                onChange={v => this.toggleNodeExporter(v.target.checked)}
-                name="node-exporter"
-              />
-            )}
-            label="Enable bundled node-exporter stack"
-          />
+          <Switch
+            disabled={this.featureStates.nodeExporter === undefined || !this.isTogglable}
+            checked={!!this.featureStates.nodeExporter && this.props.cluster.status.phase == "connected"}
+            onChange={checked => this.toggleNodeExporter(checked)}
+            name="node-exporter"
+          >
+            Enable bundled node-exporter stack
+          </Switch>
           <small className="hint">
             Enable node level metrics for your cluster.
             Enable this only if you don&apos;t have existing node-exporter stack installed.
