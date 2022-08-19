@@ -22,7 +22,6 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import sidebarStorageInjectable from "../../renderer/components/layout/sidebar-storage/sidebar-storage.injectable";
-import hostedClusterIdInjectable from "../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 
@@ -38,7 +37,6 @@ describe("cluster - sidebar and tab navigation for core", () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(hostedClusterIdInjectable, () => "some-hosted-cluster-id");
       windowDi.override(storageSaveDelayInjectable, () => 250);
 
       windowDi.override(
@@ -98,7 +96,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(
-            "/some-directory-for-lens-local-storage/some-hosted-cluster-id.json",
+            "/some-directory-for-lens-local-storage/some-cluster-id.json",
             {
               sidebar: {
                 expanded: { "some-parent-id": true },
@@ -286,7 +284,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
             const readJsonFileFake = windowDi.inject(readJsonFileInjectable);
 
             const actual = await readJsonFileFake(
-              "/some-directory-for-lens-local-storage/some-hosted-cluster-id.json",
+              "/some-directory-for-lens-local-storage/some-cluster-id.json",
             );
 
             expect(actual).toEqual({
