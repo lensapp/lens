@@ -104,7 +104,7 @@ class NonInjectedReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogPr
       <Wizard
         header={(
           <h5>
-            Scale Replica Set
+            {"Scale Replica Set "}
             <span>{replicaSet.getName()}</span>
           </h5>
         )}
@@ -132,14 +132,14 @@ class NonInjectedReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogPr
             </div>
             <div className="plus-minus-container flex gaps">
               <Icon
-                material="add_circle_outline"
-                onClick={this.desiredReplicasUp}
-                data-testid="desired-replicas-up"
-              />
-              <Icon
                 material="remove_circle_outline"
                 onClick={this.desiredReplicasDown}
                 data-testid="desired-replicas-down"
+              />
+              <Icon
+                material="add_circle_outline"
+                onClick={this.desiredReplicasUp}
+                data-testid="desired-replicas-up"
               />
             </div>
           </div>
