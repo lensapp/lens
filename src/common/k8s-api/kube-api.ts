@@ -635,8 +635,6 @@ export class KubeApi<
       watchId = `${this.kind.toLowerCase()}-${this.watchId++}`,
     } = opts ?? {};
 
-    console.log(`watching ${this.apiBase} in namespace="${namespace}"`);
-
     // Create AbortController for this request
     const abortController = new WrappedAbortController(opts?.abortController);
 
