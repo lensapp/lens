@@ -67,10 +67,24 @@ import type { LensWindow } from "../../../main/start-main-application/lens-windo
 import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
+import { Namespace } from "../../../common/k8s-api/endpoints";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
 type LensWindowWithHelpers = LensWindow & { rendered: RenderResult; di: DiContainer };
+
+const createNamespacesFor = (namespaces: Set<string>): Namespace[] => (
+  Array.from(namespaces, (namespace) => new Namespace({
+    apiVersion: "v1",
+    kind: "Namespace",
+    metadata: {
+      name: namespace,
+      resourceVersion: "1",
+      selfLink: `/api/v1/namespaces/${namespace}`,
+      uid: `namespace-${namespace}`,
+    },
+  }))
+);
 
 export interface ApplicationBuilder {
   mainDi: DiContainer;
@@ -249,6 +263,7 @@ export const getApplicationBuilder = () => {
   let applicationHasStarted = false;
 
   const namespaces = observable.set<string>();
+  const namespaceItems = observable.array<Namespace>();
   const selectedNamespaces = observable.set<string>();
 
   const builder: ApplicationBuilder = {
@@ -312,7 +327,10 @@ export const getApplicationBuilder = () => {
       },
     },
     namespaces: {
-      add: action((namespace) => namespaces.add(namespace)),
+      add: action((namespace) => {
+        namespaces.add(namespace);
+        namespaceItems.replace(createNamespacesFor(namespaces));
+      }),
       select: action((namespace) => selectedNamespaces.add(namespace)),
     },
     applicationMenu: {
@@ -469,6 +487,7 @@ export const getApplicationBuilder = () => {
         );
 
         const clusterStub = {
+          id: "some-cluster-id",
           accessibleNamespaces: [],
           isAllowedResource: isAllowedResource(allowedResourcesState),
         } as unknown as Cluster;
@@ -477,7 +496,7 @@ export const getApplicationBuilder = () => {
           computed(() => catalogEntityFromCluster(clusterStub)),
         );
 
-        windowDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
+        windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
 
         // TODO: Figure out a way to remove this stub.
         const namespaceStoreStub = {
@@ -488,14 +507,14 @@ export const getApplicationBuilder = () => {
           get allowedNamespaces() {
             return Array.from(namespaces);
           },
-          contextItems: [],
+          contextItems: namespaceItems,
           api: windowDi.inject(namespaceApiInjectable),
-          items: observable.array(),
+          items: namespaceItems,
           selectNamespaces: () => {},
           getByPath: () => undefined,
           pickOnlySelected: () => [],
           isSelectedAll: () => false,
-          getTotalCount: () => 0,
+          getTotalCount: () => namespaceItems.length,
         } as Partial<NamespaceStore> as NamespaceStore;
 
         const clusterFrameContextFake = new ClusterFrameContext(

@@ -13,11 +13,8 @@ import getRandomInstallChartTabIdInjectable from "../../../renderer/components/d
 import type { RequestCreateHelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import currentPathInjectable from "../../../renderer/routes/current-path.injectable";
-import namespaceStoreInjectable from "../../../renderer/components/+namespaces/store.injectable";
-import type { NamespaceStore } from "../../../renderer/components/+namespaces/store";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -51,26 +48,11 @@ describe("installing helm chart from new tab", () => {
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
-      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartReadmeInjectable, () => requestHelmChartReadmeMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
       windowDi.override(requestCreateHelmReleaseInjectable, () => requestCreateHelmReleaseMock);
-
-      // TODO: Replace store mocking with mock for the actual side-effect (where the namespaces are coming from)
-      windowDi.override(
-        namespaceStoreInjectable,
-        () =>
-          ({
-            contextNamespaces: [],
-            items: [
-              { getName: () => "default" },
-              { getName: () => "some-other-namespace" },
-            ],
-            selectNamespaces: () => {},
-          } as unknown as NamespaceStore),
-      );
 
       windowDi.override(getRandomInstallChartTabIdInjectable, () =>
         jest
@@ -79,6 +61,9 @@ describe("installing helm chart from new tab", () => {
           .mockReturnValueOnce("some-second-tab-id"),
       );
     });
+
+    builder.namespaces.add("default");
+    builder.namespaces.add("some-other-namespace");
   });
 
   describe("given tab for installing chart was not previously opened and application is started", () => {
