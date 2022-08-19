@@ -262,20 +262,22 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
         </section>
 
         <section>
-          <Button
-            label={this.buttonLabel}
-            waiting={this.inProgress}
-            onClick={() => this.save()}
-            primary
-            disabled={!this.changed}
-            className="w-60 h-14"
-          />
+          <div>
+            <Button
+              primary
+              label={this.buttonLabel}
+              waiting={this.inProgress}
+              onClick={() => this.save()}
+              disabled={!this.changed}
+              style={{ width: "20ch", padding: "0.5rem" }}
+            />
 
-          {this.canUpgrade && (
-            <small className="hint">
-              An update is available for enabled metrics components.
-            </small>
-          )}
+            {this.canUpgrade && (
+              <small className="hint">
+                An update is available for enabled metrics components.
+              </small>
+            )}
+          </div>
         </section>
       </>
     );
