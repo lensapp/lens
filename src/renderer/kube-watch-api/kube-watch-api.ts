@@ -10,6 +10,7 @@ import type { ClusterFrameContext } from "../cluster-frame-context/cluster-frame
 import logger from "../../common/logger";
 import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
 import type { RequestInit } from "node-fetch";
+import { AbortController } from "abort-controller";
 
 // TODO: upgrade node-fetch once we are starting to use ES modules
 type LegacyAbortSignal = NonNullable<RequestInit["signal"]>;
