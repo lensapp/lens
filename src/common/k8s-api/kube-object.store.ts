@@ -20,7 +20,7 @@ import logger from "../logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import { entries } from "../utils/objects";
-import { AbortController } from "abort-controller";
+import AbortController from "abort-controller";
 
 export type OnLoadFailure = (error: unknown) => void;
 
