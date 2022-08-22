@@ -4168,9 +4168,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
     </div>
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu right bottom portal enter leave"
+    class="Animate opacity Menu MenuActions flex HelmReleaseMenu bottom right portal enter leave"
     id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
+    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
   >
     <li
       class="MenuItem"
@@ -5221,9 +5221,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
     </div>
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu right bottom portal enter leave"
+    class="Animate opacity Menu MenuActions flex HelmReleaseMenu bottom right portal enter leave"
     id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
+    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
   >
     <li
       class="MenuItem"
@@ -6042,9 +6042,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
     </div>
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu right bottom portal enter leave"
+    class="Animate opacity Menu MenuActions flex HelmReleaseMenu bottom right portal enter leave"
     id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
+    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
   >
     <li
       class="MenuItem"
