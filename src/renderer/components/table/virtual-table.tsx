@@ -4,10 +4,10 @@
  */
 
  import React from "react";
- import { flexRender, Row } from '@tanstack/react-table'
+ import { flexRender, Row } from "@tanstack/react-table"
  import type { Table } from "@tanstack/react-table";
  import { TableHeader } from "./table-header";
- import { useVirtual } from 'react-virtual'
+ import { useVirtualizer } from "@tanstack/react-virtual";
  
  interface TableProps<T> {
    table: Table<T>;
@@ -18,22 +18,27 @@
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
   
   const { rows } = table.getRowModel()
-  const rowVirtualizer = useVirtual({
-    parentRef: tableContainerRef,
-    size: rows.length,
-    overscan: 10,
+  const rowVirtualizer = useVirtualizer({
+    getScrollElement: () => tableContainerRef.current,
+    estimateSize: () => 55,
+    overscan: 5,
+    count: rows.length
   })
-  const { virtualItems: virtualRows } = rowVirtualizer;
 
+  console.log(`${rowVirtualizer.getTotalSize()}px`)
+  
   return (
     <div className={className} ref={tableContainerRef}>
-      <table>
+      <table style={{ height: 1590 }}>
         <TableHeader table={table}/>
         <tbody>
-          {virtualRows.map(virtualRow => {
+          {rowVirtualizer.getVirtualItems().map(virtualRow => {
             const row = rows[virtualRow.index] as Row<Data>
             return (
-              <tr key={row.id}>
+              <tr
+                key={row.id}
+                // style={{ height: 30 }}
+              >
                 {row.getVisibleCells().map(cell => {
                   return (
                     <td key={cell.id} style={{ width: cell.column.getSize() }}>

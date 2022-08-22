@@ -1,5 +1,5 @@
 .tableTheme {
-  height: calc(100% - 59px);
+  height: 708px;
   overflow: auto;
 
   table {
@@ -20,7 +20,7 @@
   }
   
   tr {
-    margin: calc(var(--margin) * 1.6) var(--margin);
+    // margin: calc(var(--margin) * 1.6) var(--margin);
   }
   
   th {
