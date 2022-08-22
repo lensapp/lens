@@ -9,11 +9,7 @@ import { once } from "lodash";
 import type { ClusterFrameContext } from "../cluster-frame-context/cluster-frame-context";
 import logger from "../../common/logger";
 import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
-import type { RequestInit } from "node-fetch";
-import { AbortController } from "abort-controller";
-
-// TODO: upgrade node-fetch once we are starting to use ES modules
-type LegacyAbortSignal = NonNullable<RequestInit["signal"]>;
+import AbortController from "abort-controller";
 
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
@@ -107,7 +103,7 @@ export class KubeWatchApi {
 
     const loadThenSubscribe = async (namespaces: string[] | undefined) => {
       try {
-        await store.loadAll({ namespaces, reqInit: { signal: childController.signal as LegacyAbortSignal }, onLoadFailure });
+        await store.loadAll({ namespaces, reqInit: { signal: childController.signal }, onLoadFailure });
         unsubscribe.push(store.subscribe({ onLoadFailure, abortController: childController }));
       } catch (error) {
         if (!(error instanceof DOMException)) {
