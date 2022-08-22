@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { AbortController } from "abort-controller";
+
 /**
  * This is like an `AbortController` but will also abort if the parent aborts,
  * but won't make the parent abort if this aborts (single direction)

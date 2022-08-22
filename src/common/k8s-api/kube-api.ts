@@ -27,9 +27,7 @@ import type { PartialDeep } from "type-fest";
 import logger from "../logger";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
-
-// TODO: upgrade node-fetch once we are starting to use ES modules
-type LegacyAbortSignal = NonNullable<RequestInit["signal"]>;
+import type AbortController from "abort-controller";
 
 /**
  * The options used for creating a `KubeApi`
@@ -719,7 +717,7 @@ export class KubeApi<
     const requestParams = timeout ? { query: { timeoutSeconds: timeout }} : {};
     const watchUrl = this.getWatchUrl(namespace);
     const responsePromise = this.request.getResponse(watchUrl, requestParams, {
-      signal: abortController.signal as LegacyAbortSignal,
+      signal: abortController.signal,
       timeout: 600_000,
     });
 
