@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { AbortController } from "abort-controller";
+import type AbortController from "abort-controller";
 
 /**
  * Return a promise that will be resolved after at least `timeout` ms have

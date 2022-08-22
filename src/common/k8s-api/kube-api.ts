@@ -19,7 +19,6 @@ import { KubeJsonApi } from "./kube-json-api";
 import type { Disposer } from "../utils";
 import { isDefined, noop, WrappedAbortController } from "../utils";
 import type { RequestInit } from "node-fetch";
-import type AbortController from "abort-controller";
 import type { AgentOptions } from "https";
 import { Agent } from "https";
 import type { Patch } from "rfc6902";
@@ -28,6 +27,7 @@ import type { PartialDeep } from "type-fest";
 import logger from "../logger";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
+import type AbortController from "abort-controller";
 
 /**
  * The options used for creating a `KubeApi`

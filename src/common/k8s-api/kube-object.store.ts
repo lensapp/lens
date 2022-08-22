@@ -15,12 +15,12 @@ import { ItemStore } from "../item.store";
 import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
 import type { RequestInit } from "node-fetch";
-import AbortController from "abort-controller";
 import type { Patch } from "rfc6902";
 import logger from "../logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import { entries } from "../utils/objects";
+import { AbortController } from "abort-controller";
 
 export type OnLoadFailure = (error: unknown) => void;
 
@@ -477,7 +477,8 @@ export abstract class KubeObjectStore<
       callback,
     });
 
-    const { signal } = abortController;
+    // TODO: upgrade node-fetch once we are starting to use ES modules
+    const signal = abortController.signal;
 
     const callback: KubeApiWatchCallback<D> = (data, error) => {
       if (!this.isLoaded || error?.type === "aborted") return;
