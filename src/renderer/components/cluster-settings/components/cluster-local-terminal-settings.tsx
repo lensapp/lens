@@ -167,7 +167,7 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTe
                     title="Clear"
                     onClick={() => setAndCommitDirectory("")}
                     smallest
-                    style={{ marginRight: "var(--margin)"}}
+                    style={{ marginRight: "var(--margin)" }}
                   />
                 )
               }
