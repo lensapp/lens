@@ -17,6 +17,7 @@ import type { RequestHelmReleaseConfiguration } from "../../../common/k8s-api/en
 import requestHelmReleaseConfigurationInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import type { RequestHelmReleases } from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
+import { advanceFakeTime, useFakeTime } from "../../../common/test-utils/use-fake-time";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
@@ -49,6 +50,8 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
 
       navigateToHelmReleases = windowDi.inject(navigateToHelmReleasesInjectable);
     });
+
+    useFakeTime("2020-01-12 12:00:00");
 
     builder.namespaces.add("my-first-namespace");
     builder.namespaces.add("my-second-namespace");
@@ -114,6 +117,7 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
               const upgradeHelmChartMenuItem = renderResult.getByTestId("upgrade-chart-menu-item-for-my-second-namespace/some-name");
 
               upgradeHelmChartMenuItem.click();
+              advanceFakeTime(100);
             });
 
             it("renders", () => {

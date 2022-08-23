@@ -3116,60 +3116,6 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
       </div>
     </div>
   </div>
-  <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu right bottom portal enter leave"
-    id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
-    style="--enter-duration: 100ms; --leave-duration: 100ms;"
-  >
-    <li
-      class="MenuItem"
-      data-testid="upgrade-chart-menu-item-for-my-second-namespace/some-name"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="refresh"
-        >
-          refresh
-        </span>
-      </i>
-      <div>
-        Upgrade
-      </div>
-      <span
-        class="title"
-      >
-        Upgrade
-      </span>
-    </li>
-    <li
-      class="MenuItem"
-      data-testid="menu-action-remove"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="delete"
-        >
-          delete
-        </span>
-      </i>
-      <div>
-        Delete
-      </div>
-      <span
-        class="title"
-      >
-        Delete
-      </span>
-    </li>
-  </ul>
 </body>
 `;
 
@@ -4167,60 +4113,6 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
       </div>
     </div>
   </div>
-  <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu bottom right portal enter leave"
-    id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
-    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
-  >
-    <li
-      class="MenuItem"
-      data-testid="upgrade-chart-menu-item-for-my-second-namespace/some-name"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="refresh"
-        >
-          refresh
-        </span>
-      </i>
-      <div>
-        Upgrade
-      </div>
-      <span
-        class="title"
-      >
-        Upgrade
-      </span>
-    </li>
-    <li
-      class="MenuItem"
-      data-testid="menu-action-remove"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="delete"
-        >
-          delete
-        </span>
-      </i>
-      <div>
-        Delete
-      </div>
-      <span
-        class="title"
-      >
-        Delete
-      </span>
-    </li>
-  </ul>
 </body>
 `;
 
@@ -5220,60 +5112,6 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
       </div>
     </div>
   </div>
-  <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu bottom right portal enter leave"
-    id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
-    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
-  >
-    <li
-      class="MenuItem"
-      data-testid="upgrade-chart-menu-item-for-my-second-namespace/some-name"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="refresh"
-        >
-          refresh
-        </span>
-      </i>
-      <div>
-        Upgrade
-      </div>
-      <span
-        class="title"
-      >
-        Upgrade
-      </span>
-    </li>
-    <li
-      class="MenuItem"
-      data-testid="menu-action-remove"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="delete"
-        >
-          delete
-        </span>
-      </i>
-      <div>
-        Delete
-      </div>
-      <span
-        class="title"
-      >
-        Delete
-      </span>
-    </li>
-  </ul>
 </body>
 `;
 
@@ -6041,59 +5879,5 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
       </div>
     </div>
   </div>
-  <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu bottom right portal enter leave"
-    id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
-    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
-  >
-    <li
-      class="MenuItem"
-      data-testid="upgrade-chart-menu-item-for-my-second-namespace/some-name"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="refresh"
-        >
-          refresh
-        </span>
-      </i>
-      <div>
-        Upgrade
-      </div>
-      <span
-        class="title"
-      >
-        Upgrade
-      </span>
-    </li>
-    <li
-      class="MenuItem"
-      data-testid="menu-action-remove"
-      tabindex="0"
-    >
-      <i
-        class="Icon material focusable"
-      >
-        <span
-          class="icon"
-          data-icon-name="delete"
-        >
-          delete
-        </span>
-      </i>
-      <div>
-        Delete
-      </div>
-      <span
-        class="title"
-      >
-        Delete
-      </span>
-    </li>
-  </ul>
 </body>
 `;
