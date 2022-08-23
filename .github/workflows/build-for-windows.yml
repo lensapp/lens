@@ -63,6 +63,9 @@ jobs:
       - name: Clear CA trust
         run: rm -rf node_modules/win-ca/pem
 
+      - name: Electron Builder
+        run: yarn run electron-builder --publish onTag --win --dir
+
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v3
       #   with:
