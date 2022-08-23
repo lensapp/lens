@@ -4,13 +4,14 @@ import type { Table } from "@tanstack/react-table";
 import { flexRender } from '@tanstack/react-table';
 import { cssNames } from "../../utils";
 
-interface TableHeaderProps<Data> {
+export interface TableHeaderProps<Data> {
   table: Table<Data>;
+  className?: string;
 }
 
-export function TableHeader<Data>({ table }: TableHeaderProps<Data>) {
+export function TableHeader<Data>({ table, className }: TableHeaderProps<Data>) {
   return (
-    <thead>
+    <thead className={className}>
       {table.getHeaderGroups().map(headerGroup => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map(header => (

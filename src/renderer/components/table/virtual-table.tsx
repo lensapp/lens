@@ -6,8 +6,8 @@
  import React from "react";
  import { flexRender, Row } from "@tanstack/react-table"
  import type { Table, Cell } from "@tanstack/react-table";
- import { TableHeader } from "./table-header";
  import { useVirtualizer } from "@tanstack/react-virtual";
+import { VirtualTableHeader } from "./virtual-table-header";
  
  interface TableProps<T> {
    table: Table<T>;
@@ -34,7 +34,7 @@
           width: '100%',
           position: 'relative',
         }}>
-          <TableHeader table={table}/>
+          <VirtualTableHeader table={table}/>
           <tbody>
             {rowVirtualizer.getVirtualItems().map(virtualRow => {
               const row = rows[virtualRow.index] as Row<Data>
