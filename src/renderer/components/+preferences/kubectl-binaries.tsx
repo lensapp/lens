@@ -4,30 +4,37 @@
  */
 
 import React, { useState } from "react";
+import { observer } from "mobx-react";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
-import { UserStore } from "../../../common/user-store";
-import { bundledKubectlPath } from "../../../main/kubectl/kubectl";
-import { SelectOption, Select } from "../select";
+import type { UserStore } from "../../../common/user-store";
+import { Select } from "../select";
 import { Switch } from "../switch";
-import { packageMirrors } from "../../../common/user-store/preferences-helpers";
-import directoryForBinariesInjectable
-  from "../../../common/app-paths/directory-for-binaries/directory-for-binaries.injectable";
+import { defaultPackageMirror, packageMirrors } from "../../../common/user-store/preferences-helpers";
+import directoryForBinariesInjectable from "../../../common/app-paths/directory-for-binaries/directory-for-binaries.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
+import directoryForKubectlBinariesInjectable from "../../../common/app-paths/directory-for-kubectl-binaries/directory-for-kubectl-binaries.injectable";
 
 interface Dependencies {
-  defaultPathForKubectlBinaries: string
+  defaultPathForGeneralBinaries: string;
+  defaultPathForKubectlBinaries: string;
+  userStore: UserStore;
 }
+const downloadMirrorOptions = Array.from(packageMirrors, ([name, mirror]) => ({
+  value: name,
+  label: mirror.label,
+  isDisabled: !mirror.platforms.has(process.platform),
+}));
 
-const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKubectlBinaries }) => {
-  const userStore = UserStore.getInstance();
+const NonInjectedKubectlBinaries= observer(({
+  defaultPathForGeneralBinaries,
+  defaultPathForKubectlBinaries,
+  userStore,
+}: Dependencies) => {
   const [downloadPath, setDownloadPath] = useState(userStore.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(userStore.kubectlBinariesPath || "");
   const pathValidator = downloadPath ? InputValidators.isPath : undefined;
-  const downloadMirrorOptions: SelectOption<string>[] = Array.from(
-    packageMirrors.entries(),
-    ([value, { label, platforms }]) => ({ value, label, platforms }),
-  );
 
   const save = () => {
     userStore.downloadBinariesPath = downloadPath;
@@ -37,7 +44,7 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKub
   return (
     <>
       <section>
-        <SubTitle title="Kubectl binary download"/>
+        <SubTitle title="Kubectl binary download" />
         <Switch
           checked={userStore.downloadKubectlBinaries}
           onChange={() => userStore.downloadKubectlBinaries = !userStore.downloadKubectlBinaries}
@@ -49,12 +56,12 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKub
       <section>
         <SubTitle title="Download mirror" />
         <Select
+          id="download-mirror-input"
           placeholder="Download mirror for kubectl"
           options={downloadMirrorOptions}
           value={userStore.downloadMirror}
-          onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
-          disabled={!userStore.downloadKubectlBinaries}
-          isOptionDisabled={({ platforms }) => !platforms.has(process.platform)}
+          onChange={option => userStore.downloadMirror = option?.value ?? defaultPackageMirror}
+          isDisabled={!userStore.downloadKubectlBinaries}
         />
       </section>
 
@@ -62,21 +69,19 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKub
         <SubTitle title="Directory for binaries" />
         <Input
           value={downloadPath}
-          placeholder={defaultPathForKubectlBinaries}
+          placeholder={defaultPathForGeneralBinaries}
           validators={pathValidator}
           onChange={setDownloadPath}
           onBlur={save}
           disabled={!userStore.downloadKubectlBinaries}
         />
-        <div className="hint">
-          The directory to download binaries into.
-        </div>
+        <div className="hint">The directory to download binaries into.</div>
       </section>
 
       <section>
         <SubTitle title="Path to kubectl binary" />
         <Input
-          placeholder={bundledKubectlPath()}
+          placeholder={defaultPathForKubectlBinaries}
           value={binariesPath}
           validators={pathValidator}
           onChange={setBinariesPath}
@@ -86,10 +91,16 @@ const NonInjectedKubectlBinaries: React.FC<Dependencies> = (({ defaultPathForKub
       </section>
     </>
   );
-});
+},
+);
 
-export const KubectlBinaries = withInjectables<Dependencies>(NonInjectedKubectlBinaries, {
-  getProps: (di) => ({
-    defaultPathForKubectlBinaries: di.inject(directoryForBinariesInjectable),
-  }),
-});
+export const KubectlBinaries = withInjectables<Dependencies>(
+  NonInjectedKubectlBinaries,
+  {
+    getProps: (di) => ({
+      defaultPathForGeneralBinaries: di.inject(directoryForBinariesInjectable),
+      defaultPathForKubectlBinaries: di.inject(directoryForKubectlBinariesInjectable),
+      userStore: di.inject(userStoreInjectable),
+    }),
+  },
+);

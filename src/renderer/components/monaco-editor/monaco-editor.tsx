@@ -9,11 +9,14 @@ import { observer } from "mobx-react";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { editor, Uri } from "monaco-editor";
 import type { MonacoTheme } from "./monaco-themes";
-import { MonacoValidator, monacoValidators } from "./monaco-validators";
+import { type MonacoValidator, monacoValidators } from "./monaco-validators";
 import { debounce, merge } from "lodash";
-import { cssNames, disposer } from "../../utils";
-import { UserStore } from "../../../common/user-store";
-import { ThemeStore } from "../../theme.store";
+import { autoBind, cssNames, disposer } from "../../utils";
+import type { UserStore } from "../../../common/user-store";
+import type { ThemeStore } from "../../themes/store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 
 export type MonacoEditorId = string;
 
@@ -26,55 +29,65 @@ export interface MonacoEditorProps {
   theme?: MonacoTheme;
   language?: "yaml" | "json"; // supported list of languages, configure in `webpack.renderer.ts`
   options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
-  value?: string;
+  value: string;
   onChange?(value: string, evt: editor.IModelContentChangedEvent): void; // catch latest value updates
-  onError?(error?: Error | unknown): void; // provide syntax validation error, etc.
+  onError?(error: unknown): void; // provide syntax validation error, etc.
   onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
   onModelChange?(model: editor.ITextModel, prev?: editor.ITextModel): void;
+  innerRef?: React.ForwardedRef<MonacoEditorRef>;
 }
 
-export const defaultEditorProps: Partial<MonacoEditorProps> = {
-  language: "yaml",
-  get theme(): MonacoTheme {
-    // theme for monaco-editor defined in `src/renderer/themes/lens-*.json`
-    return ThemeStore.getInstance().activeTheme.monacoTheme;
-  },
-};
+interface Dependencies {
+  themeStore: ThemeStore;
+  userStore: UserStore;
+}
+
+export function createMonacoUri(id: MonacoEditorId): Uri {
+  return Uri.file(`/monaco-editor/${id}`);
+}
+
+const monacoViewStates = new WeakMap<Uri, editor.ICodeEditorViewState>();
+
+export interface MonacoEditorRef {
+  focus(): void;
+}
 
 @observer
-export class MonacoEditor extends React.Component<MonacoEditorProps> {
-  static defaultProps = defaultEditorProps as object;
-  static viewStates = new WeakMap<Uri, editor.ICodeEditorViewState>();
+class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Dependencies> {
+  static defaultProps = {
+    language: "yaml" as const,
+  };
 
-  static createUri(id: MonacoEditorId): Uri {
-    return Uri.file(`/monaco-editor/${id}`);
-  }
+  private staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
+  private dispose = disposer();
 
-  public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
-  public dispose = disposer();
+  @observable.ref containerElem: HTMLDivElement | null = null;
+  @observable.ref editor!: editor.IStandaloneCodeEditor;
+  @observable readonly dimensions: { width?: number; height?: number } = {};
+  @observable unmounting = false;
 
   // TODO: investigate how to replace with "common/logger"
   //  currently leads for stucking UI forever & infinite loop.
   //  e.g. happens on tab change/create, maybe some other cases too.
-  logger = console;
+  private logger = console;
 
-  @observable.ref containerElem: HTMLElement;
-  @observable.ref editor: editor.IStandaloneCodeEditor;
-  @observable dimensions: { width?: number, height?: number } = {};
-  @observable unmounting = false;
-
-  constructor(props: MonacoEditorProps) {
+  constructor(props: MonacoEditorProps & Dependencies) {
     super(props);
     makeObservable(this);
+    autoBind(this);
   }
 
-  @computed get id() {
+  @computed get id(): MonacoEditorId {
     return this.props.id ?? this.staticId;
   }
 
+  @computed get theme() {
+    return this.props.theme ?? this.props.themeStore.activeTheme.monacoTheme;
+  }
+
   @computed get model(): editor.ITextModel {
-    const uri = MonacoEditor.createUri(this.id);
+    const uri = createMonacoUri(this.id);
     const model = editor.getModel(uri);
 
     if (model) {
@@ -88,12 +101,13 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
   @computed get options(): editor.IStandaloneEditorConstructionOptions {
     return merge({},
-      UserStore.getInstance().editorConfiguration,
+      this.props.userStore.editorConfiguration,
       this.props.options,
     );
   }
 
-  @computed get logMetadata() {
+  @computed
+  private get logMetadata() {
     return {
       editorId: this.id,
       model: this.model,
@@ -120,8 +134,8 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     return () => resizeObserver.unobserve(containerElem);
   }
 
-  onModelChange = (model: editor.ITextModel, oldModel?: editor.ITextModel) => {
-    this.logger?.info("[MONACO]: model change", { model, oldModel }, this.logMetadata);
+  protected onModelChange(model: editor.ITextModel, oldModel?: editor.ITextModel) {
+    this.logger.info("[MONACO]: model change", { model, oldModel }, this.logMetadata);
 
     if (oldModel) {
       this.saveViewState(oldModel);
@@ -133,45 +147,54 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.editor.focus(); // keep focus in editor, e.g. when clicking between dock-tabs
     this.props.onModelChange?.(model, oldModel);
     this.validateLazy();
-  };
+  }
 
   /**
    * Save current view-model state in the editor.
    * This will allow restore cursor position, selected text, etc.
-   * @param {editor.ITextModel} model
    */
-  private saveViewState(model: editor.ITextModel) {
-    MonacoEditor.viewStates.set(model.uri, this.editor.saveViewState());
-  }
-
-  private restoreViewState(model: editor.ITextModel) {
-    const viewState = MonacoEditor.viewStates.get(model.uri);
+  protected saveViewState(model: editor.ITextModel) {
+    const viewState = this.editor?.saveViewState();
 
     if (viewState) {
-      this.editor.restoreViewState(viewState);
+      monacoViewStates.set(model.uri, viewState);
+    }
+  }
+
+  protected restoreViewState(model: editor.ITextModel) {
+    const viewState = monacoViewStates.get(model.uri);
+
+    if (viewState) {
+      this.editor?.restoreViewState(viewState);
     }
   }
 
   componentDidMount() {
     try {
       this.createEditor();
-      this.logger?.info(`[MONACO]: editor did mount`, this.logMetadata);
+      this.logger.info(`[MONACO]: editor did mount`, this.logMetadata);
     } catch (error) {
-      this.logger?.error(`[MONACO]: mounting failed: ${error}`, this.logMetadata);
+      this.logger.error(`[MONACO]: mounting failed: ${error}`, this.logMetadata);
     }
   }
 
   componentWillUnmount() {
     this.unmounting = true;
     this.saveViewState(this.model);
-    this.destroy();
+
+    if (this.editor) {
+      this.dispose();
+      this.editor.dispose();
+    }
+
   }
 
-  private createEditor() {
+  protected createEditor() {
     if (!this.containerElem || this.editor || this.unmounting) {
       return;
     }
-    const { language, theme, readOnly, value: defaultValue } = this.props;
+    const { language, readOnly, value: defaultValue } = this.props;
+    const { theme } = this;
 
     this.editor = editor.create(this.containerElem, {
       model: this.model,
@@ -183,7 +206,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       ...this.options,
     });
 
-    this.logger?.info(`[MONACO]: editor created for language=${language}, theme=${theme}`, this.logMetadata);
+    this.logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`, this.logMetadata);
     this.validateLazy(); // validate initial value
     this.restoreViewState(this.model); // restore previous state if any
 
@@ -208,7 +231,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
 
     this.dispose.push(
       reaction(() => this.model, this.onModelChange),
-      reaction(() => this.props.theme, editor.setTheme),
+      reaction(() => this.theme, theme => {
+        if (theme) {
+          editor.setTheme(theme);
+        }
+      }),
       reaction(() => this.props.value, value => this.setValue(value)),
       reaction(() => this.options, opts => this.editor.updateOptions(opts)),
 
@@ -217,14 +244,6 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
       () => onContentSizeChangeDisposer.dispose(),
       this.bindResizeObserver(),
     );
-  }
-
-  destroy(): void {
-    if (!this.editor) return;
-
-    this.dispose();
-    this.editor.dispose();
-    this.editor = null;
   }
 
   @action
@@ -241,7 +260,7 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.validate(value);
   }
 
-  getValue(opts?: { preserveBOM: boolean; lineEnding: string; }): string {
+  getValue(opts?: { preserveBOM: boolean; lineEnding: string }): string {
     return this.editor?.getValue(opts) ?? "";
   }
 
@@ -249,9 +268,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
     this.editor?.focus();
   }
 
-  validate = action((value = this.getValue()) => {
+  @action
+  validate(value = this.getValue()) {
     const validators: MonacoValidator[] = [
-      monacoValidators[this.props.language], // parsing syntax check
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      monacoValidators[this.props.language!], // parsing syntax check
     ].filter(Boolean);
 
     for (const validate of validators) {
@@ -261,23 +282,32 @@ export class MonacoEditor extends React.Component<MonacoEditorProps> {
         this.props.onError?.(error); // emit error outside
       }
     }
-  });
+  }
 
   // avoid excessive validations during typing
   validateLazy = debounce(this.validate, 250);
-
-  bindRef = (elem: HTMLElement) => this.containerElem = elem;
 
   render() {
     const { className, style } = this.props;
 
     return (
       <div
-        data-test-component="monaco-editor"
+        data-test-id="monaco-editor"
         className={cssNames(styles.MonacoEditor, className)}
         style={style}
-        ref={this.bindRef}
+        ref={elem => this.containerElem = elem}
       />
     );
   }
 }
+
+export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, MonacoEditorRef>(
+  React.forwardRef<MonacoEditorRef, MonacoEditorProps & Dependencies>((props, ref) => <NonInjectedMonacoEditor innerRef={ref} {...props} />),
+  {
+    getProps: (di, props) => ({
+      ...props,
+      themeStore: di.inject(themeStoreInjectable),
+      userStore: di.inject(userStoreInjectable),
+    }),
+  },
+);

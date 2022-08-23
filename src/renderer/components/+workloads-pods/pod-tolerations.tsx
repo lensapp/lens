@@ -7,11 +7,11 @@ import "./pod-tolerations.scss";
 import React from "react";
 import uniqueId from "lodash/uniqueId";
 
-import type { IToleration } from "../../../common/k8s-api/workload-kube-object";
+import type { Toleration } from "../../../common/k8s-api/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 
-interface Props {
-  tolerations: IToleration[];
+export interface PodTolerationsProps {
+  tolerations: Toleration[];
 }
 
 enum sortBy {
@@ -22,7 +22,7 @@ enum sortBy {
   Value = "value",
 }
 
-const getTableRow = (toleration: IToleration) => {
+const getTableRow = (toleration: Toleration) => {
   const { key, operator, effect, tolerationSeconds, value } = toleration;
 
   return (
@@ -40,7 +40,7 @@ const getTableRow = (toleration: IToleration) => {
   );
 };
 
-export function PodTolerations({ tolerations }: Props) {
+export function PodTolerations({ tolerations }: PodTolerationsProps) {
   return (
     <Table
       tableId="workloads_pod_tolerations"

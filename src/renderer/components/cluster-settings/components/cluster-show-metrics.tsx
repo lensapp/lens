@@ -11,15 +11,15 @@ import { Badge } from "../../badge/badge";
 import { Icon } from "../../icon/icon";
 import { Notice } from "../../+extensions/notice";
 
-interface Props {
+export interface ShowMetricsSettingProps {
   cluster: Cluster;
 }
 
 @observer
-export class ShowMetricsSetting extends React.Component<Props> {
+export class ShowMetricsSetting extends React.Component<ShowMetricsSettingProps> {
   @observable hiddenMetrics = observable.set<string>();
 
-  constructor(props: Props) {
+  constructor(props: ShowMetricsSettingProps) {
     super(props);
     makeObservable(this);
   }
@@ -53,7 +53,11 @@ export class ShowMetricsSetting extends React.Component<Props> {
         const tooltipId = `${name}`;
 
         return (
-          <Badge key={name} flat expandable={false}>
+          <Badge
+            key={name}
+            flat
+            expandable={false}
+          >
             <span id={tooltipId}>{name}</span>
             <Icon
               smallest

@@ -21,34 +21,38 @@ jest.mock("electron", () => ({
   },
 }));
 
-import { UserStore } from "../user-store";
+import type { UserStore } from "../user-store";
 import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
 import userStoreInjectable from "../user-store/user-store.injectable";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
-import { defaultTheme } from "../vars";
+import { defaultThemeId } from "../vars";
+import writeFileInjectable from "../fs/write-file.injectable";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "../vars/app-version.injectable";
 
 console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   let userStore: UserStore;
-  let mainDi: DependencyInjectionContainer;
+  let di: DiContainer;
 
-  beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+  beforeEach(() => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
 
-    mainDi = dis.mainDi;
+    di.override(writeFileInjectable, () => () => Promise.resolve());
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.permitSideEffects(userStoreInjectable);
 
-    mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
-    await dis.runSetups();
+    di.unoverride(userStoreInjectable);
   });
 
   afterEach(() => {
@@ -59,12 +63,7 @@ describe("user store tests", () => {
     beforeEach(() => {
       mockFs({ "some-directory-for-user-data": { "config.json": "{}", "kube_config": "{}" }});
 
-      userStore = mainDi.inject(userStoreInjectable);
-    });
-
-    afterEach(() => {
-      mockFs.restore();
-      UserStore.resetInstance();
+      userStore = di.inject(userStoreInjectable);
     });
 
     it("allows setting and retrieving lastSeenAppVersion", () => {
@@ -76,7 +75,7 @@ describe("user store tests", () => {
       userStore.httpsProxy = "abcd://defg";
 
       expect(userStore.httpsProxy).toBe("abcd://defg");
-      expect(userStore.colorTheme).toBe(defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultThemeId);
 
       userStore.colorTheme = "light";
       expect(userStore.colorTheme).toBe("light");
@@ -85,7 +84,7 @@ describe("user store tests", () => {
     it("correctly resets theme to default value", async () => {
       userStore.colorTheme = "some other theme";
       userStore.resetTheme();
-      expect(userStore.colorTheme).toBe(defaultTheme);
+      expect(userStore.colorTheme).toBe(defaultThemeId);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {
@@ -126,12 +125,9 @@ describe("user store tests", () => {
         },
       });
 
-      userStore = mainDi.inject(userStoreInjectable);
-    });
+      di.override(appVersionInjectable, () => "10.0.0");
 
-    afterEach(() => {
-      UserStore.resetInstance();
-      mockFs.restore();
+      userStore = di.inject(userStoreInjectable);
     });
 
     it("sets last seen app version to 0.0.0", () => {

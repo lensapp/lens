@@ -4,76 +4,69 @@
  */
 
 
-import "./command-container.scss";
+import styles from "./command-container.module.scss";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
 import { CommandDialog } from "./command-dialog";
 import type { ClusterId } from "../../../common/cluster-types";
-import commandOverlayInjectable, { CommandOverlay } from "./command-overlay.injectable";
-import { isMac } from "../../../common/vars";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { broadcastMessage, ipcRendererOn } from "../../../common/ipc";
-import { getMatchedClusterId } from "../../navigation";
-import type { Disposer } from "../../utils";
+import type { CommandOverlay } from "./command-overlay.injectable";
+import commandOverlayInjectable from "./command-overlay.injectable";
+import type { ipcRendererOn } from "../../../common/ipc";
+import { broadcastMessage } from "../../../common/ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { AddWindowEventListener } from "../../window/event-listener.injectable";
 import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
-
-export interface CommandContainerProps {
-  clusterId?: ClusterId;
-}
+import type { IComputedValue } from "mobx";
+import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
+import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
+import isMacInjectable from "../../../common/vars/is-mac.injectable";
+import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
+import { onKeyboardShortcut } from "../../utils/on-keyboard-shortcut";
 
 interface Dependencies {
-  addWindowEventListener: <K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => Disposer;
-  commandOverlay: CommandOverlay,
+  addWindowEventListener: AddWindowEventListener;
+  commandOverlay: CommandOverlay;
+  clusterId: ClusterId | undefined;
+  matchedClusterId: IComputedValue<ClusterId | undefined>;
+  isMac: boolean;
+  legacyOnChannelListen: typeof ipcRendererOn;
 }
 
 @observer
-class NonInjectedCommandContainer extends React.Component<CommandContainerProps & Dependencies> {
-  private escHandler(event: KeyboardEvent) {
-    const { commandOverlay } = this.props;
-
-    if (event.key === "Escape") {
-      event.stopPropagation();
-      commandOverlay.close();
-    }
-  }
-
-  handleCommandPalette = () => {
-    const { commandOverlay } = this.props;
-    const clusterIsActive = getMatchedClusterId() !== undefined;
-
-    if (clusterIsActive) {
-      broadcastMessage(`command-palette:${catalogEntityRegistry.activeEntity.getId()}:open`);
-    } else {
-      commandOverlay.open(<CommandDialog />);
-    }
-  };
-
-  onKeyboardShortcut(action: () => void) {
-    return ({ key, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEvent) => {
-      const ctrlOrCmd = isMac ? metaKey && !ctrlKey : !metaKey && ctrlKey;
-
-      if (key === "p" && shiftKey && ctrlOrCmd && !altKey) {
-        action();
-      }
-    };
-  }
-
+class NonInjectedCommandContainer extends React.Component<Dependencies> {
   componentDidMount() {
-    const { clusterId, addWindowEventListener, commandOverlay } = this.props;
+    const { clusterId, addWindowEventListener, commandOverlay, matchedClusterId, isMac } = this.props;
 
     const action = clusterId
       ? () => commandOverlay.open(<CommandDialog />)
-      : this.handleCommandPalette;
+      : () => {
+        const matchedId = matchedClusterId.get();
+
+        if (matchedId) {
+          broadcastMessage(`command-palette:${matchedClusterId}:open`);
+        } else {
+          commandOverlay.open(<CommandDialog />);
+        }
+      };
     const ipcChannel = clusterId
       ? `command-palette:${clusterId}:open`
       : "command-palette:open";
 
     disposeOnUnmount(this, [
-      ipcRendererOn(ipcChannel, action),
-      addWindowEventListener("keydown", this.onKeyboardShortcut(action)),
-      addWindowEventListener("keyup", (e) => this.escHandler(e), true),
+      this.props.legacyOnChannelListen(ipcChannel, action),
+      addWindowEventListener("keydown", onKeyboardShortcut(
+        isMac
+          ? "Shift+Cmd+P"
+          : "Shift+Ctrl+P",
+        action,
+      )),
+      addWindowEventListener("keydown", (event) => {
+        if (event.code === "Escape") {
+          event.stopPropagation();
+          this.props.commandOverlay.close();
+        }
+      }),
     ]);
   }
 
@@ -83,11 +76,11 @@ class NonInjectedCommandContainer extends React.Component<CommandContainerProps 
     return (
       <Dialog
         isOpen={commandOverlay.isOpen}
-        animated={true}
+        animated={false}
         onClose={commandOverlay.close}
         modal={false}
       >
-        <div id="command-container">
+        <div className={styles.CommandContainer} data-testid="command-container">
           {commandOverlay.component}
         </div>
       </Dialog>
@@ -95,10 +88,14 @@ class NonInjectedCommandContainer extends React.Component<CommandContainerProps 
   }
 }
 
-export const CommandContainer = withInjectables<Dependencies, CommandContainerProps>(NonInjectedCommandContainer, {
+export const CommandContainer = withInjectables<Dependencies>(NonInjectedCommandContainer, {
   getProps: (di, props) => ({
+    ...props,
+    clusterId: di.inject(hostedClusterIdInjectable),
     addWindowEventListener: di.inject(windowAddEventListenerInjectable),
     commandOverlay: di.inject(commandOverlayInjectable),
-    ...props,
+    matchedClusterId: di.inject(matchedClusterIdInjectable),
+    isMac: di.inject(isMacInjectable),
+    legacyOnChannelListen: di.inject(legacyOnChannelListenInjectable),
   }),
 });

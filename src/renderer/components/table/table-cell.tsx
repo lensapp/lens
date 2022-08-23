@@ -6,8 +6,9 @@
 import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
-import React, { ReactNode } from "react";
-import { boundMethod, cssNames, displayBooleans } from "../../utils";
+import type { ReactNode } from "react";
+import React from "react";
+import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 
@@ -45,11 +46,6 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   isChecked?: boolean;
 
   /**
-   * show "true" or "false" for all of the children elements are "typeof boolean"
-   */
-  renderBoolean?: boolean;
-
-  /**
    * column name, must be same as key in sortable object <Table sortable={}/>
    */
   sortBy?: TableSortBy;
@@ -57,7 +53,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   /**
    * id of the column which follow same visibility rules
    */
-  showWithColumn?: string
+  showWithColumn?: string;
 
   /**
    * @internal
@@ -77,29 +73,32 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 }
 
 export class TableCell extends React.Component<TableCellProps> {
-  @boundMethod
-  onClick(evt: React.MouseEvent<HTMLDivElement>) {
-    if (this.props.onClick) {
-      this.props.onClick(evt);
-    }
-
-    if (this.isSortable) {
-      this.props._sort(this.props.sortBy);
-    }
+  constructor(props: TableCellProps) {
+    super(props);
+    autoBind(this);
   }
 
-  get isSortable() {
-    const { _sorting, sortBy } = this.props;
+  onClick(evt: React.MouseEvent<HTMLDivElement>) {
+    const { _sort, sortBy, onClick } = this.props;
 
-    return _sorting && sortBy !== undefined;
+    onClick?.(evt);
+
+    if (_sort && typeof sortBy === "string") {
+      _sort(sortBy);
+    }
   }
 
   renderSortIcon() {
     const { sortBy, _sorting } = this.props;
 
-    if (!this.isSortable) return null;
+    if (!_sorting || !sortBy) {
+      return null;
+    }
+
     const sortActive = _sorting.sortBy === sortBy;
-    const sortIconName = (!sortActive || _sorting.orderBy === "desc") ? "arrow_drop_down" : "arrow_drop_up";
+    const sortIconName = (!sortActive || _sorting.orderBy === "desc")
+      ? "arrow_drop_down"
+      : "arrow_drop_up";
 
     return (
       <Icon
@@ -121,18 +120,35 @@ export class TableCell extends React.Component<TableCellProps> {
   }
 
   render() {
-    const { className, checkbox, isChecked, scrollable, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+    const {
+      className,
+      checkbox,
+      isChecked,
+      scrollable,
+      sortBy,
+      _sort,
+      _sorting,
+      _nowrap,
+      children,
+      title,
+      showWithColumn,
+      ...cellProps
+    } = this.props;
 
     const classNames = cssNames("TableCell", className, {
       checkbox,
       scrollable,
       nowrap: _nowrap,
-      sorting: this.isSortable,
+      sorting: _sort && typeof sortBy === "string",
     });
-    const content = displayBooleans(displayBoolean, title || children);
+    const content = title || children;
 
     return (
-      <div {...cellProps} className={classNames} onClick={this.onClick}>
+      <div
+        {...cellProps}
+        className={classNames}
+        onClick={this.onClick}
+      >
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}

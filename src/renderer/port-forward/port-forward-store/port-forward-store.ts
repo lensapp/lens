@@ -5,15 +5,17 @@
 
 import { action, makeObservable, observable, reaction } from "mobx";
 import { ItemStore } from "../../../common/item.store";
-import { autoBind, disposer, StorageHelper } from "../../utils";
-import { ForwardedPort, PortForwardItem } from "../port-forward-item";
-import { notifyErrorPortForwarding } from "../port-forward-notify";
+import type { StorageLayer } from "../../utils";
+import { autoBind, disposer } from "../../utils";
+import type { ForwardedPort } from "../port-forward-item";
+import { PortForwardItem } from "../port-forward-item";
 import { apiBase } from "../../api";
 import { waitUntilFree } from "tcp-port-used";
 import logger from "../../../common/logger";
 
 interface Dependencies {
-  storage: StorageHelper<ForwardedPort[] | undefined>
+  storage: StorageLayer<ForwardedPort[] | undefined>;
+  notifyErrorPortForwarding: (message: string) => void;
 }
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
@@ -43,7 +45,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
       for (const result of results) {
         if (result.status === "rejected" || result.value.status === "Disabled") {
-          notifyErrorPortForwarding("One or more port-forwards could not be started");
+          this.dependencies.notifyErrorPortForwarding("One or more port-forwards could not be started");
 
           return;
         }
@@ -73,15 +75,15 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     });
   }
 
-  async removeSelectedItems() {
-    return Promise.all(this.selectedItems.map(this.remove));
+  async removeItems(items: PortForwardItem[]) {
+    await Promise.all(items.map(this.remove));
   }
 
   getById(id: string) {
     const index = this.getIndexById(id);
 
     if (index === -1) {
-      return null;
+      return undefined;
     }
 
     return this.getItems()[index];
@@ -313,29 +315,26 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
    *
    * @throws if the port-forward does not exist in the store
    */
-  getPortForward = async (
-    portForward: ForwardedPort,
-  ): Promise<ForwardedPort> => {
+  getPortForward = async (portForward: ForwardedPort): Promise<ForwardedPort | undefined> => {
     if (!this.findPortForward(portForward)) {
       throw new Error("port-forward not found");
     }
 
-    let pf: ForwardedPort;
-
     try {
       // check if the port-forward is active, and if so check if it has the same local port
-      pf = await getActivePortForward(portForward);
+      const pf = await getActivePortForward(portForward);
 
-      if (pf.forwardPort && pf.forwardPort !== portForward.forwardPort) {
+      if (pf?.forwardPort && pf.forwardPort !== portForward.forwardPort) {
         logger.warn(
           `[PORT-FORWARD-STORE] local port, expected ${pf.forwardPort}, got ${portForward.forwardPort}`,
         );
       }
+
+      return pf;
     } catch (error) {
       // port is not active
+      return undefined;
     }
-
-    return pf;
   };
 }
 
@@ -352,7 +351,7 @@ function portForwardsEqual(portForward: ForwardedPort) {
   );
 }
 
-async function getActivePortForward(portForward: ForwardedPort): Promise<ForwardedPort> {
+async function getActivePortForward(portForward: ForwardedPort): Promise<ForwardedPort | undefined> {
   const { port, forwardPort } = portForward;
   let response: PortForwardResult;
 
@@ -360,6 +359,8 @@ async function getActivePortForward(portForward: ForwardedPort): Promise<Forward
     response = await apiBase.get<PortForwardResult>(`/pods/port-forward/${portForward.namespace}/${portForward.kind}/${portForward.name}`, { query: { port, forwardPort }});
   } catch (error) {
     logger.warn(`[PORT-FORWARD-STORE] Error getting active port-forward: ${error}`, portForward);
+
+    return undefined;
   }
 
   portForward.status = response?.port ? "Active" : "Disabled";

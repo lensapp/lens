@@ -7,7 +7,7 @@ export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" |
   "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
-  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
+  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" | "priorityclasses" |
   "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts";
 
 export interface KubeApiResource extends KubeApiResourceData {
@@ -41,6 +41,7 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   "pods": { kind: "Pod" },
   "poddisruptionbudgets": { kind: "PodDisruptionBudget", group: "policy" },
   "podsecuritypolicies": { kind: "PodSecurityPolicy", group: "policy" },
+  "priorityclasses": { kind: "PriorityClass", group: "scheduling.k8s.io" },
   "resourcequotas": { kind: "ResourceQuota" },
   "replicasets": { kind: "ReplicaSet", group: "apps" },
   "roles": { kind: "Role", group: "rbac.authorization.k8s.io" },

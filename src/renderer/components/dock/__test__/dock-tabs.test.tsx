@@ -8,16 +8,17 @@ import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import fse from "fs-extra";
 import { DockTabs } from "../dock-tabs";
-import { DockStore, DockTab, TabKind } from "../dock/store";
+import type { DockStore, DockTab } from "../dock/store";
+import { TabKind } from "../dock/store";
 import { noop } from "../../../utils";
-import { ThemeStore } from "../../../theme.store";
-import { UserStore } from "../../../../common/user-store";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable
-  from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import assert from "assert";
+import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -33,7 +34,19 @@ jest.mock("electron", () => ({
     on: jest.fn(),
     handle: jest.fn(),
   },
+  ipcRenderer: {
+    on: jest.fn(),
+    invoke: jest.fn(),
+  },
 }));
+
+Object.defineProperty(window, "ResizeObserver", {
+  writable: true,
+  value: jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    disconnect: jest.fn(),
+  })),
+});
 
 const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
@@ -61,28 +74,23 @@ describe("<DockTabs />", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-
     render = renderFor(di);
 
+    di.override(hostedClusterIdInjectable, () => "some-cluster-id");
     di.override(
       directoryForUserDataInjectable,
       () => "some-test-suite-specific-directory-for-user-data",
     );
 
-    await di.runSetups();
+    di.permitSideEffects(getConfigurationFileModelInjectable);
 
     dockStore = di.inject(dockStoreInjectable);
 
-    UserStore.createInstance();
-    ThemeStore.createInstance();
     await dockStore.whenReady;
     dockStore.tabs = initialTabs;
   });
 
   afterEach(() => {
-    ThemeStore.resetInstance();
-    UserStore.resetInstance();
-
     // TODO: A unit test may not cause side effects. Here accessing file system is a side effect.
     fse.remove("some-test-suite-specific-directory-for-user-data");
   });
@@ -104,6 +112,8 @@ describe("<DockTabs />", () => {
     const { container, getByText } = render(getComponent(dockStore));
     const tab = container.querySelector(".Tab");
 
+    assert(tab);
+
     fireEvent.contextMenu(tab);
     expect(getByText("Close all tabs")).toBeInTheDocument();
   });
@@ -114,6 +124,8 @@ describe("<DockTabs />", () => {
     );
 
     const tab = container.querySelector(".Tab");
+
+    assert(tab);
 
     fireEvent.contextMenu(tab);
     fireEvent.click(getByText("Close"));
@@ -150,6 +162,8 @@ describe("<DockTabs />", () => {
     const { container, getByText, rerender } = render(getComponent(dockStore));
     const tab = container.querySelector(".Tab");
 
+    assert(tab);
+
     fireEvent.contextMenu(tab);
     const command = getByText("Close all tabs");
 
@@ -179,6 +193,8 @@ describe("<DockTabs />", () => {
     }];
     const { container, getByText } = render(getComponent(dockStore));
     const tab = container.querySelector(".Tab");
+
+    assert(tab);
 
     fireEvent.contextMenu(tab);
     const closeAll = getByText("Close all tabs");

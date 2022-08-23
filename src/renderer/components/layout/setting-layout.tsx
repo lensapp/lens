@@ -7,10 +7,12 @@ import "./setting-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
-import { navigation } from "../../navigation";
-import { catalogURL } from "../../../common/routes";
+import type { IClassName } from "../../utils";
+import { cssNames } from "../../utils";
 import { CloseButton } from "./close-button";
+import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 
 export interface SettingLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -19,16 +21,22 @@ export interface SettingLayoutProps extends React.DOMAttributes<any> {
   contentGaps?: boolean;
   navigation?: React.ReactNode;
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
+  closeButtonProps?: { "data-testid"?: string };
 }
 
 const defaultProps: Partial<SettingLayoutProps> = {
+  closeButtonProps: {},
   provideBackButtonNavigation: true,
   contentGaps: true,
   back: () => {
-    if (navigation.length <= 1) {
-      navigation.push(catalogURL());
+    const di = getLegacyGlobalDiForExtensionApi();
+    const navigateToCatalog = di.inject(navigateToCatalogInjectable);
+    const observableHistory = di.inject(observableHistoryInjectable);
+
+    if (observableHistory.length <= 1) {
+      navigateToCatalog();
     } else {
-      navigation.goBack();
+      observableHistory.goBack();
     }
   },
 };
@@ -61,14 +69,14 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
 
     if (evt.code === "Escape") {
       evt.stopPropagation();
-      this.props.back(evt);
+      this.props.back?.(evt);
     }
   };
 
   render() {
     const {
       contentClass, provideBackButtonNavigation,
-      contentGaps, navigation, children, back, ...elemProps
+      contentGaps, navigation, children, back, closeButtonProps, ...elemProps
     } = this.props;
     const className = cssNames("SettingLayout", { showNavigation: navigation }, this.props.className);
 
@@ -89,7 +97,8 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
             {
               this.props.provideBackButtonNavigation && (
                 <div className="fixed top-[60px]">
-                  <CloseButton onClick={back}/>
+
+                  <CloseButton onClick={back} {...closeButtonProps}/>
                 </div>
               )
             }

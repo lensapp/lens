@@ -3,10 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-/**
- * @jest-environment jsdom
- */
-
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 
 describe("clearKubeconfigEnvVars tests", () => {

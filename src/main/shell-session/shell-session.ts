@@ -16,13 +16,13 @@ import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/app-event-bus/event-bus";
 import logger from "../logger";
-import { TerminalChannels, TerminalMessage } from "../../renderer/api/terminal-api";
-import { deserialize, serialize } from "v8";
 import { stat } from "fs/promises";
+import { getOrInsertWith } from "../../common/utils";
+import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 
 export class ShellOpenError extends Error {
-  constructor(message: string, public cause: Error) {
-    super(`${message}: ${cause}`);
+  constructor(message: string, options?: ErrorOptions) {
+    super(`${message}`, options);
     this.name = this.constructor.name;
     Error.captureStackTrace(this);
   }
@@ -105,10 +105,10 @@ export enum WebSocketCloseEvent {
 }
 
 export abstract class ShellSession {
-  abstract ShellType: string;
+  abstract readonly ShellType: string;
 
-  private static shellEnvs = new Map<string, Record<string, string>>();
-  private static processes = new Map<string, pty.IPty>();
+  private static readonly shellEnvs = new Map<string, Record<string, string | undefined>>();
+  private static readonly processes = new Map<string, pty.IPty>();
 
   /**
    * Kill all remaining shell backing processes. Should be called when about to
@@ -127,45 +127,42 @@ export abstract class ShellSession {
   }
 
   protected running = false;
-  protected kubectlBinDirP: Promise<string>;
-  protected kubeconfigPathP: Promise<string>;
+  protected readonly kubectlBinDirP: Promise<string>;
+  protected readonly kubeconfigPathP: Promise<string>;
   protected readonly terminalId: string;
 
   protected abstract get cwd(): string | undefined;
 
-  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string>, cwd: string): { shellProcess: pty.IPty, resume: boolean } {
+  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string | undefined>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
     const resume = ShellSession.processes.has(this.terminalId);
-
-    if (!resume) {
-      ShellSession.processes.set(this.terminalId, pty.spawn(shell, args, {
+    const shellProcess = getOrInsertWith(ShellSession.processes, this.terminalId, () => (
+      pty.spawn(shell, args, {
         rows: 30,
         cols: 80,
         cwd,
-        env,
+        env: env as Record<string, string>,
         name: "xterm-256color",
         // TODO: Something else is broken here so we need to force the use of winPty on windows
         useConpty: false,
-      }));
-    }
-
-    const shellProcess = ShellSession.processes.get(this.terminalId);
+      })
+    ));
 
     logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
 
     return { shellProcess, resume };
   }
 
-  constructor(protected kubectl: Kubectl, protected websocket: WebSocket, protected cluster: Cluster, terminalId: string) {
+  constructor(protected readonly kubectl: Kubectl, protected readonly websocket: WebSocket, protected readonly cluster: Cluster, terminalId: string) {
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;
   }
 
   protected send(message: TerminalMessage): void {
-    this.websocket.send(serialize(message));
+    this.websocket.send(JSON.stringify(message));
   }
 
-  protected async getCwd(env: Record<string, string>): Promise<string> {
+  protected async getCwd(env: Record<string, string | undefined>): Promise<string> {
     const cwdOptions = [this.cwd];
 
     if (isWindows) {
@@ -206,7 +203,7 @@ export abstract class ShellSession {
     return "."; // Always valid
   }
 
-  protected async openShellProcess(shell: string, args: string[], env: Record<string, string>) {
+  protected async openShellProcess(shell: string, args: string[], env: Record<string, string | undefined>) {
     const cwd = await this.getCwd(env);
     const { shellProcess, resume } = this.ensureShellProcess(shell, args, env, cwd);
 
@@ -233,17 +230,19 @@ export abstract class ShellSession {
     });
 
     this.websocket
-      .on("message", (data: string | Uint8Array) => {
+      .on("message", (rawData: unknown): void => {
         if (!this.running) {
           return void logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
         }
 
-        if (typeof data === "string") {
-          return void logger.silly(`[SHELL-SESSION]: Received message from ${this.terminalId}`, { data });
+        if (!(rawData instanceof Buffer)) {
+          return void logger.error(`[SHELL-SESSION]: Received message non-buffer message.`, { rawData });
         }
 
+        const data = rawData.toString();
+
         try {
-          const message: TerminalMessage = deserialize(data);
+          const message: TerminalMessage = JSON.parse(data);
 
           switch (message.type) {
             case TerminalChannels.STDIN:
@@ -251,6 +250,9 @@ export abstract class ShellSession {
               break;
             case TerminalChannels.RESIZE:
               shellProcess.resize(message.data.width, message.data.height);
+              break;
+            case TerminalChannels.PING:
+              logger.silly(`[SHELL-SESSION]: ${this.terminalId} ping!`);
               break;
             default:
               logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
@@ -260,7 +262,7 @@ export abstract class ShellSession {
           logger.error(`[SHELL-SESSION]: failed to handle message for ${this.terminalId}`, error);
         }
       })
-      .on("close", code => {
+      .once("close", code => {
         logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${WebSocketCloseEvent[code]}(${code})`, { cluster: this.cluster.getMeta() });
 
         const stopShellSession = this.running
@@ -312,7 +314,7 @@ export abstract class ShellSession {
 
   protected async getShellEnv() {
     const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
-    const pathStr = [...this.getPathEntries(), await this.kubectlBinDirP, process.env.PATH].join(path.delimiter);
+    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), process.env.PATH].join(path.delimiter);
     const shell = UserStore.getInstance().resolvedShell;
 
     delete env.DEBUG; // don't pass DEBUG into shells

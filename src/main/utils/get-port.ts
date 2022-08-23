@@ -12,14 +12,23 @@ interface GetPortArgs {
    * Should be case insensitive
    * Must have a named matching group called `address`
    */
-  lineRegex: RegExp;
+  lineRegex: {
+    match: (line: string) => {
+        matched: boolean;
+        groups?: {
+          address?: string;
+        };
+        raw?: RegExpExecArray;
+    };
+    rawMatcher: string;
+  };
   /**
    * Called when the port is found
    */
   onFind?: () => void;
   /**
    * Timeout for how long to wait for the port.
-   * Default: 5s
+   * Default: 15s
    */
   timeout?: number;
 }
@@ -35,15 +44,15 @@ export function getPortFrom(stream: Readable, args: GetPortArgs): Promise<number
   const logLines: string[] = [];
 
   return new Promise<number>((resolve, reject) => {
-    const handler = (data: any) => {
-      const logItem: string = data.toString();
-      const match = logItem.match(args.lineRegex);
+    const handler = (data: unknown) => {
+      const logItem = String(data);
+      const match = args.lineRegex.match(logItem);
 
       logLines.push(logItem);
 
-      if (match) {
+      if (match.matched) {
         // use unknown protocol so that there is no default port
-        const addr = new URLParse(`s://${match.groups.address.trim()}`);
+        const addr = new URLParse(`s://${match.groups?.address?.trim()}`);
 
         args.onFind?.();
         stream.off("data", handler);
@@ -53,7 +62,7 @@ export function getPortFrom(stream: Readable, args: GetPortArgs): Promise<number
     };
     const timeoutID = setTimeout(() => {
       stream.off("data", handler);
-      logger.warn(`[getPortFrom]: failed to retrieve port via ${args.lineRegex.toString()}: ${logLines}`);
+      logger.warn(`[getPortFrom]: failed to retrieve port via ${args.lineRegex.rawMatcher}`, logLines);
       reject(new Error("failed to retrieve port from stream"));
     }, args.timeout ?? 15000);
 

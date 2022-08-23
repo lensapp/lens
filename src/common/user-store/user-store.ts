@@ -3,37 +3,40 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { app, ipcMain } from "electron";
-import semver, { SemVer } from "semver";
-import { action, computed, makeObservable, observable, reaction } from "mobx";
+import { app } from "electron";
+import semver from "semver";
+import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
-import migrations, { fileNameMigration } from "../../migrations/user-store";
+import migrations from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../app-event-bus/event-bus";
-import { getOrInsertSet, toggle, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, EditorConfiguration, ExtensionRegistry, KubeconfigSyncValue, UserPreferencesModel, TerminalConfig } from "./preferences-helpers";
+import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
+import { DESCRIPTORS } from "./preferences-helpers";
+import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
+import type { SelectedUpdateChannel } from "../application-update/selected-update-channel/selected-update-channel.injectable";
+import type { UpdateChannelId } from "../application-update/update-channels";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
   preferences: UserPreferencesModel;
 }
 
+interface Dependencies {
+  selectedUpdateChannel: SelectedUpdateChannel;
+}
+
 export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {
   readonly displayName = "UserStore";
-  constructor() {
+
+  constructor(private readonly dependencies: Dependencies) {
     super({
       configName: "lens-user-store",
       migrations,
     });
 
     makeObservable(this);
-
-    if (ipcMain) {
-      fileNameMigration();
-    }
-
     this.load();
   }
 
@@ -41,47 +44,59 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   /**
    * used in add-cluster page for providing context
+   * @deprecated No longer used
    */
   @observable kubeConfigPath = kubeConfigDefaultPath;
+
+  /**
+   * @deprecated No longer used
+   */
   @observable seenContexts = observable.set<string>();
+
+  /**
+   * @deprecated No longer used
+   */
   @observable newContexts = observable.set<string>();
-  @observable allowTelemetry: boolean;
-  @observable allowErrorReporting: boolean;
-  @observable allowUntrustedCAs: boolean;
-  @observable colorTheme: string;
-  @observable terminalTheme: string;
-  @observable localeTimezone: string;
-  @observable downloadMirror: string;
-  @observable httpsProxy?: string;
-  @observable shell?: string;
-  @observable downloadBinariesPath?: string;
-  @observable kubectlBinariesPath?: string;
-  @observable terminalCopyOnSelect: boolean;
-  @observable terminalConfig: TerminalConfig;
-  @observable updateChannel?: string;
-  @observable extensionRegistryUrl: ExtensionRegistry;
+
+  @observable allowErrorReporting!: StoreType<typeof DESCRIPTORS["allowErrorReporting"]>;
+  @observable allowUntrustedCAs!: StoreType<typeof DESCRIPTORS["allowUntrustedCAs"]>;
+  @observable colorTheme!: StoreType<typeof DESCRIPTORS["colorTheme"]>;
+  @observable terminalTheme!: StoreType<typeof DESCRIPTORS["terminalTheme"]>;
+  @observable localeTimezone!: StoreType<typeof DESCRIPTORS["localeTimezone"]>;
+  @observable downloadMirror!: StoreType<typeof DESCRIPTORS["downloadMirror"]>;
+  @observable httpsProxy!: StoreType<typeof DESCRIPTORS["httpsProxy"]>;
+  @observable shell!: StoreType<typeof DESCRIPTORS["shell"]>;
+  @observable downloadBinariesPath!: StoreType<typeof DESCRIPTORS["downloadBinariesPath"]>;
+  @observable kubectlBinariesPath!: StoreType<typeof DESCRIPTORS["kubectlBinariesPath"]>;
+  @observable terminalCopyOnSelect!: StoreType<typeof DESCRIPTORS["terminalCopyOnSelect"]>;
+  @observable terminalConfig!: StoreType<typeof DESCRIPTORS["terminalConfig"]>;
+  @observable extensionRegistryUrl!: StoreType<typeof DESCRIPTORS["extensionRegistryUrl"]>;
 
   /**
    * Download kubectl binaries matching cluster version
    */
-  @observable downloadKubectlBinaries: boolean;
-  @observable openAtLogin: boolean;
+  @observable downloadKubectlBinaries!: StoreType<typeof DESCRIPTORS["downloadKubectlBinaries"]>;
+
+  /**
+   * Whether the application should open itself at login.
+   */
+  @observable openAtLogin!: StoreType<typeof DESCRIPTORS["openAtLogin"]>;
 
   /**
    * The column IDs under each configurable table ID that have been configured
    * to not be shown
    */
-  hiddenTableColumns = observable.map<string, Set<string>>();
+  @observable hiddenTableColumns!: StoreType<typeof DESCRIPTORS["hiddenTableColumns"]>;
 
   /**
    * Monaco editor configs
    */
-  @observable editorConfiguration: EditorConfiguration;
+  @observable editorConfiguration!: StoreType<typeof DESCRIPTORS["editorConfiguration"]>;
 
   /**
    * The set of file/folder paths to be synced
    */
-  syncKubeconfigEntries = observable.map<string, KubeconfigSyncValue>();
+  @observable syncKubeconfigEntries!: StoreType<typeof DESCRIPTORS["syncKubeconfigEntries"]>;
 
   @computed get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
@@ -91,16 +106,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
   }
 
-  @computed get isAllowedToDowngrade() {
-    return new SemVer(getAppVersion()).prerelease[0] !== this.updateChannel;
-  }
-
   startMainReactions() {
-    // track telemetry availability
-    reaction(() => this.allowTelemetry, allowed => {
-      appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
-    });
-
     // open at system start-up
     reaction(() => this.openAtLogin, openAtLogin => {
       app.setLoginItemSettings({
@@ -119,7 +125,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    * @param columnIds The list of IDs the check if one is hidden
    * @returns true if at least one column under the table is set to hidden
    */
-  isTableColumnHidden(tableId: string, ...columnIds: string[]): boolean {
+  isTableColumnHidden(tableId: string, ...columnIds: (string | undefined)[]): boolean {
     if (columnIds.length === 0) {
       return false;
     }
@@ -130,7 +136,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       return false;
     }
 
-    return columnIds.some(columnId => config.has(columnId));
+    return columnIds.some(columnId => columnId && config.has(columnId));
   }
 
   /**
@@ -152,11 +158,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  setLocaleTimezone(tz: string) {
-    this.localeTimezone = tz;
-  }
-
-  @action
   protected fromStore({ lastSeenAppVersion, preferences }: Partial<UserStoreModel> = {}) {
     logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
 
@@ -164,55 +165,39 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
 
-    this.httpsProxy = DESCRIPTORS.httpsProxy.fromStore(preferences?.httpsProxy);
-    this.shell = DESCRIPTORS.shell.fromStore(preferences?.shell);
-    this.colorTheme = DESCRIPTORS.colorTheme.fromStore(preferences?.colorTheme);
-    this.terminalTheme = DESCRIPTORS.terminalTheme.fromStore(preferences?.terminalTheme);
-    this.localeTimezone = DESCRIPTORS.localeTimezone.fromStore(preferences?.localeTimezone);
-    this.allowUntrustedCAs = DESCRIPTORS.allowUntrustedCAs.fromStore(preferences?.allowUntrustedCAs);
-    this.allowTelemetry = DESCRIPTORS.allowTelemetry.fromStore(preferences?.allowTelemetry);
-    this.allowErrorReporting = DESCRIPTORS.allowErrorReporting.fromStore(preferences?.allowErrorReporting);
-    this.downloadMirror = DESCRIPTORS.downloadMirror.fromStore(preferences?.downloadMirror);
-    this.downloadKubectlBinaries = DESCRIPTORS.downloadKubectlBinaries.fromStore(preferences?.downloadKubectlBinaries);
-    this.downloadBinariesPath = DESCRIPTORS.downloadBinariesPath.fromStore(preferences?.downloadBinariesPath);
-    this.kubectlBinariesPath = DESCRIPTORS.kubectlBinariesPath.fromStore(preferences?.kubectlBinariesPath);
-    this.openAtLogin = DESCRIPTORS.openAtLogin.fromStore(preferences?.openAtLogin);
-    this.hiddenTableColumns.replace(DESCRIPTORS.hiddenTableColumns.fromStore(preferences?.hiddenTableColumns));
-    this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
-    this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
-    this.terminalCopyOnSelect = DESCRIPTORS.terminalCopyOnSelect.fromStore(preferences?.terminalCopyOnSelect);
-    this.terminalConfig = DESCRIPTORS.terminalConfig.fromStore(preferences?.terminalConfig);
-    this.updateChannel = DESCRIPTORS.updateChannel.fromStore(preferences?.updateChannel);
-    this.extensionRegistryUrl = DESCRIPTORS.extensionRegistryUrl.fromStore(preferences?.extensionRegistryUrl);
+    for (const [key, { fromStore }] of object.entries(DESCRIPTORS)) {
+      const curVal = this[key];
+      const newVal = fromStore((preferences)?.[key] as never) as never;
+
+      if (isObservableArray(curVal)) {
+        curVal.replace(newVal);
+      } else if (isObservableSet(curVal) || isObservableMap(curVal)) {
+        curVal.replace(newVal);
+      } else {
+        this[key] = newVal;
+      }
+    }
+
+    // TODO: Switch to action-based saving instead saving stores by reaction
+    if (preferences?.updateChannel) {
+      this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as UpdateChannelId);
+    }
   }
 
   toJSON(): UserStoreModel {
-    const model: UserStoreModel = {
-      lastSeenAppVersion: this.lastSeenAppVersion,
-      preferences: {
-        httpsProxy: DESCRIPTORS.httpsProxy.toStore(this.httpsProxy),
-        shell: DESCRIPTORS.shell.toStore(this.shell),
-        colorTheme: DESCRIPTORS.colorTheme.toStore(this.colorTheme),
-        terminalTheme: DESCRIPTORS.terminalTheme.toStore(this.terminalTheme),
-        localeTimezone: DESCRIPTORS.localeTimezone.toStore(this.localeTimezone),
-        allowUntrustedCAs: DESCRIPTORS.allowUntrustedCAs.toStore(this.allowUntrustedCAs),
-        allowTelemetry: DESCRIPTORS.allowTelemetry.toStore(this.allowTelemetry),
-        allowErrorReporting: DESCRIPTORS.allowErrorReporting.toStore(this.allowErrorReporting),
-        downloadMirror: DESCRIPTORS.downloadMirror.toStore(this.downloadMirror),
-        downloadKubectlBinaries: DESCRIPTORS.downloadKubectlBinaries.toStore(this.downloadKubectlBinaries),
-        downloadBinariesPath: DESCRIPTORS.downloadBinariesPath.toStore(this.downloadBinariesPath),
-        kubectlBinariesPath: DESCRIPTORS.kubectlBinariesPath.toStore(this.kubectlBinariesPath),
-        openAtLogin: DESCRIPTORS.openAtLogin.toStore(this.openAtLogin),
-        hiddenTableColumns: DESCRIPTORS.hiddenTableColumns.toStore(this.hiddenTableColumns),
-        syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
-        editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
-        terminalCopyOnSelect: DESCRIPTORS.terminalCopyOnSelect.toStore(this.terminalCopyOnSelect),
-        terminalConfig: DESCRIPTORS.terminalConfig.toStore(this.terminalConfig),
-        updateChannel: DESCRIPTORS.updateChannel.toStore(this.updateChannel),
-        extensionRegistryUrl: DESCRIPTORS.extensionRegistryUrl.toStore(this.extensionRegistryUrl),
-      },
-    };
+    const preferences = object.fromEntries(
+      object.entries(DESCRIPTORS)
+        .map(([key, { toStore }]) => [key, toStore(this[key] as never)]),
+    ) as UserPreferencesModel;
 
-    return toJS(model);
+    return toJS({
+      lastSeenAppVersion: this.lastSeenAppVersion,
+
+      preferences: {
+        ...preferences,
+
+        updateChannel: this.dependencies.selectedUpdateChannel.value.get().id,
+      },
+    });
   }
 }

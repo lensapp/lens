@@ -8,6 +8,8 @@ import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
 import { isDevelopment } from "../../common/vars";
+import type { Defaulted } from "../utils";
+import { TerminalChannels, type TerminalMessage } from "../../common/terminal/channels";
 
 interface WebsocketApiParams {
   /**
@@ -29,9 +31,9 @@ interface WebsocketApiParams {
   /**
    * The message for pinging the websocket
    *
-   * @default "PING"
+   * @default "{type: \"ping\"}"
    */
-  pingMessage?: string | ArrayBufferLike | Blob | ArrayBufferView;
+  pingMessage?: string;
 
   /**
    * If set to a number > 0, then the API will ping the socket on that interval.
@@ -57,46 +59,43 @@ export enum WebSocketApiState {
 }
 
 export interface WebSocketEvents {
-  open: () => void,
+  open: () => void;
   data: (message: string) => void;
   close: () => void;
 }
 
-type Defaulted<Params, DefaultParams extends keyof Params> = Required<Pick<Params, DefaultParams>> & Omit<Params, DefaultParams>;
-
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
-  protected socket: WebSocket;
-  protected pendingCommands: (string | ArrayBufferLike | Blob | ArrayBufferView)[] = [];
-  protected reconnectTimer?: any;
-  protected pingTimer?: any;
+  protected socket: WebSocket | null = null;
+  protected pendingCommands: string[] = [];
+  protected reconnectTimer?: number;
+  protected pingTimer?: number;
   protected params: Defaulted<WebsocketApiParams, keyof typeof WebSocketApi["defaultParams"]>;
 
   @observable readyState = WebSocketApiState.PENDING;
 
-  private static defaultParams = {
+  private static readonly defaultParams = {
     logging: isDevelopment,
     reconnectDelay: 10,
     flushOnOpen: true,
-    pingMessage: "PING",
+    pingMessage: JSON.stringify({ type: TerminalChannels.PING } as TerminalMessage),
   };
 
   constructor(params: WebsocketApiParams) {
     super();
     makeObservable(this);
-    this.params = Object.assign({}, WebSocketApi.defaultParams, params);
+    this.params = {
+      ...WebSocketApi.defaultParams,
+      ...params,
+    };
     const { pingInterval } = this.params;
 
     if (pingInterval) {
-      this.pingTimer = setInterval(() => this.ping(), pingInterval * 1000);
+      this.pingTimer = window.setInterval(() => this.ping(), pingInterval * 1000);
     }
   }
 
-  get isConnected() {
-    return this.socket?.readyState === WebSocket.OPEN && this.isOnline;
-  }
-
-  get isOnline() {
-    return navigator.onLine;
+  isConnected(): this is (WebSocketApi<Events> & { socket: WebSocket }) {
+    return this.socket?.readyState === WebSocket.OPEN;
   }
 
   connect(url: string) {
@@ -113,7 +112,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   ping() {
-    if (this.isConnected) {
+    if (this.isConnected()) {
       this.send(this.params.pingMessage);
     }
   }
@@ -143,8 +142,8 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     }
   }
 
-  send(command: string | ArrayBufferLike | Blob | ArrayBufferView) {
-    if (this.isConnected) {
+  send(command: string) {
+    if (this.isConnected()) {
       this.socket.send(command);
     } else {
       this.pendingCommands.push(command);
@@ -152,11 +151,13 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   protected flush() {
-    for (const command of this.pendingCommands) {
+    const commands = this.pendingCommands;
+
+    this.pendingCommands = [];
+
+    for (const command of commands) {
       this.send(command);
     }
-
-    this.pendingCommands.length = 0;
   }
 
   protected _onOpen(evt: Event) {
@@ -181,12 +182,12 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     if (error) {
       const { reconnectDelay } = this.params;
 
-      if (reconnectDelay) {
+      if (reconnectDelay && this.socket) {
         const url = this.socket.url;
 
         this.writeLog("will reconnect in", `${reconnectDelay}s`);
 
-        this.reconnectTimer = setTimeout(() => this.connect(url), reconnectDelay * 1000);
+        this.reconnectTimer = window.setTimeout(() => this.connect(url), reconnectDelay * 1000);
         this.readyState = WebSocketApiState.RECONNECTING;
       }
     } else {

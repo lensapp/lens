@@ -8,7 +8,6 @@ import { ClusterMetadataKey } from "../../common/cluster-types";
 
 export class VersionDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.VERSION;
-  value: string;
 
   public async detect() {
     const version = await this.getKubernetesVersion();

@@ -8,7 +8,6 @@ import "./volume-details-list.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { PersistentVolume } from "../../../common/k8s-api/endpoints/persistent-volume.api";
-import { boundMethod } from "../../../common/utils/autobind";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
 import { showDetails } from "../kube-detail-params";
@@ -17,10 +16,10 @@ import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";
-import { volumesStore } from "./volumes.store";
+import { persistentVolumeStore } from "./legacy-store";
 import kebabCase from "lodash/kebabCase";
 
-interface Props {
+export interface VolumeDetailsListProps {
   persistentVolumes: PersistentVolume[];
 }
 
@@ -31,17 +30,20 @@ enum sortBy {
 }
 
 @observer
-export class VolumeDetailsList extends React.Component<Props> {
+export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
   private sortingCallbacks = {
     [sortBy.name]: (volume: PersistentVolume) => volume.getName(),
     [sortBy.capacity]: (volume: PersistentVolume) => volume.getCapacity(),
     [sortBy.status]: (volume: PersistentVolume) => volume.getStatus(),
   };
 
-  @boundMethod
-  getTableRow(uid: string) {
+  getTableRow = (uid: string) => {
     const { persistentVolumes } = this.props;
     const volume = persistentVolumes.find(volume => volume.getId() === uid);
+
+    if (!volume) {
+      return undefined;
+    }
 
     return (
       <TableRow
@@ -55,19 +57,19 @@ export class VolumeDetailsList extends React.Component<Props> {
         <TableCell className={cssNames("status", kebabCase(volume.getStatus()))}>{volume.getStatus()}</TableCell>
       </TableRow>
     );
-  }
+  };
 
   render() {
     const { persistentVolumes } = this.props;
     const virtual = persistentVolumes.length > 100;
 
     if (!persistentVolumes.length) {
-      return !volumesStore.isLoaded && <Spinner center/>;
+      return !persistentVolumeStore.isLoaded && <Spinner center/>;
     }
 
     return (
       <div className="VolumeDetailsList flex column">
-        <DrawerTitle title="Persistent Volumes"/>
+        <DrawerTitle>Persistent Volumes</DrawerTitle>
         <Table
           tableId="storage_volume_details_list"
           items={persistentVolumes}

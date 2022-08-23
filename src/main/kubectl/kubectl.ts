@@ -9,9 +9,7 @@ import { promiseExecFile } from "../../common/utils/promise-exec";
 import logger from "../logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
-import { helmCli } from "../helm/helm-cli";
 import { getBundledKubectlVersion } from "../../common/utils/app-version";
-import { isDevelopment, isWindows, isTestEnv } from "../../common/vars";
 import { SemVer } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
@@ -35,51 +33,37 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.18", "1.18.20"],
   ["1.19", "1.19.12"],
   ["1.20", "1.20.8"],
-  ["1.21", bundledVersion],
+  ["1.21", "1.21.9"],
+  ["1.22", "1.22.6"],
+  ["1.23", bundledVersion],
 ]);
-let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3";
 
-export function bundledKubectlPath(): string {
-  if (bundledPath) { return bundledPath; }
-
-  if (isDevelopment || isTestEnv) {
-    const platformName = isWindows ? "windows" : process.platform;
-
-    bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl");
-  } else {
-    bundledPath = path.join(process.resourcesPath, process.arch, "kubectl");
-  }
-
-  if (isWindows) {
-    bundledPath = `${bundledPath}.exe`;
-  }
-
-  return bundledPath;
-}
-
-interface Dependencies {
-  directoryForKubectlBinaries: string;
-
-  userStore: {
-    kubectlBinariesPath?: string
-    downloadBinariesPath?: string
-    downloadKubectlBinaries: boolean
-    downloadMirror: string
+export interface KubectlDependencies {
+  readonly directoryForKubectlBinaries: string;
+  readonly normalizedDownloadPlatform: "darwin" | "linux" | "windows";
+  readonly normalizedDownloadArch: "amd64" | "arm64" | "386";
+  readonly kubectlBinaryName: string;
+  readonly bundledKubectlBinaryPath: string;
+  readonly baseBundeledBinariesDirectory: string;
+  readonly userStore: {
+    readonly kubectlBinariesPath?: string;
+    readonly downloadBinariesPath?: string;
+    readonly downloadKubectlBinaries: boolean;
+    readonly downloadMirror: string;
   };
 }
 
 export class Kubectl {
-  public kubectlVersion: string;
-  protected directory: string;
-  protected url: string;
-  protected path: string;
-  protected dirname: string;
+  public readonly kubectlVersion: string;
+  protected readonly url: string;
+  protected readonly path: string;
+  protected readonly dirname: string;
 
-  public static readonly bundledKubectlVersion: string = bundledVersion;
+  public static readonly bundledKubectlVersion = bundledVersion;
   public static invalidBundle = false;
 
-  constructor(private dependencies: Dependencies, clusterVersion: string) {
+  constructor(protected readonly dependencies: KubectlDependencies, clusterVersion: string) {
     let version: SemVer;
 
     try {
@@ -88,39 +72,27 @@ export class Kubectl {
       version = new SemVer(Kubectl.bundledKubectlVersion);
     }
 
-    const minorVersion = `${version.major}.${version.minor}`;
+    const fromMajorMinor = kubectlMap.get(`${version.major}.${version.minor}`);
 
-    /* minorVersion is the first two digits of kube server version
-       if the version map includes that, use that version, if not, fallback to the exact x.y.z of kube version */
-    if (kubectlMap.has(minorVersion)) {
-      this.kubectlVersion = kubectlMap.get(minorVersion);
+    /**
+     * minorVersion is the first two digits of kube server version if the version map includes that,
+     * use that version, if not, fallback to the exact x.y.z of kube version
+     */
+    if (fromMajorMinor) {
+      this.kubectlVersion = fromMajorMinor;
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using version map`);
     } else {
       this.kubectlVersion = version.format();
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
-    let arch = null;
-
-    if (process.arch == "x64") {
-      arch = "amd64";
-    } else if (process.arch == "x86" || process.arch == "ia32") {
-      arch = "386";
-    } else {
-      arch = process.arch;
-    }
-
-    const platformName = isWindows ? "windows" : process.platform;
-    const binaryName = isWindows ? "kubectl.exe" : "kubectl";
-
-    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${platformName}/${arch}/${binaryName}`;
-
+    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${this.dependencies.normalizedDownloadPlatform}/${this.dependencies.normalizedDownloadArch}/${this.dependencies.kubectlBinaryName}`;
     this.dirname = path.normalize(path.join(this.getDownloadDir(), this.kubectlVersion));
-    this.path = path.join(this.dirname, binaryName);
+    this.path = path.join(this.dirname, this.dependencies.kubectlBinaryName);
   }
 
   public getBundledPath() {
-    return bundledKubectlPath();
+    return this.dependencies.bundledKubectlBinaryPath;
   }
 
   public getPathFromPreferences() {
@@ -160,8 +132,7 @@ export class Kubectl {
 
       return this.path;
     } catch (err) {
-      logger.error("Failed to ensure kubectl, fallback to the bundled version");
-      logger.error(err);
+      logger.error("Failed to ensure kubectl, fallback to the bundled version", err);
 
       return this.getBundledPath();
     }
@@ -174,7 +145,7 @@ export class Kubectl {
 
       return this.dirname;
     } catch (err) {
-      logger.error(err);
+      logger.error("Failed to get biniary directory", err);
 
       return "";
     }
@@ -187,7 +158,7 @@ export class Kubectl {
       try {
         const args = [
           "version",
-          "--client", "true",
+          "--client",
           "--output", "json",
         ];
         const { stdout } = await promiseExecFile(path, args);
@@ -208,8 +179,8 @@ export class Kubectl {
           return true;
         }
         logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`);
-      } catch (err) {
-        logger.error(`Local kubectl failed to run properly (${err.message}), unlinking`);
+      } catch (error) {
+        logger.error(`Local kubectl failed to run properly (${error}), unlinking`);
       }
       await fs.promises.unlink(this.path);
     }
@@ -310,11 +281,10 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
+    const binariesDir = this.dependencies.baseBundeledBinariesDirectory;
     const kubectlPath = this.dependencies.userStore.downloadKubectlBinaries
       ? this.dirname
       : path.dirname(this.getPathFromPreferences());
-
-    const helmPath = helmCli.getBinaryDir();
 
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
     const bashScript = [
@@ -328,7 +298,7 @@ export class Kubectl {
       "elif test -f \"$HOME/.profile\"; then",
       "  . \"$HOME/.profile\"",
       "fi",
-      `export PATH="${helmPath}:${kubectlPath}:$PATH"`,
+      `export PATH="${kubectlPath}:${binariesDir}:$PATH"`,
       'export KUBECONFIG="$tempkubeconfig"',
       `NO_PROXY=",\${NO_PROXY:-localhost},"`,
       `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,
@@ -354,12 +324,12 @@ export class Kubectl {
 
       // voodoo to replace any previous occurrences of kubectl path in the PATH
       `kubectlpath="${kubectlPath}"`,
-      `helmpath="${helmPath}"`,
+      `binariesDir="${binariesDir}"`,
       "p=\":$kubectlpath:\"",
       "d=\":$PATH:\"",
       `d=\${d//$p/:}`,
       `d=\${d/#:/}`,
-      `export PATH="$helmpath:$kubectlpath:\${d/%:/}"`,
+      `export PATH="$kubectlpath:$binariesDir:\${d/%:/}"`,
       "export KUBECONFIG=\"$tempkubeconfig\"",
       `NO_PROXY=",\${NO_PROXY:-localhost},"`,
       `NO_PROXY="\${NO_PROXY//,localhost,/,}"`,
@@ -380,7 +350,8 @@ export class Kubectl {
     // MacOS packages are only available from default
 
     const { url } = packageMirrors.get(this.dependencies.userStore.downloadMirror)
-      ?? packageMirrors.get(defaultPackageMirror);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      ?? packageMirrors.get(defaultPackageMirror)!;
 
     return url;
   }

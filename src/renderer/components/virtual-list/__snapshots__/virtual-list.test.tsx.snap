@@ -1,0 +1,355 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VirtualList renders 1`] = `
+<body>
+  <div>
+    <div
+      class="VirtualList"
+    >
+      <div
+        class="list"
+        style="position: relative; height: 45px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+      >
+        <div
+          style="height: 4545px; width: 100%;"
+        >
+          <div
+            data-testid="some-id-0"
+            style="position: absolute; left: 0px; top: 0px; height: 15px; width: 100%;"
+          >
+            some-id-0
+          </div>
+          <div
+            data-testid="some-id-1"
+            style="position: absolute; left: 0px; top: 15px; height: 15px; width: 100%;"
+          >
+            some-id-1
+          </div>
+          <div
+            data-testid="some-id-2"
+            style="position: absolute; left: 0px; top: 30px; height: 15px; width: 100%;"
+          >
+            some-id-2
+          </div>
+          <div
+            data-testid="some-id-3"
+            style="position: absolute; left: 0px; top: 45px; height: 15px; width: 100%;"
+          >
+            some-id-3
+          </div>
+          <div
+            data-testid="some-id-4"
+            style="position: absolute; left: 0px; top: 60px; height: 15px; width: 100%;"
+          >
+            some-id-4
+          </div>
+          <div
+            data-testid="some-id-5"
+            style="position: absolute; left: 0px; top: 75px; height: 15px; width: 100%;"
+          >
+            some-id-5
+          </div>
+          <div
+            data-testid="some-id-6"
+            style="position: absolute; left: 0px; top: 90px; height: 15px; width: 100%;"
+          >
+            some-id-6
+          </div>
+          <div
+            data-testid="some-id-7"
+            style="position: absolute; left: 0px; top: 105px; height: 15px; width: 100%;"
+          >
+            some-id-7
+          </div>
+          <div
+            data-testid="some-id-8"
+            style="position: absolute; left: 0px; top: 120px; height: 15px; width: 100%;"
+          >
+            some-id-8
+          </div>
+          <div
+            data-testid="some-id-9"
+            style="position: absolute; left: 0px; top: 135px; height: 15px; width: 100%;"
+          >
+            some-id-9
+          </div>
+          <div
+            data-testid="some-id-10"
+            style="position: absolute; left: 0px; top: 150px; height: 15px; width: 100%;"
+          >
+            some-id-10
+          </div>
+          <div
+            data-testid="some-id-11"
+            style="position: absolute; left: 0px; top: 165px; height: 15px; width: 100%;"
+          >
+            some-id-11
+          </div>
+          <div
+            data-testid="some-id-12"
+            style="position: absolute; left: 0px; top: 180px; height: 15px; width: 100%;"
+          >
+            some-id-12
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`VirtualList when non-visable item is selected renders 1`] = `
+<body>
+  <div>
+    <div
+      class="VirtualList"
+    >
+      <div
+        class="list"
+        style="position: relative; height: 45px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+      >
+        <div
+          style="height: 3530px; width: 100%;"
+        >
+          <div
+            data-testid="some-id-19"
+            style="position: absolute; left: 0px; top: 285px; height: 15px; width: 100%;"
+          >
+            some-id-19
+          </div>
+          <div
+            data-testid="some-id-20"
+            style="position: absolute; left: 0px; top: 300px; height: 15px; width: 100%;"
+          >
+            some-id-20
+          </div>
+          <div
+            data-testid="some-id-21"
+            style="position: absolute; left: 0px; top: 315px; height: 15px; width: 100%;"
+          >
+            some-id-21
+          </div>
+          <div
+            data-testid="some-id-22"
+            style="position: absolute; left: 0px; top: 330px; height: 15px; width: 100%;"
+          >
+            some-id-22
+          </div>
+          <div
+            data-testid="some-id-23"
+            style="position: absolute; left: 0px; top: 345px; height: 15px; width: 100%;"
+          >
+            some-id-23
+          </div>
+          <div
+            data-testid="some-id-24"
+            style="position: absolute; left: 0px; top: 360px; height: 15px; width: 100%;"
+          >
+            some-id-24
+          </div>
+          <div
+            data-testid="some-id-25"
+            style="position: absolute; left: 0px; top: 375px; height: 15px; width: 100%;"
+          >
+            some-id-25
+          </div>
+          <div
+            data-testid="some-id-26"
+            style="position: absolute; left: 0px; top: 390px; height: 15px; width: 100%;"
+          >
+            some-id-26
+          </div>
+          <div
+            data-testid="some-id-27"
+            style="position: absolute; left: 0px; top: 405px; height: 15px; width: 100%;"
+          >
+            some-id-27
+          </div>
+          <div
+            data-testid="some-id-28"
+            style="position: absolute; left: 0px; top: 420px; height: 15px; width: 100%;"
+          >
+            some-id-28
+          </div>
+          <div
+            data-testid="some-id-29"
+            style="position: absolute; left: 0px; top: 435px; height: 15px; width: 100%;"
+          >
+            some-id-29
+          </div>
+          <div
+            data-testid="some-id-30"
+            style="position: absolute; left: 0px; top: 450px; height: 15px; width: 100%;"
+          >
+            some-id-30
+          </div>
+          <div
+            data-testid="some-id-31"
+            style="position: absolute; left: 0px; top: 465px; height: 15px; width: 100%;"
+          >
+            some-id-31
+          </div>
+          <div
+            data-testid="some-id-32"
+            style="position: absolute; left: 0px; top: 480px; height: 15px; width: 100%;"
+          >
+            some-id-32
+          </div>
+          <div
+            data-testid="some-id-33"
+            style="position: absolute; left: 0px; top: 495px; height: 15px; width: 100%;"
+          >
+            some-id-33
+          </div>
+          <div
+            data-testid="some-id-34"
+            style="position: absolute; left: 0px; top: 510px; height: 15px; width: 100%;"
+          >
+            some-id-34
+          </div>
+          <div
+            data-testid="some-id-35"
+            style="position: absolute; left: 0px; top: 525px; height: 15px; width: 100%;"
+          >
+            some-id-35
+          </div>
+          <div
+            data-testid="some-id-36"
+            style="position: absolute; left: 0px; top: 540px; height: 15px; width: 100%;"
+          >
+            some-id-36
+          </div>
+          <div
+            data-testid="some-id-37"
+            style="position: absolute; left: 0px; top: 555px; height: 15px; width: 100%;"
+          >
+            some-id-37
+          </div>
+          <div
+            data-testid="some-id-38"
+            style="position: absolute; left: 0px; top: 570px; height: 15px; width: 100%;"
+          >
+            some-id-38
+          </div>
+          <div
+            data-testid="some-id-39"
+            style="position: absolute; left: 0px; top: 585px; height: 15px; width: 100%;"
+          >
+            some-id-39
+          </div>
+          <div
+            data-testid="some-id-40"
+            style="position: absolute; left: 0px; top: 600px; height: 15px; width: 100%;"
+          >
+            some-id-40
+          </div>
+          <div
+            data-testid="some-id-41"
+            style="position: absolute; left: 0px; top: 615px; height: 15px; width: 100%;"
+          >
+            some-id-41
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`VirtualList when visible item is selected renders 1`] = `
+<body>
+  <div>
+    <div
+      class="VirtualList"
+    >
+      <div
+        class="list"
+        style="position: relative; height: 45px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+      >
+        <div
+          style="height: 4545px; width: 100%;"
+        >
+          <div
+            data-testid="some-id-0"
+            style="position: absolute; left: 0px; top: 0px; height: 15px; width: 100%;"
+          >
+            some-id-0
+          </div>
+          <div
+            data-testid="some-id-1"
+            style="position: absolute; left: 0px; top: 15px; height: 15px; width: 100%;"
+          >
+            some-id-1
+          </div>
+          <div
+            data-testid="some-id-2"
+            style="position: absolute; left: 0px; top: 30px; height: 15px; width: 100%;"
+          >
+            some-id-2
+          </div>
+          <div
+            data-testid="some-id-3"
+            style="position: absolute; left: 0px; top: 45px; height: 15px; width: 100%;"
+          >
+            some-id-3
+          </div>
+          <div
+            data-testid="some-id-4"
+            style="position: absolute; left: 0px; top: 60px; height: 15px; width: 100%;"
+          >
+            some-id-4
+          </div>
+          <div
+            data-testid="some-id-5"
+            style="position: absolute; left: 0px; top: 75px; height: 15px; width: 100%;"
+          >
+            some-id-5
+          </div>
+          <div
+            data-testid="some-id-6"
+            style="position: absolute; left: 0px; top: 90px; height: 15px; width: 100%;"
+          >
+            some-id-6
+          </div>
+          <div
+            data-testid="some-id-7"
+            style="position: absolute; left: 0px; top: 105px; height: 15px; width: 100%;"
+          >
+            some-id-7
+          </div>
+          <div
+            data-testid="some-id-8"
+            style="position: absolute; left: 0px; top: 120px; height: 15px; width: 100%;"
+          >
+            some-id-8
+          </div>
+          <div
+            data-testid="some-id-9"
+            style="position: absolute; left: 0px; top: 135px; height: 15px; width: 100%;"
+          >
+            some-id-9
+          </div>
+          <div
+            data-testid="some-id-10"
+            style="position: absolute; left: 0px; top: 150px; height: 15px; width: 100%;"
+          >
+            some-id-10
+          </div>
+          <div
+            data-testid="some-id-11"
+            style="position: absolute; left: 0px; top: 165px; height: 15px; width: 100%;"
+          >
+            some-id-11
+          </div>
+          <div
+            data-testid="some-id-12"
+            style="position: absolute; left: 0px; top: 180px; height: 15px; width: 100%;"
+          >
+            some-id-12
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

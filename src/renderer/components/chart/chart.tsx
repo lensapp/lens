@@ -4,7 +4,9 @@
  */
 
 import "./chart.scss";
+import type { CSSProperties } from "react";
 import React from "react";
+import type { PluginServiceRegistrationOptions } from "chart.js";
 import ChartJS from "chart.js";
 import { remove } from "lodash";
 import { cssNames } from "../../utils";
@@ -30,7 +32,7 @@ export interface ChartProps {
   showLegend?: boolean;
   legendPosition?: "bottom";
   legendColors?: string[];  // Hex colors for each of the labels in data object
-  plugins?: any[];
+  plugins?: PluginServiceRegistrationOptions[];
   redraw?: boolean;  // If true - recreate chart instance with no animation
   title?: string;
   className?: string;
@@ -57,31 +59,31 @@ export class Chart extends React.Component<ChartProps> {
   static defaultProps = defaultProps as object;
 
   private canvas = React.createRef<HTMLCanvasElement>();
-  private chart: ChartJS;
+  private chart: ChartJS | null = null;
   // ChartJS adds _meta field to any data object passed to it.
   // We clone new data prop into currentChartData to compare props and prevProps
-  private currentChartData: ChartData;
+  private currentChartData?: ChartData;
 
   componentDidMount() {
     const { showChart } = this.props;
 
-    if (!showChart) return;
-    this.renderChart();
+    if (showChart) {
+      this.renderChart();
+    }
   }
 
   componentDidUpdate() {
     const { showChart, redraw } = this.props;
 
     if (redraw) {
-      this.chart.destroy();
+      this.chart?.destroy();
       this.renderChart();
-
-      return;
-    }
-
-    if (showChart) {
-      if (!this.chart) this.renderChart();
-      else this.updateChart();
+    } else if (showChart) {
+      if (!this.chart) {
+        this.renderChart();
+      } else {
+        this.updateChart();
+      }
     }
   }
 
@@ -107,8 +109,8 @@ export class Chart extends React.Component<ChartProps> {
 
     this.memoizeDataProps();
 
-    const datasets: ChartDataSets[] = this.chart.config.data.datasets;
-    const nextDatasets: ChartDataSets[] = this.currentChartData.datasets || [];
+    const datasets: ChartDataSets[] = (this.chart.config.data ??= {}).datasets ??= [];
+    const nextDatasets: ChartDataSets[] = (this.currentChartData ??= {}).datasets ??= [];
 
     // Remove stale datasets if they're not available in nextDatasets
     if (datasets.length > nextDatasets.length) {
@@ -126,14 +128,17 @@ export class Chart extends React.Component<ChartProps> {
       const index = datasets.findIndex(set => set.id === next.id);
 
       if (index !== -1) {
-        datasets[index].data = datasets[index].data.slice();  // "Clean" mobx observables data to use in ChartJS
-        datasets[index].data.splice(next.data.length);
-        next.data.forEach((point: any, dataIndex: number) => {
-          datasets[index].data[dataIndex] = next.data[dataIndex];
-        });
+        const data = datasets[index].data = (datasets[index].data ?? []).slice();  // "Clean" mobx observables data to use in ChartJS
+        const nextData = next.data ??= [];
+
+        data.splice(next.data.length);
+
+        for (let dataIndex = 0; dataIndex < nextData.length; dataIndex += 1) {
+          data[dataIndex] = nextData[dataIndex];
+        }
 
         // Merge other fields
-        const { data, ...props } = next;
+        const { data: _data, ...props } = next;
 
         datasets[index] = {
           ...datasets[index],
@@ -150,7 +155,7 @@ export class Chart extends React.Component<ChartProps> {
     if (!this.props.showLegend) return null;
     const { data, legendColors } = this.props;
     const { labels, datasets } = data;
-    const labelElem = (title: string, color: string, tooltip?: string) => (
+    const labelElem = (title: string | undefined, color: string | CSSProperties["backgroundColor"], tooltip?: string) => (
       <Badge
         key={title}
         className="LegendBadge flex gaps align-center"
@@ -167,24 +172,33 @@ export class Chart extends React.Component<ChartProps> {
 
     return (
       <div className="legend flex wrap">
-        {labels && labels.map((label: string, index) => {
-          const { backgroundColor } = datasets[0] as any;
-          const color = legendColors ? legendColors[index] : backgroundColor[index];
+        {
+          labels
+            ? labels.map((label, index) => {
+              const { backgroundColor = [] } = datasets?.[0] ?? {};
+              const color = legendColors ? legendColors[index] : (backgroundColor as string[])[index];
 
-          return labelElem(label, color);
-        })}
-        {!labels && datasets.map(({ borderColor, label, tooltip }) =>
-          labelElem(label, borderColor as any, tooltip),
-        )}
+              return labelElem(label as string, color);
+            })
+            : datasets?.map(({ borderColor, label, tooltip }) =>
+              labelElem(label, borderColor as string, tooltip),
+            )
+        }
       </div>
     );
   }
 
   renderChart() {
     const { type, options, plugins } = this.props;
+    const canvas = this.canvas.current;
+
+    if (!canvas) {
+      return;
+    }
 
     this.memoizeDataProps();
-    this.chart = new ChartJS(this.canvas.current, {
+
+    this.chart = new ChartJS(canvas, {
       type,
       plugins,
       options: {
@@ -204,16 +218,16 @@ export class Chart extends React.Component<ChartProps> {
       <>
         <div className={cssNames("Chart", className)}>
           {title && <div className="chart-title">{title}</div>}
-          {showChart &&
-          <div className="chart-container">
-            <canvas
-              ref={this.canvas}
-              width={width}
-              height={height}
-            />
-            <div className="chartjs-tooltip flex column"></div>
-          </div>
-          }
+          {showChart && (
+            <div className="chart-container">
+              <canvas
+                ref={this.canvas}
+                width={width}
+                height={height}
+              />
+              <div className="chartjs-tooltip flex column"></div>
+            </div>
+          )}
           {this.renderLegend()}
         </div>
       </>

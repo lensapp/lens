@@ -13,7 +13,7 @@ import type { PackageJson } from "type-fest";
 const logModule = "[EXTENSION-INSTALLER]";
 
 interface Dependencies {
-  extensionPackageRootDirectory: string
+  extensionPackageRootDirectory: string;
 }
 
 /**
@@ -74,7 +74,7 @@ export class ExtensionInstaller {
       });
       let stderr = "";
 
-      child.stderr.on("data", data => {
+      child.stderr?.on("data", data => {
         stderr += String(data);
       });
 

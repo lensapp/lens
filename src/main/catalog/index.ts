@@ -4,3 +4,4 @@
  */
 
 export * from "./catalog-entity-registry";
+export * from "./entity-registry";

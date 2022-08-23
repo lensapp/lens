@@ -4,18 +4,17 @@
  */
 
 import "./dock.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
-
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource/view";
 import { DockTabs } from "./dock-tabs";
-import { DockStore, DockTab, TabKind } from "./dock/store";
+import type { DockStore, DockTab } from "./dock/store";
+import { TabKind } from "./dock/store";
 import { EditResource } from "./edit-resource/view";
 import { InstallChart } from "./install-chart/view";
 import { LogsDockTab } from "./logs/view";
@@ -27,19 +26,24 @@ import dockStoreInjectable from "./dock/store.injectable";
 import createTerminalTabInjectable from "./terminal/create-terminal-tab.injectable";
 import { ErrorBoundary } from "../error-boundary";
 
-interface Props {
+export interface DockProps {
   className?: string;
 }
 
 interface Dependencies {
-  createResourceTab: () => void
-  createTerminalTab: () => void
-  dockStore: DockStore
+  createResourceTab: () => void;
+  createTerminalTab: () => void;
+  dockStore: DockStore;
+}
+
+enum Direction {
+  NEXT = 1,
+  PREV = -1,
 }
 
 @observer
-class NonInjectedDock extends React.Component<Props & Dependencies> {
-  private element = React.createRef<HTMLDivElement>();
+class NonInjectedDock extends React.Component<DockProps & Dependencies> {
+  private readonly element = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
     document.addEventListener("keydown", this.onKeyDown);
@@ -52,8 +56,9 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
   onKeyDown = (evt: KeyboardEvent) => {
     const { close, selectedTab, closeTab } = this.props.dockStore;
     const { code, ctrlKey, metaKey, shiftKey } = evt;
+
     // Determine if user working inside <Dock/> or using any other areas in app
-    const dockIsFocused = this.element?.current.contains(document.activeElement);
+    const dockIsFocused = this.element.current?.contains(document.activeElement);
 
     if (!selectedTab || !dockIsFocused) return;
 
@@ -63,7 +68,15 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
 
     if ((ctrlKey && code === "KeyW") || (metaKey && code === "KeyW")) {
       closeTab(selectedTab.id);
-      this.element?.current.focus();  // Avoid loosing focus when closing tab
+      this.element.current?.focus();  // Avoid loosing focus when closing tab
+    }
+
+    if(ctrlKey && code === "Period") {
+      this.switchToNextTab(selectedTab, Direction.NEXT);
+    }
+
+    if(ctrlKey && code === "Comma") {
+      this.switchToNextTab(selectedTab, Direction.PREV);
     }
   };
 
@@ -72,7 +85,20 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
 
     open();
     selectTab(tab.id);
-    this.element?.current.focus();
+    this.element.current?.focus();
+  };
+
+  switchToNextTab = (selectedTab: DockTab, direction: Direction) => {
+    const { tabs } = this.props.dockStore;
+    const currentIndex = tabs.indexOf(selectedTab);
+    const nextIndex = currentIndex + direction;
+
+    // check if moving to the next or previous tab is possible.
+    if (nextIndex >= tabs.length || nextIndex < 0) return;
+
+    const nextElement = tabs[nextIndex];
+
+    this.onChangeTab(nextElement);
   };
 
   renderTab(tab: DockTab) {
@@ -98,7 +124,10 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
     if (!isOpen || !selectedTab) return null;
 
     return (
-      <div className={`tab-content ${selectedTab.kind}`} style={{ flexBasis: height }}>
+      <div
+        className={`tab-content ${selectedTab.kind}`}
+        style={{ flexBasis: height }}
+        data-testid={`dock-tab-content-for-${selectedTab.id}`}>
         {this.renderTab(selectedTab)}
       </div>
     );
@@ -125,18 +154,23 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
           onMinExtentExceed={dockStore.open}
           onDrag={extent => dockStore.height = extent}
         />
-        <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
+        <div className="tabs-container flex align-center">
           <DockTabs
             tabs={tabs}
             selectedTab={selectedTab}
             autoFocus={isOpen}
             onChangeTab={this.onChangeTab}
           />
-          <div className="toolbar flex gaps align-center box grow">
+          <div className={cssNames("toolbar flex gaps align-center box grow", { "pl-0": tabs.length == 0 })}>
             <div className="dock-menu box grow">
-              <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
+              <MenuActions
+                id="menu-actions-for-dock"
+                usePortal
+                triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }}
+                closeOnScroll={false}
+              >
                 <MenuItem className="create-terminal-tab" onClick={() => this.props.createTerminalTab()}>
-                  <Icon small svg="terminal" size={15} />
+                  <Icon small material="terminal" />
                   Terminal session
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => this.props.createResourceTab()}>
@@ -169,7 +203,7 @@ class NonInjectedDock extends React.Component<Props & Dependencies> {
   }
 }
 
-export const Dock = withInjectables<Dependencies, Props>(
+export const Dock = withInjectables<Dependencies, DockProps>(
   NonInjectedDock,
 
   {

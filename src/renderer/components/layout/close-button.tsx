@@ -5,16 +5,21 @@
 
 import styles from "./close-button.module.scss";
 
-import React, { HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
+import React from "react";
 import { Icon } from "../icon";
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+export interface CloseButtonProps extends HTMLAttributes<HTMLDivElement> {
 }
 
-export function CloseButton(props: Props) {
+export function CloseButton(props: CloseButtonProps) {
   return (
     <div {...props}>
-      <div className={styles.closeButton} role="button" aria-label="Close">
+      <div
+        className={styles.closeButton}
+        role="button"
+        aria-label="Close"
+      >
         <Icon material="close" className={styles.icon}/>
       </div>
       <div className={styles.esc} aria-hidden="true">

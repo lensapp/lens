@@ -5,7 +5,8 @@
 
 import "./info-panel.scss";
 
-import React, { Component, ReactNode } from "react";
+import type { ReactNode } from "react";
+import React, { Component } from "react";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
@@ -13,35 +14,44 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import type { DockStore, TabId } from "./dock/store";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 
-interface Props extends OptionalProps {
+export interface InfoPanelProps extends OptionalProps {
   tabId: TabId;
-  submit?: () => Promise<ReactNode | string | void>;
+  submit?: () => Promise<string | React.ReactElement | React.ReactElement[] | null | undefined | false | void>;
 }
 
-interface OptionalProps {
+export interface OptionalProps {
   className?: string;
   error?: string;
   controls?: ReactNode;
   submitLabel?: ReactNode;
   submittingMessage?: ReactNode;
   disableSubmit?: boolean;
-  showButtons?: boolean
+  showButtons?: boolean;
   showSubmitClose?: boolean;
   showInlineInfo?: boolean;
   showNotifications?: boolean;
   showStatusPanel?: boolean;
+  submitTestId?: string;
+  submitAndCloseTestId?: string;
+  cancelTestId?: string;
+  submittingTestId?: string;
 }
 
 interface Dependencies {
-  dockStore: DockStore
+  dockStore: DockStore;
+  showSuccessNotification: ShowNotification;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
-class NonInjectedInfoPanel extends Component<Props & Dependencies> {
+class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
   static defaultProps: OptionalProps = {
     submitLabel: "Submit",
     submittingMessage: "Submitting..",
@@ -55,7 +65,7 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
   @observable error = "";
   @observable waiting = false;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: InfoPanelProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -78,11 +88,15 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
     this.waiting = true;
 
     try {
-      const result = await this.props.submit();
+      const result = await this.props.submit?.();
 
-      if (showNotifications && result) Notifications.ok(result);
+      if (showNotifications && result) {
+        this.props.showSuccessNotification(result);
+      }
     } catch (error) {
-      if (showNotifications) Notifications.error(error.toString());
+      if (showNotifications) {
+        this.props.showCheckedErrorNotification(error, "Unknown error while submitting");
+      }
     } finally {
       this.waiting = false;
     }
@@ -121,12 +135,23 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
         </div>
         {showStatusPanel && (
           <div className="flex gaps align-center">
-            {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
+            {waiting ? (
+              <>
+                <Spinner data-testid={this.props.submittingTestId} />
+                {" "}
+                {submittingMessage}
+              </>
+            ) : this.renderErrorIcon()}
           </div>
         )}
         {showButtons && (
           <>
-            <Button plain label="Cancel" onClick={close} />
+            <Button
+              plain
+              label="Cancel"
+              onClick={close}
+              data-testid={this.props.cancelTestId}
+            />
             <Button
               active
               outlined={showSubmitClose}
@@ -134,13 +159,16 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
               label={submitLabel}
               onClick={submit}
               disabled={isDisabled}
+              data-testid={this.props.submitTestId}
             />
             {showSubmitClose && (
               <Button
-                primary active
+                primary
+                active
                 label={`${submitLabel} & Close`}
                 onClick={submitAndClose}
                 disabled={isDisabled}
+                data-testid={this.props.submitAndCloseTestId}
               />
             )}
           </>
@@ -150,12 +178,14 @@ class NonInjectedInfoPanel extends Component<Props & Dependencies> {
   }
 }
 
-export const InfoPanel = withInjectables<Dependencies, Props>(
+export const InfoPanel = withInjectables<Dependencies, InfoPanelProps>(
   NonInjectedInfoPanel,
 
   {
     getProps: (di, props) => ({
       dockStore: di.inject(dockStoreInjectable),
+      showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+      showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
       ...props,
     }),
   },

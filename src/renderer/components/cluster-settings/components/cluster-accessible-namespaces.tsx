@@ -11,15 +11,15 @@ import { EditableList } from "../../editable-list";
 import { observable, makeObservable } from "mobx";
 import { systemName } from "../../input/input_validators";
 
-interface Props {
+export interface ClusterAccessibleNamespacesProps {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterAccessibleNamespaces extends React.Component<Props> {
+export class ClusterAccessibleNamespaces extends React.Component<ClusterAccessibleNamespacesProps> {
   @observable namespaces = new Set(this.props.cluster.accessibleNamespaces);
 
-  constructor(props: Props) {
+  constructor(props: ClusterAccessibleNamespacesProps) {
     super(props);
     makeObservable(this);
   }
@@ -42,7 +42,7 @@ export class ClusterAccessibleNamespaces extends React.Component<Props> {
           }}
         />
         <small className="hint">
-        This setting is useful for manually specifying which namespaces you have access to. This is useful when you do not have permissions to list namespaces.
+          This setting is useful for manually specifying which namespaces you have access to. This is useful when you do not have permissions to list namespaces.
         </small>
       </>
     );

@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import semver, { coerce, SemVer } from "semver";
+import type { SemVer } from "semver";
+import semver, { coerce } from "semver";
 import * as iter from "./iter";
 import type { RawHelmChart } from "../k8s-api/endpoints/helm-charts.api";
 import logger from "../logger";
@@ -50,7 +51,7 @@ export function sortCompare<T>(left: T, right: T): Ordering {
 
 interface ChartVersion {
   version: string;
-  __version?: SemVer;
+  __version?: SemVer | null;
 }
 
 export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion): Ordering {
@@ -73,13 +74,13 @@ export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion
 
 export function sortCharts(charts: RawHelmChart[]) {
   interface ExtendedHelmChart extends RawHelmChart {
-    __version: SemVer;
+    __version?: SemVer | null;
   }
 
   const chartsWithVersion = Array.from(
     iter.map(
       charts,
-      (chart => {
+      chart => {
         const __version = coerce(chart.version, { includePrerelease: true, loose: true });
 
         if (!__version) {
@@ -89,7 +90,7 @@ export function sortCharts(charts: RawHelmChart[]) {
         (chart as ExtendedHelmChart).__version = __version;
 
         return chart as ExtendedHelmChart;
-      }),
+      },
     ),
   );
 

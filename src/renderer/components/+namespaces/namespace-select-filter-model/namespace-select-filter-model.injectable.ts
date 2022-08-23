@@ -2,16 +2,18 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { NamespaceSelectFilterModel } from "./namespace-select-filter-model";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import namespaceStoreInjectable from "../namespace-store/namespace-store.injectable";
+import { namespaceSelectFilterModelFor } from "./namespace-select-filter-model";
+import { getInjectable } from "@ogre-tools/injectable";
+import namespaceStoreInjectable from "../store.injectable";
+import isMultiSelectionKeyInjectable from "./is-selection-key.injectable";
 
-const NamespaceSelectFilterModelInjectable = getInjectable({
-  instantiate: (di) => new NamespaceSelectFilterModel({
+const namespaceSelectFilterModelInjectable = getInjectable({
+  id: "namespace-select-filter-model",
+
+  instantiate: (di) => namespaceSelectFilterModelFor({
     namespaceStore: di.inject(namespaceStoreInjectable),
+    isMultiSelectionKey: di.inject(isMultiSelectionKeyInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
-export default NamespaceSelectFilterModelInjectable;
+export default namespaceSelectFilterModelInjectable;

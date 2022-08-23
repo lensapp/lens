@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - name: Checkout Release
         uses: actions/checkout@v2
@@ -23,11 +23,11 @@ jobs:
 
       - name: Generate NPM package
         run: |
-           make build-npm
+          make build-npm
 
       - name: publish new release
         if: contains(github.ref, 'refs/tags/v')
         run: |
-           make publish-npm
+          make publish-npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

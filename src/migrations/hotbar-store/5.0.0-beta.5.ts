@@ -3,8 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Hotbar } from "../../common/hotbar-types";
-import { catalogEntityRegistry } from "../../main/catalog";
+import type { Hotbar } from "../../common/hotbars/types";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import catalogEntityRegistryInjectable from "../../main/catalog/entity-registry.injectable";
 import type { MigrationDeclaration } from "../helpers";
 
 export default {
@@ -12,18 +13,25 @@ export default {
   run(store) {
     const rawHotbars = store.get("hotbars");
     const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars : [];
+    const di = getLegacyGlobalDiForExtensionApi();
+    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
     for (const hotbar of hotbars) {
       for (let i = 0; i < hotbar.items.length; i += 1) {
         const item = hotbar.items[i];
-        const entity = catalogEntityRegistry.items.find((entity) => entity.getId() === item?.entity.uid);
+
+        if (!item) {
+          continue;
+        }
+
+        const entity = catalogEntityRegistry.findById(item.entity.uid);
 
         if (!entity) {
           // Clear disabled item
           hotbar.items[i] = null;
         } else {
           // Save additional data
-          hotbar.items[i].entity = {
+          item.entity = {
             ...item.entity,
             name: entity.metadata.name,
             source: entity.metadata.source,

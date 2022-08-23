@@ -14,9 +14,13 @@ import { catalogInitChannel, catalogItemsChannel } from "../common/ipc/catalog";
 
 const broadcaster = debounce((items: CatalogEntity[]) => {
   broadcastMessage(catalogItemsChannel, items);
-}, 1_000, { leading: true, trailing: true });
+}, 100, { leading: true, trailing: true });
 
 export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
+  broadcaster(toJS(catalog.items));
+}
+
+export function startCatalogSyncToRenderer(catalog: CatalogEntityRegistry) {
   return disposer(
     ipcMainOn(catalogInitChannel, () => broadcaster(toJS(catalog.items))),
     reaction(() => toJS(catalog.items), (items) => {

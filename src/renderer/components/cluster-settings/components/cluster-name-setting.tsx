@@ -12,16 +12,16 @@ import { SubTitle } from "../../layout/sub-title";
 import { isRequired } from "../../input/input_validators";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 
-interface Props {
+export interface ClusterNameSettingProps {
   cluster: Cluster;
   entity: KubernetesCluster;
 }
 
 @observer
-export class ClusterNameSetting extends React.Component<Props> {
+export class ClusterNameSetting extends React.Component<ClusterNameSettingProps> {
   @observable name = "";
 
-  constructor(props: Props) {
+  constructor(props: ClusterNameSettingProps) {
     super(props);
     makeObservable(this);
   }

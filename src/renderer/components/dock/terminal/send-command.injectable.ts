@@ -2,9 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
-import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
+import { TerminalChannels } from "../../../../common/terminal/channels";
+import { waitUntilDefined } from "../../../../common/utils/wait";
+import type { TerminalApi } from "../../../api/terminal-api";
 import { noop } from "../../../utils";
 import { Notifications } from "../../notifications";
 import selectDockTabInjectable from "../dock/select-dock-tab.injectable";
@@ -15,7 +17,7 @@ import getTerminalApiInjectable from "./get-terminal-api.injectable";
 interface Dependencies {
   selectTab: (tabId: TabId) => void;
   createTerminalTab: () => DockTab;
-  getTerminalApi: (tabId: TabId) => TerminalApi;
+  getTerminalApi: (tabId: TabId) => TerminalApi | undefined;
 }
 
 export interface SendCommandOptions {
@@ -36,7 +38,7 @@ export interface SendCommandOptions {
 }
 
 const sendCommand = ({ selectTab, createTerminalTab, getTerminalApi }: Dependencies) => async (command: string, options: SendCommandOptions = {}): Promise<void> => {
-  let { tabId } = options;
+  let tabId: string | undefined = options.tabId;
 
   if (tabId) {
     selectTab(tabId);
@@ -44,10 +46,12 @@ const sendCommand = ({ selectTab, createTerminalTab, getTerminalApi }: Dependenc
     tabId = createTerminalTab().id;
   }
 
-  await when(() => Boolean(getTerminalApi(tabId)));
-
-  const terminalApi = getTerminalApi(tabId);
-  const shellIsReady = when(() =>terminalApi.isReady);
+  const terminalApi = await waitUntilDefined(() => (
+    tabId
+      ? getTerminalApi(tabId)
+      : undefined
+  ));
+  const shellIsReady = when(() => terminalApi.isReady);
   const notifyVeryLong = setTimeout(() => {
     shellIsReady.cancel();
     Notifications.info(
@@ -79,13 +83,13 @@ const sendCommand = ({ selectTab, createTerminalTab, getTerminalApi }: Dependenc
 };
 
 const sendCommandInjectable = getInjectable({
+  id: "send-command",
+
   instantiate: (di) => sendCommand({
     createTerminalTab: di.inject(createTerminalTabInjectable),
     selectTab: di.inject(selectDockTabInjectable),
     getTerminalApi: di.inject(getTerminalApiInjectable),
   }),
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default sendCommandInjectable;

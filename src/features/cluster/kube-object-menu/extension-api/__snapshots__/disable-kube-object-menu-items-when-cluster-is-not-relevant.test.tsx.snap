@@ -1,0 +1,1207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`disable kube object menu items when cluster is not relevant given extension should be enabled for the cluster renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
+      class="mainLayout"
+      style="--sidebar-width: 200px;"
+    >
+      <div
+        class="sidebar"
+      >
+        <div
+          class="flex flex-col"
+          data-testid="cluster-sidebar"
+        >
+          <div
+            class="SidebarCluster"
+          >
+            <div
+              class="Avatar rounded loadingAvatar"
+              style="width: 40px; height: 40px;"
+            >
+              ??
+            </div>
+            <div
+              class="loadingClusterName"
+            />
+          </div>
+          <div
+            class="sidebarNav sidebar-active-status"
+          >
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-workloads"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-workloads"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Workloads
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-config"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-config"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="list"
+                  >
+                    list
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Config
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-network"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-network"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="device_hub"
+                  >
+                    device_hub
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Network
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-storage"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-storage"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="storage"
+                  >
+                    storage
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Storage
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-helm"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-helm"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Helm
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-user-management"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-user-management"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="security"
+                  >
+                    security
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Access Control
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-custom-resources"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-custom-resources"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="extension"
+                  >
+                    extension
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Custom Resources
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ResizingAnchor horizontal trailing"
+        />
+      </div>
+      <div
+        class="contents"
+      >
+        <ul
+          class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+          id="menu-actions-for-kube-object-menu-for-some-uid"
+        >
+          <div
+            data-testid="some-test-id"
+          >
+            Some menu item
+          </div>
+        </ul>
+      </div>
+      <div
+        class="footer"
+      >
+        <div
+          class="Dock"
+          tabindex="-1"
+        >
+          <div
+            class="ResizingAnchor vertical leading"
+          />
+          <div
+            class="tabs-container flex align-center"
+          >
+            <div
+              class="dockTabs"
+              role="tablist"
+            >
+              <div
+                class="Tabs tabs"
+              >
+                <div
+                  class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
+                  id="tab-terminal"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="terminal"
+                    >
+                      terminal
+                    </span>
+                  </i>
+                  <div
+                    class="label"
+                  >
+                    <div
+                      class="flex align-center"
+                    >
+                      <span
+                        class="title"
+                      >
+                        Terminal
+                      </span>
+                      <div
+                        class="close"
+                      >
+                        <i
+                          class="Icon material interactive focusable small"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="close"
+                          >
+                            close
+                          </span>
+                        </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="toolbar flex gaps align-center box grow"
+            >
+              <div
+                class="dock-menu box grow"
+              >
+                <i
+                  class="Icon new-dock-tab material interactive focusable"
+                  id="menu-actions-for-dock"
+                  tabindex="0"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="add"
+                  >
+                    add
+                  </span>
+                </i>
+                <div>
+                  New tab
+                </div>
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="fullscreen"
+                >
+                  fullscreen
+                </span>
+              </i>
+              <div>
+                Fit to window
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_up"
+                >
+                  keyboard_arrow_up
+                </span>
+              </i>
+              <div>
+                Open
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`disable kube object menu items when cluster is not relevant given extension shouldn't be enabled for the cluster renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
+      class="mainLayout"
+      style="--sidebar-width: 200px;"
+    >
+      <div
+        class="sidebar"
+      >
+        <div
+          class="flex flex-col"
+          data-testid="cluster-sidebar"
+        >
+          <div
+            class="SidebarCluster"
+          >
+            <div
+              class="Avatar rounded loadingAvatar"
+              style="width: 40px; height: 40px;"
+            >
+              ??
+            </div>
+            <div
+              class="loadingClusterName"
+            />
+          </div>
+          <div
+            class="sidebarNav sidebar-active-status"
+          >
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-workloads"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-workloads"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Workloads
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-config"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-config"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="list"
+                  >
+                    list
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Config
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-network"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-network"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="device_hub"
+                  >
+                    device_hub
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Network
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-storage"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-storage"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="storage"
+                  >
+                    storage
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Storage
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-helm"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-helm"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Helm
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-user-management"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-user-management"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="security"
+                  >
+                    security
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Access Control
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-custom-resources"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-custom-resources"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="extension"
+                  >
+                    extension
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Custom Resources
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ResizingAnchor horizontal trailing"
+        />
+      </div>
+      <div
+        class="contents"
+      >
+        <ul
+          class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+          id="menu-actions-for-kube-object-menu-for-some-uid"
+        />
+      </div>
+      <div
+        class="footer"
+      >
+        <div
+          class="Dock"
+          tabindex="-1"
+        >
+          <div
+            class="ResizingAnchor vertical leading"
+          />
+          <div
+            class="tabs-container flex align-center"
+          >
+            <div
+              class="dockTabs"
+              role="tablist"
+            >
+              <div
+                class="Tabs tabs"
+              >
+                <div
+                  class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
+                  id="tab-terminal"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="terminal"
+                    >
+                      terminal
+                    </span>
+                  </i>
+                  <div
+                    class="label"
+                  >
+                    <div
+                      class="flex align-center"
+                    >
+                      <span
+                        class="title"
+                      >
+                        Terminal
+                      </span>
+                      <div
+                        class="close"
+                      >
+                        <i
+                          class="Icon material interactive focusable small"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="close"
+                          >
+                            close
+                          </span>
+                        </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="toolbar flex gaps align-center box grow"
+            >
+              <div
+                class="dock-menu box grow"
+              >
+                <i
+                  class="Icon new-dock-tab material interactive focusable"
+                  id="menu-actions-for-dock"
+                  tabindex="0"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="add"
+                  >
+                    add
+                  </span>
+                </i>
+                <div>
+                  New tab
+                </div>
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="fullscreen"
+                >
+                  fullscreen
+                </span>
+              </i>
+              <div>
+                Fit to window
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_up"
+                >
+                  keyboard_arrow_up
+                </span>
+              </i>
+              <div>
+                Open
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`disable kube object menu items when cluster is not relevant given not yet known if extension should be enabled for the cluster renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
+      class="mainLayout"
+      style="--sidebar-width: 200px;"
+    >
+      <div
+        class="sidebar"
+      >
+        <div
+          class="flex flex-col"
+          data-testid="cluster-sidebar"
+        >
+          <div
+            class="SidebarCluster"
+          >
+            <div
+              class="Avatar rounded loadingAvatar"
+              style="width: 40px; height: 40px;"
+            >
+              ??
+            </div>
+            <div
+              class="loadingClusterName"
+            />
+          </div>
+          <div
+            class="sidebarNav sidebar-active-status"
+          >
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-workloads"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-workloads"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Workloads
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-config"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-config"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="list"
+                  >
+                    list
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Config
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-network"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-network"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="device_hub"
+                  >
+                    device_hub
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Network
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-storage"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-storage"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="storage"
+                  >
+                    storage
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Storage
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-helm"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-helm"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Helm
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-user-management"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-user-management"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="security"
+                  >
+                    security
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Access Control
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-custom-resources"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-custom-resources"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="extension"
+                  >
+                    extension
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Custom Resources
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ResizingAnchor horizontal trailing"
+        />
+      </div>
+      <div
+        class="contents"
+      >
+        <ul
+          class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+          id="menu-actions-for-kube-object-menu-for-some-uid"
+        />
+      </div>
+      <div
+        class="footer"
+      >
+        <div
+          class="Dock"
+          tabindex="-1"
+        >
+          <div
+            class="ResizingAnchor vertical leading"
+          />
+          <div
+            class="tabs-container flex align-center"
+          >
+            <div
+              class="dockTabs"
+              role="tablist"
+            >
+              <div
+                class="Tabs tabs"
+              >
+                <div
+                  class="Tab flex gaps align-center DockTab TerminalTab active"
+                  data-testid="dock-tab-for-terminal"
+                  id="tab-terminal"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="terminal"
+                    >
+                      terminal
+                    </span>
+                  </i>
+                  <div
+                    class="label"
+                  >
+                    <div
+                      class="flex align-center"
+                    >
+                      <span
+                        class="title"
+                      >
+                        Terminal
+                      </span>
+                      <div
+                        class="close"
+                      >
+                        <i
+                          class="Icon material interactive focusable small"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="close"
+                          >
+                            close
+                          </span>
+                        </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="toolbar flex gaps align-center box grow"
+            >
+              <div
+                class="dock-menu box grow"
+              >
+                <i
+                  class="Icon new-dock-tab material interactive focusable"
+                  id="menu-actions-for-dock"
+                  tabindex="0"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="add"
+                  >
+                    add
+                  </span>
+                </i>
+                <div>
+                  New tab
+                </div>
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="fullscreen"
+                >
+                  fullscreen
+                </span>
+              </i>
+              <div>
+                Fit to window
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_up"
+                >
+                  keyboard_arrow_up
+                </span>
+              </i>
+              <div>
+                Open
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

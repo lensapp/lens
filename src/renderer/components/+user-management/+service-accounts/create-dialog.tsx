@@ -10,26 +10,27 @@ import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
-import { Dialog, DialogProps } from "../../dialog";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
 import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
 import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { serviceAccountsStore } from "./store";
+import { serviceAccountStore } from "./legacy-store";
 
-interface Props extends Partial<DialogProps> {
+export interface CreateServiceAccountDialogProps extends Partial<DialogProps> {
 }
 
 @observer
-export class CreateServiceAccountDialog extends React.Component<Props> {
+export class CreateServiceAccountDialog extends React.Component<CreateServiceAccountDialogProps> {
   static isOpen = observable.box(false);
 
   @observable name = "";
   @observable namespace = "default";
 
-  constructor(props: Props) {
+  constructor(props: CreateServiceAccountDialogProps) {
     super(props);
     makeObservable(this);
   }
@@ -46,13 +47,13 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
     const { name, namespace } = this;
 
     try {
-      const serviceAccount = await serviceAccountsStore.create({ namespace, name });
+      const serviceAccount = await serviceAccountStore.create({ namespace, name });
 
       this.name = "";
       showDetails(serviceAccount.selfLink);
       CreateServiceAccountDialog.close();
     } catch (err) {
-      Notifications.error(err);
+      Notifications.checkedError(err, "Unknown error occured while creating service account");
     }
   };
 
@@ -78,13 +79,15 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
               placeholder="Enter a name"
               trim
               validators={systemName}
-              value={name} onChange={v => this.name = v.toLowerCase()}
+              value={name}
+              onChange={v => this.name = v.toLowerCase()}
             />
             <SubTitle title="Namespace" />
             <NamespaceSelect
+              id="create-dialog-namespace-select-input"
               lightTheme
               value={namespace}
-              onChange={({ value }) => this.namespace = value}
+              onChange={option => this.namespace = option?.value ?? "default"}
             />
           </WizardStep>
         </Wizard>

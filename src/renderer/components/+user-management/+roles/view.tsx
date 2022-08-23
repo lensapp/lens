@@ -7,12 +7,12 @@ import "./view.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddRoleDialog } from "./add-dialog";
-import { rolesStore } from "./store";
-import type { RolesRouteParams } from "../../../../common/routes";
+import { roleStore } from "./legacy-store";
+import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
+import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -20,23 +20,20 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<RolesRouteParams> {
-}
-
 @observer
-export class Roles extends React.Component<Props> {
+export class Roles extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_roles"
           className="Roles"
-          store={rolesStore}
+          store={roleStore}
           sortingCallbacks={{
             [columnId.name]: role => role.getName(),
             [columnId.namespace]: role => role.getNs(),
-            [columnId.age]: role => role.getTimeDiffFromNow(),
+            [columnId.age]: role => -role.getCreationTimestamp(),
           }}
           searchFilters={[
             role => role.getSearchFields(),
@@ -52,7 +49,7 @@ export class Roles extends React.Component<Props> {
             role.getName(),
             <KubeObjectStatusIcon key="icon" object={role} />,
             role.getNs(),
-            role.getAge(),
+            <KubeObjectAge key="age" object={role} />,
           ]}
           addRemoveButtons={{
             onAdd: () => AddRoleDialog.open(),
@@ -60,7 +57,7 @@ export class Roles extends React.Component<Props> {
           }}
         />
         <AddRoleDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

@@ -5,8 +5,27 @@
 
 .Ingresses {
   .TableCell {
+    &.checkbox .Checkbox {
+      align-items: flex-start;
+    }
+
     &.rules {
       flex-grow: 3.0;
+      overflow-x: scroll;
+      text-overflow: unset;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .ingressRule {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ingressRule + .ingressRule {
+        margin-top: 6px;
+      }
     }
 
     &.warning {

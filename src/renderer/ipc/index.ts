@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ipcRenderer, OpenDialogOptions } from "electron";
+import type { OpenDialogOptions } from "electron";
+import { ipcRenderer } from "electron";
 import { clusterActivateHandler, clusterClearDeletingHandler, clusterDeleteHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetDeletingHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
@@ -34,7 +35,7 @@ export function requestWindowAction(type: WindowAction): Promise<void> {
   return requestMain(windowActionHandleChannel, type);
 }
 
-export function requestOpenFilePickingDialog(opts: OpenDialogOptions): Promise<{ canceled: boolean; filePaths: string[]; }> {
+export function requestOpenFilePickingDialog(opts: OpenDialogOptions): Promise<{ canceled: boolean; filePaths: string[] }> {
   return requestMain(openFilePickingDialogChannel, opts);
 }
 
@@ -62,7 +63,7 @@ export function requestDeleteCluster(clusterId: ClusterId): Promise<void> {
   return requestMain(clusterDeleteHandler, clusterId);
 }
 
-export function requestInitialClusterStates(): Promise<{ id: string, state: ClusterState }[]> {
+export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {
   return requestMain(clusterStates);
 }
 

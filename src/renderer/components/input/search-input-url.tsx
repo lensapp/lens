@@ -9,26 +9,27 @@ import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { InputProps } from "./input";
 import { SearchInput } from "./search-input";
-import { createPageParam } from "../../navigation";
-
-export const searchUrlParam = createPageParam({
-  name: "search",
-  defaultValue: "",
-});
+import type { PageParam } from "../../navigation";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import searchUrlPageParamInjectable from "./search-url-page-param.injectable";
 
 export interface SearchInputUrlProps extends InputProps {
   compact?: boolean; // show only search-icon when not focused
 }
 
+interface Dependencies {
+  searchUrlParam: PageParam<string>;
+}
+
 @observer
-export class SearchInputUrl extends React.Component<SearchInputUrlProps> {
+class NonInjectedSearchInputUrl extends React.Component<SearchInputUrlProps & Dependencies> {
   @observable inputVal = ""; // fix: use empty string on init to avoid react warnings
 
-  updateUrl = debounce((val: string) => searchUrlParam.set(val), 250);
+  readonly updateUrl = debounce((val: string) => this.props.searchUrlParam.set(val), 250);
 
   componentDidMount(): void {
     disposeOnUnmount(this, [
-      autorun(() => this.inputVal = searchUrlParam.get()),
+      autorun(() => this.inputVal = this.props.searchUrlParam.get()),
     ]);
   }
 
@@ -44,27 +45,34 @@ export class SearchInputUrl extends React.Component<SearchInputUrlProps> {
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {
     this.setValue(val);
-
-    if (this.props.onChange) {
-      this.props.onChange(val, evt);
-    }
+    this.props.onChange?.(val, evt);
   };
 
-  constructor(props: SearchInputUrlProps) {
+  constructor(props: SearchInputUrlProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   render() {
-    const { inputVal } = this;
+    const { searchUrlParam, ...searchInputProps } = this.props;
 
     return (
       <SearchInput
-        value={inputVal}
-        onChange={this.onChange}
+        value={this.inputVal}
+        onChange={(val, event) => {
+          this.setValue(val);
+          this.props.onChange?.(val, event);
+        }}
         onClear={this.clear}
-        {...this.props}
+        {...searchInputProps}
       />
     );
   }
 }
+
+export const SearchInputUrl = withInjectables<Dependencies, SearchInputUrlProps>(NonInjectedSearchInputUrl, {
+  getProps: (di, props) => ({
+    ...props,
+    searchUrlParam: di.inject(searchUrlPageParamInjectable),
+  }),
+});

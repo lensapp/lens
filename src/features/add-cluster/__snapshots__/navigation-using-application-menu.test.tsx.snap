@@ -1,0 +1,404 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`add-cluster - navigation using application menu renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="flex justify-center Welcome align-center"
+        data-testid="welcome-page"
+      >
+        <div
+          data-testid="welcome-banner-container"
+          style="width: 320px;"
+        >
+          <i
+            class="Icon logo svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <div
+            class="flex justify-center"
+          >
+            <div
+              data-testid="welcome-text-container"
+              style="width: 320px;"
+            >
+              <h2>
+                Welcome to OpenLens!
+              </h2>
+              <p>
+                To get you started we have auto-detected your clusters in your
+                 
+                kubeconfig file and added them to the catalog, your centralized
+                 
+                view for managing all your cloud-native resources.
+                <br />
+                <br />
+                If you have any questions or feedback, please join our 
+                <a
+                  class="link"
+                  href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Lens Community slack channel
+                </a>
+                .
+              </p>
+              <ul
+                class="block"
+                data-testid="welcome-menu-container"
+                style="width: 320px;"
+              >
+                <li
+                  class="flex grid-12"
+                >
+                  <i
+                    class="Icon box col-1 material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
+                  <a
+                    class="box col-10"
+                  >
+                    Browse Clusters in Catalog
+                  </a>
+                  <i
+                    class="Icon box col-1 material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="navigate_next"
+                    >
+                      navigate_next
+                    </span>
+                  </i>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`add-cluster - navigation using application menu when navigating to add cluster using application menu renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout AddClusters"
+        data-testid="add-cluster-page"
+      >
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content flex column gaps"
+          >
+            <h2>
+              Add Clusters from Kubeconfig
+            </h2>
+            <p>
+              Clusters added here are  
+              <b>
+                not
+              </b>
+               merged into the 
+              <code>
+                ~/.kube/config
+              </code>
+               file. 
+              <a
+                href="https://docs.k8slens.dev/main/catalog/add-cluster/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Read more about adding clusters.
+              </a>
+            </p>
+            <div
+              class="flex column"
+            >
+              <textarea
+                data-testid="monaco-editor-for-undefined"
+              />
+            </div>
+            <div
+              class="actions-panel"
+            >
+              <button
+                class="Button primary"
+                disabled=""
+                type="button"
+              >
+                Add clusters
+              </button>
+              <div />
+            </div>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div>
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;

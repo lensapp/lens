@@ -28,12 +28,10 @@ const logs = [
 describe("search store tests", () => {
   let searchStore: SearchStore;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
-    await di.runSetups();
 
     searchStore = di.inject(searchStoreInjectable);
   });

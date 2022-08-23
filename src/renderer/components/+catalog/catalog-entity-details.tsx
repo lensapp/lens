@@ -14,29 +14,35 @@ import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { isDevelopment } from "../../../common/vars";
 import { cssNames } from "../../utils";
 import { Avatar } from "../avatar";
-import { getLabelBadges } from "./helpers";
+import type { GetLabelBadges } from "./get-label-badges.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import getLabelBadgesInjectable from "./get-label-badges.injectable";
 
-interface Props<T extends CatalogEntity> {
-  entity: T;
+export interface CatalogEntityDetailsProps<Entity extends CatalogEntity> {
+  entity: Entity;
   hideDetails(): void;
   onRun: () => void;
 }
 
+interface Dependencies {
+  getLabelBadges: GetLabelBadges;
+}
+
 @observer
-export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Props<T>> {
+class NonInjectedCatalogEntityDetails<Entity extends CatalogEntity> extends Component<CatalogEntityDetailsProps<Entity> & Dependencies> {
   categoryIcon(category: CatalogCategory) {
-    if (category.metadata.icon.includes("<svg")) {
+    if (Icon.isSvg(category.metadata.icon)) {
       return <Icon svg={category.metadata.icon} smallest />;
     } else {
       return <Icon material={category.metadata.icon} smallest />;
     }
   }
 
-  renderContent(entity: T) {
-    const { onRun, hideDetails } = this.props;
+  renderContent(entity: Entity) {
+    const { onRun, hideDetails, getLabelBadges } = this.props;
     const detailItems = CatalogEntityDetailRegistry.getInstance().getItemsForKind(entity.kind, entity.apiVersion);
     const details = detailItems.map(({ components }, index) => <components.Details entity={entity} key={index} />);
-    const showDefaultDetails = detailItems.find((item) => item.priority > 999) === undefined;
+    const showDefaultDetails = detailItems.find((item) => item.priority ?? 50 > 999) === undefined;
 
     return (
       <>
@@ -109,3 +115,10 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
     );
   }
 }
+
+export const CatalogEntityDetails = withInjectables<Dependencies, CatalogEntityDetailsProps<CatalogEntity>>(NonInjectedCatalogEntityDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    getLabelBadges: di.inject(getLabelBadgesInjectable),
+  }),
+}) as <Entity extends CatalogEntity>(props: CatalogEntityDetailsProps<Entity>) => React.ReactElement;

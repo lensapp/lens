@@ -2,16 +2,18 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { CatalogEntityStore } from "./catalog-entity.store";
-import catalogEntityRegistryInjectable from "../../../api/catalog-entity-registry/catalog-entity-registry.injectable";
+import { getInjectable } from "@ogre-tools/injectable";
+import { catalogEntityStore } from "./catalog-entity.store";
+import catalogEntityRegistryInjectable from "../../../api/catalog/entity/registry.injectable";
+import catalogCategoryRegistryInjectable from "../../../../common/catalog/category-registry.injectable";
 
 const catalogEntityStoreInjectable = getInjectable({
-  instantiate: (di) => new CatalogEntityStore({
-    registry: di.inject(catalogEntityRegistryInjectable),
-  }),
+  id: "catalog-entity-store",
 
-  lifecycle: lifecycleEnum.singleton,
+  instantiate: (di) => catalogEntityStore({
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    catalogRegistry: di.inject(catalogCategoryRegistryInjectable),
+  }),
 });
 
 export default catalogEntityStoreInjectable;

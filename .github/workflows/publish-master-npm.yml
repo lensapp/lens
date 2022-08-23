@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - master
+concurrency:
+  group: publish-master-npm
+  cancel-in-progress: true
 jobs:
   publish:
     name: Publish NPM Package `master`
@@ -11,7 +14,7 @@ jobs:
       ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'area/extension') }}
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - name: Checkout Release
         uses: actions/checkout@v2
@@ -25,11 +28,11 @@ jobs:
 
       - name: Generate NPM package
         run: |
-           make build-npm
+          make build-npm
 
       - name: publish new release
         run: |
-           make publish-npm
+          make publish-npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_RELEASE_TAG: master

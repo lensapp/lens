@@ -10,32 +10,33 @@ import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { catalogCategoryRegistry } from "../api/catalog-category-registry";
 import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
 import { loadConfigFromString } from "../../common/kube-helpers";
-import { DeleteClusterDialog } from "../components/delete-cluster-dialog";
+import type { OpenDeleteClusterDialog } from "../components/delete-cluster-dialog/open.injectable";
 
-async function onClusterDelete(clusterId: string) {
+async function onClusterDelete(clusterId: string, openDeleteClusterDialog: OpenDeleteClusterDialog) {
   const cluster = ClusterStore.getInstance().getById(clusterId);
 
   if (!cluster) {
     return console.warn("[KUBERNETES-CLUSTER]: cannot delete cluster, does not exist in store", { clusterId });
   }
 
-  const { config, error } = loadConfigFromString(await fs.promises.readFile(cluster.kubeConfigPath, "utf-8"));
+  const result = loadConfigFromString(await fs.promises.readFile(cluster.kubeConfigPath, "utf-8"));
 
-  if (error) {
-    throw error;
+  if (result.error) {
+    throw result.error;
   }
 
-  DeleteClusterDialog.open({ cluster, config });
+  openDeleteClusterDialog({ cluster, config: result.config });
 }
 
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
+  openDeleteClusterDialog: OpenDeleteClusterDialog;
 }
 
-export function initCatalog({ openCommandDialog }: Dependencies) {
+export function initCatalog({ openCommandDialog, openDeleteClusterDialog }: Dependencies) {
   catalogCategoryRegistry
     .getForGroupKind("entity.k8slens.dev", "WebLink")
-    .on("catalogAddMenu", ctx => {
+    ?.on("catalogAddMenu", ctx => {
       ctx.menuItems.push({
         title: "Add web link",
         icon: "public",
@@ -45,12 +46,12 @@ export function initCatalog({ openCommandDialog }: Dependencies) {
 
   catalogCategoryRegistry
     .getForGroupKind("entity.k8slens.dev", "KubernetesCluster")
-    .on("contextMenuOpen", (entity, context) => {
+    ?.on("contextMenuOpen", (entity, context) => {
       if (entity.metadata?.source == "local") {
         context.menuItems.push({
-          title: "Delete",
+          title: "Remove",
           icon: "delete",
-          onClick: () => onClusterDelete(entity.getId()),
+          onClick: () => onClusterDelete(entity.getId(), openDeleteClusterDialog),
         });
       }
     });

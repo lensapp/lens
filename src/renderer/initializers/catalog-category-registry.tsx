@@ -3,41 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React from "react";
-import { kubernetesClusterCategory } from "../../common/catalog-entities";
-import { addClusterURL, kubernetesURL } from "../../common/routes";
-import { multiSet } from "../utils";
-import { UserStore } from "../../common/user-store";
-import { getAllEntries } from "../components/+preferences/kubeconfig-syncs";
-import { runInAction } from "mobx";
+import type { KubernetesClusterCategory } from "../../common/catalog-entities";
 import { isLinux, isWindows } from "../../common/vars";
 import { PathPicker } from "../components/path-picker";
-import { Notifications } from "../components/notifications";
-import { Link } from "react-router-dom";
 
-async function addSyncEntries(filePaths: string[]) {
-  const entries = await getAllEntries(filePaths);
-
-  runInAction(() => {
-    multiSet(UserStore.getInstance().syncKubeconfigEntries, entries);
-  });
-
-  Notifications.ok(
-    <div>
-      <p>Selected items has been added to Kubeconfig Sync.</p><br/>
-      <p>Check the <Link style={{ textDecoration: "underline" }} to={`${kubernetesURL()}#kube-sync`}>Preferences</Link>{" "}
-      to see full list.</p>
-    </div>,
-  );
+interface Dependencies {
+  navigateToAddCluster: () => void;
+  addSyncEntries: (filePaths: string[]) => void;
+  kubernetesClusterCategory: KubernetesClusterCategory;
 }
 
-export function initCatalogCategoryRegistryEntries() {
+export function initCatalogCategoryRegistryEntries({
+  navigateToAddCluster,
+  addSyncEntries,
+  kubernetesClusterCategory,
+} : Dependencies) {
   kubernetesClusterCategory.on("catalogAddMenu", ctx => {
     ctx.menuItems.push(
       {
         icon: "text_snippet",
         title: "Add from kubeconfig",
-        onClick: () => ctx.navigate(addClusterURL()),
+        onClick: navigateToAddCluster,
       },
     );
 

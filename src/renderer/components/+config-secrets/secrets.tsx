@@ -7,13 +7,13 @@ import "./secrets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
-import { secretsStore } from "./secrets.store";
+import { secretStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { SecretsRouteParams } from "../../../common/routes";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -24,29 +24,27 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<SecretsRouteParams> {
-}
-
 @observer
-export class Secrets extends React.Component<Props> {
+export class Secrets extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="configuration_secrets"
-          className="Secrets" store={secretsStore}
+          className="Secrets"
+          store={secretStore}
           sortingCallbacks={{
-            [columnId.name]: item => item.getName(),
-            [columnId.namespace]: item => item.getNs(),
-            [columnId.labels]: item => item.getLabels(),
-            [columnId.keys]: item => item.getKeys(),
-            [columnId.type]: item => item.type,
-            [columnId.age]: item => item.getTimeDiffFromNow(),
+            [columnId.name]: secret => secret.getName(),
+            [columnId.namespace]: secret => secret.getNs(),
+            [columnId.labels]: secret => secret.getLabels(),
+            [columnId.keys]: secret => secret.getKeys(),
+            [columnId.type]: secret => secret.type,
+            [columnId.age]: secret => -secret.getCreationTimestamp(),
           }}
           searchFilters={[
-            item => item.getSearchFields(),
-            item => item.getKeys(),
+            secret => secret.getSearchFields(),
+            secret => secret.getKeys(),
           ]}
           renderHeaderTitle="Secrets"
           renderTableHeader={[
@@ -62,10 +60,17 @@ export class Secrets extends React.Component<Props> {
             secret.getName(),
             <KubeObjectStatusIcon key="icon" object={secret} />,
             secret.getNs(),
-            secret.getLabels().map(label => <Badge scrollable key={label} label={label} expandable={false}/>),
+            secret.getLabels().map(label => (
+              <Badge
+                scrollable
+                key={label}
+                label={label}
+                expandable={false}
+              />
+            )),
             secret.getKeys().join(", "),
             secret.type,
-            secret.getAge(),
+            <KubeObjectAge key="age" object={secret} />,
           ]}
           addRemoveButtons={{
             onAdd: () => AddSecretDialog.open(),
@@ -73,7 +78,7 @@ export class Secrets extends React.Component<Props> {
           }}
         />
         <AddSecretDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

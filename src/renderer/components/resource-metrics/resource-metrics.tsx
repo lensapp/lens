@@ -9,44 +9,36 @@ import React, { createContext, useEffect, useState } from "react";
 import { Radio, RadioGroup } from "../radio";
 import { useInterval } from "../../hooks";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { cssNames } from "../../utils";
+import { cssNames, noop } from "../../utils";
 import { Spinner } from "../spinner";
+import type { MetricsTab } from "../chart/options";
+import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";
 
-interface Props extends React.HTMLProps<any> {
-  tabs: React.ReactNode[];
-  object?: KubeObject;
+export type AtLeastOneMetricTab = [MetricsTab, ...MetricsTab[]];
+
+export interface ResourceMetricsProps extends React.HTMLProps<any> {
+  tabs: AtLeastOneMetricTab;
+  object: KubeObject;
   loader?: () => void;
   interval?: number;
   className?: string;
-  params?: {
-    [key: string]: any;
-  };
+  metrics: Partial<Record<string, MetricData>> | null | undefined;
 }
 
-export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
-  object: T;
-  tabId: number;
-  params?: P;
-};
+export interface ResourceMetricsValue {
+  object: KubeObject;
+  tab: MetricsTab;
+  metrics: Partial<Record<string, MetricData>> | null | undefined;
+}
 
-export const ResourceMetricsContext = createContext<IResourceMetricsValue>(null);
+export const ResourceMetricsContext = createContext<ResourceMetricsValue | null>(null);
 
-const defaultProps: Partial<Props> = {
-  interval: 60,  // 1 min
-};
+export function ResourceMetrics({ object, loader = noop, interval = 60, tabs, children, className, metrics }: ResourceMetricsProps) {
+  const [tab, setTab] = useState<MetricsTab>(tabs[0]);
 
-ResourceMetrics.defaultProps = defaultProps;
-
-export function ResourceMetrics({ object, loader, interval, tabs, children, className, params }: Props) {
-  const [tabId, setTabId] = useState<number>(0);
-
-  useEffect(() => {
-    if (loader) loader();
-  }, [object]);
-
-  useInterval(() => {
-    if (loader) loader();
-  }, interval * 1000);
+  // This is done just incase `loader` is actually something like `() => Promise<void>`
+  useEffect(() => void loader(), [object]);
+  useInterval(loader, interval * 1000);
 
   const renderContents = () => {
     return (
@@ -55,15 +47,20 @@ export function ResourceMetrics({ object, loader, interval, tabs, children, clas
           <RadioGroup
             asButtons
             className="flex box grow gaps"
-            value={tabs[tabId]}
-            onChange={value => setTabId(tabs.findIndex(tab => tab == value))}
+            value={tab}
+            onChange={setTab}
           >
             {tabs.map((tab, index) => (
-              <Radio key={index} className="box grow" label={tab} value={tab}/>
+              <Radio
+                key={index}
+                className="box grow"
+                label={tab}
+                value={tab}
+              />
             ))}
           </RadioGroup>
         </div>
-        <ResourceMetricsContext.Provider value={{ object, tabId, params }}>
+        <ResourceMetricsContext.Provider value={{ object, tab, metrics }}>
           <div className="graph">
             {children}
           </div>

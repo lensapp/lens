@@ -14,20 +14,20 @@ import { cssNames } from "../../utils";
 
 DOMPurify.addHook("afterSanitizeAttributes", function (node) {
   // Set all elements owning target to target=_blank
-  if ("target" in node as any as HTMLElement) {
+  if ("target" in node) {
     node.setAttribute("target", "_blank");
   }
 });
 
-interface Props extends OptionalProps {
+export interface MarkdownViewerProps extends OptionalProps {
   markdown: string;
 }
 
-interface OptionalProps {
+export interface OptionalProps {
   className?: string;
 }
 
-export class MarkdownViewer extends Component<Props> {
+export class MarkdownViewer extends Component<MarkdownViewerProps> {
   render() {
     const { className, markdown } = this.props;
     const html = DOMPurify.sanitize(marked(markdown));

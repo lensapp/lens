@@ -7,24 +7,25 @@ import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Catalog } from "./catalog";
-import { createMemoryHistory } from "history";
 import { mockWindow } from "../../../../__mocks__/windowMock";
-import { CatalogCategoryRegistry, CatalogEntity, CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
-import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
+import { CatalogEntity } from "../../../common/catalog";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
-import catalogEntityRegistryInjectable
-  from "../../api/catalog-entity-registry/catalog-entity-registry.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import { ThemeStore } from "../../theme.store";
-import { UserStore } from "../../../common/user-store";
 import mockFs from "mock-fs";
-import directoryForUserDataInjectable
-  from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import type { AppEvent } from "../../../common/app-event-bus/event-bus";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import { computed } from "mobx";
+import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 
 mockWindow();
 jest.mock("electron", () => ({
@@ -41,6 +42,10 @@ jest.mock("electron", () => ({
     on: jest.fn(),
     handle: jest.fn(),
   },
+  ipcRenderer: {
+    on: jest.fn(),
+    invoke: jest.fn(),
+  },
 }));
 
 jest.mock("./hotbar-toggle-menu-item", () => ({
@@ -54,95 +59,72 @@ class MockCatalogEntity extends CatalogEntity {
   constructor(data: CatalogEntityData, public onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
     super(data);
   }
+}
 
-  public onContextMenuOpen(): void | Promise<void> {}
-  public onSettingsOpen(): void | Promise<void> {}
+function createMockCatalogEntity(onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
+  return new MockCatalogEntity({
+    metadata: {
+      uid: "a_catalogEntity_uid",
+      name: "a catalog entity",
+      labels: {
+        test: "label",
+      },
+    },
+    status: {
+      phase: "",
+    },
+    spec: {},
+  }, onRun);
 }
 
 describe("<Catalog />", () => {
-  const history = createMemoryHistory();
-  const mockLocation = {
-    pathname: "",
-    search: "",
-    state: "",
-    hash: "",
-  };
-  const mockMatch = {
-    params: {
-      // will be used to match activeCategory
-      // need to be the same as property values in kubernetesClusterCategory
-      group: "entity.k8slens.dev",
-      kind: "KubernetesCluster",
-    },
-    isExact: true,
-    path: "",
-    url: "",
-  };
-
-  function createMockCatalogEntity(onRun: (context: CatalogEntityActionContext) => void | Promise<void>) {
-    return new MockCatalogEntity({
-      metadata: {
-        uid: "a_catalogEntity_uid",
-        name: "a catalog entity",
-        labels: {
-          test: "label",
-        },
-      },
-      status: {
-        phase: "",
-      },
-      spec: {},
-    }, onRun);
-  }
-
-  let di: DependencyInjectionContainer;
+  let di: DiContainer;
   let catalogEntityStore: CatalogEntityStore;
   let catalogEntityRegistry: CatalogEntityRegistry;
+  let emitEvent: (event: AppEvent) => void;
+  let onRun: jest.MockedFunction<(context: CatalogEntityActionContext) => void | Promise<void>>;
+  let catalogEntityItem: MockCatalogEntity;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
-    await di.runSetups();
+    di.override(broadcastMessageInjectable, () => async () => {});
+
+    di.permitSideEffects(getConfigurationFileModelInjectable);
 
     mockFs();
-
-    UserStore.createInstance();
-    ThemeStore.createInstance();
     CatalogEntityDetailRegistry.createInstance();
 
     render = renderFor(di);
-
-    const catalogCategoryRegistry = new CatalogCategoryRegistry();
-
-    catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    onRun = jest.fn();
+    catalogEntityItem = createMockCatalogEntity(onRun);
+    catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
     di.override(catalogEntityRegistryInjectable, () => catalogEntityRegistry);
 
+    emitEvent = jest.fn();
+
+    di.override(appEventBusInjectable, () => ({
+      emit: emitEvent,
+    }));
+
     catalogEntityStore = di.inject(catalogEntityStoreInjectable);
+    Object.assign(catalogEntityStore, {
+      selectedItem: computed(() => catalogEntityItem),
+    });
   });
 
   afterEach(() => {
-    UserStore.resetInstance();
-    ThemeStore.resetInstance();
     CatalogEntityDetailRegistry.resetInstance();
-
     jest.clearAllMocks();
     jest.restoreAllMocks();
     mockFs.restore();
   });
 
   it("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       (event) => {
         expect(event.target.getId()).toBe("a_catalogEntity_uid");
@@ -155,26 +137,12 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
   it("onBeforeRun prevents event => onRun wont be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       (e) => {
         setTimeout(() => {
@@ -185,26 +153,12 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
   it("addOnBeforeRun throw an exception => onRun will be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       () => {
         setTimeout(() => {
@@ -216,25 +170,13 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
   it("addOnRunHook return a promise and does not prevent run event => onRun()", (done) => {
-    const onRun = jest.fn(() => done());
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
+    onRun.mockImplementation(() => done());
 
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
@@ -242,26 +184,12 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
   it("addOnRunHook return a promise and prevents event wont be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       async (e) => {
         expect(onRun).not.toBeCalled();
@@ -275,26 +203,12 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
   });
 
   it("addOnRunHook return a promise and reject => onRun will be triggered", (done) => {
-    const onRun = jest.fn();
-    const catalogEntityItem = createMockCatalogEntity(onRun);
-
-    // mock as if there is a selected item > the detail panel opens
-    jest
-      .spyOn(catalogEntityStore, "selectedItem", "get")
-      .mockImplementation(() => catalogEntityItem);
-
     catalogEntityRegistry.addOnBeforeRun(
       async () => {
         setTimeout(() => {
@@ -306,14 +220,35 @@ describe("<Catalog />", () => {
       },
     );
 
-    render(
-      <Catalog
-        history={history}
-        location={mockLocation}
-        match={mockMatch}
-      />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+  });
+
+  it("emits catalog open AppEvent", () => {
+    render(
+      <Catalog />,
+    );
+
+    expect(emitEvent).toHaveBeenCalledWith( {
+      action: "open",
+      name: "catalog",
+    });
+  });
+
+  it("emits catalog change AppEvent when changing the category", () => {
+    render(
+      <Catalog />,
+    );
+
+    userEvent.click(screen.getByText("Web Links"));
+
+    expect(emitEvent).toHaveBeenLastCalledWith({
+      action: "change-category",
+      name: "catalog",
+      params: {
+        category: "Web Links",
+      },
+    });
   });
 });

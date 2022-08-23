@@ -3,10 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { Common, Renderer } from "@k8slens/extensions";
+import type { Common } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import { computed, observable, makeObservable } from "mobx";
-import { MetricsFeature, MetricsConfiguration } from "./metrics-feature";
+import type { MetricsConfiguration } from "./metrics-feature";
+import { MetricsFeature } from "./metrics-feature";
 
 const {
   K8sApi: {
@@ -17,13 +19,13 @@ const {
   },
 } = Renderer;
 
-interface Props {
+export interface MetricsSettingsProps {
   cluster: Common.Catalog.KubernetesCluster;
 }
 
 @observer
-export class MetricsSettings extends React.Component<Props> {
-  constructor(props: Props) {
+export class MetricsSettings extends React.Component<MetricsSettingsProps> {
+  constructor(props: MetricsSettingsProps) {
     super(props);
     makeObservable(this);
   }
@@ -206,14 +208,14 @@ export class MetricsSettings extends React.Component<Props> {
         <section>
           <SubTitle title="Prometheus" />
           <FormSwitch
-            control={
+            control={(
               <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.prometheus && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.togglePrometheus(v.target.checked)}
                 name="prometheus"
               />
-            }
+            )}
             label="Enable bundled Prometheus metrics stack"
           />
           <small className="hint">
@@ -224,14 +226,14 @@ export class MetricsSettings extends React.Component<Props> {
         <section>
           <SubTitle title="Kube State Metrics" />
           <FormSwitch
-            control={
+            control={(
               <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.toggleKubeStateMetrics(v.target.checked)}
                 name="node-exporter"
               />
-            }
+            )}
             label="Enable bundled kube-state-metrics stack"
           />
           <small className="hint">
@@ -243,14 +245,14 @@ export class MetricsSettings extends React.Component<Props> {
         <section>
           <SubTitle title="Node Exporter" />
           <FormSwitch
-            control={
+            control={(
               <Switcher
                 disabled={this.featureStates.nodeExporter === undefined || !this.isTogglable}
                 checked={!!this.featureStates.nodeExporter && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.toggleNodeExporter(v.target.checked)}
                 name="node-exporter"
               />
-            }
+            )}
             label="Enable bundled node-exporter stack"
           />
           <small className="hint">
@@ -269,9 +271,11 @@ export class MetricsSettings extends React.Component<Props> {
             className="w-60 h-14"
           />
 
-          {this.canUpgrade && (<small className="hint">
-            An update is available for enabled metrics components.
-          </small>)}
+          {this.canUpgrade && (
+            <small className="hint">
+              An update is available for enabled metrics components.
+            </small>
+          )}
         </section>
       </>
     );

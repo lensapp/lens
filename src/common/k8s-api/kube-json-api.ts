@@ -3,10 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
+import type { JsonApiData, JsonApiError } from "./json-api";
+import { JsonApi } from "./json-api";
 import type { Response } from "node-fetch";
-import { LensProxy } from "../../main/lens-proxy";
 import { apiKubePrefix, isDebugging } from "../vars";
+import { apiBase } from "./api-base";
+import type { KubeJsonApiObjectMetadata } from "./kube-object";
 
 export interface KubeJsonApiListMetadata {
   resourceVersion: string;
@@ -20,28 +22,17 @@ export interface KubeJsonApiDataList<T = KubeJsonApiData> {
   metadata: KubeJsonApiListMetadata;
 }
 
-export interface KubeJsonApiMetadata {
-  uid: string;
-  name: string;
-  namespace?: string;
-  creationTimestamp?: string;
-  resourceVersion: string;
-  continue?: string;
-  finalizers?: string[];
-  selfLink?: string;
-  labels?: {
-    [label: string]: string;
-  };
-  annotations?: {
-    [annotation: string]: string;
-  };
-  [key: string]: any;
-}
-
-export interface KubeJsonApiData extends JsonApiData {
+export interface KubeJsonApiData<
+  Metadata extends KubeJsonApiObjectMetadata = KubeJsonApiObjectMetadata,
+  Status = unknown,
+  Spec = unknown,
+> extends JsonApiData {
   kind: string;
   apiVersion: string;
-  metadata: KubeJsonApiMetadata;
+  metadata: Metadata;
+  status?: Status;
+  spec?: Spec;
+  [otherKeys: string]: unknown;
 }
 
 export interface KubeJsonApiError extends JsonApiError {
@@ -57,20 +48,24 @@ export interface KubeJsonApiError extends JsonApiError {
 
 export class KubeJsonApi extends JsonApi<KubeJsonApiData> {
   static forCluster(clusterId: string): KubeJsonApi {
-    const port = LensProxy.getInstance().port;
+    const url = new URL(apiBase.config.serverAddress);
 
     return new this({
-      serverAddress: `http://127.0.0.1:${port}`,
+      serverAddress: apiBase.config.serverAddress,
       apiBase: apiKubePrefix,
       debug: isDebugging,
     }, {
       headers: {
-        "Host": `${clusterId}.localhost:${port}`,
+        "Host": `${clusterId}.localhost:${url.port}`,
       },
     });
   }
 
-  protected parseError(error: KubeJsonApiError | any, res: Response): string[] {
+  protected parseError(error: KubeJsonApiError | string, res: Response): string[] {
+    if (typeof error === "string") {
+      return [error];
+    }
+
     const { status, reason, message } = error;
 
     if (status && reason) {

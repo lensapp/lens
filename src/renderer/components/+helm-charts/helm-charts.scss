@@ -1,0 +1,68 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.HelmCharts {
+  .SearchInput {
+    width: 70%;
+    margin: auto;
+
+    > label {
+      padding: $padding $padding * 2;
+    }
+  }
+
+  .TableCell {
+    text-overflow: ellipsis;
+
+    &.name {
+      flex-grow: 1.3;
+    }
+
+    &.icon {
+      $iconSize: $unit * 3.5;
+
+      padding: 0;
+      display: flex;
+      flex-grow: 0;
+      flex-basis: $iconSize;
+
+      figure {
+        width: $iconSize;
+        height: $iconSize;
+        margin: auto;
+
+        svg {
+          padding: 1px;
+        }
+
+        img {
+          object-fit: contain;
+          width: inherit;
+          height: inherit;
+          visibility: hidden;
+          border-radius: inherit;
+
+          &.visible {
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    &.description {
+      flex-grow: 2.5;
+    }
+
+    &.repository {
+      &.stable {
+        color: var(--helmStableRepo);
+      }
+
+      &.incubator {
+        color: var(--helmIncubatorRepo);
+      }
+    }
+  }
+}

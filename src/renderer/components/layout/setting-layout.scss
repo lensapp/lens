@@ -34,7 +34,7 @@
 
     .sidebar {
       width: 218px;
-      padding: 60px 0 60px 20px;
+      padding: 60px 10px 60px 20px;
 
       h2 {
         font-size: 15px;
@@ -52,10 +52,6 @@
         margin-right: 20px;
         height: 1px;
         border-top: thin solid var(--hrColor);
-
-        &:first-child {
-          display: none;
-        }
       }
 
       .Tabs {
@@ -63,7 +59,6 @@
           padding: 6px 10px;
           font-size: 13px;
           font-weight: 800;
-          line-height: 16px;
           text-transform: uppercase;
           color: var(--textColorPrimary);
 
@@ -76,14 +71,10 @@
           padding: 6px 10px;
           margin-bottom: 2px;
           border-radius: 4px;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
           font-size: 15px;
           line-height: 20px;
           cursor: pointer;
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
+          white-space: normal;
 
           &::after {
             content: none;

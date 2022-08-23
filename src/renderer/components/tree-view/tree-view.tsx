@@ -18,14 +18,14 @@ const deepDash = getDeepDash(_);
 
 export interface NavigationTree {
   id: string;
-  parentId: string;
+  parentId?: string;
   name: string;
   selected?: boolean;
   children?: NavigationTree[];
 }
 
-interface Props {
-  data: NavigationTree[]
+export interface RecursiveTreeViewProps {
+  data: NavigationTree[];
 }
 
 function scrollToItem(id: string) {
@@ -36,7 +36,7 @@ function getSelectedNode(data: NavigationTree[]) {
   return deepDash.findDeep(data, (value, key) => key === "selected" && value === true)?.parent;
 }
 
-export function RecursiveTreeView({ data }: Props) {
+export function RecursiveTreeView({ data }: RecursiveTreeViewProps) {
   const [expanded, setExpanded] = React.useState<string[]>([]);
   const prevData = useRef<NavigationTree[]>(data);
 

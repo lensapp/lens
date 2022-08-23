@@ -6,18 +6,18 @@
 import React from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { boundMethod } from "../../utils";
+import type { SingleOrMany } from "../../utils";
 
-interface Props {
+export interface RenderDelayProps {
   placeholder?: React.ReactNode;
-  children: unknown;
+  children: SingleOrMany<React.ReactNode>;
 }
 
 @observer
-export class RenderDelay extends React.Component<Props> {
+export class RenderDelay extends React.Component<RenderDelayProps> {
   @observable isVisible = false;
 
-  constructor(props: Props) {
+  constructor(props: RenderDelayProps) {
     super(props);
     makeObservable(this);
   }
@@ -32,10 +32,7 @@ export class RenderDelay extends React.Component<Props> {
     window.cancelIdleCallback(this.showContents);
   }
 
-  @boundMethod
-  showContents() {
-    this.isVisible = true;
-  }
+  showContents = () => this.isVisible = true;
 
   render() {
     if (!this.isVisible) {

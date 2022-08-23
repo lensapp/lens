@@ -52,7 +52,7 @@ describe("preferences page tests", () => {
     ];
 
     for (const { id, header } of pages) {
-      await window.click(`[data-testid=${id}-tab]`);
+      await window.click(`[data-testid=tab-link-for-${id}]`);
       await window.waitForSelector(`[data-testid=${id}-header] >> text=${header}`);
     }
   }, 10*60*1000);
@@ -60,9 +60,7 @@ describe("preferences page tests", () => {
   // Skipping, but will turn it on again in the follow up PR
   it.skip("ensures helm repos", async () => {
     await window.click("[data-testid=kubernetes-tab]");
-    await window.waitForSelector("[data-testid=repository-name]", {
-      timeout: 140_000,
-    });
+    await window.waitForSelector("[data-testid=repository-name]");
     await window.click("#HelmRepoSelect");
     await window.waitForSelector("div.Select__option");
   }, 10*60*1000);

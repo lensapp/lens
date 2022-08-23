@@ -5,7 +5,7 @@
 
 import React from "react";
 import type { Cluster } from "../../../../common/cluster/cluster";
-import { boundMethod } from "../../../utils";
+import { autoBind } from "../../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
@@ -18,19 +18,23 @@ enum GeneralInputStatus {
   ERROR = "error",
 }
 
-interface Props {
+export interface ClusterIconSettingProps {
   cluster: Cluster;
-  entity: KubernetesCluster
+  entity: KubernetesCluster;
 }
 
 @observer
-export class ClusterIconSetting extends React.Component<Props> {
+export class ClusterIconSetting extends React.Component<ClusterIconSettingProps> {
   @observable status = GeneralInputStatus.CLEAN;
   @observable errorText?: string;
 
+  constructor(props: ClusterIconSettingProps) {
+    super(props);
+    autoBind(this);
+  }
+
   private element = React.createRef<HTMLDivElement>();
 
-  @boundMethod
   async onIconPick([file]: File[]) {
     if (!file) {
       return;
@@ -43,7 +47,7 @@ export class ClusterIconSetting extends React.Component<Props> {
 
       cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
     } catch (e) {
-      this.errorText = e.toString();
+      this.errorText = String(e);
       this.status = GeneralInputStatus.ERROR;
     }
   }
@@ -56,12 +60,11 @@ export class ClusterIconSetting extends React.Component<Props> {
     this.props.cluster.preferences.icon = null;
   }
 
-  @boundMethod
   onUploadClick() {
     this.element
       .current
-      .querySelector<HTMLInputElement>("input[type=file]")
-      .click();
+      ?.querySelector<HTMLInputElement>("input[type=file]")
+      ?.click();
   }
 
   render() {
@@ -73,19 +76,20 @@ export class ClusterIconSetting extends React.Component<Props> {
           <div className="mr-5">
             <FilePicker
               accept="image/*"
-              label={
+              label={(
                 <Avatar
                   colorHash={`${entity.getName()}-${entity.metadata.source}`}
                   title={entity.getName()}
                   src={entity.spec.icon?.src}
                   size={53}
                 />
-              }
+              )}
               onOverSizeLimit={OverSizeLimitStyle.FILTER}
               handler={this.onIconPick}
             />
           </div>
           <MenuActions
+            id={`menu-actions-for-cluster-icon-settings-for-${entity.getId()}`}
             toolbar={false}
             autoCloseOnSelect={true}
             triggerIcon={{ material: "more_horiz" }}

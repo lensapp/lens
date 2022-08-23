@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React, { InputHTMLAttributes } from "react";
+import type { InputHTMLAttributes } from "react";
+import React from "react";
 
 export interface FileInputSelection<T = string> {
   file: File;
@@ -11,7 +12,7 @@ export interface FileInputSelection<T = string> {
   error?: string;
 }
 
-interface Props extends InputHTMLAttributes<any> {
+export interface FileInputProps extends InputHTMLAttributes<any> {
   id?: string; // could be used with <label htmlFor={id}/> to open filesystem dialog
   accept?: string; // allowed file types to select, e.g. "application/json"
   readAsText?: boolean; // provide files content as text in selection-callback
@@ -19,8 +20,8 @@ interface Props extends InputHTMLAttributes<any> {
   onSelectFiles(...selectedFiles: FileInputSelection[]): void;
 }
 
-export class FileInput extends React.Component<Props> {
-  protected input: HTMLInputElement;
+export class FileInput extends React.Component<FileInputProps> {
+  protected input: HTMLInputElement | null = null;
 
   protected style: React.CSSProperties = {
     position: "absolute",
@@ -28,11 +29,11 @@ export class FileInput extends React.Component<Props> {
   };
 
   selectFiles = () => {
-    this.input.click(); // opens system dialog for selecting files
+    this.input?.click(); // opens system dialog for selecting files
   };
 
   protected onChange = async (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = Array.from(evt.target.files);
+    const fileList = Array.from(evt.target.files ?? []);
 
     if (!fileList.length) {
       return;
@@ -48,7 +49,7 @@ export class FileInput extends React.Component<Props> {
             resolve({
               file,
               data: reader.result,
-              error: reader.error ? String(reader.error) : null,
+              error: reader.error ? String(reader.error) : undefined,
             });
           };
           reader.readAsText(file);

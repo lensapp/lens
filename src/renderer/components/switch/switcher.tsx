@@ -4,14 +4,16 @@
  */
 
 import React from "react";
-import { createStyles, withStyles, Theme } from "@material-ui/core/styles";
-import Switch, { SwitchClassKey, SwitchProps } from "@material-ui/core/Switch";
+import type { Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/core/styles";
+import type { SwitchClassKey, SwitchProps } from "@material-ui/core/Switch";
+import Switch from "@material-ui/core/Switch";
 
 interface Styles extends Partial<Record<SwitchClassKey, string>> {
   focusVisible?: string;
 }
 
-interface Props extends SwitchProps {
+export interface SwitcherProps extends SwitchProps {
   classes: Styles;
 }
 
@@ -58,7 +60,7 @@ export const Switcher = withStyles((theme: Theme) =>
     checked: {},
     focusVisible: {},
   }),
-)(({ classes, ...props }: Props) => {
+)(({ classes, ...props }: SwitcherProps) => {
   return (
     <Switch
       focusVisibleClassName={classes.focusVisible}

@@ -3,8 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { SetRequired } from "type-fest";
+
+export type RemoveUndefinedFromValues<K> = {
+  [P in keyof K]: NonNullable<K[P]>;
+};
+
 /**
- * An N length tuple of T
+ * This type helps define which fields of some type will always be defined
  */
-export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
-type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;
+export type Defaulted<Params, DefaultParams extends keyof Params> = RemoveUndefinedFromValues<Required<Pick<Params, DefaultParams>>> & Omit<Params, DefaultParams>;
+
+export type OptionVarient<Key, Base, RequiredKey extends keyof Base> = {
+  type: Key;
+} & Pick<Base, RequiredKey> & {
+  [OtherKey in Exclude<keyof Base, RequiredKey>]?: undefined;
+};
+
+export type SingleOrMany<T> = T | T[];
+
+export type IfEquals<T, U, Y=unknown, N=never> =
+  (<G>() => G extends T ? 1 : 2) extends
+  (<G>() => G extends U ? 1 : 2) ? Y : N;
+
+export type MaybeSetRequired<BaseType, Keys extends keyof BaseType, Query> = Query extends true
+  ? SetRequired<BaseType, Keys>
+  : BaseType;

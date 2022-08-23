@@ -8,42 +8,52 @@ import "./hotbar-menu.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { HotbarEntityIcon } from "./hotbar-entity-icon";
-import { cssNames, IClassName } from "../../utils";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { HotbarStore } from "../../../common/hotbar-store";
+import type { IClassName } from "../../utils";
+import { cssNames } from "../../utils";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, type DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
-import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
+import type { HotbarItem } from "../../../common/hotbars/types";
+import { defaultHotbarCells } from "../../../common/hotbars/types";
 import { action, makeObservable, observable } from "mobx";
+import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { HotbarStore } from "../../../common/hotbars/store";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
-interface Props {
+export interface HotbarMenuProps {
   className?: IClassName;
 }
 
+interface Dependencies {
+  hotbarStore: HotbarStore;
+  entityRegistry: CatalogEntityRegistry;
+}
+
 @observer
-export class HotbarMenu extends React.Component<Props> {
+class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuProps> {
   @observable draggingOver = false;
 
-  constructor(props: Props) {
+  constructor(props: Dependencies & HotbarMenuProps) {
     super(props);
     makeObservable(this);
   }
 
   get hotbar() {
-    return HotbarStore.getInstance().getActive();
+    return this.props.hotbarStore.getActive();
   }
 
-  getEntity(item: HotbarItem) {
-    const hotbar = HotbarStore.getInstance().getActive();
+  getEntity(item: HotbarItem | null) {
+    const hotbar = this.props.hotbarStore.getActive();
 
-    if (!hotbar) {
+    if (!hotbar || !item) {
       return null;
     }
 
-    return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
+    return this.props.entityRegistry.getById(item.entity.uid) ?? null;
   }
 
   @action
@@ -64,22 +74,26 @@ export class HotbarMenu extends React.Component<Props> {
     const from = parseInt(source.droppableId);
     const to = parseInt(destination.droppableId);
 
-    HotbarStore.getInstance().restackItems(from, to);
+    this.props.hotbarStore.restackItems(from, to);
   }
 
-  removeItem(uid: string) {
-    const hotbar = HotbarStore.getInstance();
+  removeItem = (uid: string) => {
+    const hotbar = this.props.hotbarStore;
 
     hotbar.removeFromHotbar(uid);
-  }
+  };
 
-  addItem(entity: CatalogEntity, index = -1) {
-    const hotbar = HotbarStore.getInstance();
+  addItem = (entity: CatalogEntity, index = -1) => {
+    const hotbar = this.props.hotbarStore;
 
     hotbar.addToHotbar(entity, index);
-  }
+  };
 
-  getMoveAwayDirection(entityId: string, cellIndex: number) {
+  getMoveAwayDirection(entityId: string | undefined, cellIndex: number) {
+    if (!entityId) {
+      return "animateDown";
+    }
+
     const draggableItemIndex = this.hotbar.items.findIndex(item => item?.entity.uid == entityId);
 
     return draggableItemIndex > cellIndex ? "animateDown" : "animateUp";
@@ -103,7 +117,11 @@ export class HotbarMenu extends React.Component<Props> {
               {...provided.droppableProps}
             >
               {item && (
-                <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0} >
+                <Draggable
+                  draggableId={item.entity.uid}
+                  key={item.entity.uid}
+                  index={0}
+                >
                   {(provided, snapshot) => {
                     const style = {
                       zIndex: defaultHotbarCells - index,
@@ -124,7 +142,7 @@ export class HotbarMenu extends React.Component<Props> {
                             key={index}
                             index={index}
                             entity={entity}
-                            onClick={() => catalogEntityRegistry.onRun(entity)}
+                            onClick={() => this.props.entityRegistry.onRun(entity)}
                             className={cssNames({ isDragging: snapshot.isDragging })}
                             remove={this.removeItem}
                             add={this.addItem}
@@ -134,7 +152,7 @@ export class HotbarMenu extends React.Component<Props> {
                           <HotbarIcon
                             uid={`hotbar-icon-${item.entity.uid}`}
                             title={item.entity.name}
-                            source={item.entity.source}
+                            source={item.entity.source ?? "local"}
                             tooltip={`${item.entity.name} (${item.entity.source})`}
                             menuItems={[
                               {
@@ -160,19 +178,28 @@ export class HotbarMenu extends React.Component<Props> {
   }
 
   render() {
-    const { className } = this.props;
-    const hotbarStore = HotbarStore.getInstance();
+    const { className, hotbarStore } = this.props;
     const hotbar = hotbarStore.getActive();
 
     return (
       <div className={cssNames("HotbarMenu flex column", { draggingOver: this.draggingOver }, className)}>
         <div className="HotbarItems flex column gaps">
-          <DragDropContext onDragStart={() => this.onDragStart()} onDragEnd={(result) => this.onDragEnd(result)}>
+          <DragDropContext
+            onDragStart={() => this.onDragStart()}
+            onDragEnd={(result) => this.onDragEnd(result)}>
             {this.renderGrid()}
           </DragDropContext>
         </div>
-        <HotbarSelector hotbar={hotbar}/>
+        <HotbarSelector hotbar={hotbar} />
       </div>
     );
   }
 }
+
+export const HotbarMenu = withInjectables<Dependencies, HotbarMenuProps>(NonInjectedHotbarMenu, {
+  getProps: (di, props) => ({
+    ...props,
+    hotbarStore: di.inject(hotbarStoreInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+  }),
+});

@@ -3,8 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+@import "../../components/mixins.scss";
+
 .Switch {
-  --thumb-size: 2rem;
+  --thumb-size: 20px;
   --thumb-color: hsl(0 0% 100%);
   --thumb-color-highlight: hsl(0 0% 100% / 25%);
 
@@ -64,7 +66,7 @@
     }
 
     &:not(:disabled):hover::before {
-      --hover-highlight-size: .5rem;
+      --hover-highlight-size: .3rem;
     }
 
     &:checked {

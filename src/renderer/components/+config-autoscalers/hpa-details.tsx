@@ -12,52 +12,76 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { cssNames } from "../../utils";
-import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../../common/k8s-api/endpoints/hpa.api";
+import type { HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricTarget } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
+import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
 export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
 
+interface Dependencies {
+  apiManager: ApiManager;
+  getDetailsUrl: GetDetailsUrl;
+}
+
 @observer
-export class HpaDetails extends React.Component<HpaDetailsProps> {
+class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependencies> {
+  private renderTargetLink(target: HorizontalPodAutoscalerMetricTarget | undefined) {
+    if (!target) {
+      return null;
+    }
+
+    const { object: hpa, apiManager, getDetailsUrl } = this.props;
+    const { kind, name } = target;
+    const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
+
+    return (
+      <>
+        on
+        <Link to={objectUrl}>
+          {`${kind}/${name}`}
+        </Link>
+      </>
+    );
+  }
+
   renderMetrics() {
     const { object: hpa } = this.props;
 
-    const renderName = (metric: IHpaMetric) => {
+    const renderName = (metric: HorizontalPodAutoscalerMetricSpec) => {
       switch (metric.type) {
+        case HpaMetricType.ContainerResource:
+
+        // fallthrough
         case HpaMetricType.Resource: {
-          const addition = metric.resource.targetAverageUtilization
-            ? "(as a percentage of request)"
+          const metricSpec = metric.resource ?? metric.containerResource;
+          const addition = metricSpec.targetAverageUtilization
+            ? " (as a percentage of request)"
             : "";
 
-          return <>Resource {metric.resource.name} on Pods {addition}</>;
+          return `Resource ${metricSpec.name} on Pods${addition}`;
         }
         case HpaMetricType.Pods:
-          return <>{metric.pods.metricName} on Pods</>;
+          return `${metric.pods.metricName} on Pods`;
 
         case HpaMetricType.Object: {
-          const { target } = metric.object;
-          const { kind, name } = target;
-          const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
-
           return (
             <>
-              {metric.object.metricName} on{" "}
-              <Link to={objectUrl}>{kind}/{name}</Link>
+              {metric.object.metricName}
+              {" "}
+              {this.renderTargetLink(metric.object.target)}
             </>
           );
         }
         case HpaMetricType.External:
-          return (
-            <>
-              {metric.external.metricName} on{" "}
-              {JSON.stringify(metric.external.selector)}
-            </>
-          );
+          return `${metric.external.metricName} on ${JSON.stringify(metric.external.metricSelector)}`;
       }
     };
 
@@ -81,7 +105,7 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
   }
 
   render() {
-    const { object: hpa } = this.props;
+    const { object: hpa, apiManager, getDetailsUrl } = this.props;
 
     if (!hpa) {
       return null;
@@ -102,7 +126,9 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
         <DrawerItem name="Reference">
           {scaleTargetRef && (
             <Link to={getDetailsUrl(apiManager.lookupApiLink(scaleTargetRef, hpa))}>
-              {scaleTargetRef.kind}/{scaleTargetRef.name}
+              {scaleTargetRef.kind}
+              /
+              {scaleTargetRef.name}
             </Link>
           )}
         </DrawerItem>
@@ -119,22 +145,23 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
           {hpa.getReplicas()}
         </DrawerItem>
 
-        <DrawerItem name="Status" className="status" labelsOnly>
-          {hpa.getConditions().map(({ type, tooltip, isReady }) => {
-            if (!isReady) return null;
-
-            return (
+        <DrawerItem
+          name="Status"
+          className="status"
+          labelsOnly
+        >
+          {hpa.getReadyConditions()
+            .map(({ type, tooltip, isReady }) => (
               <Badge
                 key={type}
                 label={type}
                 tooltip={tooltip}
                 className={cssNames({ [type.toLowerCase()]: isReady })}
               />
-            );
-          })}
+            ))}
         </DrawerItem>
 
-        <DrawerTitle title="Metrics"/>
+        <DrawerTitle>Metrics</DrawerTitle>
         <div className="metrics">
           {this.renderMetrics()}
         </div>
@@ -142,3 +169,11 @@ export class HpaDetails extends React.Component<HpaDetailsProps> {
     );
   }
 }
+
+export const HpaDetails = withInjectables<Dependencies, HpaDetailsProps>(NonInjectedHpaDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    apiManager: di.inject(apiManagerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+  }),
+});

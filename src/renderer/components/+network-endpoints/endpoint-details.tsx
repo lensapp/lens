@@ -9,16 +9,16 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { Endpoint } from "../../../common/k8s-api/endpoints";
+import { Endpoints } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<Endpoint> {
+export interface EndpointsDetailsProps extends KubeObjectDetailsProps<Endpoints> {
 }
 
 @observer
-export class EndpointDetails extends React.Component<Props> {
+export class EndpointsDetails extends React.Component<EndpointsDetailsProps> {
   render() {
     const { object: endpoint } = this.props;
 
@@ -26,7 +26,7 @@ export class EndpointDetails extends React.Component<Props> {
       return null;
     }
 
-    if (!(endpoint instanceof Endpoint)) {
+    if (!(endpoint instanceof Endpoints)) {
       logger.error("[EndpointDetails]: passed object that is not an instanceof Endpoint", endpoint);
 
       return null;
@@ -35,10 +35,14 @@ export class EndpointDetails extends React.Component<Props> {
     return (
       <div className="EndpointDetails">
         <KubeObjectMeta object={endpoint}/>
-        <DrawerTitle title="Subsets"/>
+        <DrawerTitle>Subsets</DrawerTitle>
         {
           endpoint.getEndpointSubsets().map((subset) => (
-            <EndpointSubsetList key={subset.toString()} subset={subset} endpoint={endpoint} />
+            <EndpointSubsetList
+              key={subset.toString()}
+              subset={subset}
+              endpoint={endpoint}
+            />
           ))
         }
       </div>

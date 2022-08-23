@@ -6,12 +6,13 @@
 import { observable, reaction } from "mobx";
 import { StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
+import { toJS } from "../../../common/utils";
 
-type StorageModel = {
+interface StorageModel {
   [prop: string]: any /*json-serializable*/;
   message?: string;
   description?: any;
-};
+}
 
 describe("renderer/utils/StorageHelper", () => {
   describe("Using custom StorageAdapter", () => {
@@ -103,7 +104,7 @@ describe("renderer/utils/StorageHelper", () => {
 
       // returning object modifies `draft` as well
       storageHelper.merge(draft => ({
-        message: draft.message.replace("2", "3"),
+        message: draft.message?.replace("2", "3"),
       }));
       expect(storageHelper.get()).toEqual({ ...storageHelper.defaultValue, message: "updated3" });
     });
@@ -131,7 +132,7 @@ describe("renderer/utils/StorageHelper", () => {
     it("storage.get() is observable", () => {
       expect(storageHelper.get()).toEqual(defaultValue);
 
-      reaction(() => storageHelper.toJSON(), change => {
+      reaction(() => toJS(storageHelper.get()), change => {
         observedChanges.push(change);
       });
 

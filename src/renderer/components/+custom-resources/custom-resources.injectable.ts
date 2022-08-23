@@ -3,14 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { crdStore } from "./crd.store";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
 
 const customResourceDefinitionsInjectable = getInjectable({
-  instantiate: () => computed(() => [...crdStore.items]),
+  id: "custom-resource-definitions",
 
-  lifecycle: lifecycleEnum.singleton,
+  instantiate: (di) => {
+    const createStoresAndApis = di.inject(storesAndApisCanBeCreatedInjectable);
+
+    if (!createStoresAndApis) {
+      return computed(() => []);
+    }
+
+    const store = di.inject(customResourceDefinitionStoreInjectable);
+    const subscribeStores = di.inject(subscribeStoresInjectable);
+
+    subscribeStores([store]);
+
+    return computed(() => [...store.items]);
+  },
 });
 
 export default customResourceDefinitionsInjectable;

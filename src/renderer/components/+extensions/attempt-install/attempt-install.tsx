@@ -2,23 +2,25 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import {
+import type {
   Disposer,
+  ExtendableDisposer } from "../../../../common/utils";
+import {
   disposer,
-  ExtendableDisposer,
 } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
 import { Button } from "../../button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import React from "react";
-import fse from "fs-extra";
+import { remove as removeDir } from "fs-extra";
 import { shell } from "electron";
 import type { InstallRequestValidated } from "./create-temp-files-and-validate/create-temp-files-and-validate";
 import type { InstallRequest } from "./install-request";
+import type {
+  ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import {
   ExtensionInstallationState,
-  ExtensionInstallationStateStore,
 } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
@@ -34,9 +36,9 @@ interface Dependencies {
     installRequest: InstallRequest,
   ) => Promise<InstallRequestValidated | null>;
 
-  getExtensionDestFolder: (name: string) => string
+  getExtensionDestFolder: (name: string) => string;
 
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
 export const attemptInstall =
@@ -72,7 +74,9 @@ export const attemptInstall =
           <div className="flex column gaps">
             <b>Extension Install Collision:</b>
             <p>
-            The <em>{name}</em> extension is currently {curState.toLowerCase()}.
+              {"The "}
+              <em>{name}</em>
+              {` extension is currently ${curState.toLowerCase()}.`}
             </p>
             <p>Will not proceed with this current install request.</p>
           </div>,
@@ -80,36 +84,30 @@ export const attemptInstall =
       }
 
       const extensionFolder = getExtensionDestFolder(name);
-      const folderExists = await fse.pathExists(extensionFolder);
+      const installedExtension = extensionLoader.getExtension(validatedRequest.id);
 
-      if (!folderExists) {
-      // install extension if not yet exists
-        await unpackExtension(validatedRequest, dispose);
-      } else {
-        const {
-          manifest: { version: oldVersion },
-        } = extensionLoader.getExtension(validatedRequest.id);
+      if (installedExtension) {
+        const { version: oldVersion } = installedExtension.manifest;
 
-        // otherwise confirmation required (re-install / update)
+        // confirm to uninstall old version before installing new version
         const removeNotification = Notifications.info(
           <div className="InstallingExtensionNotification flex gaps align-center">
             <div className="flex column gaps">
               <p>
-              Install extension{" "}
-                <b>
-                  {name}@{version}
-                </b>
-              ?
+                {"Install extension "}
+                <b>{`${name}@${version}`}</b>
+                ?
               </p>
               <p>
-              Description: <em>{description}</em>
+                {"Description: "}
+                <em>{description}</em>
               </p>
               <div
                 className="remove-folder-warning"
                 onClick={() => shell.openPath(extensionFolder)}
               >
-                <b>Warning:</b> {name}@{oldVersion} will be removed before
-              installation.
+                <b>Warning:</b>
+                {` ${name}@${oldVersion} will be removed before installation.`}
               </div>
             </div>
             <Button
@@ -130,5 +128,11 @@ export const attemptInstall =
             onClose: dispose,
           },
         );
+      } else {
+        // clean up old data if still around
+        await removeDir(extensionFolder);
+
+        // install extension if not yet exists
+        await unpackExtension(validatedRequest, dispose);
       }
     };

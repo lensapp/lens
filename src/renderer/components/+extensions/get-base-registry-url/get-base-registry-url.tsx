@@ -4,22 +4,23 @@
  */
 
 import React from "react";
-import { defaultExtensionRegistryUrl, ExtensionRegistry, ExtensionRegistryLocation } from "../../../../common/user-store/preferences-helpers";
+import type { ExtensionRegistry } from "../../../../common/user-store/preferences-helpers";
+import { defaultExtensionRegistryUrl } from "../../../../common/user-store/preferences-helpers";
 import { promiseExecFile } from "../../../utils";
 import { Notifications } from "../../notifications";
 
 interface Dependencies {
-  getRegistryUrlPreference: () => ExtensionRegistry,
+  getRegistryUrlPreference: () => ExtensionRegistry;
 }
 
 export const getBaseRegistryUrl = ({ getRegistryUrlPreference }: Dependencies) => async () => {
   const extensionRegistryUrl = getRegistryUrlPreference();
 
   switch (extensionRegistryUrl.location) {
-    case ExtensionRegistryLocation.CUSTOM:
+    case "custom":
       return extensionRegistryUrl.customUrl;
 
-    case ExtensionRegistryLocation.NPMRC: {
+    case "npmrc": {
       try {
         const filteredEnv = Object.fromEntries(
           Object.entries(process.env)
@@ -29,13 +30,20 @@ export const getBaseRegistryUrl = ({ getRegistryUrlPreference }: Dependencies) =
 
         return stdout.trim();
       } catch (error) {
-        Notifications.error(<p>Failed to get configured registry from <code>.npmrc</code>. Falling back to default registry</p>);
+        Notifications.error((
+          <p>
+            Failed to get configured registry from
+            <code>.npmrc</code>
+            . Falling back to default registry.
+          </p>
+        ));
         console.warn("[EXTENSIONS]: failed to get configured registry from .npmrc", error);
       }
-      // fallthrough
     }
+
+    // fallthrough
     default:
-    case ExtensionRegistryLocation.DEFAULT:
+    case "default":
       return defaultExtensionRegistryUrl;
   }
 };

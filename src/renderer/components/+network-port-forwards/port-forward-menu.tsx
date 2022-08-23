@@ -4,28 +4,36 @@
  */
 
 import React from "react";
-import { boundMethod, cssNames } from "../../utils";
-import { openPortForward, PortForwardItem, PortForwardStore } from "../../port-forward";
-import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
+import { autoBind, cssNames } from "../../utils";
+import type { PortForwardItem, PortForwardStore } from "../../port-forward";
+import type { MenuActionsProps } from "../menu/menu-actions";
+import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
+import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
+import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
 
-interface Props extends MenuActionsProps {
+export interface PortForwardMenuProps extends MenuActionsProps {
   portForward: PortForwardItem;
   hideDetails?(): void;
 }
 
 interface Dependencies {
-  portForwardStore: PortForwardStore,
-  openPortForwardDialog: (item: PortForwardItem) => void
+  portForwardStore: PortForwardStore;
+  openPortForwardDialog: (item: PortForwardItem) => void;
+  openPortForward: OpenPortForward;
 }
 
-class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
-  @boundMethod
+class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependencies> extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    autoBind(this);
+  }
+
   remove() {
     const { portForward } = this.props;
 
@@ -58,7 +66,11 @@ class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
     if (portForward.status === "Active") {
       return (
         <MenuItem onClick={() => this.portForwardStore.stop(portForward)}>
-          <Icon material="stop" tooltip="Stop port-forward" interactive={toolbar} />
+          <Icon
+            material="stop"
+            tooltip="Stop port-forward"
+            interactive={toolbar}
+          />
           <span className="title">Stop</span>
         </MenuItem>
       );
@@ -66,7 +78,11 @@ class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
 
     return (
       <MenuItem onClick={this.startPortForwarding}>
-        <Icon material="play_arrow" tooltip="Start port-forward" interactive={toolbar} />
+        <Icon
+          material="play_arrow"
+          tooltip="Start port-forward"
+          interactive={toolbar}
+        />
         <span className="title">Start</span>
       </MenuItem>
     );
@@ -79,14 +95,22 @@ class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
 
     return (
       <>
-        { portForward.status === "Active" &&
-          <MenuItem onClick={() => openPortForward(portForward)}>
-            <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
+        { portForward.status === "Active" && (
+          <MenuItem onClick={() => this.props.openPortForward(portForward)}>
+            <Icon
+              material="open_in_browser"
+              interactive={toolbar}
+              tooltip="Open in browser"
+            />
             <span className="title">Open</span>
           </MenuItem>
-        }
+        )}
         <MenuItem onClick={() => this.props.openPortForwardDialog(portForward)}>
-          <Icon material="edit" tooltip="Change port or protocol" interactive={toolbar} />
+          <Icon
+            material="edit"
+            tooltip="Change port or protocol"
+            interactive={toolbar}
+          />
           <span className="title">Edit</span>
         </MenuItem>
         {this.renderStartStopMenuItem()}
@@ -99,6 +123,7 @@ class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
 
     return (
       <MenuActions
+        id={`menu-actions-for-port-forward-menu-for-${this.props.portForward.getId()}`}
         {...menuProps}
         className={cssNames("PortForwardMenu", className)}
         removeAction={this.remove}
@@ -109,13 +134,14 @@ class NonInjectedPortForwardMenu extends React.Component<Props & Dependencies> {
   }
 }
 
-export const PortForwardMenu = withInjectables<Dependencies, Props>(
+export const PortForwardMenu = withInjectables<Dependencies, PortForwardMenuProps>(
   NonInjectedPortForwardMenu,
 
   {
     getProps: (di, props) => ({
       portForwardStore: di.inject(portForwardStoreInjectable),
       openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
+      openPortForward: di.inject(openPortForwardInjectable),
       ...props,
     }),
   },

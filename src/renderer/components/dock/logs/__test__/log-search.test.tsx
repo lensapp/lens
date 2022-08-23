@@ -5,12 +5,12 @@
 
 import React from "react";
 import { screen } from "@testing-library/react";
-import { Pod } from "../../../../../common/k8s-api/endpoints";
 import { dockerPod } from "./pod.mock";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
-import { LogTabViewModel, LogTabViewModelDependencies } from "../logs-view-model";
+import type { LogTabViewModelDependencies } from "../logs-view-model";
+import { LogTabViewModel } from "../logs-view-model";
 import type { TabId } from "../../dock/store";
 import { LogSearch } from "../search";
 import userEvent from "@testing-library/user-event";
@@ -36,7 +36,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
 }
 
 const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependencies> = {}): LogTabViewModel => {
-  const selectedPod = new Pod(dockerPod);
+  const selectedPod = dockerPod;
 
   return mockLogTabViewModel(tabId, {
     getLogTabData: () => ({
@@ -60,12 +60,10 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
 describe("LogSearch tests", () => {
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     render = renderFor(di);
-
-    await di.runSetups();
   });
 
   it("renders w/o errors", () => {

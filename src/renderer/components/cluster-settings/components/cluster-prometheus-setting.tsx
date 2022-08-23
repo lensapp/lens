@@ -7,42 +7,56 @@ import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import { SubTitle } from "../../layout/sub-title";
-import { Select, SelectOption } from "../../select";
+import type { SelectOption } from "../../select";
+import { Select } from "../../select";
 import { Input } from "../../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
 import { productName } from "../../../../common/vars";
-import { MetricProviderInfo, metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
+import type { MetricProviderInfo } from "../../../../common/k8s-api/endpoints/metrics.api";
+import { metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { Spinner } from "../../spinner";
 
-interface Props {
+export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
 }
 
-@observer
-export class ClusterPrometheusSetting extends React.Component<Props> {
-  @observable path = "";
-  @observable provider = "";
-  @observable loading = true;
-  @observable loadedOptions: MetricProviderInfo[] = [];
+const autoDetectPrometheus = Symbol("auto-detect-prometheus");
 
-  @computed get options(): SelectOption<string>[] {
+type ProviderValue = typeof autoDetectPrometheus | string;
+
+@observer
+export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusSettingProps> {
+  @observable path = "";
+  @observable selectedOption: ProviderValue = autoDetectPrometheus;
+  @observable loading = true;
+  readonly loadedOptions = observable.map<string, MetricProviderInfo>();
+
+  @computed get options(): SelectOption<ProviderValue>[] {
     return [
-      { value: "", label: "Auto detect" },
-      ...this.loadedOptions.map(({ name, id }) => ({ value: id, label: name })),
+      {
+        value: autoDetectPrometheus,
+        label: "Auto Detect Prometheus",
+        isSelected: autoDetectPrometheus === this.selectedOption,
+      },
+      ...Array.from(this.loadedOptions, ([id, provider]) => ({
+        value: id,
+        label: provider.name,
+        isSelected: id === this.selectedOption,
+      })),
     ];
   }
 
-  constructor(props: Props) {
+  constructor(props: ClusterPrometheusSettingProps) {
     super(props);
     makeObservable(this);
   }
 
   @computed get canEditPrometheusPath(): boolean {
-    return Boolean(
-      this.loadedOptions
-        .find(opt => opt.id === this.provider)
-        ?.isConfigurable,
-    );
+    if (!this.selectedOption || this.selectedOption === autoDetectPrometheus) {
+      return false;
+    }
+
+    return this.loadedOptions.get(this.selectedOption)?.isConfigurable ?? false;
   }
 
   componentDidMount() {
@@ -59,9 +73,9 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
         }
 
         if (prometheusProvider) {
-          this.provider = prometheusProvider.type;
+          this.selectedOption = this.options.find(opt => opt.value === prometheusProvider.type)?.value ?? autoDetectPrometheus;
         } else {
-          this.provider = "";
+          this.selectedOption = autoDetectPrometheus;
         }
       }),
     );
@@ -70,22 +84,19 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
       .getMetricProviders()
       .then(values => {
         this.loading = false;
-
-        if (values) {
-          this.loadedOptions = values;
-        }
+        this.loadedOptions.replace(values.map(provider => [provider.id, provider]));
       });
   }
 
   parsePrometheusPath = () => {
-    if (!this.provider || !this.path) {
-      return null;
+    if (!this.selectedOption || !this.path) {
+      return undefined;
     }
     const parsed = this.path.split(/\/|:/, 3);
     const apiPrefix = this.path.substring(parsed.join("/").length);
 
     if (!parsed[0] || !parsed[1] || !parsed[2]) {
-      return null;
+      return undefined;
     }
 
     return {
@@ -97,9 +108,9 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
   };
 
   onSaveProvider = () => {
-    this.props.cluster.preferences.prometheusProvider = this.provider ?
-      { type: this.provider } :
-      null;
+    this.props.cluster.preferences.prometheusProvider = typeof this.selectedOption === "string"
+      ? { type: this.selectedOption }
+      : undefined;
   };
 
   onSavePath = () => {
@@ -110,26 +121,29 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
     return (
       <>
         <section>
-          <SubTitle title="Prometheus"/>
+          <SubTitle title="Prometheus" />
           {
             this.loading
               ? <Spinner />
-              : <>
-                <Select
-                  value={this.provider}
-                  onChange={({ value }) => {
-                    this.provider = value;
-                    this.onSaveProvider();
-                  }}
-                  options={this.options}
-                />
-                <small className="hint">What query format is used to fetch metrics from Prometheus</small>
-              </>
+              : (
+                <>
+                  <Select
+                    id="cluster-prometheus-settings-input"
+                    value={this.selectedOption}
+                    onChange={option => {
+                      this.selectedOption = option?.value ?? autoDetectPrometheus;
+                      this.onSaveProvider();
+                    }}
+                    options={this.options}
+                  />
+                  <small className="hint">What query format is used to fetch metrics from Prometheus</small>
+                </>
+              )
           }
         </section>
         {this.canEditPrometheusPath && (
           <>
-            <hr/>
+            <hr />
             <section>
               <SubTitle title="Prometheus service address" />
               <Input
@@ -139,8 +153,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
                 placeholder="<namespace>/<service>:<port>"
               />
               <small className="hint">
-                An address to an existing Prometheus installation{" "}
-                ({"<namespace>/<service>:<port>"}). {productName} tries to auto-detect address if left empty.
+                {`An address to an existing Prometheus installation (<namespace>/<service>:<port>). ${productName} tries to auto-detect address if left empty.`}
               </small>
             </section>
           </>

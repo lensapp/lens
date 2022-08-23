@@ -4,159 +4,82 @@
  */
 
 import React from "react";
-import { autorun, computed, makeObservable, observable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
-import yaml from "js-yaml";
-import type { DockTab, TabId } from "../dock/store";
-import type { EditResourceTabStore } from "./store";
+import { observer } from "mobx-react";
+import type { DockTab } from "../dock/store";
+import { Spinner } from "../../spinner";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import type { EditResourceModel } from "./edit-resource-model/edit-resource-model.injectable";
+import editResourceModelInjectable from "./edit-resource-model/edit-resource-model.injectable";
+import { EditorPanel } from "../editor-panel";
 import { InfoPanel } from "../info-panel";
 import { Badge } from "../../badge";
-import { EditorPanel } from "../editor-panel";
-import { Spinner } from "../../spinner";
-import type { KubeObject } from "../../../../common/k8s-api/kube-object";
-import { createPatch } from "rfc6902";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import editResourceTabStoreInjectable from "./store.injectable";
-import { noop } from "../../../utils";
-import closeDockTabInjectable from "../dock/close-dock-tab.injectable";
+import { Notice } from "../../+extensions/notice";
 
-interface Props {
+export interface EditResourceProps {
   tab: DockTab;
 }
 
 interface Dependencies {
-  editResourceStore: EditResourceTabStore;
-  closeTab: (tabId: TabId) => void;
+  model: EditResourceModel;
 }
 
-@observer
-class NonInjectedEditResource extends React.Component<Props & Dependencies> {
-  @observable error = "";
-
-  constructor(props: Props & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount(): void {
-    disposeOnUnmount(this, [
-      autorun(() => {
-        const store = this.props.editResourceStore.getStore(this.props.tab.id);
-        const tabData = this.props.editResourceStore.getData(this.props.tab.id);
-        const obj = this.resource;
-
-        if (!obj) {
-          if (store.isLoaded) {
-            // auto-close tab when resource removed from store
-            this.props.closeTab(this.props.tab.id);
-          } else if (!store.isLoading) {
-            // preload resource for editing
-            store.loadFromPath(tabData.resource).catch(noop);
-          }
-        }
-      }),
-    ]);
-  }
-
-  get tabId() {
-    return this.props.tab.id;
-  }
-
-  get isReadyForEditing() {
-    return this.props.editResourceStore.isReady(this.tabId);
-  }
-
-  get resource(): KubeObject | undefined {
-    return this.props.editResourceStore.getResource(this.tabId);
-  }
-
-  @computed get draft(): string {
-    if (!this.isReadyForEditing) {
-      return ""; // wait until tab's data and kube-object resource are loaded
-    }
-
-    const editData = this.props.editResourceStore.getData(this.tabId);
-
-    if (typeof editData.draft === "string") {
-      return editData.draft;
-    }
-
-    const firstDraft = yaml.dump(this.resource.toPlainObject()); // dump resource first time
-
-    return editData.firstDraft = firstDraft;
-  }
-
-  saveDraft(draft: string) {
-    this.props.editResourceStore.getData(this.tabId).draft = draft;
-  }
-
-  onChange = (draft: string) => {
-    this.error = ""; // reset first
-    this.saveDraft(draft);
-  };
-
-  onError = (error?: Error | string) => {
-    this.error = error.toString();
-  };
-
-  save = async () => {
-    if (this.error) {
-      return null;
-    }
-
-    const store = this.props.editResourceStore.getStore(this.tabId);
-    const currentVersion = yaml.load(this.draft);
-    const firstVersion = yaml.load(this.props.editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
-    const patches = createPatch(firstVersion, currentVersion);
-    const updatedResource = await store.patch(this.resource, patches);
-
-    this.props.editResourceStore.clearInitialDraft(this.tabId);
-
-    return (
-      <p>
-        {updatedResource.kind} <b>{updatedResource.getName()}</b> updated.
-      </p>
-    );
-  };
-
-  render() {
-    const { tabId, error, onChange, onError, save, draft, isReadyForEditing, resource } = this;
-
-    if (!isReadyForEditing) {
-      return <Spinner center/>;
-    }
-
+const NonInjectedEditResource = observer(
+  ({ model, tab: { id: tabId }}: EditResourceProps & Dependencies) => {
     return (
       <div className="EditResource flex column">
-        <InfoPanel
-          tabId={tabId}
-          error={error}
-          submit={save}
-          submitLabel="Save"
-          submittingMessage="Applying.."
-          controls={(
-            <div className="resource-info flex gaps align-center">
-              <span>Kind:</span><Badge label={resource.kind}/>
-              <span>Name:</span><Badge label={resource.getName()}/>
-              <span>Namespace:</span><Badge label={resource.getNs() || "global"}/>
-            </div>
-          )}
-        />
-        <EditorPanel
-          tabId={tabId}
-          value={draft}
-          onChange={onChange}
-          onError={onError}
-        />
+        {model.shouldShowErrorAboutNoResource && (
+          <Notice>
+            Resource not found
+          </Notice>
+        )}
+
+        {!model.shouldShowErrorAboutNoResource && (
+          <>
+            <InfoPanel
+              tabId={tabId}
+              error={model.configuration.error.value.get()}
+              submit={model.save}
+              showNotifications={false}
+              submitLabel="Save"
+              submittingMessage="Applying..."
+              submitTestId={`save-edit-resource-from-tab-for-${tabId}`}
+              submitAndCloseTestId={`save-and-close-edit-resource-from-tab-for-${tabId}`}
+              cancelTestId={`cancel-edit-resource-from-tab-for-${tabId}`}
+              submittingTestId={`saving-edit-resource-from-tab-for-${tabId}`}
+              controls={(
+                <div className="resource-info flex gaps align-center">
+                  <span>Kind:</span>
+                  <Badge label={model.kind} />
+                  <span>Name:</span>
+                  <Badge label={model.name} />
+                  <span>Namespace:</span>
+                  <Badge label={model.namespace} />
+                </div>
+              )}
+            />
+            <EditorPanel
+              tabId={tabId}
+              value={model.configuration.value.get()}
+              onChange={model.configuration.onChange}
+              onError={model.configuration.error.onChange}
+            />
+          </>
+        )}
       </div>
     );
-  }
-}
+  },
+);
 
-export const EditResource = withInjectables<Dependencies, Props>(NonInjectedEditResource, {
-  getProps: (di, props) => ({
-    editResourceStore: di.inject(editResourceTabStoreInjectable),
-    closeTab: di.inject(closeDockTabInjectable),
-    ...props,
-  }),
-});
+export const EditResource = withInjectables<Dependencies, EditResourceProps>(
+  NonInjectedEditResource,
+  {
+    getPlaceholder: () => (
+      <Spinner center data-testid="edit-resource-tab-spinner" />
+    ),
+
+    getProps: async (di, props) => ({
+      model: await di.inject(editResourceModelInjectable, props.tab.id),
+      ...props,
+    }),
+  },
+);

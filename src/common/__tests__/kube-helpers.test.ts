@@ -43,30 +43,30 @@ users:
       command: foo
 `;
 
-interface kubeconfig {
-  apiVersion: string,
+interface Kubeconfig {
+  apiVersion: string;
   clusters: [{
-    name: string,
+    name: string;
     cluster: {
-      server: string
-    }
-  }],
+      server: string;
+    };
+  }];
   contexts: [{
     context: {
-      cluster: string,
-      user: string,
-    },
-    name: string
-  }],
+      cluster: string;
+      user: string;
+    };
+    name: string;
+  }];
   users: [{
-    name: string
-  }],
-  kind: string,
-  "current-context": string,
-  preferences: {}
+    name: string;
+  }];
+  kind: string;
+  "current-context": string;
+  preferences: {};
 }
 
-let mockKubeConfig: kubeconfig;
+let mockKubeConfig: Kubeconfig;
 
 describe("kube helpers", () => {
   describe("validateKubeconfig", () => {
@@ -78,12 +78,12 @@ describe("kube helpers", () => {
     describe("with default validation options", () => {
       describe("with valid kubeconfig", () => {
         it("does not return an error", () => {
-          expect(validateKubeConfig(kc, "valid")).toBeUndefined();
+          expect(validateKubeConfig(kc, "valid")).toBeDefined();
         });
       });
       describe("with invalid context object", () => {
         it("returns an error", () => {
-          expect(String(validateKubeConfig(kc, "invalid"))).toEqual(
+          expect(validateKubeConfig(kc, "invalid").error?.toString()).toEqual(
             expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'"),
           );
         });
@@ -91,7 +91,7 @@ describe("kube helpers", () => {
 
       describe("with invalid cluster object", () => {
         it("returns an error", () => {
-          expect(String(validateKubeConfig(kc, "invalidCluster"))).toEqual(
+          expect(validateKubeConfig(kc, "invalidCluster").error?.toString()).toEqual(
             expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'"),
           );
         });
@@ -99,7 +99,7 @@ describe("kube helpers", () => {
 
       describe("with invalid user object", () => {
         it("returns an error", () => {
-          expect(String(validateKubeConfig(kc, "invalidUser"))).toEqual(
+          expect(validateKubeConfig(kc, "invalidUser").error?.toString()).toEqual(
             expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'"),
           );
         });

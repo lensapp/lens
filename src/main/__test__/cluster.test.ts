@@ -3,79 +3,57 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-const logger = {
-  silly: jest.fn(),
-  debug: jest.fn(),
-  log: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
-  crit: jest.fn(),
-};
-
-jest.mock("winston", () => ({
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    simple: jest.fn(),
-    label: jest.fn(),
-    timestamp: jest.fn(),
-    printf: jest.fn(),
-  },
-  createLogger: jest.fn().mockReturnValue(logger),
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-}));
-
 jest.mock("../../common/ipc");
 jest.mock("request");
 jest.mock("request-promise-native");
 
 import { Console } from "console";
-import mockFs from "mock-fs";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { ClusterModel } from "../../common/cluster-types";
+import type { CreateCluster } from "../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
+import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
+import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
+import type { ClusterContextHandler } from "../context-handler/context-handler";
+import { parse } from "url";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("create clusters", () => {
   let cluster: Cluster;
-  let createCluster: (model: ClusterModel) => Cluster;
+  let createCluster: CreateCluster;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const clusterServerUrl = "https://192.168.64.3:8443";
 
-    mockFs({
-      "minikube-config.yml": JSON.stringify({
-        apiVersion: "v1",
-        clusters: [{
-          name: "minikube",
-          cluster: {
-            server: "https://192.168.64.3:8443",
-          },
-        }],
-        contexts: [{
-          context: {
-            cluster: "minikube",
-            user: "minikube",
-          },
-          name: "minikube",
-        }],
-        users: [{
-          name: "minikube",
-        }],
-        kind: "Config",
-        preferences: {},
-      }),
-    });
-
-    await di.runSetups();
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
+    di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
+    di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
+    di.override(createContextHandlerInjectable, () => (cluster) => ({
+      restartServer: jest.fn(),
+      stopServer: jest.fn(),
+      clusterUrl: parse(cluster.apiUrl),
+      getApiTarget: jest.fn(),
+      getPrometheusDetails: jest.fn(),
+      resolveAuthProxyCa: jest.fn(),
+      resolveAuthProxyUrl: jest.fn(),
+      setupPrometheus: jest.fn(),
+      ensureServer: jest.fn(),
+    } as ClusterContextHandler));
 
     createCluster = di.inject(createClusterInjectionToken);
 
@@ -85,11 +63,13 @@ describe("create clusters", () => {
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
+    }, {
+      clusterServerUrl,
     });
   });
 
   afterEach(() => {
-    mockFs.restore();
+    cluster.disconnect();
   });
 
   it("should be able to create a cluster from a cluster model and apiURL should be decoded", () => {
@@ -105,19 +85,7 @@ describe("create clusters", () => {
   });
 
   it("activating cluster should try to connect to cluster and do a refresh", async () => {
-    const cluster = createCluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-
-    cluster.contextHandler = {
-      ensureServer: jest.fn(),
-      stopServer: jest.fn(),
-    } as any;
-
     jest.spyOn(cluster, "reconnect");
-    jest.spyOn(cluster, "canI");
     jest.spyOn(cluster, "refreshConnectionStatus");
 
     await cluster.activate();

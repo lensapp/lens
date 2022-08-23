@@ -6,7 +6,6 @@
 import "./crd-resource-details.scss";
 
 import React from "react";
-import jsonPath from "jsonpath";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Badge } from "../badge";
@@ -14,18 +13,29 @@ import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { Input } from "../input";
-import { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
-import { parseJsonPath } from "../../utils/jsonPath";
-import { KubeObject, KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
+import type { AdditionalPrinterColumnsV1 } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
+import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
+import { convertKubectlJsonPathToNodeJsonPath } from "../../utils/jsonPath";
+import type { KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 import logger from "../../../common/logger";
+import { JSONPath } from "@astronautlabs/jsonpath";
 
-interface Props extends KubeObjectDetailsProps<KubeObject> {
+export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeObject> {
   crd: CustomResourceDefinition;
 }
 
-function convertSpecValue(value: any): any {
+function convertSpecValue(value: unknown): React.ReactNode {
   if (Array.isArray(value)) {
-    return value.map(convertSpecValue);
+    return (
+      <ul>
+        {value.map((value, index) => (
+          <li key={index}>
+            {convertSpecValue(value)}
+          </li>
+        ))}
+      </ul>
+    );
   }
 
   if (typeof value === "object") {
@@ -39,32 +49,46 @@ function convertSpecValue(value: any): any {
     );
   }
 
-  return value;
+  if (
+    typeof value === "boolean"
+    || typeof value === "string"
+    || typeof value === "number"
+  ) {
+    return value.toString();
+  }
+
+  return null;
 }
 
 @observer
-export class CrdResourceDetails extends React.Component<Props> {
+export class CustomResourceDetails extends React.Component<CustomResourceDetailsProps> {
   renderAdditionalColumns(resource: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
-    return columns.map(({ name, jsonPath: jp }) => (
-      <DrawerItem key={name} name={name} renderBoolean>
-        {convertSpecValue(jsonPath.value(resource, parseJsonPath(jp.slice(1))))}
+    return columns.map(({ name, jsonPath }) => (
+      <DrawerItem key={name} name={name}>
+        {convertSpecValue(JSONPath.query(resource, convertKubectlJsonPathToNodeJsonPath(jsonPath)))}
       </DrawerItem>
     ));
   }
 
-  renderStatus(customResource: KubeObject<KubeObjectMetadata, KubeObjectStatus, any>, columns: AdditionalPrinterColumnsV1[]) {
+  renderStatus(cr: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
+    const customResource = cr as KubeObject<KubeObjectMetadata, KubeObjectStatus, unknown>;
     const showStatus = !columns.find(column => column.name == "Status") && Array.isArray(customResource.status?.conditions);
 
     if (!showStatus) {
       return null;
     }
 
-    const conditions = customResource.status.conditions
-      .filter(({ type, reason }) => type || reason)
-      .map(({ type, reason, message, status }) => ({ kind: type || reason, message, status }))
+    const conditions = customResource.status?.conditions
+      ?.filter(({ type, reason }) => type || reason)
+      .map(({ type, reason, message, status }) => ({
+        kind: type || reason || "<unknown>",
+        message,
+        status,
+      }))
       .map(({ kind, message, status }, index) => (
         <Badge
-          key={kind + index} label={kind}
+          key={kind + index}
+          label={kind}
           disabled={status === "False"}
           className={kind.toLowerCase()}
           tooltip={message}
@@ -72,7 +96,11 @@ export class CrdResourceDetails extends React.Component<Props> {
       ));
 
     return (
-      <DrawerItem name="Status" className="status" labelsOnly>
+      <DrawerItem
+        name="Status"
+        className="status"
+        labelsOnly
+      >
         {conditions}
       </DrawerItem>
     );

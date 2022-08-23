@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CephFs /> should render 'false' for Readonly when false is provided 1`] = `
+<div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Monitors
+    </span>
+    <span
+      class="value"
+    >
+      <ul />
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Mount Path
+    </span>
+    <span
+      class="value"
+    >
+      /
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Username
+    </span>
+    <span
+      class="value"
+    >
+      admin
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Secret Filepath
+    </span>
+    <span
+      class="value"
+    >
+      /etc/ceph/user.secret
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+    data-testid="cephfs-readonly"
+  >
+    <span
+      class="name"
+    >
+      Readonly
+    </span>
+    <span
+      class="value"
+    >
+      false
+    </span>
+  </div>
+</div>
+`;
+
+exports[`<CephFs /> should render 'false' for Readonly when not provided 1`] = `
+<div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Monitors
+    </span>
+    <span
+      class="value"
+    >
+      <ul />
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Mount Path
+    </span>
+    <span
+      class="value"
+    >
+      /
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Username
+    </span>
+    <span
+      class="value"
+    >
+      admin
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Secret Filepath
+    </span>
+    <span
+      class="value"
+    >
+      /etc/ceph/user.secret
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+    data-testid="cephfs-readonly"
+  >
+    <span
+      class="name"
+    >
+      Readonly
+    </span>
+    <span
+      class="value"
+    >
+      false
+    </span>
+  </div>
+</div>
+`;
+
+exports[`<CephFs /> should render 'true' for Readonly when true is provided 1`] = `
+<div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Monitors
+    </span>
+    <span
+      class="value"
+    >
+      <ul />
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Mount Path
+    </span>
+    <span
+      class="value"
+    >
+      /
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Username
+    </span>
+    <span
+      class="value"
+    >
+      admin
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+  >
+    <span
+      class="name"
+    >
+      Secret Filepath
+    </span>
+    <span
+      class="value"
+    >
+      /etc/ceph/user.secret
+    </span>
+  </div>
+  <div
+    class="DrawerItem"
+    data-testid="cephfs-readonly"
+  >
+    <span
+      class="name"
+    >
+      Readonly
+    </span>
+    <span
+      class="value"
+    >
+      true
+    </span>
+  </div>
+</div>
+`;

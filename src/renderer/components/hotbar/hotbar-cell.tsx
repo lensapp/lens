@@ -4,21 +4,22 @@
  */
 import "./hotbar-menu.scss";
 
-import React, { HTMLAttributes, ReactNode, useState } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
+import React, { useState } from "react";
 
 import { cssNames } from "../../utils";
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+export interface HotbarCellProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   index: number;
   innerRef?: React.Ref<HTMLDivElement>;
 }
 
-export function HotbarCell({ innerRef, children, className, ...rest }: Props) {
+export function HotbarCell({ innerRef, children, className, ...rest }: HotbarCellProps) {
   const [animating, setAnimating] = useState(false);
   const onAnimationEnd = () => { setAnimating(false); };
   const onClick = () => {
-    setAnimating(!className.includes("isDraggingOver"));
+    setAnimating(!className?.includes("isDraggingOver"));
   };
 
   return (

@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { observable } from "mobx";
+import { getInjectable } from "@ogre-tools/injectable";
+import { action, observable } from "mobx";
 import React from "react";
 
 export class CommandOverlay {
@@ -14,17 +14,17 @@ export class CommandOverlay {
     return Boolean(this.#component.get());
   }
 
-  open = (component: React.ReactElement) => {
+  open = action((component: React.ReactElement) => {
     if (!React.isValidElement(component)) {
       throw new TypeError("CommandOverlay.open must be passed a valid ReactElement");
     }
 
     this.#component.set(component);
-  };
+  });
 
-  close = () => {
+  close = action(() => {
     this.#component.set(null);
-  };
+  });
 
   get component(): React.ReactElement | null {
     return this.#component.get();
@@ -32,8 +32,8 @@ export class CommandOverlay {
 }
 
 const commandOverlayInjectable = getInjectable({
+  id: "command-overlay",
   instantiate: () => new CommandOverlay(),
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default commandOverlayInjectable;

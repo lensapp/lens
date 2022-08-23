@@ -8,21 +8,23 @@ import "./kube-event-icon.scss";
 import React from "react";
 import { Icon } from "../icon";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { eventStore } from "./event.store";
+import { eventStore } from "./legacy-store";
 import { cssNames } from "../../utils";
 import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
+import { KubeObjectAge } from "../kube-object/age";
 
-interface Props {
+export interface KubeEventIconProps {
   object: KubeObject;
   showWarningsOnly?: boolean;
   filterEvents?: (events: KubeEvent[]) => KubeEvent[];
 }
 
-const defaultProps: Partial<Props> = {
+
+const defaultProps: Partial<KubeEventIconProps> = {
   showWarningsOnly: true,
 };
 
-export class KubeEventIcon extends React.Component<Props> {
+export class KubeEventIcon extends React.Component<KubeEventIconProps> {
   static defaultProps = defaultProps as object;
 
   render() {
@@ -47,7 +49,7 @@ export class KubeEventIcon extends React.Component<Props> {
               <div className="msg">{event.message}</div>
               <div className="age">
                 <Icon material="access_time"/>
-                {event.getAge(undefined, undefined, true)}
+                <KubeObjectAge object={event} />
               </div>
             </div>
           ),

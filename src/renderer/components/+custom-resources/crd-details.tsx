@@ -8,7 +8,7 @@ import "./crd-details.scss";
 import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
-import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
+import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import { Badge } from "../badge";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
@@ -18,11 +18,11 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { MonacoEditor } from "../monaco-editor";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
+export interface CRDDetailsProps extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
 
 @observer
-export class CRDDetails extends React.Component<Props> {
+export class CRDDetails extends React.Component<CRDDetailsProps> {
   render() {
     const { object: crd } = this.props;
 
@@ -69,7 +69,11 @@ export class CRDDetails extends React.Component<Props> {
             readOnly
           />
         </DrawerItem>
-        <DrawerItem name="Conditions" className="conditions" labelsOnly>
+        <DrawerItem
+          name="Conditions"
+          className="conditions"
+          labelsOnly
+        >
           {
             crd.getConditions().map(condition => {
               const { type, message, lastTransitionTime, status } = condition;
@@ -83,7 +87,10 @@ export class CRDDetails extends React.Component<Props> {
                   tooltip={(
                     <>
                       <p>{message}</p>
-                      <p>Last transition time: {lastTransitionTime}</p>
+                      <p>
+                        Last transition time:
+                        {lastTransitionTime}
+                      </p>
                     </>
                   )}
                 />
@@ -91,7 +98,7 @@ export class CRDDetails extends React.Component<Props> {
             })
           }
         </DrawerItem>
-        <DrawerTitle title="Names"/>
+        <DrawerTitle>Names</DrawerTitle>
         <Table selectable className="names box grow">
           <TableHead>
             <TableCell>plural</TableCell>
@@ -106,9 +113,9 @@ export class CRDDetails extends React.Component<Props> {
             <TableCell>{listKind}</TableCell>
           </TableRow>
         </Table>
-        {printerColumns.length > 0 &&
+        {printerColumns.length > 0 && (
           <>
-            <DrawerTitle title="Additional Printer Columns"/>
+            <DrawerTitle>Additional Printer Columns</DrawerTitle>
             <Table selectable className="printer-columns box grow">
               <TableHead>
                 <TableCell className="name">Name</TableCell>
@@ -132,17 +139,17 @@ export class CRDDetails extends React.Component<Props> {
               }
             </Table>
           </>
-        }
-        {validation &&
+        )}
+        {validation && (
           <>
-            <DrawerTitle title="Validation"/>
+            <DrawerTitle>Validation</DrawerTitle>
             <MonacoEditor
               readOnly
               value={validation}
               style={{ height: 400 }}
             />
           </>
-        }
+        )}
       </div>
     );
   }

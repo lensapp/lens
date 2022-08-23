@@ -13,11 +13,11 @@ import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 
-interface Props extends KubeObjectDetailsProps<Role> {
+export interface RoleDetailsProps extends KubeObjectDetailsProps<Role> {
 }
 
 @observer
-export class RoleDetails extends React.Component<Props> {
+export class RoleDetails extends React.Component<RoleDetailsProps> {
   render() {
     const { object: role } = this.props;
 
@@ -27,7 +27,7 @@ export class RoleDetails extends React.Component<Props> {
     return (
       <div className="RoleDetails">
         <KubeObjectMeta object={role}/>
-        <DrawerTitle title="Rules"/>
+        <DrawerTitle>Rules</DrawerTitle>
         {rules.map(({ resourceNames, apiGroups, resources, verbs }, index) => {
           return (
             <div className="rule" key={index}>

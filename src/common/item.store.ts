@@ -13,15 +13,13 @@ export interface ItemObject {
 }
 
 export abstract class ItemStore<Item extends ItemObject> {
-  abstract loadAll(...args: any[]): Promise<void | Item[]>;
-
   protected defaultSorting = (item: Item) => item.getName();
 
   @observable failedLoading = false;
   @observable isLoading = false;
   @observable isLoaded = false;
   @observable items = observable.array<Item>([], { deep: false });
-  @observable selectedItemsIds = observable.map<string, boolean>();
+  @observable selectedItemsIds = observable.set<string>();
 
   constructor() {
     makeObservable(this);
@@ -29,7 +27,11 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   @computed get selectedItems(): Item[] {
-    return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
+    return this.pickOnlySelected(this.items);
+  }
+
+  public pickOnlySelected(items: Item[]): Item[] {
+    return items.filter(item => this.selectedItemsIds.has(item.getId()));
   }
 
   public getItems(): Item[] {
@@ -40,8 +42,7 @@ export abstract class ItemStore<Item extends ItemObject> {
     return this.items.length;
   }
 
-  getByName(name: string, ...args: any[]): Item;
-  getByName(name: string): Item {
+  getByName(name: string): Item | undefined {
     return this.items.find(item => item.getName() === name);
   }
 
@@ -111,7 +112,6 @@ export abstract class ItemStore<Item extends ItemObject> {
     }
   }
 
-  protected async loadItem(...args: any[]): Promise<Item>;
   @action
   protected async loadItem(request: () => Promise<Item>, sortItems = true) {
     const item = await Promise.resolve(request()).catch(() => null);
@@ -129,9 +129,9 @@ export abstract class ItemStore<Item extends ItemObject> {
         if (sortItems) items = this.sortItems(items);
         this.items.replace(items);
       }
-
-      return item;
     }
+
+    return item;
   }
 
   @action
@@ -152,12 +152,12 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   isSelected(item: Item) {
-    return !!this.selectedItemsIds.get(item.getId());
+    return this.selectedItemsIds.has(item.getId());
   }
 
   @action
   select(item: Item) {
-    this.selectedItemsIds.set(item.getId(), true);
+    this.selectedItemsIds.add(item.getId());
   }
 
   @action
@@ -206,6 +206,8 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   async removeSelectedItems?(): Promise<any>;
+
+  async removeItems?(items: Item[]): Promise<void>;
 
   * [Symbol.iterator]() {
     yield* this.items;

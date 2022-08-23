@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { FSWatcher } from "chokidar";
 import { watch } from "chokidar";
 import path from "path";
 import os from "os";
@@ -16,6 +17,9 @@ import installExtensionInjectable
 import directoryForUserDataInjectable
   from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import mockFs from "mock-fs";
+import { delay } from "../../renderer/utils";
+import { observable, when } from "mobx";
+import appVersionInjectable from "../../common/vars/app-version.injectable";
 
 jest.setTimeout(60_000);
 
@@ -48,15 +52,14 @@ const mockedFse = fse as jest.Mocked<typeof fse>;
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
+    di.override(appVersionInjectable, () => "5.0.0");
 
     mockFs();
-
-    await di.runSetups();
 
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
   });
@@ -65,8 +68,9 @@ describe("ExtensionDiscovery", () => {
     mockFs.restore();
   });
 
-  it("emits add for added extension", async (done) => {
-    let addHandler: (filePath: string) => void;
+  it("emits add for added extension", async () => {
+    const letTestFinish = observable.box(false);
+    let addHandler!: (filePath: string) => void;
 
     mockedFse.readJson.mockImplementation((p) => {
       expect(p).toBe(path.join(os.homedir(), ".k8slens/extensions/my-extension/package.json"));
@@ -74,12 +78,15 @@ describe("ExtensionDiscovery", () => {
       return {
         name: "my-extension",
         version: "1.0.0",
+        engines: {
+          lens: "5.0.0",
+        },
       };
     });
 
     mockedFse.pathExists.mockImplementation(() => true);
 
-    const mockWatchInstance: any = {
+    const mockWatchInstance = {
       on: jest.fn((event: string, handler: typeof addHandler) => {
         if (event === "add") {
           addHandler = handler;
@@ -87,11 +94,9 @@ describe("ExtensionDiscovery", () => {
 
         return mockWatchInstance;
       }),
-    };
+    } as unknown as FSWatcher;
 
-    mockedWatch.mockImplementationOnce(() =>
-        (mockWatchInstance) as any,
-    );
+    mockedWatch.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
@@ -104,23 +109,27 @@ describe("ExtensionDiscovery", () => {
         id: path.normalize("some-directory-for-user-data/node_modules/my-extension/package.json"),
         isBundled: false,
         isEnabled: false,
-        isCompatible: false,
+        isCompatible: true,
         manifest:  {
           name: "my-extension",
           version: "1.0.0",
+          engines: {
+            lens: "5.0.0",
+          },
         },
         manifestPath: path.normalize("some-directory-for-user-data/node_modules/my-extension/package.json"),
       });
-      done();
+      letTestFinish.set(true);
     });
 
     addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
+    await when(() => letTestFinish.get());
   });
 
-  it("doesn't emit add for added file under extension", async done => {
-    let addHandler: (filePath: string) => void;
+  it("doesn't emit add for added file under extension", async () => {
+    let addHandler!: (filePath: string) => void;
 
-    const mockWatchInstance: any = {
+    const mockWatchInstance = {
       on: jest.fn((event: string, handler: typeof addHandler) => {
         if (event === "add") {
           addHandler = handler;
@@ -128,11 +137,9 @@ describe("ExtensionDiscovery", () => {
 
         return mockWatchInstance;
       }),
-    };
+    } as unknown as FSWatcher;
 
-    mockedWatch.mockImplementationOnce(() =>
-        (mockWatchInstance) as any,
-    );
+    mockedWatch.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
@@ -145,10 +152,8 @@ describe("ExtensionDiscovery", () => {
 
     addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/node_modules/dep/package.json"));
 
-    setTimeout(() => {
-      expect(onAdd).not.toHaveBeenCalled();
-      done();
-    }, 10);
+    await delay(10);
+
+    expect(onAdd).not.toHaveBeenCalled();
   });
 });
-

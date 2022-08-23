@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { dumpYaml, KubeConfig } from "@kubernetes/client-node";
+import type { KubeConfig } from "@kubernetes/client-node";
+import { dumpYaml } from "@kubernetes/client-node";
 import fs from "fs";
 import * as lockFile from "proper-lockfile";
 

@@ -5,23 +5,30 @@
 
 import "./events.scss";
 
-import React, { Fragment } from "react";
+import React from "react";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
-import { TabLayout } from "../layout/tab-layout";
-import { EventStore, eventStore } from "./event.store";
-import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object-list-layout";
-import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
+import { TabLayout } from "../layout/tab-layout-2";
+import type { EventStore } from "./store";
+import type { KubeObjectListLayoutProps } from "../kube-object-list-layout";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
+import type { KubeEvent, KubeEventApi, KubeEventData } from "../../../common/k8s-api/endpoints/events.api";
 import type { TableSortCallbacks, TableSortParams } from "../table";
 import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
-import { cssNames, IClassName, stopPropagation } from "../../utils";
+import type { IClassName } from "../../utils";
+import { cssNames, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { eventsURL } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
-import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import navigateToEventsInjectable  from "../../../common/front-end-routing/routes/cluster/events/navigate-to-events.injectable";
+import { KubeObjectAge } from "../kube-object/age";
+import { ReactiveDuration } from "../duration/reactive-duration";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import eventStoreInjectable from "./store.injectable";
 
 enum columnId {
   message = "message",
@@ -34,20 +41,25 @@ enum columnId {
   lastSeen = "last-seen",
 }
 
-interface Props extends Partial<KubeObjectListLayoutProps<KubeEvent>> {
+export interface EventsProps extends Partial<KubeObjectListLayoutProps<KubeEvent, KubeEventApi, KubeEventData>> {
   className?: IClassName;
   compact?: boolean;
   compactLimit?: number;
 }
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<EventsProps> = {
   compactLimit: 10,
 };
 
+interface Dependencies {
+  navigateToEvents: () => void;
+  eventStore: EventStore;
+  apiManager: ApiManager;
+}
+
 @observer
-export class Events extends React.Component<Props> {
+class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
   static defaultProps = defaultProps as object;
-  now = Date.now();
 
   @observable sorting: TableSortParams = {
     sortBy: columnId.age,
@@ -59,26 +71,22 @@ export class Events extends React.Component<Props> {
     [columnId.type]: event => event.type,
     [columnId.object]: event => event.involvedObject.name,
     [columnId.count]: event => event.count,
-    [columnId.age]: event => event.getTimeDiffFromNow(),
-    [columnId.lastSeen]: event => this.now - new Date(event.lastTimestamp).getTime(),
+    [columnId.age]: event => -event.getCreationTimestamp(),
+    [columnId.lastSeen]: event => event.lastTimestamp ? -new Date(event.lastTimestamp).getTime() : 0,
   };
 
-  constructor(props: Props) {
+  constructor(props: Dependencies & EventsProps) {
     super(props);
     makeObservable(this);
   }
 
-  get store(): EventStore {
-    return eventStore;
-  }
-
   @computed get items(): KubeEvent[] {
-    const items = this.store.contextItems;
+    const items = this.props.eventStore.contextItems;
     const { sortBy, orderBy: order } = this.sorting;
 
     // we must sort items before passing to "KubeObjectListLayout -> Table"
     // to make it work with "compact=true" (proper table sorting actions + initial items)
-    return orderBy(items, this.sortingCallbacks[sortBy], order as any);
+    return orderBy(items, this.sortingCallbacks[sortBy], order);
   }
 
   @computed get visibleItems(): KubeEvent[] {
@@ -92,8 +100,8 @@ export class Events extends React.Component<Props> {
   }
 
   customizeHeader: HeaderCustomizer = ({ info, title, ...headerPlaceholders }) => {
-    const { compact } = this.props;
-    const { store, items, visibleItems } = this;
+    const { compact, eventStore } = this.props;
+    const { items, visibleItems } = this;
     const allEventsAreShown = visibleItems.length === items.length;
 
     // handle "compact"-mode header
@@ -104,35 +112,44 @@ export class Events extends React.Component<Props> {
 
       return {
         title,
-        info: <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>,
+        info: (
+          <span>
+            {"("}
+            {visibleItems.length}
+            {" of "}
+            <a onClick={this.props.navigateToEvents}>{items.length}</a>
+            {")"}
+          </span>
+        ),
       };
     }
 
     return {
-      info: <>
-        {info}
-        <Icon
-          small
-          material="help_outline"
-          className="help-icon"
-          tooltip={`Limited to ${store.limit}`}
-        />
-      </>,
+      info: (
+        <>
+          {info}
+          <Icon
+            small
+            material="help_outline"
+            className="help-icon"
+            tooltip={`Limited to ${eventStore.limit}`}
+          />
+        </>
+      ),
       title,
       ...headerPlaceholders,
     };
   };
 
   render() {
-    const { store } = this;
-    const { compact, compactLimit, className, ...layoutProps } = this.props;
+    const { apiManager, eventStore, compact, compactLimit, className, ...layoutProps } = this.props;
 
     const events = (
       <KubeObjectListLayout
         {...layoutProps}
         isConfigurable
         tableId="events"
-        store={store}
+        store={eventStore}
         className={cssNames("Events", className, { compact })}
         renderHeaderTitle="Events"
         customizeHeader={this.customizeHeader}
@@ -169,24 +186,28 @@ export class Events extends React.Component<Props> {
           return [
             type, // type of event: "Normal" or "Warning"
             {
-              className: { warning: isWarning },
+              className: cssNames({ warning: isWarning }),
               title: (
-                <Fragment>
+                <>
                   <span id={tooltipId}>{message}</span>
                   <Tooltip targetId={tooltipId} formatters={{ narrow: true, warning: isWarning }}>
                     {message}
                   </Tooltip>
-                </Fragment>
+                </>
               ),
             },
             event.getNs(),
-            <Link key="link" to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
-              {involvedObject.kind}: {involvedObject.name}
+            <Link
+              key="link"
+              to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))}
+              onClick={stopPropagation}
+            >
+              {`${involvedObject.kind}: ${involvedObject.name}`}
             </Link>,
             event.getSource(),
             event.count,
-            event.getAge(),
-            event.getLastSeenTime(),
+            <KubeObjectAge key="age" object={event} />,
+            <ReactiveDuration key="last-seen" timestamp={event.lastTimestamp} />,
           ];
         }}
       />
@@ -203,3 +224,12 @@ export class Events extends React.Component<Props> {
     );
   }
 }
+
+export const Events = withInjectables<Dependencies, EventsProps>(NonInjectedEvents, {
+  getProps: (di, props) => ({
+    ...props,
+    navigateToEvents: di.inject(navigateToEventsInjectable),
+    apiManager: di.inject(apiManagerInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+  }),
+});

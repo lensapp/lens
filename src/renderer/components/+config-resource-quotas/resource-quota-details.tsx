@@ -8,7 +8,7 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { cpuUnitsToNumber, cssNames, unitsToBytes, metricUnitsToNumber } from "../../utils";
+import { cpuUnitsToNumber, cssNames, unitsToBytes, metricUnitsToNumber, object, hasDefinedTupleValue } from "../../utils";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceQuota } from "../../../common/k8s-api/endpoints/resource-quota.api";
 import { LineProgress } from "../line-progress";
@@ -16,10 +16,10 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<ResourceQuota> {
+export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
 }
 
-function transformUnit(name: string, value: string): number {
+function transformUnit(name: string, value: string): number | undefined {
   if (name.includes("memory") || name.includes("storage")) {
     return unitsToBytes(value);
   }
@@ -32,25 +32,44 @@ function transformUnit(name: string, value: string): number {
 }
 
 function renderQuotas(quota: ResourceQuota): JSX.Element[] {
-  const { hard = {}, used = {}} = quota.status;
+  const { hard = {}, used = {}} = quota.status ?? {};
 
-  return Object.entries(hard)
-    .filter(([name]) => used[name])
-    .map(([name, value]) => {
-      const current = transformUnit(name, used[name]);
-      const max = transformUnit(name, value);
-      const usage = max === 0 ? 100 : Math.ceil(current / max * 100); // special case 0 max as always 100% usage
+  return object.entries(hard)
+    .filter(hasDefinedTupleValue)
+    .map(([name, rawMax]) => {
+      const rawCurrent = used[name] ?? "0";
+      const current = transformUnit(name, rawCurrent);
+      const max = transformUnit(name, rawMax);
+
+      if (current === undefined || max === undefined) {
+        return (
+          <div key={name} className={cssNames("param", kebabCase(name))}>
+            <span className="title">{name}</span>
+            <span className="value">
+              {`${rawCurrent} / ${rawMax}`}
+            </span>
+          </div>
+        );
+      }
+
+      const usage = max === 0
+        ? 100 // special case 0 max as always 100% usage
+        : current / max * 100;
 
       return (
         <div key={name} className={cssNames("param", kebabCase(name))}>
           <span className="title">{name}</span>
-          <span className="value">{used[name]} / {value}</span>
+          <span className="value">
+            {`${rawCurrent} / ${rawMax}`}
+          </span>
           <LineProgress
             max={max}
             value={current}
-            tooltip={
-              <p>Set: {value}. Usage: {`${usage}%`}</p>
-            }
+            tooltip={(
+              <p>
+                {`Set: ${rawMax}. Usage: ${+usage.toFixed(2)}%`}
+              </p>
+            )}
           />
         </div>
       );
@@ -58,7 +77,7 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
 }
 
 @observer
-export class ResourceQuotaDetails extends React.Component<Props> {
+export class ResourceQuotaDetails extends React.Component<ResourceQuotaDetailsProps> {
   render() {
     const { object: quota } = this.props;
 
@@ -82,7 +101,7 @@ export class ResourceQuotaDetails extends React.Component<Props> {
 
         {quota.getScopeSelector().length > 0 && (
           <>
-            <DrawerTitle title="Scope Selector"/>
+            <DrawerTitle>Scope Selector</DrawerTitle>
             <Table className="paths">
               <TableHead>
                 <TableCell>Operator</TableCell>

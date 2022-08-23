@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterModel } from "../../common/cluster-types";
-
 jest.mock("winston", () => ({
   format: {
     colorize: jest.fn(),
@@ -15,6 +13,7 @@ jest.mock("winston", () => ({
     printf: jest.fn(),
     padLevels: jest.fn(),
     ms: jest.fn(),
+    splat: jest.fn(),
   },
   createLogger: jest.fn().mockReturnValue({
     silly: jest.fn(),
@@ -37,27 +36,39 @@ jest.mock("tcp-port-used");
 import type { Cluster } from "../../common/cluster/cluster";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import { broadcastMessage } from "../../common/ipc";
-import { ChildProcess, spawn } from "child_process";
-import { bundledKubectlPath, Kubectl } from "../kubectl/kubectl";
-import { mock, MockProxy } from "jest-mock-extended";
+import type { ChildProcess } from "child_process";
+import { spawn } from "child_process";
+import { Kubectl } from "../kubectl/kubectl";
+import type { DeepMockProxy } from "jest-mock-extended";
+import { mockDeep, mock } from "jest-mock-extended";
 import { waitUntilUsed } from "tcp-port-used";
-import { EventEmitter, Readable } from "stream";
-import { UserStore } from "../../common/user-store";
+import type { Readable } from "stream";
+import { EventEmitter } from "stream";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import type { CreateCluster } from "../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import path from "path";
+import spawnInjectable from "../child-process/spawn.injectable";
+import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 
 console = new Console(stdout, stderr);
 
 const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcastMessage>;
 const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
 const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilUsed>;
+const clusterServerUrl = "https://192.168.64.3:8443";
 
 describe("kube auth proxy tests", () => {
-  let createCluster: (model: ClusterModel) => Cluster;
+  let createCluster: CreateCluster;
   let createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
 
   beforeEach(async () => {
@@ -69,7 +80,7 @@ describe("kube auth proxy tests", () => {
         clusters: [{
           name: "minikube",
           cluster: {
-            server: "https://192.168.64.3:8443",
+            server: clusterServerUrl,
           },
         }],
         "current-context": "minikube",
@@ -91,19 +102,24 @@ describe("kube auth proxy tests", () => {
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mockFs(mockMinikubeConfig);
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
 
-    await di.runSetups();
+    di.override(spawnInjectable, () => mockSpawn);
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
+
+    di.permitSideEffects(getConfigurationFileModelInjectable);
+
+    mockFs(mockMinikubeConfig);
 
     createCluster = di.inject(createClusterInjectionToken);
 
     createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
-
-    UserStore.createInstance();
   });
 
   afterEach(() => {
-    UserStore.resetInstance();
     mockFs.restore();
   });
 
@@ -112,6 +128,8 @@ describe("kube auth proxy tests", () => {
       id: "foobar",
       kubeConfigPath: "minikube-config.yml",
       contextName: "minikube",
+    }, {
+      clusterServerUrl,
     });
 
     const kap = createKubeAuthProxy(cluster, {});
@@ -122,79 +140,79 @@ describe("kube auth proxy tests", () => {
   });
 
   describe("spawn tests", () => {
-    let mockedCP: MockProxy<ChildProcess>;
+    let mockedCP: DeepMockProxy<ChildProcess>;
     let listeners: EventEmitter;
     let proxy: KubeAuthProxy;
 
     beforeEach(async () => {
-      mockedCP = mock<ChildProcess>();
+      mockedCP = mockDeep<ChildProcess>();
       listeners = new EventEmitter();
+      const stderr = mockedCP.stderr = mock<Readable>();
+      const stdout = mockedCP.stdout = mock<Readable>();
 
       jest.spyOn(Kubectl.prototype, "checkBinary").mockReturnValueOnce(Promise.resolve(true));
       jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValueOnce(Promise.resolve(false));
-      mockedCP.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): ChildProcess => {
+      mockedCP.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): ChildProcess => {
         listeners.on(event, listener);
 
         return mockedCP;
       });
-      mockedCP.stderr = mock<Readable>();
-      mockedCP.stderr.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.on(`stderr/${event}`, listener);
+      mockedCP.stderr.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.on(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.off.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stderr/${event}`, listener);
+      mockedCP.stderr.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.removeListener.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stderr/${event}`, listener);
+      mockedCP.stderr.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.once.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.once(`stderr/${event}`, listener);
+      mockedCP.stderr.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.once(`stderr/${String(event)}`, listener);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stderr.removeAllListeners.mockImplementation((event?: string): Readable => {
-        listeners.removeAllListeners(event ?? `stderr/${event}`);
+      mockedCP.stderr.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
+        listeners.removeAllListeners(event ?? `stderr/${String(event)}`);
 
-        return mockedCP.stderr;
+        return stderr;
       });
-      mockedCP.stdout = mock<Readable>();
-      mockedCP.stdout.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.on(`stdout/${event}`, listener);
+      mockedCP.stdout.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.on(`stdout/${String(event)}`, listener);
 
         if (event === "data") {
           listeners.emit("stdout/data", "Starting to serve on 127.0.0.1:9191");
         }
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.once.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.once(`stdout/${event}`, listener);
+      mockedCP.stdout.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.once(`stdout/${String(event)}`, listener);
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.off.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stdout/${event}`, listener);
+      mockedCP.stdout.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stdout/${String(event)}`, listener);
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.removeListener.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
-        listeners.off(`stdout/${event}`, listener);
+      mockedCP.stdout.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+        listeners.off(`stdout/${String(event)}`, listener);
 
-        return mockedCP.stdout;
+        return stdout;
       });
-      mockedCP.stdout.removeAllListeners.mockImplementation((event?: string): Readable => {
-        listeners.removeAllListeners(event ?? `stdout/${event}`);
+      mockedCP.stdout.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
+        listeners.removeAllListeners(event ?? `stdout/${String(event)}`);
 
-        return mockedCP.stdout;
+        return stdout;
       });
       mockSpawn.mockImplementationOnce((command: string): ChildProcess => {
-        expect(command).toBe(bundledKubectlPath());
+        expect(path.basename(command).split(".")[0]).toBe("lens-k8s-proxy");
 
         return mockedCP;
       });
@@ -204,6 +222,8 @@ describe("kube auth proxy tests", () => {
         id: "foobar",
         kubeConfigPath: "minikube-config.yml",
         contextName: "minikube",
+      }, {
+        clusterServerUrl,
       });
 
       proxy = createKubeAuthProxy(cluster, {});

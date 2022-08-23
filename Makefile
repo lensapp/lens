@@ -17,22 +17,22 @@ else
 endif
 
 node_modules: yarn.lock
-	yarn install --frozen-lockfile --network-timeout=100000
-	yarn check --verify-tree --integrity
+	yarn install --check-files --frozen-lockfile --network-timeout=100000
 
 binaries/client: node_modules
-	yarn download-bins
-
-static/build/LensDev.html: node_modules
-	yarn compile:renderer
+	yarn download:binaries
 
 .PHONY: compile-dev
 compile-dev: node_modules
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
+.PHONY: validate-dev
+ci-validate-dev: binaries/client build-extensions compile-dev
+
 .PHONY: dev
-dev: binaries/client build-extensions static/build/LensDev.html
+dev: binaries/client build-extensions
+	rm -rf static/build/
 	yarn dev
 
 .PHONY: lint
@@ -55,6 +55,7 @@ integration: build
 build: node_modules binaries/client
 	yarn run npm:fix-build-version
 	$(MAKE) build-extensions -B
+	yarn run build:tray-icons
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
 # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
@@ -62,10 +63,15 @@ ifeq "$(DETECTED_OS)" "Windows"
 endif
 	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
 
-$(extension_node_modules): node_modules
-	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund
+.PHONY: update-extension-locks
+update-extension-locks:
+	$(foreach dir, $(extensions), (cd $(dir) && rm package-lock.json && ../../node_modules/.bin/npm install --package-lock-only);)
 
-$(extension_dists): src/extensions/npm/extensions/dist
+.NOTPARALLEL: $(extension_node_modules)
+$(extension_node_modules): node_modules
+	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
+
+$(extension_dists): src/extensions/npm/extensions/dist $(extension_node_modules)
 	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
 
 .PHONY: clean-old-extensions
@@ -73,25 +79,23 @@ clean-old-extensions:
 	find ./extensions -mindepth 1 -maxdepth 1 -type d '!' -exec test -e '{}/package.json' \; -exec rm -rf {} \;
 
 .PHONY: build-extensions
-build-extensions: node_modules clean-old-extensions $(extension_node_modules) $(extension_dists)
+build-extensions: node_modules clean-old-extensions $(extension_dists)
 
 .PHONY: test-extensions
 test-extensions: $(extension_node_modules)
 	$(foreach dir, $(extensions), (cd $(dir) && npm run test || exit $?);)
 
-.PHONY: copy-extension-themes
-copy-extension-themes:
-	mkdir -p src/extensions/npm/extensions/dist/src/renderer/themes/
-	cp $(wildcard src/renderer/themes/*.json) src/extensions/npm/extensions/dist/src/renderer/themes/
-
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
 
-src/extensions/npm/extensions/dist: node_modules
+src/extensions/npm/extensions/dist: src/extensions/npm/extensions/node_modules
 	yarn compile:extension-types
 
+src/extensions/npm/extensions/node_modules: src/extensions/npm/extensions/package.json
+	cd src/extensions/npm/extensions/ && ../../../../node_modules/.bin/npm install --no-audit --no-fund
+
 .PHONY: build-npm
-build-npm: build-extension-types copy-extension-themes src/extensions/npm/extensions/__mocks__
+build-npm: build-extension-types src/extensions/npm/extensions/__mocks__
 	yarn npm:fix-package-version
 
 .PHONY: build-extension-types

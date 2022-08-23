@@ -7,16 +7,22 @@ import { ObservableMap } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync-manager/kubeconfig-sync-manager";
+import { computeDiff as computeDiffFor, configToModels } from "../kubeconfig-sync/manager";
 import mockFs from "mock-fs";
 import fs from "fs";
-import { ClusterManager } from "../../cluster-manager";
 import clusterStoreInjectable from "../../../common/cluster-store/cluster-store.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
-import directoryForKubeConfigsInjectable
-  from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-
+import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import clusterManagerInjectable from "../../cluster-manager.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import kubectlBinaryNameInjectable from "../../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../../kubectl/normalized-arch.injectable";
+import normalizedPlatformInjectable from "../../../common/vars/normalized-platform.injectable";
+import { iter } from "../../../common/utils";
+import fsInjectable from "../../../common/fs/fs.injectable";
 
 jest.mock("electron", () => ({
   app: {
@@ -42,21 +48,26 @@ describe("kubeconfig-sync.source tests", () => {
 
     mockFs();
 
-    await di.runSetups();
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
+
+    di.permitSideEffects(fsInjectable);
+    di.unoverride(clusterStoreInjectable);
+    di.permitSideEffects(clusterStoreInjectable);
+    di.permitSideEffects(getConfigurationFileModelInjectable);
 
     computeDiff = computeDiffFor({
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
       createCluster: di.inject(createClusterInjectionToken),
+      clusterManager: di.inject(clusterManagerInjectable),
     });
-
-    di.inject(clusterStoreInjectable);
-
-    ClusterManager.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-    ClusterManager.resetInstance();
   });
 
   describe("configsToModels", () => {
@@ -92,8 +103,8 @@ describe("kubeconfig-sync.source tests", () => {
       const models = configToModels(config, "/bar");
 
       expect(models.length).toBe(1);
-      expect(models[0].contextName).toBe("context-name");
-      expect(models[0].kubeConfigPath).toBe("/bar");
+      expect(models[0][0].contextName).toBe("context-name");
+      expect(models[0][0].kubeConfigPath).toBe("/bar");
     });
   });
 
@@ -144,7 +155,8 @@ describe("kubeconfig-sync.source tests", () => {
 
       expect(rootSource.size).toBe(1);
 
-      const c = rootSource.values().next().value[0] as Cluster;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const c = (iter.first(rootSource.values())!)[0];
 
       expect(c.kubeConfigPath).toBe("/bar");
       expect(c.contextName).toBe("context-name");

@@ -3,72 +3,70 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./dock-tab.scss";
+import styles from "./dock-tab.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames, prevDefault, isMiddleClick } from "../../utils";
+import { autoBind, cssNames, prevDefault, isMiddleClick } from "../../utils";
 import type { DockStore, DockTab as DockTabModel } from "./dock/store";
-import { Tab, TabProps } from "../tabs";
+import type { TabProps } from "../tabs";
+import { Tab } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
-import { observable, makeObservable } from "mobx";
-import { isMac } from "../../../common/vars";
+import { observable } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
+import { Tooltip, TooltipPosition } from "../tooltip";
+import isMacInjectable from "../../../common/vars/is-mac.injectable";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
 }
 
 interface Dependencies {
-  dockStore: DockStore
+  dockStore: DockStore;
+  isMac: boolean;
 }
 
 @observer
 class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
-  @observable menuVisible = false;
+  private readonly menuVisible = observable.box(false);
 
   constructor(props: DockTabProps & Dependencies) {
     super(props);
-    makeObservable(this);
+    autoBind(this);
   }
 
-  get tabId() {
-    return this.props.value.id;
+  close(id: string) {
+    this.props.dockStore.closeTab(id);
   }
 
-  @boundMethod
-  close() {
-    this.props.dockStore.closeTab(this.tabId);
-  }
-
-  renderMenu() {
+  renderMenu(tabId: string) {
     const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight, tabs, getTabIndex } = this.props.dockStore;
     const closeAllDisabled = tabs.length === 1;
     const closeOtherDisabled = tabs.length === 1;
-    const closeRightDisabled = getTabIndex(this.tabId) === tabs.length - 1;
+    const closeRightDisabled = getTabIndex(tabId) === tabs.length - 1;
 
     return (
       <Menu
         usePortal
-        htmlFor={`tab-${this.tabId}`}
+        htmlFor={`tab-${tabId}`}
         className="DockTabMenu"
-        isOpen={this.menuVisible}
-        open={() => this.menuVisible = true}
-        close={() => this.menuVisible = false}
+        isOpen={this.menuVisible.get()}
+        open={() => this.menuVisible.set(true)}
+        close={() => this.menuVisible.set(false)}
         toggleEvent="contextmenu"
       >
-        <MenuItem onClick={() => closeTab(this.tabId)}>
+        <MenuItem onClick={() => closeTab(tabId)}>
           Close
         </MenuItem>
         <MenuItem onClick={() => closeAllTabs()} disabled={closeAllDisabled}>
           Close all tabs
         </MenuItem>
-        <MenuItem onClick={() => closeOtherTabs(this.tabId)} disabled={closeOtherDisabled}>
+        <MenuItem onClick={() => closeOtherTabs(tabId)} disabled={closeOtherDisabled}>
           Close other tabs
         </MenuItem>
-        <MenuItem onClick={() => closeTabsToTheRight(this.tabId)} disabled={closeRightDisabled}>
+        <MenuItem onClick={() => closeTabsToTheRight(tabId)} disabled={closeRightDisabled}>
           Close tabs to the right
         </MenuItem>
       </Menu>
@@ -76,44 +74,59 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
   }
 
   render() {
-    const { className, moreActions, dockStore, ...tabProps } = this.props;
-    const { title, pinned } = tabProps.value;
-    const label = (
-      <div className="flex gaps align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
-        <span className="title" title={title}>{title}</span>
-        {moreActions}
-        {!pinned && (
-          <Icon
-            small material="close"
-            tooltip={`Close ${isMac ? "⌘+W" : "Ctrl+W"}`}
-            onClick={prevDefault(this.close)}
-          />
-        )}
-      </div>
-    );
+    const { className, moreActions, dockStore, active, isMac, ...tabProps } = this.props;
+
+    if (!tabProps.value) {
+      return;
+    }
+
+    const { title, pinned, id } = tabProps.value;
+    const close = prevDefault(() => this.close(id));
 
     return (
       <>
         <Tab
           {...tabProps}
-          id={`tab-${this.tabId}`}
-          className={cssNames("DockTab", className, { pinned })}
-          onContextMenu={() => this.menuVisible = true}
-          label={label}
+          id={`tab-${id}`}
+          className={cssNames(styles.DockTab, className, {
+            [styles.pinned]: pinned,
+          })}
+          onContextMenu={() => this.menuVisible.set(true)}
+          label={(
+            <div className="flex align-center" onAuxClick={isMiddleClick(close)}>
+              <span className={styles.title}>{title}</span>
+              {moreActions}
+              {!pinned && (
+                <div className={styles.close}>
+                  <Icon
+                    small
+                    material="close"
+                    tooltip={`Close ${this.props.isMac ? "⌘+W" : "Ctrl+W"}`}
+                    onClick={close}
+                  />
+                </div>
+              )}
+              <Tooltip
+                targetId={`tab-${id}`}
+                preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
+                style={{ transitionDelay: "700ms" }}
+              >
+                {title}
+              </Tooltip>
+            </div>
+          )}
+          data-testid={`dock-tab-for-${id}`}
         />
-        {this.renderMenu()}
+        {this.renderMenu(id)}
       </>
     );
   }
 }
 
-export const DockTab = withInjectables<Dependencies, DockTabProps>(
-  NonInjectedDockTab,
-
-  {
-    getProps: (di, props) => ({
-      dockStore: di.inject(dockStoreInjectable),
-      ...props,
-    }),
-  },
-);
+export const DockTab = withInjectables<Dependencies, DockTabProps>(NonInjectedDockTab, {
+  getProps: (di, props) => ({
+    dockStore: di.inject(dockStoreInjectable),
+    isMac: di.inject(isMacInjectable),
+    ...props,
+  }),
+});

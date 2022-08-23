@@ -9,9 +9,9 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { podsStore } from "./pods.store";
+import { podStore } from "./legacy-store";
 import type { Pod } from "../../../common/k8s-api/endpoints";
-import { boundMethod, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
+import { autoBind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { LineProgress } from "../line-progress";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -22,25 +22,28 @@ import { showDetails } from "../kube-detail-params";
 
 enum sortBy {
   name = "name",
+  node = "node",
   namespace = "namespace",
   cpu = "cpu",
   memory = "memory",
 }
 
-interface Props extends OptionalProps {
+export interface PodDetailsListProps {
   pods: Pod[];
   owner: KubeObject;
-}
-
-interface OptionalProps {
   maxCpu?: number;
   maxMemory?: number;
 }
 
 @observer
-export class PodDetailsList extends React.Component<Props> {
+export class PodDetailsList extends React.Component<PodDetailsListProps> {
+  constructor(props: PodDetailsListProps) {
+    super(props);
+    autoBind(this);
+  }
+
   private metricsWatcher = interval(120, () => {
-    podsStore.loadKubeMetrics(this.props.owner.getNs());
+    podStore.loadKubeMetrics(this.props.owner.getNs());
   });
 
   componentDidMount() {
@@ -57,9 +60,6 @@ export class PodDetailsList extends React.Component<Props> {
   renderCpuUsage(id: string, usage: number) {
     const { maxCpu } = this.props;
     const value = usage.toFixed(3);
-    const tooltip = (
-      <p>CPU: {Math.ceil(usage * 100) / maxCpu}%<br/>{usage.toFixed(3)}</p>
-    );
 
     if (!maxCpu) {
       if (parseFloat(value) === 0) return 0;
@@ -67,9 +67,18 @@ export class PodDetailsList extends React.Component<Props> {
       return value;
     }
 
+    const tooltip = (
+      <p>
+        {`CPU: ${Math.ceil(usage * 100 / maxCpu)}%`}
+        <br/>
+        {usage.toFixed(3)}
+      </p>
+    );
+
     return (
       <LineProgress
-        max={maxCpu} value={usage}
+        max={maxCpu}
+        value={usage}
         tooltip={parseFloat(value) !== 0 ? tooltip : null}
       />
     );
@@ -77,25 +86,35 @@ export class PodDetailsList extends React.Component<Props> {
 
   renderMemoryUsage(id: string, usage: number) {
     const { maxMemory } = this.props;
-    const tooltip = (
-      <p>Memory: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, 3)}</p>
-    );
 
     if (!maxMemory) return usage ? bytesToUnits(usage) : 0;
 
+    const tooltip = (
+      <p>
+        {`Memory: ${Math.ceil(usage * 100 / maxMemory)}%`}
+        <br/>
+        {bytesToUnits(usage, { precision: 3 })}
+      </p>
+    );
+
     return (
       <LineProgress
-        max={maxMemory} value={usage}
+        max={maxMemory}
+        value={usage}
         tooltip={usage != 0 ? tooltip : null}
       />
     );
   }
 
-  @boundMethod
   getTableRow(uid: string) {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
-    const metrics = podsStore.getPodKubeMetrics(pod);
+
+    if (!pod) {
+      return;
+    }
+
+    const metrics = podStore.getPodKubeMetrics(pod);
 
     return (
       <TableRow
@@ -106,8 +125,11 @@ export class PodDetailsList extends React.Component<Props> {
       >
         <TableCell className="name">{pod.getName()}</TableCell>
         <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={pod}/></TableCell>
+        <TableCell className="node">{pod.getNodeName()}</TableCell>
         <TableCell className="namespace">{pod.getNs()}</TableCell>
-        <TableCell className="ready">{pod.getRunningContainers().length}/{pod.getContainers().length}</TableCell>
+        <TableCell className="ready">
+          {`${pod.getRunningContainers().length} / ${pod.getContainers().length}`}
+        </TableCell>
         <TableCell className="cpu">{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
         <TableCell className="memory">{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>
         <TableCell className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
@@ -118,7 +140,7 @@ export class PodDetailsList extends React.Component<Props> {
   render() {
     const { pods } = this.props;
 
-    if (!podsStore.isLoaded) {
+    if (!podStore.isLoaded) {
       return (
         <div className="PodDetailsList flex justify-center">
           <Spinner />
@@ -134,7 +156,7 @@ export class PodDetailsList extends React.Component<Props> {
 
     return (
       <div className="PodDetailsList flex column">
-        <DrawerTitle title="Pods" />
+        <DrawerTitle>Pods</DrawerTitle>
         <Table
           tableId="workloads_pod_details_list"
           items={pods}
@@ -145,19 +167,25 @@ export class PodDetailsList extends React.Component<Props> {
           virtualHeight={660}
           sortable={{
             [sortBy.name]: pod => pod.getName(),
+            [sortBy.node]: pod => pod.getNodeName(),
             [sortBy.namespace]: pod => pod.getNs(),
-            [sortBy.cpu]: pod => podsStore.getPodKubeMetrics(pod).cpu,
-            [sortBy.memory]: pod => podsStore.getPodKubeMetrics(pod).memory,
+            [sortBy.cpu]: pod => podStore.getPodKubeMetrics(pod).cpu,
+            [sortBy.memory]: pod => podStore.getPodKubeMetrics(pod).memory,
           }}
           sortByDefault={{ sortBy: sortBy.cpu, orderBy: "desc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          renderRow={!virtual && (pod => this.getTableRow(pod.getId()))}
+          renderRow={(
+            virtual
+              ? undefined
+              : (pod => this.getTableRow(pod.getId()))
+          )}
           className="box grow"
         >
           <TableHead>
             <TableCell className="name" sortBy={sortBy.name}>Name</TableCell>
             <TableCell className="warning"/>
+            <TableCell className="node" sortBy={sortBy.node}>Node</TableCell>
             <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>
             <TableCell className="ready">Ready</TableCell>
             <TableCell className="cpu" sortBy={sortBy.cpu}>CPU</TableCell>

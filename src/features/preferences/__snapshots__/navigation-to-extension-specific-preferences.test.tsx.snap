@@ -1,0 +1,3684 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab shows extension tab in general area 1`] = `
+<div
+  class="Tab flex gaps align-center"
+  data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
+  role="tab"
+  tabindex="0"
+>
+  <div
+    class="label"
+  >
+    Metrics tab
+  </div>
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab when navigating to specific extension tab renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="extension-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Metrics tab
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="extensions"
+            >
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                Metrics tab
+              </h2>
+              <section
+                class="small"
+                data-testid="extension-preference-item-for-metrics-preference-item-id"
+                id="metrics-preference-item-id"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  License item
+                   
+                </div>
+                <div
+                  data-testid="metrics-preference-item-input"
+                />
+                <div
+                  class="hint"
+                >
+                  <div
+                    data-testid="metrics-preference-item-hint"
+                  />
+                </div>
+              </section>
+              <hr
+                class="small"
+              />
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extensions with tabs having same id when navigating to first extension tab renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="extension-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Metrics tab
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Metrics tab
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="extensions"
+            >
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                Metrics tab
+              </h2>
+              <section
+                class="small"
+                data-testid="extension-preference-item-for-metrics-preference-item-id"
+                id="metrics-preference-item-id"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  License item
+                   
+                </div>
+                <div
+                  data-testid="metrics-preference-item-input"
+                />
+                <div
+                  class="hint"
+                >
+                  <div
+                    data-testid="metrics-preference-item-hint"
+                  />
+                </div>
+              </section>
+              <hr
+                class="small"
+              />
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extensions with tabs having same id when navigating to second extension tab renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="extension-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-registered-tab-page-id-nav-item-metrics-extension-tab"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Metrics tab
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Metrics tab
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="extensions"
+            >
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                Metrics tab
+              </h2>
+              <section
+                class="small"
+                data-testid="extension-preference-item-for-another-metrics-preference-item-id"
+                id="another-metrics-preference-item-id"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Another metrics
+                   
+                </div>
+                <div
+                  data-testid="another-metrics-preference-item-input"
+                />
+                <div
+                  class="hint"
+                >
+                  <div
+                    data-testid="another-metrics-preference-item-hint"
+                  />
+                </div>
+              </section>
+              <hr
+                class="small"
+              />
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given multiple extensions with specific preferences, when navigating to extension specific preferences page renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="extension-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                data-testid="extension-settings"
+              >
+                <hr />
+                <div
+                  class="header flex items-center"
+                >
+                  <i
+                    class="Icon mr-3 material focusable smallest"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="extension"
+                    >
+                      extension
+                    </span>
+                  </i>
+                   
+                  Extensions
+                </div>
+                <div>
+                  <div
+                    class="Tab flex gaps align-center active"
+                    data-testid="tab-link-for-extension-some-test-extension-id"
+                    role="tab"
+                    tabindex="0"
+                  >
+                    <div
+                      class="label"
+                    >
+                      some-test-extension-id
+                    </div>
+                  </div>
+                  <div
+                    class="Tab flex gaps align-center"
+                    data-testid="tab-link-for-extension-some-other-test-extension-id"
+                    role="tab"
+                    tabindex="0"
+                  >
+                    <div
+                      class="label"
+                    >
+                      some-other-test-extension-id
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="extensions"
+            >
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                some-test-extension-id preferences
+              </h2>
+              <section
+                class="small"
+                data-testid="extension-preference-item-for-some-preference-item-id"
+                id="some-preference-item-id"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Some preference item
+                   
+                </div>
+                <div
+                  data-testid="some-preference-item-input"
+                />
+                <div
+                  class="hint"
+                >
+                  <div
+                    data-testid="some-preference-item-hint"
+                  />
+                </div>
+              </section>
+              <hr
+                class="small"
+              />
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="application-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="application"
+            >
+              <h2
+                data-testid="application-header"
+              >
+                Application
+              </h2>
+              <section
+                id="appearance"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Theme
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-theme-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__placeholder css-14el2xx-placeholder"
+                        id="react-select-theme-input-placeholder"
+                      >
+                        Select...
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-describedby="react-select-theme-input-placeholder"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="theme-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <hr />
+              <section
+                id="extensionRegistryUrl"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Extension Install Registry
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-extension-install-registry-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__placeholder css-14el2xx-placeholder"
+                        id="react-select-extension-install-registry-input-placeholder"
+                      >
+                        Select...
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-describedby="react-select-extension-install-registry-input-placeholder"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="extension-install-registry-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="mt-4 mb-5 leading-relaxed"
+                >
+                  This setting is to change the registry URL for installing extensions by name. 
+                  If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                  <b>
+                    .npmrc
+                  </b>
+                   file or in the input below.
+                </p>
+                <div
+                  class="Input theme round black disabled invalid"
+                >
+                  <label
+                    class="input-area flex gaps align-center"
+                    id=""
+                  >
+                    <input
+                      class="input box grow"
+                      disabled=""
+                      placeholder="Custom Extension Registry URL..."
+                      spellcheck="false"
+                      value="some-custom-url"
+                    />
+                  </label>
+                  <div
+                    class="input-info flex gaps"
+                  />
+                </div>
+              </section>
+              <hr />
+              <section
+                id="other"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Start-up
+                   
+                </div>
+                <label
+                  class="Switch"
+                  data-testid="switch"
+                >
+                  Automatically start Lens on login
+                  <input
+                    role="switch"
+                    type="checkbox"
+                  />
+                </label>
+              </section>
+              <hr />
+              <section
+                id="update-channel"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Update Channel
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-update-channel-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__single-value css-qc6sy-singleValue"
+                      >
+                        Stable
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="update-channel-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <hr />
+              <section
+                id="locale"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Locale Timezone
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-timezone-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__placeholder css-14el2xx-placeholder"
+                        id="react-select-timezone-input-placeholder"
+                      >
+                        Select...
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-describedby="react-select-timezone-input-placeholder"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="timezone-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="application-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                data-testid="extension-settings"
+              >
+                <hr />
+                <div
+                  class="header flex items-center"
+                >
+                  <i
+                    class="Icon mr-3 material focusable smallest"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="extension"
+                    >
+                      extension
+                    </span>
+                  </i>
+                   
+                  Extensions
+                </div>
+                <div>
+                  <div
+                    class="Tab flex gaps align-center"
+                    data-testid="tab-link-for-extension-some-test-extension-id"
+                    role="tab"
+                    tabindex="0"
+                  >
+                    <div
+                      class="label"
+                    >
+                      some-test-extension-id
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="application"
+            >
+              <h2
+                data-testid="application-header"
+              >
+                Application
+              </h2>
+              <section
+                id="appearance"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Theme
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-theme-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__placeholder css-14el2xx-placeholder"
+                        id="react-select-theme-input-placeholder"
+                      >
+                        Select...
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-describedby="react-select-theme-input-placeholder"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="theme-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <hr />
+              <section
+                id="extensionRegistryUrl"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Extension Install Registry
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-extension-install-registry-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__placeholder css-14el2xx-placeholder"
+                        id="react-select-extension-install-registry-input-placeholder"
+                      >
+                        Select...
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-describedby="react-select-extension-install-registry-input-placeholder"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="extension-install-registry-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="mt-4 mb-5 leading-relaxed"
+                >
+                  This setting is to change the registry URL for installing extensions by name. 
+                  If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                  <b>
+                    .npmrc
+                  </b>
+                   file or in the input below.
+                </p>
+                <div
+                  class="Input theme round black disabled invalid"
+                >
+                  <label
+                    class="input-area flex gaps align-center"
+                    id=""
+                  >
+                    <input
+                      class="input box grow"
+                      disabled=""
+                      placeholder="Custom Extension Registry URL..."
+                      spellcheck="false"
+                      value="some-custom-url"
+                    />
+                  </label>
+                  <div
+                    class="input-info flex gaps"
+                  />
+                </div>
+              </section>
+              <hr />
+              <section
+                id="other"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Start-up
+                   
+                </div>
+                <label
+                  class="Switch"
+                  data-testid="switch"
+                >
+                  Automatically start Lens on login
+                  <input
+                    role="switch"
+                    type="checkbox"
+                  />
+                </label>
+              </section>
+              <hr />
+              <section
+                id="update-channel"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Update Channel
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-update-channel-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__single-value css-qc6sy-singleValue"
+                      >
+                        Stable
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="update-channel-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <hr />
+              <section
+                id="locale"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Locale Timezone
+                   
+                </div>
+                <div
+                  class="Select theme-lens css-b62m3t-container"
+                >
+                  <span
+                    class="css-1f43avz-a11yText-A11yText"
+                    id="react-select-timezone-input-live-region"
+                  />
+                  <span
+                    aria-atomic="false"
+                    aria-live="polite"
+                    aria-relevant="additions text"
+                    class="css-1f43avz-a11yText-A11yText"
+                  />
+                  <div
+                    class="Select__control css-1s2u09g-control"
+                  >
+                    <div
+                      class="Select__value-container css-319lph-ValueContainer"
+                    >
+                      <div
+                        class="Select__placeholder css-14el2xx-placeholder"
+                        id="react-select-timezone-input-placeholder"
+                      >
+                        Select...
+                      </div>
+                      <div
+                        class="Select__input-container css-6j8wv5-Input"
+                        data-value=""
+                      >
+                        <input
+                          aria-autocomplete="list"
+                          aria-describedby="react-select-timezone-input-placeholder"
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          autocapitalize="none"
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="Select__input"
+                          id="timezone-input"
+                          role="combobox"
+                          spellcheck="false"
+                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                    >
+                      <span
+                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                      />
+                      <div
+                        aria-hidden="true"
+                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="css-tj5bde-Svg"
+                          focusable="false"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          width="20"
+                        >
+                          <path
+                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled when navigating to extension preferences using navigation renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="extension-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                data-testid="extension-settings"
+              >
+                <hr />
+                <div
+                  class="header flex items-center"
+                >
+                  <i
+                    class="Icon mr-3 material focusable smallest"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="extension"
+                    >
+                      extension
+                    </span>
+                  </i>
+                   
+                  Extensions
+                </div>
+                <div>
+                  <div
+                    class="Tab flex gaps align-center active"
+                    data-testid="tab-link-for-extension-some-test-extension-id"
+                    role="tab"
+                    tabindex="0"
+                  >
+                    <div
+                      class="label"
+                    >
+                      some-test-extension-id
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="extensions"
+            >
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                some-test-extension-id preferences
+              </h2>
+              <section
+                class="small"
+                data-testid="extension-preference-item-for-some-preference-item-id"
+                id="some-preference-item-id"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Some preference item
+                   
+                </div>
+                <div
+                  data-testid="some-preference-item-input"
+                />
+                <div
+                  class="hint"
+                >
+                  <div
+                    data-testid="some-preference-item-hint"
+                  />
+                </div>
+              </section>
+              <hr
+                class="small"
+              />
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled when navigating to extension preferences using navigation when extension is disabled renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ClusterManager"
+    >
+      <div
+        class="topBar"
+      >
+        <div
+          class="items"
+        >
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="items"
+        />
+      </div>
+      <main>
+        <div
+          id="lens-views"
+        />
+        <div
+          class="SettingLayout showNavigation Preferences"
+          data-testid="extension-preferences-page"
+        >
+          <nav
+            class="sidebarRegion"
+          >
+            <div
+              class="sidebar"
+            >
+              <div
+                class="Tabs flex column"
+              >
+                <div
+                  class="header"
+                >
+                  Preferences
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="tab-link-for-application"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    App
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="tab-link-for-proxy"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Proxy
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="tab-link-for-kubernetes"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Kubernetes
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="tab-link-for-editor"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Editor
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-testid="tab-link-for-terminal"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Terminal
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+          <div
+            class="contentRegion"
+            id="ScrollSpyRoot"
+          >
+            <div
+              class="content"
+            >
+              <section
+                id="extensions"
+              >
+                <h2
+                  data-testid="extension-preferences-page-title"
+                >
+                  Extension preferences
+                </h2>
+                <div
+                  class="flex items-center"
+                  data-testid="error-for-extension-not-being-present"
+                >
+                  No extension found
+                </div>
+              </section>
+            </div>
+            <div
+              class="toolsRegion"
+            >
+              <div
+                class="fixed top-[60px]"
+              >
+                <div
+                  data-testid="close-preferences"
+                >
+                  <div
+                    aria-label="Close"
+                    class="closeButton"
+                    role="button"
+                  >
+                    <i
+                      class="Icon icon material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="close"
+                      >
+                        close
+                      </span>
+                    </i>
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="esc"
+                  >
+                    ESC
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div
+        class="HotbarMenu flex column"
+      >
+        <div
+          class="HotbarItems flex column gaps"
+        />
+        <div
+          class="HotbarSelector"
+        >
+          <i
+            class="Icon Icon previous material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_left"
+            >
+              arrow_left
+            </span>
+          </i>
+          <div
+            class="HotbarIndex"
+          >
+            <div
+              class="badge Badge small clickable"
+              id="hotbarIndex"
+            >
+              0
+            </div>
+          </div>
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_right"
+            >
+              arrow_right
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="StatusBar"
+      >
+        <div
+          class="leftSide"
+          data-testid="status-bar-left"
+        />
+        <div
+          class="rightSide"
+          data-testid="status-bar-right"
+        />
+      </div>
+    </div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+  </div>
+</body>
+`;
+
+exports[`preferences - navigation to extension specific preferences when navigating to extension specific tab renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="extension-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Metrics tab
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="extensions"
+            >
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                Metrics tab
+              </h2>
+              <section
+                class="small"
+                data-testid="extension-preference-item-for-another-metrics-preference-item-id"
+                id="another-metrics-preference-item-id"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  Another metrics
+                   
+                </div>
+                <div
+                  data-testid="another-metrics-preference-item-input"
+                />
+                <div
+                  class="hint"
+                >
+                  <div
+                    data-testid="another-metrics-preference-item-hint"
+                  />
+                </div>
+              </section>
+              <hr
+                class="small"
+              />
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - navigation to extension specific preferences when navigating to someone else extension specific tab renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout showNavigation Preferences"
+        data-testid="extension-preferences-page"
+      >
+        <nav
+          class="sidebarRegion"
+        >
+          <div
+            class="sidebar"
+          >
+            <div
+              class="Tabs flex column"
+            >
+              <div
+                class="header"
+              >
+                Preferences
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-application"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  App
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-proxy"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Proxy
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-kubernetes"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Kubernetes
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-editor"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Editor
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center"
+                data-testid="tab-link-for-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Terminal
+                </div>
+              </div>
+              <div
+                class="Tab flex gaps align-center active"
+                data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
+                role="tab"
+                tabindex="0"
+              >
+                <div
+                  class="label"
+                >
+                  Metrics tab
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section
+              id="extensions"
+            >
+              <h2
+                data-testid="extension-preferences-page-title"
+              >
+                extension-using-someone-else-tab-id preferences
+              </h2>
+              <section
+                class="small"
+                data-testid="extension-preference-item-for-my-preferences-item-id"
+                id="my-preferences-item-id"
+              >
+                <div
+                  class="SubTitle"
+                >
+                  My preferences
+                   
+                </div>
+                <div
+                  data-testid="my-preferences-item-input"
+                />
+                <div
+                  class="hint"
+                >
+                  <div
+                    data-testid="my-preferences-item-hint"
+                  />
+                </div>
+              </section>
+              <hr
+                class="small"
+              />
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div
+                data-testid="close-preferences"
+              >
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;

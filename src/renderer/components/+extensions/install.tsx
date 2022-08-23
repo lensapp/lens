@@ -9,15 +9,15 @@ import { prevDefault } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
-import { Input, InputValidator, InputValidators } from "../input";
+import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import extensionInstallationStateStoreInjectable
-  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import { unionInputValidatorsAsync } from "../input/input_validators";
 
-interface Props {
+export interface InstallProps {
   installPath: string;
   supportedFormats: string[];
   onChange: (path: string) => void;
@@ -29,20 +29,16 @@ interface Dependencies {
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
-const installInputValidators = [
+const installInputValidator = unionInputValidatorsAsync(
+  {
+    message: "Invalid URL, absolute path, or extension name",
+  },
   InputValidators.isUrl,
-  InputValidators.isPath,
   InputValidators.isExtensionNameInstall,
-];
+  InputValidators.isPath,
+);
 
-const installInputValidator: InputValidator = {
-  message: "Invalid URL, absolute path, or extension name",
-  validate: (value: string) => (
-    installInputValidators.some(({ validate }) => validate(value))
-  ),
-};
-
-const NonInjectedInstall: React.FC<Dependencies & Props> = ({
+const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
   installPath,
   supportedFormats,
   onChange,
@@ -50,16 +46,15 @@ const NonInjectedInstall: React.FC<Dependencies & Props> = ({
   installFromSelectFileDialog,
   extensionInstallationStateStore,
 }) => (
-  <section className="mt-2">
+  <section>
     <SubTitle
       title={`Name or file path or URL to an extension package (${supportedFormats.join(
         ", ",
       )})`}
     />
-    <div className="flex">
-      <div className="flex-1">
+    <div className={styles.inputs}>
+      <div>
         <Input
-          className="box grow mr-6"
           disabled={
             extensionInstallationStateStore.anyPreInstallingOrInstalling
           }
@@ -69,21 +64,22 @@ const NonInjectedInstall: React.FC<Dependencies & Props> = ({
           value={installPath}
           onChange={onChange}
           onSubmit={installFromInput}
-          iconRight={
+          iconRight={(
             <Icon
               className={styles.icon}
+              smallest
               material="folder_open"
               onClick={prevDefault(installFromSelectFileDialog)}
               tooltip="Browse"
             />
-          }
+          )}
         />
       </div>
-      <div className="flex-initial">
+      <div>
         <Button
+          className={styles.button}
           primary
           label="Install"
-          className="w-80 h-full"
           disabled={
             extensionInstallationStateStore.anyPreInstallingOrInstalling
           }
@@ -92,13 +88,14 @@ const NonInjectedInstall: React.FC<Dependencies & Props> = ({
         />
       </div>
     </div>
-    <small className="mt-3">
-      <b>Pro-Tip</b>: you can drag-n-drop tarball-file to this area
+    <small className={styles.proTip}>
+      <b>Pro-Tip</b>
+      : you can drag-n-drop tarball-file to this area
     </small>
   </section>
 );
 
-export const Install = withInjectables<Dependencies, Props>(
+export const Install = withInjectables<Dependencies, InstallProps>(
   observer(NonInjectedInstall),
   {
     getProps: (di, props) => ({

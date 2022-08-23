@@ -13,11 +13,11 @@ import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 import type { ClusterRole } from "../../../../common/k8s-api/endpoints";
 
-interface Props extends KubeObjectDetailsProps<ClusterRole> {
+export interface ClusterRoleDetailsProps extends KubeObjectDetailsProps<ClusterRole> {
 }
 
 @observer
-export class ClusterRoleDetails extends React.Component<Props> {
+export class ClusterRoleDetails extends React.Component<ClusterRoleDetailsProps> {
   render() {
     const { object: clusterRole } = this.props;
 
@@ -28,7 +28,7 @@ export class ClusterRoleDetails extends React.Component<Props> {
       <div className="ClusterRoleDetails">
         <KubeObjectMeta object={clusterRole}/>
 
-        <DrawerTitle title="Rules"/>
+        <DrawerTitle>Rules</DrawerTitle>
         {rules.map(({ resourceNames, apiGroups, resources, verbs }, index) => {
           return (
             <div className="rule" key={index}>

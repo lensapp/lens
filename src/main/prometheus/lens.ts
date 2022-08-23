@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { PrometheusProvider, PrometheusService } from "./provider-registry";
+import type { PrometheusService } from "./provider-registry";
+import { PrometheusProvider } from "./provider-registry";
 import type { CoreV1Api } from "@kubernetes/client-node";
 import { inspect } from "util";
 

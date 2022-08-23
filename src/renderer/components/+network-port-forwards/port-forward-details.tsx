@@ -7,26 +7,27 @@ import "./port-forward-details.scss";
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { portForwardAddress, PortForwardItem } from "../../port-forward";
+import type { PortForwardItem } from "../../port-forward";
+import { portForwardAddress } from "../../port-forward";
 import { Drawer, DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
-import { podsApi, serviceApi } from "../../../common/k8s-api/endpoints";
+import { podApi, serviceApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 import { PortForwardMenu } from "./port-forward-menu";
 
-interface Props {
+export interface PortForwardDetailsProps {
   portForward: PortForwardItem;
   hideDetails(): void;
 }
 
-export class PortForwardDetails extends React.Component<Props> {
+export class PortForwardDetails extends React.Component<PortForwardDetailsProps> {
 
   renderResourceName() {
     const { portForward } = this.props;
     const name = portForward.getName();
     const api = {
       "service": serviceApi,
-      "pod": podsApi,
+      "pod": podApi,
     }[portForward.kind];
 
     if (!api) {
@@ -76,7 +77,13 @@ export class PortForwardDetails extends React.Component<Props> {
 
   render() {
     const { hideDetails, portForward } = this.props;
-    const toolbar = <PortForwardMenu portForward={portForward} toolbar hideDetails={hideDetails}/>;
+    const toolbar = (
+      <PortForwardMenu
+        portForward={portForward}
+        toolbar
+        hideDetails={hideDetails}
+      />
+    );
 
     return (
       <Drawer

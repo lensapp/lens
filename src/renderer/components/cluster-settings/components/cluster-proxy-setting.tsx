@@ -10,15 +10,15 @@ import type { Cluster } from "../../../../common/cluster/cluster";
 import { Input, InputValidators } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
 
-interface Props {
+export interface ClusterProxySettingProps {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterProxySetting extends React.Component<Props> {
+export class ClusterProxySetting extends React.Component<ClusterProxySettingProps> {
   @observable proxy = "";
 
-  constructor(props: Props) {
+  constructor(props: ClusterProxySettingProps) {
     super(props);
     makeObservable(this);
   }

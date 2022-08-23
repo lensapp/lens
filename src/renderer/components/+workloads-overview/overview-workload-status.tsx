@@ -8,18 +8,24 @@ import "./overview-workload-status.scss";
 import React from "react";
 import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
+import type { DatasetTooltipLabel, PieChartData } from "../chart";
 import { PieChart } from "../chart";
-import { cssVar } from "../../utils";
-import type { ChartData } from "chart.js";
-import { ThemeStore } from "../../theme.store";
+import { cssVar, object } from "../../utils";
+import type { ThemeStore } from "../../themes/store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import themeStoreInjectable from "../../themes/store.injectable";
 
-interface Props {
-  status: Record<string, number>;
+export interface OverviewWorkloadStatusProps {
+  status: Partial<Record<string, number>>;
+}
+
+interface Dependencies {
+  themeStore: ThemeStore;
 }
 
 @observer
-export class OverviewWorkloadStatus extends React.Component<Props> {
-  elem?: HTMLElement;
+class NonInjectedOverviewWorkloadStatus extends React.Component<OverviewWorkloadStatusProps & Dependencies> {
+  private elem: HTMLElement | null = null;
 
   renderChart() {
     if (!this.elem) {
@@ -27,26 +33,28 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
     }
 
     const cssVars = cssVar(this.elem);
-    const chartData: Required<ChartData> = {
+    const chartData: Required<PieChartData> = {
       labels: [],
       datasets: [],
     };
 
-    const statuses = Object.entries(this.props.status).filter(([, val]) => val > 0);
+    const statuses = object.entries(this.props.status).filter(([, val]) => val > 0);
 
     if (statuses.length === 0) {
       chartData.datasets.push({
         data: [1],
-        backgroundColor: [ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor],
+        backgroundColor: [this.props.themeStore.activeTheme.colors.pieChartDefaultColor],
         label: "Empty",
       });
     } else {
       const data: number[] = [];
       const backgroundColor: string[] = [];
+      const tooltipLabels: DatasetTooltipLabel[] = [];
 
       for (const [status, value] of statuses) {
         data.push(value);
         backgroundColor.push(cssVars.get(`--workload-status-${status.toLowerCase()}`).toString());
+        tooltipLabels.push(percent => `${capitalize(status)}: ${percent}`);
         chartData.labels.push(`${capitalize(status)}: ${value}`);
       }
 
@@ -54,6 +62,7 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
         data,
         backgroundColor,
         label: "Status",
+        tooltipLabels,
       });
     }
 
@@ -81,3 +90,10 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
     );
   }
 }
+
+export const OverviewWorkloadStatus = withInjectables<Dependencies, OverviewWorkloadStatusProps>(NonInjectedOverviewWorkloadStatus, {
+  getProps: (di, props) => ({
+    ...props,
+    themeStore: di.inject(themeStoreInjectable),
+  }),
+});

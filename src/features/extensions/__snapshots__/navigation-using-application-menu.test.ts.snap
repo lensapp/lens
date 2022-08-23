@@ -1,0 +1,426 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`extensions - navigation using application menu renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="flex justify-center Welcome align-center"
+        data-testid="welcome-page"
+      >
+        <div
+          data-testid="welcome-banner-container"
+          style="width: 320px;"
+        >
+          <i
+            class="Icon logo svg focusable"
+          >
+            <span
+              class="icon"
+            />
+          </i>
+          <div
+            class="flex justify-center"
+          >
+            <div
+              data-testid="welcome-text-container"
+              style="width: 320px;"
+            >
+              <h2>
+                Welcome to OpenLens!
+              </h2>
+              <p>
+                To get you started we have auto-detected your clusters in your
+                 
+                kubeconfig file and added them to the catalog, your centralized
+                 
+                view for managing all your cloud-native resources.
+                <br />
+                <br />
+                If you have any questions or feedback, please join our 
+                <a
+                  class="link"
+                  href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Lens Community slack channel
+                </a>
+                .
+              </p>
+              <ul
+                class="block"
+                data-testid="welcome-menu-container"
+                style="width: 320px;"
+              >
+                <li
+                  class="flex grid-12"
+                >
+                  <i
+                    class="Icon box col-1 material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
+                  <a
+                    class="box col-10"
+                  >
+                    Browse Clusters in Catalog
+                  </a>
+                  <i
+                    class="Icon box col-1 material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="navigate_next"
+                    >
+                      navigate_next
+                    </span>
+                  </i>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`extensions - navigation using application menu when navigating to extensions using application menu renders 1`] = `
+<div>
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <i
+          class="Icon material interactive focusable"
+          data-testid="home-button"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="home"
+          >
+            home
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-back"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_back"
+          >
+            arrow_back
+          </span>
+        </i>
+        <i
+          class="Icon material interactive disabled focusable"
+          data-testid="history-forward"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_forward"
+          >
+            arrow_forward
+          </span>
+        </i>
+      </div>
+      <div
+        class="items"
+      />
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        class="SettingLayout DropFileInput Extensions"
+        data-testid="extensions-page"
+      >
+        <div
+          class="contentRegion"
+          id="ScrollSpyRoot"
+        >
+          <div
+            class="content"
+          >
+            <section>
+              <h1>
+                Extensions
+              </h1>
+              <div
+                class="notice"
+              >
+                <p>
+                  Add new features via Lens Extensions. Check out the 
+                  <a
+                    href="https://docs.k8slens.dev/main/extensions/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    docs
+                  </a>
+                   and list of 
+                  <a
+                    href="https://github.com/lensapp/lens-extensions/blob/main/README.md"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    available extensions
+                  </a>
+                  .
+                </p>
+              </div>
+              <section>
+                <div
+                  class="SubTitle"
+                >
+                  Name or file path or URL to an extension package (tar, tgz)
+                   
+                </div>
+                <div
+                  class="inputs"
+                >
+                  <div />
+                  <div>
+                    <button
+                      class="Button button primary"
+                      type="button"
+                    >
+                      Install
+                    </button>
+                  </div>
+                </div>
+                <small
+                  class="proTip"
+                >
+                  <b>
+                    Pro-Tip
+                  </b>
+                  : you can drag-n-drop tarball-file to this area
+                </small>
+              </section>
+              <div>
+                <div
+                  class="Spinner singleColor center"
+                />
+              </div>
+            </section>
+          </div>
+          <div
+            class="toolsRegion"
+          >
+            <div
+              class="fixed top-[60px]"
+            >
+              <div>
+                <div
+                  aria-label="Close"
+                  class="closeButton"
+                  role="button"
+                >
+                  <i
+                    class="Icon icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="close"
+                    >
+                      close
+                    </span>
+                  </i>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="esc"
+                >
+                  ESC
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;

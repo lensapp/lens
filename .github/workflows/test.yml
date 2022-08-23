@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04, macos-11, windows-2019]
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - name: Checkout Release from lens
         uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - uses: nick-invision/retry@v2
+      - uses: nick-fields/retry@v2
         name: Install dependencies
         with:
           timeout_minutes: 10
@@ -53,7 +53,7 @@ jobs:
       - run: make build-npm
         name: Generate npm package
 
-      - uses: nick-invision/retry@v2
+      - uses: nick-fields/retry@v2
         name: Build bundled extensions
         with:
           timeout_minutes: 15
@@ -67,9 +67,15 @@ jobs:
       - run: make test-extensions
         name: Run In-tree Extension tests
 
+      - run: make ci-validate-dev
+        if: contains(github.event.pull_request.labels.*.name, 'dependencies')
+        name: Validate dev mode will work
+
       - name: Install integration test dependencies
         id: minikube
-        uses: medyagh/setup-minikube@5a9a7104d7322fa40424de8855c84685e89cefd7
+        uses: medyagh/setup-minikube@master
+        with:
+          minikube-version: latest
         if: runner.os == 'Linux'
 
       - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration

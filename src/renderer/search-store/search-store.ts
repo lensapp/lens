@@ -4,7 +4,7 @@
  */
 
 import { action, computed, observable, makeObservable } from "mobx";
-import { boundMethod } from "../utils";
+import autoBind from "auto-bind";
 
 export class SearchStore {
   /**
@@ -13,6 +13,11 @@ export class SearchStore {
    */
   public static escapeRegex(value?: string): string {
     return value ? value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") : "";
+  }
+
+  constructor() {
+    makeObservable(this);
+    autoBind(this);
   }
 
   /**
@@ -35,10 +40,6 @@ export class SearchStore {
    * @observable
    */
   @observable activeOverlayIndex = -1;
-
-  constructor() {
-    makeObservable(this);
-  }
 
   /**
    * Sets default activeOverlayIndex
@@ -109,12 +110,10 @@ export class SearchStore {
     return prev;
   }
 
-  @boundMethod
   public setNextOverlayActive(): void {
     this.activeOverlayIndex = this.getNextOverlay(true);
   }
 
-  @boundMethod
   public setPrevOverlayActive(): void {
     this.activeOverlayIndex = this.getPrevOverlay(true);
   }
@@ -140,7 +139,6 @@ export class SearchStore {
    * @param line Index of the line where overlay is located
    * @param occurrence Number of the overlay within one line
    */
-  @boundMethod
   public isActiveOverlay(line: number, occurrence: number): boolean {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 

@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { InstallRequestValidated } from "../create-temp-files-and-validate/create-temp-files-and-validate";
-import { Disposer, extractTar, noop } from "../../../../../common/utils";
+import type { Disposer } from "../../../../../common/utils";
+import { extractTar, noop } from "../../../../../common/utils";
 import { extensionDisplayName } from "../../../../../extensions/lens-extension";
 import logger from "../../../../../main/logger";
 import type { ExtensionLoader } from "../../../../../extensions/extension-loader";
@@ -16,9 +17,9 @@ import React from "react";
 import type { ExtensionInstallationStateStore } from "../../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 
 interface Dependencies {
-  extensionLoader: ExtensionLoader
-  getExtensionDestFolder: (name: string) => string
-  extensionInstallationStateStore: ExtensionInstallationStateStore
+  extensionLoader: ExtensionLoader;
+  getExtensionDestFolder: (name: string) => string;
+  extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
 export const unpackExtension =
@@ -74,7 +75,9 @@ export const unpackExtension =
 
         Notifications.ok(
           <p>
-          Extension <b>{displayName}</b> successfully installed!
+            {"Extension "}
+            <b>{displayName}</b>
+            {" successfully installed!"}
           </p>,
         );
       } catch (error) {
@@ -86,7 +89,9 @@ export const unpackExtension =
         );
         Notifications.error(
           <p>
-          Installing extension <b>{displayName}</b> has failed:{" "}
+            {"Installing extension "}
+            <b>{displayName}</b>
+            {" has failed: "}
             <em>{message}</em>
           </p>,
         );

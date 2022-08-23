@@ -10,25 +10,26 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
-import { Dialog, DialogProps } from "../../dialog";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
 import { Input } from "../../input";
 import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { rolesStore } from "./store";
+import { roleStore } from "./legacy-store";
 
-interface Props extends Partial<DialogProps> {
+export interface AddRoleDialogProps extends Partial<DialogProps> {
 }
 
 @observer
-export class AddRoleDialog extends React.Component<Props> {
+export class AddRoleDialog extends React.Component<AddRoleDialogProps> {
   static isOpen = observable.box(false);
 
   @observable roleName = "";
   @observable namespace = "";
 
-  constructor(props: Props) {
+  constructor(props: AddRoleDialogProps) {
     super(props);
     makeObservable(this);
   }
@@ -48,13 +49,13 @@ export class AddRoleDialog extends React.Component<Props> {
 
   createRole = async () => {
     try {
-      const role = await rolesStore.create({ name: this.roleName, namespace: this.namespace });
+      const role = await roleStore.create({ name: this.roleName, namespace: this.namespace });
 
       showDetails(role.selfLink);
       this.reset();
       AddRoleDialog.close();
     } catch (err) {
-      Notifications.error(err.toString());
+      Notifications.checkedError(err, "Unknown error occured while creating role");
     }
   };
 
@@ -77,7 +78,8 @@ export class AddRoleDialog extends React.Component<Props> {
           >
             <SubTitle title="Role Name" />
             <Input
-              required autoFocus
+              required
+              autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"
               value={this.roleName}
@@ -85,9 +87,10 @@ export class AddRoleDialog extends React.Component<Props> {
             />
             <SubTitle title="Namespace" />
             <NamespaceSelect
+              id="add-dialog-namespace-select-input"
               lightTheme
               value={this.namespace}
-              onChange={({ value }) => this.namespace = value}
+              onChange={option => this.namespace = option?.value ?? "default"}
             />
           </WizardStep>
         </Wizard>

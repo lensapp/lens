@@ -7,18 +7,20 @@ import treeStyles from "./catalog-tree.module.scss";
 import styles from "./catalog-menu.module.scss";
 
 import React from "react";
-import { TreeItem, TreeItemProps, TreeView } from "@material-ui/lab";
+import type { TreeItemProps } from "@material-ui/lab";
+import { TreeItem, TreeView } from "@material-ui/lab";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";
 import { cssNames } from "../../utils";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
+import { CatalogCategoryLabel } from "./catalog-category-label";
 
-type Props = {
-  activeItem: string;
+export interface CatalogMenuProps {
+  activeTab: string | undefined;
   onItemClick: (id: string) => void;
-};
+}
 
 function getCategories() {
   return catalogCategoryRegistry.filteredItems;
@@ -28,7 +30,7 @@ function getCategoryIcon(category: CatalogCategory) {
   const { icon } = category.metadata ?? {};
 
   if (typeof icon === "string") {
-    return icon.includes("<svg")
+    return Icon.isSvg(icon)
       ? <Icon small svg={icon}/>
       : <Icon small material={icon}/>;
   }
@@ -42,7 +44,7 @@ function Item(props: TreeItemProps) {
   );
 }
 
-export const CatalogMenu = observer((props: Props) => {
+export const CatalogMenu = observer((props: CatalogMenuProps) => {
   return (
     // Overwrite Material UI styles with injectFirst https://material-ui.com/guides/interoperability/#controlling-priority-4
     <StylesProvider injectFirst>
@@ -52,9 +54,14 @@ export const CatalogMenu = observer((props: Props) => {
           defaultExpanded={["catalog"]}
           defaultCollapseIcon={<Icon material="expand_more"/>}
           defaultExpandIcon={<Icon material="chevron_right" />}
-          selected={props.activeItem || "browse"}
+          selected={props.activeTab || "browse"}
         >
-          <Item nodeId="browse" label="Browse" data-testid="*-tab" onClick={() => props.onItemClick("*")}/>
+          <Item
+            nodeId="browse"
+            label="Browse"
+            data-testid="*-tab"
+            onClick={() => props.onItemClick("*")}
+          />
           <Item
             nodeId="catalog"
             label={<div className={styles.parent}>Categories</div>}
@@ -66,7 +73,7 @@ export const CatalogMenu = observer((props: Props) => {
                   icon={getCategoryIcon(category)}
                   key={category.getId()}
                   nodeId={category.getId()}
-                  label={category.metadata.name}
+                  label={<CatalogCategoryLabel category={category}/>}
                   data-testid={`${category.getId()}-tab`}
                   onClick={() => props.onItemClick(category.getId())}
                 />

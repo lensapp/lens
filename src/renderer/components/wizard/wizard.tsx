@@ -12,7 +12,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
 import { debounce } from "lodash";
 
-interface WizardCommonProps<D = any> {
+export interface WizardCommonProps<D> {
   data?: Partial<D>;
   save?: (data: Partial<D>, callback?: () => void) => void;
   reset?: () => void;
@@ -20,43 +20,44 @@ interface WizardCommonProps<D = any> {
   hideSteps?: boolean;
 }
 
-export interface WizardProps extends WizardCommonProps {
+export interface WizardProps<D> extends WizardCommonProps<D> {
   className?: string;
   step?: number;
   title?: string;
   header?: React.ReactNode;
   onChange?: (step: number) => void;
+  children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
 
 interface State {
-  step?: number;
+  step: number;
 }
 
-export class Wizard extends React.Component<WizardProps, State> {
+export class Wizard<D> extends React.Component<WizardProps<D>, State> {
   public state: State = {
-    step: this.getValidStep(this.props.step),
+    step: this.getValidStep(this.props.step ?? 0),
   };
 
-  get steps() {
+  get steps(): React.ReactElement<WizardStepProps<D>>[] {
     const { className, title, step, header, onChange, children, ...commonProps } = this.props;
-    const steps = React.Children.toArray(children) as WizardStepElem[];
+    const steps = React.Children.toArray(children) as React.ReactElement<WizardStepProps<D>>[];
 
-    return steps.filter(step => !step.props.skip).map((stepElem, i) => {
-      const stepProps = stepElem.props;
-
-      return React.cloneElement(stepElem, {
-        step: i + 1,
-        wizard: this,
-        next: this.nextStep,
-        prev: this.prevStep,
-        first: this.firstStep,
-        last: this.lastStep,
-        isFirst: this.isFirstStep,
-        isLast: this.isLastStep,
-        ...commonProps,
-        ...stepProps,
-      } as WizardStepProps<any>);
-    });
+    return steps
+      .filter(step => !step.props.skip)
+      .map((stepElem, i) => (
+        React.cloneElement(stepElem, {
+          step: i + 1,
+          wizard: this,
+          next: this.nextStep,
+          prev: this.prevStep,
+          first: this.firstStep,
+          last: this.lastStep,
+          isFirst: this.isFirstStep,
+          isLast: this.isLastStep,
+          ...commonProps,
+          ...stepElem.props,
+        })
+      ));
   }
 
   get step() {
@@ -68,9 +69,7 @@ export class Wizard extends React.Component<WizardProps, State> {
     if (step === this.step) return;
 
     this.setState({ step }, () => {
-      if (this.props.onChange) {
-        this.props.onChange(step);
-      }
+      this.props.onChange?.(step);
     });
   }
 
@@ -94,8 +93,8 @@ export class Wizard extends React.Component<WizardProps, State> {
       <div className={cssNames("Wizard", className)}>
         <div className="header">
           {header}
-          {title ? <SubTitle title={title}/> : null}
-          {!hideSteps && steps.length > 1 ? <Stepper steps={steps} step={this.step}/> : null}
+          {title ? <SubTitle title={title} /> : null}
+          {!hideSteps && steps.length > 1 ? <Stepper steps={steps} step={this.step} /> : null}
         </div>
         {step}
       </div>
@@ -103,8 +102,8 @@ export class Wizard extends React.Component<WizardProps, State> {
   }
 }
 
-export interface WizardStepProps<D = any> extends WizardCommonProps<D> {
-  wizard?: Wizard;
+export interface WizardStepProps<D> extends WizardCommonProps<D> {
+  wizard?: Wizard<D>;
   title?: string;
   className?: string | object;
   contentClass?: string | object;
@@ -129,20 +128,21 @@ export interface WizardStepProps<D = any> extends WizardCommonProps<D> {
   noValidate?: boolean; // no validate form attribute
   skip?: boolean; // don't render the step
   scrollable?: boolean;
+  children?: React.ReactNode | React.ReactNode[];
+  testIdForNext?: string;
+  testIdForPrev?: string;
 }
 
 interface WizardStepState {
   waiting?: boolean;
 }
 
-type WizardStepElem = React.ReactElement<WizardStepProps>;
-
-export class WizardStep extends React.Component<WizardStepProps, WizardStepState> {
-  private form: HTMLFormElement;
+export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardStepState> {
+  private form: HTMLFormElement | null = null;
   public state: WizardStepState = {};
   private unmounting = false;
 
-  static defaultProps: WizardStepProps = {
+  static defaultProps: WizardStepProps<any> = {
     scrollable: true,
   };
 
@@ -153,16 +153,16 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
   prev = () => {
     const { isFirst, prev, done } = this.props;
 
-    if (isFirst() && done) done();
-    else prev();
+    if (isFirst?.() && done) done();
+    else prev?.();
   };
 
   next = () => {
     const next = this.props.next;
-    const nextStep = this.props.wizard.nextStep;
+    const nextStep = this.props.wizard?.nextStep;
 
     if (nextStep !== next) {
-      const result = next();
+      const result = next?.();
 
       if (result instanceof Promise) {
         this.setState({ waiting: true });
@@ -172,29 +172,30 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
         });
       }
       else if (typeof result === "boolean" && result) {
-        nextStep();
+        nextStep?.();
       }
     }
     else {
-      nextStep();
+      nextStep?.();
     }
   };
 
   //because submit MIGHT be called through pressing enter, it might be fired twice.
   //we'll debounce it to ensure it isn't
   submit = debounce(() => {
-    if (!this.form.noValidate) {
-      const valid = this.form.checkValidity();
-
-      if (!valid) return;
+    if (!this.form) {
+      return;
     }
-    this.next();
+
+    if (this.form.noValidate || this.form.checkValidity()) {
+      this.next();
+    }
   }, 100);
 
   renderLoading() {
     return (
       <div className="step-loading flex center">
-        <Spinner/>
+        <Spinner />
       </div>
     );
   }
@@ -215,39 +216,44 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
       step, isFirst, isLast, children,
       loading, customButtons, disabledNext, scrollable,
       hideNextBtn, hideBackBtn, beforeContent, afterContent, noValidate, skip, moreButtons,
+      waiting, className, contentClass, prevLabel, nextLabel, testIdForNext, testIdForPrev,
     } = this.props;
-    let { className, contentClass, nextLabel, prevLabel, waiting } = this.props;
 
     if (skip) {
       return null;
     }
-    waiting = (waiting !== undefined) ? waiting : this.state.waiting;
-    className = cssNames(`WizardStep step${step}`, className);
-    contentClass = cssNames("step-content", { scrollable }, contentClass);
-    prevLabel = prevLabel || (isFirst() ? "Cancel" : "Back");
-    nextLabel = nextLabel || (isLast() ? "Submit" : "Next");
 
     return (
-      <form className={className}
-        onSubmit={prevDefault(this.submit)} noValidate={noValidate}
+      <form
+        className={cssNames(`WizardStep step${step}`, className)}
+        onSubmit={prevDefault(this.submit)}
+        noValidate={noValidate}
         onKeyDown={(evt) => this.keyDown(evt)}
-        ref={e => this.form = e}>
+        ref={e => this.form = e}
+      >
         {beforeContent}
-        <div className={contentClass}>
+        <div className={cssNames("step-content", { scrollable }, contentClass)}>
           {loading ? this.renderLoading() : children}
         </div>
-        {customButtons !== undefined ? customButtons : (
+        {customButtons ?? (
           <div className="buttons flex gaps align-center">
             {moreButtons}
             <Button
               className="back-btn"
-              plain label={prevLabel} hidden={hideBackBtn}
+              plain
+              label={prevLabel || (isFirst?.() ? "Cancel" : "Back")}
+              hidden={hideBackBtn}
               onClick={this.prev}
+              data-testid={testIdForPrev}
             />
             <Button
-              primary type="submit"
-              label={nextLabel} hidden={hideNextBtn}
-              waiting={waiting} disabled={disabledNext}
+              primary
+              type="submit"
+              label={nextLabel || (isLast?.() ? "Submit" : "Next")}
+              hidden={hideNextBtn}
+              waiting={waiting ?? this.state.waiting}
+              disabled={disabledNext}
+              data-testid={testIdForNext}
             />
           </div>
         )}

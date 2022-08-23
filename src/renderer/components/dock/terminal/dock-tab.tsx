@@ -3,10 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import "./terminal-dock-tab.scss";
 import React from "react";
-import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../../utils";
-import { DockTab, DockTabProps } from "../dock-tab";
+import { disposeOnUnmount, observer } from "mobx-react";
+import { autoBind, cssNames } from "../../../utils";
+import type { DockTabProps } from "../dock-tab";
+import { DockTab } from "../dock-tab";
 import { Icon } from "../../icon";
 import type { TerminalStore } from "./store";
 import type { DockStore } from "../dock/store";
@@ -15,37 +17,56 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "../dock/store.injectable";
 import terminalStoreInjectable from "./store.injectable";
 
-interface Props extends DockTabProps {
+export interface TerminalTabProps extends DockTabProps {
 }
 
 interface Dependencies {
-  dockStore: DockStore
-  terminalStore: TerminalStore
+  dockStore: DockStore;
+  terminalStore: TerminalStore;
 }
 
 @observer
-class NonInjectedTerminalTab extends React.Component<Props & Dependencies> {
+class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    autoBind(this);
+  }
+
   componentDidMount() {
-    reaction(() => this.isDisconnected === true, () => {
-      this.props.dockStore.closeTab(this.tabId);
-    });
+    disposeOnUnmount(this, [
+      reaction(() => this.isDisconnected, this.close),
+    ]);
   }
 
-  get tabId() {
-    return this.props.value.id;
+  private close() {
+    const { tabId } = this;
+
+    if (tabId) {
+      this.props.dockStore.closeTab(tabId);
+    }
   }
 
-  get isDisconnected() {
-    return this.props.terminalStore.isDisconnected(this.tabId);
+  private get tabId() {
+    return this.props.value?.id;
   }
 
-  @boundMethod
-  reconnect() {
-    this.props.terminalStore.reconnect(this.tabId);
+  private get isDisconnected() {
+    const { tabId } = this;
+
+    return tabId
+      ? this.props.terminalStore.isDisconnected(tabId)
+      : false;
+  }
+
+  private reconnect() {
+    const { tabId } = this;
+
+    if (tabId) {
+      this.props.terminalStore.reconnect(tabId);
+    }
   }
 
   render() {
-    const tabIcon = <Icon svg="terminal"/>;
     const className = cssNames("TerminalTab", this.props.className, {
       disconnected: this.isDisconnected,
     });
@@ -56,7 +77,7 @@ class NonInjectedTerminalTab extends React.Component<Props & Dependencies> {
       <DockTab
         {...tabProps}
         className={className}
-        icon={tabIcon}
+        icon={<Icon material="terminal" />}
         moreActions={this.isDisconnected && (
           <Icon
             small
@@ -71,7 +92,7 @@ class NonInjectedTerminalTab extends React.Component<Props & Dependencies> {
   }
 }
 
-export const TerminalTab = withInjectables<Dependencies, Props>(NonInjectedTerminalTab, {
+export const TerminalTab = withInjectables<Dependencies, TerminalTabProps>(NonInjectedTerminalTab, {
   getProps: (di, props) => ({
     dockStore: di.inject(dockStoreInjectable),
     terminalStore: di.inject(terminalStoreInjectable),

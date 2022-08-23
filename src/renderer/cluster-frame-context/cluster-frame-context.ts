@@ -4,12 +4,12 @@
  */
 
 import type { Cluster } from "../../common/cluster/cluster";
-import type { NamespaceStore } from "../components/+namespaces/namespace-store/namespace.store";
+import type { NamespaceStore } from "../components/+namespaces/store";
 import type { ClusterContext } from "../../common/k8s-api/cluster-context";
 import { computed, makeObservable } from "mobx";
 
 interface Dependencies {
-  namespaceStore: NamespaceStore
+  namespaceStore: NamespaceStore;
 }
 
 export class ClusterFrameContext implements ClusterContext {

@@ -63,7 +63,8 @@ class NonInjectedWeblinkAddCommand extends React.Component<Dependencies> {
           value={this.url}
           onChange={(v) => this.onChangeUrl(v)}
           onSubmit={(v) => this.onSubmitUrl(v)}
-          showValidationLine={true} />
+          showValidationLine={true} 
+        />
         { this.nameHidden && (
           <small className="hint">
             Please provide a web link URL (Press &quot;Enter&quot; to continue or &quot;Escape&quot; to cancel)
@@ -76,7 +77,8 @@ class NonInjectedWeblinkAddCommand extends React.Component<Dependencies> {
               autoFocus={true}
               data-test-id="command-palette-weblink-add-name"
               onSubmit={(v) => this.onSubmit(v)}
-              dirty={true}/>
+              dirty={true}
+            />
             <small className="hint">
               Please provide a name for the web link (Press &quot;Enter&quot; to confirm or &quot;Escape&quot; to cancel)
             </small>

@@ -7,9 +7,15 @@ import "./kube-object-status-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames, formatDuration } from "../../utils";
-import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
-import { KubeObjectStatusRegistry } from "../../../extensions/registries";
+import { cssNames, formatDuration, getOrInsert, isDefined } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import kubeObjectStatusTextsForObjectInjectable from "./kube-object-status-texts-for-object.injectable";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-status";
+import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
+import type { IComputedValue } from "mobx";
+import { observer } from "mobx-react";
+import type { KubeObjectStatusText } from "./kube-object-status-text-injection-token";
 
 function statusClassName(level: KubeObjectStatusLevel): string {
   switch (level) {
@@ -33,14 +39,14 @@ function statusTitle(level: KubeObjectStatusLevel): string {
   }
 }
 
-function getAge(timestamp: string) {
+function getAge(timestamp: string | undefined) {
   return timestamp
     ? formatDuration(Date.now() - new Date(timestamp).getTime(), true)
     : "";
 }
 
 interface SplitStatusesByLevel {
-  maxLevel: string,
+  maxLevel: string;
   criticals: KubeObjectStatus[];
   warnings: KubeObjectStatus[];
   infos: KubeObjectStatus[];
@@ -49,26 +55,35 @@ interface SplitStatusesByLevel {
 /**
  * This function returns the class level for corresponding to the highest status level
  * and the statuses split by their levels.
- * @param src a list of status items
+ * @param statuses a list of status items
  */
-function splitByLevel(src: KubeObjectStatus[]): SplitStatusesByLevel {
-  const parts = new Map(Object.values(KubeObjectStatusLevel).map(v => [v, []]));
+function splitByLevel(statuses: KubeObjectStatus[]): SplitStatusesByLevel {
+  const parts = new Map<KubeObjectStatusLevel, KubeObjectStatus[]>();
 
-  src.forEach(status => parts.get(status.level).push(status));
+  for (const status of statuses) {
+    const part = getOrInsert(parts, status.level, []);
 
-  const criticals = parts.get(KubeObjectStatusLevel.CRITICAL);
-  const warnings = parts.get(KubeObjectStatusLevel.WARNING);
-  const infos = parts.get(KubeObjectStatusLevel.INFO);
+    part.push(status);
+  }
+
+  const criticals = parts.get(KubeObjectStatusLevel.CRITICAL) ?? [];
+  const warnings = parts.get(KubeObjectStatusLevel.WARNING) ?? [];
+  const infos = parts.get(KubeObjectStatusLevel.INFO) ?? [];
   const maxLevel = statusClassName(criticals[0]?.level ?? warnings[0]?.level ?? infos[0].level);
 
   return { maxLevel, criticals, warnings, infos };
 }
 
-interface Props {
+export interface KubeObjectStatusIconProps {
   object: KubeObject;
 }
 
-export class KubeObjectStatusIcon extends React.Component<Props> {
+interface Dependencies {
+  statuses: IComputedValue<KubeObjectStatusText[]>;
+}
+
+@observer
+class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIconProps & Dependencies> {
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
     const filteredStatuses = statuses.filter((item) => item.level == level);
 
@@ -80,7 +95,11 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
         {
           filteredStatuses.map((status, index) => (
             <div key={`kube-resource-status-${level}-${index}`} className={cssNames("status", "msg")}>
-              - {status.text} <span className="age"> · {getAge(status.timestamp)}</span>
+              {`- ${status.text} `}
+              <span className="age">
+                {" . "}
+                {getAge(status.timestamp)}
+              </span>
             </div>
           ))
         }
@@ -89,7 +108,11 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
   }
 
   render() {
-    const statuses = KubeObjectStatusRegistry.getInstance().getItemsForObject(this.props.object);
+    const statusTexts = this.props.statuses.get();
+
+    const statuses = statusTexts
+      .map((statusText) => statusText.resolve(this.props.object))
+      .filter(isDefined);
 
     if (statuses.length === 0) {
       return null;
@@ -101,6 +124,7 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
       <Icon
         material={maxLevel}
         className={cssNames("KubeObjectStatusIcon", maxLevel)}
+        data-testid={`kube-object-status-icon-for-${this.props.object.getId()}`}
         tooltip={{
           children: (
             <div className="KubeObjectStatusTooltip">
@@ -114,3 +138,14 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
     );
   }
 }
+
+export const KubeObjectStatusIcon = withInjectables<Dependencies, KubeObjectStatusIconProps>(
+  NonInjectedKubeObjectStatusIcon,
+
+  {
+    getProps: (di, props) => ({
+      statuses: di.inject(kubeObjectStatusTextsForObjectInjectable, props.object),
+      ...props,
+    }),
+  },
+);

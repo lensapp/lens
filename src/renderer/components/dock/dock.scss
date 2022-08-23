@@ -34,7 +34,9 @@
     height: auto !important;
 
     .Tab {
-      --color-active: inherit;
+      --color-active: var(--colorVague);
+      --color-text-active: inherit;
+      --color-border-active: transparent;
 
       &:not(:focus):after {
         display: none;
@@ -55,6 +57,10 @@
       min-height: $unit * 4;
       padding-left: $padding;
       user-select: none;
+
+      &.pl-0 {
+        padding-left: 0;
+      }
     }
   }
 
@@ -63,6 +69,7 @@
     flex: 1;
     overflow: hidden;
     transition: flex-basis 25ms ease-in;
+    background: var(--dockInfoBackground);
 
     &.terminal {
       background: var(--terminalBackground);

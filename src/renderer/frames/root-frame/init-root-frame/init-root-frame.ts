@@ -4,15 +4,16 @@
  */
 import { delay } from "../../../../common/utils";
 import { broadcastMessage } from "../../../../common/ipc";
-import { registerIpcListeners } from "../../../ipc/register-listeners";
 import logger from "../../../../common/logger";
-import { unmountComponentAtNode } from "react-dom";
 import type { ExtensionLoading } from "../../../../extensions/extension-loader";
-import type { CatalogEntityRegistry } from "../../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import { bundledExtensionsLoaded } from "../../../../common/ipc/extension-handling";
+
 
 interface Dependencies {
   loadExtensions: () => Promise<ExtensionLoading[]>;
+
+  registerIpcListeners: () => void;
 
   // TODO: Move usages of third party library behind abstraction
   ipcRenderer: { send: (name: string) => void };
@@ -31,10 +32,10 @@ export const initRootFrame =
     bindProtocolAddRouteHandlers,
     lensProtocolRouterRenderer,
     ipcRenderer,
-
+    registerIpcListeners,
     catalogEntityRegistry,
   }: Dependencies) =>
-    async (rootElem: HTMLElement) => {
+    async (unmountRoot: () => void) => {
       catalogEntityRegistry.init();
 
       try {
@@ -69,6 +70,6 @@ export const initRootFrame =
       window.addEventListener("beforeunload", () => {
         logger.info(`${logPrefix} Unload app`);
 
-        unmountComponentAtNode(rootElem);
+        unmountRoot();
       });
     };

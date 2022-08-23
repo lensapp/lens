@@ -5,20 +5,22 @@
 
 import "./item-list-layout.scss";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
-import type { ItemObject, ItemStore } from "../../../common/item.store";
-import type { Filter } from "./page-filters.store";
-import type { HeaderCustomizer, HeaderPlaceholders, SearchFilter } from "./list-layout";
+import type { IClassName } from "../../utils";
+import { cssNames, isDefined } from "../../utils";
+import type { ItemObject } from "../../../common/item.store";
+import type { Filter } from "./page-filters/store";
+import type { HeaderCustomizer, HeaderPlaceholders, ItemListStore, SearchFilter } from "./list-layout";
 import { SearchInputUrl } from "../input";
 
-export interface ItemListLayoutHeaderProps<I extends ItemObject> {
+export interface ItemListLayoutHeaderProps<I extends ItemObject, PreLoadStores extends boolean> {
   getItems: () => I[];
   getFilters: () => Filter[];
   toggleFilters: () => void;
 
-  store: ItemStore<I>;
+  store: ItemListStore<I, PreLoadStores>;
   searchFilters?: SearchFilter<I>[];
 
   // header (title, filtering, searching, etc.)
@@ -26,21 +28,19 @@ export interface ItemListLayoutHeaderProps<I extends ItemObject> {
   headerClassName?: IClassName;
   renderHeaderTitle?:
     | ReactNode
-    | ((parent: ItemListLayoutHeader<I>) => ReactNode);
+    | (() => ReactNode);
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 }
 
 @observer
-export class ItemListLayoutHeader<I extends ItemObject> extends React.Component<
-  ItemListLayoutHeaderProps<I>
-> {
+export class ItemListLayoutHeader<I extends ItemObject, PreLoadStores extends boolean> extends React.Component<ItemListLayoutHeaderProps<I, PreLoadStores>> {
   render() {
     const {
       showHeader,
       customizeHeader,
       renderHeaderTitle,
       headerClassName,
-      searchFilters,
+      searchFilters = [],
       getItems,
       store,
       getFilters,
@@ -58,7 +58,8 @@ export class ItemListLayoutHeader<I extends ItemObject> extends React.Component<
       if (getFilters().length > 0) {
         return (
           <>
-            <a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}
+            <a onClick={toggleFilters}>Filtered</a>
+            {`: ${itemsCount} / ${allItemsCount}`}
           </>
         );
       }
@@ -68,9 +69,9 @@ export class ItemListLayoutHeader<I extends ItemObject> extends React.Component<
         : `${allItemsCount} items`;
     };
 
-    const customizeHeaderFunctions = [customizeHeader].flat().filter(Boolean);
+    const customizeHeaderFunctions = [customizeHeader].flat().filter(isDefined);
     const renderedTitle = typeof renderHeaderTitle === "function"
-      ? renderHeaderTitle(this)
+      ? renderHeaderTitle()
       : renderHeaderTitle;
 
     const {

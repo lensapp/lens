@@ -4,22 +4,30 @@
  */
 
 import React from "react";
-import { portForwardsURL } from "../../common/routes/port-forwards";
 import { Button } from "../components/button";
-import { Notifications, notificationsStore } from "../components/notifications";
-import { navigate } from "../navigation";
-import { getHostedClusterId } from "../utils";
+import { Notifications } from "../components/notifications";
+import type { NavigateToPortForwards } from "../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
+import type { NotificationsStore } from "../components/notifications/notifications.store";
 
+interface AboutPortForwardingDependencies {
+  navigateToPortForwards: NavigateToPortForwards;
+  hostedClusterId: string;
+  notificationsStore: NotificationsStore;
+}
 
-export function aboutPortForwarding() {
-  const notificationId = `port-forward-notification-${getHostedClusterId()}`;
+export const aboutPortForwarding = ({
+  navigateToPortForwards,
+  hostedClusterId,
+  notificationsStore,
+}: AboutPortForwardingDependencies) => () => {
+  const notificationId = `port-forward-notification-${hostedClusterId}`;
 
   Notifications.info(
     (
       <div className="flex column gaps">
         <b>Port Forwarding</b>
         <p>
-            You can manage your port forwards on the Port Forwarding Page.
+          You can manage your port forwards on the Port Forwarding Page.
         </p>
         <div className="flex gaps row align-left box grow">
           <Button
@@ -27,7 +35,7 @@ export function aboutPortForwarding() {
             outlined
             label="Go to Port Forwarding"
             onClick={() => {
-              navigate(portForwardsURL());
+              navigateToPortForwards();
               notificationsStore.remove(notificationId);
             }}
           />
@@ -39,10 +47,21 @@ export function aboutPortForwarding() {
       timeout: 10_000,
     },
   );
+};
+
+interface NotifyErrorPortForwardingDependencies {
+  navigateToPortForwards: NavigateToPortForwards;
+  hostedClusterId: string;
+  notificationsStore: NotificationsStore;
 }
 
-export function notifyErrorPortForwarding(msg: string) {
-  const notificationId = `port-forward-error-notification-${getHostedClusterId()}`;
+
+export const notifyErrorPortForwarding = ({
+  navigateToPortForwards,
+  hostedClusterId,
+  notificationsStore,
+}: NotifyErrorPortForwardingDependencies) => (msg: string) => {
+  const notificationId = `port-forward-error-notification-${hostedClusterId}`;
 
   Notifications.error(
     (
@@ -57,7 +76,7 @@ export function notifyErrorPortForwarding(msg: string) {
             outlined
             label="Check Port Forwarding"
             onClick={() => {
-              navigate(portForwardsURL());
+              navigateToPortForwards();
               notificationsStore.remove(notificationId);
             }}
           />
@@ -69,5 +88,5 @@ export function notifyErrorPortForwarding(msg: string) {
       timeout: 10_000,
     },
   );
-}
+};
 

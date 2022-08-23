@@ -9,26 +9,32 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
-import type { ClusterRoleBinding, ClusterRoleBindingSubject } from "../../../../common/k8s-api/endpoints";
+import type { ClusterRoleBinding } from "../../../../common/k8s-api/endpoints";
 import { autoBind, ObservableHashSet, prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
-import { ConfirmDialog } from "../../confirm-dialog";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingsStore } from "./store";
-import { hashClusterRoleBindingSubject } from "./hashers";
+import { clusterRoleBindingStore } from "./legacy-store";
+import { hashSubject } from "../hashers";
+import type { OpenConfirmDialog } from "../../confirm-dialog/open.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import openConfirmDialogInjectable from "../../confirm-dialog/open.injectable";
 
-interface Props extends KubeObjectDetailsProps<ClusterRoleBinding> {
+export interface ClusterRoleBindingDetailsProps extends KubeObjectDetailsProps<ClusterRoleBinding> {
+}
+
+interface Dependencies {
+  openConfirmDialog: OpenConfirmDialog;
 }
 
 @observer
-export class ClusterRoleBindingDetails extends React.Component<Props> {
-  selectedSubjects = new ObservableHashSet<ClusterRoleBindingSubject>([], hashClusterRoleBindingSubject);
+class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBindingDetailsProps & Dependencies> {
+  selectedSubjects = new ObservableHashSet([], hashSubject);
 
-  constructor(props: Props) {
+  constructor(props: ClusterRoleBindingDetailsProps & Dependencies) {
     super(props);
     autoBind(this);
   }
@@ -42,14 +48,18 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
   }
 
   removeSelectedSubjects() {
-    const { object: clusterRoleBinding } = this.props;
+    const { object: clusterRoleBinding, openConfirmDialog } = this.props;
     const { selectedSubjects } = this;
 
-    ConfirmDialog.open({
-      ok: () => clusterRoleBindingsStore.removeSubjects(clusterRoleBinding, selectedSubjects),
+    openConfirmDialog({
+      ok: () => clusterRoleBindingStore.removeSubjects(clusterRoleBinding, selectedSubjects),
       labelOk: `Remove`,
       message: (
-        <p>Remove selected bindings for <b>{clusterRoleBinding.getName()}</b>?</p>
+        <p>
+          Remove selected bindings for
+          <b>{clusterRoleBinding.getName()}</b>
+          ?
+        </p>
       ),
     });
   }
@@ -68,7 +78,7 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
       <div className="ClusterRoleBindingDetails">
         <KubeObjectMeta object={clusterRoleBinding} />
 
-        <DrawerTitle title="Reference" />
+        <DrawerTitle>Reference</DrawerTitle>
         <Table>
           <TableHead>
             <TableCell>Kind</TableCell>
@@ -82,7 +92,7 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
           </TableRow>
         </Table>
 
-        <DrawerTitle title="Bindings" />
+        <DrawerTitle>Bindings</DrawerTitle>
         {subjects.length > 0 && (
           <Table selectable className="bindings box grow">
             <TableHead>
@@ -115,7 +125,7 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
 
         <AddRemoveButtons
           onAdd={() => ClusterRoleBindingDialog.open(clusterRoleBinding)}
-          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : null}
+          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : undefined}
           addTooltip={`Add bindings to ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
         />
@@ -123,3 +133,10 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
     );
   }
 }
+
+export const ClusterRoleBindingDetails = withInjectables<Dependencies, ClusterRoleBindingDetailsProps>(NonInjectedClusterRoleBindingDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    openConfirmDialog: di.inject(openConfirmDialogInjectable),
+  }),
+});

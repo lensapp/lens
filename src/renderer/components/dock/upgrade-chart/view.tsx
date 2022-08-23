@@ -15,15 +15,19 @@ import type { UpgradeChartTabStore } from "./store";
 import { Spinner } from "../../spinner";
 import { Badge } from "../../badge";
 import { EditorPanel } from "../editor-panel";
-import { helmChartStore, IChartVersion } from "../../+apps-helm-charts/helm-chart.store";
-import type { HelmRelease, IReleaseUpdateDetails, IReleaseUpdatePayload } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import { Select, SelectOption } from "../../select";
-import { IAsyncComputed, withInjectables } from "@ogre-tools/injectable-react";
+import { helmChartStore, type ChartVersion } from "../../+helm-charts/helm-chart.store";
+import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
+import type { SelectOption } from "../../select";
+import { Select } from "../../select";
+import type { IAsyncComputed } from "@ogre-tools/injectable-react";
+import { withInjectables } from "@ogre-tools/injectable-react";
 import upgradeChartTabStoreInjectable from "./store.injectable";
-import updateReleaseInjectable from "../../+apps-releases/update-release/update-release.injectable";
-import releasesInjectable from "../../+apps-releases/releases.injectable";
+import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
+import releasesInjectable from "../../+helm-releases/releases.injectable";
+import type { CallForHelmReleaseUpdate } from "../../+helm-releases/update-release/call-for-helm-release-update/call-for-helm-release-update.injectable";
+import { first } from "lodash/fp";
 
-interface Props {
+export interface UpgradeChartProps {
   className?: string;
   tab: DockTab;
 }
@@ -31,16 +35,16 @@ interface Props {
 interface Dependencies {
   releases: IAsyncComputed<HelmRelease[]>;
   upgradeChartTabStore: UpgradeChartTabStore;
-  updateRelease: (name: string, namespace: string, payload: IReleaseUpdatePayload) => Promise<IReleaseUpdateDetails>;
+  updateRelease: CallForHelmReleaseUpdate;
 }
 
 @observer
-export class NonInjectedUpgradeChart extends React.Component<Props & Dependencies> {
-  @observable error: string;
-  @observable versions = observable.array<IChartVersion>();
-  @observable version: IChartVersion;
+export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps & Dependencies> {
+  @observable error?: string;
+  @observable versions = observable.array<ChartVersion>();
+  @observable version: ChartVersion | undefined = undefined;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: UpgradeChartProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -68,7 +72,7 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
     return this.props.tab.id;
   }
 
-  get release(): HelmRelease {
+  get release() {
     const tabData = this.props.upgradeChartTabStore.getData(this.tabId);
 
     if (!tabData) return null;
@@ -84,17 +88,17 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
     this.props.upgradeChartTabStore.reloadValues(this.props.tab.id);
   }
 
-  async reloadVersions(release: HelmRelease) {
+  async reloadVersions(release: HelmRelease | null | undefined) {
     if (!release) {
       return;
     }
 
-    this.version = null;
+    this.version = undefined;
     this.versions.clear();
-    const versions = await helmChartStore.getVersions(this.release.getChart());
+    const versions = await helmChartStore.getVersions(release.getChart());
 
     this.versions.replace(versions);
-    this.version = this.versions[0];
+    this.version = first(this.versions);
   }
 
   onChange = action((value: string) => {
@@ -107,7 +111,10 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
   });
 
   upgrade = async () => {
-    if (this.error) return null;
+    if (this.error || !this.release || !this.version || !this.value) {
+      return null;
+    }
+
     const { version, repo } = this.version;
     const releaseName = this.release.getName();
     const releaseNs = this.release.getNs();
@@ -120,16 +127,12 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
 
     return (
       <p>
-        Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b>
+        {"Release "}
+        <b>{releaseName}</b>
+        {" successfully upgraded to version "}
+        <b>{version}</b>
       </p>
     );
-  };
-
-  formatVersionLabel = ({ value }: SelectOption<IChartVersion>) => {
-    const chartName = this.release.getChart();
-    const { repo, version } = value;
-
-    return `${repo}/${chartName}-${version}`;
   };
 
   render() {
@@ -140,19 +143,29 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
       return <Spinner center />;
     }
     const currentVersion = release.getVersion();
+    const versionOptions = versions.map(version => ({
+      value: version,
+      label: `${version.repo}/${release.getChart()}-${version.version}`,
+    }));
     const controlsAndInfo = (
       <div className="upgrade flex gaps align-center">
-        <span>Release</span> <Badge label={release.getName()}/>
-        <span>Namespace</span> <Badge label={release.getNs()}/>
-        <span>Version</span> <Badge label={currentVersion}/>
+        <span>Release</span>
+        {" "}
+        <Badge label={release.getName()} />
+        <span>Namespace</span>
+        {" "}
+        <Badge label={release.getNs()} />
+        <span>Version</span>
+        {" "}
+        <Badge label={currentVersion} />
         <span>Upgrade version</span>
-        <Select
+        <Select<ChartVersion, SelectOption<ChartVersion>, false>
+          id="char-version-input"
           className="chart-version"
           menuPlacement="top"
           value={version}
-          options={versions}
-          formatOptionLabel={this.formatVersionLabel}
-          onChange={({ value }: SelectOption) => this.version = value}
+          options={versionOptions}
+          onChange={option => this.version = option?.value}
         />
       </div>
     );
@@ -169,7 +182,7 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
         />
         <EditorPanel
           tabId={tabId}
-          value={value}
+          value={value ?? ""}
           onChange={onChange}
           onError={onError}
         />
@@ -178,7 +191,7 @@ export class NonInjectedUpgradeChart extends React.Component<Props & Dependencie
   }
 }
 
-export const UpgradeChart = withInjectables<Dependencies, Props>(NonInjectedUpgradeChart, {
+export const UpgradeChart = withInjectables<Dependencies, UpgradeChartProps>(NonInjectedUpgradeChart, {
   getProps: (di, props) => ({
     releases: di.inject(releasesInjectable),
     updateRelease: di.inject(updateReleaseInjectable),

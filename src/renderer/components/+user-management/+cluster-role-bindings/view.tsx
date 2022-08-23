@@ -7,14 +7,14 @@ import "./view.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingsStore } from "./store";
-import { clusterRolesStore } from "../+cluster-roles/store";
-import { serviceAccountsStore } from "../+service-accounts/store";
-import type { ClusterRoleBindingsRouteParams } from "../../../../common/routes";
+import { clusterRoleBindingStore } from "./legacy-store";
+import { clusterRoleStore } from "../+cluster-roles/legacy-store";
+import { serviceAccountStore } from "../+service-accounts/legacy-store";
+import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
+import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -23,24 +23,21 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ClusterRoleBindingsRouteParams> {
-}
-
 @observer
-export class ClusterRoleBindings extends React.Component<Props> {
+export class ClusterRoleBindings extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_cluster_role_bindings"
           className="ClusterRoleBindings"
-          store={clusterRoleBindingsStore}
-          dependentStores={[clusterRolesStore, serviceAccountsStore]}
+          store={clusterRoleBindingStore}
+          dependentStores={[clusterRoleStore, serviceAccountStore]}
           sortingCallbacks={{
             [columnId.name]: binding => binding.getName(),
             [columnId.bindings]: binding => binding.getSubjectNames(),
-            [columnId.age]: binding => binding.getTimeDiffFromNow(),
+            [columnId.age]: binding => -binding.getCreationTimestamp(),
           }}
           searchFilters={[
             binding => binding.getSearchFields(),
@@ -57,7 +54,7 @@ export class ClusterRoleBindings extends React.Component<Props> {
             binding.getName(),
             <KubeObjectStatusIcon key="icon" object={binding} />,
             binding.getSubjectNames(),
-            binding.getAge(),
+            <KubeObjectAge key="age" object={binding} />,
           ]}
           addRemoveButtons={{
             onAdd: () => ClusterRoleBindingDialog.open(),
@@ -65,7 +62,7 @@ export class ClusterRoleBindings extends React.Component<Props> {
           }}
         />
         <ClusterRoleBindingDialog />
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

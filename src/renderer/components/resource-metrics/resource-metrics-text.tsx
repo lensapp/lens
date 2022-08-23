@@ -4,20 +4,22 @@
  */
 
 import React from "react";
-import type { IPodMetrics } from "../../../common/k8s-api/endpoints";
-import { getMetricLastPoints, IMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
+import type { PodMetricData } from "../../../common/k8s-api/endpoints";
+import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 import { bytesToUnits } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 
-interface Props {
-  metrics: IPodMetrics<IMetrics>;
+export interface ResourceMetricsTextProps {
+  metrics: PodMetricData | null | undefined;
 }
 
-export function ResourceMetricsText(props: Props) {
-  if (!props.metrics) return null;
-  const metrics = getMetricLastPoints(props.metrics);
-  const { cpuUsage, cpuRequests, cpuLimits, memoryUsage, memoryRequests, memoryLimits } = metrics;
+export function ResourceMetricsText({ metrics }: ResourceMetricsTextProps) {
+  if (!metrics) {
+    return null;
+  }
+
+  const { cpuUsage, cpuRequests, cpuLimits, memoryUsage, memoryRequests, memoryLimits } = getMetricLastPoints(metrics);
 
   return (
     <>

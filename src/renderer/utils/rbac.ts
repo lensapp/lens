@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { apiResourceRecord, KubeResource } from "../../common/rbac";
+import type { KubeResource } from "../../common/rbac";
+import { apiResourceRecord } from "../../common/rbac";
 
 export const ResourceNames: Record<KubeResource, string> = {
   "namespaces": "Namespaces",
@@ -30,6 +31,7 @@ export const ResourceNames: Record<KubeResource, string> = {
   "horizontalpodautoscalers": "Horizontal Pod Autoscalers",
   "podsecuritypolicies": "Pod Security Policies",
   "poddisruptionbudgets": "Pod Disruption Budgets",
+  "priorityclasses": "Priority Classes",
   "limitranges": "Limit Ranges",
   "roles": "Roles",
   "rolebindings": "Role Bindings",

@@ -79,7 +79,11 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
 
     return (
       <MenuItem onClick={Util.prevDefault(() => this.execShell(containers[0].name))}>
-        <Icon svg="ssh" interactive={toolbar} tooltip={toolbar && "Pod Shell"} />
+        <Icon
+          svg="ssh"
+          interactive={toolbar}
+          tooltip={toolbar && "Pod Shell"} 
+        />
         <span className="title">Shell</span>
         {containers.length > 1 && (
           <>
@@ -90,7 +94,11 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
                   const { name } = container;
 
                   return (
-                    <MenuItem key={name} onClick={Util.prevDefault(() => this.execShell(name))} className="flex align-center">
+                    <MenuItem
+                      key={name}
+                      onClick={Util.prevDefault(() => this.execShell(name))}
+                      className="flex align-center"
+                    >
                       <StatusBrick/>
                       <span>{name}</span>
                     </MenuItem>

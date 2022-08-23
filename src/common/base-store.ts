@@ -4,19 +4,22 @@
  */
 
 import path from "path";
-import Config from "conf";
+import type Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
 import { ipcMain, ipcRenderer } from "electron";
-import { IEqualsComparer, makeObservable, reaction, runInAction } from "mobx";
-import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
+import type { IEqualsComparer } from "mobx";
+import { makeObservable, reaction, runInAction } from "mobx";
+import type { Disposer } from "./utils";
+import { Singleton, toJS } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
 import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import getConfigurationFileModelInjectable from "./get-configuration-file-model/get-configuration-file-model.injectable";
+import appVersionInjectable from "./vars/app-version.injectable";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: {
@@ -51,10 +54,14 @@ export abstract class BaseStore<T> extends Singleton {
       logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING from ${this.path} ...`);
     }
 
-    this.storeConfig = new Config({
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
+
+    this.storeConfig = getConfigurationFileModel({
       ...this.params,
       projectName: "lens",
-      projectVersion: getAppVersion(),
+      projectVersion: di.inject(appVersionInjectable),
       cwd: this.cwd(),
     });
 

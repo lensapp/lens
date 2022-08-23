@@ -7,19 +7,20 @@ import "./search-input.scss";
 
 import React, { createRef } from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames } from "../../utils";
+import { cssNames, autoBind } from "../../utils";
 import { Icon } from "../icon";
-import { Input, InputProps } from "./input";
+import type { InputProps } from "./input";
+import { Input } from "./input";
 import { isMac } from "../../../common/vars";
 
-interface Props extends InputProps {
+export interface SearchInputProps extends InputProps {
   compact?: boolean; // show only search-icon when not focused
   bindGlobalFocusHotkey?: boolean;
   showClearIcon?: boolean;
   onClear?(): void;
 }
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<SearchInputProps> = {
   autoFocus: true,
   bindGlobalFocusHotkey: true,
   showClearIcon: true,
@@ -27,10 +28,15 @@ const defaultProps: Partial<Props> = {
 };
 
 @observer
-export class SearchInput extends React.Component<Props> {
+export class SearchInput extends React.Component<SearchInputProps> {
   static defaultProps = defaultProps as object;
 
   private inputRef = createRef<Input>();
+
+  constructor(props: SearchInputProps) {
+    super(props);
+    autoBind(this);
+  }
 
   componentDidMount() {
     if (!this.props.bindGlobalFocusHotkey) return;
@@ -41,14 +47,12 @@ export class SearchInput extends React.Component<Props> {
     window.removeEventListener("keydown", this.onGlobalKey);
   }
 
-  @boundMethod
   onGlobalKey(evt: KeyboardEvent) {
     if (evt.key === "f" && (isMac ? evt.metaKey : evt.ctrlKey)) {
-      this.inputRef.current.focus();
+      this.inputRef.current?.focus();
     }
   }
 
-  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     this.props.onKeyDown?.(evt);
 
@@ -58,12 +62,11 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
-  @boundMethod
   clear() {
     if (this.props.onClear) {
       this.props.onClear();
     } else {
-      this.inputRef.current.setValue("");
+      this.inputRef.current?.setValue("");
     }
   }
 
@@ -72,7 +75,13 @@ export class SearchInput extends React.Component<Props> {
     let rightIcon = <Icon small material="search"/>;
 
     if (showClearIcon && value) {
-      rightIcon = <Icon small material="close" onClick={this.clear}/>;
+      rightIcon = (
+        <Icon
+          small
+          material="close"
+          onClick={this.clear}
+        />
+      );
     }
 
     return (

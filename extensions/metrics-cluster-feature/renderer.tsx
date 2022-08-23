@@ -4,7 +4,8 @@
  */
 
 import React from "react";
-import { Common, Renderer } from "@k8slens/extensions";
+import type { Common } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { MetricsSettings } from "./src/metrics-settings";
 
 export default class ClusterMetricsFeatureExtension extends Renderer.LensExtension {

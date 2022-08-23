@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { CatalogCategorySpec } from "../../../../common/catalog";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
@@ -11,14 +11,16 @@ import rendererExtensionsInjectable from "../../../../extensions/renderer-extens
 import { CatalogCategory } from "../../../api/catalog-entity";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { AdditionalCategoryColumnRegistration, CategoryColumnRegistration } from "../custom-category-columns";
-import getCategoryColumnsInjectable, { CategoryColumns, GetCategoryColumnsParams } from "../get-category-columns.injectable";
+import type { CategoryColumns, GetCategoryColumnsParams } from "../columns/get.injectable";
+import getCategoryColumnsInjectable from "../columns/get.injectable";
+import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 
 class TestCategory extends CatalogCategory {
   apiVersion = "catalog.k8slens.dev/v1alpha1";
   kind = "CatalogCategory";
-  metadata: {
-    name: "Test";
-    icon: "question_mark";
+  metadata = {
+    name: "Test",
+    icon: "question_mark",
   };
   spec: CatalogCategorySpec = {
     group: "foo.bar.bat",
@@ -30,15 +32,20 @@ class TestCategory extends CatalogCategory {
 
   constructor(columns?: CategoryColumnRegistration[]) {
     super();
-    this.spec.displayColumns = columns;
+    this.spec = {
+      displayColumns: columns,
+      ...this.spec,
+    };
   }
 }
 
 describe("Custom Category Columns", () => {
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
 
   beforeEach(() => {
     di = getDiForUnitTesting();
+
+    di.override(hotbarStoreInjectable, () => ({}));
   });
 
   describe("without extensions", () => {
@@ -50,19 +57,19 @@ describe("Custom Category Columns", () => {
     });
 
     it("should contain a kind column if activeCategory is falsy", () => {
-      expect(getCategoryColumns({ activeCategory: null }).renderTableHeader.find(elem => elem.title === "Kind")).toBeTruthy();
+      expect(getCategoryColumns({ activeCategory: null }).renderTableHeader.find(elem => elem?.title === "Kind")).toBeTruthy();
     });
 
     it("should not contain a kind column if activeCategory is truthy", () => {
-      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem.title === "Kind")).toBeFalsy();
+      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem?.title === "Kind")).toBeFalsy();
     });
 
     it("should include the default columns if the provided category doesn't provide any", () => {
-      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem.title === "Source")).toBeTruthy();
+      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem?.title === "Source")).toBeTruthy();
     });
 
     it("should not include the default columns if the provided category provides any", () => {
-      expect(getCategoryColumns({ activeCategory: new TestCategory([]) }).renderTableHeader.find(elem => elem.title === "Source")).toBeFalsy();
+      expect(getCategoryColumns({ activeCategory: new TestCategory([]) }).renderTableHeader.find(elem => elem?.title === "Source")).toBeFalsy();
     });
 
     it("should include the displayColumns from the provided category", () => {
@@ -76,7 +83,7 @@ describe("Custom Category Columns", () => {
         },
       ];
 
-      expect(getCategoryColumns({ activeCategory: new TestCategory(columns) }).renderTableHeader.find(elem => elem.title === "Foo")).toBeTruthy();
+      expect(getCategoryColumns({ activeCategory: new TestCategory(columns) }).renderTableHeader.find(elem => elem?.title === "Foo")).toBeTruthy();
     });
   });
 
@@ -113,11 +120,11 @@ describe("Custom Category Columns", () => {
     });
 
     it("should include columns from extensions that match", () => {
-      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem.title === "High")).toBeTruthy();
+      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem?.title === "High")).toBeTruthy();
     });
 
     it("should not include columns from extensions that don't match", () => {
-      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem.title === "High2")).toBeFalsy();
+      expect(getCategoryColumns({ activeCategory: new TestCategory() }).renderTableHeader.find(elem => elem?.title === "High2")).toBeFalsy();
     });
   });
 });

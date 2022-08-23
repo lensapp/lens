@@ -7,33 +7,36 @@
 import { action, makeObservable } from "mobx";
 import type { ObservableHistory } from "mobx-observable-history";
 
-export interface PageParamInit<V = any> {
+export interface PageParamInit<Value = any> {
   name: string;
-  defaultValue?: V; // multi-values param must be defined with array-value, e.g. []
-  prefix?: string; // name prefix, for extensions it's `${extension.id}:`
-  parse?(value: string | string[]): V; // from URL
-  stringify?(value: V): string | string[]; // to URL
+  defaultValue?: Value; // multi-values param must be defined with array-value, e.g. []
+  parse?(value: string | string[]): Value; // from URL
+  stringify?(value: Value): string | string[]; // to URL
+}
+
+export interface PageParamDependencies {
+  readonly history: ObservableHistory<unknown>;
 }
 
 // TODO: write tests
-export class PageParam<V = any> {
+export class PageParam<Value = any> {
   readonly name: string;
   readonly isMulti: boolean;
 
-  constructor(private init: PageParamInit<V>, private history: ObservableHistory) {
+  constructor(protected readonly dependencies: PageParamDependencies, private init: PageParamInit<Value>) {
     makeObservable(this);
-    const { prefix, name, defaultValue } = init;
+    const { name, defaultValue } = init;
 
-    this.name = `${prefix ?? ""}${name}`; // actual prefixed URL-name
+    this.name = name;
     this.isMulti = Array.isArray(defaultValue); // multi-values param
   }
 
   // should be a getter since `init.defaultValue` could be a getter too
-  get defaultValue(): V | undefined {
+  get defaultValue(): Value | undefined {
     return this.init.defaultValue;
   }
 
-  parse(values: string | string[]): V {
+  parse(values: string | string[]): Value {
     const { parse } = this.init;
 
     if (parse) {
@@ -41,10 +44,10 @@ export class PageParam<V = any> {
     }
 
     // return as-is ("string"-value based params)
-    return values as any as V;
+    return values as unknown as Value;
   }
 
-  stringify(value: V = this.get()): string[] {
+  stringify(value: Value = this.get()): string[] {
     const { stringify } = this.init;
 
     if (stringify) {
@@ -54,15 +57,17 @@ export class PageParam<V = any> {
     return [value].flat().map(String);
   }
 
-  get(): V {
-    return this.parse(this.getRaw()) ?? this.defaultValue;
+  get(): Value {
+    // TODO: cleanup
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.parse(this.getRaw()) ?? this.defaultValue!;
   }
 
   @action
-  set(value: V, { mergeGlobals = true, replaceHistory = false } = {}): void {
+  set(value: Value, { mergeGlobals = true, replaceHistory = false } = {}): void {
     const search = this.toString({ mergeGlobals, value });
 
-    this.history.merge({ search }, replaceHistory);
+    this.dependencies.history.merge({ search }, replaceHistory);
   }
 
   /**
@@ -76,10 +81,10 @@ export class PageParam<V = any> {
     if (this.isMulti) {
       this.clear();
       values.forEach(value => {
-        this.history.searchParams.append(this.name, value);
+        this.dependencies.history.searchParams.append(this.name, value);
       });
     } else {
-      this.history.searchParams.set(this.name, values[0]);
+      this.dependencies.history.searchParams.set(this.name, values[0]);
     }
   }
 
@@ -87,21 +92,21 @@ export class PageParam<V = any> {
    * Get stringified raw value(s) from `document.location.search`
    */
   getRaw(): string | string[] {
-    const values: string[] = this.history.searchParams.getAll(this.name);
+    const values: string[] = this.dependencies.history.searchParams.getAll(this.name);
 
     return this.isMulti ? values : values[0];
   }
 
   @action
   clear() {
-    this.history.searchParams.delete(this.name);
+    this.dependencies.history.searchParams.delete(this.name);
   }
 
-  toString({ withPrefix = true, mergeGlobals = true, value = this.get() } = {}): string {
+  toString({ mergeGlobals = true, value = this.get() } = {}): string {
     let searchParams = new URLSearchParams();
 
     if (mergeGlobals) {
-      searchParams = new URLSearchParams(this.history.searchParams);
+      searchParams = new URLSearchParams(this.dependencies.history.searchParams);
       searchParams.delete(this.name);
     }
 
@@ -109,6 +114,6 @@ export class PageParam<V = any> {
       searchParams.append(this.name, value);
     });
 
-    return `${withPrefix ? "?" : ""}${searchParams}`;
+    return searchParams.toString();
   }
 }

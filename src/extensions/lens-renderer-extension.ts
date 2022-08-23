@@ -4,12 +4,11 @@
  */
 
 import type * as registries from "./registries";
-import { Disposers, LensExtension } from "./lens-extension";
-import { getExtensionPageUrl } from "./registries/page-registry";
+import { Disposers, LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { Disposer } from "../common/utils";
-import { catalogEntityRegistry, EntityFilter } from "../renderer/api/catalog-entity-registry";
-import { catalogCategoryRegistry, CategoryFilter } from "../renderer/api/catalog-category-registry";
+import type { EntityFilter } from "../renderer/api/catalog/entity/registry";
+import type { CategoryFilter } from "../renderer/api/catalog-category-registry";
 import type { TopBarRegistration } from "../renderer/components/layout/top-bar/top-bar-registration";
 import type { KubernetesCluster } from "../common/catalog-entities";
 import type { WelcomeMenuRegistration } from "../renderer/components/+welcome/welcome-menu-items/welcome-menu-registration";
@@ -18,20 +17,30 @@ import type { CommandRegistration } from "../renderer/components/command-palette
 import type { AppPreferenceRegistration } from "../renderer/components/+preferences/app-preferences/app-preference-registration";
 import type { AdditionalCategoryColumnRegistration } from "../renderer/components/+catalog/custom-category-columns";
 import type { CustomCategoryViewRegistration } from "../renderer/components/+catalog/custom-views";
-import type { StatusBarRegistration } from "../renderer/components/cluster-manager/status-bar-registration";
-import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/dependencies/kube-object-menu-items/kube-object-menu-registration";
+import type { StatusBarRegistration } from "../renderer/components/status-bar/status-bar-registration";
+import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/kube-object-menu-registration";
+import type { WorkloadsOverviewDetailRegistration } from "../renderer/components/+workloads-overview/workloads-overview-detail-registration";
+import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";
+import { fromPairs, map, matches, toPairs } from "lodash/fp";
+import { pipeline } from "@ogre-tools/fp";
+import { getExtensionRoutePath } from "../renderer/routes/for-extension";
+import type { LensRendererExtensionDependencies } from "./lens-extension-set-dependencies";
+import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
+import type { AppPreferenceTabRegistration } from "../renderer/components/+preferences/app-preference-tab/app-preference-tab-registration";
+import type { KubeObjectDetailRegistration } from "../renderer/components/kube-object-details/kube-object-detail-registration";
 
-export class LensRendererExtension extends LensExtension {
+export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
   globalPages: registries.PageRegistration[] = [];
   clusterPages: registries.PageRegistration[] = [];
   clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
-  kubeObjectStatusTexts: registries.KubeObjectStatusRegistration[] = [];
+  kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
+  appPreferenceTabs: AppPreferenceTabRegistration[] = [];
   entitySettings: registries.EntitySettingRegistration[] = [];
   statusBarItems: StatusBarRegistration[] = [];
-  kubeObjectDetailItems: registries.KubeObjectDetailRegistration[] = [];
+  kubeObjectDetailItems: KubeObjectDetailRegistration[] = [];
   kubeObjectMenuItems: KubeObjectMenuRegistration[] = [];
-  kubeWorkloadsOverviewItems: registries.WorkloadsOverviewDetailRegistration[] = [];
+  kubeWorkloadsOverviewItems: WorkloadsOverviewDetailRegistration[] = [];
   commands: CommandRegistration[] = [];
   welcomeMenus: WelcomeMenuRegistration[] = [];
   welcomeBanners: WelcomeBannerRegistration[] = [];
@@ -39,16 +48,41 @@ export class LensRendererExtension extends LensExtension {
   topBarItems: TopBarRegistration[] = [];
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
   customCategoryViews: CustomCategoryViewRegistration[] = [];
+  kubeObjectHandlers: KubeObjectHandlerRegistration[] = [];
 
-  async navigate<P extends object>(pageId?: string, params?: P) {
-    const { navigate } = await import("../renderer/navigation");
-    const pageUrl = getExtensionPageUrl({
-      extensionId: this.name,
-      pageId,
-      params: params ?? {}, // compile to url with params
+  async navigate(pageId?: string, params: object = {}) {
+    const routes = this[lensExtensionDependencies].routes.get();
+    const targetRegistration = [...this.globalPages, ...this.clusterPages]
+      .find(registration => registration.id === (pageId || undefined));
+
+    if (!targetRegistration) {
+      return;
+    }
+
+    const targetRoutePath = getExtensionRoutePath(this, targetRegistration.id);
+    const targetRoute = routes.find(matches({ path: targetRoutePath }));
+
+    if (!targetRoute) {
+      return;
+    }
+
+    const normalizedParams = this[lensExtensionDependencies].getExtensionPageParameters({
+      extension: this,
+      registration: targetRegistration,
     });
+    const query = pipeline(
+      params,
+      toPairs,
+      map(([key, value]) => [
+        key,
+        normalizedParams[key].stringify(value),
+      ]),
+      fromPairs,
+    );
 
-    navigate(pageUrl);
+    this[lensExtensionDependencies].navigateToRoute(targetRoute, {
+      query,
+    });
   }
 
   /**
@@ -56,6 +90,8 @@ export class LensRendererExtension extends LensExtension {
    * called when the extension is created within a cluster frame.
    *
    * The default implementation is to return `true`
+   *
+   * @deprecated Switch to using "enabled" or "visible" properties in each registration together with `activeCluster`
    */
   async isEnabledForCluster(cluster: KubernetesCluster): Promise<Boolean> {
     return (void cluster) || true;
@@ -67,7 +103,7 @@ export class LensRendererExtension extends LensExtension {
    * @returns A function to clean up the filter
    */
   addCatalogFilter(fn: EntityFilter): Disposer {
-    const dispose = catalogEntityRegistry.addCatalogFilter(fn);
+    const dispose = this[lensExtensionDependencies].entityRegistry.addCatalogFilter(fn);
 
     this[Disposers].push(dispose);
 
@@ -80,7 +116,7 @@ export class LensRendererExtension extends LensExtension {
    * @returns A function to clean up the filter
    */
   addCatalogCategoryFilter(fn: CategoryFilter): Disposer {
-    const dispose = catalogCategoryRegistry.addCatalogCategoryFilter(fn);
+    const dispose = this[lensExtensionDependencies].categoryRegistry.addCatalogCategoryFilter(fn);
 
     this[Disposers].push(dispose);
 

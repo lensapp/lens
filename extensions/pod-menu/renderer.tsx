@@ -4,9 +4,12 @@
  */
 
 import { Renderer } from "@k8slens/extensions";
-import { PodAttachMenu, PodAttachMenuProps } from "./src/attach-menu";
-import { PodShellMenu, PodShellMenuProps } from "./src/shell-menu";
-import { PodLogsMenu, PodLogsMenuProps } from "./src/logs-menu";
+import type { PodAttachMenuProps } from "./src/attach-menu";
+import { PodAttachMenu } from "./src/attach-menu";
+import type { PodShellMenuProps } from "./src/shell-menu";
+import { PodShellMenu } from "./src/shell-menu";
+import type { PodLogsMenuProps } from "./src/logs-menu";
+import { PodLogsMenu } from "./src/logs-menu";
 import React from "react";
 
 export default class PodMenuRendererExtension extends Renderer.LensExtension {

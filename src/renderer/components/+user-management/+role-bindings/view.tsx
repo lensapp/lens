@@ -6,15 +6,15 @@ import "./view.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { RoleBindingDialog } from "./dialog";
-import { roleBindingsStore } from "./store";
-import { rolesStore } from "../+roles/store";
-import { clusterRolesStore } from "../+cluster-roles/store";
-import { serviceAccountsStore } from "../+service-accounts/store";
-import type { RoleBindingsRouteParams } from "../../../../common/routes";
+import { roleBindingStore } from "./legacy-store";
+import { roleStore } from "../+roles/legacy-store";
+import { clusterRoleStore } from "../+cluster-roles/legacy-store";
+import { serviceAccountStore } from "../+service-accounts/legacy-store";
+import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
+import { KubeObjectAge } from "../../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -23,25 +23,22 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<RoleBindingsRouteParams> {
-}
-
 @observer
-export class RoleBindings extends React.Component<Props> {
+export class RoleBindings extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_role_bindings"
           className="RoleBindings"
-          store={roleBindingsStore}
-          dependentStores={[rolesStore, clusterRolesStore, serviceAccountsStore]}
+          store={roleBindingStore}
+          dependentStores={[roleStore, clusterRoleStore, serviceAccountStore]}
           sortingCallbacks={{
             [columnId.name]: binding => binding.getName(),
             [columnId.namespace]: binding => binding.getNs(),
             [columnId.bindings]: binding => binding.getSubjectNames(),
-            [columnId.age]: binding => binding.getTimeDiffFromNow(),
+            [columnId.age]: binding => -binding.getCreationTimestamp(),
           }}
           searchFilters={[
             binding => binding.getSearchFields(),
@@ -60,7 +57,7 @@ export class RoleBindings extends React.Component<Props> {
             <KubeObjectStatusIcon key="icon" object={binding} />,
             binding.getNs(),
             binding.getSubjectNames(),
-            binding.getAge(),
+            <KubeObjectAge key="age" object={binding} />,
           ]}
           addRemoveButtons={{
             onAdd: () => RoleBindingDialog.open(),
@@ -68,7 +65,7 @@ export class RoleBindings extends React.Component<Props> {
           }}
         />
         <RoleBindingDialog />
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

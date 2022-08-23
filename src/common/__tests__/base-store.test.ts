@@ -7,10 +7,9 @@ import mockFs from "mock-fs";
 import { BaseStore } from "../base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
-import { getDisForUnitTesting } from "../../test-utils/get-dis-for-unit-testing";
-
-import directoryForUserDataInjectable
-  from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 
 jest.mock("electron", () => ({
   ipcMain: {
@@ -26,9 +25,9 @@ interface TestStoreModel {
 }
 
 class TestStore extends BaseStore<TestStoreModel> {
-  @observable a: string;
-  @observable b: string;
-  @observable c: string;
+  @observable a = "";
+  @observable b = "";
+  @observable c = "";
 
   constructor() {
     super({
@@ -77,14 +76,12 @@ class TestStore extends BaseStore<TestStoreModel> {
 describe("BaseStore", () => {
   let store: TestStore;
 
-  beforeEach(async () => {
-    const dis = getDisForUnitTesting({ doGeneralOverrides: true });
+  beforeEach(() => {
+    const mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    dis.mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
+    mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
+    mainDi.permitSideEffects(getConfigurationFileModelInjectable);
 
-    await dis.runSetups();
-
-    store = undefined;
     TestStore.resetInstance();
 
     const mockOpts = {
@@ -99,9 +96,9 @@ describe("BaseStore", () => {
   });
 
   afterEach(() => {
+    mockFs.restore();
     store.disableSync();
     TestStore.resetInstance();
-    mockFs.restore();
   });
 
   describe("persistence", () => {

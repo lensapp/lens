@@ -7,7 +7,8 @@ import styles from "./network-policy-details.module.scss";
 
 import React from "react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { IPolicyIpBlock, NetworkPolicy, NetworkPolicyPeer, NetworkPolicyPort } from "../../../common/k8s-api/endpoints/network-policy.api";
+import type { IPolicyIpBlock, NetworkPolicyPeer, NetworkPolicyPort } from "../../../common/k8s-api/endpoints/network-policy.api";
+import { NetworkPolicy } from "../../../common/k8s-api/endpoints/network-policy.api";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
@@ -17,11 +18,11 @@ import logger from "../../../common/logger";
 import type { LabelMatchExpression, LabelSelector } from "../../../common/k8s-api/kube-object";
 import { isEmpty } from "lodash";
 
-interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
+export interface NetworkPolicyDetailsProps extends KubeObjectDetailsProps<NetworkPolicy> {
 }
 
 @observer
-export class NetworkPolicyDetails extends React.Component<Props> {
+export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsProps> {
   renderIPolicyIpBlock(ipBlock: IPolicyIpBlock | undefined) {
     if (!ipBlock) {
       return null;
@@ -52,7 +53,11 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     }
 
     return Object.entries(matchLabels)
-      .map(([key, value]) => <li key={key}>{key}: {value}</li>);
+      .map(([key, value]) => (
+        <li key={key}>
+          {`${key}: ${value}`}
+        </li>
+      ));
   }
 
   renderMatchExpressions(matchExpressions: LabelMatchExpression[] | undefined) {
@@ -64,12 +69,16 @@ export class NetworkPolicyDetails extends React.Component<Props> {
       switch (expr.operator) {
         case "DoesNotExist":
         case "Exists":
-          return <li key={expr.key}>{expr.key} ({expr.operator})</li>;
+          return (
+            <li key={expr.key}>
+              {`${expr.key} (${expr.operator})`}
+            </li>
+          );
         case "In":
         case "NotIn":
           return (
             <li key={expr.key}>
-              {expr.key}({expr.operator})
+              {`${expr.key} (${expr.operator})`}
               <ul>
                 {expr.values.map((value, index) => <li key={index}>{value}</li>)}
               </ul>
@@ -132,7 +141,10 @@ export class NetworkPolicyDetails extends React.Component<Props> {
         <ul>
           {ports.map(({ protocol = "TCP", port = "<all>", endPort }, index) => (
             <li key={index}>
-              {protocol}:{port}{typeof endPort === "number" && `:${endPort}`}
+              {protocol}
+              :
+              {port}
+              {typeof endPort === "number" && `:${endPort}`}
             </li>
           ))}
         </ul>
@@ -170,7 +182,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
         {ingress && (
           <>
-            <DrawerTitle title="Ingress"/>
+            <DrawerTitle>Ingress</DrawerTitle>
             {ingress.map((ingress, i) => (
               <div key={i} data-testid={`ingress-${i}`}>
                 {this.renderNetworkPolicyPorts(ingress.ports)}
@@ -182,7 +194,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
         {egress && (
           <>
-            <DrawerTitle title="Egress"/>
+            <DrawerTitle>Egress</DrawerTitle>
             {egress.map((egress, i) => (
               <div key={i} data-testid={`egress-${i}`}>
                 {this.renderNetworkPolicyPorts(egress.ports)}

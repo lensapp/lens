@@ -6,7 +6,7 @@
 .SidebarCluster {
   display: flex;
   align-items: center;
-  padding: 1.25rem;
+  padding: calc(var(--padding) * 1.2);
   cursor: pointer;
 
   &:hover {
@@ -38,13 +38,12 @@
 
 .menu {
   width: 200px;
-  margin-top: -1.25rem;
-  margin-left: 1.25rem;
+  margin-top: -10px;
 }
 
 .avatar {
   font-weight: 500;
-  margin-right: 1.25rem;
+  margin-right: calc(var(--margin) * 1.5);
 }
 
 .loadingAvatar {

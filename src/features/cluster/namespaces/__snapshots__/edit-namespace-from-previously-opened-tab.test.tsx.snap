@@ -1,0 +1,1180 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cluster/namespaces - edit namespaces from previously opened tab given tab was previously opened, when application is started renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
+      class="mainLayout"
+      style="--sidebar-width: 200px;"
+    >
+      <div
+        class="sidebar"
+      >
+        <div
+          class="flex flex-col"
+          data-testid="cluster-sidebar"
+        >
+          <div
+            class="SidebarCluster"
+          >
+            <div
+              class="Avatar rounded loadingAvatar"
+              style="width: 40px; height: 40px;"
+            >
+              ??
+            </div>
+            <div
+              class="loadingClusterName"
+            />
+          </div>
+          <div
+            class="sidebarNav sidebar-active-status"
+          >
+            <div
+              class="SidebarItem"
+              data-is-active-test="true"
+              data-testid="sidebar-item-workloads"
+            >
+              <a
+                aria-current="page"
+                class="nav-item flex gaps align-center expandable active"
+                data-testid="sidebar-item-link-for-workloads"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Workloads
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-config"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-config"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="list"
+                  >
+                    list
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Config
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-network"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-network"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="device_hub"
+                  >
+                    device_hub
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Network
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-storage"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-storage"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="storage"
+                  >
+                    storage
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Storage
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-namespaces"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-namespaces"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="layers"
+                  >
+                    layers
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Namespaces
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-helm"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-helm"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Helm
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-user-management"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-user-management"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="security"
+                  >
+                    security
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Access Control
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-custom-resources"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-custom-resources"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="extension"
+                  >
+                    extension
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Custom Resources
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ResizingAnchor horizontal trailing"
+        />
+      </div>
+      <div
+        class="contents"
+      >
+        <div
+          class="TabLayout"
+          data-testid="tab-layout"
+        >
+          <div
+            class="Tabs center scrollable"
+          >
+            <div
+              class="Tab flex gaps align-center active"
+              data-is-active-test="true"
+              data-testid="tab-link-for-overview"
+              role="tab"
+              tabindex="0"
+            >
+              <div
+                class="label"
+              >
+                Overview
+              </div>
+            </div>
+          </div>
+          <main>
+            <div
+              class="WorkloadsOverview flex column gaps"
+            >
+              <div
+                class="header flex gaps align-center"
+              >
+                <h5
+                  class="box grow"
+                >
+                  Overview
+                </h5>
+                <div
+                  class="NamespaceSelectFilterParent"
+                  data-testid="namespace-select-filter"
+                >
+                  <div
+                    class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-overview-namespace-select-filter-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
+                    <div
+                      class="Select__control css-1s2u09g-control"
+                    >
+                      <div
+                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                      >
+                        <div
+                          class="Select__placeholder css-14el2xx-placeholder"
+                          id="react-select-overview-namespace-select-filter-input-placeholder"
+                        >
+                          All namespaces
+                        </div>
+                        <div
+                          class="Select__input-container css-6j8wv5-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-describedby="react-select-overview-namespace-select-filter-input-placeholder"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="overview-namespace-select-filter-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="OverviewStatuses"
+              >
+                <div
+                  class="workloads"
+                />
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+      <div
+        class="footer"
+      >
+        <div
+          class="Dock isOpen"
+          tabindex="-1"
+        >
+          <div
+            class="ResizingAnchor vertical leading"
+          />
+          <div
+            class="tabs-container flex align-center"
+          >
+            <div
+              class="dockTabs"
+              role="tablist"
+            >
+              <div
+                class="Tabs tabs"
+              >
+                <div
+                  class="Tab flex gaps align-center DockTab active"
+                  data-testid="dock-tab-for-some-first-tab-id"
+                  id="tab-some-first-tab-id"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <i
+                    class="Icon material focusable small"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="edit"
+                    >
+                      edit
+                    </span>
+                  </i>
+                  <div
+                    class="label"
+                  >
+                    <div
+                      class="flex align-center"
+                    >
+                      <span
+                        class="title"
+                      >
+                        Namespace: some-namespace
+                      </span>
+                      <div
+                        class="close"
+                      >
+                        <i
+                          class="Icon material interactive focusable small"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="close"
+                          >
+                            close
+                          </span>
+                        </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="toolbar flex gaps align-center box grow"
+            >
+              <div
+                class="dock-menu box grow"
+              >
+                <i
+                  class="Icon new-dock-tab material interactive focusable"
+                  id="menu-actions-for-dock"
+                  tabindex="0"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="add"
+                  >
+                    add
+                  </span>
+                </i>
+                <div>
+                  New tab
+                </div>
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="fullscreen"
+                >
+                  fullscreen
+                </span>
+              </i>
+              <div>
+                Fit to window
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+              <div>
+                Minimize
+              </div>
+            </div>
+          </div>
+          <div
+            class="tab-content edit-resource"
+            data-testid="dock-tab-content-for-some-first-tab-id"
+            style="flex-basis: 300px;"
+          >
+            <div
+              class="Spinner singleColor center"
+              data-testid="edit-resource-tab-spinner"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`cluster/namespaces - edit namespaces from previously opened tab given tab was previously opened, when application is started when call for namespace resolves with namespace renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
+      class="mainLayout"
+      style="--sidebar-width: 200px;"
+    >
+      <div
+        class="sidebar"
+      >
+        <div
+          class="flex flex-col"
+          data-testid="cluster-sidebar"
+        >
+          <div
+            class="SidebarCluster"
+          >
+            <div
+              class="Avatar rounded loadingAvatar"
+              style="width: 40px; height: 40px;"
+            >
+              ??
+            </div>
+            <div
+              class="loadingClusterName"
+            />
+          </div>
+          <div
+            class="sidebarNav sidebar-active-status"
+          >
+            <div
+              class="SidebarItem"
+              data-is-active-test="true"
+              data-testid="sidebar-item-workloads"
+            >
+              <a
+                aria-current="page"
+                class="nav-item flex gaps align-center expandable active"
+                data-testid="sidebar-item-link-for-workloads"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Workloads
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-config"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-config"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="list"
+                  >
+                    list
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Config
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-network"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-network"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="device_hub"
+                  >
+                    device_hub
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Network
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-storage"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-storage"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="storage"
+                  >
+                    storage
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Storage
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-namespaces"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-namespaces"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="layers"
+                  >
+                    layers
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Namespaces
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-helm"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-helm"
+                href="/"
+              >
+                <i
+                  class="Icon svg focusable"
+                >
+                  <span
+                    class="icon"
+                  />
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Helm
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-user-management"
+            >
+              <a
+                class="nav-item flex gaps align-center"
+                data-testid="sidebar-item-link-for-user-management"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="security"
+                  >
+                    security
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Access Control
+                </span>
+              </a>
+            </div>
+            <div
+              class="SidebarItem"
+              data-is-active-test="false"
+              data-testid="sidebar-item-custom-resources"
+            >
+              <a
+                class="nav-item flex gaps align-center expandable"
+                data-testid="sidebar-item-link-for-custom-resources"
+                href="/"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="extension"
+                  >
+                    extension
+                  </span>
+                </i>
+                <span
+                  class="link-text box grow"
+                >
+                  Custom Resources
+                </span>
+                <i
+                  class="Icon expand-icon box right material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="keyboard_arrow_down"
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ResizingAnchor horizontal trailing"
+        />
+      </div>
+      <div
+        class="contents"
+      >
+        <div
+          class="TabLayout"
+          data-testid="tab-layout"
+        >
+          <div
+            class="Tabs center scrollable"
+          >
+            <div
+              class="Tab flex gaps align-center active"
+              data-is-active-test="true"
+              data-testid="tab-link-for-overview"
+              role="tab"
+              tabindex="0"
+            >
+              <div
+                class="label"
+              >
+                Overview
+              </div>
+            </div>
+          </div>
+          <main>
+            <div
+              class="WorkloadsOverview flex column gaps"
+            >
+              <div
+                class="header flex gaps align-center"
+              >
+                <h5
+                  class="box grow"
+                >
+                  Overview
+                </h5>
+                <div
+                  class="NamespaceSelectFilterParent"
+                  data-testid="namespace-select-filter"
+                >
+                  <div
+                    class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-overview-namespace-select-filter-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
+                    <div
+                      class="Select__control css-1s2u09g-control"
+                    >
+                      <div
+                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                      >
+                        <div
+                          class="Select__placeholder css-14el2xx-placeholder"
+                          id="react-select-overview-namespace-select-filter-input-placeholder"
+                        >
+                          All namespaces
+                        </div>
+                        <div
+                          class="Select__input-container css-6j8wv5-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-describedby="react-select-overview-namespace-select-filter-input-placeholder"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="overview-namespace-select-filter-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="OverviewStatuses"
+              >
+                <div
+                  class="workloads"
+                />
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+      <div
+        class="footer"
+      >
+        <div
+          class="Dock isOpen"
+          tabindex="-1"
+        >
+          <div
+            class="ResizingAnchor vertical leading"
+          />
+          <div
+            class="tabs-container flex align-center"
+          >
+            <div
+              class="dockTabs"
+              role="tablist"
+            >
+              <div
+                class="Tabs tabs"
+              >
+                <div
+                  class="Tab flex gaps align-center DockTab active"
+                  data-testid="dock-tab-for-some-first-tab-id"
+                  id="tab-some-first-tab-id"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <i
+                    class="Icon material focusable small"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="edit"
+                    >
+                      edit
+                    </span>
+                  </i>
+                  <div
+                    class="label"
+                  >
+                    <div
+                      class="flex align-center"
+                    >
+                      <span
+                        class="title"
+                      >
+                        Namespace: some-namespace
+                      </span>
+                      <div
+                        class="close"
+                      >
+                        <i
+                          class="Icon material interactive focusable small"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="close"
+                          >
+                            close
+                          </span>
+                        </i>
+                        <div>
+                          Close ⌘+W
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="toolbar flex gaps align-center box grow"
+            >
+              <div
+                class="dock-menu box grow"
+              >
+                <i
+                  class="Icon new-dock-tab material interactive focusable"
+                  id="menu-actions-for-dock"
+                  tabindex="0"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="add"
+                  >
+                    add
+                  </span>
+                </i>
+                <div>
+                  New tab
+                </div>
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="fullscreen"
+                >
+                  fullscreen
+                </span>
+              </i>
+              <div>
+                Fit to window
+              </div>
+              <i
+                class="Icon material interactive focusable"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+              <div>
+                Minimize
+              </div>
+            </div>
+          </div>
+          <div
+            class="tab-content edit-resource"
+            data-testid="dock-tab-content-for-some-first-tab-id"
+            style="flex-basis: 300px;"
+          >
+            <div
+              class="EditResource flex column"
+            >
+              <div
+                class="InfoPanel flex gaps align-center"
+              >
+                <div
+                  class="controls"
+                >
+                  <div
+                    class="resource-info flex gaps align-center"
+                  >
+                    <span>
+                      Kind:
+                    </span>
+                    <div
+                      class="badge"
+                    >
+                      Namespace
+                    </div>
+                    <span>
+                      Name:
+                    </span>
+                    <div
+                      class="badge"
+                    >
+                      some-name
+                    </div>
+                    <span>
+                      Namespace:
+                    </span>
+                    <div
+                      class="badge"
+                    >
+                      default
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex gaps align-center"
+                />
+                <button
+                  class="Button plain"
+                  data-testid="cancel-edit-resource-from-tab-for-some-first-tab-id"
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button
+                  class="Button active outlined"
+                  data-testid="save-edit-resource-from-tab-for-some-first-tab-id"
+                  type="button"
+                >
+                  Save
+                </button>
+                <button
+                  class="Button primary active"
+                  data-testid="save-and-close-edit-resource-from-tab-for-some-first-tab-id"
+                  type="button"
+                >
+                  Save & Close
+                </button>
+              </div>
+              <textarea
+                data-testid="monaco-editor-for-some-first-tab-id"
+              >
+                some-saved-configuration
+              </textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

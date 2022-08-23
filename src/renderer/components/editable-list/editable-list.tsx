@@ -9,32 +9,38 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { Icon } from "../icon";
-import { Input, InputValidator } from "../input";
-import { boundMethod } from "../../utils";
+import type { InputValidator } from "../input";
+import { Input } from "../input";
+import { autoBind } from "../../utils";
+import type { SingleOrMany } from "../../utils";
 
-export interface Props<T> {
-  items: T[],
-  add: (newItem: string) => void,
-  remove: (info: { oldItem: T, index: number }) => void,
-  placeholder?: string,
-  validators?: InputValidator | InputValidator[];
+export interface EditableListProps<T> {
+  items: T[];
+  add: (newItem: string) => void;
+  remove: (info: { oldItem: T; index: number }) => void;
+  placeholder?: string;
+  validators?: SingleOrMany<InputValidator<boolean>>;
 
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
-  renderItem?: (item: T, index: number) => React.ReactNode,
+  renderItem?: (item: T, index: number) => React.ReactNode;
   lightTheme?: boolean;
 }
 
-const defaultProps: Partial<Props<any>> = {
+const defaultProps = {
   placeholder: "Add new item...",
   renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>,
 };
 
 @observer
-export class EditableList<T> extends React.Component<Props<T>> {
-  static defaultProps = defaultProps as Props<any>;
+class DefaultedEditableList<T> extends React.Component<EditableListProps<T> & typeof defaultProps> {
+  static defaultProps = defaultProps as EditableListProps<any>;
 
-  @boundMethod
+  constructor(props: EditableListProps<T> & typeof defaultProps) {
+    super(props);
+    autoBind(this);
+  }
+
   onSubmit(val: string, evt: React.KeyboardEvent) {
     if (val) {
       evt.preventDefault();
@@ -74,4 +80,8 @@ export class EditableList<T> extends React.Component<Props<T>> {
       </div>
     );
   }
+}
+
+export function EditableList<T>(props: EditableListProps<T>) {
+  return <DefaultedEditableList {...props as object}/>;
 }

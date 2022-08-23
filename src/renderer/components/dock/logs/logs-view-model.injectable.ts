@@ -13,16 +13,19 @@ import getLogTabDataInjectable from "./get-log-tab-data.injectable";
 import loadLogsInjectable from "./load-logs.injectable";
 import setLogTabDataInjectable from "./set-log-tab-data.injectable";
 import stopLoadingLogsInjectable from "./stop-loading-logs.injectable";
-import { podsStore } from "../../+workloads-pods/pods.store";
 import renameTabInjectable from "../dock/rename-tab.injectable";
 import areLogsPresentInjectable from "./are-logs-present.injectable";
 import searchStoreInjectable from "../../../search-store/search-store.injectable";
+import getPodsByOwnerIdInjectable from "../../+workloads-pods/get-pods-by-owner-id.injectable";
+import getPodByIdInjectable from "../../+workloads-pods/get-pod-by-id.injectable";
 
 export interface InstantiateArgs {
   tabId: TabId;
 }
 
 const logsViewModelInjectable = getInjectable({
+  id: "logs-view-model",
+
   instantiate: (di, { tabId }: InstantiateArgs) => new LogTabViewModel(tabId, {
     getLogs: di.inject(getLogsInjectable),
     getLogsWithoutTimestamps: di.inject(getLogsWithoutTimestampsInjectable),
@@ -34,8 +37,8 @@ const logsViewModelInjectable = getInjectable({
     renameTab: di.inject(renameTabInjectable),
     stopLoadingLogs: di.inject(stopLoadingLogsInjectable),
     areLogsPresent: di.inject(areLogsPresentInjectable),
-    getPodById: id => podsStore.getById(id),
-    getPodsByOwnerId: id => podsStore.getPodsByOwnerId(id),
+    getPodById: di.inject(getPodByIdInjectable),
+    getPodsByOwnerId: di.inject(getPodsByOwnerIdInjectable),
     searchStore: di.inject(searchStoreInjectable),
   }),
   lifecycle: lifecycleEnum.transient,

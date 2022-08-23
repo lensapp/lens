@@ -9,7 +9,8 @@
 import path from "path";
 import fse from "fs-extra";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
-import { MigrationDeclaration, migrationLog } from "../helpers";
+import type { MigrationDeclaration } from "../helpers";
+import { migrationLog } from "../helpers";
 import type { ClusterModel } from "../../common/cluster-types";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable
@@ -20,7 +21,7 @@ import getCustomKubeConfigDirectoryInjectable
   from "../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 
 interface Pre360ClusterModel extends ClusterModel {
-  kubeConfig: string;
+  kubeConfig?: string;
 }
 
 export default {
@@ -45,6 +46,10 @@ export default {
        */
       try {
         const absPath = getCustomKubeConfigDirectory(clusterModel.id);
+
+        if (!clusterModel.kubeConfig) {
+          continue;
+        }
 
         // take the embedded kubeconfig and dump it into a file
         fse.writeFileSync(absPath, clusterModel.kubeConfig, { encoding: "utf-8", mode: 0o600 });
@@ -74,7 +79,7 @@ export default {
         }
       } catch (error) {
         migrationLog(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
-        delete clusterModel.preferences.icon;
+        delete clusterModel.preferences?.icon;
       }
 
       migratedClusters.push(clusterModel);

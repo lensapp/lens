@@ -5,7 +5,8 @@
 
 import * as uuid from "uuid";
 import { action, comparer, computed, makeObservable, observable, reaction, runInAction } from "mobx";
-import { autoBind, StorageHelper } from "../../../utils";
+import type { StorageLayer } from "../../../utils";
+import { autoBind } from "../../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -69,7 +70,7 @@ export interface DockStorageState {
   height: number;
   tabs: DockTab[];
   selectedTabId?: TabId;
-  isOpen?: boolean;
+  isOpen: boolean;
 }
 
 export interface DockTabChangeEvent {
@@ -98,7 +99,7 @@ export interface DockTabCloseEvent {
 }
 
 interface Dependencies {
-  readonly storage: StorageHelper<DockStorageState>
+  readonly storage: StorageLayer<DockStorageState>;
   readonly tabDataClearers: Record<TabKind, (tabId: TabId) => void>;
   readonly tabDataValidator: Partial<Record<TabKind, (tabId: TabId) => boolean>>;
 }
@@ -156,10 +157,14 @@ export class DockStore implements DockStorageState {
     );
   }
 
-  set selectedTabId(tabId: TabId) {
+  set selectedTabId(tabId: TabId | undefined) {
     if (tabId && !this.getTabById(tabId)) return; // skip invalid ids
 
     this.dependencies.storage.merge({ selectedTabId: tabId });
+  }
+
+  @computed get tabsNumber() : number {
+    return this.tabs.length;
   }
 
   @computed get selectedTab() {
@@ -278,7 +283,7 @@ export class DockStore implements DockStorageState {
     const tabNumbers = this.tabs
       .filter(tab => tab.kind === kind)
       .map(tab => {
-        const tabNumber = +tab.title.match(/\d+/);
+        const tabNumber = Number(tab.title.match(/\d+/));
 
         return tabNumber === 0 ? 1 : tabNumber; // tab without a number is first
       });
@@ -323,6 +328,7 @@ export class DockStore implements DockStorageState {
   @action
   closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
+    const tabIndex = this.getTabIndex(tabId);
 
     if (!tab || tab.pinned) {
       return;
@@ -333,11 +339,11 @@ export class DockStore implements DockStorageState {
 
     if (this.selectedTabId === tab.id) {
       if (this.tabs.length) {
-        const newTab = this.tabs.slice(-1)[0]; // last
+        const newTab = tabIndex < this.tabsNumber ? this.tabs[tabIndex] : this.tabs[tabIndex - 1];
 
         this.selectTab(newTab.id);
       } else {
-        this.selectedTabId = null;
+        this.selectedTabId = undefined;
         this.close();
       }
     }
@@ -369,12 +375,14 @@ export class DockStore implements DockStorageState {
   renameTab(tabId: TabId, title: string) {
     const tab = this.getTabById(tabId);
 
-    tab.title = title;
+    if (tab) {
+      tab.title = title;
+    }
   }
 
   @action
   selectTab(tabId: TabId) {
-    this.selectedTabId = this.getTabById(tabId)?.id ?? null;
+    this.selectedTabId = this.getTabById(tabId)?.id;
   }
 
   @action

@@ -6,32 +6,38 @@
 import styles from "./entity-settings.module.scss";
 
 import React from "react";
-import { observable, makeObservable } from "mobx";
-import type { RouteComponentProps } from "react-router";
+import type { IComputedValue } from "mobx";
+import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
-import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { EntitySettingRegistry } from "../../../extensions/registries";
-import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
 import logger from "../../../common/logger";
 import { Avatar } from "../avatar";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import entitySettingsRouteParametersInjectable from "./entity-settings-route-parameters.injectable";
+import type { ObservableHistory } from "mobx-observable-history";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import observableHistoryInjectable from "../../navigation/observable-history.injectable";
 
-interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
+interface Dependencies {
+  entityId: IComputedValue<string>;
+  entityRegistry: CatalogEntityRegistry;
+  observableHistory: ObservableHistory<unknown>;
 }
 
 @observer
-export class EntitySettings extends React.Component<Props> {
-  @observable activeTab: string;
+class NonInjectedEntitySettings extends React.Component<Dependencies> {
+  @observable activeTab?: string;
 
-  constructor(props: Props) {
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
 
-    const { hash } = navigation.location;
+    const { hash } = this.props.observableHistory.location;
 
     if (hash) {
       const menuId = hash.slice(1);
@@ -43,12 +49,13 @@ export class EntitySettings extends React.Component<Props> {
     }
   }
 
+  @computed
   get entityId() {
-    return this.props.match.params.entityId;
+    return this.props.entityId.get();
   }
 
-  get entity(): CatalogEntity {
-    return catalogEntityRegistry.getById(this.entityId);
+  get entity() {
+    return this.props.entityRegistry.getById(this.entityId);
   }
 
   get menuItems() {
@@ -67,7 +74,7 @@ export class EntitySettings extends React.Component<Props> {
     this.activeTab = tabId;
   };
 
-  renderNavigation() {
+  renderNavigation(entity: CatalogEntity) {
     const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
 
     groups.sort((a, b) => {
@@ -81,17 +88,22 @@ export class EntitySettings extends React.Component<Props> {
       <>
         <div className="flex items-center pb-8">
           <Avatar
-            title={this.entity.getName()}
-            colorHash={`${this.entity.getName()}-${this.entity.metadata.source}`}
-            src={this.entity.spec.icon?.src}
+            title={entity.getName()}
+            colorHash={`${entity.getName()}-${entity.metadata.source}`}
+            src={entity.spec.icon?.src}
             className={styles.settingsAvatar}
             size={40}
           />
           <div className={styles.entityName}>
-            {this.entity.getName()}
+            {entity.getName()}
           </div>
         </div>
-        <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+        <Tabs
+          className="flex column"
+          scrollable={false}
+          onChange={this.onTabChange}
+          value={this.activeTab}
+        >
           { groups.map((group, groupIndex) => (
             <React.Fragment key={`group-${groupIndex}`}>
               <hr/>
@@ -112,18 +124,17 @@ export class EntitySettings extends React.Component<Props> {
   }
 
   render() {
-    if (!this.entity) {
+    const { activeSetting, entity } = this;
+
+    if (!entity) {
       logger.error("[ENTITY-SETTINGS]: entity not found", this.entityId);
 
       return null;
     }
 
-    const { activeSetting } = this;
-
-
     return (
       <SettingLayout
-        navigation={this.renderNavigation()}
+        navigation={this.renderNavigation(entity)}
         contentGaps={false}
       >
         {
@@ -131,7 +142,7 @@ export class EntitySettings extends React.Component<Props> {
             <section>
               <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
               <section>
-                <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
+                <activeSetting.components.View entity={entity} key={activeSetting.title} />
               </section>
             </section>
           )
@@ -140,3 +151,11 @@ export class EntitySettings extends React.Component<Props> {
     );
   }
 }
+
+export const EntitySettings = withInjectables<Dependencies>(NonInjectedEntitySettings, {
+  getProps: (di) => ({
+    ...di.inject(entitySettingsRouteParametersInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    observableHistory: di.inject(observableHistoryInjectable),
+  }),
+});

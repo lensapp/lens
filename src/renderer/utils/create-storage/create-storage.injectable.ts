@@ -2,24 +2,34 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { createStorage } from "./create-storage";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
+import { observable } from "mobx";
+import loggerInjectable from "../../../common/logger.injectable";
+import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
+import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
+import storageSaveDelayInjectable from "./storage-save-delay.injectable";
 
 const createStorageInjectable = getInjectable({
-  instantiate: (di) =>
-    createStorage({
-      readJsonFile: di.inject(readJsonFileInjectable),
-      writeJsonFile: di.inject(writeJsonFileInjectable),
+  id: "create-storage",
 
-      directoryForLensLocalStorage: di.inject(
-        directoryForLensLocalStorageInjectable,
-      ),
+  instantiate: (di) => createStorage({
+    storage: observable({
+      initialized: false,
+      loaded: false,
+      data: {},
     }),
-
-  lifecycle: lifecycleEnum.singleton,
+    readJsonFile: di.inject(readJsonFileInjectable),
+    writeJsonFile: di.inject(writeJsonFileInjectable),
+    logger: di.inject(loggerInjectable),
+    directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
+    getAbsolutePath: di.inject(getAbsolutePathInjectable),
+    hostedClusterId: di.inject(hostedClusterIdInjectable),
+    saveDelay: di.inject(storageSaveDelayInjectable),
+  }),
 });
 
 export default createStorageInjectable;

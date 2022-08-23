@@ -2,11 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { TabId } from "../dock/store";
 import logTabStoreInjectable from "./tab-store.injectable";
 
 const clearLogTabDataInjectable = getInjectable({
+  id: "clear-log-tab-data",
+
   instantiate: (di) => {
     const logTabStore = di.inject(logTabStoreInjectable);
 
@@ -14,8 +16,6 @@ const clearLogTabDataInjectable = getInjectable({
       logTabStore.clearData(tabId);
     };
   },
-
-  lifecycle: lifecycleEnum.singleton,
 });
 
 export default clearLogTabDataInjectable;

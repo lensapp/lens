@@ -7,12 +7,12 @@ import "./resource-quotas.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { AddQuotaDialog } from "./add-quota-dialog";
-import { resourceQuotaStore } from "./resource-quotas.store";
+import { resourceQuotaStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { ResourceQuotaRouteParams } from "../../../common/routes";
+import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
+import { KubeObjectAge } from "../kube-object/age";
 
 enum columnId {
   name = "name",
@@ -20,26 +20,24 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ResourceQuotaRouteParams> {
-}
-
 @observer
-export class ResourceQuotas extends React.Component<Props> {
+export class ResourceQuotas extends React.Component {
   render() {
     return (
-      <>
+      <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="configuration_quotas"
-          className="ResourceQuotas" store={resourceQuotaStore}
+          className="ResourceQuotas"
+          store={resourceQuotaStore}
           sortingCallbacks={{
-            [columnId.name]: item => item.getName(),
-            [columnId.namespace]: item => item.getNs(),
-            [columnId.age]: item => item.getTimeDiffFromNow(),
+            [columnId.name]: resourceQuota => resourceQuota.getName(),
+            [columnId.namespace]: resourceQuota => resourceQuota.getNs(),
+            [columnId.age]: resourceQuota => -resourceQuota.getCreationTimestamp(),
           }}
           searchFilters={[
-            item => item.getSearchFields(),
-            item => item.getName(),
+            resourceQuota => resourceQuota.getSearchFields(),
+            resourceQuota => resourceQuota.getName(),
           ]}
           renderHeaderTitle="Resource Quotas"
           renderTableHeader={[
@@ -52,7 +50,7 @@ export class ResourceQuotas extends React.Component<Props> {
             resourceQuota.getName(),
             <KubeObjectStatusIcon key="icon" object={resourceQuota}/>,
             resourceQuota.getNs(),
-            resourceQuota.getAge(),
+            <KubeObjectAge key="age" object={resourceQuota} />,
           ]}
           addRemoveButtons={{
             onAdd: () => AddQuotaDialog.open(),
@@ -60,7 +58,7 @@ export class ResourceQuotas extends React.Component<Props> {
           }}
         />
         <AddQuotaDialog/>
-      </>
+      </SiblingsInTabLayout>
     );
   }
 }

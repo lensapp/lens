@@ -5,7 +5,8 @@
 
 import React from "react";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
-import { CatalogEntityDetailRegistry, CatalogEntityDetailsProps } from "../../extensions/registries";
+import type { CatalogEntityDetailsProps } from "../../extensions/registries";
+import { CatalogEntityDetailRegistry } from "../../extensions/registries";
 import { DrawerItem, DrawerTitle } from "../components/drawer";
 
 export function initCatalogEntityDetailRegistry() {
@@ -17,7 +18,7 @@ export function initCatalogEntityDetailRegistry() {
         components: {
           Details: ({ entity }: CatalogEntityDetailsProps<KubernetesCluster>) => (
             <>
-              <DrawerTitle title="Kubernetes Information" />
+              <DrawerTitle>Kubernetes Information</DrawerTitle>
               <div className="box grow EntityMetadata">
                 <DrawerItem name="Distribution">
                   {entity.metadata.distro || "unknown"}
@@ -30,13 +31,16 @@ export function initCatalogEntityDetailRegistry() {
           ),
         },
       },
+    ]);
+  CatalogEntityDetailRegistry.getInstance()
+    .add([
       {
         apiVersions: [WebLink.apiVersion],
         kind: WebLink.kind,
         components: {
           Details: ({ entity }: CatalogEntityDetailsProps<WebLink>) => (
             <>
-              <DrawerTitle title="More Information" />
+              <DrawerTitle>More Information</DrawerTitle>
               <DrawerItem name="URL">
                 {entity.spec.url}
               </DrawerItem>

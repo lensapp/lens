@@ -6,19 +6,19 @@
 import * as uuid from "uuid";
 
 import { broadcastMessage } from "../../../common/ipc";
-import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
+import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { delay, noop } from "../../../common/utils";
-import { LensExtension } from "../../../extensions/main-api";
-import { ExtensionsStore } from "../../../extensions/extensions-store/extensions-store";
+import type { ExtensionsStore, IsEnabledExtensionDescriptor } from "../../../extensions/extensions-store/extensions-store";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
-import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import extensionLoaderInjectable
-  from "../../../extensions/extension-loader/extension-loader.injectable";
-import lensProtocolRouterMainInjectable
-  from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
-import extensionsStoreInjectable
-  from "../../../extensions/extensions-store/extensions-store.injectable";
+import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
+import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import { LensExtension } from "../../../extensions/lens-extension";
+import type { LensExtensionId } from "../../../extensions/lens-extension";
+import type { ObservableMap } from "mobx";
+import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 jest.mock("../../../common/ipc");
 
@@ -29,53 +29,37 @@ function throwIfDefined(val: any): void {
 }
 
 describe("protocol router tests", () => {
-  // TODO: This test suite is using any to access protected property.
-  // Unit tests are allowed to only public interfaces.
-  let extensionLoader: any;
+  let extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   let lpr: LensProtocolRouterMain;
-  let extensionsStore: ExtensionsStore;
+  let enabledExtensions: Set<string>;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mockFs({
-      "tmp": {},
-    });
+    enabledExtensions = new Set();
 
-    await di.runSetups();
+    di.override(extensionsStoreInjectable, () => ({
+      isEnabled: ({ id, isBundled }: IsEnabledExtensionDescriptor) => isBundled || enabledExtensions.has(id),
+    } as unknown as ExtensionsStore));
 
-    extensionLoader = di.inject(extensionLoaderInjectable);
-    extensionsStore = di.inject(extensionsStoreInjectable);
+    di.permitSideEffects(getConfigurationFileModelInjectable);
 
+    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
+    extensionInstances = di.inject(extensionInstancesInjectable);
     lpr = di.inject(lensProtocolRouterMainInjectable);
 
     lpr.rendererLoaded = true;
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-
-    // TODO: Remove Singleton from BaseStore to achieve independent unit testing
-    ExtensionsStore.resetInstance();
-
-    mockFs.restore();
+  it("should broadcast invalid protocol on non-lens URLs", async () => {
+    await lpr.route("https://google.ca");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInvalid, "invalid protocol", "https://google.ca");
   });
 
-  it("should throw on non-lens URLS", async () => {
-    try {
-      expect(await lpr.route("https://google.ca")).toBeUndefined();
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-    }
-  });
-
-  it("should throw when host not internal or extension", async () => {
-    try {
-      expect(await lpr.route("lens://foobar")).toBeUndefined();
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-    }
+  it("should broadcast invalid host on non internal or non extension URLs", async () => {
+    await lpr.route("lens://foobar");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInvalid, "invalid host", "lens://foobar");
   });
 
   it("should not throw when has valid host", async () => {
@@ -86,6 +70,7 @@ describe("protocol router tests", () => {
       manifest: {
         name: "@mirantis/minikube",
         version: "0.1.1",
+        engines: { lens: "^5.5.0" },
       },
       isBundled: false,
       isEnabled: true,
@@ -98,8 +83,8 @@ describe("protocol router tests", () => {
       handler: noop,
     });
 
-    extensionLoader.instances.set(extId, ext);
-    (extensionsStore as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
+    extensionInstances.set(extId, ext);
+    enabledExtensions.add(extId);
 
     lpr.addInternalHandler("/", noop);
 
@@ -161,6 +146,7 @@ describe("protocol router tests", () => {
       manifest: {
         name: "@foobar/icecream",
         version: "0.1.1",
+        engines: { lens: "^5.5.0" },
       },
       isBundled: false,
       isEnabled: true,
@@ -177,8 +163,8 @@ describe("protocol router tests", () => {
         handler: params => { called = params.pathname.id; },
       });
 
-    extensionLoader.instances.set(extId, ext);
-    (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+    extensionInstances.set(extId, ext);
+    enabledExtensions.add(extId);
 
     try {
       expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
@@ -202,6 +188,7 @@ describe("protocol router tests", () => {
         manifest: {
           name: "@foobar/icecream",
           version: "0.1.1",
+          engines: { lens: "^5.5.0" },
         },
         isBundled: false,
         isEnabled: true,
@@ -215,8 +202,8 @@ describe("protocol router tests", () => {
           handler: params => { called = params.pathname.id; },
         });
 
-      extensionLoader.instances.set(extId, ext);
-      (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+      extensionInstances.set(extId, ext);
+      enabledExtensions.add(extId);
     }
 
     {
@@ -227,6 +214,7 @@ describe("protocol router tests", () => {
         manifest: {
           name: "icecream",
           version: "0.1.1",
+          engines: { lens: "^5.5.0" },
         },
         isBundled: false,
         isEnabled: true,
@@ -240,12 +228,12 @@ describe("protocol router tests", () => {
           handler: () => { called = 1; },
         });
 
-      extensionLoader.instances.set(extId, ext);
-      (extensionsStore as any).state.set(extId, { enabled: true, name: "icecream" });
+      extensionInstances.set(extId, ext);
+      enabledExtensions.add(extId);
     }
 
-    (extensionsStore as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
-    (extensionsStore as any).state.set("icecream", { enabled: true, name: "icecream" });
+    enabledExtensions.add("@foobar/icecream");
+    enabledExtensions.add("icecream");
 
     try {
       expect(await lpr.route("lens://extension/icecream/page")).toBeUndefined();

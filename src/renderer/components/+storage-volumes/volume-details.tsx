@@ -11,17 +11,17 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { PersistentVolume, pvcApi } from "../../../common/k8s-api/endpoints";
+import { PersistentVolume, persistentVolumeClaimApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<PersistentVolume> {
+export interface PersistentVolumeDetailsProps extends KubeObjectDetailsProps<PersistentVolume> {
 }
 
 @observer
-export class PersistentVolumeDetails extends React.Component<Props> {
+export class PersistentVolumeDetails extends React.Component<PersistentVolumeDetailsProps> {
   render() {
     const { object: volume } = this.props;
 
@@ -41,7 +41,7 @@ export class PersistentVolumeDetails extends React.Component<Props> {
       <div className="PersistentVolumeDetails">
         <KubeObjectMeta object={volume}/>
         <DrawerItem name="Capacity">
-          {capacity.storage}
+          {capacity?.storage}
         </DrawerItem>
 
         {mountOptions && (
@@ -51,7 +51,7 @@ export class PersistentVolumeDetails extends React.Component<Props> {
         )}
 
         <DrawerItem name="Access Modes">
-          {accessModes.join(", ")}
+          {accessModes?.join(", ")}
         </DrawerItem>
         <DrawerItem name="Reclaim Policy">
           {persistentVolumeReclaimPolicy}
@@ -65,7 +65,7 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
         {nfs && (
           <>
-            <DrawerTitle title="Network File System"/>
+            <DrawerTitle>Network File System</DrawerTitle>
             {
               Object.entries(nfs).map(([name, value]) => (
                 <DrawerItem key={name} name={startCase(name)}>
@@ -78,7 +78,7 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
         {flexVolume && (
           <>
-            <DrawerTitle title="FlexVolume"/>
+            <DrawerTitle>FlexVolume</DrawerTitle>
             <DrawerItem name="Driver">
               {flexVolume.driver}
             </DrawerItem>
@@ -94,12 +94,12 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
         {claimRef && (
           <>
-            <DrawerTitle title="Claim"/>
+            <DrawerTitle>Claim</DrawerTitle>
             <DrawerItem name="Type">
               {claimRef.kind}
             </DrawerItem>
             <DrawerItem name="Name">
-              <Link to={getDetailsUrl(pvcApi.getUrl(claimRef))}>
+              <Link to={getDetailsUrl(persistentVolumeClaimApi.getUrl(claimRef))}>
                 {claimRef.name}
               </Link>
             </DrawerItem>

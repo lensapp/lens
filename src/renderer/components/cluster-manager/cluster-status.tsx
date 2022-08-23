@@ -10,27 +10,35 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { isBoolean, hasTypedProperty, isObject, isString, cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import { navigate } from "../../navigation";
-import { entitySettingsURL } from "../../../common/routes";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { requestClusterActivation } from "../../ipc";
+import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
-interface Props {
+export interface ClusterStatusProps {
   className?: IClassName;
   cluster: Cluster;
 }
 
+interface Dependencies {
+  navigateToEntitySettings: NavigateToEntitySettings;
+  entityRegistry: CatalogEntityRegistry;
+}
+
 @observer
-export class ClusterStatus extends React.Component<Props> {
+class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Dependencies> {
   @observable authOutput: KubeAuthUpdate[] = [];
   @observable isReconnecting = false;
 
-  constructor(props: Props) {
+  constructor(props: ClusterStatusProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -40,7 +48,7 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   @computed get entity() {
-    return catalogEntityRegistry.getById(this.cluster.id);
+    return this.props.entityRegistry.getById(this.cluster.id);
   }
 
   @computed get hasErrors(): boolean {
@@ -49,10 +57,25 @@ export class ClusterStatus extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      ipcRendererOn(`cluster:${this.cluster.id}:connection-update`, (evt, res: KubeAuthUpdate) => {
-        this.authOutput.push(res);
+      ipcRendererOn(`cluster:${this.cluster.id}:connection-update`, (evt, res: unknown) => {
+        if (
+          isObject(res)
+          && hasTypedProperty(res, "message", isString)
+          && hasTypedProperty(res, "isError", isBoolean)
+        ) {
+          this.authOutput.push(res);
+        } else {
+          console.warn(`Got invalid connection update for ${this.cluster.id}`, { update: res });
+        }
       }),
     ]);
+  }
+
+  componentDidUpdate(prevProps: Readonly<ClusterStatusProps>): void {
+    if (prevProps.cluster.id !== this.props.cluster.id) {
+      this.isReconnecting = false;
+      this.authOutput = [];
+    }
   }
 
   reconnect = async () => {
@@ -63,7 +86,7 @@ export class ClusterStatus extends React.Component<Props> {
       await requestClusterActivation(this.cluster.id, true);
     } catch (error) {
       this.authOutput.push({
-        message: error.toString(),
+        message: String(error),
         isError: true,
       });
     } finally {
@@ -72,12 +95,7 @@ export class ClusterStatus extends React.Component<Props> {
   };
 
   manageProxySettings = () => {
-    navigate(entitySettingsURL({
-      params: {
-        entityId: this.cluster.id,
-      },
-      fragment: "proxy",
-    }));
+    this.props.navigateToEntitySettings(this.cluster.id, "proxy");
   };
 
   renderAuthenticationOutput() {
@@ -103,7 +121,10 @@ export class ClusterStatus extends React.Component<Props> {
       <>
         <Spinner singleColor={false} className={styles.spinner} />
         <pre className="kube-auth-out">
-          <p>{this.isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
+          <p>
+            {this.isReconnecting ? "Reconnecting" : "Connecting"}
+            &hellip;
+          </p>
         </pre>
       </>
     );
@@ -146,3 +167,11 @@ export class ClusterStatus extends React.Component<Props> {
     );
   }
 }
+
+export const ClusterStatus = withInjectables<Dependencies, ClusterStatusProps>(NonInjectedClusterStatus, {
+  getProps: (di, props) => ({
+    ...props,
+    navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
+    entityRegistry: di.inject(catalogEntityRegistryInjectable),
+  }),
+});

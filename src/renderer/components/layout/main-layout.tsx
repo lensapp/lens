@@ -7,19 +7,19 @@ import styles from "./main-layout.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, StorageHelper } from "../../utils";
+import type { StorageLayer } from "../../utils";
+import { cssNames } from "../../utils";
 import { ErrorBoundary } from "../error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import sidebarStorageInjectable, {
-  defaultSidebarWidth,
-  SidebarStorageState,
-} from "./sidebar-storage/sidebar-storage.injectable";
+import type { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
+import sidebarStorageInjectable, { defaultSidebarWidth } from "./sidebar-storage/sidebar-storage.injectable";
 
-interface Props {
+export interface MainLayoutProps {
   sidebar: React.ReactNode;
   className?: string;
   footer?: React.ReactNode;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 /**
@@ -29,11 +29,11 @@ interface Props {
  */
 
 interface Dependencies {
-  sidebarStorage: StorageHelper<SidebarStorageState>
+  sidebarStorage: StorageLayer<SidebarStorageState>;
 }
 
 @observer
-class NonInjectedMainLayout extends React.Component<Props & Dependencies> {
+class NonInjectedMainLayout extends React.Component<MainLayoutProps & Dependencies> {
   onSidebarResize = (width: number) => {
     this.props.sidebarStorage.merge({ width });
   };
@@ -69,15 +69,10 @@ class NonInjectedMainLayout extends React.Component<Props & Dependencies> {
   }
 }
 
-export const MainLayout = withInjectables<Dependencies, Props>(
-  NonInjectedMainLayout,
-
-  {
-    getProps: (di, props) => ({
-      sidebarStorage: di.inject(sidebarStorageInjectable),
-
-      ...props,
-    }),
-  },
-);
+export const MainLayout = withInjectables<Dependencies, MainLayoutProps>(NonInjectedMainLayout, {
+  getProps: (di, props) => ({
+    ...props,
+    sidebarStorage: di.inject(sidebarStorageInjectable),
+  }),
+});
 

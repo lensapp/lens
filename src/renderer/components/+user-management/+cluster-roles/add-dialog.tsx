@@ -8,24 +8,25 @@ import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
-import { Dialog, DialogProps } from "../../dialog";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
 import { Input } from "../../input";
 import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { clusterRolesStore } from "./store";
+import { clusterRoleStore } from "./legacy-store";
 
-interface Props extends Partial<DialogProps> {
+export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }
 
 @observer
-export class AddClusterRoleDialog extends React.Component<Props> {
+export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogProps> {
   static isOpen = observable.box(false);
 
   @observable clusterRoleName = "";
 
-  constructor(props: Props) {
+  constructor(props: AddClusterRoleDialogProps) {
     super(props);
     makeObservable(this);
   }
@@ -44,13 +45,13 @@ export class AddClusterRoleDialog extends React.Component<Props> {
 
   createRole = async () => {
     try {
-      const role = await clusterRolesStore.create({ name: this.clusterRoleName });
+      const role = await clusterRoleStore.create({ name: this.clusterRoleName });
 
       showDetails(role.selfLink);
       this.reset();
       AddClusterRoleDialog.close();
-    } catch (err) {
-      Notifications.error(err.toString());
+    } catch (error) {
+      Notifications.checkedError(error, "Unknown error occured while creating the role");
     }
   };
 
@@ -76,7 +77,8 @@ export class AddClusterRoleDialog extends React.Component<Props> {
             <SubTitle title="ClusterRole Name" />
             <Input
               lightTheme
-              required autoFocus
+              required
+              autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"
               value={this.clusterRoleName}

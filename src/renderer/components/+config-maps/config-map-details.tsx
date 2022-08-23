@@ -12,21 +12,21 @@ import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
 import { Input } from "../input";
 import { Button } from "../button";
-import { configMapsStore } from "./config-maps.store";
+import { configMapStore } from "./legacy-store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
-interface Props extends KubeObjectDetailsProps<ConfigMap> {
+export interface ConfigMapDetailsProps extends KubeObjectDetailsProps<ConfigMap> {
 }
 
 @observer
-export class ConfigMapDetails extends React.Component<Props> {
+export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
   @observable isSaving = false;
-  @observable data = observable.map<string, string>();
+  @observable data = observable.map<string, string | undefined>();
 
-  constructor(props: Props) {
+  constructor(props: ConfigMapDetailsProps) {
     super(props);
     makeObservable(this);
   }
@@ -48,15 +48,17 @@ export class ConfigMapDetails extends React.Component<Props> {
 
     try {
       this.isSaving = true;
-      await configMapsStore.update(configMap, {
+      await configMapStore.update(configMap, {
         ...configMap,
         data: Object.fromEntries(this.data),
       });
-      Notifications.ok(
+      Notifications.ok((
         <p>
-          <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
-        </p>,
-      );
+          {"ConfigMap "}
+          <b>{configMap.getName()}</b>
+          {" successfully updated."}
+        </p>
+      ));
     } catch (error) {
       Notifications.error(`Failed to save config map: ${error}`);
     } finally {
@@ -85,7 +87,7 @@ export class ConfigMapDetails extends React.Component<Props> {
         {
           data.length > 0 && (
             <>
-              <DrawerTitle title="Data"/>
+              <DrawerTitle>Data</DrawerTitle>
               {
                 data.map(([name, value]) => (
                   <div key={name} className="data">
@@ -103,7 +105,8 @@ export class ConfigMapDetails extends React.Component<Props> {
               }
               <Button
                 primary
-                label="Save" waiting={this.isSaving}
+                label="Save"
+                waiting={this.isSaving}
                 className="save-btn"
                 onClick={this.save}
               />

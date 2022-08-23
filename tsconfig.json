@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "jsx": "react",
-    "target": "ES2017",
+    "target": "ES2019",
     "module": "ESNext",
     "lib": [
       "ESNext",
@@ -11,7 +11,7 @@
     ],
     "moduleResolution": "Node",
     "sourceMap": true,
-    "strict": false,
+    "strict": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
@@ -32,7 +32,11 @@
         "types/*"
       ]
     },
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
   },
   "ts-node": {
     "transpileOnly": true,
@@ -42,7 +46,7 @@
   },
   "include": [
     "src/**/*",
-    "types/*.d.ts"
+    "types/*.d.ts",
   ],
   "exclude": [
     "node_modules",

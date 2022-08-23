@@ -10,41 +10,47 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Deployment, getMetricsForDeployments, IPodMetrics } from "../../../common/k8s-api/endpoints";
+import type { PodMetricData } from "../../../common/k8s-api/endpoints";
+import { Deployment, getMetricsForDeployments } from "../../../common/k8s-api/endpoints";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
-import { deploymentStore } from "./deployments.store";
+import type { DeploymentStore } from "./store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import type { ReplicaSetStore } from "../+workloads-replicasets/store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { boundMethod, Disposer } from "../../utils";
 import logger from "../../../common/logger";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kubeWatchApiInjectable
-  from "../../kube-watch-api/kube-watch-api.injectable";
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
+import type { PodStore } from "../+workloads-pods/store";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
+import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectable";
+import deploymentStoreInjectable from "./store.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
-interface Props extends KubeObjectDetailsProps<Deployment> {
+export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
 
 interface Dependencies {
-  subscribeStores: (stores: KubeObjectStore<KubeObject>[]) => Disposer
+  subscribeStores: SubscribeStores;
+  podStore: PodStore;
+  replicaSetStore: ReplicaSetStore;
+  deploymentStore: DeploymentStore;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
-class NonInjectedDeploymentDetails extends React.Component<Props & Dependencies> {
-  @observable metrics: IPodMetrics = null;
+class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProps & Dependencies> {
+  @observable metrics: PodMetricData | null = null;
 
-  constructor(props: Props & Dependencies) {
+  constructor(props: DeploymentDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -56,21 +62,20 @@ class NonInjectedDeploymentDetails extends React.Component<Props & Dependencies>
       }),
 
       this.props.subscribeStores([
-        podsStore,
-        replicaSetStore,
+        this.props.podStore,
+        this.props.replicaSetStore,
       ]),
     ]);
   }
 
-  @boundMethod
-  async loadMetrics() {
+  loadMetrics = async () => {
     const { object: deployment } = this.props;
 
     this.metrics = await getMetricsForDeployments([deployment], deployment.getNs(), "");
-  }
+  };
 
   render() {
-    const { object: deployment } = this.props;
+    const { object: deployment, podStore, replicaSetStore, deploymentStore, getActiveClusterEntity } = this.props;
 
     if (!deployment) {
       return null;
@@ -91,45 +96,49 @@ class NonInjectedDeploymentDetails extends React.Component<Props & Dependencies>
 
     return (
       <div className="DeploymentDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && podStore.isLoaded && (
           <ResourceMetrics
             loader={this.loadMetrics}
-            tabs={podMetricTabs} object={deployment} params={{ metrics: this.metrics }}
+            tabs={podMetricTabs}
+            object={deployment}
+            metrics={this.metrics}
           >
             <PodCharts/>
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={deployment}/>
         <DrawerItem name="Replicas">
-          {`${spec.replicas} desired, ${status.updatedReplicas || 0} updated`},{" "}
-          {`${status.replicas || 0} total, ${status.availableReplicas || 0} available`},{" "}
-          {`${status.unavailableReplicas || 0} unavailable`}
+          {`${spec.replicas} desired, ${status?.updatedReplicas ?? 0} updated, `}
+          {`${status?.replicas ?? 0} total, ${status?.availableReplicas ?? 0} available, `}
+          {`${status?.unavailableReplicas ?? 0} unavailable`}
         </DrawerItem>
-        {selectors.length > 0 &&
-        <DrawerItem name="Selector" labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
-        </DrawerItem>
-        }
-        {nodeSelector.length > 0 &&
-        <DrawerItem name="Node Selector">
-          {
-            nodeSelector.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
-        </DrawerItem>
-        }
+        {selectors.length > 0 && (
+          <DrawerItem name="Selector" labelsOnly>
+            {
+              selectors.map(label => <Badge key={label} label={label}/>)
+            }
+          </DrawerItem>
+        )}
+        {nodeSelector.length > 0 && (
+          <DrawerItem name="Node Selector">
+            {
+              nodeSelector.map(label => (
+                <Badge key={label} label={label}/>
+              ))
+            }
+          </DrawerItem>
+        )}
         <DrawerItem name="Strategy Type">
           {spec.strategy.type}
         </DrawerItem>
-        <DrawerItem name="Conditions" className="conditions" labelsOnly>
+        <DrawerItem
+          name="Conditions"
+          className="conditions"
+          labelsOnly
+        >
           {
-            deployment.getConditions().map(condition => {
-              const { type, message, lastTransitionTime, status } = condition;
-
-              return (
+            deployment.getConditions()
+              .map(({ type, message, lastTransitionTime, status }) => (
                 <Badge
                   key={type}
                   label={type}
@@ -138,12 +147,12 @@ class NonInjectedDeploymentDetails extends React.Component<Props & Dependencies>
                   tooltip={(
                     <>
                       <p>{message}</p>
-                      <p>Last transition time: {lastTransitionTime}</p>
+                      <p>
+                        {`Last transition time: ${lastTransitionTime}`}
+                      </p>
                     </>
-                  )}
-                />
-              );
-            })
+                  )} />
+              ))
           }
         </DrawerItem>
         <PodDetailsTolerations workload={deployment}/>
@@ -156,14 +165,14 @@ class NonInjectedDeploymentDetails extends React.Component<Props & Dependencies>
   }
 }
 
-export const DeploymentDetails = withInjectables<Dependencies, Props>(
-  NonInjectedDeploymentDetails,
-
-  {
-    getProps: (di, props) => ({
-      subscribeStores: di.inject(kubeWatchApiInjectable).subscribeStores,
-      ...props,
-    }),
-  },
-);
+export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetailsProps>(NonInjectedDeploymentDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    subscribeStores: di.inject(subscribeStoresInjectable),
+    podStore: di.inject(podStoreInjectable),
+    replicaSetStore: di.inject(replicaSetStoreInjectable),
+    deploymentStore: di.inject(deploymentStoreInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+  }),
+});
 

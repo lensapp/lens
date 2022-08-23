@@ -9,51 +9,34 @@ import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import type { Disposer } from "../../utils";
 import { cssNames, prevDefault } from "../../utils";
-import { Notification, NotificationMessage, notificationsStore, NotificationStatus } from "./notifications.store";
+import type { CreateNotificationOptions, Notification, NotificationMessage, NotificationsStore } from "./notifications.store";
 import { Animate } from "../animate";
 import { Icon } from "../icon";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import notificationsStoreInjectable from "./notifications-store.injectable";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import showSuccessNotificationInjectable from "./show-success-notification.injectable";
+import type { ShowCheckedErrorNotification } from "./show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "./show-checked-error.injectable";
+import showErrorNotificationInjectable from "./show-error-notification.injectable";
+import showInfoNotificationInjectable from "./show-info-notification.injectable";
+import showShortInfoNotificationInjectable from "./show-short-info.injectable";
+
+export type ShowNotification = (message: NotificationMessage, opts?: CreateNotificationOptions) => Disposer;
+
+interface Dependencies {
+  store: NotificationsStore;
+}
 
 @observer
-export class Notifications extends React.Component {
-  public elem: HTMLElement;
-
-  static ok(message: NotificationMessage) {
-    return notificationsStore.add({
-      message,
-      timeout: 2_500,
-      status: NotificationStatus.OK,
-    });
-  }
-
-  static error(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
-    return notificationsStore.add({
-      message,
-      timeout: 10_000,
-      status: NotificationStatus.ERROR,
-      ...customOpts,
-    });
-  }
-
-  static shortInfo(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
-    return this.info(message, {
-      timeout: 5_000,
-      ...customOpts,
-    });
-  }
-
-  static info(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
-    return notificationsStore.add({
-      status: NotificationStatus.INFO,
-      timeout: 0,
-      message,
-      ...customOpts,
-    });
-  }
+class NonInjectedNotifications extends React.Component<Dependencies> {
+  public elem: HTMLDivElement | null = null;
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => notificationsStore.notifications.length, () => {
+      reaction(() => this.props.store.notifications.length, () => {
         this.scrollToLastNotification();
       }, { delay: 250 }),
     ]);
@@ -63,7 +46,7 @@ export class Notifications extends React.Component {
     if (!this.elem) {
       return;
     }
-    this.elem.scrollTo({
+    this.elem.scrollTo?.({
       top: this.elem.scrollHeight,
       behavior: "smooth",
     });
@@ -80,7 +63,7 @@ export class Notifications extends React.Component {
   }
 
   render() {
-    const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = notificationsStore;
+    const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = this.props.store;
 
     return (
       <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
@@ -93,14 +76,17 @@ export class Notifications extends React.Component {
               <div
                 className={cssNames("notification flex", status)}
                 onMouseLeave={() => addAutoHideTimer(id)}
-                onMouseEnter={() => removeAutoHideTimer(id)}>
+                onMouseEnter={() => removeAutoHideTimer(id)}
+              >
                 <div className="box">
-                  <Icon material="info_outline"/>
+                  <Icon material="info_outline" />
                 </div>
                 <div className="message box grow">{msgText}</div>
                 <div className="box">
                   <Icon
-                    material="close" className="close"
+                    material="close"
+                    className="close"
+                    data-testid={`close-notification-for-${id}`}
                     onClick={prevDefault(() => {
                       remove(id);
                       onClose?.();
@@ -115,3 +101,26 @@ export class Notifications extends React.Component {
     );
   }
 }
+
+export const Notifications = withInjectables<Dependencies>(
+  NonInjectedNotifications,
+
+  {
+    getProps: (di) => ({
+      store: di.inject(notificationsStoreInjectable),
+    }),
+  },
+) as React.FC & {
+  ok: ShowNotification;
+  checkedError: ShowCheckedErrorNotification;
+  error: ShowNotification;
+  shortInfo: ShowNotification;
+  info: ShowNotification;
+};
+
+Notifications.ok = asLegacyGlobalFunctionForExtensionApi(showSuccessNotificationInjectable);
+Notifications.error = asLegacyGlobalFunctionForExtensionApi(showErrorNotificationInjectable);
+Notifications.checkedError = asLegacyGlobalFunctionForExtensionApi(showCheckedErrorNotificationInjectable);
+Notifications.info = asLegacyGlobalFunctionForExtensionApi(showInfoNotificationInjectable);
+Notifications.shortInfo = asLegacyGlobalFunctionForExtensionApi(showShortInfoNotificationInjectable);
+

@@ -7,23 +7,20 @@ import React from "react";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import { observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
-import { boundMethod } from "../../../../common/utils";
 import { shell } from "electron";
 import { Notice } from "../../+extensions/notice";
 
-interface Props {
+export interface ClusterKubeconfigProps {
   cluster: Cluster;
 }
 
 @observer
-export class ClusterKubeconfig extends React.Component<Props> {
-
-  @boundMethod
-  openKubeconfig() {
+export class ClusterKubeconfig extends React.Component<ClusterKubeconfigProps> {
+  openKubeconfig = () => {
     const { cluster } = this.props;
 
     shell.showItemInFolder(cluster.kubeConfigPath);
-  }
+  };
 
   render() {
     return (

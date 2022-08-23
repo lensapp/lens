@@ -11,7 +11,7 @@ import { computed } from "mobx";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import type { ConfigurableDependencyInjectionContainer } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
 import { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import type { WelcomeBannerRegistration } from "../welcome-banner-items/welcome-banner-registration";
@@ -27,16 +27,12 @@ jest.mock("electron", () => ({
 
 describe("<Welcome/>", () => {
   let render: DiRender;
-  let di: ConfigurableDependencyInjectionContainer;
+  let di: DiContainer;
   let welcomeBannersStub: WelcomeBannerRegistration[];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    await di.runSetups();
-
     render = renderFor(di);
-
     welcomeBannersStub = [];
 
     di.override(rendererExtensionsInjectable, () =>
@@ -102,7 +98,7 @@ class TestExtension extends LensRendererExtension {
       isBundled: false,
       isCompatible: false,
       isEnabled: false,
-      manifest: { name: id, version: "some-version" },
+      manifest: { name: id, version: "some-version", engines: { lens: "^5.5.0" }},
       manifestPath: "irrelevant",
     });
 

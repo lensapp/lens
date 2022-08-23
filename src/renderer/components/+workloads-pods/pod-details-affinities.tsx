@@ -9,11 +9,11 @@ import { DrawerItem, DrawerParamToggler } from "../drawer";
 import type { DaemonSet, Deployment, Job, Pod, ReplicaSet, StatefulSet } from "../../../common/k8s-api/endpoints";
 import { MonacoEditor } from "../monaco-editor";
 
-interface Props {
+export interface PodDetailsAffinitiesProps {
   workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
 }
 
-export class PodDetailsAffinities extends React.Component<Props> {
+export class PodDetailsAffinities extends React.Component<PodDetailsAffinitiesProps> {
   render() {
     const { workload } = this.props;
     const affinitiesNum = workload.getAffinityNumber();

@@ -9,9 +9,11 @@ import path from "path";
 import os from "os";
 import yaml from "js-yaml";
 import logger from "../main/logger";
-import { Cluster, Context, newClusters, newContexts, newUsers, User } from "@kubernetes/client-node/dist/config_types";
-import { resolvePath } from "./utils";
+import type { Cluster, Context, User } from "@kubernetes/client-node/dist/config_types";
+import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
+import { isDefined, resolvePath } from "./utils";
 import Joi from "joi";
+import type { PartialDeep } from "type-fest";
 
 export const kubeConfigDefaultPath = path.join(os.homedir(), ".kube", "config");
 
@@ -91,7 +93,7 @@ interface KubeConfigOptions {
 
 interface OptionsResult {
   options: KubeConfigOptions;
-  error: Joi.ValidationError;
+  error: Joi.ValidationError | undefined;
 }
 
 function loadToOptions(rawYaml: string): OptionsResult {
@@ -134,7 +136,7 @@ export function loadFromOptions(options: KubeConfigOptions): KubeConfig {
 
 export interface ConfigResult {
   config: KubeConfig;
-  error: Joi.ValidationError;
+  error: Joi.ValidationError | undefined;
 }
 
 export function loadConfigFromString(content: string): ConfigResult {
@@ -147,8 +149,8 @@ export function loadConfigFromString(content: string): ConfigResult {
 }
 
 export interface SplitConfigEntry {
-  config: KubeConfig,
-  error?: string;
+  config: KubeConfig;
+  validationResult: ValidateKubeConfigResult;
 }
 
 /**
@@ -177,7 +179,7 @@ export function splitConfig(kubeConfig: KubeConfig): SplitConfigEntry[] {
 
     return {
       config,
-      error: validateKubeConfig(config, ctx.name)?.toString(),
+      validationResult: validateKubeConfig(config, ctx.name),
     };
   });
 }
@@ -187,38 +189,44 @@ export function splitConfig(kubeConfig: KubeConfig): SplitConfigEntry[] {
  * @param kubeConfig The kubeconfig object to format as pretty yaml
  * @returns The yaml representation of the kubeconfig object
  */
-export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
-  const clusters = kubeConfig.clusters.map(cluster => ({
-    name: cluster.name,
-    cluster: {
-      "certificate-authority-data": cluster.caData,
-      "certificate-authority": cluster.caFile,
-      server: cluster.server,
-      "insecure-skip-tls-verify": cluster.skipTLSVerify,
-    },
-  }));
-  const contexts = kubeConfig.contexts.map(context => ({
-    name: context.name,
-    context: {
-      cluster: context.cluster,
-      user: context.user,
-      namespace: context.namespace,
-    },
-  }));
-  const users = kubeConfig.users.map(user => ({
-    name: user.name,
-    user: {
-      "client-certificate-data": user.certData,
-      "client-certificate": user.certFile,
-      "client-key-data": user.keyData,
-      "client-key": user.keyFile,
-      "auth-provider": user.authProvider,
-      exec: user.exec,
-      token: user.token,
-      username: user.username,
-      password: user.password,
-    },
-  }));
+export function dumpConfigYaml(kubeConfig: PartialDeep<KubeConfig>): string {
+  const clusters = kubeConfig.clusters
+    ?.filter(isDefined)
+    .map(cluster => ({
+      name: cluster.name,
+      cluster: {
+        "certificate-authority-data": cluster.caData,
+        "certificate-authority": cluster.caFile,
+        server: cluster.server,
+        "insecure-skip-tls-verify": cluster.skipTLSVerify,
+      },
+    }));
+  const contexts = kubeConfig.contexts
+    ?.filter(isDefined)
+    .map(context => ({
+      name: context.name,
+      context: {
+        cluster: context.cluster,
+        user: context.user,
+        namespace: context.namespace,
+      },
+    }));
+  const users = kubeConfig.users
+    ?.filter(isDefined)
+    .map(user => ({
+      name: user.name,
+      user: {
+        "client-certificate-data": user.certData,
+        "client-certificate": user.certFile,
+        "client-key-data": user.keyData,
+        "client-key": user.keyFile,
+        "auth-provider": user.authProvider,
+        exec: user.exec,
+        token: user.token,
+        username: user.username,
+        password: user.password,
+      },
+    }));
   const config = {
     apiVersion: "v1",
     kind: "Config",
@@ -235,25 +243,44 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
   return yaml.dump(config, { skipInvalid: true });
 }
 
+export type ValidateKubeConfigResult = {
+  error: Error;
+} | {
+  error?: undefined;
+  context: Context;
+  cluster: Cluster;
+  user: User;
+};
+
 /**
  * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
  *
  * Note: This function returns an error instead of throwing it, returning `undefined` if the validation passes
  */
-export function validateKubeConfig(config: KubeConfig, contextName: string): Error | undefined {
-  const contextObject = config.getContextObject(contextName);
+export function validateKubeConfig(config: KubeConfig, contextName: string): ValidateKubeConfigResult {
+  const context = config.getContextObject(contextName);
 
-  if (!contextObject) {
-    return new Error(`No valid context object provided in kubeconfig for context '${contextName}'`);
+  if (!context) {
+    return {
+      error: new Error(`No valid context object provided in kubeconfig for context '${contextName}'`),
+    };
   }
 
-  if (!config.getCluster(contextObject.cluster)) {
-    return new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`);
+  const cluster = config.getCluster(context.cluster);
+
+  if (!cluster) {
+    return {
+      error: new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`),
+    };
   }
 
-  if (!config.getUser(contextObject.user)) {
-    return new Error(`No valid user object provided in kubeconfig for context '${contextName}'`);
+  const user = config.getUser(context.user);
+
+  if (!user) {
+    return {
+      error: new Error(`No valid user object provided in kubeconfig for context '${contextName}'`),
+    };
   }
 
-  return undefined;
+  return { cluster, user, context };
 }

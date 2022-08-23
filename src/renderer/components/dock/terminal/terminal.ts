@@ -4,54 +4,57 @@
  */
 
 import debounce from "lodash/debounce";
+import type { IComputedValue } from "mobx";
 import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
-import { TerminalApi, TerminalChannels } from "../../../api/terminal-api";
-import { ThemeStore } from "../../../theme.store";
+import type { TerminalApi } from "../../../api/terminal-api";
+import type { ThemeStore } from "../../../themes/store";
 import { disposer } from "../../../utils";
-import { isMac, defaultTerminalFontFamily } from "../../../../common/vars";
 import { once } from "lodash";
-import { UserStore } from "../../../../common/user-store";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
+import assert from "assert";
+import { TerminalChannels } from "../../../../common/terminal/channels";
+import { LinkProvider } from "xterm-link-provider";
+import type { OpenLinkInBrowser } from "../../../../common/utils/open-link-in-browser.injectable";
+
+export interface TerminalDependencies {
+  readonly spawningPool: HTMLElement;
+  readonly terminalConfig: IComputedValue<TerminalConfig>;
+  readonly terminalCopyOnSelect: IComputedValue<boolean>;
+  readonly themeStore: ThemeStore;
+  readonly isMac: boolean;
+  openLinkInBrowser: OpenLinkInBrowser;
+}
+
+export interface TerminalArguments {
+  tabId: TabId;
+  api: TerminalApi;
+}
 
 export class Terminal {
-  private terminalConfig: TerminalConfig = UserStore.getInstance().terminalConfig;
-
-  public static get spawningPool() {
-    return document.getElementById("terminal-init");
-  }
-
-  static async preloadFonts() {
-    const fontPath = require("../../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
-    const fontFace = new FontFace(defaultTerminalFontFamily, `url(${fontPath})`);
-
-    await fontFace.load();
-    document.fonts.add(fontFace);
-  }
-
-  private xterm: XTerm | null = new XTerm({
-    cursorBlink: true,
-    cursorStyle: "bar",
-    fontSize: this.terminalConfig.fontSize,
-    fontFamily: this.terminalConfig.fontFamily,
-  });
+  private readonly xterm: XTerm;
   private readonly fitAddon = new FitAddon();
   private scrollPos = 0;
-  private disposer = disposer();
+  private readonly disposer = disposer();
+  public readonly tabId: TabId;
+  protected readonly api: TerminalApi;
 
-  get elem() {
-    return this.xterm?.element;
+  private get elem() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.xterm.element!;
   }
 
-  get viewport() {
-    return this.xterm.element.querySelector(".xterm-viewport");
+  private get viewport() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.elem.querySelector(".xterm-viewport")!;
   }
 
   attachTo(parentElem: HTMLElement) {
+    assert(this.elem, "Terminal should always be mounted somewhere");
     parentElem.appendChild(this.elem);
     this.onActivate();
   }
@@ -60,16 +63,39 @@ export class Terminal {
     const { elem } = this;
 
     if (elem) {
-      Terminal.spawningPool.appendChild(elem);
+      this.dependencies.spawningPool.appendChild(elem);
     }
   }
 
-  constructor(public tabId: TabId, protected api: TerminalApi) {
+  get fontFamily() {
+    return this.dependencies.terminalConfig.get().fontFamily;
+  }
+
+  get fontSize() {
+    return this.dependencies.terminalConfig.get().fontSize;
+  }
+
+  get theme(): Record<string/*paramName*/, string/*color*/> {
+    return this.dependencies.themeStore.xtermColors;
+  }
+
+  constructor(protected readonly dependencies: TerminalDependencies, {
+    tabId,
+    api,
+  }: TerminalArguments) {
+    this.tabId = tabId;
+    this.api = api;
+
+    this.xterm = new XTerm({
+      cursorBlink: true,
+      cursorStyle: "bar",
+      fontSize: this.fontSize,
+      fontFamily: this.fontFamily,
+    });
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
 
-    this.xterm.open(Terminal.spawningPool);
-    this.xterm.registerLinkMatcher(/https?:\/\/[^\s]+/i, this.onClickLink);
+    this.xterm.open(this.dependencies.spawningPool);
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
     this.xterm.onSelectionChange(this.onSelectionChange);
 
@@ -84,50 +110,38 @@ export class Terminal {
     this.api.on("data", this.onApiData);
     window.addEventListener("resize", this.onResize);
 
+    const linkProvider = new LinkProvider(
+      this.xterm,
+      /https?:\/\/[^\s]+/i,
+      (event, link) => this.dependencies.openLinkInBrowser(link),
+      undefined,
+      0,
+    );
+
     this.disposer.push(
-      reaction(() => ThemeStore.getInstance().xtermColors, colors => {
-        this.xterm?.setOption("theme", colors);
-      }, {
+      this.xterm.registerLinkProvider(linkProvider),
+      reaction(() => this.theme, colors => this.xterm.setOption("theme", colors), {
         fireImmediately: true,
       }),
-      reaction(() => UserStore.getInstance().terminalConfig.fontSize, this.setFontSize, {
-        fireImmediately: true,
-      }),
-      reaction(() => UserStore.getInstance().terminalConfig.fontFamily, this.setFontFamily, {
-        fireImmediately: true,
-      }),
+      reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true }),
+      reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true }),
       () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
       () => window.removeEventListener("resize", this.onResize),
       () => this.elem.removeEventListener("contextmenu", this.onContextMenu),
+      this.xterm.onResize(({ cols, rows }) => {
+        this.api.sendTerminalSize(cols, rows);
+      }),
     );
   }
 
   destroy() {
-    if (this.xterm) {
-      this.disposer();
-      this.xterm.dispose();
-      this.xterm = null;
-    }
+    this.disposer();
+    this.xterm.dispose();
   }
 
-  fit = () => {
-    // Since this function is debounced we need to read this value as late as possible
-    if (!this.xterm) {
-      return;
-    }
-
-    try {
-      this.fitAddon.fit();
-      const { cols, rows } = this.xterm;
-
-      this.api.sendTerminalSize(cols, rows);
-    } catch (error) {
-      // see https://github.com/lensapp/lens/issues/1891
-      logger.error(`[TERMINAL]: failed to resize terminal to fit`, error);
-    }
-  };
+  fit = () => this.fitAddon.fit();
 
   fitLazy = debounce(this.fit, 250);
 
@@ -166,14 +180,10 @@ export class Terminal {
     this.viewport.scrollTop = this.scrollPos; // restore last scroll position
   };
 
-  onClickLink = (evt: MouseEvent, link: string) => {
-    window.open(link, "_blank");
-  };
-
   onContextMenu = () => {
     if (
       // don't paste if user hasn't turned on the feature
-      UserStore.getInstance().terminalCopyOnSelect
+      this.dependencies.terminalCopyOnSelect.get()
 
       // don't paste if the clipboard doesn't have text
       && clipboard.availableFormats().includes("text/plain")
@@ -185,17 +195,26 @@ export class Terminal {
   onSelectionChange = () => {
     const selection = this.xterm.getSelection().trim();
 
-    if (UserStore.getInstance().terminalCopyOnSelect && selection) {
+    if (this.dependencies.terminalCopyOnSelect.get() && selection) {
       clipboard.writeText(selection);
     }
   };
 
-  setFontSize = (size: number) => {
-    this.xterm.options.fontSize = size;
+  setFontSize = (fontSize: number) => {
+    logger.info(`[TERMINAL]: set fontSize to ${fontSize}`);
+
+    this.xterm.options.fontSize = fontSize;
+    this.fit();
   };
 
-  setFontFamily = (family: string) => {
-    this.xterm.options.fontFamily = family;
+  setFontFamily = (fontFamily: string) => {
+    logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
+
+    this.xterm.options.fontFamily = fontFamily;
+    this.fit();
+
+    // provide css-variable within `:root {}`
+    document.documentElement.style.setProperty("--font-terminal", fontFamily);
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
@@ -217,7 +236,7 @@ export class Terminal {
     }
 
     //Ctrl+K: clear the entire buffer, making the prompt line the new first line on mac os
-    if (isMac && metaKey) {
+    if (this.dependencies.isMac && metaKey) {
       switch (code) {
         case "KeyK":
           this.onClear();

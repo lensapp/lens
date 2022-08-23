@@ -5,10 +5,12 @@
 
 import "./tab-layout.scss";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { matchPath, Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
+import type { IClassName } from "../../utils";
+import { cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "../error-boundary";
 import { navigate, navigation } from "../../navigation";
@@ -38,21 +40,29 @@ export const TabLayout = observer(({ className, contentClass, tabs = [], childre
     <div className={cssNames("TabLayout", className)}>
       {hasTabs && (
         <Tabs center onChange={(url) => navigate(url)}>
-          {tabs.map(({ title, routePath, url = routePath, exact }) => {
-            const isActive = !!matchPath(currentLocation, { path: routePath, exact });
-
-            return <Tab key={url} label={title} value={url} active={isActive}/>;
-          })}
+          {tabs.map(({ title, routePath, url = routePath, exact }) => (
+            <Tab
+              key={url}
+              label={title}
+              value={url}
+              active={!!matchPath(currentLocation, { path: routePath, exact })}
+            />
+          ))}
         </Tabs>
       )}
       <main className={cssNames(contentClass)}>
         <ErrorBoundary>
           {hasTabs && (
             <Switch>
-              {tabs.map(({ routePath, exact, component }) => {
-                return <Route key={routePath} exact={exact} path={routePath} component={component}/>;
-              })}
-              <Redirect to={startTabUrl}/>
+              {tabs.map(({ routePath, exact, component }) => (
+                <Route
+                  key={routePath}
+                  exact={exact}
+                  path={routePath}
+                  component={component}
+                />
+              ))}
+              {startTabUrl && <Redirect to={startTabUrl}/>}
             </Switch>
           )}
           {children}

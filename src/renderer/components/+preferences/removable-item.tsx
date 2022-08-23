@@ -4,18 +4,20 @@
  */
 import styles from "./removable-item.module.scss";
 
-import React, { DOMAttributes } from "react";
+import type { DOMAttributes } from "react";
+import React from "react";
 
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 
-interface Props extends DOMAttributes<any>{
+export interface RemovableItemProps extends DOMAttributes<any>{
   icon?: string;
   onRemove: () => void;
   className?: string;
+  "data-testid"?: string;
 }
 
-export function RemovableItem({ icon, onRemove, children, className, ...rest }: Props) {
+export function RemovableItem({ icon, onRemove, children, className, "data-testid": testId, ...rest }: RemovableItemProps) {
   return (
     <div className={cssNames(styles.item, "flex gaps align-center justify-space-between", className)} {...rest}>
       {icon && (
@@ -26,6 +28,7 @@ export function RemovableItem({ icon, onRemove, children, className, ...rest }: 
         material="delete"
         onClick={onRemove}
         tooltip="Remove"
+        data-testid={testId}
       />
     </div>
   );

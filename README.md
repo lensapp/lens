@@ -1,7 +1,7 @@
 # Lens Open Source Project (OpenLens)
 
 [![Build Status](https://github.com/lensapp/lens/actions/workflows/test.yml/badge.svg)](https://github.com/lensapp/lens/actions/workflows/test.yml)
-[![Chat on Slack](https://img.shields.io/badge/chat-on%20slack-blue.svg?logo=slack&longCache=true&style=flat)](https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI)
+[![Chat on Slack](https://img.shields.io/badge/chat-on%20slack-blue.svg?logo=slack&longCache=true&style=flat)](https://join.slack.com/t/k8slens/shared_invite/zt-198iepl92-EPJsCckkJ~f887vWqJcgGA)
 
 ## The Repository
 
@@ -19,7 +19,7 @@ Lens IDE a standalone application for MacOS, Windows and Linux operating systems
 
 ## Installation
 
-See [Getting Started](https://docs.k8slens.dev/latest/getting-started/) page.
+See [Getting Started](https://docs.k8slens.dev/main/getting-started/install-lens/) page.
 
 ## Development
 

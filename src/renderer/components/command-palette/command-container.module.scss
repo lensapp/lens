@@ -1,0 +1,91 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.CommandContainer {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--layoutBackground);
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 16px 70px;
+  max-width: 640px;
+  color: var(--settingsColor);
+  transition: all 0.3s;
+
+  :global(.Input) {
+    label {
+      caret-color: var(--blue);
+      color: var(--settingsColor);
+      background: transparent;
+      border: 0;
+      font-size: 18px;
+      padding: 15px 19px;
+      border-bottom: 1px solid var(--borderFaintColor);
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  :global(.hint) {
+    padding: 8px;
+    display: block;
+  }
+
+  :global(.errors) {
+    padding: 8px;
+  }
+
+  :global(.Select__menu) {
+    position: relative;
+  }
+
+  :global(.Select__control) {
+    padding: var(--padding);
+    box-shadow: none;
+    border-bottom: 1px solid var(--borderFaintColor);
+    caret-color: var(--blue);
+    font-size: 18px;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  :global(.Select__menu) {
+    box-shadow: none;
+    background: transparent;
+    margin: 0;
+  }
+
+  :global(.Select__menu-list) {
+    padding: 0;
+  }
+
+  :global(.Select__option) {
+    background-color: transparent;
+    padding: 10px 18px;
+
+    &:hover {
+      background-color: var(--menuSelectedOptionBgc);
+      border-left: 4px solid var(--blue);
+      padding-left: 14px;
+    }
+
+    &:global(.Select__option--is-focused) {
+      background-color: var(--menuSelectedOptionBgc);
+      border-left: 4px solid var(--blue);
+      padding-left: 14px;
+    }
+  }
+
+  :global(.Select__menu-notice--no-options) {
+    padding: 12px;
+  }
+}

@@ -1,0 +1,25 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+$baseline: 8px;
+
+.ForceUpdateModal {
+  background-color: white;
+  border-radius: 1 * $baseline;
+  padding: 3 * $baseline;
+  width: 50 * $baseline;
+
+  .header {
+    margin-bottom: 2 * $baseline;
+  }
+
+  .content {
+    margin-bottom: 2 * $baseline;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+  }
+}
