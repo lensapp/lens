@@ -4,9 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { upgradeRelease } from "../helm-release-manager";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { JsonObject } from "type-fest";
+import { execHelm } from "../exec";
+import tempy from "tempy";
+import fse from "fs-extra";
+import yaml from "js-yaml";
+import getHelmReleaseInjectable from "./get-helm-release.injectable";
 
 export interface UpdateChartArgs {
   chart: string;
@@ -19,23 +23,37 @@ const updateHelmReleaseInjectable = getInjectable({
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const getHelmRelease = di.inject(getHelmReleaseInjectable);
 
     return async (cluster: Cluster, releaseName: string, namespace: string, data: UpdateChartArgs) => {
       const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
-      const kubectl = await cluster.ensureKubectl();
-      const kubectlPath = await kubectl.getPath();
 
       logger.debug("Upgrade release");
 
-      return upgradeRelease(
+      const valuesFilePath = tempy.file({ name: "values.yaml" });
+
+      await fse.writeFile(valuesFilePath, yaml.dump(data.values));
+
+      const args = [
+        "upgrade",
         releaseName,
         data.chart,
-        data.values,
-        namespace,
-        data.version,
-        proxyKubeconfig,
-        kubectlPath,
-      );
+        "--version", data.version,
+        "--values", valuesFilePath,
+        "--namespace", namespace,
+        "--kubeconfig", proxyKubeconfig,
+      ];
+
+      try {
+        const output = await execHelm(args);
+
+        return {
+          log: output,
+          release: await getHelmRelease(cluster, releaseName, namespace),
+        };
+      } finally {
+        await fse.unlink(valuesFilePath);
+      }
     };
   },
 
@@ -43,3 +61,4 @@ const updateHelmReleaseInjectable = getInjectable({
 });
 
 export default updateHelmReleaseInjectable;
+

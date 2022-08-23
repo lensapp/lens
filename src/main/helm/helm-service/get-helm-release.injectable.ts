@@ -4,14 +4,17 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { getRelease } from "../helm-release-manager";
 import loggerInjectable from "../../../common/logger.injectable";
+import { isObject, json } from "../../../common/utils";
+import { execHelm } from "../exec";
+import getHelmReleaseResourcesInjectable from "./get-helm-release-resources/get-helm-release-resources.injectable";
 
 const getHelmReleaseInjectable = getInjectable({
   id: "get-helm-release",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const getHelmReleaseResources = di.inject(getHelmReleaseResourcesInjectable);
 
     return async (cluster: Cluster, releaseName: string, namespace: string) => {
       const kubeconfigPath = await cluster.getProxyKubeconfigPath();
@@ -20,7 +23,35 @@ const getHelmReleaseInjectable = getInjectable({
 
       logger.debug("Fetch release");
 
-      return getRelease(releaseName, namespace, kubeconfigPath, kubectlPath);
+      const args = [
+        "status",
+        releaseName,
+        "--namespace",
+        namespace,
+        "--kubeconfig",
+        kubeconfigPath,
+        "--output",
+        "json",
+      ];
+
+      const release = json.parse(
+        await execHelm(args, {
+          maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
+        }),
+      );
+
+      if (!isObject(release) || Array.isArray(release)) {
+        return undefined;
+      }
+
+      release.resources = await getHelmReleaseResources(
+        releaseName,
+        namespace,
+        kubeconfigPath,
+        kubectlPath,
+      );
+
+      return release;
     };
   },
 

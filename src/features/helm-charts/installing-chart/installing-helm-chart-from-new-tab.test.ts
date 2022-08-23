@@ -29,6 +29,8 @@ import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/h
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import callForHelmReleasesInjectable from "../../../renderer/components/+helm-releases/call-for-helm-releases/call-for-helm-releases.injectable";
+import callForHelmReleaseDetailsInjectable from "../../../renderer/components/+helm-releases/release-details/release-details-model/call-for-helm-release/call-for-helm-release-details/call-for-helm-release-details.injectable";
 
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;
@@ -50,6 +52,9 @@ describe("installing helm chart from new tab", () => {
     callForCreateHelmReleaseMock = asyncFn();
 
     builder.beforeWindowStart((windowDi) => {
+      windowDi.override(callForHelmReleasesInjectable, () => async () => []);
+      windowDi.override(callForHelmReleaseDetailsInjectable, () => () => new Promise(() => {}));
+
       windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
