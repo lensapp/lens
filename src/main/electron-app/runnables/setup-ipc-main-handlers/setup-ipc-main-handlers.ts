@@ -5,7 +5,7 @@
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import { clusterFrameMap } from "../../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../../../common/ipc/cluster";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { appEventBus } from "../../../../common/app-event-bus/event-bus";
@@ -14,9 +14,7 @@ import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster/manager";
 import { ResourceApplier } from "../../../resource-applier";
-import { remove } from "fs-extra";
-import type { IComputedValue, ObservableSet } from "mobx";
-import type { GetAbsolutePath } from "../../../../common/path/get-absolute-path.injectable";
+import type { IComputedValue } from "mobx";
 import type { MenuItemOpts } from "../../../menu/application-menu-items.injectable";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
@@ -26,27 +24,21 @@ import type { Theme } from "../../../theme/operating-system-theme-state.injectab
 import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
 
 interface Dependencies {
-  directoryForLensLocalStorage: string;
-  getAbsolutePath: GetAbsolutePath;
   applicationMenuItems: IComputedValue<MenuItemOpts[]>;
   clusterManager: ClusterManager;
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
-  clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
 }
 
 export const setupIpcMainHandlers = ({
   applicationMenuItems,
-  directoryForLensLocalStorage,
-  getAbsolutePath,
   clusterManager,
   catalogEntityRegistry,
   clusterStore,
   operatingSystemTheme,
   askUserForFilePaths,
-  clustersThatAreBeingDeleted,
 }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
@@ -83,40 +75,6 @@ export const setupIpcMainHandlers = ({
       cluster.disconnect();
       clusterFrameMap.delete(cluster.id);
     }
-  });
-
-  ipcMainHandle(clusterDeleteHandler, async (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "remove" });
-
-    const clusterStore = ClusterStore.getInstance();
-    const cluster = clusterStore.getById(clusterId);
-
-    if (!cluster) {
-      return;
-    }
-
-    cluster.disconnect();
-    clusterFrameMap.delete(cluster.id);
-
-    // Remove from the cluster store as well, this should clear any old settings
-    clusterStore.clusters.delete(cluster.id);
-
-    try {
-      // remove the local storage file
-      const localStorageFilePath = getAbsolutePath(directoryForLensLocalStorage, `${cluster.id}.json`);
-
-      await remove(localStorageFilePath);
-    } catch {
-      // ignore error
-    }
-  });
-
-  ipcMainHandle(clusterSetDeletingHandler, (event, clusterId: string) => {
-    clustersThatAreBeingDeleted.add(clusterId);
-  });
-
-  ipcMainHandle(clusterClearDeletingHandler, (event, clusterId: string) => {
-    clustersThatAreBeingDeleted.delete(clusterId);
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {

@@ -68,6 +68,7 @@ import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
+import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -114,6 +115,7 @@ export interface ApplicationBuilder {
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
+  afterWindowStart: (callback: Callback) => ApplicationBuilder;
 
   startHidden: () => Promise<void>;
   render: () => Promise<RenderResult>;
@@ -168,6 +170,11 @@ export const getApplicationBuilder = () => {
 
   const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeWindowStartCallbacks: Callback[] = [];
+  const afterWindowStartCallbacks: Callback[] = [];
+
+  const fsState = new Map();
+
+  overrideFsWithFakes(mainDi, fsState);
 
   let environment = environments.application;
 
@@ -202,6 +209,7 @@ export const getApplicationBuilder = () => {
     const windowDi = getRendererDi({ doGeneralOverrides: true });
 
     overrideChannelsForWindow(windowDi, windowId);
+    overrideFsWithFakes(windowDi, fsState);
 
     runInAction(() => {
       windowDi.register(rendererExtensionsStateInjectable);
@@ -234,6 +242,10 @@ export const getApplicationBuilder = () => {
         const startFrame = windowDi.inject(startFrameInjectable);
 
         await startFrame();
+
+        for (const callback of afterWindowStartCallbacks) {
+          await callback(windowDi);
+        }
 
         const history = windowDi.inject(historyInjectable);
 
@@ -642,6 +654,18 @@ export const getApplicationBuilder = () => {
       });
 
       beforeWindowStartCallbacks.push(callback);
+
+      return builder;
+    },
+
+    afterWindowStart(callback) {
+      const alreadyRenderedWindows = builder.applicationWindow.getAll();
+
+      alreadyRenderedWindows.forEach((window) => {
+        callback(window.di);
+      });
+
+      afterWindowStartCallbacks.push(callback);
 
       return builder;
     },

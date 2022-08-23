@@ -7,6 +7,7 @@ import "./animate.scss";
 import React, { useEffect, useState } from "react";
 import { cssNames, noop } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { RequestAnimationFrame } from "./request-animation-frame.injectable";
 import requestAnimationFrameInjectable from "./request-animation-frame.injectable";
 import defaultEnterDurationForAnimatedInjectable from "./default-enter-duration.injectable";
 import defaultLeaveDurationForAnimatedInjectable from "./default-leave-duration.injectable";
@@ -24,7 +25,7 @@ export interface AnimateProps {
 }
 
 interface Dependencies {
-  requestAnimationFrame: (callback: () => void) => void;
+  requestAnimationFrame: RequestAnimationFrame;
   defaultEnterDuration: number;
   defaultLeaveDuration: number;
 }
@@ -46,21 +47,25 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
     onLeave: onLeaveHandler = noop<[]>,
   } = props;
 
-  const [isVisible, setIsVisible] = useState(enter);
+  const [isVisible, setIsVisible] = useState(false);
   const [showClassNameEnter, setShowClassNameEnter] = useState(false);
   const [showClassNameLeave, setShowClassNameLeave] = useState(false);
 
   const contentElem = React.Children.only(children) as React.ReactElement<React.HTMLAttributes<any>>;
-  const onEnter = () => {
-    setIsVisible(true);
+  const classNames = cssNames("Animate", name, contentElem.props.className, {
+    enter: showClassNameEnter,
+    leave: showClassNameLeave,
+  });
 
-    requestAnimationFrame(() => {
-      setShowClassNameEnter(true);
-      onEnterHandler();
-    });
-  };
-  const onLeave = () => {
-    if (isVisible) {
+  useEffect(() => {
+    if (enter) {
+      setIsVisible(true);
+
+      requestAnimationFrame(() => {
+        setShowClassNameEnter(true);
+        onEnterHandler();
+      });
+    } else if (isVisible) {
       setShowClassNameLeave(true);
       onLeaveHandler();
 
@@ -71,16 +76,7 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
         setShowClassNameLeave(false);
       }, leaveDuration);
     }
-  };
-  const toggle = (entering: boolean) => {
-    if (entering) {
-      onEnter();
-    } else {
-      onLeave();
-    }
-  };
-
-  useEffect(() => toggle(enter), [enter]);
+  }, [enter]);
 
   if (!isVisible) {
     return null;
@@ -92,10 +88,7 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
   } as React.CSSProperties;
 
   return React.cloneElement(contentElem, {
-    className: cssNames("Animate", name, contentElem.props.className, {
-      enter: showClassNameEnter,
-      leave: showClassNameLeave,
-    }),
+    className: classNames,
     children: contentElem.props.children,
     style: {
       ...contentElem.props.style,
@@ -112,5 +105,3 @@ export const Animate = withInjectables<Dependencies, AnimateProps>(NonInjectedAn
     defaultLeaveDuration: di.inject(defaultLeaveDurationForAnimatedInjectable),
   }),
 });
-
-

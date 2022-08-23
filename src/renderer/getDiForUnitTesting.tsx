@@ -53,7 +53,6 @@ import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./componen
 import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
 import replicasetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-replicasets/scale-dialog/replicaset-scale-dialog-cluster-frame-child-component.injectable";
 import statefulsetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-statefulsets/scale/statefulset-scale-dialog-cluster-frame-child-component.injectable";
-import deleteClusterDialogClusterFrameChildComponentInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-cluster-frame-child-component.injectable";
 import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/kube-object-details/kube-object-details-cluster-frame-child-component.injectable";
 import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
@@ -149,7 +148,6 @@ export const getDiForUnitTesting = (
       deploymentScaleDialogClusterFrameChildComponentInjectable,
       replicasetScaleDialogClusterFrameChildComponentInjectable,
       statefulsetScaleDialogClusterFrameChildComponentInjectable,
-      deleteClusterDialogClusterFrameChildComponentInjectable,
       kubeObjectDetailsClusterFrameChildComponentInjectable,
       kubeconfigDialogClusterFrameChildComponentInjectable,
       portForwardDialogClusterFrameChildComponentInjectable,

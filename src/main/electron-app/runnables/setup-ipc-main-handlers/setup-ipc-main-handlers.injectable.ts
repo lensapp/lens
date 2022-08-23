@@ -3,12 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { setupIpcMainHandlers } from "./setup-ipc-main-handlers";
 import loggerInjectable from "../../../../common/logger.injectable";
 import clusterManagerInjectable from "../../../cluster/manager.injectable";
 import applicationMenuItemsInjectable from "../../../menu/application-menu-items.injectable";
-import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import { onLoadOfApplicationInjectionToken } from "../../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
@@ -21,14 +19,8 @@ const setupIpcMainHandlersInjectable = getInjectable({
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
-
-    const directoryForLensLocalStorage = di.inject(
-      directoryForLensLocalStorageInjectable,
-    );
-
     const clusterManager = di.inject(clusterManagerInjectable);
     const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const clusterStore = di.inject(clusterStoreInjectable);
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
@@ -42,8 +34,6 @@ const setupIpcMainHandlersInjectable = getInjectable({
 
         setupIpcMainHandlers({
           applicationMenuItems,
-          getAbsolutePath,
-          directoryForLensLocalStorage,
           clusterManager,
           catalogEntityRegistry,
           clusterStore,
