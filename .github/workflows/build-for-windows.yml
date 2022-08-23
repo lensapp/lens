@@ -40,31 +40,34 @@ jobs:
         with:
           args: install make
 
-      # Sets up the node_modules folder with the Windows version of the dependencies
-      - name: Yarn install
-        run: |
-          yarn install --frozen-lockfile --network-timeout=100000
-          yarn check --verify-tree --integrity
+      # # Sets up the node_modules folder with the Windows version of the dependencies
+      # - name: Yarn install
+      #   run: |
+      #     yarn install --frozen-lockfile --network-timeout=100000
+      #     yarn check --verify-tree --integrity
 
-      # Downloads kubernetes dependencies
-      - name: Download client binaries
-        run: yarn download:binaries
+      # # Downloads kubernetes dependencies
+      # - name: Download client binaries
+      #   run: yarn download:binaries
 
-      # Fix the version of the build
-      - name: Fix Build version
-        run: yarn run npm:fix-build-version
+      # # Fix the version of the build
+      # - name: Fix Build version
+      #   run: yarn run npm:fix-build-version
 
-      # Compile
-      - name: Compile
-        run: yarn run compile
+      # # Compile
+      # - name: Compile
+      #   run: yarn run compile
 
-      # clear our pem folder before publish
-      # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
-      - name: Clear CA trust
-        run: rm -rf node_modules/win-ca/pem
+      # # clear our pem folder before publish
+      # # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
+      # - name: Clear CA trust
+      #   run: rm -rf node_modules/win-ca/pem
 
-      - name: Electron Builder
-        run: yarn run electron-builder --publish onTag --win --dir
+      # - name: Electron Builder
+      #   run: yarn run electron-builder --publish onTag --win --dir
+
+      - name: Make
+        run: make build
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
