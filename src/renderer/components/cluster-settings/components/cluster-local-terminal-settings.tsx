@@ -112,6 +112,8 @@ const NonInjectedClusterLocalTerminalSetting = observer(({ cluster, showErrorNot
                     material="close"
                     title="Clear"
                     onClick={() => setAndCommitDirectory("")}
+                    smallest
+                    style={{ marginRight: "var(--margin)" }}
                   />
                 )
               }
@@ -119,6 +121,7 @@ const NonInjectedClusterLocalTerminalSetting = observer(({ cluster, showErrorNot
                 material="folder"
                 title="Pick from filesystem"
                 onClick={openFilePicker}
+                smallest
               />
             </>
           )}
