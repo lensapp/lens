@@ -166,6 +166,8 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTe
                     material="close"
                     title="Clear"
                     onClick={() => setAndCommitDirectory("")}
+                    smallest
+                    style={{ marginRight: "var(--margin)" }}
                   />
                 )
               }
@@ -173,6 +175,7 @@ export const ClusterLocalTerminalSetting = observer(({ cluster }: ClusterLocalTe
                 material="folder"
                 title="Pick from filesystem"
                 onClick={openFilePicker}
+                smallest
               />
             </>
           )}
