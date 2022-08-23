@@ -6,5 +6,5 @@
 
 This is a forked repository of the "OpenLens" repo.
 
-Observe the github actions on this repo. 
-The file (./.github\workflows\build-for-windows.yml) shows how to build the basic Lens app without any of the proprietary extensions like the Lens ID log in screen.
+Observe the github actions on this repo.
+The file [./.github/workflows/build-for-windows.yml](./.github/workflows/build-for-windows.yml) shows how to build the basic Lens app without any of the proprietary extensions like the Lens ID log in screen.
