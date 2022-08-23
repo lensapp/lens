@@ -33,6 +33,8 @@ jobs:
           npm install --global yarn
           yarn --version
 
+      - name: update Node GYP to latest
+        run: npm install -g node-gyp@latest
 
       # install GNU make
       - name: Install gnu make using choclatey
