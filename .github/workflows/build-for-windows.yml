@@ -37,7 +37,8 @@ jobs:
       # install GNU make
       - name: Install gnu make using choclatey
         uses: crazy-max/ghaction-chocolatey@v2
-        run: choco install make
+        with:
+          args: install make
 
       # Sets up the node_modules folder with the Windows version of the dependencies
       - name: Yarn install
