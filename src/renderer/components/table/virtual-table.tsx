@@ -28,33 +28,52 @@
   console.log(`${rowVirtualizer.getTotalSize()}px`)
   
   return (
-    <div className={className} ref={tableContainerRef}>
-      <table style={{ height: 1590 }}>
-        <TableHeader table={table}/>
-        <tbody>
-          {rowVirtualizer.getVirtualItems().map(virtualRow => {
-            const row = rows[virtualRow.index] as Row<Data>
-            return (
-              <tr
-                key={row.id}
-                // style={{ height: 30 }}
-              >
-                {row.getVisibleCells().map(cell => {
-                  return (
-                    <td key={cell.id} style={{ width: cell.column.getSize() }}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className={className} ref={tableContainerRef}>
+        <table style={{
+          height: rowVirtualizer.getTotalSize(),
+          width: '100%',
+          position: 'relative',
+        }}>
+          <TableHeader table={table}/>
+          <tbody>
+            {rowVirtualizer.getVirtualItems().map(virtualRow => {
+              const row = rows[virtualRow.index] as Row<Data>
+
+              return (
+                <div
+                  key={virtualRow.index}
+                  ref={virtualRow.measureElement}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${virtualRow.start}px)`,
+                    display: 'flex',
+                  }}
+                >
+                  {row.getVisibleCells().map(cell => {
+                    return (
+                      <div key={cell.id} style={{
+                        width: cell.column.getSize(),
+                        flexGrow: 0,
+                        flexShrink: 0,
+                      }}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </>
   )
 }
  
