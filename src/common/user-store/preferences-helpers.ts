@@ -6,10 +6,8 @@
 import moment from "moment-timezone";
 import path from "path";
 import os from "os";
-import { getAppVersion } from "../utils";
 import type { editor } from "monaco-editor";
 import merge from "lodash/merge";
-import { SemVer } from "semver";
 import { defaultThemeId, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
 import type { ObservableMap } from "mobx";
 import { observable } from "mobx";

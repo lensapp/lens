@@ -6,7 +6,7 @@
 import type { UpdateInfo } from "electron-updater";
 import { autoUpdater } from "electron-updater";
 import logger from "./logger";
-import { isPublishConfigured, isTestEnv } from "../common/vars";
+import { isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import type { UpdateAvailableToBackchannel } from "../common/ipc";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateChecking, AutoUpdateLogPrefix, AutoUpdateNoUpdateAvailable, broadcastMessage, onceCorrect, UpdateAvailableChannel } from "../common/ipc";
@@ -50,7 +50,7 @@ interface Dependencies {
  * starts the automatic update checking
  * @param interval milliseconds between interval to check on, defaults to 2h
  */
-export const startUpdateChecking = ({ isAutoUpdateEnabled } : Dependencies) => once(function (interval = 1000 * 60 * 60 * 2): void {
+export const startUpdateChecking = ({ isAutoUpdateEnabled }: Dependencies) => once(function (interval = 1000 * 60 * 60 * 2): void {
   if (!isAutoUpdateEnabled() || isTestEnv) {
     return;
   }

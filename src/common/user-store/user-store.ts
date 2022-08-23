@@ -4,7 +4,7 @@
  */
 
 import { app } from "electron";
-import semver, { SemVer } from "semver";
+import semver from "semver";
 import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
