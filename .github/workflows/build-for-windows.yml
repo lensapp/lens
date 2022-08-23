@@ -23,7 +23,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 14
@@ -34,11 +33,14 @@ jobs:
           npm install --global yarn
           yarn --version
 
+
       # install GNU make
       - name: Install gnu make using choclatey
         uses: crazy-max/ghaction-chocolatey@v2
         with:
           args: install make
+
+      - uses: actions/checkout@v3
 
       # # Sets up the node_modules folder with the Windows version of the dependencies
       # - name: Yarn install
