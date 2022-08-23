@@ -66,8 +66,8 @@ jobs:
       - name: Electron Builder
         run: yarn run electron-builder --publish onTag --win --dir
 
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: built-artifacts
-      #     path: path/to/artifact/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-artifacts
+          path: ./static/build
