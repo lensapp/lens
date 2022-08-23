@@ -5,7 +5,7 @@
 
  import React from "react";
  import { flexRender, Row } from "@tanstack/react-table"
- import type { Table } from "@tanstack/react-table";
+ import type { Table, Cell } from "@tanstack/react-table";
  import { TableHeader } from "./table-header";
  import { useVirtualizer } from "@tanstack/react-virtual";
  
@@ -22,11 +22,10 @@
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => 55,
     overscan: 5,
-    count: rows.length
+    count: rows.length,
+    paddingStart: 60 // header width
   })
 
-  console.log(`${rowVirtualizer.getTotalSize()}px`)
-  
   return (
     <>
       <div className={className} ref={tableContainerRef}>
@@ -55,11 +54,7 @@
                 >
                   {row.getVisibleCells().map(cell => {
                     return (
-                      <div key={cell.id} style={{
-                        width: cell.column.getSize(),
-                        flexGrow: 0,
-                        flexShrink: 0,
-                      }}>
+                      <div key={cell.id} style={getCellWidthStyles(table, cell)}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -77,3 +72,21 @@
   )
 }
  
+function getCellWidthStyles<T>(table: Table<T>, cell: Cell<T, unknown>) {
+  const cellResized = cell.column.id in table.getState().columnSizing;
+  const cellFixed = cell.column.getCanResize();
+
+  if (cellResized || cellFixed) {
+    return {
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: cell.column.getSize()
+    }
+  }
+
+  return {
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: "0%",
+  }
+}
