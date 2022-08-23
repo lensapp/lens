@@ -4,7 +4,6 @@
  */
 
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
-import { broadcastMessage } from "../ipc";
 import type { ClusterContextHandler } from "../../main/context-handler/context-handler";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { HttpError } from "@kubernetes/client-node";
@@ -25,6 +24,7 @@ import type { CanI } from "./authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
 import assert from "assert";
 import type { Logger } from "../logger";
+import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -36,6 +36,7 @@ export interface ClusterDependencies {
   createAuthorizationReview: (config: KubeConfig) => CanI;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
+  broadcastMessage: BroadcastMessage;
 }
 
 /**
@@ -602,7 +603,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   pushState(state = this.getState()) {
     this.dependencies.logger.silly(`[CLUSTER]: push-state`, state);
-    broadcastMessage("cluster:state", this.id, state);
+    this.dependencies.broadcastMessage("cluster:state", this.id, state);
   }
 
   // get cluster system meta, e.g. use in "logger"
@@ -625,7 +626,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const update: KubeAuthUpdate = { message, isError };
 
     this.dependencies.logger.debug(`[CLUSTER]: broadcasting connection update`, { ...update, meta: this.getMeta() });
-    broadcastMessage(`cluster:${this.id}:connection-update`, update);
+    this.dependencies.broadcastMessage(`cluster:${this.id}:connection-update`, update);
   }
 
   protected async getAllowedNamespaces(proxyConfig: KubeConfig) {
@@ -645,7 +646,7 @@ export class Cluster implements ClusterModel, ClusterState {
         const { response } = error as HttpError & { response: Response };
 
         this.dependencies.logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error: response.body });
-        broadcastMessage(clusterListNamespaceForbiddenChannel, this.id);
+        this.dependencies.broadcastMessage(clusterListNamespaceForbiddenChannel, this.id);
       }
 
       return namespaceList;

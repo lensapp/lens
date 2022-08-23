@@ -4,10 +4,8 @@
  */
 
 import type { ChildProcess } from "child_process";
-import { waitUntilUsed } from "tcp-port-used";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
-import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
 import { makeObservable, observable, when } from "mobx";
 import type { SelfSignedCert } from "selfsigned";
@@ -15,6 +13,7 @@ import assert from "assert";
 import { TypedRegEx } from "typed-regex";
 import type { Spawn } from "../child-process/spawn.injectable";
 import type { Logger } from "../../common/logger";
+import type { WaitUntilPortIsUsed } from "./wait-until-port-is-used/wait-until-port-is-used.injectable";
 
 const startingServeMatcher = "starting to serve on (?<address>.+)";
 const startingServeRegex = Object.assign(TypedRegEx(startingServeMatcher, "i"), {
@@ -24,8 +23,9 @@ const startingServeRegex = Object.assign(TypedRegEx(startingServeMatcher, "i"), 
 export interface KubeAuthProxyDependencies {
   readonly proxyBinPath: string;
   readonly proxyCert: SelfSignedCert;
-  spawn: Spawn;
+  readonly spawn: Spawn;
   readonly logger: Logger;
+  readonly waitUntilPortIsUsed: WaitUntilPortIsUsed;
 }
 
 export class KubeAuthProxy {
@@ -106,13 +106,13 @@ export class KubeAuthProxy {
       onFind: () => this.cluster.broadcastConnectUpdate("Authentication proxy started"),
     });
 
-    logger.info(`[KUBE-AUTH-PROXY]: found port=${this._port}`);
+    this.dependencies.logger.info(`[KUBE-AUTH-PROXY]: found port=${this._port}`);
 
     try {
-      await waitUntilUsed(this.port, 500, 10000);
+      await this.dependencies.waitUntilPortIsUsed(this.port, 500, 10000);
       this.ready = true;
     } catch (error) {
-      logger.warn("[KUBE-AUTH-PROXY]: waitUntilUsed failed", error);
+      this.dependencies.logger.warn("[KUBE-AUTH-PROXY]: waitUntilUsed failed", error);
       this.cluster.broadcastConnectUpdate("Proxy port failed to be used within timelimit, restarting...", true);
       this.exit();
 
@@ -124,7 +124,7 @@ export class KubeAuthProxy {
     this.ready = false;
 
     if (this.proxyProcess) {
-      logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());
+      this.dependencies.logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());
       this.proxyProcess.removeAllListeners();
       this.proxyProcess.stderr?.removeAllListeners();
       this.proxyProcess.stdout?.removeAllListeners();
