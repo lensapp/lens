@@ -302,7 +302,7 @@
     "@swc/core": "^1.2.242",
     "@swc/jest": "^0.2.22",
     "@testing-library/dom": "^7.31.2",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "@types/byline": "^4.2.33",
