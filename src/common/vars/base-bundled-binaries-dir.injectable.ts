@@ -4,17 +4,17 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import bundledResourcesDirectoryInjectable from "./bundled-resources-dir.injectable";
-import getAbsolutePathInjectable from "../path/get-absolute-path.injectable";
 import normalizedPlatformArchitectureInjectable from "./normalized-platform-architecture.injectable";
+import joinPathsInjectable from "../path/join-paths.injectable";
 
 const baseBundledBinariesDirectoryInjectable = getInjectable({
   id: "base-bundled-binaries-directory",
   instantiate: (di) => {
     const bundledResourcesDirectory = di.inject(bundledResourcesDirectoryInjectable);
     const normalizedPlatformArchitecture = di.inject(normalizedPlatformArchitectureInjectable);
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
 
-    return getAbsolutePath(
+    return joinPaths(
       bundledResourcesDirectory,
       normalizedPlatformArchitecture,
     );
