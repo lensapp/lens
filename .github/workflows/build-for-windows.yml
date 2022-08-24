@@ -33,11 +33,14 @@ jobs:
           npm install --global yarn
           yarn --version
 
-      - name: Install build tools for Node GYP
-        run: npm install --global windows-build-tools@4.0.0
-
-      - name: update Node GYP to latest
-        run: npm install -g node-gyp@latest
+           
+      - name: Update node-gyp
+        run: |
+          $WhereNode = Get-Command node | Select-Object -ExpandProperty Definition
+          $NodeDirPath = Split-Path $WhereNode -Parent
+          $NodeModulesPath = $NodeDirPath + "\node_modules\npm\node_modules\npm-lifecycle"
+          cd $NodeModulesPath
+          npm install node-gyp@8.x 
 
       # install GNU make
       - name: Install gnu make using choclatey
