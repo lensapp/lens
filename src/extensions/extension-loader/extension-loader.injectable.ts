@@ -9,6 +9,7 @@ import { createExtensionInstanceInjectionToken } from "./create-extension-instan
 import extensionInstancesInjectable from "./extension-instances.injectable";
 import type { LensExtension } from "../lens-extension";
 import extensionInjectable from "./extension/extension.injectable";
+import loggerInjectable from "../../common/logger.injectable";
 
 const extensionLoaderInjectable = getInjectable({
   id: "extension-loader",
@@ -18,6 +19,7 @@ const extensionLoaderInjectable = getInjectable({
     createExtensionInstance: di.inject(createExtensionInstanceInjectionToken),
     extensionInstances: di.inject(extensionInstancesInjectable),
     getExtension: (instance: LensExtension) => di.inject(extensionInjectable, instance),
+    logger: di.inject(loggerInjectable),
   }),
 });
 

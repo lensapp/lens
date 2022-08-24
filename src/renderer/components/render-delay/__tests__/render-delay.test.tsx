@@ -6,9 +6,6 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render } from "@testing-library/react";
 import { RenderDelay } from "../render-delay";
-import { mockWindow } from "../../../../../__mocks__/windowMock";
-
-mockWindow();
 
 describe("<RenderDelay/>", () => {
   it("renders w/o errors", () => {

@@ -18,10 +18,6 @@ import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
-import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
-import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
-import joinPathsInjectable from "../common/path/join-paths.injectable";
-import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
@@ -228,8 +224,6 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
 
 const overrideOperatingSystem = (di: DiContainer) => {
   di.override(platformInjectable, () => "darwin");
-  di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
-  di.override(joinPathsInjectable, () => joinPathsFake);
   di.override(normalizedPlatformArchitectureInjectable, () => "arm64");
 };
 

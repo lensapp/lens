@@ -65,17 +65,23 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
         setShowClassNameEnter(true);
         onEnterHandler();
       });
+
+      return noop;
     } else if (isVisible) {
       setShowClassNameLeave(true);
       onLeaveHandler();
 
       // Cleanup after duration
-      setTimeout(() => {
+      const handle = setTimeout(() => {
         setIsVisible(false);
         setShowClassNameEnter(false);
         setShowClassNameLeave(false);
       }, leaveDuration);
+
+      return () => clearTimeout(handle);
     }
+
+    return noop;
   }, [enter]);
 
   if (!isVisible) {

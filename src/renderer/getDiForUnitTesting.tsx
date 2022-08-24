@@ -20,10 +20,6 @@ import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
-import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
-import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
-import joinPathsInjectable from "../common/path/join-paths.injectable";
-import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
@@ -116,9 +112,6 @@ export const getDiForUnitTesting = (
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
-
-    di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
-    di.override(joinPathsInjectable, () => joinPathsFake);
 
     di.override(historyInjectable, () => createMemoryHistory());
     di.override(legacyOnChannelListenInjectable, () => () => noop);
