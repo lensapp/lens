@@ -22,13 +22,14 @@ export type SearchFilter<T> = (item: T) => string;
 export interface ListProps<T> extends TableOptions<T> {
   filters: SearchFilter<T>[];
   title?: React.ReactNode;
+  onRowClick?: (item: T) => void;
 }
 
 interface Dependencies {
   pageFiltersStore: PageFiltersStore;
 }
 
-export function NonInjectedList<T>({ columns, data, title, filters, pageFiltersStore }: ListProps<T> & Dependencies) {
+export function NonInjectedList<T>({ columns, data, title, filters, pageFiltersStore, onRowClick }: ListProps<T> & Dependencies) {
   const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
@@ -60,6 +61,7 @@ export function NonInjectedList<T>({ columns, data, title, filters, pageFiltersS
         columns={columns}
         data={filteredData}
         className={themeStyles.tableTheme}
+        onRowClick={onRowClick}
       />
       {filteredData.length == 0 && (
         <div className={styles.notFound}>No data found</div>

@@ -34,7 +34,11 @@
     // padding: 0 var(--padding);
     font-weight: 500;
   }
-  
+
+  tbody tr:hover {
+    background-color: var(--tableBgcSelected);
+  }
+
   .headIcon {
     font-weight: normal;
     color: var(--textColorAccent);

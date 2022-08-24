@@ -34,6 +34,7 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeToStoresDisposersInjectable from "../../kube-watch-api/subscribe-to-stores-disposers.injectable";
 import { KubeObjectMenu } from "../kube-object-menu";
+import toggleKubeDetailsPaneInjectable, { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 
 enum columnId {
   name = "name",
@@ -54,6 +55,7 @@ interface Dependencies {
   podStore: PodStore;
   nodeApi: NodeApi;
   subscribeToWatchStores: SubscribeStores;
+  toggleDetails: ToggleKubeDetailsPane;
 }
 
 const columnHelper = createColumnHelper<Pod>()
@@ -254,6 +256,7 @@ class NonInjectedPods extends React.Component<Dependencies> {
             pod => pod.status?.podIP || "",
             pod => pod.getNodeName() || "",
           ]}
+          onRowClick={(item) => this.props.toggleDetails(item.selfLink)}
           getCoreRowModel={getCoreRowModel()}
         />
       </SiblingsInTabLayout>
@@ -362,6 +365,7 @@ export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
     nodeApi: di.inject(nodeApiInjectable),
     eventStore: di.inject(eventStoreInjectable),
     podStore: di.inject(podStoreInjectable),
-    subscribeToWatchStores: di.inject(subscribeToStoresDisposersInjectable)
+    subscribeToWatchStores: di.inject(subscribeToStoresDisposersInjectable),
+    toggleDetails: di.inject(toggleKubeDetailsPaneInjectable),
   }),
 });

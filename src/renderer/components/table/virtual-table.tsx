@@ -8,13 +8,15 @@ import { flexRender, Row } from "@tanstack/react-table"
 import type { Table, Cell, Header } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { VirtualTableHeader } from "./virtual-table-header";
+import { prevDefault } from "../../utils";
  
  interface TableProps<T> {
    table: Table<T>;
    className?: string;
+   onRowClick?: (item: T) => void;
  }
  
- export function VirtualTable<Data>({ className, table }: TableProps<Data>) {
+ export function VirtualTable<Data>({ className, table, onRowClick }: TableProps<Data>) {
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
   
   const { rows } = table.getRowModel()
@@ -50,7 +52,9 @@ import { VirtualTableHeader } from "./virtual-table-header";
                     width: '100%',
                     transform: `translateY(${virtualRow.start}px)`,
                     display: 'flex',
+                    cursor: onRowClick ? 'pointer' : 'default',
                   }}
+                  onClick={prevDefault(() => onRowClick?.(row.original))}
                 >
                   {row.getVisibleCells().map(cell => {
                     return (

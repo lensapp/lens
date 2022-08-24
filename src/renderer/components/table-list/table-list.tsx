@@ -15,6 +15,7 @@ interface TableProps<T> {
   selectable?: boolean;
   configurable?: boolean;
   columnsResizable?: boolean;
+  onRowClick?: (item: T) => void;
 }
 
 export function TableList<Data>({
@@ -24,6 +25,7 @@ export function TableList<Data>({
   selectable = true,
   configurable = true,
   columnsResizable = true,
+  onRowClick,
 }: TableProps<Data>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const tableColumns = useMemo(() => {
@@ -82,7 +84,7 @@ export function TableList<Data>({
   });
 
   return (
-    <VirtualTable table={table} className={className} />
+    <VirtualTable table={table} className={className} onRowClick={onRowClick} />
   )
 }
 
