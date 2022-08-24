@@ -6,12 +6,16 @@
 import styles from "./list.module.scss";
 import themeStyles from "./table-theme.module.scss";
 
-import React, { useState } from "react";
-import { SearchInput, SearchInputUrl } from "../input";
+import React, { useEffect, useState } from "react";
+import { SearchInputUrl } from "../input";
 import type { TableOptions } from '@tanstack/react-table'
 
 import { TableList } from "../table-list/table-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import { FilterType, PageFiltersStore } from "../item-object-list/page-filters/store";
+import pageFiltersStoreInjectable from "../item-object-list/page-filters/store.injectable";
+import { observer } from "mobx-react";
 
 export type SearchFilter<T> = (item: T) => string;
 
@@ -20,12 +24,22 @@ export interface ListProps<T> extends TableOptions<T> {
   title?: React.ReactNode;
 }
 
-export function List<T>({ columns, data, title, filters }: ListProps<T>) {
+interface Dependencies {
+  pageFiltersStore: PageFiltersStore;
+}
+
+export function NonInjectedList<T>({ columns, data, title, filters, pageFiltersStore }: ListProps<T> & Dependencies) {
   const [search, setSearch] = useState<string>("");
-  const query = search.toLowerCase();
+
+  useEffect(() => {
+    const searchFilter = pageFiltersStore.activeFilters.find(({ type }) => type === FilterType.SEARCH);
+    const searchValue = searchFilter?.value ?? "";
+
+    setSearch(searchValue);
+  }, [pageFiltersStore.activeFilters]);
 
   const filteredData = data.filter((item, index) => (
-    filters.some(getText => String(getText(data[index])).toLowerCase().includes(query))
+    filters.some(getText => String(getText(data[index])).toLowerCase().includes(search.toLowerCase()))
   ));
 
   return (
@@ -40,13 +54,6 @@ export function List<T>({ columns, data, title, filters }: ListProps<T>) {
         <div className={styles.controls}>
           <NamespaceSelectFilter id="object-list-layout-namespace-select-input" />
           <SearchInputUrl />
-{/* 
-          <SearchInput
-            value={search}
-            theme="round-black"
-            onChange={setSearch}
-            className={styles.searchInput}
-          /> */}
         </div>
       </div>
       <TableList
@@ -60,3 +67,11 @@ export function List<T>({ columns, data, title, filters }: ListProps<T>) {
     </div>
   );
 }
+
+export const List = withInjectables<Dependencies, ListProps<any>>(
+  observer(NonInjectedList), {
+  getProps: (di, props) => ({
+    ...props,
+    pageFiltersStore: di.inject(pageFiltersStoreInjectable),
+  }),
+})

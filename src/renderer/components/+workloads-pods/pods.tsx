@@ -242,7 +242,7 @@ class NonInjectedPods extends React.Component<Dependencies> {
           data={podStore.contextItems}
           title="Pods"
           filters={[
-            // pod => pod.getSearchFields(),
+            pod => pod.getSearchFields(),
             pod => pod.getStatusMessage(),
             pod => pod.status?.podIP || "",
             pod => pod.getNodeName() || "",
