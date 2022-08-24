@@ -6,21 +6,18 @@
 import type { FSWatcher } from "chokidar";
 import path from "path";
 import os from "os";
-import { Console } from "console";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import mockFs from "mock-fs";
 import { delay } from "../../renderer/utils";
 import { observable, when } from "mobx";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
 import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
-
-console = new Console(process.stdout, process.stderr); // fix mockFS
+import deleteFileInjectable from "../../common/fs/delete-file.injectable";
 
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
@@ -44,13 +41,9 @@ describe("ExtensionDiscovery", () => {
     watchMock = jest.fn();
     di.override(watchInjectable, () => watchMock);
 
-    mockFs();
+    di.override(deleteFileInjectable, () => async () => {}); // allow deleting files for now
 
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("emits add for added extension", async () => {
