@@ -37,7 +37,7 @@ describe("opening application window using tray", () => {
 
         mainDi.override(
           lensResourcesDirInjectable,
-          () => "some-lens-resources-directory",
+          () => "/some-lens-resources-directory",
         );
 
         const loadFileMock = jest
@@ -119,7 +119,7 @@ describe("opening application window using tray", () => {
         });
 
         it("starts loading static HTML of splash window", () => {
-          expect(callForSplashWindowHtmlMock).toHaveBeenCalledWith("/some-absolute-root-directory/some-lens-resources-directory/static/splash.html");
+          expect(callForSplashWindowHtmlMock).toHaveBeenCalledWith("/some-lens-resources-directory/static/splash.html");
         });
 
         describe("when loading of splash window HTML resolves", () => {
