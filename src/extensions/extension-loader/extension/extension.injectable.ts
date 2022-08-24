@@ -23,6 +23,12 @@ const extensionInjectable = getInjectable({
 
         return {
           register: () => {
+            const anyInstance = instance as any;
+
+            if (anyInstance.__v2Register) {
+              anyInstance.__v2Register(childDi);
+            }
+
             const injectables = extensionRegistrators.flatMap((getInjectablesOfExtension) =>
               getInjectablesOfExtension(instance),
             );
