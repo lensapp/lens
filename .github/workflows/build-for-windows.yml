@@ -33,14 +33,16 @@ jobs:
           npm install --global yarn
           yarn --version
 
-           
+      - name: Set MSVC version
+        run: npm config set msvs_version 2022
+
       - name: Update node-gyp
         run: |
           $WhereNode = Get-Command node | Select-Object -ExpandProperty Definition
           $NodeDirPath = Split-Path $WhereNode -Parent
           $NodeModulesPath = $NodeDirPath + "\node_modules\npm\node_modules\npm-lifecycle"
           cd $NodeModulesPath
-          npm install node-gyp@8.x 
+          npm install node-gyp@8.x
 
       # install GNU make
       - name: Install gnu make using choclatey
