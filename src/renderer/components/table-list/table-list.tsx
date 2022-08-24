@@ -58,15 +58,8 @@ export function TableList<Data>({
       )
     }
 
-    if (configurable) {
-      cols.push(
-        columnHelper.display({
-          id: "config",
-          header: () => <ColumnConfigMenu table={table}/>,
-          size: 30,
-          enableResizing: false,
-        })
-      )
+    if (configurable && cols.findIndex(({ id }) => id == 'actions') !== -1) {
+      cols[cols.findIndex(({ id }) => id == 'actions')].header = () => <ColumnConfigMenu table={table}/>
     }
 
     return cols;

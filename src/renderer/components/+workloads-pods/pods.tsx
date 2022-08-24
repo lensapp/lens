@@ -33,6 +33,7 @@ import { ColumnDef, createColumnHelper, getCoreRowModel } from '@tanstack/react-
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeToStoresDisposersInjectable from "../../kube-watch-api/subscribe-to-stores-disposers.injectable";
+import { KubeObjectMenu } from "../kube-object-menu";
 
 enum columnId {
   name = "name",
@@ -233,6 +234,12 @@ class NonInjectedPods extends React.Component<Dependencies> {
         header: "Status",
         cell: info => info.getValue(),
       }),
+      columnHelper.display({
+        id: "actions",
+        size: 30,
+        cell: row => <KubeObjectMenu object={row.row.original} />,
+        enableResizing: false,
+      })
     ]
 
     return (
