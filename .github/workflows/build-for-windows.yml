@@ -33,6 +33,9 @@ jobs:
           npm install --global yarn
           yarn --version
 
+      - name: Install build tools for Node GYP
+        run: npm install -g windows-build-tools
+
       - name: update Node GYP to latest
         run: npm install -g node-gyp@latest
 
