@@ -64,8 +64,8 @@ jobs:
 
       # clear our pem folder before publish
       # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
-      - name: Clear CA trust
-        run: rm -rf node_modules/win-ca/pem
+      # - name: Clear CA trust
+      #   run: rm -Recursive node_modules/win-ca/pem
 
       - name: Electron Builder
         run: yarn run electron-builder --publish onTag
