@@ -261,7 +261,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
 
   di.override(
     getElectronAppPathInjectable,
-    () => (name: string) => `some-electron-app-path-for-${kebabCase(name)}`,
+    () => (name: string) => `/some-electron-app-path-for-${kebabCase(name)}`,
   );
 
   di.override(setElectronAppPathInjectable, () => () => {});

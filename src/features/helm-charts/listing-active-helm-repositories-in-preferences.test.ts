@@ -10,7 +10,7 @@ import readYamlFileInjectable from "../../common/fs/read-yaml-file.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { HelmRepositoriesFromYaml } from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
-import execFileInjectable from "../../common/fs/exec-file.injectable";
+import execFileInjectable, { type ExecFile } from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
@@ -21,7 +21,7 @@ describe("listing active helm repositories in preferences", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let readYamlFileMock: AsyncFnMock<ReadYamlFile>;
-  let execFileMock: AsyncFnMock<ReturnType<typeof execFileInjectable["instantiate"]>>;
+  let execFileMock: AsyncFnMock<ExecFile>;
   let loggerStub: Logger;
   let showErrorNotificationMock: jest.Mock;
 
