@@ -10,6 +10,7 @@ import type { CancelIdleCallback } from "./cancel-idle-callback.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import cancelIdleCallbackInjectable from "./cancel-idle-callback.injectable";
 import requestIdleCallbackInjectable from "./request-idle-callback.injectable";
+import idleCallbackTimeoutInjectable from "./idle-callback-timeout.injectable";
 
 export interface RenderDelayProps {
   placeholder?: React.ReactNode;
@@ -19,6 +20,7 @@ export interface RenderDelayProps {
 interface Dependencies {
   requestIdleCallback: RequestIdleCallback;
   cancelIdleCallback: CancelIdleCallback;
+  idleCallbackTimeout: number;
 }
 
 const NonInjectedRenderDelay = (props: RenderDelayProps & Dependencies) => {
@@ -27,11 +29,12 @@ const NonInjectedRenderDelay = (props: RenderDelayProps & Dependencies) => {
     requestIdleCallback,
     children,
     placeholder,
+    idleCallbackTimeout,
   } = props;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handle = requestIdleCallback(() => setIsVisible(true), { timeout: 1000 });
+    const handle = requestIdleCallback(() => setIsVisible(true), { timeout: idleCallbackTimeout });
 
     return () => cancelIdleCallback(handle);
   }, []);
@@ -40,8 +43,8 @@ const NonInjectedRenderDelay = (props: RenderDelayProps & Dependencies) => {
     <>
       {
         isVisible
-          ? placeholder ?? null
-          : children
+          ? children
+          : placeholder
       }
     </>
   );
@@ -52,5 +55,6 @@ export const RenderDelay = withInjectables<Dependencies, RenderDelayProps>(NonIn
     ...props,
     cancelIdleCallback: di.inject(cancelIdleCallbackInjectable),
     requestIdleCallback: di.inject(requestIdleCallbackInjectable),
+    idleCallbackTimeout: di.inject(idleCallbackTimeoutInjectable),
   }),
 });
