@@ -1,5 +1,5 @@
 .tableTheme {
-  overflow: auto;
+  overflow: overlay;
 
   table {
     table-layout: fixed;
@@ -10,8 +10,12 @@
     border-bottom: thin solid var(--hrColor);
     color: var(--textColorAccent);
     height: 33px;
-    // position: sticky;
-    // top: 0;
+    position: sticky;
+    top: 0;
+    background-color: var(--tableHeaderBackground);
+    display: flex;
+    flex-shrink: 0;
+    z-index: 1;
   }
   
   thead tr {
@@ -20,6 +24,8 @@
   
   tr {
     // margin: calc(var(--margin) * 1.6) var(--margin);
+    // margin: 0 calc(var(--margin) * 2);
+    width: 100%;
   }
   
   th {
