@@ -6,4 +6,8 @@
 import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
 import requestIdleCallbackInjectable from "./request-idle-callback.injectable";
 
-export default getGlobalOverride(requestIdleCallbackInjectable, () => (callback) => callback());
+export default getGlobalOverride(requestIdleCallbackInjectable, () => (callback) => {
+  callback();
+
+  return 0;
+});
