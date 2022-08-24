@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
- import React from "react";
- import { flexRender, Row } from "@tanstack/react-table"
- import type { Table, Cell } from "@tanstack/react-table";
- import { useVirtualizer } from "@tanstack/react-virtual";
+import React from "react";
+import { flexRender, Row } from "@tanstack/react-table"
+import type { Table, Cell, Header } from "@tanstack/react-table";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { VirtualTableHeader } from "./virtual-table-header";
  
  interface TableProps<T> {
@@ -23,7 +23,7 @@ import { VirtualTableHeader } from "./virtual-table-header";
     estimateSize: () => 55,
     overscan: 5,
     count: rows.length,
-    paddingStart: 60 // header width
+    paddingStart: 50 // header width
   })
 
   return (
@@ -34,7 +34,7 @@ import { VirtualTableHeader } from "./virtual-table-header";
           width: '100%',
           position: 'relative',
         }}>
-          <VirtualTableHeader table={table}/>
+          <VirtualTableHeader table={table} getColumnSizeStyles={getCellWidthStyles}/>
           <tbody>
             {rowVirtualizer.getVirtualItems().map(virtualRow => {
               const row = rows[virtualRow.index] as Row<Data>
@@ -72,9 +72,9 @@ import { VirtualTableHeader } from "./virtual-table-header";
   )
 }
  
-function getCellWidthStyles<T>(table: Table<T>, cell: Cell<T, unknown>) {
+function getCellWidthStyles<T>(table: Table<T>, cell: Cell<T, unknown> | Header<T, unknown>): React.CSSProperties {
   const cellResized = cell.column.id in table.getState().columnSizing;
-  const cellFixed = cell.column.getCanResize();
+  const cellFixed = !cell.column.getCanResize();
 
   if (cellResized || cellFixed) {
     return {

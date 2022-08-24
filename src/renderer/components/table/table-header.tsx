@@ -1,21 +1,22 @@
 import styles from "./table-header.module.scss";
-import React from "react";
-import type { Table } from "@tanstack/react-table";
+import React, { CSSProperties } from "react";
+import type { Table, Header } from "@tanstack/react-table";
 import { flexRender } from '@tanstack/react-table';
 import { cssNames } from "../../utils";
 
 export interface TableHeaderProps<Data> {
   table: Table<Data>;
+  getColumnSizeStyles: (table: Table<Data>, header: Header<Data, unknown>) => CSSProperties;
   className?: string;
 }
 
-export function TableHeader<Data>({ table, className }: TableHeaderProps<Data>) {
+export function TableHeader<Data>({ table, className, getColumnSizeStyles }: TableHeaderProps<Data>) {
   return (
     <thead className={className}>
       {table.getHeaderGroups().map(headerGroup => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map(header => (
-            <th key={header.id} style={{ position: 'relative', width: header.getSize() }}>
+            <th key={header.id} style={{ position: 'relative', ...getColumnSizeStyles(table, header) }}>
               {header.isPlaceholder ? null : (
                 <div
                   {...{
