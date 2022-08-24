@@ -8,14 +8,14 @@ import { execFile } from "child_process";
 import type { AsyncResult } from "../utils/async-result";
 
 export interface ExecFile {
-  (filePath: string, args: string[], options: ExecFileOptions): Promise<AsyncResult<string, { stderr: string; error: Error }>>;
+  (filePath: string, args: string[], options?: ExecFileOptions): Promise<AsyncResult<string, { stderr: string; error: Error }>>;
 }
 
 const execFileInjectable = getInjectable({
   id: "exec-file",
 
   instantiate: (): ExecFile => (filePath, args, options) => new Promise((resolve) => {
-    execFile(filePath, args, options, (error, stdout, stderr) => {
+    execFile(filePath, args, options ?? {}, (error, stdout, stderr) => {
       if (error) {
         resolve({
           callWasSuccessful: false,

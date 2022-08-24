@@ -22,6 +22,8 @@ import spawnPtyInjectable from "../spawn-pty.injectable";
 import resolvedShellInjectable from "../../../common/user-store/resolved-shell.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
+import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
+import statInjectable from "../../../common/fs/stat/stat.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -46,11 +48,13 @@ const openLocalShellSessionInjectable = getInjectable({
       appName: di.inject(appNameInjectable),
       buildVersion: di.inject(buildVersionInjectable),
       modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),
+      emitAppEvent: di.inject(emitAppEventInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
       computeShellEnvironment: di.inject(computeShellEnvironmentInjectable),
       spawnPty: di.inject(spawnPtyInjectable),
+      stat: di.inject(statInjectable),
     };
 
     return (args) => {

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronQuitAndInstallUpdateInjectable from "../../../main/electron-app/features/electron-quit-and-install-update.injectable";
 import { getCurrentDateTime } from "../../../common/utils/date/get-current-date-time";
-import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
+import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import discoveredUpdateVersionInjectable from "../common/discovered-update-version/discovered-update-version.injectable";
 
 const quitAndInstallUpdateInjectable = getInjectable({
@@ -16,7 +16,7 @@ const quitAndInstallUpdateInjectable = getInjectable({
       electronQuitAndInstallUpdateInjectable,
     );
 
-    const emitEvent = di.inject(emitEventInjectable);
+    const emitEvent = di.inject(emitAppEventInjectable);
     const discoveredUpdateVersion = di.inject(discoveredUpdateVersionInjectable);
 
     return () => {

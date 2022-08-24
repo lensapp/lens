@@ -5,9 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
 import clusterManagerInjectable from "./cluster/manager.injectable";
-import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import closeAllWindowsInjectable from "./start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
+import emitAppEventInjectable from "../common/app-event-bus/emit-event.injectable";
 
 const stopServicesAndExitAppInjectable = getInjectable({
   id: "stop-services-and-exit-app",
@@ -15,12 +15,12 @@ const stopServicesAndExitAppInjectable = getInjectable({
   instantiate: (di) => {
     const exitApp = di.inject(exitAppInjectable);
     const clusterManager = di.inject(clusterManagerInjectable);
-    const appEventBus = di.inject(appEventBusInjectable);
     const logger = di.inject(loggerInjectable);
     const closeAllWindows = di.inject(closeAllWindowsInjectable);
+    const emitAppEvent = di.inject(emitAppEventInjectable);
 
     return () => {
-      appEventBus.emit({ name: "service", action: "close" });
+      emitAppEvent({ name: "service", action: "close" });
       closeAllWindows();
       clusterManager.stop();
       logger.info("SERVICE:QUIT");
