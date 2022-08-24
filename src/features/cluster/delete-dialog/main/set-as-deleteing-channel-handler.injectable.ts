@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { requestChannelListenerInjectionToken } from "../../../../common/utils/channel/request-channel-listener-injection-token";
-import clustersThatAreBeingDeletedInjectable from "../../../../main/clusters-that-are-being-deleted.injectable";
+import clustersThatAreBeingDeletedInjectable from "../../../../main/cluster/are-being-deleted.injectable";
 import setClusterAsDeletingChannelInjectable from "../common/set-as-deleting-channel.injectable";
 
 const setClusterAsDeletingChannelHandlerInjectable = getInjectable({
