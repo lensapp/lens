@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React from "react";
+import React, { CSSProperties } from "react";
 import { flexRender } from '@tanstack/react-table'
-import type { Table } from "@tanstack/react-table";
+import type { Table, Header, Cell } from "@tanstack/react-table";
 import { TableHeader } from "./table-header";
 
 interface TableProps<T> {
@@ -17,7 +17,7 @@ export function Table<Data>({ className, table }: TableProps<Data>) {
   return (
     <div className={className}>
       <table>
-        <TableHeader table={table}/>
+        <TableHeader table={table} getColumnSizeStyles={getWidthStyles}/>
         <tbody>
           {table.getRowModel().rows.map(row => (
             <tr key={row.id}>
@@ -32,4 +32,10 @@ export function Table<Data>({ className, table }: TableProps<Data>) {
       </table>
     </div>
   )
+}
+
+function getWidthStyles<T>(table: Table<T>, cell: Cell<T, unknown> | Header<T, unknown>): CSSProperties {
+  return {
+    width: cell.column.getSize(),
+  }
 }
