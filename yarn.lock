@@ -1235,53 +1235,46 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@ogre-tools/fp@9.0.1":
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.1.tgz#22c23bd209f6f56bf66a5ff4514930334a3a4782"
-  integrity sha512-7kORUcvR9DZz5/2qDSSKExGeisXzfmOafP+Z6l8C+WQXEmEQm7CmFMyBEyMkei0eNFzNghlKYgRFpsvBdU3KAg==
+"@ogre-tools/fp@9.0.3", "@ogre-tools/fp@^9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.3.tgz#f8c9a3316b688c4782309e050c86aa04bebfc293"
+  integrity sha512-j5TQAxiz6ncEfYFBcqnWXeLZY89Qd+dZ9UlfonBdw/C9okxjNeFL+2bmt+b/Vxscz1cOLGZ1F6nmlhQdTtHzPw==
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/fp@^9.0.2":
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.2.tgz#9f7fbbf461c539850c5408456164a8fadb643704"
-  integrity sha512-HQa6YQK5EDR0Fv4tbvckrjO8VueE9uagX+TbgFE+Zq51E1cc/4VHQJGo5c6l+H/g+jvYKCfJMwbnMiFFxeDEfw==
+"@ogre-tools/injectable-extension-for-auto-registration@9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-9.0.3.tgz#a26d2a39e24ec3a0800fe21141c0f4f0e7d5504d"
+  integrity sha512-0zjt4w1ACBX9a3FyhTD+/AAqk/xov2bw+Cnbte7NMOVWAbHDfQpmbdiKJlMnFcMUd8vdwOEMm1Z4ogT1VkUeqg==
   dependencies:
+    "@ogre-tools/fp" "^9.0.3"
+    "@ogre-tools/injectable" "^9.0.3"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-auto-registration@9.0.2":
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-9.0.2.tgz#b72e0cb23ec14ef24206e1354ed65e94001f0c84"
-  integrity sha512-DVn2sc7L88zXHLRhXbX9H/V9KmL0kTI75PUIXdnId/0PbkiSOOdcOlSnt1qNw63pL3OQiOT1s1OuxSz8sg1MOQ==
+"@ogre-tools/injectable-extension-for-mobx@9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-9.0.3.tgz#24a14b940f51cae8b07645a2376d804b826c659e"
+  integrity sha512-DgCbAIqMPKgeNETY/8nxz6llAk8fAihGcbs/fkKINe4N9zFgOBKsuk/w67Sx0rTE7l35L6HQenbo7nJhIqbCWA==
   dependencies:
-    "@ogre-tools/fp" "^9.0.2"
-    "@ogre-tools/injectable" "^9.0.2"
+    "@ogre-tools/fp" "^9.0.3"
+    "@ogre-tools/injectable" "^9.0.3"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-mobx@9.0.2":
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-9.0.2.tgz#d1a4af35ab815390c8e773cf7696b30564ba58ba"
-  integrity sha512-0x5NyM/sJkqSnTA3pgXwLK+zCxnTMpQ3XiIHInzL5abtwQK3L6J7xrbCR7yRF2L+dQwTmWd/fWtrfwLtBIWVdQ==
+"@ogre-tools/injectable-react@9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-9.0.3.tgz#bc125ef906b171c8894f711f8b61f38d49e81dd0"
+  integrity sha512-6O9vr19Mcy0uUekZhRyjsM5nw8pgFXhbNvZ8JOnBQg6Lp1CqdasIFhJ0Hdxb8w8P9Zs+pd8pfevRVotq0ouV2Q==
   dependencies:
-    "@ogre-tools/fp" "^9.0.2"
-    "@ogre-tools/injectable" "^9.0.2"
+    "@ogre-tools/fp" "^9.0.3"
+    "@ogre-tools/injectable" "^9.0.3"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@9.0.2":
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-9.0.2.tgz#e8148268a755e30587cb1c27a5c500b247b0c5d0"
-  integrity sha512-IIEq8GoCXDoGLWOH62F/ZWduk5TAObDn+K5VuayCnfnLGmAEw+A7rTh6bJhjhGAH8DblX9xr+BLjs0SPgxzMpA==
+"@ogre-tools/injectable@9.0.3", "@ogre-tools/injectable@^9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-9.0.3.tgz#6d9e01a5be7e7c96e7bcbc727f928faad5e11884"
+  integrity sha512-KCmqcMEl/1Jjwg6XzNve+JVaW/OtiJUOKBucTJx2ZKBlAQaKz1/VUP7IB4UoQ4RWVa0+mUKLTxBTQFBQfp05RA==
   dependencies:
-    "@ogre-tools/fp" "^9.0.2"
-    "@ogre-tools/injectable" "^9.0.2"
-    lodash "^4.17.21"
-
-"@ogre-tools/injectable@9.0.2", "@ogre-tools/injectable@^9.0.2":
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-9.0.2.tgz#a00aebf648c1b8d08cd05641d348e44e43f4f7a5"
-  integrity sha512-0msgHvssOqeEPmW0i56jUz1Yp7fiApXfxII/dhdkQrG2tnb4brgW3WXP1841xt2q6Hf769+HXON2bhBsawohAw==
-  dependencies:
-    "@ogre-tools/fp" "^9.0.2"
+    "@ogre-tools/fp" "^9.0.3"
     lodash "^4.17.21"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.7":

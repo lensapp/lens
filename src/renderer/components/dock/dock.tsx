@@ -104,11 +104,11 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
   renderTab(tab: DockTab) {
     switch (tab.kind) {
       case TabKind.CREATE_RESOURCE:
-        return <CreateResource tab={tab} />;
+        return <CreateResource tabId={tab.id} />;
       case TabKind.EDIT_RESOURCE:
-        return <EditResource tab={tab} />;
+        return <EditResource tabId={tab.id} />;
       case TabKind.INSTALL_CHART:
-        return <InstallChart tab={tab} />;
+        return <InstallChart tabId={tab.id} />;
       case TabKind.UPGRADE_CHART:
         return <UpgradeChart tab={tab} />;
       case TabKind.POD_LOGS:

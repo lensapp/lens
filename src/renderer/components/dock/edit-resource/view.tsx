@@ -5,7 +5,6 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { DockTab } from "../dock/store";
 import { Spinner } from "../../spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { EditResourceModel } from "./edit-resource-model/edit-resource-model.injectable";
@@ -16,7 +15,7 @@ import { Badge } from "../../badge";
 import { Notice } from "../../+extensions/notice";
 
 export interface EditResourceProps {
-  tab: DockTab;
+  tabId: string;
 }
 
 interface Dependencies {
@@ -24,7 +23,7 @@ interface Dependencies {
 }
 
 const NonInjectedEditResource = observer(
-  ({ model, tab: { id: tabId }}: EditResourceProps & Dependencies) => {
+  ({ model, tabId }: EditResourceProps & Dependencies) => {
     return (
       <div className="EditResource flex column">
         {model.shouldShowErrorAboutNoResource && (
@@ -78,7 +77,7 @@ export const EditResource = withInjectables<Dependencies, EditResourceProps>(
     ),
 
     getProps: async (di, props) => ({
-      model: await di.inject(editResourceModelInjectable, props.tab.id),
+      model: await di.inject(editResourceModelInjectable, props.tabId),
       ...props,
     }),
   },
