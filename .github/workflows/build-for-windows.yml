@@ -27,10 +27,18 @@ jobs:
         with:
           node-version: 14
 
+      - name: Check node/npm version
+        run: |
+          echo "NodeJs version: "
+          node --version
+          echo "npm version: "
+          npm --version
+
       # use npm to set up yarn
       - name: Set up yarn cli
         run: |
           npm install --global yarn
+          echo "Yarn version: "
           yarn --version
 
       - name: Set MSVC version
