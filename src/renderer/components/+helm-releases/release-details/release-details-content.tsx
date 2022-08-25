@@ -34,7 +34,6 @@ interface Dependencies {
 }
 
 const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & ReleaseDetailsContentProps) => {
-  const isLoading = model.isLoading.get();
   const failedToLoad = model.failedToLoad.get();
 
   if (failedToLoad) {
@@ -43,69 +42,65 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
 
 
   return (
-    (isLoading ? (
-      <Spinner center data-testid="helm-release-detail-content-spinner" />
-    ) : (
-      <div>
-        <DrawerItem name="Chart" className="chart">
-          <div className="flex gaps align-center">
-            <span>{model.release.chart}</span>
+    <div>
+      <DrawerItem name="Chart" className="chart">
+        <div className="flex gaps align-center">
+          <span>{model.release.chart}</span>
 
-            <Button
-              primary
-              label="Upgrade"
-              className="box right upgrade"
-              onClick={model.startUpgradeProcess}
-              data-testid="helm-release-upgrade-button"
-            />
-          </div>
-        </DrawerItem>
-
-        <DrawerItem name="Updated">
-          {model.release.getUpdated()}
-          {` ago (${model.release.updated})`}
-        </DrawerItem>
-
-        <DrawerItem name="Namespace">{model.release.getNs()}</DrawerItem>
-
-        <DrawerItem name="Version" onClick={stopPropagation}>
-          <div className="version flex gaps align-center">
-            <span>{model.release.getVersion()}</span>
-          </div>
-        </DrawerItem>
-
-        <DrawerItem
-          name="Status"
-          className="status"
-          labelsOnly>
-          <Badge
-            label={model.release.getStatus()}
-            className={kebabCase(model.release.getStatus())}
+          <Button
+            primary
+            label="Upgrade"
+            className="box right upgrade"
+            onClick={model.startUpgradeProcess}
+            data-testid="helm-release-upgrade-button"
           />
-        </DrawerItem>
+        </div>
+      </DrawerItem>
 
-        <ReleaseValues
-          configuration={model.configuration}
-          onlyUserSuppliedValuesAreShown={
-            model.onlyUserSuppliedValuesAreShown
-          }
+      <DrawerItem name="Updated">
+        {model.release.getUpdated()}
+        {` ago (${model.release.updated})`}
+      </DrawerItem>
+
+      <DrawerItem name="Namespace">{model.release.getNs()}</DrawerItem>
+
+      <DrawerItem name="Version" onClick={stopPropagation}>
+        <div className="version flex gaps align-center">
+          <span>{model.release.getVersion()}</span>
+        </div>
+      </DrawerItem>
+
+      <DrawerItem
+        name="Status"
+        className="status"
+        labelsOnly>
+        <Badge
+          label={model.release.getStatus()}
+          className={kebabCase(model.release.getStatus())}
         />
+      </DrawerItem>
 
-        <DrawerTitle>Notes</DrawerTitle>
+      <ReleaseValues
+        configuration={model.configuration}
+        onlyUserSuppliedValuesAreShown={
+          model.onlyUserSuppliedValuesAreShown
+        }
+      />
 
-        {model.notes && <div className="notes">{model.notes}</div>}
+      <DrawerTitle>Notes</DrawerTitle>
 
-        <DrawerTitle>Resources</DrawerTitle>
+      {model.notes && <div className="notes">{model.notes}</div>}
 
-        {model.groupedResources.length > 0 && (
-          <div className="resources">
-            {model.groupedResources.map((group) => (
-              <ResourceGroup key={group.kind} group={group} />
-            ))}
-          </div>
-        )}
-      </div>
-    ))
+      <DrawerTitle>Resources</DrawerTitle>
+
+      {model.groupedResources.length > 0 && (
+        <div className="resources">
+          {model.groupedResources.map((group) => (
+            <ResourceGroup key={group.kind} group={group} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 });
 

@@ -103,7 +103,6 @@ export class ReleaseDetailsModel {
 
   private detailedRelease = observable.box<DetailedHelmRelease | undefined>();
 
-  readonly isLoading = observable.box(false);
   readonly failedToLoad = observable.box(false);
 
   readonly configuration: ConfigurationInput = {
@@ -171,10 +170,6 @@ export class ReleaseDetailsModel {
   };
 
   load = async () => {
-    runInAction(() => {
-      this.isLoading.set(true);
-    });
-
     const { name, namespace } = this.dependencies.targetRelease;
 
     const result = await this.dependencies.callForHelmRelease(
@@ -195,10 +190,6 @@ export class ReleaseDetailsModel {
     });
 
     await this.loadConfiguration();
-
-    runInAction(() => {
-      this.isLoading.set(false);
-    });
   };
 
   private loadConfiguration = async () => {
