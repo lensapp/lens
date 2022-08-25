@@ -840,6 +840,10 @@ export class Pod extends KubeObject<
     return this.spec?.priorityClassName || "";
   }
 
+  getServiceAccountName() {
+    return this.spec?.serviceAccountName || "";
+  }
+
   getStatus(): PodStatusPhase {
     const phase = this.getStatusPhase();
     const reason = this.getReason();

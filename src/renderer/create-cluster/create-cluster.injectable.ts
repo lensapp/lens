@@ -8,6 +8,7 @@ import { Cluster } from "../../common/cluster/cluster";
 import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import loggerInjectable from "../../common/logger.injectable";
+import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -16,6 +17,7 @@ const createClusterInjectable = getInjectable({
     const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
       logger: di.inject(loggerInjectable),
+      broadcastMessage: di.inject(broadcastMessageInjectable),
 
       // TODO: Dismantle wrong abstraction
       // Note: "as never" to get around strictness in unnatural scenario

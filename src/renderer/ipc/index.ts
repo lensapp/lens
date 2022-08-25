@@ -4,7 +4,6 @@
  */
 
 import type { OpenDialogOptions } from "electron";
-import { ipcRenderer } from "electron";
 import { clusterActivateHandler, clusterClearDeletingHandler, clusterDeleteHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetDeletingHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
@@ -14,12 +13,22 @@ import type { InstalledExtension } from "../../extensions/extension-discovery/ex
 import type { LensExtensionId } from "../../extensions/lens-extension";
 import { toJS } from "../utils";
 import type { Location } from "history";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import ipcRendererInjectable from "../utils/channel/ipc-renderer.injectable";
 
 function requestMain(channel: string, ...args: any[]) {
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  const ipcRenderer = di.inject(ipcRendererInjectable);
+
   return ipcRenderer.invoke(channel, ...args.map(toJS));
 }
 
 function emitToMain(channel: string, ...args: any[]) {
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  const ipcRenderer = di.inject(ipcRendererInjectable);
+
   return ipcRenderer.send(channel, ...args.map(toJS));
 }
 

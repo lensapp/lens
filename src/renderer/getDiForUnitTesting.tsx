@@ -32,8 +32,6 @@ import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
-import ipcRendererInjectable from "./utils/channel/ipc-renderer.injectable";
-import type { IpcRenderer } from "electron";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable, computed } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
@@ -163,11 +161,6 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
     di.override(closeWindowInjectable, () => () => {});
     di.override(maximizeWindowInjectable, () => () => {});
     di.override(toggleMaximizeWindowInjectable, () => () => {});
-
-    di.override(ipcRendererInjectable, () => ({
-      invoke: () => {},
-      on: () => {},
-    }) as unknown as IpcRenderer);
 
     overrideFunctionalInjectables(di, [
       broadcastMessageInjectable,

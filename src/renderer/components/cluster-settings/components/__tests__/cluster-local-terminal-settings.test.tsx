@@ -4,28 +4,38 @@
  */
 
 import React from "react";
-import { render, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import { ClusterLocalTerminalSetting } from "../cluster-local-terminal-settings";
 import userEvent from "@testing-library/user-event";
-import { stat } from "fs/promises";
-import { Notifications } from "../../../notifications";
 import type { Stats } from "fs";
 import type { Cluster } from "../../../../../common/cluster/cluster";
-
-const mockStat = stat as jest.MockedFunction<typeof stat>;
-
-jest.mock("fs", () => {
-  const actual = jest.requireActual("fs");
-
-  actual.promises.stat = jest.fn();
-
-  return actual;
-});
-
-jest.mock("../../../notifications");
+import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
+import type { DiRender } from "../../../test-utils/renderFor";
+import { renderFor } from "../../../test-utils/renderFor";
+import showErrorNotificationInjectable from "../../../notifications/show-error-notification.injectable";
+import statInjectable from "../../../../../common/fs/stat/stat.injectable";
 
 describe("ClusterLocalTerminalSettings", () => {
+  let render: DiRender;
+  let showErrorNotificationMock: jest.Mock;
+  let statMock: jest.Mock;
+
   beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    showErrorNotificationMock = jest.fn();
+
+    statMock = jest.fn();
+
+    di.override(statInjectable, () => statMock);
+
+    di.override(
+      showErrorNotificationInjectable,
+      () => showErrorNotificationMock,
+    );
+
+    render = renderFor(di);
+
     jest.resetAllMocks();
   });
 
@@ -89,7 +99,7 @@ describe("ClusterLocalTerminalSettings", () => {
   });
 
   it("should save the new CWD if path is a directory", async () => {
-    mockStat.mockImplementation(async (path) => {
+    statMock.mockImplementation(async (path) => {
       expect(path).toBe("/foobar");
 
       return {
@@ -114,7 +124,7 @@ describe("ClusterLocalTerminalSettings", () => {
   });
 
   it("should not save the new CWD if path is a file", async () => {
-    mockStat.mockImplementation(async (path) => {
+    statMock.mockImplementation(async (path) => {
       expect(path).toBe("/foobar");
 
       return {
@@ -136,6 +146,6 @@ describe("ClusterLocalTerminalSettings", () => {
     userEvent.type(dn, "/foobar");
     userEvent.click(dom.baseElement);
 
-    await waitFor(() => expect(Notifications.error).toBeCalled());
+    await waitFor(() => expect(showErrorNotificationMock).toHaveBeenCalled());
   });
 });

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ipcRenderer } from "electron";
+import { ipcMain, ipcRenderer } from "electron";
 import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
@@ -127,10 +127,10 @@ export class ExtensionLoader {
 
   @action
   async init() {
-    if (ipcRenderer) {
-      await this.initRenderer();
-    } else {
+    if (ipcMain) {
       await this.initMain();
+    } else {
+      await this.initRenderer();
     }
 
     await Promise.all([this.whenLoaded]);

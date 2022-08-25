@@ -4,17 +4,20 @@
  */
 
 import React from "react";
-import { render } from "@testing-library/react";
 import { SecretDetails } from "../secret-details";
 import { Secret, SecretType } from "../../../../common/k8s-api/endpoints";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { renderFor } from "../../test-utils/renderFor";
 
 jest.mock("../../kube-object-meta/kube-object-meta", () => ({
   KubeObjectMeta: () => null,
 }));
 
-
 describe("SecretDetails tests", () => {
   it("should show the visibility toggle when the secret value is ''", () => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const render = renderFor(di);
+
     const secret = new Secret({
       apiVersion: "v1",
       kind: "secret",

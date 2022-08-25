@@ -22,6 +22,7 @@ import { showDetails } from "../kube-detail-params";
 
 enum sortBy {
   name = "name",
+  node = "node",
   namespace = "namespace",
   cpu = "cpu",
   memory = "memory",
@@ -124,6 +125,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
       >
         <TableCell className="name">{pod.getName()}</TableCell>
         <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={pod}/></TableCell>
+        <TableCell className="node">{pod.getNodeName()}</TableCell>
         <TableCell className="namespace">{pod.getNs()}</TableCell>
         <TableCell className="ready">
           {`${pod.getRunningContainers().length} / ${pod.getContainers().length}`}
@@ -165,6 +167,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
           virtualHeight={660}
           sortable={{
             [sortBy.name]: pod => pod.getName(),
+            [sortBy.node]: pod => pod.getNodeName(),
             [sortBy.namespace]: pod => pod.getNs(),
             [sortBy.cpu]: pod => podStore.getPodKubeMetrics(pod).cpu,
             [sortBy.memory]: pod => podStore.getPodKubeMetrics(pod).memory,
@@ -182,6 +185,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
           <TableHead>
             <TableCell className="name" sortBy={sortBy.name}>Name</TableCell>
             <TableCell className="warning"/>
+            <TableCell className="node" sortBy={sortBy.node}>Node</TableCell>
             <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>
             <TableCell className="ready">Ready</TableCell>
             <TableCell className="cpu" sortBy={sortBy.cpu}>CPU</TableCell>

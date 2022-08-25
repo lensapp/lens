@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { AbortSignal } from "abort-controller";
+
 /**
  * Creates a new promise that will be rejected when the signal rejects.
  *

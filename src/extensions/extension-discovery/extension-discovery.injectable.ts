@@ -13,6 +13,10 @@ import installExtensionInjectable from "../extension-installer/install-extension
 import extensionPackageRootDirectoryInjectable from "../extension-installer/extension-package-root-directory/extension-package-root-directory.injectable";
 import installExtensionsInjectable from "../extension-installer/install-extensions/install-extensions.injectable";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
+import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
+import loggerInjectable from "../../common/logger.injectable";
+import pathExistsInjectable from "../../common/fs/path-exists.injectable";
+import watchInjectable from "../../common/fs/watch/watch.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
@@ -40,6 +44,10 @@ const extensionDiscoveryInjectable = getInjectable({
       ),
 
       staticFilesDirectory: di.inject(staticFilesDirectoryInjectable),
+      readJsonFile: di.inject(readJsonFileInjectable),
+      pathExists: di.inject(pathExistsInjectable),
+      watch: di.inject(watchInjectable),
+      logger: di.inject(loggerInjectable),
     }),
 });
 

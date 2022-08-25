@@ -3,15 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import logger from "../../logger";
 import * as proto from "../../../common/protocol-handler";
 import URLParse from "url-parse";
 import type { LensExtension } from "../../../extensions/lens-extension";
-import { broadcastMessage } from "../../../common/ipc";
 import { observable, when, makeObservable } from "mobx";
 import type { LensProtocolRouterDependencies, RouteAttempt } from "../../../common/protocol-handler";
 import { ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { disposer, noop } from "../../../common/utils";
+import type { BroadcastMessage } from "../../../common/ipc/broadcast-message.injectable";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -36,6 +35,7 @@ function checkHost<Query>(url: URLParse<Query>): boolean {
 
 export interface LensProtocolRouterMainDependencies extends LensProtocolRouterDependencies {
   showApplicationWindow: () => Promise<void>;
+  broadcastMessage: BroadcastMessage;
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
@@ -73,7 +73,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       this.dependencies.showApplicationWindow().catch(noop);
       const routeInternally = checkHost(url);
 
-      logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);
+      this.dependencies.logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);
 
       if (routeInternally) {
         this._routeToInternal(url);
@@ -81,12 +81,12 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
         await this._routeToExtension(url);
       }
     } catch (error) {
-      broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
+      this.dependencies.broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
 
       if (error instanceof proto.RoutingError) {
-        logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { url: error.url });
+        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { url: error.url });
       } else {
-        logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { rawUrl });
+        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { rawUrl });
       }
     }
   }
@@ -119,7 +119,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     const rawUrl = url.toString(); // for sending to renderer
     const attempt = super._routeToInternal(url);
 
-    this.disposers.push(when(() => this.rendererLoaded, () => broadcastMessage(proto.ProtocolHandlerInternal, rawUrl, attempt)));
+    this.disposers.push(when(() => this.rendererLoaded, () => this.dependencies.broadcastMessage(proto.ProtocolHandlerInternal, rawUrl, attempt)));
 
     return attempt;
   }
@@ -136,7 +136,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
      */
     const attempt = await super._routeToExtension(new URLParse(url.toString(), true));
 
-    this.disposers.push(when(() => this.rendererLoaded, () => broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt)));
+    this.disposers.push(when(() => this.rendererLoaded, () => this.dependencies.broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt)));
 
     return attempt;
   }

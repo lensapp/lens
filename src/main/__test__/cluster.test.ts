@@ -2,11 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-jest.mock("../../common/ipc");
-jest.mock("request");
-jest.mock("request-promise-native");
-
+import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import { Console } from "console";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Kubectl } from "../kubectl/kubectl";
@@ -41,6 +37,7 @@ describe("create clusters", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+    di.override(broadcastMessageInjectable, () => async () => {});
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => (cluster) => ({

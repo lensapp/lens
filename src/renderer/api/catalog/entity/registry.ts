@@ -10,12 +10,12 @@ import "../../../../common/catalog-entities";
 import { iter } from "../../../utils";
 import type { Disposer } from "../../../utils";
 import { once } from "lodash";
-import logger from "../../../../common/logger";
 import { CatalogRunEvent } from "../../../../common/catalog/catalog-run-event";
 import { ipcRenderer } from "electron";
 import { catalogInitChannel, catalogItemsChannel, catalogEntityRunListener } from "../../../../common/ipc/catalog";
 import { isMainFrame } from "process";
 import type { Navigate } from "../../../navigation/navigate.injectable";
+import type { Logger } from "../../../../common/logger";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
@@ -23,6 +23,7 @@ export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promis
 interface Dependencies {
   navigate: Navigate;
   readonly categoryRegistry: CatalogCategoryRegistry;
+  logger: Logger;
 }
 
 export class CatalogEntityRegistry {
@@ -219,7 +220,7 @@ export class CatalogEntityRegistry {
    * @returns Whether the entities `onRun` method should be executed
    */
   async onBeforeRun(entity: CatalogEntity): Promise<boolean> {
-    logger.debug(`[CATALOG-ENTITY-REGISTRY]: run onBeforeRun on ${entity.getId()}`);
+    this.dependencies.logger.debug(`[CATALOG-ENTITY-REGISTRY]: run onBeforeRun on ${entity.getId()}`);
 
     const runEvent = new CatalogRunEvent({ target: entity });
 
@@ -227,7 +228,7 @@ export class CatalogEntityRegistry {
       try {
         await onBeforeRun(runEvent);
       } catch (error) {
-        logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
+        this.dependencies.logger.warn(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onBeforeRun threw an error`, error);
       }
 
       if (runEvent.defaultPrevented) {
@@ -253,9 +254,9 @@ export class CatalogEntityRegistry {
             },
           });
         } else {
-          logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
+          this.dependencies.logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
         }
       })
-      .catch(error => logger.error(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onRun threw an error`, error));
+      .catch(error => this.dependencies.logger.error(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onRun threw an error`, error));
   }
 }

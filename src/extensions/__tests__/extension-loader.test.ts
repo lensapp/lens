@@ -10,8 +10,10 @@ import extensionLoaderInjectable from "../extension-loader/extension-loader.inje
 import { runInAction } from "mobx";
 import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
 import mockFs from "mock-fs";
-import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import { delay } from "../../renderer/utils";
+import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
+import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
+import type { IpcRenderer } from "electron";
 
 console = new Console(stdout, stderr);
 
@@ -19,10 +21,14 @@ const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";
 const manifestPath3 = "manifest/path3";
 
-jest.mock(
-  "electron",
-  () => ({
-    ipcRenderer: {
+describe("ExtensionLoader", () => {
+  let extensionLoader: ExtensionLoader;
+  let updateExtensionStateMock: jest.Mock;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(ipcRendererInjectable, () => ({
       invoke: jest.fn(async (channel: string) => {
         if (channel === "extension-loader:main:state") {
           return [
@@ -59,59 +65,46 @@ jest.mock(
 
         return [];
       }),
-      on: jest.fn(
-        (channel: string, listener: (event: any, ...args: any[]) => void) => {
-          if (channel === "extension-loader:main:state") {
-            // First initialize with extensions 1 and 2
-            // and then broadcast event to remove extension 2 and add extension number 3
-            setTimeout(() => {
-              listener({}, [
-                [
+
+      on: (channel: string, listener: (event: any, ...args: any[]) => void) => {
+        if (channel === "extension-loader:main:state") {
+          // First initialize with extensions 1 and 2
+          // and then broadcast event to remove extension 2 and add extension number 3
+          setTimeout(() => {
+            listener({}, [
+              [
+                manifestPath,
+                {
+                  manifest: {
+                    name: "TestExtension",
+                    version: "1.0.0",
+                  },
+                  id: manifestPath,
+                  absolutePath: "/test/1",
                   manifestPath,
-                  {
-                    manifest: {
-                      name: "TestExtension",
-                      version: "1.0.0",
-                    },
-                    id: manifestPath,
-                    absolutePath: "/test/1",
-                    manifestPath,
-                    isBundled: false,
-                    isEnabled: true,
+                  isBundled: false,
+                  isEnabled: true,
+                },
+              ],
+              [
+                manifestPath3,
+                {
+                  manifest: {
+                    name: "TestExtension3",
+                    version: "3.0.0",
                   },
-                ],
-                [
-                  manifestPath3,
-                  {
-                    manifest: {
-                      name: "TestExtension3",
-                      version: "3.0.0",
-                    },
-                    id: manifestPath3,
-                    absolutePath: "/test/3",
-                    manifestPath: manifestPath3,
-                    isBundled: false,
-                    isEnabled: true,
-                  },
-                ],
-              ]);
-            }, 10);
-          }
-        },
-      ),
-    },
-  }),
-  {
-    virtual: true,
-  },
-);
-
-describe("ExtensionLoader", () => {
-  let extensionLoader: ExtensionLoader;
-  let updateExtensionStateMock: jest.Mock;
-
-  beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+                  id: manifestPath3,
+                  absolutePath: "/test/3",
+                  manifestPath: manifestPath3,
+                  isBundled: false,
+                  isEnabled: true,
+                },
+              ],
+            ]);
+          }, 10);
+        }
+      },
+    }) as unknown as IpcRenderer);
 
     mockFs();
 
