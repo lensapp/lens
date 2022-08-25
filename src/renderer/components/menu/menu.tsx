@@ -226,7 +226,9 @@ export class Menu extends React.Component<MenuProps, State> {
     this.props.close();
   }
 
-  toggle() {
+  toggle(event: MouseEvent) {
+    event.stopPropagation();
+  
     if (this.isOpen) {
       this.close();
     } else {
