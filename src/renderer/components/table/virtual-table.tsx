@@ -25,7 +25,7 @@ import { prevDefault } from "../../utils";
     estimateSize: () => 55,
     overscan: 5,
     count: rows.length,
-    paddingStart: 50 // header width
+    paddingStart: 50 // header height
   })
 
   return (
@@ -46,12 +46,7 @@ import { prevDefault } from "../../utils";
                   key={virtualRow.index}
                   ref={virtualRow.measureElement}
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
                     transform: `translateY(${virtualRow.start}px)`,
-                    display: 'flex',
                     cursor: onRowClick ? 'pointer' : 'default',
                   }}
                   onClick={prevDefault(() => onRowClick?.(row.original))}

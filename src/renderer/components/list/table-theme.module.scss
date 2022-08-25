@@ -54,4 +54,22 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  // Virtual table styles
+  tbody > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    padding: 0 calc(var(--padding) * 2);
+
+    &:hover {
+      background-color: var(--tableBgcSelected);
+    }
+
+    > div {
+      padding: 4px 0;
+    }
+  }
 }
