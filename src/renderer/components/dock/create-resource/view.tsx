@@ -11,7 +11,6 @@ import type { IComputedValue } from "mobx";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import type { CreateResourceTabStore } from "./store";
-import type { DockTab } from "../dock/store";
 import { EditorPanel } from "../editor-panel";
 import { InfoPanel } from "../info-panel";
 import * as resourceApplierApi from "../../../../common/k8s-api/endpoints/resource-applier.api";
@@ -31,7 +30,7 @@ import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.in
 import navigateInjectable from "../../../navigation/navigate.injectable";
 
 export interface CreateResourceProps {
-  tab: DockTab;
+  tabId: string;
 }
 
 interface Dependencies {
@@ -52,7 +51,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
   }
 
   get tabId() {
-    return this.props.tab.id;
+    return this.props.tabId;
   }
 
   get data() {
