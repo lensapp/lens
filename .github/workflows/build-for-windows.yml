@@ -75,6 +75,9 @@ jobs:
       # - name: Clear CA trust
       #   run: rm -Recursive node_modules/win-ca/pem
 
+      - name: add path to msbuild 
+        run: PATH="/c/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/":$PATH
+      
       - name: Electron Builder
         run: yarn run electron-builder --publish onTag
 
