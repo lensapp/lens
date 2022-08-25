@@ -7,12 +7,11 @@ import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } f
 import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
-import path from "path";
 import { moveSync, removeSync } from "fs-extra";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { isDefined } from "../../common/utils";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
 
 function mergePrometheusPreferences(left: ClusterPrometheusPreferences, right: ClusterPrometheusPreferences): ClusterPrometheusPreferences {
   if (left.prometheus && left.prometheusProvider) {
@@ -79,29 +78,29 @@ function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">):
   };
 }
 
-function moveStorageFolder({ folder, newId, oldId }: { folder: string; newId: string; oldId: string }): void {
-  const oldPath = path.resolve(folder, `${oldId}.json`);
-  const newPath = path.resolve(folder, `${newId}.json`);
-
-  try {
-    moveSync(oldPath, newPath);
-  } catch (error) {
-    if (String(error).includes("dest already exists")) {
-      migrationLog(`Multiple old lens-local-storage files for newId=${newId}. Removing ${oldId}.json`);
-      removeSync(oldPath);
-    }
-  }
-}
-
 export default {
   version: "5.0.0-beta.13",
   run(store) {
     const di = getLegacyGlobalDiForExtensionApi();
 
     const userDataPath = di.inject(directoryForUserDataInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
 
-    const folder = path.resolve(userDataPath, "lens-local-storage");
+    const moveStorageFolder = ({ folder, newId, oldId }: { folder: string; newId: string; oldId: string }): void => {
+      const oldPath = joinPaths(folder, `${oldId}.json`);
+      const newPath = joinPaths(folder, `${newId}.json`);
 
+      try {
+        moveSync(oldPath, newPath);
+      } catch (error) {
+        if (String(error).includes("dest already exists")) {
+          migrationLog(`Multiple old lens-local-storage files for newId=${newId}. Removing ${oldId}.json`);
+          removeSync(oldPath);
+        }
+      }
+    };
+
+    const folder = joinPaths(userDataPath, "lens-local-storage");
     const oldClusters: ClusterModel[] = store.get("clusters") ?? [];
     const clusters = new Map<string, ClusterModel>();
 

@@ -5,7 +5,7 @@
 
 // Helper for working with tarball files (.tar, .tgz)
 // Docs: https://github.com/npm/node-tar
-import type { ExtractOptions, FileStat } from "tar";
+import type { FileStat } from "tar";
 import tar from "tar";
 import path from "path";
 import { parse } from "./json";
@@ -62,18 +62,10 @@ export async function listTarEntries(filePath: string): Promise<string[]> {
 
   await tar.list({
     file: filePath,
-    onentry: (entry: FileStat) => {
+    onentry: (entry) => {
       entries.push(path.normalize(entry.path as unknown as string));
     },
   });
 
   return entries;
-}
-
-export function extractTar(filePath: string, opts: ExtractOptions & { sync?: boolean } = {}) {
-  return tar.extract({
-    file: filePath,
-    cwd: path.dirname(filePath),
-    ...opts,
-  });
 }

@@ -9,7 +9,6 @@ import type { Cluster } from "../../../../common/cluster/cluster";
 import { Input } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
 import type { ShowNotification } from "../../notifications";
-import { resolveTilde } from "../../../utils";
 import { Icon } from "../../icon";
 import { PathPicker } from "../../path-picker";
 import { isWindows } from "../../../../common/vars";
@@ -17,6 +16,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 import type { ValidateDirectory } from "../../../../common/fs/validate-directory.injectable";
 import validateDirectoryInjectable from "../../../../common/fs/validate-directory.injectable";
+import type { ResolveTilde } from "../../../../common/path/resolve-tilde.injectable";
+import resolveTildeInjectable from "../../../../common/path/resolve-tilde.injectable";
 
 export interface ClusterLocalTerminalSettingProps {
   cluster: Cluster;
@@ -24,9 +25,15 @@ export interface ClusterLocalTerminalSettingProps {
 interface Dependencies {
   showErrorNotification: ShowNotification;
   validateDirectory: ValidateDirectory;
+  resolveTilde: ResolveTilde;
 }
 
-const NonInjectedClusterLocalTerminalSetting = observer(({ cluster, showErrorNotification, validateDirectory }: Dependencies & ClusterLocalTerminalSettingProps) => {
+const NonInjectedClusterLocalTerminalSetting = observer(({
+  cluster,
+  showErrorNotification,
+  validateDirectory,
+  resolveTilde,
+}: Dependencies & ClusterLocalTerminalSettingProps) => {
   if (!cluster) {
     return null;
   }
@@ -150,15 +157,11 @@ const NonInjectedClusterLocalTerminalSetting = observer(({ cluster, showErrorNot
   );
 });
 
-export const ClusterLocalTerminalSetting = withInjectables<Dependencies, ClusterLocalTerminalSettingProps>(
-  NonInjectedClusterLocalTerminalSetting,
-
-  {
-    getProps: (di, props) => ({
-      showErrorNotification: di.inject(showErrorNotificationInjectable),
-      validateDirectory: di.inject(validateDirectoryInjectable),
-      ...props,
-    }),
-  },
-);
-
+export const ClusterLocalTerminalSetting = withInjectables<Dependencies, ClusterLocalTerminalSettingProps>(NonInjectedClusterLocalTerminalSetting, {
+  getProps: (di, props) => ({
+    ...props,
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
+    validateDirectory: di.inject(validateDirectoryInjectable),
+    resolveTilde: di.inject(resolveTildeInjectable),
+  }),
+});

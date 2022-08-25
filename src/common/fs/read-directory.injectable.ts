@@ -29,9 +29,9 @@ export interface ReadDirectory {
   ): Promise<Dirent[]>;
 }
 
-const readDirInjectable = getInjectable({
-  id: "read-dir",
+const readDirectoryInjectable = getInjectable({
+  id: "read-directory",
   instantiate: (di): ReadDirectory => di.inject(fsInjectable).readdir,
 });
 
-export default readDirInjectable;
+export default readDirectoryInjectable;

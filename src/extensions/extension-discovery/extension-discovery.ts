@@ -22,9 +22,8 @@ import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { Watch } from "../../common/fs/watch/watch.injectable";
 import type { Stats } from "fs";
 import { constants } from "fs";
-import type { DeleteFile } from "../../common/fs/delete-file.injectable";
 import type { LStat } from "../../common/fs/lstat.injectable";
-import type { ReadDirectory } from "../../common/fs/read-dir.injectable";
+import type { ReadDirectory } from "../../common/fs/read-directory.injectable";
 import type { EnsureDirectory } from "../../common/fs/ensure-dir.injectable";
 import type { AccessPath } from "../../common/fs/access-path.injectable";
 import type { Copy } from "../../common/fs/copy.injectable";
@@ -32,6 +31,7 @@ import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
+import type { RemovePath } from "../../common/fs/remove-path.injectable";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
@@ -47,7 +47,7 @@ interface Dependencies {
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
   readJsonFile: ReadJson;
   pathExists: PathExists;
-  deleteFile: DeleteFile;
+  removePath: RemovePath;
   lstat: LStat;
   watch: Watch;
   readDirectory: ReadDirectory;
@@ -222,7 +222,7 @@ export class ExtensionDiscovery {
 
         if (extension) {
           // Remove a broken symlink left by a previous installation if it exists.
-          await this.dependencies.deleteFile(extension.manifestPath);
+          await this.dependencies.removePath(extension.manifestPath);
 
           // Install dependencies for the new extension
           await this.dependencies.installExtension(extension.absolutePath);
@@ -285,7 +285,7 @@ export class ExtensionDiscovery {
    * @param name e.g. "@mirantis/lens-extension-cc"
    */
   removeSymlinkByPackageName(name: string): Promise<void> {
-    return this.dependencies.deleteFile(this.getInstalledPath(name));
+    return this.dependencies.removePath(this.getInstalledPath(name));
   }
 
   /**
@@ -307,7 +307,7 @@ export class ExtensionDiscovery {
     await this.removeSymlinkByPackageName(manifest.name);
 
     // fs.remove does nothing if the path doesn't exist anymore
-    await this.dependencies.deleteFile(absolutePath);
+    await this.dependencies.removePath(absolutePath);
   }
 
   async load(): Promise<Map<LensExtensionId, InstalledExtension>> {
@@ -322,7 +322,7 @@ export class ExtensionDiscovery {
       `${logModule} loading extensions from ${this.dependencies.extensionPackageRootDirectory}`,
     );
 
-    await this.dependencies.deleteFile(this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, "package-lock.json"));
+    await this.dependencies.removePath(this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, "package-lock.json"));
 
     const canWriteToInTreeFolder = await this.dependencies.accessPath(this.inTreeFolderPath, constants.W_OK);
 
@@ -331,7 +331,7 @@ export class ExtensionDiscovery {
       this.bundledFolderPath = this.inTreeFolderPath;
     } else {
       // Remove e.g. /Users/<username>/Library/Application Support/LensDev/extensions
-      await this.dependencies.deleteFile(this.inTreeTargetPath);
+      await this.dependencies.removePath(this.inTreeTargetPath);
 
       // Create folder e.g. /Users/<username>/Library/Application Support/LensDev/extensions
       await this.dependencies.ensureDirectory(this.inTreeTargetPath);

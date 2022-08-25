@@ -14,6 +14,9 @@ import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import type WebSocket from "ws";
+import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -35,6 +38,9 @@ const openLocalShellSessionInjectable = getInjectable({
       isWindows: di.inject(isWindowsInjectable),
       logger: di.inject(loggerInjectable),
       userStore: di.inject(userStoreInjectable),
+      getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
+      joinPaths: di.inject(joinPathsInjectable),
+      getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
     };
 
     return (args) => {

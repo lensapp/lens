@@ -14,6 +14,9 @@ import bundledKubectlBinaryPathInjectable from "./bundled-binary-path.injectable
 import baseBundledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
 import bundledKubectlVersionInjectable from "../../common/vars/bundled-kubectl-version.injectable";
 import kubectlVersionMapInjectable from "./version-map.injectable";
+import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
+import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
 
 const createKubectlInjectable = getInjectable({
   id: "create-kubectl",
@@ -29,6 +32,9 @@ const createKubectlInjectable = getInjectable({
       baseBundeledBinariesDirectory: di.inject(baseBundledBinariesDirectoryInjectable),
       bundledKubectlVersion: di.inject(bundledKubectlVersionInjectable),
       kubectlVersionMap: di.inject(kubectlVersionMapInjectable),
+      getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
+      joinPaths: di.inject(joinPathsInjectable),
+      getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
     };
 
     return (clusterVersion: string) => new Kubectl(dependencies, clusterVersion);

@@ -9,6 +9,8 @@ import type { KubeconfigManagerDependencies } from "./kubeconfig-manager";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import loggerInjectable from "../../common/logger.injectable";
 import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
+import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 
 export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;
@@ -24,6 +26,8 @@ const createKubeconfigManagerInjectable = getInjectable({
       directoryForTemp: di.inject(directoryForTempInjectable),
       logger: di.inject(loggerInjectable),
       lensProxyPort: di.inject(lensProxyPortInjectable),
+      joinPaths: di.inject(joinPathsInjectable),
+      getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
     };
 
     return (cluster) => new KubeconfigManager(dependencies, cluster);

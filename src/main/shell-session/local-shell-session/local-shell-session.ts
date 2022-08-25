@@ -3,16 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import path from "path";
 import type { UserStore } from "../../../common/user-store";
 import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-session";
 import { ShellSession } from "../shell-session";
 import type { ModifyTerminalShellEnv } from "../shell-env-modifier/modify-terminal-shell-env.injectable";
+import type { JoinPaths } from "../../../common/path/join-paths.injectable";
+import type { GetDirnameOfPath } from "../../../common/path/get-dirname.injectable";
+import type { GetBasenameOfPath } from "../../../common/path/get-basename.injectable";
 
 export interface LocalShellSessionDependencies extends ShellSessionDependencies {
-  modifyTerminalShellEnv: ModifyTerminalShellEnv;
   readonly directoryForBinaries: string;
   readonly userStore: UserStore;
+  modifyTerminalShellEnv: ModifyTerminalShellEnv;
+  joinPaths: JoinPaths;
+  getDirnameOfPath: GetDirnameOfPath;
+  getBasenameOfPath: GetBasenameOfPath;
 }
 
 export class LocalShellSession extends ShellSession {
@@ -49,13 +54,15 @@ export class LocalShellSession extends ShellSession {
 
   protected async getShellArgs(shell: string): Promise<string[]> {
     const pathFromPreferences = this.dependencies.userStore.kubectlBinariesPath || this.kubectl.getBundledPath();
-    const kubectlPathDir = this.dependencies.userStore.downloadKubectlBinaries ? await this.kubectlBinDirP : path.dirname(pathFromPreferences);
+    const kubectlPathDir = this.dependencies.userStore.downloadKubectlBinaries
+      ? await this.kubectlBinDirP
+      : this.dependencies.getDirnameOfPath(pathFromPreferences);
 
-    switch(path.basename(shell)) {
+    switch(this.dependencies.getBasenameOfPath(shell)) {
       case "powershell.exe":
         return ["-NoExit", "-command", `& {$Env:PATH="${kubectlPathDir};${this.dependencies.directoryForBinaries};$Env:PATH"}`];
       case "bash":
-        return ["--init-file", path.join(await this.kubectlBinDirP, ".bash_set_path")];
+        return ["--init-file", this.dependencies.joinPaths(await this.kubectlBinDirP, ".bash_set_path")];
       case "fish":
         return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${this.dependencies.directoryForBinaries}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
       case "zsh":

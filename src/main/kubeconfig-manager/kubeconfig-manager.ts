@@ -6,17 +6,20 @@
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
-import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../../common/kube-helpers";
 import { isErrnoException } from "../../common/utils";
 import type { PartialDeep } from "type-fest";
 import type { Logger } from "../../common/logger";
+import type { JoinPaths } from "../../common/path/join-paths.injectable";
+import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 
 export interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
   readonly logger: Logger;
-  lensProxyPort: { get: () => number };
+  readonly lensProxyPort: { get: () => number };
+  joinPaths: JoinPaths;
+  getDirnameOfPath: GetDirnameOfPath;
 }
 
 export class KubeconfigManager {
@@ -93,7 +96,7 @@ export class KubeconfigManager {
   protected async createProxyKubeconfig(): Promise<string> {
     const { cluster } = this;
     const { contextName, id } = cluster;
-    const tempFile = path.join(
+    const tempFile = this.dependencies.joinPaths(
       this.dependencies.directoryForTemp,
       `kubeconfig-${id}`,
     );
@@ -121,7 +124,7 @@ export class KubeconfigManager {
     // write
     const configYaml = dumpConfigYaml(proxyConfig);
 
-    await fs.ensureDir(path.dirname(tempFile));
+    await fs.ensureDir(this.dependencies.getDirnameOfPath(tempFile));
     await fs.writeFile(tempFile, configYaml, { mode: 0o600 });
     this.dependencies.logger.debug(`[KUBECONFIG-MANAGER]: Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 

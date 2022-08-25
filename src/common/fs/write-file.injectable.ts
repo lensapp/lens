@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import path from "path";
+import getDirnameOfPathInjectable from "../path/get-dirname.injectable";
 import fsInjectable from "./fs.injectable";
 
 const writeFileInjectable = getInjectable({
@@ -11,9 +11,10 @@ const writeFileInjectable = getInjectable({
 
   instantiate: (di) => {
     const { writeFile, ensureDir } = di.inject(fsInjectable);
+    const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
 
     return async (filePath: string, content: string | Buffer) => {
-      await ensureDir(path.dirname(filePath), { mode: 0o755 });
+      await ensureDir(getDirnameOfPath(filePath), { mode: 0o755 });
 
       await writeFile(filePath, content, {
         encoding: "utf-8",

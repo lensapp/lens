@@ -7,7 +7,6 @@ import { ipcMain, ipcRenderer } from "electron";
 import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
-import path from "path";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import type { Disposer } from "../../common/utils";
 import { isDefined, toJS } from "../../common/utils";
@@ -23,6 +22,8 @@ import { EventEmitter } from "../../common/event-emitter";
 import type { CreateExtensionInstance } from "./create-extension-instance.token";
 import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
+import type { JoinPaths } from "../../common/path/join-paths.injectable";
+import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
@@ -32,6 +33,8 @@ interface Dependencies {
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
   createExtensionInstance: CreateExtensionInstance;
   getExtension: (instance: LensExtension) => Extension;
+  joinPaths: JoinPaths;
+  getDirnameOfPath: GetDirnameOfPath;
 }
 
 export interface ExtensionLoading {
@@ -371,7 +374,7 @@ export class ExtensionLoader {
       return null;
     }
 
-    const extAbsolutePath = path.resolve(path.join(path.dirname(extension.manifestPath), extRelativePath));
+    const extAbsolutePath = this.dependencies.joinPaths(this.dependencies.getDirnameOfPath(extension.manifestPath), extRelativePath);
 
     try {
       return __non_webpack_require__(extAbsolutePath).default;

@@ -16,6 +16,7 @@ import loggerInjectable from "../../common/logger.injectable";
 import detectorRegistryInjectable from "../cluster-detectors/detector-registry.injectable";
 import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
+import loadConfigfromFileInjectable from "../../common/kube-helpers/load-config-from-file.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -32,6 +33,7 @@ const createClusterInjectable = getInjectable({
       detectorRegistry: di.inject(detectorRegistryInjectable),
       createVersionDetector: di.inject(createVersionDetectorInjectable),
       broadcastMessage: di.inject(broadcastMessageInjectable),
+      loadConfigfromFile: di.inject(loadConfigfromFileInjectable),
     };
 
     return (model, configData) => new Cluster(dependencies, model, configData);

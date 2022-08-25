@@ -4,8 +4,8 @@
  */
 
 import { getGlobalOverride } from "../test-utils/get-global-override";
-import readDirInjectable from "./read-dir.injectable";
+import extractTarInjectable from "./extract-tar.injectable";
 
-export default getGlobalOverride(readDirInjectable, () => async () => {
-  throw new Error("tried to read a directory's content without override");
+export default getGlobalOverride(extractTarInjectable, () => async () => {
+  throw new Error("tried to extract a tar file without override");
 });

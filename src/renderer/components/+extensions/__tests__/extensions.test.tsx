@@ -18,8 +18,8 @@ import extensionDiscoveryInjectable from "../../../../extensions/extension-disco
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 import assert from "assert";
-import type { InstallFromInput } from "../install-from-input/install-from-input";
-import installFromInputInjectable from "../install-from-input/install-from-input.injectable";
+import type { InstallExtensionFromInput } from "../install-extension-from-input.injectable";
+import installExtensionFromInputInjectable from "../install-extension-from-input.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { observable, when } from "mobx";
@@ -46,7 +46,7 @@ jest.mock("../../../../common/utils/tar");
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
   let extensionDiscovery: ExtensionDiscovery;
-  let installFromInput: jest.MockedFunction<InstallFromInput>;
+  let installExtensionFromInput: jest.MockedFunction<InstallExtensionFromInput>;
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
   let deleteFileMock: jest.MockedFunction<DeleteFile>;
@@ -59,8 +59,8 @@ describe("Extensions", () => {
 
     render = renderFor(di);
 
-    installFromInput = jest.fn();
-    di.override(installFromInputInjectable, () => installFromInput);
+    installExtensionFromInput = jest.fn();
+    di.override(installExtensionFromInputInjectable, () => installExtensionFromInput);
 
     deleteFileMock = jest.fn();
     di.override(deleteFileInjectable, () => deleteFileMock);
@@ -126,7 +126,7 @@ describe("Extensions", () => {
     const resolveInstall = observable.box(false);
 
     deleteFileMock.mockReturnValue(Promise.resolve());
-    installFromInput.mockImplementation(async (input) => {
+    installExtensionFromInput.mockImplementation(async (input) => {
       expect(input).toBe("https://test.extensionurl/package.tgz");
 
       const clear = extensionInstallationStateStore.startPreInstall();

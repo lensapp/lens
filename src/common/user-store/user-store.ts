@@ -7,7 +7,6 @@ import { app } from "electron";
 import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
-import { kubeConfigDefaultPath } from "../kube-helpers";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
@@ -37,12 +36,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @observable lastSeenAppVersion = "0.0.0";
-
-  /**
-   * used in add-cluster page for providing context
-   * @deprecated No longer used
-   */
-  @observable kubeConfigPath = kubeConfigDefaultPath;
 
   /**
    * @deprecated No longer used
