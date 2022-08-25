@@ -11,6 +11,7 @@ jobs:
     name: Test
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-20.04, macos-11, windows-2019]
         node-version: [16.x]
