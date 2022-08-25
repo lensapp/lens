@@ -107,6 +107,7 @@ function IndeterminateCheckbox({
       ref={ref}
       className={className}
       style={{ cursor: "pointer" }}
+      onClick={(e) => e.stopPropagation()}
       {...rest}
     />
   )
