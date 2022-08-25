@@ -7,7 +7,6 @@ import "./install-chart.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { DockTab } from "../dock/store";
 import { InfoPanel } from "../info-panel";
 import { Badge } from "../../badge";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
@@ -23,8 +22,8 @@ import type { InstallChartModel } from "./install-chart-model.injectable";
 import installChartModelInjectable from "./install-chart-model.injectable";
 import { Spinner } from "../../spinner";
 
-export interface InstallCharProps {
-  tab: DockTab;
+export interface InstallChartProps {
+  tabId: string;
 }
 
 interface Dependencies {
@@ -32,7 +31,7 @@ interface Dependencies {
 }
 
 const NonInjectedInstallChart = observer(
-  ({ model: model, tab: { id: tabId }}: InstallCharProps & Dependencies) => {
+  ({ model: model, tabId }: InstallChartProps & Dependencies) => {
     const installed = model.installed.get();
 
     if (installed) {
@@ -144,7 +143,7 @@ const NonInjectedInstallChart = observer(
   },
 );
 
-export const InstallChart = withInjectables<Dependencies, InstallCharProps>(
+export const InstallChart = withInjectables<Dependencies, InstallChartProps>(
   NonInjectedInstallChart,
 
   {
@@ -156,7 +155,7 @@ export const InstallChart = withInjectables<Dependencies, InstallCharProps>(
     ),
 
     getProps: async (di, props) => ({
-      model: await di.inject(installChartModelInjectable, props.tab.id),
+      model: await di.inject(installChartModelInjectable, props.tabId),
       ...props,
     }),
   },
