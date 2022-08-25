@@ -5,7 +5,7 @@
 
 import styles from "./badge.module.scss";
 
-import React, { createRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils/cssNames";
@@ -40,12 +40,15 @@ export const Badge = withTooltip(observer(({
   children,
   ...elemProps
 }: BadgeProps) => {
-  const elem = createRef<HTMLDivElement>();
+  const elem = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpandable, setIsExpandable] = useState(false);
 
-  const isExpandable = expandable && elem.current
-    ? elem.current.clientWidth < elem.current.scrollWidth
-    : false;
+  useEffect(() => {
+    const { clientWidth = 0, scrollWidth = 0 } = elem.current ?? {};
+
+    setIsExpandable(expandable && (clientWidth < scrollWidth));
+  }, [expandable, elem.current]);
 
   const onMouseUp = action(() => {
     if (!isExpandable || badgeMeta.hasTextSelected) {
