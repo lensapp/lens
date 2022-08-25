@@ -183,7 +183,11 @@ class NonInjectedPods extends React.Component<Dependencies> {
       columnHelper.accessor(row => row.getName(), {
         id: "name",
         header: "Name",
-        cell: info => info.getValue(),
+        cell: info => (
+          <span style={{ wordBreak: "break-word", whiteSpace: "normal" }}>
+            {info.getValue()}
+          </span>
+        ),
         size: 130,
       }),
       columnHelper.display({
@@ -214,7 +218,7 @@ class NonInjectedPods extends React.Component<Dependencies> {
       }),
       columnHelper.accessor(row => this.renderControlledBy(row), {
         id: "controlledBy",
-        header: "Controlled By",
+        header: "Owners",
         cell: info => info.getValue(),
       }),
       columnHelper.accessor(row => this.renderNodeName(row), {

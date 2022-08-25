@@ -71,7 +71,8 @@
 
     > div {
       padding: 4px 0;
-      word-break: break-all;
+      overflow: hidden;
+      white-space: nowrap;
     }
   }
 }
