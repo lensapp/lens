@@ -9411,7 +9411,7 @@ markdown@^0.5.0:
   dependencies:
     nopt "~2.1.1"
 
-marked@^4.0.16, marked@^4.0.18:
+marked@^4.0.18:
   version "4.0.18"
   resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.18.tgz#cd0ac54b2e5610cfb90e8fd46ccaa8292c9ed569"
   integrity sha512-wbLDJ7Zh0sqA0Vdg6aqlbT+yPxqLblpAZh1mK2+AO2twQkPywvvqQNfEPVwSSRjZ7dZcdeVBIAgiO7MMp3Dszw==
@@ -13488,13 +13488,13 @@ typedoc-plugin-markdown@^3.13.1:
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@0.23.8:
-  version "0.23.8"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.8.tgz#6837fb2732f73e7aa61b46a4fbe77a301473998d"
-  integrity sha512-NLRTY/7XSrhiowR3xnH/nlfTnHk+dkzhHWAMT8guoZ6RHCQZIu3pJREMCqzdkWVCC5+dr9We7TtNeprR3Qy6Ag==
+typedoc@0.23.10:
+  version "0.23.10"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.10.tgz#285d595a5f2e35ccdf6f38eba4dfe951d5bff461"
+  integrity sha512-03EUiu/ZuScUBMnY6p0lY+HTH8SwhzvRE3gImoemdPDWXPXlks83UGTx++lyquWeB1MTwm9D9Ca8RIjkK3AFfQ==
   dependencies:
     lunr "^2.3.9"
-    marked "^4.0.16"
+    marked "^4.0.18"
     minimatch "^5.1.0"
     shiki "^0.10.1"
 
