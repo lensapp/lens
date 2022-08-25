@@ -50,7 +50,12 @@ jobs:
           $NodeDirPath = Split-Path $WhereNode -Parent
           $NodeModulesPath = $NodeDirPath + "\node_modules\npm\node_modules\npm-lifecycle"
           cd $NodeModulesPath
-          npm install node-gyp@8.x
+          npm install node-gyp@latest
+
+      - name: Force to latest node-gyp
+        run: |
+          npm install --global node-gyp@latest
+          for /f "delims=" %P in ('npm prefix -g') do npm config set node_gyp "%P\node_modules\node-gyp\bin\node-gyp.js"
 
       # install GNU make
       - name: Install gnu make using choclatey
@@ -83,9 +88,9 @@ jobs:
       # - name: Clear CA trust
       #   run: rm -Recursive node_modules/win-ca/pem
 
-      - name: add path to msbuild 
+      - name: add path to msbuild
         run: PATH="/c/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/":$PATH
-      
+
       - name: Electron Builder
         run: yarn run electron-builder --publish onTag
 
