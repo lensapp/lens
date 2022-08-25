@@ -25,7 +25,7 @@ import { prevDefault } from "../../utils";
     estimateSize: () => 55,
     overscan: 5,
     count: rows.length,
-    paddingStart: 50 // header height
+    paddingStart: 35 // header height
   })
 
   return (
