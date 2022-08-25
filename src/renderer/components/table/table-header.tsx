@@ -39,6 +39,7 @@ export function TableHeader<Data>({ table, className, getColumnSizeStyles }: Tab
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
                       className={cssNames(styles.resizer, { [styles.isResizing]: header.column.getIsResizing() })}
+                      onClick={(e) => e.stopPropagation()}
                     ></div>
                   )}
                 </div>
