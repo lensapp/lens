@@ -25,7 +25,7 @@ import { prevDefault } from "../../utils";
     estimateSize: () => 55,
     overscan: 5,
     count: rows.length,
-    paddingStart: 35 // header height
+    paddingStart: 33, // header height
   })
 
   return (
@@ -87,5 +87,6 @@ function getCellWidthStyles<T>(table: Table<T>, cell: Cell<T, unknown> | Header<
     flexGrow: 1,
     flexShrink: 0,
     flexBasis: "0%",
+    minWidth: cell.column.getCanResize() ? '80px' : 'auto',
   }
 }
