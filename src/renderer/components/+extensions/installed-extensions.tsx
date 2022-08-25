@@ -10,12 +10,11 @@ import type {
   InstalledExtension,
 } from "../../../extensions/extension-discovery/extension-discovery";
 import { Icon } from "../icon";
-import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
 import { Spinner } from "../spinner";
 import { cssNames } from "../../utils";
 import { observer } from "mobx-react";
-import type { Row } from "react-table";
+import { ColumnDef, useReactTable, getCoreRowModel, getSortedRowModel } from "@tanstack/react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import extensionDiscoveryInjectable
   from "../../../extensions/extension-discovery/extension-discovery.injectable";
@@ -24,6 +23,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import extensionInstallationStateStoreInjectable
   from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import { Table } from "../table/react-table";
 
 export interface InstalledExtensionsProps {
   extensions: InstalledExtension[];
@@ -46,62 +46,58 @@ function getStatus(extension: InstalledExtension) {
 }
 
 const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extensionInstallationStateStore, extensions, uninstall, enable, disable }: Dependencies & InstalledExtensionsProps) => {
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Name",
-        accessor: "extension",
-        width: 200,
-        sortType: (rowA: Row, rowB: Row) => { // Custom sorting for extension name
-          const nameA = extensions[rowA.index].manifest.name;
-          const nameB = extensions[rowB.index].manifest.name;
+  const cols = useMemo<ColumnDef<InstalledExtension>[]>(() => ([
+    {
+      id: "name",
+      header: "Name",
+      size: 200,
+      sortingFn: (a, b) => { // Custom sorting for extension name
+        const nameA = extensions[a.index].manifest.name;
+        const nameB = extensions[b.index].manifest.name;
 
-          if (nameA > nameB) return -1;
-          if (nameB > nameA) return 1;
+        if (nameA > nameB) return -1;
+        if (nameB > nameA) return 1;
 
-          return 0;
-        },
+        return 0;
       },
-      {
-        Header: "Version",
-        accessor: "version",
-      },
-      {
-        Header: "Status",
-        accessor: "status",
-      },
-      {
-        Header: "",
-        accessor: "actions",
-        disableSortBy: true,
-        width: 20,
-        className: "actions",
-      },
-    ], [],
-  );
-
-  const data = useMemo(
-    () => extensions.map(extension => {
-      const { id, isEnabled, isCompatible, manifest } = extension;
-      const { name, description, version } = manifest;
-      const isUninstalling = extensionInstallationStateStore.isExtensionUninstalling(id);
-
-      return {
-        extension: (
-          <div className={"flex items-start"}>
-            <div>
-              <div className={styles.extensionName}>{name}</div>
-              <div className={styles.extensionDescription}>{description}</div>
-            </div>
+      cell: (cell) => (
+        <div className={"flex items-start"}>
+          <div>
+            <div className={styles.extensionName}>{cell.row.original.manifest.name}</div>
+            <div className={styles.extensionDescription}></div>
           </div>
-        ),
-        version,
-        status: (
+        </div>
+      )
+    },
+    {
+      id: "version",
+      header: "Version",
+      cell: (cell) => cell.row.original.manifest.version
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessorFn: (row) => row,
+      cell: (cell) => {
+        const extension = cell.row.original;
+        const { isEnabled, isCompatible } = extension;
+        
+        return (
           <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
             {getStatus(extension)}
           </div>
-        ),
-        actions: (
+        )
+      }
+    },
+    {
+      id: "actions",
+      enableSorting: false,
+      size: 30,
+      cell: (cell) => {
+        const extension = cell.row.original;
+        const { id, isEnabled, isCompatible } = extension;
+        const isUninstalling = extensionInstallationStateStore.isExtensionUninstalling(id);
+        return (
           <MenuActions
             id={`menu-actions-for-installed-extensions-for-${id}`}
             usePortal
@@ -136,10 +132,17 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
               <span className="title" aria-disabled={isUninstalling}>Uninstall</span>
             </MenuItem>
           </MenuActions>
-        ),
-      };
-    }), [extensions, extensionInstallationStateStore.anyUninstalling],
-  );
+        )
+      }
+    }
+  ]), []);
+
+  const table = useReactTable({
+    data: extensions,
+    columns: cols,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
 
   if (!extensionDiscovery.isLoaded) {
     return <div><Spinner center /></div>;
@@ -159,17 +162,10 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
 
   return (
     <section data-testid="extensions-table">
-      <List
-        title={<h2 className={styles.title}>Installed extensions</h2>}
-        columns={columns}
-        data={data}
-        items={extensions}
-        filters={[
-          (extension) => extension.manifest.name,
-          (extension) => getStatus(extension),
-          (extension) => extension.manifest.version,
-        ]}
-      />
+      <div>
+        <h2 className={styles.title}>Installed extensions</h2> 
+      </div>
+      <Table table={table} />
     </section>
   );
 });

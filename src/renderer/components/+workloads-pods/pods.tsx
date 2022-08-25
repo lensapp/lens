@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
-import { cssNames, Disposer, getConvertedParts, object, stopPropagation } from "../../utils";
+import { cssNames, getConvertedParts, object, stopPropagation } from "../../utils";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
@@ -29,9 +29,8 @@ import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.inject
 import eventStoreInjectable from "../+events/store.injectable";
 import podStoreInjectable from "./store.injectable";
 import { List } from "../list/list";
-import { ColumnDef, createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
-import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
+import { createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
+import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeToStoresDisposersInjectable from "../../kube-watch-api/subscribe-to-stores-disposers.injectable";
 import { KubeObjectMenu } from "../kube-object-menu";
 import toggleKubeDetailsPaneInjectable, { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
