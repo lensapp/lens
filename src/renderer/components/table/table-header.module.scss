@@ -7,16 +7,17 @@
   position: absolute;
   right: 0;
   top: 0;
-  height: 100%;
-  width: 5px;
-  background: #ccc;
+  height: 20px;
+  width: 2px;
+  border-radius: 3px;
+  background: var(--textColorDimmed);
   cursor: col-resize;
   user-select: none;
   touch-action: none;
 }
 
 .resizer.isResizing {
-  background: blue;
+  background: var(--textColorAccent);
   opacity: 1;
 }
 
@@ -27,5 +28,6 @@
 
   *:hover > .resizer {
     opacity: 1;
+    background: var(--textColorTertiary)
   }
 }
