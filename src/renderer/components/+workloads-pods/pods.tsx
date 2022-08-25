@@ -184,6 +184,7 @@ class NonInjectedPods extends React.Component<Dependencies> {
         id: "name",
         header: "Name",
         cell: info => info.getValue(),
+        size: 130,
       }),
       columnHelper.display({
         id: "warning",
@@ -195,14 +196,15 @@ class NonInjectedPods extends React.Component<Dependencies> {
         id: "namespace",
         header: "Namespace",
         cell: info => info.getValue(),
-        minSize: 110,
-        size: 110,
+        minSize: 100,
+        size: 100,
       }),
       columnHelper.accessor(row => this.renderContainersStatus(row), {
         id: "containers",
         header: "Containers",
         cell: info => info.getValue(),
-        minSize: 137,
+        size: 100,
+        minSize: 100,
       }),
       columnHelper.accessor(row => row.getRestartsCount(), {
         id: "restarts",
