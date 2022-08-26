@@ -22,10 +22,6 @@
 }
 
 @media (hover: hover) {
-  .resizer {
-    opacity: 0;
-  }
-
   *:hover > .resizer {
     opacity: 1;
     background: var(--textColorTertiary)
