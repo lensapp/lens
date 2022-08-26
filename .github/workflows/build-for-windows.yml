@@ -44,6 +44,10 @@ jobs:
       - name: Set MSVC version
         run: npm config set msvs_version 2022
 
+      # This might be helpful for issues building node-gyp modules on Windows.
+      # - name: Set up npm Windows build tools
+      #   run: yarn install -g windows-build-tools
+
       - name: Update node-gyp
         run: |
           $WhereNode = Get-Command node | Select-Object -ExpandProperty Definition
