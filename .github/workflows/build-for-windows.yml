@@ -71,9 +71,7 @@ jobs:
 
       # Sets up the node_modules folder with the Windows version of the dependencies
       - name: Yarn install
-        run: |
-          yarn install --frozen-lockfile --network-timeout=100000 --no-optional
-          yarn check --verify-tree --integrity
+        run: yarn install --frozen-lockfile --network-timeout=100000 --no-optional
 
       # Downloads kubernetes dependencies
       - name: Download client binaries
