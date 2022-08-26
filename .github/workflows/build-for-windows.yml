@@ -89,7 +89,7 @@ jobs:
       #   run: rm -Recursive node_modules/win-ca/pem
 
       - name: add path to msbuild
-        run: PATH="/c/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/":$PATH
+        run: $env:Path += ";/c/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/"
 
       - name: Electron Builder
         run: yarn run electron-builder --publish onTag
