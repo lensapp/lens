@@ -49,6 +49,7 @@ html {
 
     &__single-value {
       color: var(--textColorSecondary);
+      overflow: visible;
     }
 
     &__indicator {

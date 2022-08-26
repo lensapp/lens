@@ -6,7 +6,6 @@
 import { forRemoteCluster, KubeApi } from "../kube-api";
 import { KubeJsonApi } from "../kube-json-api";
 import { KubeObject } from "../kube-object";
-import AbortController from "abort-controller";
 import { delay } from "../../utils/delay";
 import { PassThrough } from "stream";
 import { ApiManager } from "../api-manager";
@@ -15,6 +14,7 @@ import { DeploymentApi, Ingress, IngressApi, Pod, PodApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import autoRegistrationInjectable from "../api-manager/auto-registration.injectable";
+import AbortController from "abort-controller";
 
 jest.mock("../api-manager");
 

@@ -11,8 +11,9 @@ jobs:
     name: Test
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-18.04, macos-11, windows-2019]
+        os: [ubuntu-20.04, macos-11, windows-2019]
         node-version: [16.x]
     steps:
       - name: Checkout Release from lens

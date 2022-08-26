@@ -1,16 +1,14 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-// This script creates a release PR
-import { execSync, exec, spawn } from "child_process";
+import child_process from "child_process";
 import commandLineArgs from "command-line-args";
 import fse from "fs-extra";
 import { basename } from "path";
+import { createInterface } from "readline";
 import semver from "semver";
-import { promisify } from "util";
+import { inspect, promisify } from "util";
 
 const {
   SemVer,
@@ -18,8 +16,8 @@ const {
   rcompare: semverRcompare,
   lte: semverLte,
 } = semver;
-const { readJsonSync } = fse;
-const execP = promisify(exec);
+const exec = promisify(child_process.exec);
+const execFile = promisify(child_process.execFile);
 
 const options = commandLineArgs([
   {
@@ -82,17 +80,17 @@ if (basename(process.cwd()) === "scripts") {
 }
 
 
-const currentVersion = new SemVer(readJsonSync("./package.json").version);
+const currentVersion = new SemVer((await fse.readJson("./package.json")).version);
 
 console.log(`current version: ${currentVersion.format()}`);
 console.log("fetching tags...");
-execSync("git fetch --tags --force");
+await exec("git fetch --tags --force");
 
-const actualTags = execSync("git tag --list", { encoding: "utf-8" }).split(/\r?\n/).map(line => line.trim());
+const actualTags = (await exec("git tag --list", { encoding: "utf-8" })).stdout.split(/\r?\n/).map(line => line.trim());
 const [previousReleasedVersion] = actualTags
-  .map(semverValid)
-  .filter(Boolean)
-  .sort(semverRcompare)
+  .map((value) => semverValid(value))
+  .filter((v): v is string => typeof v === "string")
+  .sort((l, r) => semverRcompare(l, r))
   .filter(version => semverLte(version, currentVersion));
 
 const npmVersionArgs = [
@@ -107,9 +105,9 @@ if (options.preid) {
 
 npmVersionArgs.push("--git-tag-version false");
 
-execSync(npmVersionArgs.join(" "), { stdio: "ignore" });
+await exec(npmVersionArgs.join(" "));
 
-const newVersion = new SemVer(readJsonSync("./package.json").version);
+const newVersion = new SemVer((await fse.readJson("./package.json")).version);
 const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
 
 console.log(`new version: ${newVersion.format()}`);
@@ -121,22 +119,63 @@ const getMergedPrsArgs = [
   "--limit=500", // Should be big enough, if not we need to release more often ;)
   "--state=merged",
   "--base=master",
-  "--json mergeCommit,title,author,labels,number,milestone",
+  "--json mergeCommit,title,author,labels,number,milestone,mergedAt",
 ];
 
+interface GithubPrData {
+  author: {
+    login: string;
+  };
+  labels: {
+    id: string;
+    name: string;
+    description: string;
+    color: string;
+  }[];
+  mergeCommit: {
+    oid: string;
+  };
+  mergedAt: string;
+  milestone: {
+    number: number;
+    title: string;
+    description: string;
+    dueOn: null | string;
+  };
+  number: number;
+  title: string;
+}
+
 console.log("retreiving last 500 PRs to create release PR body...");
-const mergedPrs = JSON.parse(execSync(getMergedPrsArgs.join(" "), { encoding: "utf-8" }));
+const mergedPrs = JSON.parse((await exec(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout) as GithubPrData[];
 const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone?.title === newVersionMilestone);
 const relaventPrsQuery = await Promise.all(
   milestoneRelevantPrs.map(async pr => ({
     pr,
-    stdout: (await execP(`git tag v${previousReleasedVersion} --no-contains ${pr.mergeCommit.oid}`)).stdout,
+    stdout: (await exec(`git tag v${previousReleasedVersion} --no-contains ${pr.mergeCommit.oid}`)).stdout,
   })),
 );
 const relaventPrs = relaventPrsQuery
   .filter(query => query.stdout)
   .map(query => query.pr)
-  .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"));
+  .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"))
+  .map(pr => ({ ...pr, mergedAt: new Date(pr.mergedAt) }))
+  .sort((left, right) => {
+    const leftAge = left.mergedAt.valueOf();
+    const rightAge = right.mergedAt.valueOf();
+
+    if (leftAge === rightAge) {
+      return 0;
+    }
+
+    if (leftAge > rightAge) {
+      return 1;
+    }
+
+    return -1;
+  });
+
+console.log(inspect(relaventPrs, false, null, true));
 
 const enhancementPrLabelName = "enhancement";
 const bugfixPrLabelName = "bug";
@@ -199,19 +238,34 @@ const createPrArgs = [
   "--body-file", "-",
 ];
 
-const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" });
-let result = "";
+const rl = createInterface(process.stdin);
 
-createPrProcess.stdout.on("data", (chunk) => result += chunk);
+if (prBase !== "master") {
+  console.log("Cherry-picking commits to current branch");
 
-createPrProcess.stdin.write(prBody);
-createPrProcess.stdin.end();
+  for (const pr of relaventPrs) {
+    try {
+      const promise = exec(`git cherry-pick ${pr.mergeCommit.oid}`);
 
-await new Promise((resolve) => {
-  createPrProcess.on("close", () => {
-    createPrProcess.stdout.removeAllListeners();
-    resolve();
-  });
-});
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      promise.child.stdout!.pipe(process.stdout);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      promise.child.stderr!.pipe(process.stderr);
 
-console.log(result);
+      await promise;
+    } catch {
+      console.error(`Failed to cherry-pick ${pr.mergeCommit.oid}, please resolve conflicts and then press enter here:`);
+      await new Promise<void>(resolve => rl.on("line", () => resolve()));
+    }
+  }
+}
+
+const createPrProcess = execFile("gh", createPrArgs);
+
+createPrProcess.child.stdout?.pipe(process.stdout);
+createPrProcess.child.stderr?.pipe(process.stderr);
+
+createPrProcess.child.stdin?.write(prBody);
+createPrProcess.child.stdin?.end();
+
+await createPrProcess;
