@@ -17,7 +17,7 @@ import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
 import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
-import deleteFileInjectable from "../../common/fs/delete-file.injectable";
+import removePathInjectable from "../../common/fs/remove-path.injectable";
 
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
@@ -41,7 +41,7 @@ describe("ExtensionDiscovery", () => {
     watchMock = jest.fn();
     di.override(watchInjectable, () => watchMock);
 
-    di.override(deleteFileInjectable, () => async () => {}); // allow deleting files for now
+    di.override(removePathInjectable, () => async () => {}); // allow deleting files for now
 
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
   });
