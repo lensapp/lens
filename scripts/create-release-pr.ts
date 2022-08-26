@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { exec, spawn } from "child_process";
+import child_process from "child_process";
 import commandLineArgs from "command-line-args";
 import fse from "fs-extra";
 import { basename } from "path";
@@ -16,7 +16,8 @@ const {
   rcompare: semverRcompare,
   lte: semverLte,
 } = semver;
-const execP = promisify(exec);
+const exec = promisify(child_process.exec);
+const execFile = promisify(child_process.execFile);
 
 const options = commandLineArgs([
   {
@@ -83,9 +84,9 @@ const currentVersion = new SemVer((await fse.readJson("./package.json")).version
 
 console.log(`current version: ${currentVersion.format()}`);
 console.log("fetching tags...");
-await execP("git fetch --tags --force");
+await exec("git fetch --tags --force");
 
-const actualTags = (await execP("git tag --list", { encoding: "utf-8" })).stdout.split(/\r?\n/).map(line => line.trim());
+const actualTags = (await exec("git tag --list", { encoding: "utf-8" })).stdout.split(/\r?\n/).map(line => line.trim());
 const [previousReleasedVersion] = actualTags
   .map((value) => semverValid(value))
   .filter((v): v is string => typeof v === "string")
@@ -104,7 +105,7 @@ if (options.preid) {
 
 npmVersionArgs.push("--git-tag-version false");
 
-await execP(npmVersionArgs.join(" "));
+await exec(npmVersionArgs.join(" "));
 
 const newVersion = new SemVer((await fse.readJson("./package.json")).version);
 const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
@@ -146,12 +147,12 @@ interface GithubPrData {
 }
 
 console.log("retreiving last 500 PRs to create release PR body...");
-const mergedPrs = JSON.parse((await execP(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout) as GithubPrData[];
+const mergedPrs = JSON.parse((await exec(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout) as GithubPrData[];
 const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone?.title === newVersionMilestone);
 const relaventPrsQuery = await Promise.all(
   milestoneRelevantPrs.map(async pr => ({
     pr,
-    stdout: (await execP(`git tag v${previousReleasedVersion} --no-contains ${pr.mergeCommit.oid}`)).stdout,
+    stdout: (await exec(`git tag v${previousReleasedVersion} --no-contains ${pr.mergeCommit.oid}`)).stdout,
   })),
 );
 const relaventPrs = relaventPrsQuery
@@ -244,7 +245,7 @@ if (prBase !== "master") {
 
   for (const pr of relaventPrs) {
     try {
-      const promise = execP(`git cherry-pick ${pr.mergeCommit.oid}`);
+      const promise = exec(`git cherry-pick ${pr.mergeCommit.oid}`);
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       promise.child.stdout!.pipe(process.stdout);
@@ -259,19 +260,12 @@ if (prBase !== "master") {
   }
 }
 
-const createPrProcess = spawn("gh", createPrArgs, { stdio: "pipe" });
-let result = "";
+const createPrProcess = execFile("gh", createPrArgs);
 
-createPrProcess.stdout.on("data", (chunk) => result += chunk);
+createPrProcess.child.stdout?.pipe(process.stdout);
+createPrProcess.child.stderr?.pipe(process.stderr);
 
-createPrProcess.stdin.write(prBody);
-createPrProcess.stdin.end();
+createPrProcess.child.stdin?.write(prBody);
+createPrProcess.child.stdin?.end();
 
-await new Promise<void>((resolve) => {
-  createPrProcess.on("close", () => {
-    createPrProcess.stdout.removeAllListeners();
-    resolve();
-  });
-});
-
-console.log(result);
+await createPrProcess;
