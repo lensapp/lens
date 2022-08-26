@@ -10,7 +10,7 @@ import type { ExtensionDiscovery } from "../extension-discovery/extension-discov
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { delay } from "../../renderer/utils";
-import { observable, when } from "mobx";
+import { observable, runInAction, when } from "mobx";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
@@ -101,7 +101,7 @@ describe("ExtensionDiscovery", () => {
         },
         manifestPath: "/some-directory-for-user-data/node_modules/my-extension/package.json",
       });
-      letTestFinish.set(true);
+      runInAction(() => letTestFinish.set(true));
     });
 
     addHandler(joinPaths(extensionDiscovery.localFolderPath, "/my-extension/package.json"));

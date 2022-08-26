@@ -31,6 +31,7 @@ import type { GetBasenameOfPath } from "../../common/path/get-basename.injectabl
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove-path.injectable";
+import type TypedEventEmitter from "typed-emitter";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
@@ -94,6 +95,11 @@ interface LoadFromFolderOptions {
   isBundled?: boolean;
 }
 
+interface ExtensionDiscoveryEvents {
+  add: (ext: InstalledExtension) => void;
+  remove: (extId: LensExtensionId) => void;
+}
+
 /**
  * Discovers installed bundled and local extensions from the filesystem.
  * Also watches for added and removed local extensions by watching the directory.
@@ -117,7 +123,7 @@ export class ExtensionDiscovery {
     return when(() => this.isLoaded);
   }
 
-  public events = new EventEmitter();
+  public readonly events: TypedEventEmitter<ExtensionDiscoveryEvents> = new EventEmitter();
 
   constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
