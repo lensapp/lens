@@ -47,7 +47,9 @@
     "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
     "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
     "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
-    "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version"
+    "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version",
+    "precreate-release-pr": "npx swc ./scripts/create-release-pr.ts -o ./scripts/create-release-pr.mjs",
+    "create-release-pr": "node ./scripts/create-release-pr.mjs"
   },
   "config": {
     "k8sProxyVersion": "0.2.1",
@@ -299,6 +301,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@sentry/types": "^6.19.7",
+    "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.242",
     "@swc/jest": "^0.2.22",
     "@testing-library/dom": "^7.31.2",
