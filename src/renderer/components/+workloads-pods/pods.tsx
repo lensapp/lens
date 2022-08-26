@@ -184,9 +184,10 @@ class NonInjectedPods extends React.Component<Dependencies> {
         id: "name",
         header: "Name",
         cell: info => (
-          <span style={{ wordBreak: "break-word", whiteSpace: "normal" }}>
-            {info.getValue()}
-          </span>
+          // <span style={{ wordBreak: "break-word", whiteSpace: "normal" }}>
+          //   {info.getValue()}
+          // </span>
+          <span>{info.getValue()}</span>
         ),
         size: 130,
       }),
