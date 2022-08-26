@@ -18,8 +18,8 @@ import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-c
 import type { Cluster } from "../../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
-import path from "path";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 
 const currentClusterServerUrl = "https://localhost";
 const nonCurrentClusterServerUrl = "http://localhost";
@@ -208,6 +208,7 @@ describe("Deleting a cluster", () => {
       config.loadFromString(singleClusterConfig);
 
       const directoryForKubeConfigs = builder.applicationWindow.only.di.inject(directoryForKubeConfigsInjectable);
+      const joinPaths = builder.applicationWindow.only.di.inject(joinPathsInjectable);
 
       currentCluster = createCluster({
         id: "some-cluster",
@@ -215,7 +216,7 @@ describe("Deleting a cluster", () => {
         preferences: {
           clusterName: "some-cluster",
         },
-        kubeConfigPath: path.join(directoryForKubeConfigs, "some-cluster.json"),
+        kubeConfigPath: joinPaths(directoryForKubeConfigs, "some-cluster.json"),
       }, {
         clusterServerUrl: singleClusterServerUrl,
       });

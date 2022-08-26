@@ -6,7 +6,6 @@
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import { makeObservable, observable, reaction, when } from "mobx";
-import os from "os";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
 import { isErrnoException, toJS } from "../../common/utils";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
@@ -42,6 +41,7 @@ interface Dependencies {
   readonly logger: Logger;
   readonly isProduction: boolean;
   readonly fileSystemSeparator: string;
+  readonly homeDirectoryPath: string;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
   installExtension: (name: string) => Promise<void>;
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
@@ -124,7 +124,7 @@ export class ExtensionDiscovery {
   }
 
   get localFolderPath(): string {
-    return this.dependencies.joinPaths(os.homedir(), ".k8slens", "extensions");
+    return this.dependencies.joinPaths(this.dependencies.homeDirectoryPath, ".k8slens", "extensions");
   }
 
   get packageJsonPath(): string {

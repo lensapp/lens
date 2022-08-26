@@ -4,8 +4,6 @@
  */
 
 import type { FSWatcher } from "chokidar";
-import path from "path";
-import os from "os";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
@@ -18,19 +16,27 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
 import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
 import removePathInjectable from "../../common/fs/remove-path.injectable";
+import type { JoinPaths } from "../../common/path/join-paths.injectable";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
+import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
 
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
   let readJsonFileMock: jest.Mock;
   let pathExistsMock: jest.Mock;
   let watchMock: jest.Mock;
+  let joinPaths: JoinPaths;
+  let homeDirectoryPath: string;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
     di.override(extensionApiVersionInjectable, () => "5.0.0");
+
+    joinPaths = di.inject(joinPathsInjectable);
+    homeDirectoryPath = di.inject(homeDirectoryPathInjectable);
 
     readJsonFileMock = jest.fn();
     di.override(readJsonFileInjectable, () => readJsonFileMock);
@@ -51,7 +57,7 @@ describe("ExtensionDiscovery", () => {
     let addHandler!: (filePath: string) => void;
 
     readJsonFileMock.mockImplementation((p) => {
-      expect(p).toBe(path.join(os.homedir(), ".k8slens/extensions/my-extension/package.json"));
+      expect(p).toBe(joinPaths(homeDirectoryPath, ".k8slens/extensions/my-extension/package.json"));
 
       return {
         name: "my-extension",
@@ -82,7 +88,7 @@ describe("ExtensionDiscovery", () => {
     extensionDiscovery.events.on("add", extension => {
       expect(extension).toEqual({
         absolutePath: expect.any(String),
-        id: path.normalize("some-directory-for-user-data/node_modules/my-extension/package.json"),
+        id: "/some-directory-for-user-data/node_modules/my-extension/package.json",
         isBundled: false,
         isEnabled: false,
         isCompatible: true,
@@ -93,12 +99,12 @@ describe("ExtensionDiscovery", () => {
             lens: "5.0.0",
           },
         },
-        manifestPath: path.normalize("some-directory-for-user-data/node_modules/my-extension/package.json"),
+        manifestPath: "/some-directory-for-user-data/node_modules/my-extension/package.json",
       });
       letTestFinish.set(true);
     });
 
-    addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
+    addHandler(joinPaths(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
     await when(() => letTestFinish.get());
   });
 
@@ -126,7 +132,7 @@ describe("ExtensionDiscovery", () => {
 
     extensionDiscovery.events.on("add", onAdd);
 
-    addHandler(path.join(extensionDiscovery.localFolderPath, "/my-extension/node_modules/dep/package.json"));
+    addHandler(joinPaths(extensionDiscovery.localFolderPath, "/my-extension/node_modules/dep/package.json"));
 
     await delay(10);
 

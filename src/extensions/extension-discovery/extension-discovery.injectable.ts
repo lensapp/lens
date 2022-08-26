@@ -28,6 +28,7 @@ import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable
 import getRelativePathInjectable from "../../common/path/get-relative-path.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import removePathInjectable from "../../common/fs/remove-path.injectable";
+import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
@@ -57,6 +58,7 @@ const extensionDiscoveryInjectable = getInjectable({
     getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
     getRelativePath: di.inject(getRelativePathInjectable),
     joinPaths: di.inject(joinPathsInjectable),
+    homeDirectoryPath: di.inject(homeDirectoryPathInjectable),
   }),
 });
 
