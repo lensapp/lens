@@ -81,7 +81,7 @@ export function sortCharts(charts: RawHelmChart[]) {
     iter.map(
       charts,
       chart => {
-        const __version = coerce(chart.version, { includePrerelease: true, loose: true });
+        const __version = coerce(chart.version, { loose: true });
 
         if (!__version) {
           logger.warn(`[HELM-SERVICE]: Version from helm chart is not loosely coercable to semver.`, { name: chart.name, version: chart.version, repo: chart.repo });

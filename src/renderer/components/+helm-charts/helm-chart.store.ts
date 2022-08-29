@@ -55,7 +55,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   protected sortVersions = (versions: ChartVersion[]) => {
     return versions
-      .map(chartVersion => ({ ...chartVersion, __version: semver.coerce(chartVersion.version, { includePrerelease: true, loose: true }) }))
+      .map(chartVersion => ({ ...chartVersion, __version: semver.coerce(chartVersion.version, { loose: true }) }))
       .sort(sortCompareChartVersions)
       .map(({ __version, ...chartVersion }) => chartVersion);
   };
