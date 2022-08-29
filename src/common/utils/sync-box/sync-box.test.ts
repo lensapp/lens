@@ -18,11 +18,15 @@ describe("sync-box", () => {
     applicationBuilder = getApplicationBuilder();
 
     applicationBuilder.beforeApplicationStart(mainDi => {
-      mainDi.register(someInjectable);
+      runInAction(() => {
+        mainDi.register(someInjectable);
+      });
     });
 
     applicationBuilder.beforeWindowStart((windowDi) => {
-      windowDi.register(someInjectable);
+      runInAction(() => {
+        windowDi.register(someInjectable);
+      });
     });
   });
 

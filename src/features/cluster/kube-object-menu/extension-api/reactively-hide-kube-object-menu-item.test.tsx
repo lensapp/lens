@@ -26,7 +26,9 @@ describe("reactively hide kube object menu item", () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+      runInAction(() => {
+        windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+      });
     });
 
     someObservable = observable.box(false);

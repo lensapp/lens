@@ -11,7 +11,7 @@ import directoryForLensLocalStorageInjectable from "../../common/directory-for-l
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
 import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import { noop } from "lodash/fp";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
@@ -51,9 +51,11 @@ describe("cluster - sidebar and tab navigation for core", () => {
   describe("given core registrations", () => {
     beforeEach(() => {
       builder.beforeWindowStart((windowDi) => {
-        windowDi.register(testRouteInjectable);
-        windowDi.register(testRouteComponentInjectable);
-        windowDi.register(testSidebarItemsInjectable);
+        runInAction(() => {
+          windowDi.register(testRouteInjectable);
+          windowDi.register(testRouteComponentInjectable);
+          windowDi.register(testSidebarItemsInjectable);
+        });
       });
     });
 
