@@ -103,4 +103,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: built-artifacts
-          path: ./static/build
+          path: ./dist
