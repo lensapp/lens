@@ -404,7 +404,7 @@
     "node-gyp": "^8.3.0",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.19",
-    "playwright": "^1.24.2",
+    "playwright": "^1.25.1",
     "postcss": "^8.4.16",
     "postcss-loader": "^6.2.1",
     "randomcolor": "^0.6.2",
