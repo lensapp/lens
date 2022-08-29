@@ -2,17 +2,47 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectionToken } from "@ogre-tools/injectable";
-import type { SetRequired } from "type-fest";
-import type { MessageChannel } from "./message-channel-injection-token";
+import type { Injectable } from "@ogre-tools/injectable";
+import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 
-export interface MessageChannelListener<TChannel extends MessageChannel<any>> {
-  channel: TChannel;
-  handler: (value: SetRequired<TChannel, "_messageSignature">["_messageSignature"]) => void;
+export interface MessageChannel<Message> {
+  id: string;
+  _messageSignature?: Message; // only used to mark `Message` as used
 }
 
-export const messageChannelListenerInjectionToken = getInjectionToken<MessageChannelListener<MessageChannel<any>>>(
+export type MessageChannelHandler<Channel> = Channel extends MessageChannel<infer Message>
+  ? (message: Message) => void
+  : never;
+
+export interface MessageChannelListener<Channel> {
+  channel: Channel;
+  handler: MessageChannelHandler<Channel>;
+}
+
+export const messageChannelListenerInjectionToken = getInjectionToken<MessageChannelListener<MessageChannel<unknown>>>(
   {
     id: "message-channel-listener",
   },
 );
+
+export interface GetMessageChannelListenerInfo<
+  Channel extends MessageChannel<Message>,
+  Message,
+> {
+  channel: Channel;
+  handlerInjectable: Injectable<MessageChannelHandler<Channel>, unknown, void>;
+}
+
+export function getMessageChannelListenerInjectable<
+  Channel extends MessageChannel<Message>,
+  Message,
+>(info: GetMessageChannelListenerInfo<Channel, Message>) {
+  return getInjectable({
+    id: `${info.channel.id}-listener`,
+    instantiate: (di) => ({
+      channel: info.channel,
+      handler: di.inject(info.handlerInjectable),
+    }),
+    injectionToken: messageChannelListenerInjectionToken,
+  });
+}

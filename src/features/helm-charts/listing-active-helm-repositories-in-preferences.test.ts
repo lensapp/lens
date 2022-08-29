@@ -83,7 +83,13 @@ describe("listing active helm repositories in preferences", () => {
 
     describe("when getting configuration rejects", () => {
       beforeEach(async () => {
-        await execFileMock.reject("some-error");
+        await execFileMock.resolve({
+          callWasSuccessful: false,
+          error: {
+            error: new Error("some error"),
+            stderr: "some-error",
+          },
+        });
       });
 
       it("shows error notification", () => {
@@ -115,7 +121,10 @@ describe("listing active helm repositories in preferences", () => {
 
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
-          "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
+          {
+            callWasSuccessful: true,
+            response: "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
+          },
         );
       });
 
@@ -154,7 +163,10 @@ describe("listing active helm repositories in preferences", () => {
 
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
-          "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
+          {
+            callWasSuccessful: true,
+            response: "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
+          },
         );
       });
 
@@ -193,11 +205,13 @@ describe("listing active helm repositories in preferences", () => {
 
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
-
-          [
-            "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
-            "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
-          ].join("\n"),
+          {
+            callWasSuccessful: true,
+            response: [
+              "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
+              "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
+            ].join("\n"),
+          },
         );
       });
 
@@ -219,7 +233,13 @@ describe("listing active helm repositories in preferences", () => {
 
       describe("when updating repositories reject with any other error", () => {
         beforeEach(async () => {
-          await execFileMock.reject("Some error");
+          await execFileMock.resolve({
+            callWasSuccessful: false,
+            error: {
+              error: new Error("Some error"),
+              stderr: "Some error",
+            },
+          });
         });
 
         it("shows error notification", () => {
@@ -249,9 +269,13 @@ describe("listing active helm repositories in preferences", () => {
         beforeEach(async () => {
           execFileMock.mockClear();
 
-          await execFileMock.reject(
-            "Error: no repositories found. You must add one before updating",
-          );
+          await execFileMock.resolve({
+            callWasSuccessful: false,
+            error: {
+              error: new Error("no repositories found. You must add one before updating"),
+              stderr: "no repositories found. You must add one before updating",
+            },
+          });
         });
 
         it("renders", () => {
@@ -274,7 +298,13 @@ describe("listing active helm repositories in preferences", () => {
 
         describe("when adding default repository reject", () => {
           beforeEach(async () => {
-            await execFileMock.reject("Some error");
+            await execFileMock.resolve({
+              callWasSuccessful: false,
+              error: {
+                error: new Error("Some error"),
+                stderr: "Some error",
+              },
+            });
           });
 
           it("shows error notification", () => {
@@ -307,7 +337,6 @@ describe("listing active helm repositories in preferences", () => {
             await execFileMock.resolveSpecific(
               [
                 "some-helm-binary-path",
-
                 [
                   "repo",
                   "add",
@@ -315,8 +344,10 @@ describe("listing active helm repositories in preferences", () => {
                   "https://charts.bitnami.com/bitnami",
                 ],
               ],
-
-              "",
+              {
+                callWasSuccessful: true,
+                response: "",
+              },
             );
           });
 
@@ -380,7 +411,10 @@ describe("listing active helm repositories in preferences", () => {
 
           await execFileMock.resolveSpecific(
             ["some-helm-binary-path", ["repo", "update"]],
-            "",
+            {
+              callWasSuccessful: true,
+              response: "",
+            },
           );
         });
 

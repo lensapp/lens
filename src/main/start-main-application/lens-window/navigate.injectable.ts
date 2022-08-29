@@ -37,7 +37,7 @@ const navigateInjectable = getInjectable({
       applicationWindow.send({
         channel,
         frameInfo,
-        data: [url],
+        data: url,
       });
     };
   },

@@ -7,7 +7,7 @@ import { autorun } from "mobx";
 import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
 import setUpdateOnQuitInjectable from "../../electron-app/features/set-update-on-quit.injectable";
 import selectedUpdateChannelInjectable from "../../../common/application-update/selected-update-channel/selected-update-channel.injectable";
-import type { UpdateChannel } from "../../../common/application-update/update-channels";
+import type { ReleaseChannel, UpdateChannel } from "../../../common/application-update/update-channels";
 import discoveredUpdateVersionInjectable from "../../../common/application-update/discovered-update-version/discovered-update-version.injectable";
 
 const watchIfUpdateShouldHappenOnQuitInjectable = getInjectable({
@@ -20,33 +20,26 @@ const watchIfUpdateShouldHappenOnQuitInjectable = getInjectable({
 
     return getStartableStoppable("watch-if-update-should-happen-on-quit", () =>
       autorun(() => {
-        const sufficientlyStableUpdateChannels =
-          getSufficientlyStableUpdateChannels(selectedUpdateChannel.value.get());
+        const sufficientlyStableUpdateChannels = getSufficientlyStableUpdateChannels(selectedUpdateChannel.value.get());
+        const updateIsDiscoveredFromChannel = discoveredVersionState.value.get()?.updateChannel;
 
-        const discoveredVersion = discoveredVersionState.value.get();
-
-        const updateIsDiscoveredFromChannel = discoveredVersion?.updateChannel;
-
-        const updateOnQuit = updateIsDiscoveredFromChannel
-          ? sufficientlyStableUpdateChannels.includes(
-            updateIsDiscoveredFromChannel,
-          )
-          : false;
-
-        setUpdateOnQuit(updateOnQuit);
+        setUpdateOnQuit((
+          updateIsDiscoveredFromChannel
+            ? sufficientlyStableUpdateChannels.includes(updateIsDiscoveredFromChannel.id)
+            : false
+        ));
       }),
     );
   },
 });
 
-const getSufficientlyStableUpdateChannels = (updateChannel: UpdateChannel): UpdateChannel[] => {
+const getSufficientlyStableUpdateChannels = (updateChannel: UpdateChannel): ReleaseChannel[] => {
   if (!updateChannel.moreStableUpdateChannel) {
-    return [updateChannel];
+    return [updateChannel.id];
   }
 
   return [
-    updateChannel,
-
+    updateChannel.id,
     ...getSufficientlyStableUpdateChannels(updateChannel.moreStableUpdateChannel),
   ];
 };
