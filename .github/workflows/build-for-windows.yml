@@ -94,7 +94,7 @@ jobs:
         run: $env:Path += ";/c/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/"
 
       - name: Electron Builder
-        run: yarn run electron-builder --publish onTag
+        run: yarn run electron-builder --publish onTag --win --dir
 
       # - name: Make
       #   run: make build
