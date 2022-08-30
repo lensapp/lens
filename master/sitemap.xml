@@ -1236,6 +1236,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Theme.LensTheme/</loc>
+         <lastmod>2022-08-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.App.Preferences/</loc>
          <lastmod>2022-08-30</lastmod>
          <changefreq>daily</changefreq>
