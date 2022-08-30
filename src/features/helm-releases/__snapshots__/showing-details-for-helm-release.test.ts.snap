@@ -39,7 +39,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -50,13 +50,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -73,7 +71,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -87,9 +85,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -100,7 +96,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -114,13 +110,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -137,7 +131,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -151,9 +145,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -165,7 +157,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -176,13 +168,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -199,7 +189,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -213,9 +203,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -226,7 +214,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -240,13 +228,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -791,7 +777,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -802,13 +788,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -825,7 +809,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -839,9 +823,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -852,7 +834,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -866,13 +848,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -889,7 +869,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -903,9 +883,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -917,7 +895,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -928,13 +906,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -951,7 +927,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -965,9 +941,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -978,7 +952,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -992,13 +966,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1548,7 +1520,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -1559,13 +1531,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1582,7 +1552,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -1596,9 +1566,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -1609,7 +1577,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -1623,13 +1591,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1646,7 +1612,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -1660,9 +1626,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -1674,7 +1638,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -1685,13 +1649,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1708,7 +1670,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -1722,9 +1684,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -1735,7 +1695,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -1749,13 +1709,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2473,7 +2431,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -2484,13 +2442,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2507,7 +2463,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -2521,9 +2477,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -2534,7 +2488,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -2548,13 +2502,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2571,7 +2523,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -2585,9 +2537,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -2599,7 +2549,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -2610,13 +2560,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2633,7 +2581,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -2647,9 +2595,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -2660,7 +2606,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -2674,13 +2620,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3445,7 +3389,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -3456,13 +3400,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3479,7 +3421,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -3493,9 +3435,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -3506,7 +3446,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -3520,13 +3460,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3543,7 +3481,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -3557,9 +3495,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -3571,7 +3507,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -3582,13 +3518,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3605,7 +3539,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -3619,9 +3553,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -3632,7 +3564,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -3646,13 +3578,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4370,7 +4300,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -4381,13 +4311,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4404,7 +4332,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -4418,9 +4346,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -4431,7 +4357,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -4445,13 +4371,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4468,7 +4392,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -4482,9 +4406,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -4496,7 +4418,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -4507,13 +4429,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4530,7 +4450,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -4544,9 +4464,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -4557,7 +4475,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -4571,13 +4489,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5342,7 +5258,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -5353,13 +5269,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5376,7 +5290,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -5390,9 +5304,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -5403,7 +5315,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -5417,13 +5329,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5440,7 +5350,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -5454,9 +5364,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -5468,7 +5376,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -5479,13 +5387,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5502,7 +5408,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -5516,9 +5422,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -5529,7 +5433,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -5543,13 +5447,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -6314,7 +6216,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -6325,13 +6227,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -6348,7 +6248,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -6362,9 +6262,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -6375,7 +6273,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -6389,13 +6287,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -6412,7 +6308,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -6426,9 +6322,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -6440,7 +6334,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -6451,13 +6345,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -6474,7 +6366,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -6488,9 +6380,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -6501,7 +6391,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -6515,13 +6405,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -7552,7 +7440,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -7563,13 +7451,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -7586,7 +7472,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -7600,9 +7486,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -7613,7 +7497,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -7627,13 +7511,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -7650,7 +7532,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -7664,9 +7546,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -7678,7 +7558,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -7689,13 +7569,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -7712,7 +7590,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -7726,9 +7604,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -7739,7 +7615,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -7753,13 +7629,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -8790,7 +8664,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -8801,13 +8675,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -8824,7 +8696,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -8838,9 +8710,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -8851,7 +8721,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -8865,13 +8735,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -8888,7 +8756,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -8902,9 +8770,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -8916,7 +8782,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -8927,13 +8793,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -8950,7 +8814,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -8964,9 +8828,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -8977,7 +8839,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -8991,13 +8853,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -10028,7 +9888,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -10039,13 +9899,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -10062,7 +9920,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -10076,9 +9934,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -10089,7 +9945,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -10103,13 +9959,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -10126,7 +9980,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -10140,9 +9994,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -10154,7 +10006,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -10165,13 +10017,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -10188,7 +10038,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -10202,9 +10052,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -10215,7 +10063,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -10229,13 +10077,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -11093,7 +10939,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -11104,13 +10950,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -11127,7 +10971,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -11141,9 +10985,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -11154,7 +10996,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -11168,13 +11010,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -11191,7 +11031,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -11205,9 +11045,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -11219,7 +11057,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -11230,13 +11068,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -11253,7 +11089,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -11267,9 +11103,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -11280,7 +11114,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -11294,13 +11128,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -12160,7 +11992,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -12171,13 +12003,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -12194,7 +12024,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -12208,9 +12038,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -12221,7 +12049,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -12235,13 +12063,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -12258,7 +12084,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -12272,9 +12098,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -12286,7 +12110,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -12297,13 +12121,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -12320,7 +12142,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -12334,9 +12156,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -12347,7 +12167,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -12361,13 +12181,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -13398,7 +13216,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -13409,13 +13227,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -13432,7 +13248,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -13446,9 +13262,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -13459,7 +13273,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -13473,13 +13287,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -13496,7 +13308,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -13510,9 +13322,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -13524,7 +13334,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -13535,13 +13345,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -13558,7 +13366,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -13572,9 +13380,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -13585,7 +13391,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -13599,13 +13405,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -14381,7 +14185,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -14392,13 +14196,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -14415,7 +14217,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -14429,9 +14231,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -14442,7 +14242,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -14456,13 +14256,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -14479,7 +14277,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -14493,9 +14291,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -14507,7 +14303,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -14518,13 +14314,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -14541,7 +14335,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -14555,9 +14349,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -14568,7 +14360,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -14582,13 +14374,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -15353,7 +15143,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -15364,13 +15154,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -15387,7 +15175,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -15401,9 +15189,7 @@ exports[`showing details for helm release given application is started when navi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -15414,7 +15200,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -15428,13 +15214,11 @@ exports[`showing details for helm release given application is started when navi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -15451,7 +15235,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -15465,9 +15249,7 @@ exports[`showing details for helm release given application is started when navi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -15479,7 +15261,7 @@ exports[`showing details for helm release given application is started when navi
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -15490,13 +15272,11 @@ exports[`showing details for helm release given application is started when navi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -15513,7 +15293,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -15527,9 +15307,7 @@ exports[`showing details for helm release given application is started when navi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -15540,7 +15318,7 @@ exports[`showing details for helm release given application is started when navi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -15554,13 +15332,11 @@ exports[`showing details for helm release given application is started when navi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
