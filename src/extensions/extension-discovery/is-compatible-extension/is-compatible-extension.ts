@@ -27,7 +27,6 @@ export const isCompatibleExtension = ({ appSemVer }: Dependencies): ((manifest: 
 
     const { major: extMajor, minor: extMinor } = semver.coerce(manifestLensEngine, {
       loose: true,
-      includePrerelease: false,
     }) as semver.SemVer;
     const supportedVersionsByExtension = semver.validRange(`^${extMajor}.${extMinor}`) as string;
 
