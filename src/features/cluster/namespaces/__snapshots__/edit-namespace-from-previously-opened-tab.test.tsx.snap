@@ -317,6 +317,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
           <main>
             <div
               class="WorkloadsOverview flex column gaps"
+              data-testid="page-for-workloads-overview"
             >
               <div
                 class="header flex gaps align-center"
@@ -874,6 +875,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
           <main>
             <div
               class="WorkloadsOverview flex column gaps"
+              data-testid="page-for-workloads-overview"
             >
               <div
                 class="header flex gaps align-center"

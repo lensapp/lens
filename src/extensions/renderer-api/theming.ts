@@ -3,11 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import themeStoreInjectable from "../../renderer/themes/store.injectable";
+import activeThemeInjectable from "../../renderer/themes/active.injectable";
+import type { LensTheme } from "../../renderer/themes/store";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
-const themeStore = asLegacyGlobalForExtensionApi(themeStoreInjectable);
+export const activeTheme = asLegacyGlobalForExtensionApi(activeThemeInjectable);
 
+/**
+ * @deprecated This hides the reactivity of active theme, use {@link activeTheme} instead
+ */
 export function getActiveTheme() {
-  return themeStore.activeTheme;
+  return activeTheme.get();
 }
+
+export type { LensTheme };

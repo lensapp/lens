@@ -1281,6 +1281,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
         <main>
           <div
             class="WorkloadsOverview flex column gaps"
+            data-testid="page-for-workloads-overview"
           >
             <div
               class="header flex gaps align-center"

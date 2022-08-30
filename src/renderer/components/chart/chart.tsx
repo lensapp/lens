@@ -36,6 +36,7 @@ export interface ChartProps {
   redraw?: boolean;  // If true - recreate chart instance with no animation
   title?: string;
   className?: string;
+  "data-testid"?: string;
 }
 
 export enum ChartKind {
@@ -212,25 +213,26 @@ export class Chart extends React.Component<ChartProps> {
   }
 
   render() {
-    const { width, height, showChart, title, className } = this.props;
+    const { width, height, showChart, title, className, "data-testid": dataTestId } = this.props;
 
     return (
-      <>
-        <div className={cssNames("Chart", className)}>
-          {title && <div className="chart-title">{title}</div>}
-          {showChart && (
-            <div className="chart-container">
-              <canvas
-                ref={this.canvas}
-                width={width}
-                height={height}
-              />
-              <div className="chartjs-tooltip flex column"></div>
-            </div>
-          )}
-          {this.renderLegend()}
-        </div>
-      </>
+      <div
+        className={cssNames("Chart", className)}
+        data-testid={dataTestId}
+      >
+        {title && <div className="chart-title">{title}</div>}
+        {showChart && (
+          <div className="chart-container">
+            <canvas
+              ref={this.canvas}
+              width={width}
+              height={height}
+            />
+            <div className="chartjs-tooltip flex column"></div>
+          </div>
+        )}
+        {this.renderLegend()}
+      </div>
     );
   }
 }
