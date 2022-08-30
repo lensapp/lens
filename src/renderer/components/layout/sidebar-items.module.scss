@@ -7,13 +7,9 @@
 
   > .navItem {
     display: flex;
-    align-items: center;
-    gap: 4px;
+    gap: 8px;
     text-decoration: none;
-    padding: 3px 6px;
-    width: 100%;
-    height: 100%;
-    color: inherit;
+    padding: 6px 8px 6px 10px;
     cursor: pointer;
 
     &:global(.active), &:hover {
@@ -39,9 +35,12 @@
   
     .SidebarItem {
       color: var(--textColorPrimary);
-      padding-left: 28px;
+      padding-left: 25px;
   
       .navItem {
+        padding-top: 4px;
+        padding-bottom: 4px;
+
         &:global(.active), &:hover {
           color: var(--sidebarSubmenuActiveColor);
           background: none;
