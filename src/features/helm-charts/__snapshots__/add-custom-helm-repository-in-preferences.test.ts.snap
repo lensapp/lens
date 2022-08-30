@@ -6316,6 +6316,7 @@ exports[`add custom helm repository in preferences when navigating to preference
             <button
               class="Button waiting primary"
               data-testid="custom-helm-repository-submit-button"
+              data-waiting="true"
               type="submit"
             >
               Add
