@@ -6,6 +6,9 @@
   user-select: none;
 
   > .navItem {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     text-decoration: none;
     padding: 3px 6px;
     width: 100%;
@@ -13,30 +16,44 @@
     color: inherit;
     cursor: pointer;
 
-    &.active, &:hover {
+    &:global(.active), &:hover {
       background: var(--blue);
       color: var(--sidebarActiveColor);
     }
+  }
 
-    .subMenu {
-      border-left: 4px solid transparent;
-    
-      > .SidebarItem {
-        color: var(--textColorPrimary);
-        padding-left: 31px;
-        line-height: 150%;
-    
-        .SidebarItem {
-          padding-left: calc(var(--padding * 2)); // 3rd+ menu level
-        }
+  .expandIcon {
+    margin-left: auto;
+  }
 
-        .navItem {
-          &.active, &:hover {
-            color: var(--sidebarSubmenuActiveColor);
-            background: none;
-          }
+  .subMenu {
+    border-left: 4px solid transparent;
+
+    &.active {
+      border-color: var(--blue);
+    }
+  
+    > .SidebarItem {
+      color: var(--textColorPrimary);
+      padding-left: 28px;
+  
+      .navItem {
+        &:global(.active), &:hover {
+          color: var(--sidebarSubmenuActiveColor);
+          background: none;
         }
       }
+    }
+  }
+
+   // 3rd menu level
+  .subMenu .subMenu {
+    &.active {
+      border-color: transparent;
+    }
+
+    .SidebarItem {
+      padding-left: calc(var(--padding) / 2);
     }
   }
 }
