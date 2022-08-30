@@ -8,7 +8,7 @@ import type { BaseStoreParams } from "../base-store";
 
 const getConfigurationFileModelInjectable = getInjectable({
   id: "get-configuration-file-model",
-  instantiate: () => <ConfigurationContent>(content: BaseStoreParams<ConfigurationContent>) => new Config(content),
+  instantiate: () => <T extends object>(content: BaseStoreParams<T>) => new Config(content),
   causesSideEffects: true,
 });
 

@@ -31,7 +31,7 @@ export interface BaseStoreParams<T> extends ConfOptions<T> {
 /**
  * Note: T should only contain base JSON serializable types.
  */
-export abstract class BaseStore<T> extends Singleton {
+export abstract class BaseStore<T extends object> extends Singleton {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
 
