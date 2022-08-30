@@ -6,20 +6,21 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { DockTabCreate, DockTab, TabId } from "../dock/store";
 import { TabKind } from "../dock/store";
 import type { LogTabData } from "./tab-store";
-import * as uuid from "uuid";
 import { runInAction } from "mobx";
 import createDockTabInjectable from "../dock/create-dock-tab.injectable";
 import setLogTabDataInjectable from "./set-log-tab-data.injectable";
+import getRandomIdForPodLogsTabInjectable from "./get-random-id-for-pod-logs-tab.injectable";
 
 export type CreateLogsTabData = Pick<LogTabData, "owner" | "selectedPodId" | "selectedContainer" | "namespace"> & Omit<Partial<LogTabData>, "owner" | "selectedPodId" | "selectedContainer" | "namespace">;
 
 interface Dependencies {
   createDockTab: (rawTabDesc: DockTabCreate, addNumber?: boolean) => DockTab;
   setLogTabData: (tabId: string, data: LogTabData) => void;
+  getRandomId: () => string;
 }
 
-const createLogsTab = ({ createDockTab, setLogTabData }: Dependencies) => (title: string, data: CreateLogsTabData): TabId => {
-  const id = `log-tab-${uuid.v4()}`;
+const createLogsTab = ({ createDockTab, setLogTabData, getRandomId }: Dependencies) => (title: string, data: CreateLogsTabData): TabId => {
+  const id = `log-tab-${getRandomId()}`;
 
   runInAction(() => {
     createDockTab({
@@ -43,6 +44,7 @@ const createLogsTabInjectable = getInjectable({
   instantiate: (di) => createLogsTab({
     createDockTab: di.inject(createDockTabInjectable),
     setLogTabData: di.inject(setLogTabDataInjectable),
+    getRandomId: di.inject(getRandomIdForPodLogsTabInjectable),
   }),
 });
 
