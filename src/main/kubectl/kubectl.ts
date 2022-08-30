@@ -67,7 +67,7 @@ export class Kubectl {
     let version: SemVer;
 
     try {
-      version = new SemVer(clusterVersion, { includePrerelease: false });
+      version = new SemVer(clusterVersion);
     } catch {
       version = new SemVer(Kubectl.bundledKubectlVersion);
     }
