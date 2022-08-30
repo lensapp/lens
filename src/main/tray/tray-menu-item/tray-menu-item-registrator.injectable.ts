@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { pipeline } from "@ogre-tools/fp";
-import { kebabCase } from "lodash/fp";
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
@@ -16,7 +15,7 @@ import { withErrorSuppression } from "../../../common/utils/with-error-suppressi
 import type { WithErrorLoggingFor } from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
-import { isBoolean } from "../../../common/utils";
+import { isBoolean, isString } from "../../../common/utils";
 
 const trayMenuItemRegistratorInjectable = getInjectable({
   id: "tray-menu-item-registrator",
@@ -38,7 +37,7 @@ export default trayMenuItemRegistratorInjectable;
 
 const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor: WithErrorLoggingFor, getRandomId: () => string) => {
   const _toItemInjectables = (parentId: string | null) => (registration: TrayMenuRegistration): Injectable<TrayMenuItem, TrayMenuItem, void>[] => {
-    const trayItemId = registration.id || kebabCase(registration.label || getRandomId());
+    const trayItemId = registration.id || getRandomId();
     const id = `${trayItemId}-tray-menu-item-for-extension-${extension.sanitizedExtensionId}`;
 
     const parentInjectable = getInjectable({
@@ -51,7 +50,18 @@ const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor:
 
         separator: registration.type === "separator",
 
-        label: computed(() => registration.label || ""),
+        label: computed(() => {
+          if (!registration.label) {
+            return "";
+          }
+
+          if (isString(registration.label)) {
+            return registration.label;
+          }
+
+          return registration.label.get();
+        }),
+
         tooltip: registration.toolTip,
 
         click: () => {
