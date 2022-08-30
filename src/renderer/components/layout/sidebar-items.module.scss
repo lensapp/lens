@@ -20,6 +20,10 @@
       background: var(--blue);
       color: var(--sidebarActiveColor);
     }
+
+    span {
+      word-break: break-word;
+    }
   }
 
   .expandIcon {
@@ -33,7 +37,7 @@
       border-color: var(--blue);
     }
   
-    > .SidebarItem {
+    .SidebarItem {
       color: var(--textColorPrimary);
       padding-left: 28px;
   
