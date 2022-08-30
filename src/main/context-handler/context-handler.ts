@@ -155,6 +155,12 @@ export class ContextHandler implements ClusterContextHandler {
 
     if (this.clusterUrl.hostname) {
       headers.Host = this.clusterUrl.hostname;
+
+      // fix current IPv6 inconsistency in url.Parse() and httpProxy.
+      // with url.Parse the IPv6 Hostname has no Square brackets but httpProxy needs the Square brackets to work.
+      if (headers.Host.includes(":")) {
+        headers.Host = `[${headers.Host}]`;
+      }
     }
 
     return {
