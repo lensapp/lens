@@ -290,6 +290,7 @@ exports[`download logs options in pod logs dock tab when opening pod logs render
           <main>
             <div
               class="WorkloadsOverview flex column gaps"
+              data-testid="page-for-workloads-overview"
             >
               <div
                 class="header flex gaps align-center"

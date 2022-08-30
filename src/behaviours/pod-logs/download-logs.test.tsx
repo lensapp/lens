@@ -3,13 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { act, waitFor } from "@testing-library/react";
 import getPodByIdInjectable from "../../renderer/components/+workloads-pods/get-pod-by-id.injectable";
 import getPodsByOwnerIdInjectable from "../../renderer/components/+workloads-pods/get-pods-by-owner-id.injectable";
-import { SearchStore } from "../../renderer/search-store/search-store";
-import searchStoreInjectable from "../../renderer/search-store/search-store.injectable";
 import openSaveFileDialogInjectable from "../../renderer/utils/save-file.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -31,7 +28,6 @@ import { dockerPod } from "../../renderer/components/dock/logs/__test__/pod.mock
 
 describe("download logs options in pod logs dock tab", () => {
   let rendered: RenderResult;
-  let rendererDi: DiContainer;
   let builder: ApplicationBuilder;
   let openSaveFileDialogMock: jest.MockedFunction<() => void>;
   let callForLogsMock: jest.MockedFunction<CallForLogs>;
@@ -46,57 +42,55 @@ describe("download logs options in pod logs dock tab", () => {
 
     callForLogsMock = jest.fn();
 
-    builder.beforeApplicationStart(({ rendererDi }) => {
-      rendererDi.override(callForLogsInjectable, () => callForLogsMock);
+    builder.beforeWindowStart((windowDi) => {
+      windowDi.override(callForLogsInjectable, () => callForLogsMock);
 
       // Overriding internals of logsViewModelInjectable
-      rendererDi.override(getLogsInjectable, () => () => ["some-logs"]);
-      rendererDi.override(getLogsWithoutTimestampsInjectable, () => () => ["some-logs"]);
-      rendererDi.override(getTimestampSplitLogsInjectable, () => () => [...logs]);
-      rendererDi.override(reloadLogsInjectable, () => jest.fn());
-      rendererDi.override(getLogTabDataInjectable, () => () => ({
+      windowDi.override(getLogsInjectable, () => () => ["some-logs"]);
+      windowDi.override(getLogsWithoutTimestampsInjectable, () => () => ["some-logs"]);
+      windowDi.override(getTimestampSplitLogsInjectable, () => () => [...logs]);
+      windowDi.override(reloadLogsInjectable, () => jest.fn());
+      windowDi.override(getLogTabDataInjectable, () => () => ({
         selectedPodId: selectedPod.getId(),
         selectedContainer: selectedPod.getContainers()[0].name,
         namespace: "default",
         showPrevious: true,
         showTimestamps: false,
       }));
-      rendererDi.override(setLogTabDataInjectable, () => jest.fn());
-      rendererDi.override(loadLogsInjectable, () => jest.fn());
-      rendererDi.override(stopLoadingLogsInjectable, () => jest.fn());
-      rendererDi.override(areLogsPresentInjectable, () => jest.fn());
-      rendererDi.override(getPodByIdInjectable, () => (id) => {
+      windowDi.override(setLogTabDataInjectable, () => jest.fn());
+      windowDi.override(loadLogsInjectable, () => jest.fn());
+      windowDi.override(stopLoadingLogsInjectable, () => jest.fn());
+      windowDi.override(areLogsPresentInjectable, () => jest.fn());
+      windowDi.override(getPodByIdInjectable, () => (id) => {
         if (id === selectedPod.getId()) {
           return selectedPod;
         }
-  
+
         return undefined;
       });
-      rendererDi.override(getPodsByOwnerIdInjectable, () => jest.fn());
-      rendererDi.override(searchStoreInjectable, () => new SearchStore());
-      
-      rendererDi.override(getRandomIdForPodLogsTabInjectable, () => jest.fn(() => "some-irrelevant-random-id"));
+      windowDi.override(getPodsByOwnerIdInjectable, () => jest.fn());
+
+      windowDi.override(getRandomIdForPodLogsTabInjectable, () => jest.fn(() => "some-irrelevant-random-id"));
 
       openSaveFileDialogMock = jest.fn();
-      rendererDi.override(openSaveFileDialogInjectable, () => openSaveFileDialogMock);
+      windowDi.override(openSaveFileDialogInjectable, () => openSaveFileDialogMock);
     });
-
   });
 
   describe("when opening pod logs", () => {
     beforeEach(async () => {
       rendered = await builder.render();
-      rendererDi = builder.dis.rendererDi;
 
+      const windowDi = builder.applicationWindow.only.di;
       const pod = dockerPod;
-      const createLogsTab = rendererDi.inject(createPodLogsTabInjectable);
+      const createLogsTab = windowDi.inject(createPodLogsTabInjectable);
       const container = {
         name: "docker-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
         imagePullPolicy: "pull",
       };
 
-      const dockStore = rendererDi.inject(dockStoreInjectable);
+      const dockStore = windowDi.inject(dockStoreInjectable);
 
       dockStore.closeTab("terminal");
 
