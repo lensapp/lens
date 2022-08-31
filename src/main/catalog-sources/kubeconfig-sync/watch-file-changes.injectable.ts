@@ -13,7 +13,7 @@ import { inspect } from "util";
 import type { CatalogEntity } from "../../../common/catalog";
 import type { Cluster } from "../../../common/cluster/cluster";
 import fsInjectable from "../../../common/fs/fs.injectable";
-import watchInjectable from "../../../common/fs/watch.injectable";
+import watchInjectable from "../../../common/fs/watch/watch.injectable";
 import type { Disposer } from "../../../common/utils";
 import { getOrInsertWith, iter } from "../../../common/utils";
 import diffChangedKubeconfigInjectable from "./diff-changed-kubeconfig.injectable";
