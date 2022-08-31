@@ -88,7 +88,7 @@ const NonInjectedContainerEnv = ({
       const { name, key } = configMapKeyRef;
       const configMap = configMapStore.getByName(name, namespace);
 
-      return configMap?.data[key] ?? `configMapKeyRef(${name}${key})`;
+      return configMap?.data[key] ?? `configMapKeyRef(${name}:${key})`;
     }
 
     return null;
