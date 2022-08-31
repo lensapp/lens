@@ -110,7 +110,7 @@ const NonInjectedContainerEnv = ({
               data-testid={`env-${name}`}
             >
               <span className="var-name">{name}</span>
-              {`= `}
+              {` = `}
               {value}
             </div>
           ))
