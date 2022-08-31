@@ -40,7 +40,6 @@ describe("download logs options in logs dock tab", () => {
   const logs = new Map([["timestamp", "some-logs"]]);
   const pod = dockerPod;
 
-  loadLogsInjectable.lifecycle;
   const container = {
     name: "docker-exporter",
     image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
