@@ -38,7 +38,9 @@ describe("download logs options in logs dock tab", () => {
   let getSplittedLogsMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   const logs = new Map([["timestamp", "some-logs"]]);
-  const pod = dockerPod;;loadLogsInjectable.lifecycle;
+  const pod = dockerPod;
+
+  loadLogsInjectable.lifecycle;
   const container = {
     name: "docker-exporter",
     image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
@@ -150,7 +152,7 @@ describe("download logs options in logs dock tab", () => {
       });
 
       it("dropdown is enabled", () => {
-        expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled")
+        expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled");
       });
 
       describe("when clicking on dropdown", () => {
