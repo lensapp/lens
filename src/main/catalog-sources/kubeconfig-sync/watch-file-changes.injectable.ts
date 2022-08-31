@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { FSWatcher } from "chokidar";
-import type { Stats } from "fs";
 import GlobToRegExp from "glob-to-regexp";
 import type { IComputedValue, ObservableMap } from "mobx";
 import { computed, observable } from "mobx";
@@ -12,7 +10,8 @@ import path from "path";
 import { inspect } from "util";
 import type { CatalogEntity } from "../../../common/catalog";
 import type { Cluster } from "../../../common/cluster/cluster";
-import fsInjectable from "../../../common/fs/fs.injectable";
+import statInjectable from "../../../common/fs/stat/stat.injectable";
+import type { Watcher } from "../../../common/fs/watch/watch.injectable";
 import watchInjectable from "../../../common/fs/watch/watch.injectable";
 import type { Disposer } from "../../../common/utils";
 import { getOrInsertWith, iter } from "../../../common/utils";
@@ -47,14 +46,14 @@ const watchKubeconfigFileChangesInjectable = getInjectable({
   instantiate: (di): WatchKubeconfigFileChanges => {
     const diffChangedKubeconfig = di.inject(diffChangedKubeconfigInjectable);
     const logger = di.inject(kubeconfigSyncLoggerInjectable);
-    const { stat } = di.inject(fsInjectable);
+    const stat = di.inject(statInjectable);
     const watch = di.inject(watchInjectable);
 
     return (filePath) => {
       const rootSource = observable.map<string, ObservableMap<string, [Cluster, CatalogEntity]>>();
       const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
 
-      let watcher: FSWatcher;
+      let watcher: Watcher<true>;
 
       (async () => {
         try {
@@ -65,7 +64,7 @@ const watchKubeconfigFileChangesInjectable = getInjectable({
             ? folderSyncMaxAllowedFileReadSize
             : fileSyncMaxAllowedFileReadSize;
 
-          watcher = watch(filePath, {
+          watcher = watch<true>(filePath, {
             followSymlinks: true,
             depth: isFolderSync ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
             disableGlobbing: true,
@@ -80,7 +79,7 @@ const watchKubeconfigFileChangesInjectable = getInjectable({
           });
 
           watcher
-            .on("change", (childFilePath, stats: Stats): void => {
+            .on("change", (childFilePath, stats): void => {
               const cleanup = cleanupFns.get(childFilePath);
 
               if (!cleanup) {
@@ -96,7 +95,7 @@ const watchKubeconfigFileChangesInjectable = getInjectable({
                 maxAllowedFileReadSize,
               }));
             })
-            .on("add", (childFilePath, stats: Stats): void => {
+            .on("add", (childFilePath, stats): void => {
               if (isFolderSync) {
                 const fileName = path.basename(childFilePath);
 

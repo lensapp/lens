@@ -12,8 +12,8 @@ import type { CatalogEntity } from "../../../common/catalog";
 import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { loadConfigFromString } from "../../../common/kube-helpers";
+import clustersThatAreBeingDeletedInjectable from "../../cluster/are-being-deleted.injectable";
 import { catalogEntityFromCluster } from "../../cluster/manager";
-import clusterManagerInjectable from "../../cluster/manager.injectable";
 import createClusterInjectable from "../../create-cluster/create-cluster.injectable";
 import configToModelsInjectable from "./config-to-models.injectable";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
@@ -25,7 +25,7 @@ const computeKubeconfigDiffInjectable = getInjectable({
   instantiate: (di): ComputeKubeconfigDiff => {
     const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
     const createCluster = di.inject(createClusterInjectable);
-    const clusterManager = di.inject(clusterManagerInjectable);
+    const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);
     const configToModels = di.inject(configToModelsInjectable);
     const logger = di.inject(kubeconfigSyncLoggerInjectable);
     const getClusterById = di.inject(getClusterByIdInjectable);
@@ -48,8 +48,8 @@ const computeKubeconfigDiffInjectable = getInjectable({
 
           // remove and disconnect clusters that were removed from the config
           if (!data) {
-          // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
-            clusterManager.deleting.delete(value[0].id);
+            // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
+            clustersThatAreBeingDeleted.delete(value[0].id);
 
             value[0].disconnect();
             source.delete(contextName);
@@ -68,7 +68,7 @@ const computeKubeconfigDiffInjectable = getInjectable({
         }
 
         for (const [contextName, [model, configData]] of models) {
-        // add new clusters to the source
+          // add new clusters to the source
           try {
             const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
             const cluster = getClusterById(clusterId) ?? createCluster({ ...model, id: clusterId }, configData);
@@ -93,6 +93,8 @@ const computeKubeconfigDiffInjectable = getInjectable({
         logger.warn(`Failed to compute diff: ${error}`, { filePath });
         source.clear(); // clear source if we have failed so as to not show outdated information
       }
+
+      logger.debug("Finished computing diff", { filePath });
     });
   },
 });

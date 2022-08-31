@@ -36,11 +36,13 @@ export class KubeconfigSyncManager {
     return (
       iter.pipeline(this.sources.values())
         .flatMap(([entities]) => entities.get())
-        .filter(entity => (
-          seenIds.has(entity.getId())
-            ? false
-            : seenIds.add(entity.getId())
-        ))
+        .filter(entity => {
+          const alreadySeen = seenIds.has(entity.getId());
+
+          seenIds.add(entity.getId());
+
+          return !alreadySeen;
+        })
         .collect(items => [...items])
     );
   });

@@ -9,7 +9,7 @@ import type { ObservableMap } from "mobx";
 import type { Readable } from "stream";
 import type { CatalogEntity } from "../../../common/catalog";
 import type { Cluster } from "../../../common/cluster/cluster";
-import fsInjectable from "../../../common/fs/fs.injectable";
+import createReadFileStreamInjectable from "../../../common/fs/create-read-file-stream.injectable";
 import type { Disposer } from "../../../common/utils";
 import { bytesToUnits, noop } from "../../../common/utils";
 import computeKubeconfigDiffInjectable from "./compute-diff.injectable";
@@ -28,7 +28,7 @@ const diffChangedKubeconfigInjectable = getInjectable({
   instantiate: (di): DiffChangedKubeconfig => {
     const computeKubeconfigDiff = di.inject(computeKubeconfigDiffInjectable);
     const logger = di.inject(kubeconfigSyncLoggerInjectable);
-    const { createReadStream } = di.inject(fsInjectable);
+    const createReadFileStream = di.inject(createReadFileStreamInjectable);
 
     return ({ filePath, maxAllowedFileReadSize, source, stats }) => {
       logger.debug(`file changed`, { filePath });
@@ -40,7 +40,7 @@ const diffChangedKubeconfigInjectable = getInjectable({
         return noop;
       }
 
-      const fileReader = createReadStream(filePath, {
+      const fileReader = createReadFileStream(filePath, {
         mode: constants.O_RDONLY,
       });
       const readStream = fileReader as Readable;
