@@ -35,6 +35,7 @@ describe("download logs options in logs dock tab", () => {
   let openSaveFileDialogMock: jest.MockedFunction<() => void>;
   let callForLogsMock: jest.MockedFunction<CallForLogs>;
   let getLogsMock: jest.Mock;
+  let getSplittedLogsMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   const logs = new Map([["timestamp", "some-logs"]]);
   const pod = dockerPod;;loadLogsInjectable.lifecycle;
@@ -53,6 +54,7 @@ describe("download logs options in logs dock tab", () => {
 
     callForLogsMock = jest.fn();
     getLogsMock = jest.fn();
+    getSplittedLogsMock = jest.fn();
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(callForLogsInjectable, () => callForLogsMock);
@@ -60,7 +62,7 @@ describe("download logs options in logs dock tab", () => {
       // Overriding internals of logsViewModelInjectable
       windowDi.override(getLogsInjectable, () => getLogsMock);
       windowDi.override(getLogsWithoutTimestampsInjectable, () => getLogsMock);
-      windowDi.override(getTimestampSplitLogsInjectable, () => () => [...logs]);
+      windowDi.override(getTimestampSplitLogsInjectable, () => getSplittedLogsMock);
       windowDi.override(reloadLogsInjectable, () => jest.fn());
       windowDi.override(getLogTabDataInjectable, () => () => ({
         selectedPodId: selectedPod.getId(),
@@ -92,7 +94,7 @@ describe("download logs options in logs dock tab", () => {
     });
   });
 
-  describe.only("opening pod logs", () => {
+  describe("opening pod logs", () => {
     beforeEach(async () => {
       rendered = await builder.render();
       windowDi = builder.applicationWindow.only.di;
@@ -102,11 +104,36 @@ describe("download logs options in logs dock tab", () => {
       dockStore.closeTab("terminal");
     });
 
-    describe("when logs presented", () => {
+    describe("when logs not available", () => {
+      beforeEach(async () => {
+        const createLogsTab = windowDi.inject(createPodLogsTabInjectable);
+    
+        getLogsMock.mockReturnValue([]);
+        getSplittedLogsMock.mockReturnValue([]);
+  
+        createLogsTab({
+          selectedPod: pod,
+          selectedContainer: container,
+        });
+      });
+
+      it("renders", () => {
+        expect(rendered.baseElement).toMatchSnapshot();
+      });
+
+      it("dropdown being disabled", () => {
+        const downloadButton = rendered.getByTestId("download-logs-dropdown");
+
+        expect(downloadButton).toBeDisabled();
+      });
+    });
+
+    describe("when logs available", () => {
       beforeEach(async () => {
         const createLogsTab = windowDi.inject(createPodLogsTabInjectable);
     
         getLogsMock.mockReturnValue(["some-logs"]);
+        getSplittedLogsMock.mockReturnValue([...logs]);
   
         createLogsTab({
           selectedPod: pod,
@@ -140,7 +167,7 @@ describe("download logs options in logs dock tab", () => {
             button.click();
           });
 
-          it.only("shows save dialog with proper attributes", () => {
+          it("shows save dialog with proper attributes", () => {
             expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "some-logs", "text/plain");
           });
         });
