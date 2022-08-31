@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import { InfoPanel } from "../info-panel";
 import { LogResourceSelector } from "./resource-selector";
 import type { LogListRef } from "./list";
-import { LogList } from "./list";
+// import { LogList } from "./list";
 import { LogSearch } from "./search";
 import { LogControls } from "./controls";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -20,6 +20,8 @@ import type { SubscribeStores } from "../../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../../+workloads-pods/store";
 import podStoreInjectable from "../../+workloads-pods/store.injectable";
+import { noop } from "lodash";
+import { LogList } from "./log-list";
 
 export interface LogsDockTabProps {
   className?: string;
@@ -83,7 +85,7 @@ const NonInjectedLogsDockTab = observer(({
             <LogResourceSelector model={model} />
             <LogSearch
               model={model}
-              scrollToOverlay={scrollToOverlay}
+              scrollToOverlay={noop}
             />
           </div>
         )}
@@ -91,7 +93,8 @@ const NonInjectedLogsDockTab = observer(({
         showButtons={false}
         showStatusPanel={false}
       />
-      <LogList model={model} ref={logListElement} />
+      {/* <LogList model={model} ref={logListElement} /> */}
+      <LogList model={model} />
       <LogControls model={model} />
     </div>
   );

@@ -1,6 +1,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import AnsiUp from 'ansi_up';
 import DOMPurify from 'dompurify';
+import { observer } from 'mobx-react';
 import React, { useRef } from 'react';
 import { SearchStore } from '../../../search-store/search-store';
 import { cssNames } from '../../../utils';
@@ -10,7 +11,7 @@ export interface LogListProps {
   model: LogTabViewModel;
 }
 
-export const LogList = ({ model }: LogListProps) => {
+export const LogList = observer(({ model }: LogListProps) => {
   const { logs } = model;
   const parentRef = useRef<HTMLDivElement>(null)
   const rowVirtualizer = useVirtualizer({
@@ -24,7 +25,7 @@ export const LogList = ({ model }: LogListProps) => {
     <div
       ref={parentRef}
       style={{
-        height: `400px`,
+        flexGrow: 1,
         overflow: 'auto', // Make it scroll!
       }}
     >
@@ -56,7 +57,7 @@ export const LogList = ({ model }: LogListProps) => {
       </div>
     </div>
   )
-}
+});
 
 const colorConverter = new AnsiUp();
 
