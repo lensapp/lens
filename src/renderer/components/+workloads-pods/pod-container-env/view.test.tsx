@@ -91,7 +91,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar= https://localhost:12345`);
+    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar = https://localhost:12345`);
   });
 
   it("renders envFrom when given a configMapRef", () => {
@@ -140,7 +140,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("envFrom-configmap-my-config-map:configFoo")).toHaveTextContent(`configFoo= configBar`);
+    expect(result.getByTestId("envFrom-configmap-my-config-map:configFoo")).toHaveTextContent(`configFoo = configBar`);
   });
 
   it("renders envFrom when given a secretRef", () => {
@@ -190,7 +190,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("envFrom-secret-my-secret:bar")).toHaveTextContent(/^bar= secretKeyRef\(my-secret\.bar\)/);
+    expect(result.getByTestId("envFrom-secret-my-secret:bar")).toHaveTextContent(/^bar = secretKeyRef\(my-secret\.bar\)/);
   });
 
   it("renders env", () => {
@@ -218,7 +218,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar= https://localhost:12345`);
+    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar = https://localhost:12345`);
   });
 
   it("renders both env and configMapRef envFrom", () => {
@@ -271,7 +271,7 @@ describe("<ContainerEnv />", () => {
     });
     const result = render(<ContainerEnvironment container={container} namespace={pod.getNs()} />);
 
-    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar= https://localhost:12345`);
-    expect(result.getByTestId("envFrom-configmap-my-config-map:configFoo")).toHaveTextContent(`configFoo= configBar`);
+    expect(result.getByTestId("env-foobar")).toHaveTextContent(`foobar = https://localhost:12345`);
+    expect(result.getByTestId("envFrom-configmap-my-config-map:configFoo")).toHaveTextContent(`configFoo = configBar`);
   });
 });

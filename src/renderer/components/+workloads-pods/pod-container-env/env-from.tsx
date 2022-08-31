@@ -57,7 +57,7 @@ const NonInjectedContainerEnvFromSource = ({
       data-testid={`envFrom-${kind}-${testIdName}`}
     >
       <span className="var-name">{fieldName}</span>
-      {`= `}
+      {` = `}
       {value}
     </div>
   );
