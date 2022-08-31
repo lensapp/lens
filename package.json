@@ -408,7 +408,7 @@
     "postcss": "^8.4.16",
     "postcss-loader": "^6.2.1",
     "randomcolor": "^0.6.2",
-    "react-beautiful-dnd": "^13.1.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-refresh": "^0.14.0",
     "react-refresh-typescript": "^2.0.7",
     "react-router-dom": "^5.3.3",
