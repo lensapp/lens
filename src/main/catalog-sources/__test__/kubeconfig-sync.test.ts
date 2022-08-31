@@ -21,7 +21,7 @@ import { iter } from "../../../common/utils";
 import fsInjectable from "../../../common/fs/fs.injectable";
 import type { ComputeKubeconfigDiff } from "../kubeconfig-sync/compute-diff.injectable";
 import computeKubeconfigDiffInjectable from "../kubeconfig-sync/compute-diff.injectable";
-import watchInjectable from "../../../common/fs/watch.injectable";
+import watchInjectable from "../../../common/fs/watch/watch.injectable";
 import type { ConfigToModels } from "../kubeconfig-sync/config-to-models.injectable";
 import configToModelsInjectable from "../kubeconfig-sync/config-to-models.injectable";
 import kubeconfigSyncManagerInjectable from "../kubeconfig-sync/manager.injectable";
