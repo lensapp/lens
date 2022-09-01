@@ -2,9 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Theme } from "./store";
+import type { LensTheme } from "./store";
 
-const lensLightTheme: Theme = {
+const lensLightTheme: LensTheme = {
   "name": "Light",
   "type": "light",
   "description": "Original Lens light theme",

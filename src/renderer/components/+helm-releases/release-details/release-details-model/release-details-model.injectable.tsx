@@ -3,13 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { IObservableValue } from "mobx";
+import type { IComputedValue, IObservableValue } from "mobx";
 import { runInAction, action, observable, computed } from "mobx";
 import type { TargetHelmRelease } from "../target-helm-release.injectable";
 import type { CallForHelmRelease, DetailedHelmRelease } from "./call-for-helm-release/call-for-helm-release.injectable";
 import callForHelmReleaseInjectable from "./call-for-helm-release/call-for-helm-release.injectable";
-import type { ThemeStore } from "../../../../themes/store";
-import themeStoreInjectable from "../../../../themes/store.injectable";
+import type { LensTheme } from "../../../../themes/store";
 import type { CallForHelmReleaseConfiguration } from "./call-for-helm-release-configuration/call-for-helm-release-configuration.injectable";
 import callForHelmReleaseConfigurationInjectable from "./call-for-helm-release-configuration/call-for-helm-release-configuration.injectable";
 import { toHelmRelease } from "../../releases.injectable";
@@ -31,6 +30,7 @@ import type { NavigateToHelmReleases } from "../../../../../common/front-end-rou
 import navigateToHelmReleasesInjectable from "../../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import assert from "assert";
 import withOrphanPromiseInjectable from "../../../../../common/utils/with-orphan-promise/with-orphan-promise.injectable";
+import activeThemeInjectable from "../../../../themes/active.injectable";
 
 const releaseDetailsModelInjectable = getInjectable({
   id: "release-details-model",
@@ -38,7 +38,7 @@ const releaseDetailsModelInjectable = getInjectable({
   instantiate: (di, targetRelease: TargetHelmRelease) => {
     const callForHelmRelease = di.inject(callForHelmReleaseInjectable);
     const callForHelmReleaseConfiguration = di.inject(callForHelmReleaseConfigurationInjectable);
-    const themeStore = di.inject(themeStoreInjectable);
+    const activeTheme = di.inject(activeThemeInjectable);
     const getResourceDetailsUrl = di.inject(getResourceDetailsUrlInjectable);
     const updateRelease = di.inject(updateReleaseInjectable);
     const showCheckedErrorNotification = di.inject(showCheckedErrorNotificationInjectable);
@@ -50,7 +50,7 @@ const releaseDetailsModelInjectable = getInjectable({
     const model = new ReleaseDetailsModel({
       callForHelmRelease,
       targetRelease,
-      themeStore,
+      activeTheme,
       callForHelmReleaseConfiguration,
       getResourceDetailsUrl,
       updateRelease,
@@ -92,7 +92,7 @@ export interface ConfigurationInput {
 interface Dependencies {
   callForHelmRelease: CallForHelmRelease;
   targetRelease: TargetHelmRelease;
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
   callForHelmReleaseConfiguration: CallForHelmReleaseConfiguration;
   getResourceDetailsUrl: GetResourceDetailsUrl;
   updateRelease: CallForHelmReleaseUpdate;
@@ -259,7 +259,7 @@ export class ReleaseDetailsModel {
   }
 
   @computed get activeTheme() {
-    return this.dependencies.themeStore.activeTheme.type;
+    return this.dependencies.activeTheme.get().type;
   }
 
   close = () => {

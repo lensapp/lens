@@ -298,6 +298,7 @@ exports[`add-cluster - navigation using application menu when navigating to add 
             >
               <button
                 class="Button primary"
+                data-waiting="false"
                 disabled=""
                 type="button"
               >

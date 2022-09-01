@@ -350,6 +350,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
         <main>
           <div
             class="WorkloadsOverview flex column gaps"
+            data-testid="page-for-workloads-overview"
           >
             <div
               class="header flex gaps align-center"
@@ -987,6 +988,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
         <main>
           <div
             class="WorkloadsOverview flex column gaps"
+            data-testid="page-for-workloads-overview"
           >
             <div
               class="header flex gaps align-center"

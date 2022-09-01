@@ -7,6 +7,7 @@ import "./item-list-layout.scss";
 
 import type { ReactNode } from "react";
 import React from "react";
+import type { IComputedValue } from "mobx";
 import { computed, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
 import type { ConfirmDialogParams } from "../confirm-dialog";
@@ -20,18 +21,18 @@ import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import type { ItemObject } from "../../../common/item.store";
 import type { Filter, PageFiltersStore } from "./page-filters/store";
-import type { ThemeStore } from "../../themes/store";
+import type { LensTheme } from "../../themes/store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import type { UserStore } from "../../../common/user-store";
 import type { ItemListStore } from "./list-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import pageFiltersStoreInjectable from "./page-filters/store.injectable";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -71,7 +72,7 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
 }
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
   userStore: UserStore;
   pageFiltersStore: PageFiltersStore;
   openConfirmDialog: OpenConfirmDialog;
@@ -291,10 +292,10 @@ class NonInjectedItemListLayoutContent<
   render() {
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
-      detailsItem, className, tableProps = {}, tableId, getItems, themeStore,
+      detailsItem, className, tableProps = {}, tableId, getItems, activeTheme,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
-    const classNames = cssNames(className, "box", "grow", themeStore.activeTheme.type);
+    const classNames = cssNames(className, "box", "grow", activeTheme.get().type);
     const items = getItems();
     const selectedItems = store.pickOnlySelected(items);
 
@@ -377,7 +378,7 @@ class NonInjectedItemListLayoutContent<
 export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayoutContentProps<ItemObject, boolean>>(NonInjectedItemListLayoutContent, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
     userStore: di.inject(userStoreInjectable),
     pageFiltersStore: di.inject(pageFiltersStoreInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),

@@ -12,18 +12,19 @@ import { ResourceMetricsContext } from "../resource-metrics";
 import { observer } from "mobx-react";
 import { mapValues } from "lodash";
 import { type MetricsTab, metricTabOptions } from "../chart/options";
-import type { ThemeStore } from "../../themes/store";
+import type { LensTheme } from "../../themes/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
+import type { IComputedValue } from "mobx";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 export interface NodeChartsProps {}
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
 }
 
 const NonInjectedNodeCharts = observer(({
-  themeStore,
+  activeTheme,
 }: Dependencies & NodeChartsProps) => {
   const { metrics, tab, object } = useContext(ResourceMetricsContext) ?? {};
 
@@ -31,7 +32,7 @@ const NonInjectedNodeCharts = observer(({
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
   const id = object.getId();
-  const { chartCapacityColor } = themeStore.activeTheme.colors;
+  const { chartCapacityColor } = activeTheme.get().colors;
   const {
     memoryUsage,
     workloadMemoryUsage,
@@ -162,6 +163,6 @@ const NonInjectedNodeCharts = observer(({
 export const NodeCharts = withInjectables<Dependencies, NodeChartsProps>(NonInjectedNodeCharts, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
   }),
 });

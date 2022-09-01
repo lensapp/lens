@@ -125,7 +125,7 @@ export interface ApplicationBuilder {
   helmCharts: {
     navigate: NavigateToHelmCharts;
   };
-
+  navigateWith: (token: Injectable<() => void, any, void>) => void;
   select: {
     openMenu: (id: string) => { selectOption: (labelText: string) => void };
     selectOption: (menuId: string, labelText: string) => void;
@@ -439,6 +439,13 @@ export const getApplicationBuilder = () => {
 
         navigateToHelmCharts(parameters);
       },
+    },
+
+    navigateWith: (token) => {
+      const windowDi = builder.applicationWindow.only.di;
+      const navigate = windowDi.inject(token);
+
+      navigate();
     },
 
     setEnvironmentToClusterFrame: () => {

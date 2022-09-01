@@ -290,6 +290,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
           <main>
             <div
               class="WorkloadsOverview flex column gaps"
+              data-testid="page-for-workloads-overview"
             >
               <div
                 class="header flex gaps align-center"

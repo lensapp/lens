@@ -91,7 +91,7 @@ const attemptInstallByInfo = ({
       }
     } else {
       const versions = Object.keys(json.versions)
-        .map(version => new SemVer(version, { loose: true, includePrerelease: true }))
+        .map(version => new SemVer(version, { loose: true }))
         // ignore pre-releases for auto picking the version
         .filter(version => version.prerelease.length === 0);
 

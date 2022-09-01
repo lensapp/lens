@@ -8,15 +8,15 @@
 import "./select.scss";
 
 import React from "react";
-import type { ObservableSet } from "mobx";
+import type { IComputedValue, ObservableSet } from "mobx";
 import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import ReactSelect, { components, createFilter } from "react-select";
 import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from "react-select";
-import type { ThemeStore } from "../../themes/store";
+import type { LensTheme } from "../../themes/store";
 import { autoBind, cssNames } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 const { Menu } = components;
 
@@ -80,7 +80,7 @@ const defaultFilter = createFilter({
 });
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
 }
 
 export function onMultiSelectFor<Value, Option extends SelectOption<Value>, Group extends GroupBase<Option> = GroupBase<Option>>(collection: Set<Value> | ObservableSet<Value>): SelectProps<Value, Option, true, Group>["onChange"] {
@@ -124,7 +124,7 @@ class NonInjectedSelect<
   }
 
   @computed get themeClass() {
-    const themeName = this.props.themeName || this.props.themeStore.activeTheme.type;
+    const themeName = this.props.themeName || this.props.activeTheme.get().type;
 
     return `theme-${themeName}`;
   }
@@ -248,7 +248,7 @@ class NonInjectedSelect<
 export const Select = withInjectables<Dependencies, SelectProps<unknown, SelectOption<unknown>, boolean>>(NonInjectedSelect, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
   }),
 }) as <
   Value,

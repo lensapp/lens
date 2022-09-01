@@ -1,0 +1,37 @@
+.dropdown {
+  --accent-color: var(--colorInfo);
+
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  padding: calc(var(--padding) / 4) var(--padding);
+  gap: 6px;
+  position: relative;
+
+  &:disabled {
+    cursor: progress;
+    opacity: .7;
+  }
+
+  &:hover::before{
+    opacity: 0.25;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-color);
+    border-color: transparent;
+  }
+
+  &::before {
+    content: " ";
+    position: absolute;
+    background: var(--accent-color);
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+}
