@@ -24,7 +24,7 @@ export function runManySyncFor(di: DiContainerForInjection): RunManySync {
   return (injectionToken) => async (parameter) => {
     const allRunnables = di.injectMany(injectionToken);
 
-    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor(allRunnables);
+    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor((injectionToken as any).id, allRunnables);
 
     const recursedRun = (
       runAfterRunnable: RunnableSync<any> | undefined = undefined,

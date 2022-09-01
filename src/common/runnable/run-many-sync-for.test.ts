@@ -152,7 +152,7 @@ describe("runManySyncFor", () => {
     );
 
     return expect(() => runMany()).rejects.toThrow(
-      "Tried to run runnable after other runnable which does not same injection token.",
+      'Tried to run runnable "some-runnable-1" after the runnable "some-runnable-2" which does not share the "some-injection-token" injection token.',
     );
   });
 
