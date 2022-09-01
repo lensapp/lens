@@ -15,10 +15,10 @@ export const LogList = observer(({ model }: LogListProps) => {
   const [toBottomVisible, setToBottomVisible] = React.useState(false);
   const [lastLineVisible, setLastLineVisible] = React.useState(true);
 
-  const { logs } = model;
+  const { visibleLogs } = model;
   const parentRef = useRef<HTMLDivElement>(null)
   const rowVirtualizer = useVirtualizer({
-    count: logs.get().length,
+    count: visibleLogs.get().length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 38,
     overscan: 5,
@@ -70,7 +70,7 @@ export const LogList = observer(({ model }: LogListProps) => {
   useEffect(() => {
     setTimeout(() => {
       // Initial scroll to bottom
-      rowVirtualizer.scrollToIndex(logs.get().length - 1, { align: 'end', smoothScroll: false });
+      rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
     }, 200)
   }, [])
 
@@ -123,7 +123,7 @@ const colorConverter = new AnsiUp();
 
 function LogRow({ rowIndex, model }: { rowIndex: number; model: LogTabViewModel }) {
   const { searchQuery, isActiveOverlay } = model.searchStore;
-  const log = model.logs.get()[rowIndex];
+  const log = model.visibleLogs.get()[rowIndex];
   const contents: React.ReactElement[] = [];
   const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
 
