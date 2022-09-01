@@ -32,6 +32,7 @@ export const LogList = observer(({ model }: LogListProps) => {
 
     setToBottomVisibility();
     setLastLineVisibility();
+    checkLoadIntent();
   }
 
   // TODO: Move to its own hook
@@ -54,6 +55,17 @@ export const LogList = observer(({ model }: LogListProps) => {
       setLastLineVisible(false);
     }
   }
+
+  /**
+   * Check if user scrolled to top and new logs should be loaded
+   */
+   const checkLoadIntent = () => {
+    const { scrollTop } = parentRef.current as HTMLDivElement;
+
+    if (scrollTop === 0) {
+      model.loadLogs();
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
