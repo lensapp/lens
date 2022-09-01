@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import kubeconfigSyncManagerInjectable from "../../../catalog-sources/kubeconfig-sync/manager.injectable";
 import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
-import { afterRootFrameIsReadyInjectionToken } from "../../runnable-tokens/after-root-frame-is-ready-injection-token";
+import { afterApplicationIsLoadedInjectionToken } from "../../runnable-tokens/after-application-is-loaded-injection-token";
 
 const addKubeconfigSyncAsEntitySourceInjectable = getInjectable({
   id: "add-kubeconfig-sync-as-entity-source",
@@ -20,7 +20,7 @@ const addKubeconfigSyncAsEntitySourceInjectable = getInjectable({
       },
     };
   },
-  injectionToken: afterRootFrameIsReadyInjectionToken,
+  injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 
 export default addKubeconfigSyncAsEntitySourceInjectable;
