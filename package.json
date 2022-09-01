@@ -401,7 +401,7 @@
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^2.6.1",
     "mock-http": "^1.1.0",
-    "node-gyp": "^8.3.0",
+    "node-gyp": "^9.1.0",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.19",
     "playwright": "^1.25.1",

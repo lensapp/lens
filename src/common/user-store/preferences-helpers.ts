@@ -293,6 +293,11 @@ const terminalConfig: PreferenceDescription<TerminalConfig, TerminalConfig> = {
   },
 };
 
+  ["none", {
+    label: "Do Not Update",
+  }],
+// export const defaultUpdateChannel = new SemVer(getAppVersion()).prerelease[0]?.toString() || "latest";
+export const defaultUpdateChannel = "none";
 export type ExtensionRegistryLocation = "default" | "npmrc" | "custom";
 
 export type ExtensionRegistry = {

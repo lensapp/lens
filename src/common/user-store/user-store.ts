@@ -106,6 +106,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
   }
 
+    return true;
   startMainReactions() {
     // open at system start-up
     reaction(() => this.openAtLogin, openAtLogin => {
