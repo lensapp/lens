@@ -2,7 +2,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import AnsiUp from 'ansi_up';
 import DOMPurify from 'dompurify';
 import { observer } from 'mobx-react';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SearchStore } from '../../../search-store/search-store';
 import { cssNames } from '../../../utils';
 import type { LogTabViewModel } from './logs-view-model';
@@ -12,14 +12,55 @@ export interface LogListProps {
 }
 
 export const LogList = observer(({ model }: LogListProps) => {
+  const [toBottomVisible, setToBottomVisible] = React.useState(false);
+  const [lastLineVisible, setLastLineVisible] = React.useState(true);
+
   const { logs } = model;
   const parentRef = useRef<HTMLDivElement>(null)
   const rowVirtualizer = useVirtualizer({
     count: logs.get().length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 38,
-    overscan: 5
-  })
+    overscan: 5,
+    scrollPaddingEnd: 0,
+    scrollPaddingStart: 0,
+  });
+
+  const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    console.log("scrolling", toBottomVisible)
+    if (!parentRef.current) return;
+
+    setToBottomVisibility();
+    setLastLineVisibility();
+  }
+
+  // TODO: Move to its own hook
+  const setToBottomVisibility = () => {
+    const { scrollTop, scrollHeight } = parentRef.current as HTMLDivElement;
+    console.log("scrolling", scrollHeight, scrollTop, rowVirtualizer.getTotalSize())
+    if (scrollHeight - scrollTop > 4000) {
+      setToBottomVisible(true);
+    } else {
+      setToBottomVisible(false);
+    }
+  }
+
+  const setLastLineVisibility = () => {
+    const { scrollTop, scrollHeight } = parentRef.current as HTMLDivElement;
+
+    if (scrollHeight - scrollTop < 4000) {
+      setLastLineVisible(true);
+    } else {
+      setLastLineVisible(false);
+    }
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      // Initial scroll to bottom
+      rowVirtualizer.scrollToIndex(logs.get().length - 1, { align: 'end', smoothScroll: false });
+    }, 200)
+  }, [])
 
   return (
     <div
@@ -28,6 +69,7 @@ export const LogList = observer(({ model }: LogListProps) => {
         flexGrow: 1,
         overflow: 'auto', // Make it scroll!
       }}
+      onScroll={onScroll}
     >
       <div
         style={{
@@ -40,7 +82,6 @@ export const LogList = observer(({ model }: LogListProps) => {
           <div
             key={virtualRow.index}
             ref={virtualRow.measureElement}
-            className={virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'}
             style={{
               position: 'absolute',
               top: 0,
@@ -54,6 +95,13 @@ export const LogList = observer(({ model }: LogListProps) => {
             </div>
           </div>
         ))}
+        <div style={{
+          width: "100%",
+          height: "1px",
+          background: "red",
+          position: "absolute",
+          bottom: 0,
+        }}></div>
       </div>
     </div>
   )
