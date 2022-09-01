@@ -15,6 +15,8 @@ export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
   loadExtension(extension: LensExtension) {
     this.extension = extension;
 
+    this.params.projectVersion ??= this.extension.version;
+
     return super.load();
   }
 
