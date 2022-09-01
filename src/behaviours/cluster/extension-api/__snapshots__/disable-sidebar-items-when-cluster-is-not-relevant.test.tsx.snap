@@ -40,7 +40,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -51,13 +51,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -74,7 +72,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -88,9 +86,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -101,7 +97,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -115,13 +111,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -138,7 +132,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -152,9 +146,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -165,7 +157,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -176,13 +168,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -199,7 +189,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -213,9 +203,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -226,7 +214,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -240,13 +228,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -263,16 +249,14 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-test-extension-some-sidebar-item"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-test-extension-some-sidebar-item"
                 href="/"
               >
                 <div>
                   Some icon
                 </div>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Some sidebar item
                 </span>
               </a>
@@ -575,7 +559,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -586,13 +570,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -609,7 +591,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -623,9 +605,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -636,7 +616,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -650,13 +630,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -673,7 +651,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -687,9 +665,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -700,7 +676,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -711,13 +687,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -734,7 +708,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -748,9 +722,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -761,7 +733,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -775,13 +747,11 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1090,7 +1060,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -1101,13 +1071,11 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1124,7 +1092,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -1138,9 +1106,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -1151,7 +1117,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -1165,13 +1131,11 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1188,7 +1152,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -1202,9 +1166,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -1215,7 +1177,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -1226,13 +1188,11 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1249,7 +1209,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -1263,9 +1223,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -1276,7 +1234,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -1290,13 +1248,11 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
