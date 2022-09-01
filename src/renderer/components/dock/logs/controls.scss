@@ -4,8 +4,6 @@
  */
 
 .LogControls {
-  @include hidden-scrollbar;
-
   background: var(--dockInfoBackground);
   padding: $padding $padding * 2;
 }
