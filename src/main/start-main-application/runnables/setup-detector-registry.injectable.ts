@@ -18,6 +18,7 @@ const setupDetectorRegistryInjectable = getInjectable({
     const detectorRegistry = di.inject(detectorRegistryInjectable);
 
     return {
+      id: "setup-detector-registry",
       run: () => {
         detectorRegistry
           .add(ClusterIdDetector)

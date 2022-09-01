@@ -13,6 +13,7 @@ const stopClusterManagerInjectable = getInjectable({
     const clusterManager = di.inject(clusterManagerInjectable);
 
     return {
+      id: "stop-cluster-manager",
       run: () => {
         clusterManager.stop();
       },

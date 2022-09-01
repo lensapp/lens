@@ -14,6 +14,7 @@ const flagRendererAsLoadedInjectable = getInjectable({
     const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
 
     return {
+      id: "flag-renderer-as-loaded",
       run: () => {
         runInAction(() => {
           // Todo: remove this kludge which enables out-of-place temporal dependency.

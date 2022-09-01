@@ -11,8 +11,9 @@ import { filter, forEach, map, tap } from "lodash/fp";
 import { throwWithIncorrectHierarchyFor } from "./throw-with-incorrect-hierarchy-for";
 
 export interface Runnable<TParameter = void> {
+  id: string;
   run: Run<TParameter>;
-  runAfter?: this;
+  runAfter?: Runnable<TParameter>;
 }
 
 type Run<Param> = (parameter: Param) => Promise<void> | void;

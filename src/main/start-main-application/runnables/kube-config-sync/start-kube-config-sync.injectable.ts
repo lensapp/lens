@@ -18,6 +18,7 @@ const startKubeConfigSyncInjectable = getInjectable({
     const ensureDir = di.inject(ensureDirInjectable);
 
     return {
+      id: "start-kubeconfig-sync",
       run: async () => {
         await ensureDir(directoryForKubeConfigs);
 

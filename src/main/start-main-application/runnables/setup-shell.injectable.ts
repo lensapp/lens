@@ -20,6 +20,7 @@ const setupShellInjectable = getInjectable({
     const electronApp = di.inject(electronAppInjectable);
 
     return {
+      id: "setup-shell",
       run: async () => {
         logger.info("🐚 Syncing shell environment");
 

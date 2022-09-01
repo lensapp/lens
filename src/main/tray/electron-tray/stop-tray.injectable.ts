@@ -14,6 +14,7 @@ const stopTrayInjectable = getInjectable({
     const electronTray = di.inject(electronTrayInjectable);
 
     return {
+      id: "stop-tray",
       run: () => {
         electronTray.stop();
       },

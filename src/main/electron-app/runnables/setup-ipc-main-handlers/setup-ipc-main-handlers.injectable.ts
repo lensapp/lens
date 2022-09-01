@@ -36,6 +36,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);
 
     return {
+      id: "setup-ipc-main-handlers",
       run: () => {
         logger.debug("[APP-MAIN] initializing ipc main handlers");
 

@@ -12,6 +12,7 @@ const initializeClusterManagerInjectable = getInjectable({
     const clusterManager = di.inject(clusterManagerInjectable);
 
     return {
+      id: "initialize-cluster-manager",
       run: () => {
         clusterManager.init();
       },

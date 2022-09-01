@@ -11,6 +11,7 @@ const setupOnApiErrorListenersInjectable = getInjectable({
   id: "setup-on-api-error-listeners",
 
   instantiate: () => ({
+    id: "setup-on-api-error-listeners",
     run: () => {
       apiBase?.onError.addListener(onApiError);
     },

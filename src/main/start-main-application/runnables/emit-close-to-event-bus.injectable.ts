@@ -13,6 +13,7 @@ const emitCloseToEventBusInjectable = getInjectable({
     const appEventBus = di.inject(appEventBusInjectable);
 
     return {
+      id: "emit-close-to-event-bus",
       run: () => {
         appEventBus.emit({ name: "app", action: "close" });
       },

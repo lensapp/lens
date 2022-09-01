@@ -21,6 +21,7 @@ const initializeExtensionsInjectable = getInjectable({
     const showErrorPopup = di.inject(showErrorPopupInjectable);
 
     return {
+      id: "initialize-extensions",
       run: async () => {
         logger.info("🧩 Initializing extensions");
 

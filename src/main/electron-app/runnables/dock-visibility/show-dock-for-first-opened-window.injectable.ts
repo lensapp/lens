@@ -13,6 +13,7 @@ const showDockForFirstOpenedWindowInjectable = getInjectable({
     const app = di.inject(electronAppInjectable);
 
     return {
+      id: "show-dock-for-first-opened-window",
       run: () => {
         app.dock?.show();
       },

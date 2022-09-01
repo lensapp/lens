@@ -13,6 +13,7 @@ const setupSyncingOfWeblinksInjectable = getInjectable({
     const syncWeblinks = di.inject(syncWeblinksInjectable);
 
     return {
+      id: "setup-syncing-of-weblinks",
       run: () => {
         syncWeblinks();
       },

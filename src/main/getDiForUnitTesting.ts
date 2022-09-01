@@ -219,7 +219,10 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     startCatalogSyncInjectable,
     startKubeConfigSyncInjectable,
   ].forEach((injectable) => {
-    di.override(injectable, () => ({ run: () => {} }));
+    di.override(injectable, () => ({
+      id: injectable.id,
+      run: () => {},
+    }));
   });
 };
 
@@ -231,18 +234,20 @@ const overrideOperatingSystem = (di: DiContainer) => {
 };
 
 const overrideElectronFeatures = (di: DiContainer) => {
-  di.override(setupMainWindowVisibilityAfterActivationInjectable, () => ({
-    run: () => {},
-  }));
+  [
+    setupMainWindowVisibilityAfterActivationInjectable,
+    setupDeviceShutdownInjectable,
+    setupDeepLinkingInjectable,
+    setupApplicationNameInjectable,
+    setupRunnablesBeforeClosingOfApplicationInjectable,
+  ].forEach((injectable) => {
+    di.override(injectable, () => ({
+      id: injectable.id,
+      run: () => {},
+    }));
+  });
 
-  di.override(setupDeviceShutdownInjectable, () => ({
-    run: () => {},
-  }));
-
-  di.override(setupDeepLinkingInjectable, () => ({ run: () => {} }));
   di.override(exitAppInjectable, () => () => {});
-  di.override(setupApplicationNameInjectable, () => ({ run: () => {} }));
-  di.override(setupRunnablesBeforeClosingOfApplicationInjectable, () => ({ run: () => {} }));
   di.override(getCommandLineSwitchInjectable, () => () => "irrelevant");
   di.override(requestSingleInstanceLockInjectable, () => () => true);
   di.override(disableHardwareAccelerationInjectable, () => () => {});

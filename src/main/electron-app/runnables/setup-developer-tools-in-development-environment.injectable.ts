@@ -13,6 +13,7 @@ const setupDeveloperToolsInDevelopmentEnvironmentInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
 
     return {
+      id: "setup-developer-tools-in-development-environment",
       run: () => {
         if (process.env.NODE_ENV !== "development") {
           return;

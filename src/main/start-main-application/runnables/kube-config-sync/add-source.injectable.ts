@@ -14,6 +14,7 @@ const addKubeconfigSyncAsEntitySourceInjectable = getInjectable({
     const entityRegistry = di.inject(catalogEntityRegistryInjectable);
 
     return {
+      id: "add-kubeconfig-sync-as-entity-source",
       run: () => {
         entityRegistry.addComputedSource("kubeconfig-sync", kubeConfigSyncManager.source);
       },

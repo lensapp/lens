@@ -10,6 +10,7 @@ const cleanUpShellSessionsInjectable = getInjectable({
   id: "clean-up-shell-sessions",
 
   instantiate: () => ({
+    id: "clean-up-shell-sessions",
     run: () => {
       ShellSession.cleanup();
     },

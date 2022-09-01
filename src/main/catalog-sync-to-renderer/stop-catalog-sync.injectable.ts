@@ -13,6 +13,7 @@ const stopCatalogSyncInjectable = getInjectable({
     const catalogSyncToRenderer = di.inject(catalogSyncToRendererInjectable);
 
     return {
+      id: "stop-catalog-sync",
       run: async () => {
         if (catalogSyncToRenderer.started) {
           await catalogSyncToRenderer.stop();

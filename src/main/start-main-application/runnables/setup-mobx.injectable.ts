@@ -10,6 +10,7 @@ const setupMobxInjectable = getInjectable({
   id: "setup-mobx",
 
   instantiate: () => ({
+    id: "setup-mobx",
     run: () => {
       // Docs: https://mobx.js.org/configuration.html
       Mobx.configure({

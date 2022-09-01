@@ -16,6 +16,7 @@ const startTopbarStateSyncInjectable = getInjectable({
     const ipcRenderer = di.inject(ipcRendererInjectable);
 
     return {
+      id: "start-topbar-state-sync",
       run: () => {
         ipcRenderer.on("history:can-go-back", action((event, canGoBack: boolean) => {
           state.prevEnabled = canGoBack;

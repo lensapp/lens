@@ -13,6 +13,7 @@ const startWatchingIfUpdateShouldHappenOnQuitInjectable = getInjectable({
     const watchIfUpdateShouldHappenOnQuit = di.inject(watchIfUpdateShouldHappenOnQuitInjectable);
 
     return {
+      id: "start-watching-if-update-should-happen-on-quit",
       run: () => {
         watchIfUpdateShouldHappenOnQuit.start();
       },
