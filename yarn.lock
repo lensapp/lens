@@ -1240,46 +1240,46 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@ogre-tools/fp@9.0.3", "@ogre-tools/fp@^9.0.3":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-9.0.3.tgz#f8c9a3316b688c4782309e050c86aa04bebfc293"
-  integrity sha512-j5TQAxiz6ncEfYFBcqnWXeLZY89Qd+dZ9UlfonBdw/C9okxjNeFL+2bmt+b/Vxscz1cOLGZ1F6nmlhQdTtHzPw==
+"@ogre-tools/fp@10.1.0", "@ogre-tools/fp@^10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-10.1.0.tgz#e83c4dad97416c62d89913c0c0a34e734ae06b8b"
+  integrity sha512-ZqGQXytucSWbSoNjrdyHAiIWO0LotxBU+aI5hCcqedWg9TzNzf78YKD6ngHXxVEwT/JYsslxXMxzE4LNdo8Cbg==
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-auto-registration@9.0.3":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-9.0.3.tgz#a26d2a39e24ec3a0800fe21141c0f4f0e7d5504d"
-  integrity sha512-0zjt4w1ACBX9a3FyhTD+/AAqk/xov2bw+Cnbte7NMOVWAbHDfQpmbdiKJlMnFcMUd8vdwOEMm1Z4ogT1VkUeqg==
+"@ogre-tools/injectable-extension-for-auto-registration@10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-10.1.0.tgz#a46d23cf5cf880e416a46238ecb54e7f933f9d89"
+  integrity sha512-G9UKcaYr4DHViXHIKigzy6jI2ZhQC+K6idc1M4W/l4IazaV26Gwj1MSI5nrJ6Z4aRAzILFKM4dzkvZNFjkyGrw==
   dependencies:
-    "@ogre-tools/fp" "^9.0.3"
-    "@ogre-tools/injectable" "^9.0.3"
+    "@ogre-tools/fp" "^10.1.0"
+    "@ogre-tools/injectable" "^10.1.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-mobx@9.0.3":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-9.0.3.tgz#24a14b940f51cae8b07645a2376d804b826c659e"
-  integrity sha512-DgCbAIqMPKgeNETY/8nxz6llAk8fAihGcbs/fkKINe4N9zFgOBKsuk/w67Sx0rTE7l35L6HQenbo7nJhIqbCWA==
+"@ogre-tools/injectable-extension-for-mobx@10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-10.1.0.tgz#b1efaafb048f2ceb5588daad708dbeffbd2ec7d1"
+  integrity sha512-G5A6FSgBMTlD6Qdd6xzeuVzcyHGS+tTUW7DCBbYLJqZ3Y8/PprSomhunrNrrcuZdM0K16BpQT8o6OHw4Z/Kqiw==
   dependencies:
-    "@ogre-tools/fp" "^9.0.3"
-    "@ogre-tools/injectable" "^9.0.3"
+    "@ogre-tools/fp" "^10.1.0"
+    "@ogre-tools/injectable" "^10.1.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@9.0.3":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-9.0.3.tgz#bc125ef906b171c8894f711f8b61f38d49e81dd0"
-  integrity sha512-6O9vr19Mcy0uUekZhRyjsM5nw8pgFXhbNvZ8JOnBQg6Lp1CqdasIFhJ0Hdxb8w8P9Zs+pd8pfevRVotq0ouV2Q==
+"@ogre-tools/injectable-react@10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-10.1.0.tgz#5c9b4b5eb9e5843cc966629131104055180ba18c"
+  integrity sha512-4ReLJm8QcruCEm4KFhbsXLki3YiKRwlg3Mg7C2d8KyUfg+MUA5VdvgQSn3HthnyejiXlYCinqJLw83IryX/GNA==
   dependencies:
-    "@ogre-tools/fp" "^9.0.3"
-    "@ogre-tools/injectable" "^9.0.3"
+    "@ogre-tools/fp" "^10.1.0"
+    "@ogre-tools/injectable" "^10.1.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable@9.0.3", "@ogre-tools/injectable@^9.0.3":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-9.0.3.tgz#6d9e01a5be7e7c96e7bcbc727f928faad5e11884"
-  integrity sha512-KCmqcMEl/1Jjwg6XzNve+JVaW/OtiJUOKBucTJx2ZKBlAQaKz1/VUP7IB4UoQ4RWVa0+mUKLTxBTQFBQfp05RA==
+"@ogre-tools/injectable@10.1.0", "@ogre-tools/injectable@^10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-10.1.0.tgz#5051cc6a673576028e00439fc3e3f053ecdda030"
+  integrity sha512-7h7P5nfAFqnSny341FFT6cbJCmXVlGqA4zwTOpwKsGyC1h90NWtQZ+PUxY5MKl7rFWW/wpXgAKQqtf27Vy41Qw==
   dependencies:
-    "@ogre-tools/fp" "^9.0.3"
+    "@ogre-tools/fp" "^10.1.0"
     lodash "^4.17.21"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.7":

@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import appEventBusInjectable from "./app-event-bus.injectable";
 
-const emitEventInjectable = getInjectable({
-  id: "emit-event",
-  instantiate: (di) => di.inject(appEventBusInjectable).emit,
+const telemetryWhiteListForFunctionsInjectable = getInjectable({
+  id: "telemetry-white-list-for-functions",
+  instantiate: () => ["some-placeholder-injectable-id"],
   decorable: false,
 });
 
-export default emitEventInjectable;
+export default telemetryWhiteListForFunctionsInjectable;

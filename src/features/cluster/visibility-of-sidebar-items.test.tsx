@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
 import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import React from "react";
 import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
@@ -25,9 +25,11 @@ describe("cluster - visibility of sidebar items", () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.register(testRouteInjectable);
-      windowDi.register(testRouteComponentInjectable);
-      windowDi.register(testSidebarItemsInjectable);
+      runInAction(() => {
+        windowDi.register(testRouteInjectable);
+        windowDi.register(testRouteComponentInjectable);
+        windowDi.register(testSidebarItemsInjectable);
+      });
     });
   });
 

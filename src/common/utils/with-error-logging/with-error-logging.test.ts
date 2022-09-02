@@ -19,7 +19,7 @@ describe("with-error-logging", () => {
     let decorated: (a: string, b: string) => number | undefined;
 
     beforeEach(() => {
-      const di = getDiForUnitTesting();
+      const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
       loggerStub = {
         error: jest.fn(),
@@ -119,7 +119,7 @@ describe("with-error-logging", () => {
     let toBeDecorated: AsyncFnMock<typeof decorated>;
 
     beforeEach(() => {
-      const di = getDiForUnitTesting();
+      const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
       loggerStub = {
         error: jest.fn(),

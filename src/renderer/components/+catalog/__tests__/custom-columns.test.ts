@@ -43,7 +43,7 @@ describe("Custom Category Columns", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting();
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(hotbarStoreInjectable, () => ({}));
   });

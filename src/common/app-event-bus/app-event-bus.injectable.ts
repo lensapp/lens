@@ -9,6 +9,7 @@ const appEventBusInjectable = getInjectable({
   id: "app-event-bus",
   instantiate: () => appEventBus,
   causesSideEffects: true,
+  decorable: false,
 });
 
 export default appEventBusInjectable;

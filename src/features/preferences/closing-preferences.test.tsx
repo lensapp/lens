@@ -9,7 +9,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import currentPathInjectable from "../../renderer/routes/current-path.injectable";
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import { preferenceNavigationItemInjectionToken } from "../../renderer/components/+preferences/preferences-navigation/preference-navigation-items.injectable";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
 import { Preferences } from "../../renderer/components/+preferences";
@@ -30,11 +30,13 @@ describe("preferences - closing-preferences", () => {
     builder = getApplicationBuilder();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.register(testPreferencesRouteInjectable);
-      windowDi.register(testPreferencesRouteComponentInjectable);
-      windowDi.register(testFrontPageRouteInjectable);
-      windowDi.register(testFrontPageRouteComponentInjectable);
-      windowDi.register(testNavigationItemInjectable);
+      runInAction(() => {
+        windowDi.register(testPreferencesRouteInjectable);
+        windowDi.register(testPreferencesRouteComponentInjectable);
+        windowDi.register(testFrontPageRouteInjectable);
+        windowDi.register(testFrontPageRouteComponentInjectable);
+        windowDi.register(testNavigationItemInjectable);
+      });
 
       windowDi.override(navigateToFrontPageInjectable, (di) => {
         const navigateToRoute = di.inject(navigateToRouteInjectionToken);
