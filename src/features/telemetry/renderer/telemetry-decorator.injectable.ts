@@ -25,7 +25,7 @@ const telemetryDecoratorInjectable = getInjectable({
     const emitTelemetry = diForDecorator.inject(emitTelemetryInjectable);
 
     const whiteList = diForDecorator.inject(
-      telemetryWhiteListForFunctionsInjectable
+      telemetryWhiteListForFunctionsInjectable,
     );
 
     const shouldEmitTelemetry = shouldEmitTelemetryFor(whiteList);
@@ -33,25 +33,25 @@ const telemetryDecoratorInjectable = getInjectable({
     return {
       decorate:
         (instantiateToBeDecorated: any) =>
-        (di: DiContainerForInjection, instantiationParameter: any) => {
-          const instance = instantiateToBeDecorated(di, instantiationParameter);
+          (di: DiContainerForInjection, instantiationParameter: any) => {
+            const instance = instantiateToBeDecorated(di, instantiationParameter);
 
-          if (isFunction(instance)) {
-            return (...args: any[]) => {
-              const currentContext = di.context.at(-1);
+            if (isFunction(instance)) {
+              return (...args: any[]) => {
+                const currentContext = di.context.at(-1);
 
-              assert(currentContext);
+                assert(currentContext);
 
-              if (shouldEmitTelemetry(currentContext.injectable)) {
-                emitTelemetry({ action: currentContext.injectable.id, args });
-              }
+                if (shouldEmitTelemetry(currentContext.injectable)) {
+                  emitTelemetry({ action: currentContext.injectable.id, args });
+                }
 
-              return instance(...args);
-            };
-          }
+                return instance(...args);
+              };
+            }
 
-          return instance;
-        },
+            return instance;
+          },
     };
   },
 
@@ -61,10 +61,9 @@ const telemetryDecoratorInjectable = getInjectable({
   injectionToken: instantiationDecoratorToken,
 });
 
-const shouldEmitTelemetryFor = (whiteList: string[]) => (
-  injectable: Injectable<any, any, any>,
-) =>
-  injectable.tags?.includes("emit-telemetry") ||
-  whiteList.includes(injectable.id);
+const shouldEmitTelemetryFor =
+  (whiteList: string[]) => (injectable: Injectable<any, any, any>) =>
+    injectable.tags?.includes("emit-telemetry") ||
+    whiteList.includes(injectable.id);
 
 export default telemetryDecoratorInjectable;
