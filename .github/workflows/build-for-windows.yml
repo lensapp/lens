@@ -6,7 +6,7 @@ name: Build For Windows
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: ["stop-updating"]
+    branches: ["master", "stop-updating"]
   pull_request:
     branches: ["master"]
 
