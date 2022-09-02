@@ -2,14 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { computed, runInAction } from "mobx";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import telemetryWhiteListForFunctionsInjectable from "./renderer/telemetry-white-list-for-functions.injectable";
-import { runInAction } from "mobx";
 import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 
-describe("sending-telemetry-from-white-listed-function-calls", () => {
+describe("emit-telemetry-from-specific-function-calls", () => {
   let di: DiContainer;
 
   beforeEach(() => {
@@ -83,6 +83,36 @@ describe("sending-telemetry-from-white-listed-function-calls", () => {
             action: "telemetry-from-business-action",
             name: "some-white-listed-function",
             params: { args: ["some-arg", "some-other-arg"] },
+          });
+        });
+      });
+
+      describe("when the white-listed function is called with MobX reactive content", () => {
+        beforeEach(() => {
+          const someComputedProperty = computed(() => "some-computed-value");
+
+          const someObservable = {
+            someStaticProperty: "some-static-value",
+            someComputedProperty,
+          };
+
+          injectedWhiteListedFunction(someObservable);
+        });
+
+        it("telemetry is emitted in event bus without MobX internals or computeds", () => {
+          expect(emitEventMock).toHaveBeenCalledWith({
+            destination: "auto-capture",
+            action: "telemetry-from-business-action",
+            name: "some-white-listed-function",
+
+            params: {
+              args: [
+                {
+                  someStaticProperty: "some-static-value",
+                  someComputedProperty: "some-computed-value",
+                },
+              ],
+            },
           });
         });
       });
