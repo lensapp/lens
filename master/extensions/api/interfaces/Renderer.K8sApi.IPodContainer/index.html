@@ -712,13 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hierarchy" class="md-nav__link">
-    Hierarchy
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -789,6 +782,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#lifecycle" class="md-nav__link">
+    lifecycle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#livenessprobe" class="md-nav__link">
     livenessProbe
   </a>
@@ -824,8 +824,29 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#securitycontext" class="md-nav__link">
+    securityContext
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#startupprobe" class="md-nav__link">
     startupProbe
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdin" class="md-nav__link">
+    stdin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdinonce" class="md-nav__link">
+    stdinOnce
   </a>
   
 </li>
@@ -845,8 +866,29 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tty" class="md-nav__link">
+    tty
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumedevices" class="md-nav__link">
+    volumeDevices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#volumemounts" class="md-nav__link">
     volumeMounts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workingdir" class="md-nav__link">
+    workingDir
   </a>
   
 </li>
@@ -872,11 +914,7 @@
                 
                 <h1 id="interface-ipodcontainer">Interface: IPodContainer<a class="headerlink" href="#interface-ipodcontainer" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.IPodContainer</p>
-<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
-<ul>
-<li><code>Partial</code>&lt;<code>Record</code>&lt;<code>PodContainerProbe</code>, <code>IContainerProbe</code>>></li>
-</ul>
-<p>↳ <strong><code>IPodContainer</code></strong></p>
+<p>A single application container that you want to run within a pod.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
@@ -886,102 +924,161 @@
 <li><a href="./#envfrom">envFrom</a></li>
 <li><a href="./#image">image</a></li>
 <li><a href="./#imagepullpolicy">imagePullPolicy</a></li>
+<li><a href="./#lifecycle">lifecycle</a></li>
 <li><a href="./#livenessprobe">livenessProbe</a></li>
 <li><a href="./#name">name</a></li>
 <li><a href="./#ports">ports</a></li>
 <li><a href="./#readinessprobe">readinessProbe</a></li>
 <li><a href="./#resources">resources</a></li>
+<li><a href="./#securitycontext">securityContext</a></li>
 <li><a href="./#startupprobe">startupProbe</a></li>
+<li><a href="./#stdin">stdin</a></li>
+<li><a href="./#stdinonce">stdinOnce</a></li>
 <li><a href="./#terminationmessagepath">terminationMessagePath</a></li>
 <li><a href="./#terminationmessagepolicy">terminationMessagePolicy</a></li>
+<li><a href="./#tty">tty</a></li>
+<li><a href="./#volumedevices">volumeDevices</a></li>
 <li><a href="./#volumemounts">volumeMounts</a></li>
+<li><a href="./#workingdir">workingDir</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="args">args<a class="headerlink" href="#args" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>args</strong>: <code>string</code>[]</p>
+<p>Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable
+references <code>$(VAR_NAME)</code> are expanded using the container's environment.</p>
+<p>If a variable cannot be resolved, the reference in the input string will be unchanged.
+Double <code>$$</code> are reduced to a single <code>$</code>, which allows for escaping the <code>$(VAR_NAME)</code> syntax:
+i.e. <code>"$$(VAR_NAME)"</code> will produce the string literal <code>"$(VAR_NAME)</code>".</p>
+<p>Escaped references will never be expanded, regardless of whether the variable exists or not.
+Cannot be updated.</p>
+<p>More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell</p>
 <hr />
 <h3 id="command">command<a class="headerlink" href="#command" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>command</strong>: <code>string</code>[]</p>
+<p>Entrypoint array. Not executed within a shell. The docker image's ENTRYPOINT is used if this
+is not provided. Variable references <code>$(VAR_NAME)</code> are expanded using the container's
+environment.</p>
+<p>If a variable cannot be resolved, the reference in the input string will be unchanged.
+Double <code>$$</code> are reduced to a single <code>$</code>, which allows for escaping the <code>$(VAR_NAME)</code> syntax:
+i.e. <code>"$$(VAR_NAME)"</code> will produce the string literal <code>"$(VAR_NAME)</code>".</p>
+<p>Escaped references will never be expanded, regardless of whether the variable exists or not.
+Cannot be updated.</p>
+<p>More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell</p>
 <hr />
 <h3 id="env">env<a class="headerlink" href="#env" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>env</strong>: { <code>name</code>: <code>string</code> ; <code>value?</code>: <code>string</code> ; <code>valueFrom?</code>: { <code>configMapKeyRef?</code>: { <code>key</code>: <code>string</code> ; <code>name</code>: <code>string</code>  } ; <code>fieldRef?</code>: { <code>apiVersion</code>: <code>string</code> ; <code>fieldPath</code>: <code>string</code>  } ; <code>secretKeyRef?</code>: { <code>key</code>: <code>string</code> ; <code>name</code>: <code>string</code>  }  }  }[]</p>
+<p>• <code>Optional</code> <strong>env</strong>: <code>EnvVar</code>[]</p>
+<p>List of environment variables to set in the container. Cannot be updated.</p>
 <hr />
 <h3 id="envfrom">envFrom<a class="headerlink" href="#envfrom" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>envFrom</strong>: { <code>configMapRef?</code>: <code>LocalObjectReference</code> ; <code>secretRef?</code>: <code>LocalObjectReference</code>  }[]</p>
+<p>• <code>Optional</code> <strong>envFrom</strong>: <code>EnvFromSource</code>[]</p>
+<p>List of sources to populate environment variables in the container. The keys defined within a
+source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the
+container is starting.</p>
+<p>When a key exists in multiple sources, the value associated with the last source will take
+precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be
+updated.</p>
 <hr />
 <h3 id="image">image<a class="headerlink" href="#image" title="Permanent link">#</a></h3>
-<p>• <strong>image</strong>: <code>string</code></p>
+<p>• <code>Optional</code> <strong>image</strong>: <code>string</code></p>
+<p>Docker image name.</p>
+<p>More info: https://kubernetes.io/docs/concepts/containers/images</p>
 <hr />
 <h3 id="imagepullpolicy">imagePullPolicy<a class="headerlink" href="#imagepullpolicy" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>imagePullPolicy</strong>: <code>string</code></p>
+<p>• <code>Optional</code> <strong>imagePullPolicy</strong>: <code>"Always"</code> | <code>"Never"</code> | <code>"IfNotPresent"</code></p>
+<p>Image pull policy. Defaults to <code>"Always"</code> if :latest tag is specified, or <code>"IfNotPresent"</code>
+otherwise. Cannot be updated.</p>
+<p>More info: https://kubernetes.io/docs/concepts/containers/images#updating-images</p>
+<hr />
+<h3 id="lifecycle">lifecycle<a class="headerlink" href="#lifecycle" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>lifecycle</strong>: <code>Lifecycle</code></p>
 <hr />
 <h3 id="livenessprobe">livenessProbe<a class="headerlink" href="#livenessprobe" title="Permanent link">#</a></h3>
-<p>• <strong>livenessProbe</strong>: <code>undefined</code> | <code>IContainerProbe</code></p>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>Partial.livenessProbe</p>
+<p>• <code>Optional</code> <strong>livenessProbe</strong>: <code>Probe</code></p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
+<p>Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique
+name. Cannot be updated.</p>
 <hr />
 <h3 id="ports">ports<a class="headerlink" href="#ports" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>ports</strong>: <code>ContainerPort</code>[]</p>
+<p>List of ports to expose from the container. Exposing a port here gives the system additional
+information about the network connections a container uses, but is primarily informational.
+Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is
+listening on the default <code>"0.0.0.0"</code> address inside a container will be accessible from the
+network. Cannot be updated.</p>
 <hr />
 <h3 id="readinessprobe">readinessProbe<a class="headerlink" href="#readinessprobe" title="Permanent link">#</a></h3>
-<p>• <strong>readinessProbe</strong>: <code>undefined</code> | <code>IContainerProbe</code></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>Partial.readinessProbe</p>
+<p>• <code>Optional</code> <strong>readinessProbe</strong>: <code>Probe</code></p>
 <hr />
 <h3 id="resources">resources<a class="headerlink" href="#resources" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>resources</strong>: <code>Object</code></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>limits?</code></td>
-<td align="left">{ <code>cpu</code>: <code>string</code> ; <code>memory</code>: <code>string</code>  }</td>
-</tr>
-<tr>
-<td align="left"><code>limits.cpu</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>limits.memory</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>requests?</code></td>
-<td align="left">{ <code>cpu</code>: <code>string</code> ; <code>memory</code>: <code>string</code>  }</td>
-</tr>
-<tr>
-<td align="left"><code>requests.cpu</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>requests.memory</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
+<p>• <code>Optional</code> <strong>resources</strong>: <code>ResourceRequirements</code></p>
+<hr />
+<h3 id="securitycontext">securityContext<a class="headerlink" href="#securitycontext" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>securityContext</strong>: <code>SecurityContext</code></p>
 <hr />
 <h3 id="startupprobe">startupProbe<a class="headerlink" href="#startupprobe" title="Permanent link">#</a></h3>
-<p>• <strong>startupProbe</strong>: <code>undefined</code> | <code>IContainerProbe</code></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p>Partial.startupProbe</p>
+<p>• <code>Optional</code> <strong>startupProbe</strong>: <code>Probe</code></p>
+<hr />
+<h3 id="stdin">stdin<a class="headerlink" href="#stdin" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>stdin</strong>: <code>boolean</code></p>
+<p>Whether this container should allocate a buffer for stdin in the container runtime. If this is
+not set, reads from stdin in the container will always result in EOF.</p>
+<p><strong><code>default</code></strong> false</p>
+<hr />
+<h3 id="stdinonce">stdinOnce<a class="headerlink" href="#stdinonce" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>stdinOnce</strong>: <code>boolean</code></p>
+<p>Whether the container runtime should close the stdin channel after it has been opened by a
+single attach. When stdin is true the stdin stream will remain open across multiple attach
+sessions.</p>
+<p>If stdinOnce is set to true, stdin is opened on container start, is empty until the first
+client attaches to stdin, and then remains open and accepts data until the client disconnects,
+at which time stdin is closed and remains closed until the container is restarted.</p>
+<p>If this flag is false, a container processes that reads from stdin will never receive an EOF.</p>
+<p><strong><code>default</code></strong> false</p>
 <hr />
 <h3 id="terminationmessagepath">terminationMessagePath<a class="headerlink" href="#terminationmessagepath" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>terminationMessagePath</strong>: <code>string</code></p>
+<p>Path at which the file to which the container's termination message will be written
+is mounted into the container's filesystem. Message written is intended to be brief final
+status, such as an assertion failure message.</p>
+<p>Will be truncated by the node if greater than 4096 bytes.
+The total message length across all containers will be limited to 12kb. Cannot be updated.</p>
+<p><strong><code>default</code></strong> "/dev/termination-log"</p>
 <hr />
 <h3 id="terminationmessagepolicy">terminationMessagePolicy<a class="headerlink" href="#terminationmessagepolicy" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>terminationMessagePolicy</strong>: <code>string</code></p>
+<p>• <code>Optional</code> <strong>terminationMessagePolicy</strong>: <code>"File"</code> | <code>"FallbackToLogsOnError"</code></p>
+<p>Indicate how the termination message should be populated.</p>
+<ul>
+<li>
+<p><code>File</code>: will use the contents of <a href="./#terminationmessagepath">terminationMessagePath</a> to populate the container
+status message on both success and failure.</p>
+</li>
+<li>
+<p><code>FallbackToLogsOnError</code>: will use the last chunk of container log output if the
+termination message file is empty and the container exited with an error.</p>
+</li>
+</ul>
+<p>The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Cannot be updated.</p>
+<p><strong><code>default</code></strong> "File"</p>
+<hr />
+<h3 id="tty">tty<a class="headerlink" href="#tty" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>tty</strong>: <code>boolean</code></p>
+<p>Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.</p>
+<p><strong><code>default</code></strong> false</p>
+<hr />
+<h3 id="volumedevices">volumeDevices<a class="headerlink" href="#volumedevices" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>volumeDevices</strong>: <code>VolumeDevice</code>[]</p>
+<p>volumeDevices is the list of block devices to be used by the container.</p>
 <hr />
 <h3 id="volumemounts">volumeMounts<a class="headerlink" href="#volumemounts" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>volumeMounts</strong>: <code>VolumeMount</code>[]</p>
+<p>Pod volumes to mount into the container's filesystem. Cannot be updated.</p>
+<hr />
+<h3 id="workingdir">workingDir<a class="headerlink" href="#workingdir" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>workingDir</strong>: <code>string</code></p>
+<p>Container's working directory. If not specified, the container runtime's default will be used,
+which might be configured in the container image. Cannot be updated.</p>
                 
               
               
