@@ -4,16 +4,15 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 import type { CatalogCategorySpec } from "../../../../common/catalog";
-import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
-import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
+import { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import { CatalogCategory } from "../../../api/catalog-entity";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { AdditionalCategoryColumnRegistration, CategoryColumnRegistration } from "../custom-category-columns";
 import type { CategoryColumns, GetCategoryColumnsParams } from "../columns/get.injectable";
 import getCategoryColumnsInjectable from "../columns/get.injectable";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
+import extensionInjectable from "../../../../extensions/extension-loader/extension/extension.injectable";
 
 class TestCategory extends CatalogCategory {
   apiVersion = "catalog.k8slens.dev/v1alpha1";
@@ -41,21 +40,16 @@ class TestCategory extends CatalogCategory {
 
 describe("Custom Category Columns", () => {
   let di: DiContainer;
+  let getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
 
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(hotbarStoreInjectable, () => ({}));
+    getCategoryColumns = di.inject(getCategoryColumnsInjectable);
   });
 
   describe("without extensions", () => {
-    let getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
-
-    beforeEach(() => {
-      di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
-      getCategoryColumns = di.inject(getCategoryColumnsInjectable);
-    });
-
     it("should contain a kind column if activeCategory is falsy", () => {
       expect(getCategoryColumns({ activeCategory: null }).renderTableHeader.find(elem => elem?.title === "Kind")).toBeTruthy();
     });
@@ -88,13 +82,9 @@ describe("Custom Category Columns", () => {
   });
 
   describe("with extensions", () => {
-    let getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
-
     beforeEach(() => {
-      di.override(rendererExtensionsInjectable, () => computed(() => [
-        {
-          name: "test-extension",
-          additionalCategoryColumns: [
+      const ext = di.inject(extensionInjectable, new (class extends LensRendererExtension {
+        additionalCategoryColumns = [
             {
               group: "foo.bar.bat",
               id: "high",
@@ -113,10 +103,24 @@ describe("Custom Category Columns", () => {
                 title: "High2",
               },
             } as AdditionalCategoryColumnRegistration,
-          ],
-        } as LensRendererExtension,
-      ]));
-      getCategoryColumns = di.inject(getCategoryColumnsInjectable);
+        ];
+      })({
+        absolutePath: "/some-absolute-path",
+        id: "some-id",
+        isBundled: false,
+        isCompatible: true,
+        isEnabled: true,
+        manifest: {
+          engines: {
+            lens: "",
+          },
+          name: "some-extension-name",
+          version: "1.0.0",
+        },
+        manifestPath: "/some-manifest-path",
+      }));
+
+      ext.register();
     });
 
     it("should include columns from extensions that match", () => {
