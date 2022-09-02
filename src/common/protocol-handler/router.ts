@@ -113,7 +113,17 @@ export abstract class LensProtocolRouter {
     }
 
     // if no exact match pick the one that is the most specific
-    return matches.sort(([a], [b]) => compareMatches(a, b))[0] ?? null;
+    return matches.sort(([a], [b]) => {
+      if (a.path === "/") {
+        return 1;
+      }
+
+      if (b.path === "/") {
+        return -1;
+      }
+
+      return countBy(b.path)["/"] - countBy(a.path)["/"];
+    })[0] ?? null;
   }
 
   /**
@@ -264,22 +274,4 @@ export abstract class LensProtocolRouter {
   public removeInternalHandler(urlSchema: string): void {
     this.internalRoutes.delete(urlSchema);
   }
-}
-
-/**
- * a comparison function for `array.sort(...)`. Sort order should be most path
- * parts to least path parts.
- * @param a the left side to compare
- * @param b the right side to compare
- */
-function compareMatches<T>(a: match<T>, b: match<T>): number {
-  if (a.path === "/") {
-    return 1;
-  }
-
-  if (b.path === "/") {
-    return -1;
-  }
-
-  return countBy(b.path)["/"] - countBy(a.path)["/"];
 }
