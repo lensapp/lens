@@ -27,18 +27,17 @@ export const LogList = observer(({ model }: LogListProps) => {
   });
 
   const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
-    console.log("scrolling", toBottomVisible)
     if (!parentRef.current) return;
 
     setToBottomVisibility();
     setLastLineVisibility();
-    checkLoadIntent();
+    onScrollToTop();
   }
 
   // TODO: Move to its own hook
   const setToBottomVisibility = () => {
     const { scrollTop, scrollHeight } = parentRef.current as HTMLDivElement;
-    console.log("scrolling", scrollHeight, scrollTop, rowVirtualizer.getTotalSize())
+    // console.log("scrolling", scrollHeight, scrollTop, rowVirtualizer.getTotalSize())
     if (scrollHeight - scrollTop > 4000) {
       setToBottomVisible(true);
     } else {
@@ -59,11 +58,23 @@ export const LogList = observer(({ model }: LogListProps) => {
   /**
    * Check if user scrolled to top and new logs should be loaded
    */
-   const checkLoadIntent = () => {
+   const onScrollToTop = async () => {
     const { scrollTop } = parentRef.current as HTMLDivElement;
 
     if (scrollTop === 0) {
-      model.loadLogs();
+      const oldLogsAmount = visibleLogs.get().length;
+      await model.loadLogs();
+      const newLogsAmount = visibleLogs.get().length;
+
+      
+      const scrollToIndex = newLogsAmount - oldLogsAmount;
+      console.log("new logs loaded", oldLogsAmount, newLogsAmount, scrollToIndex);
+
+      setTimeout(() => {
+        rowVirtualizer.scrollToIndex(scrollToIndex, { align: 'start', smoothScroll: false });
+      }, 1000)
+
+      // rowVirtualizer.scrollToIndex(scrollToIndex, { align: 'start', smoothScroll: false });
     }
   };
 
