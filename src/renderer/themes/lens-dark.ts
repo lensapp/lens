@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Theme } from "./store";
+import type { LensTheme } from "./store";
 
-const lensDarkTheme: Theme = {
+const lensDarkTheme: LensTheme = {
   "name": "Dark",
   "type": "dark",
   "description": "Original Lens dark theme",
@@ -50,7 +50,6 @@ const lensDarkTheme: Theme = {
     "tableHeaderColor": "#ffffff",
     "tableSelectedRowColor": "#ffffff",
     "helmLogoBackground": "#ffffff",
-    "helmImgBackground": "#414448",
     "helmStableRepo": "#3d90ce",
     "helmIncubatorRepo": "#ff7043",
     "helmDescriptionHr": "#41474a",

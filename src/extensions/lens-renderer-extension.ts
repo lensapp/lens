@@ -27,6 +27,7 @@ import { getExtensionRoutePath } from "../renderer/routes/for-extension";
 import type { LensRendererExtensionDependencies } from "./lens-extension-set-dependencies";
 import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
 import type { AppPreferenceTabRegistration } from "../renderer/components/+preferences/app-preference-tab/app-preference-tab-registration";
+import type { KubeObjectDetailRegistration } from "../renderer/components/kube-object-details/kube-object-detail-registration";
 
 export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
   globalPages: registries.PageRegistration[] = [];
@@ -37,7 +38,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
   appPreferenceTabs: AppPreferenceTabRegistration[] = [];
   entitySettings: registries.EntitySettingRegistration[] = [];
   statusBarItems: StatusBarRegistration[] = [];
-  kubeObjectDetailItems: registries.KubeObjectDetailRegistration[] = [];
+  kubeObjectDetailItems: KubeObjectDetailRegistration[] = [];
   kubeObjectMenuItems: KubeObjectMenuRegistration[] = [];
   kubeWorkloadsOverviewItems: WorkloadsOverviewDetailRegistration[] = [];
   commands: CommandRegistration[] = [];
@@ -89,6 +90,8 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
    * called when the extension is created within a cluster frame.
    *
    * The default implementation is to return `true`
+   *
+   * @deprecated Switch to using "enabled" or "visible" properties in each registration together with `activeCluster`
    */
   async isEnabledForCluster(cluster: KubernetesCluster): Promise<Boolean> {
     return (void cluster) || true;

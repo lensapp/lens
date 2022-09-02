@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { runInAction } from "mobx";
 import type { LensExtension } from "../../lens-extension";
 import { extensionRegistratorInjectionToken } from "../extension-registrator-injection-token";
 
@@ -27,17 +28,23 @@ const extensionInjectable = getInjectable({
               getInjectablesOfExtension(instance),
             );
 
-            childDi.register(...injectables);
+            runInAction(() => {
+              childDi.register(...injectables);
+            });
           },
 
           deregister: () => {
-            parentDi.deregister(extensionInjectable);
+            runInAction(() => {
+              parentDi.deregister(extensionInjectable);
+            });
           },
         };
       },
     });
 
-    parentDi.register(extensionInjectable);
+    runInAction(() => {
+      parentDi.register(extensionInjectable);
+    });
 
     return parentDi.inject(extensionInjectable);
   },

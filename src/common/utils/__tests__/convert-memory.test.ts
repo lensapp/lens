@@ -10,6 +10,50 @@ describe("unitsToBytes", () => {
     expect(unitsToBytes("1234")).toBe(1234);
   });
 
+  it("should parse with B suffix", () => {
+    expect(unitsToBytes("1234B")).toBe(1234);
+  });
+
+  it("should parse with Ki suffix", () => {
+    expect(unitsToBytes("1234Ki")).toBe(1234 * (1024));
+  });
+
+  it("should parse with Ki suffix as the same as KiB", () => {
+    expect(unitsToBytes("1234Ki")).toBe(unitsToBytes("1234KiB"));
+  });
+
+  it("should parse with Mi suffix", () => {
+    expect(unitsToBytes("1234Mi")).toBe(1234 * (1024 ** 2));
+  });
+
+  it("should parse with Mi suffix as the same as MiB", () => {
+    expect(unitsToBytes("1234Mi")).toBe(unitsToBytes("1234MiB"));
+  });
+
+  it("should parse with Gi suffix", () => {
+    expect(unitsToBytes("1234Gi")).toBe(1234 * (1024 ** 3));
+  });
+
+  it("should parse with Gi suffix as the same as GiB", () => {
+    expect(unitsToBytes("1234Gi")).toBe(unitsToBytes("1234GiB"));
+  });
+
+  it("should parse with Ti suffix", () => {
+    expect(unitsToBytes("1234Ti")).toBe(1234 * (1024 ** 4));
+  });
+
+  it("should parse with Ti suffix as the same as TiB", () => {
+    expect(unitsToBytes("1234Ti")).toBe(unitsToBytes("1234TiB"));
+  });
+
+  it("should parse with Pi suffix", () => {
+    expect(unitsToBytes("1234Pi")).toBe(1234 * (1024 ** 5));
+  });
+
+  it("should parse with Pi suffix as the same as PiB", () => {
+    expect(unitsToBytes("1234Pi")).toBe(unitsToBytes("1234PiB"));
+  });
+
   it("given unrelated data, return NaN", () => {
     expect(unitsToBytes("I am not a number")).toBeNaN();
   });
@@ -63,14 +107,6 @@ describe("bytesToUnits", () => {
     expect(bytesToUnits(2048**5)).toBe("32.0PiB");
     expect(bytesToUnits(1900 * 1024 ** 4)).toBe("1.9PiB");
     expect(bytesToUnits(50*(1024 ** 5) + 1)).toBe("50.0PiB");
-  });
-
-  it("given a number within the magnitude of 1024^6.., format with EiB", () => {
-    expect(bytesToUnits(1024**6)).toBe("1.0EiB");
-    expect(bytesToUnits(2048**6)).toBe("64.0EiB");
-    expect(bytesToUnits(1900 * 1024 ** 5)).toBe("1.9EiB");
-    expect(bytesToUnits(50*(1024 ** 6) + 1)).toBe("50.0EiB");
-    expect(bytesToUnits(1024**8)).toBe("1048576.0EiB");
   });
 });
 

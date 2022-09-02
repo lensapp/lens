@@ -1,0 +1,24 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.PriorityClasses {
+  .TableCell {
+    &.name {
+      flex: 2;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.keys {
+      flex: 2.5;
+    }
+
+    &.age {
+      flex: .5;
+    }
+  }
+}

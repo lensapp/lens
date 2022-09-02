@@ -39,6 +39,8 @@ export interface DrawerProps {
   onClose?: () => void;
   toolbar?: React.ReactNode;
   children?: SingleOrMany<React.ReactNode>;
+  "data-testid"?: string;
+  testIdForClose?: string;
 }
 
 const defaultProps = {
@@ -107,8 +109,9 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
     // detail: A count of consecutive clicks that happened in a short amount of time
     if (ev.detail === 3) {
       const selection = window.getSelection();
+      const isSelectingChildrenOfInputLabel = selection?.anchorNode instanceof HTMLLabelElement;
 
-      if (selection?.anchorNode?.parentNode) {
+      if (selection?.anchorNode?.parentNode && !isSelectingChildrenOfInputLabel) {
         selection.selectAllChildren(selection.anchorNode.parentNode);
       }
     }
@@ -178,7 +181,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
   };
 
   render() {
-    const { className, contentClass, animation, open, position, title, children, toolbar, size, usePortal } = this.props;
+    const { className, contentClass, animation, open, position, title, children, toolbar, size, usePortal, "data-testid": testId, testIdForClose } = this.props;
     const { isCopied, width } = this.state;
     const copyTooltip = isCopied ? "Copied!" : "Copy";
     const copyIcon = isCopied ? "done" : "content_copy";
@@ -192,6 +195,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
           className={cssNames("Drawer", className, position)}
           style={{ "--size": drawerSize } as React.CSSProperties}
           ref={e => this.contentElem = e}
+          data-testid={testId}
         >
           <div className="drawer-wrapper flex column">
             <div className="drawer-title flex align-center">
@@ -210,6 +214,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
                 material="close"
                 tooltip="Close"
                 onClick={this.close}
+                data-testid={testIdForClose}
               />
             </div>
             <div

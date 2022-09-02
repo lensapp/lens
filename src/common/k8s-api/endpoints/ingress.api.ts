@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectScope, TypedLocalObjectReference } from "../kube-object";
+import type { NamespaceScopedMetadata, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { hasTypedProperty, isString, iter } from "../../utils";
 import type { MetricData } from "./metrics.api";
@@ -136,11 +136,15 @@ export interface IngressSpec {
 
 export interface IngressStatus {
   loadBalancer: {
-    ingress: ILoadBalancerIngress[];
+    ingress?: ILoadBalancerIngress[];
   };
 }
 
-export class Ingress extends KubeObject<IngressStatus, IngressSpec, KubeObjectScope.Namespace> {
+export class Ingress extends KubeObject<
+  NamespaceScopedMetadata,
+  IngressStatus,
+  IngressSpec
+> {
   static readonly kind = "Ingress";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/networking.k8s.io/v1/ingresses";
@@ -199,7 +203,7 @@ export class Ingress extends KubeObject<IngressStatus, IngressSpec, KubeObjectSc
   }
 
   getLoadBalancers() {
-    return this.status?.loadBalancer.ingress.map(address => (
+    return this.status?.loadBalancer?.ingress?.map(address => (
       address.hostname || address.ip
     )) ?? [];
   }

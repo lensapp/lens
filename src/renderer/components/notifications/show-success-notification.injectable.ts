@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { NotificationMessage, Notification } from "./notifications.store";
+import type { ShowNotification } from "./notifications";
 import { NotificationStatus } from "./notifications.store";
 import notificationsStoreInjectable from "./notifications-store.injectable";
 
 const showSuccessNotificationInjectable = getInjectable({
   id: "show-success-notification",
 
-  instantiate: (di) => {
+  instantiate: (di): ShowNotification => {
     const notificationsStore = di.inject(notificationsStoreInjectable);
 
-    return (message: NotificationMessage, customOpts: Partial<Omit<Notification, "message">> = {}) =>
+    return (message, customOpts = {}) =>
       notificationsStore.add({
         status: NotificationStatus.OK,
         timeout: 5000,

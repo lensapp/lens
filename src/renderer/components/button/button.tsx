@@ -49,7 +49,11 @@ export const Button = withTooltip((props: ButtonProps) => {
 
   // render as button
   return (
-    <button type="button" {...btnProps}>
+    <button
+      type="button"
+      {...btnProps}
+      data-waiting={typeof waiting === "boolean" ? String(waiting) : undefined}
+    >
       {label}
       {children}
     </button>

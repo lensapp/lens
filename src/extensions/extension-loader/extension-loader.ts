@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ipcRenderer } from "electron";
+import { ipcMain, ipcRenderer } from "electron";
 import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
@@ -12,7 +12,6 @@ import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../..
 import type { Disposer } from "../../common/utils";
 import { isDefined, toJS } from "../../common/utils";
 import logger from "../../main/logger";
-import type { CatalogEntity, KubernetesCluster } from "../common-api/catalog";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
@@ -128,10 +127,10 @@ export class ExtensionLoader {
 
   @action
   async init() {
-    if (ipcRenderer) {
-      await this.initRenderer();
-    } else {
+    if (ipcMain) {
       await this.initMain();
+    } else {
+      await this.initRenderer();
     }
 
     await Promise.all([this.whenLoaded]);
@@ -274,32 +273,10 @@ export class ExtensionLoader {
     });
   };
 
-  loadOnClusterRenderer = (getCluster: () => CatalogEntity) => {
+  loadOnClusterRenderer = () => {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
 
-    this.autoInitExtensions(async (ext) => {
-      const entity = getCluster() as KubernetesCluster;
-      const extension = ext as LensRendererExtension;
-
-      // getCluster must be a callback, as the entity might be available only after an extension has been loaded
-      if ((await extension.isEnabledForCluster(entity)) === false) {
-        return [];
-      }
-
-      const removeItems = [
-        registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
-      ];
-
-      this.onRemoveExtensionId.addListener((removedExtensionId) => {
-        if (removedExtensionId === extension.id) {
-          removeItems.forEach(remove => {
-            remove();
-          });
-        }
-      });
-
-      return removeItems;
-    });
+    this.autoInitExtensions(async () => []);
   };
 
   protected async loadExtensions(installedExtensions: Map<string, InstalledExtension>, register: (ext: LensExtension) => Promise<Disposer[]>) {
@@ -398,11 +375,9 @@ export class ExtensionLoader {
     try {
       return __non_webpack_require__(extAbsolutePath).default;
     } catch (error) {
-      if (window && error instanceof window.Error) {
-        console.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error.stack || error}`, extension);
-      } else {
-        logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error}`, { extension });
-      }
+      const message = (error instanceof Error ? error.stack : undefined) || error;
+
+      logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${message}`, { extension });
     }
 
     return null;

@@ -3,16 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import { observable, action, untracked, computed, makeObservable } from "mobx";
+import type { IComputedValue } from "mobx";
+import { observable, action, computed, comparer } from "mobx";
 import type { NamespaceStore } from "../store";
-import { isMac } from "../../../../common/vars";
-import type { ActionMeta } from "react-select";
+import type { ActionMeta, MultiValue } from "react-select";
 import { Icon } from "../../icon";
 import type { SelectOption } from "../../select";
-import { autoBind } from "../../../utils";
+import { observableCrate } from "../../../utils";
+import type { IsMultiSelectionKey } from "./is-selection-key.injectable";
 
 interface Dependencies {
-  readonly namespaceStore: NamespaceStore;
+  namespaceStore: NamespaceStore;
+  isMultiSelectionKey: IsMultiSelectionKey;
 }
 
 export const selectAllNamespaces = Symbol("all-namespaces-selected");
@@ -20,140 +22,160 @@ export const selectAllNamespaces = Symbol("all-namespaces-selected");
 export type SelectAllNamespaces = typeof selectAllNamespaces;
 export type NamespaceSelectFilterOption = SelectOption<string | SelectAllNamespaces>;
 
-export class NamespaceSelectFilterModel {
-  constructor(private readonly dependencies: Dependencies) {
-    makeObservable(this);
-    autoBind(this);
-  }
-
-  readonly options = computed((): readonly NamespaceSelectFilterOption[] => {
-    const baseOptions = this.dependencies.namespaceStore.items.map(ns => ns.getName());
-
-    baseOptions.sort((
-      (left, right) =>
-        +this.selectedNames.has(right)
-        - +this.selectedNames.has(left)
-    ));
-
-    return [
-      {
-        value: selectAllNamespaces,
-        label: "All Namespaces",
-        isSelected: false,
-      },
-      ...baseOptions.map(namespace => ({
-        value: namespace,
-        label: namespace,
-        isSelected: this.selectedNames.has(namespace),
-      })),
-    ];
-  });
-
-  formatOptionLabel({ value, isSelected }: NamespaceSelectFilterOption) {
-    if (value === selectAllNamespaces) {
-      return "All Namespaces";
-    }
-
-    return (
-      <div className="flex gaps align-center">
-        <Icon small material="layers" />
-        <span>{value}</span>
-        {isSelected && (
-          <Icon
-            small
-            material="check"
-            className="box right"
-          />
-        )}
-      </div>
-    );
-  }
-
-  readonly menuIsOpen = observable.box(false);
-
-  @action
-  closeMenu() {
-    this.menuIsOpen.set(false);
-  }
-
-  @action
-  openMenu(){
-    this.menuIsOpen.set(true);
-  }
-
-  get selectedNames() {
-    return untracked(() => this.dependencies.namespaceStore.selectedNames);
-  }
-
-  isSelected(namespace: string | string[]) {
-    return this.dependencies.namespaceStore.hasContext(namespace);
-  }
-
-  selectSingle(namespace: string) {
-    this.dependencies.namespaceStore.selectSingle(namespace);
-  }
-
-  selectAll() {
-    this.dependencies.namespaceStore.selectAll();
-  }
-
-  onChange(namespace: unknown, action: ActionMeta<NamespaceSelectFilterOption>) {
-    switch (action.action) {
-      case "clear":
-        this.dependencies.namespaceStore.selectAll();
-        break;
-      case "deselect-option":
-        if (typeof action.option === "string") {
-          this.dependencies.namespaceStore.toggleSingle(action.option);
-        }
-        break;
-      case "select-option":
-        if (action.option?.value === selectAllNamespaces) {
-          this.dependencies.namespaceStore.selectAll();
-        } else if (action.option) {
-          if (this.isMultiSelection) {
-            this.dependencies.namespaceStore.toggleSingle(action.option.value);
-          } else {
-            this.dependencies.namespaceStore.selectSingle(action.option.value);
-          }
-        }
-        break;
-    }
-  }
-
-  onClick() {
-    if (!this.menuIsOpen.get()) {
-      this.openMenu();
-    } else if (!this.isMultiSelection) {
-      this.closeMenu();
-    }
-  }
-
-  private isMultiSelection = false;
-
-  onKeyDown(event: React.KeyboardEvent) {
-    if (isSelectionKey(event)) {
-      this.isMultiSelection = true;
-    }
-  }
-
-  onKeyUp(event: React.KeyboardEvent) {
-    if (isSelectionKey(event)) {
-      this.isMultiSelection = false;
-    }
-  }
-
-  @action
-  reset() {
-    this.isMultiSelection = false;
-    this.closeMenu();
-  }
+export interface NamespaceSelectFilterModel {
+  readonly options: IComputedValue<readonly NamespaceSelectFilterOption[]>;
+  readonly menu: {
+    open: () => void;
+    close: () => void;
+    readonly isOpen: IComputedValue<boolean>;
+  };
+  onChange: (newValue: MultiValue<NamespaceSelectFilterOption>, actionMeta: ActionMeta<NamespaceSelectFilterOption>) => void;
+  onClick: () => void;
+  onKeyDown: React.KeyboardEventHandler;
+  onKeyUp: React.KeyboardEventHandler;
+  reset: () => void;
+  isOptionSelected: (option: NamespaceSelectFilterOption) => boolean;
+  formatOptionLabel: (option: NamespaceSelectFilterOption) => JSX.Element;
 }
 
-const isSelectionKey = (event: React.KeyboardEvent): boolean  => {
-  if (isMac) {
-    return event.key === "Meta";
-  }
+enum SelectMenuState {
+  Close = "close",
+  Open = "open",
+}
 
-  return event.key === "Control"; // windows or linux
-};
+export function namespaceSelectFilterModelFor(dependencies: Dependencies): NamespaceSelectFilterModel {
+  const { isMultiSelectionKey, namespaceStore } = dependencies;
+
+  let didToggle = false;
+  let isMultiSelection = false;
+  const menuState = observableCrate(SelectMenuState.Close, [{
+    from: SelectMenuState.Close,
+    to: SelectMenuState.Open,
+    onTransition: () => {
+      optionsSortingSelected.replace(selectedNames.get());
+      didToggle = false;
+    },
+  }]);
+  const selectedNames = computed(() => new Set(namespaceStore.contextNamespaces), {
+    equals: comparer.structural,
+  });
+  const optionsSortingSelected = observable.set(selectedNames.get());
+  const sortNamespacesByIfTheyHaveBeenSelected = (left: string, right: string) => {
+    const isLeftSelected = optionsSortingSelected.has(left);
+    const isRightSelected = optionsSortingSelected.has(right);
+
+    if (isLeftSelected === isRightSelected) {
+      return 0;
+    }
+
+    return isRightSelected
+      ? 1
+      : -1;
+  };
+  const options = computed((): readonly NamespaceSelectFilterOption[] => [
+    {
+      value: selectAllNamespaces,
+      label: "All Namespaces",
+      id: "all-namespaces",
+    },
+    ...namespaceStore
+      .items
+      .map(ns => ns.getName())
+      .sort(sortNamespacesByIfTheyHaveBeenSelected)
+      .map(namespace => ({
+        value: namespace,
+        label: namespace,
+        id: namespace,
+      })),
+  ]);
+  const menuIsOpen = computed(() => menuState.get() === SelectMenuState.Open);
+  const isOptionSelected: NamespaceSelectFilterModel["isOptionSelected"] = (option) => {
+    if (option.value === selectAllNamespaces) {
+      return false;
+    }
+
+    return selectedNames.get().has(option.value);
+  };
+
+  const model: NamespaceSelectFilterModel = {
+    options,
+    menu: {
+      close: action(() => {
+        menuState.set(SelectMenuState.Close);
+      }),
+      open: action(() => {
+        menuState.set(SelectMenuState.Open);
+      }),
+      isOpen: menuIsOpen,
+    },
+    onChange: (_, action) => {
+      switch (action.action) {
+        case "clear":
+          namespaceStore.selectAll();
+          break;
+        case "deselect-option":
+        case "select-option":
+          if (action.option) {
+            didToggle = true;
+
+            if (action.option.value === selectAllNamespaces) {
+              namespaceStore.selectAll();
+            } else if (isMultiSelection) {
+              namespaceStore.toggleSingle(action.option.value);
+            } else {
+              namespaceStore.selectSingle(action.option.value);
+            }
+          }
+          break;
+      }
+    },
+    onClick: () => {
+      if (!menuIsOpen.get()) {
+        model.menu.open();
+      } else if (!isMultiSelection) {
+        model.menu.close();
+      }
+    },
+    onKeyDown: (event) => {
+      if (isMultiSelectionKey(event)) {
+        isMultiSelection = true;
+      }
+    },
+    onKeyUp: (event) => {
+      if (isMultiSelectionKey(event)) {
+        isMultiSelection = false;
+
+        if (didToggle) {
+          model.menu.close();
+        }
+      }
+    },
+    reset: action(() => {
+      isMultiSelection = false;
+      model.menu.close();
+    }),
+    isOptionSelected,
+    formatOptionLabel: (option) => {
+      if (option.value === selectAllNamespaces) {
+        return <>All Namespaces</>;
+      }
+
+      return (
+        <div className="flex gaps align-center">
+          <Icon small material="layers" />
+          <span>{option.value}</span>
+          {isOptionSelected(option) && (
+            <Icon
+              small
+              material="check"
+              className="box right"
+              data-testid={`namespace-select-filter-option-${option.value}-selected`}
+            />
+          )}
+        </div>
+      );
+    },
+  };
+
+  return model;
+}

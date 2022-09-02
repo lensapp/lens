@@ -31,10 +31,11 @@
       figure {
         width: $iconSize;
         height: $iconSize;
-        border-radius: 50%;
-        background: var(--helmImgBackground) url(helm-placeholder.svg) center center no-repeat;
-        background-size: 72%; // bg size looks same as image on top of it
         margin: auto;
+
+        svg {
+          padding: 1px;
+        }
 
         img {
           object-fit: contain;
@@ -42,8 +43,6 @@
           height: inherit;
           visibility: hidden;
           border-radius: inherit;
-          background-color: var(--helmImgBackground);
-          padding: $padding * 0.5;
 
           &.visible {
             visibility: visible;

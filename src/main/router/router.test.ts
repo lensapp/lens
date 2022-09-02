@@ -20,6 +20,7 @@ import type { SetRequired } from "type-fest";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
+import { runInAction } from "mobx";
 
 describe("router", () => {
   let router: Router;
@@ -53,7 +54,9 @@ describe("router", () => {
       injectionToken: routeInjectionToken,
     });
 
-    di.register(injectable);
+    runInAction(() => {
+      di.register(injectable);
+    });
 
     router = di.inject(routerInjectable);
   });

@@ -7,6 +7,7 @@
 import type { IconProps } from "../../renderer/components/icon";
 import type React from "react";
 import type { PageTarget } from "./page-registry";
+import type { IComputedValue } from "mobx";
 
 export interface ClusterPageMenuRegistration {
   id?: string;
@@ -14,6 +15,7 @@ export interface ClusterPageMenuRegistration {
   target?: PageTarget;
   title: React.ReactNode;
   components: ClusterPageMenuComponents;
+  visible?: IComputedValue<boolean>;
 }
 
 export interface ClusterPageMenuComponents {

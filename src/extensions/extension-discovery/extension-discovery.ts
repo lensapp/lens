@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fse from "fs-extra";
@@ -12,7 +11,6 @@ import os from "os";
 import path from "path";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
 import { isErrnoException, toJS } from "../../common/utils";
-import logger from "../../main/logger";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { ExtensionLoader } from "../extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
@@ -21,6 +19,10 @@ import type { ExtensionInstallationStateStore } from "../extension-installation-
 import type { PackageJson } from "type-fest";
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
 import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
+import type { ReadJson } from "../../common/fs/read-json-file.injectable";
+import type { Logger } from "../../common/logger";
+import type { PathExists } from "../../common/fs/path-exists.injectable";
+import type { Watch } from "../../common/fs/watch/watch.injectable";
 
 interface Dependencies {
   extensionLoader: ExtensionLoader;
@@ -35,6 +37,10 @@ interface Dependencies {
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
   extensionPackageRootDirectory: string;
   staticFilesDirectory: string;
+  readJsonFile: ReadJson;
+  pathExists: PathExists;
+  watch: Watch;
+  logger: Logger;
 }
 
 export interface InstalledExtension {
@@ -155,13 +161,12 @@ export class ExtensionDiscovery {
    * Dependencies are installed automatically after an extension folder is copied.
    */
   async watchExtensions(): Promise<void> {
-    logger.info(`${logModule} watching extension add/remove in ${this.localFolderPath}`);
+    this.dependencies.logger.info(`${logModule} watching extension add/remove in ${this.localFolderPath}`);
 
     // Wait until .load() has been called and has been resolved
     await this.whenLoaded;
 
-    // chokidar works better than fs.watch
-    watch(this.localFolderPath, {
+    this.dependencies.watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.
       depth: 1,
       ignoreInitial: true,
@@ -206,11 +211,11 @@ export class ExtensionDiscovery {
           await this.dependencies.installExtension(extension.absolutePath);
 
           this.extensions.set(extension.id, extension);
-          logger.info(`${logModule} Added extension ${extension.manifest.name}`);
+          this.dependencies.logger.info(`${logModule} Added extension ${extension.manifest.name}`);
           this.events.emit("add", extension);
         }
       } catch (error) {
-        logger.error(`${logModule}: failed to add extension: ${error}`, { error });
+        this.dependencies.logger.error(`${logModule}: failed to add extension: ${error}`, { error });
       } finally {
         this.dependencies.extensionInstallationStateStore.clearInstallingFromMain(manifestPath);
       }
@@ -247,13 +252,13 @@ export class ExtensionDiscovery {
       const lensExtensionId = extension.manifestPath;
 
       this.extensions.delete(extension.id);
-      logger.info(`${logModule} removed extension ${extensionName}`);
+      this.dependencies.logger.info(`${logModule} removed extension ${extensionName}`);
       this.events.emit("remove", lensExtensionId);
 
       return;
     }
 
-    logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
+    this.dependencies.logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
   };
 
   /**
@@ -275,12 +280,12 @@ export class ExtensionDiscovery {
     const extension = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtension(extensionId);
 
     if (!extension) {
-      return void logger.warn(`${logModule} could not uninstall extension, not found`, { id: extensionId });
+      return void this.dependencies.logger.warn(`${logModule} could not uninstall extension, not found`, { id: extensionId });
     }
 
     const { manifest, absolutePath } = extension;
 
-    logger.info(`${logModule} Uninstalling ${manifest.name}`);
+    this.dependencies.logger.info(`${logModule} Uninstalling ${manifest.name}`);
 
     await this.removeSymlinkByPackageName(manifest.name);
 
@@ -296,7 +301,7 @@ export class ExtensionDiscovery {
 
     this.loadStarted = true;
 
-    logger.info(
+    this.dependencies.logger.info(
       `${logModule} loading extensions from ${this.dependencies.extensionPackageRootDirectory}`,
     );
 
@@ -358,12 +363,12 @@ export class ExtensionDiscovery {
    */
   protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
-      const manifest = await fse.readJson(manifestPath) as LensExtensionManifest;
+      const manifest = await this.dependencies.readJsonFile(manifestPath) as unknown as LensExtensionManifest;
       const id = this.getInstalledManifestPath(manifest.name);
       const isEnabled = this.dependencies.extensionsStore.isEnabled({ id, isBundled });
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
-      const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
+      const absolutePath = (isProduction && await this.dependencies.pathExists(npmPackage)) ? npmPackage : extensionDir;
       const isCompatible = (isBundled && this.dependencies.isCompatibleBundledExtension(manifest)) || this.dependencies.isCompatibleExtension(manifest);
 
       return {
@@ -378,9 +383,9 @@ export class ExtensionDiscovery {
     } catch (error) {
       if (isErrnoException(error) && error.code === "ENOTDIR") {
         // ignore this error, probably from .DS_Store file
-        logger.debug(`${logModule}: failed to load extension manifest through a not-dir-like at ${manifestPath}`);
+        this.dependencies.logger.debug(`${logModule}: failed to load extension manifest through a not-dir-like at ${manifestPath}`);
       } else {
-        logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`);
+        this.dependencies.logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`);
       }
 
       return null;
@@ -395,7 +400,7 @@ export class ExtensionDiscovery {
     const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
 
     for (const extension of userExtensions) {
-      if ((await fse.pathExists(extension.manifestPath)) === false) {
+      if (!(await this.dependencies.pathExists(extension.manifestPath))) {
         try {
           await this.dependencies.installExtension(extension.absolutePath);
         } catch (error) {
@@ -404,7 +409,7 @@ export class ExtensionDiscovery {
             : String(error || "unknown error");
           const { name, version } = extension.manifest;
 
-          logger.error(`${logModule}: failed to install user extension ${name}@${version}: ${message}`);
+          this.dependencies.logger.error(`${logModule}: failed to install user extension ${name}@${version}: ${message}`);
         }
       }
     }
@@ -438,7 +443,7 @@ export class ExtensionDiscovery {
         extensions.push(extension);
       }
     }
-    logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { folderPath, extensions });
+    this.dependencies.logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { folderPath, extensions });
 
     return extensions;
   }
@@ -473,7 +478,7 @@ export class ExtensionDiscovery {
       }
     }
 
-    logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { folderPath, extensions });
+    this.dependencies.logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { folderPath, extensions });
 
     return extensions;
   }

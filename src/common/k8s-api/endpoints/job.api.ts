@@ -6,8 +6,9 @@
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { PodContainer, PodMetricData, PodSpec } from "./pod.api";
-import type { KubeObjectScope, KubeObjectStatus, LabelSelector } from "../kube-object";
+import type { PodMetricData, PodSpec } from "./pod.api";
+import type { Container } from "./types/container";
+import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 
 export interface JobSpec {
@@ -23,7 +24,7 @@ export interface JobSpec {
     };
     spec: PodSpec;
   };
-  containers?: PodContainer[];
+  containers?: Container[];
   restartPolicy?: string;
   terminationGracePeriodSeconds?: number;
   dnsPolicy?: string;
@@ -38,7 +39,11 @@ export interface JobStatus extends KubeObjectStatus {
   succeeded: number;
 }
 
-export class Job extends KubeObject<JobStatus, JobSpec, KubeObjectScope.Namespace> {
+export class Job extends KubeObject<
+  NamespaceScopedMetadata,
+  JobStatus,
+  JobSpec
+> {
   static readonly kind = "Job";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/batch/v1/jobs";

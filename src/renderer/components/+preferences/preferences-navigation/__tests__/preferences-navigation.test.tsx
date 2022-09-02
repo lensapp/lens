@@ -13,10 +13,10 @@ import type { PreferenceNavigationItem } from "../preference-navigation-items.in
 import preferenceNavigationItemsInjectable from "../preference-navigation-items.injectable";
 
 describe.only("preferences - navigation block with links", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given in preferences, when rendered", () => {
@@ -24,17 +24,15 @@ describe.only("preferences - navigation block with links", () => {
 
     describe("when general navigation items passed", () => {
       beforeEach(async () => {
-        applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-          rendererDi.override(preferenceNavigationItemsInjectable, () =>
+        builder.beforeWindowStart((windowDi) => {
+          windowDi.override(preferenceNavigationItemsInjectable, () =>
             computed(() => generalNavItems),
           );
+
+          builder.preferences.navigate();
         });
 
-        applicationBuilder.beforeRender(() => {
-          applicationBuilder.preferences.navigate();
-        });
-
-        renderer = await applicationBuilder.render();
+        renderer = await builder.render();
       });
 
       const links = ["General", "Proxy"];
@@ -52,17 +50,15 @@ describe.only("preferences - navigation block with links", () => {
 
     describe("when general + extension navigation items passed", () => {
       beforeEach(async () => {
-        applicationBuilder.beforeApplicationStart(({ rendererDi }) => {
-          rendererDi.override(preferenceNavigationItemsInjectable, () =>
+        builder.beforeWindowStart((windowDi) => {
+          windowDi.override(preferenceNavigationItemsInjectable, () =>
             computed(() => [...generalNavItems, ...extensionNavItems]),
           );
+
+          builder.preferences.navigate();
         });
 
-        applicationBuilder.beforeRender(() => {
-          applicationBuilder.preferences.navigate();
-        });
-
-        renderer = await applicationBuilder.render();
+        renderer = await builder.render();
       });
 
       const generalLinks = ["General", "Proxy"];

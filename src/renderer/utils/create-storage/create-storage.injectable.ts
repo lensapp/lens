@@ -11,6 +11,7 @@ import { observable } from "mobx";
 import loggerInjectable from "../../../common/logger.injectable";
 import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
+import storageSaveDelayInjectable from "./storage-save-delay.injectable";
 
 const createStorageInjectable = getInjectable({
   id: "create-storage",
@@ -27,6 +28,7 @@ const createStorageInjectable = getInjectable({
     directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
     getAbsolutePath: di.inject(getAbsolutePathInjectable),
     hostedClusterId: di.inject(hostedClusterIdInjectable),
+    saveDelay: di.inject(storageSaveDelayInjectable),
   }),
 });
 

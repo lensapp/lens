@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { BaseKubeObjectCondition, KubeObjectScope } from "../kube-object";
+import type { BaseKubeObjectCondition, ClusterScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { cpuUnitsToNumber, unitsToBytes, isObject } from "../../../renderer/utils";
 import type { MetricData } from "./metrics.api";
@@ -176,7 +176,11 @@ export interface NodeStatus {
   volumesAttached?: AttachedVolume[];
 }
 
-export class Node extends KubeObject<NodeStatus, NodeSpec, KubeObjectScope.Cluster> {
+export class Node extends KubeObject<
+  ClusterScopedMetadata,
+  NodeStatus,
+  NodeSpec
+> {
   static readonly kind = "Node";
   static readonly namespaced = false;
   static readonly apiBase = "/api/v1/nodes";

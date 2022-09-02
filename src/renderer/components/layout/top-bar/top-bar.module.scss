@@ -79,10 +79,10 @@
 
   &.linuxButtons {
     > div {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      margin-right: calc(var(--padding) * -1.5);
+      margin-right: var(--padding);
       color: var(--textColorAccent);
 
       svg {

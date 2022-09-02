@@ -6,6 +6,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -18,7 +19,6 @@ exports[`kube-object-menu given kube object renders 1`] = `
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -27,6 +27,9 @@ exports[`kube-object-menu given kube object renders 1`] = `
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -45,6 +48,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -57,7 +61,6 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -66,6 +69,9 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -120,6 +126,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove
@@ -136,6 +143,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-other-uid"
       >
         <li
           class="MenuItem"
@@ -145,7 +153,6 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -154,6 +161,9 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -172,6 +182,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-other-uid"
       >
         <li
           class="MenuItem"
@@ -181,7 +192,6 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -190,6 +200,9 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -244,6 +257,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove
@@ -260,6 +274,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -272,7 +287,6 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -281,6 +295,9 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -335,6 +352,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove
@@ -351,6 +369,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
           Some menu item
@@ -363,7 +382,6 @@ exports[`kube-object-menu given kube object without namespace when removing kube
           <i
             class="Icon material interactive focusable"
             tabindex="0"
-            tooltip="Delete"
           >
             <span
               class="icon"
@@ -372,6 +390,9 @@ exports[`kube-object-menu given kube object without namespace when removing kube
               delete
             </span>
           </i>
+          <div>
+            Delete
+          </div>
           <span
             class="title"
           >
@@ -426,6 +447,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         <button
           class="Button ok primary"
           data-testid="confirm"
+          data-waiting="false"
           type="button"
         >
           Remove
@@ -441,6 +463,7 @@ exports[`kube-object-menu given no kube object, renders 1`] = `
   <div>
     <ul
       class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+      id="menu-actions-for-kube-object-menu-for-undefined"
     />
   </div>
 </body>

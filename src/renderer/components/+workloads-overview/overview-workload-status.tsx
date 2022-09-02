@@ -8,92 +8,101 @@ import "./overview-workload-status.scss";
 import React from "react";
 import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
-import type { DatasetTooltipLabel, PieChartData } from "../chart";
+import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
-import { cssVar, object } from "../../utils";
-import type { ThemeStore } from "../../themes/store";
+import { object } from "../../utils";
+import type { LensTheme } from "../../themes/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
+import type { PascalCase } from "type-fest";
+import type { IComputedValue } from "mobx";
+import activeThemeInjectable from "../../themes/active.injectable";
+import type { Workload } from "./workloads/workload-injection-token";
+
+export type LowercaseOrPascalCase<T extends string> = Lowercase<T> | PascalCase<T>;
+
+export type WorkloadStatus = Partial<Record<LowercaseOrPascalCase<keyof typeof statusBackgroundColorMapping>, number>>;
+
+function toLowercase<T extends string>(src: T): Lowercase<T> {
+  return src.toLowerCase() as Lowercase<T>;
+}
 
 export interface OverviewWorkloadStatusProps {
-  status: Partial<Record<string, number>>;
+  workload: Workload;
 }
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
 }
 
-@observer
-class NonInjectedOverviewWorkloadStatus extends React.Component<OverviewWorkloadStatusProps & Dependencies> {
-  private elem: HTMLElement | null = null;
+const statusBackgroundColorMapping = {
+  "running": "colorOk",
+  "scheduled": "colorOk",
+  "pending": "colorWarning",
+  "suspended": "colorWarning",
+  "evicted": "colorError",
+  "succeeded": "colorSuccess",
+  "failed": "colorError",
+  "terminated": "colorTerminated",
+  "terminating": "colorTerminated",
+  "unknown": "colorVague",
+  "complete": "colorSuccess",
+} as const;
 
-  renderChart() {
-    if (!this.elem) {
-      return null;
-    }
+const NonInjectedOverviewWorkloadStatus = observer((props: OverviewWorkloadStatusProps & Dependencies) => {
+  const {
+    workload,
+    activeTheme,
+  } = props;
 
-    const cssVars = cssVar(this.elem);
-    const chartData: Required<PieChartData> = {
-      labels: [],
-      datasets: [],
-    };
+  const statusesToBeShown = object.entries(workload.status.get()).filter(([, val]) => val > 0);
+  const theme = activeTheme.get();
 
-    const statuses = object.entries(this.props.status).filter(([, val]) => val > 0);
+  const emptyDataSet = {
+    data: [1],
+    backgroundColor: [theme.colors.pieChartDefaultColor],
+    label: "Empty",
+  };
+  const statusDataSet = {
+    label: "Status",
+    data: statusesToBeShown.map(([, value]) => value),
+    backgroundColor: statusesToBeShown.map(([status]) => (
+      theme.colors[statusBackgroundColorMapping[toLowercase(status)]]
+    )),
+    tooltipLabels: statusesToBeShown.map(([status]) => (
+      (percent: string) => `${capitalize(status)}: ${percent}`
+    )),
+  };
 
-    if (statuses.length === 0) {
-      chartData.datasets.push({
-        data: [1],
-        backgroundColor: [this.props.themeStore.activeTheme.colors.pieChartDefaultColor],
-        label: "Empty",
-      });
-    } else {
-      const data: number[] = [];
-      const backgroundColor: string[] = [];
-      const tooltipLabels: DatasetTooltipLabel[] = [];
+  const chartData: Required<PieChartData> = {
+    datasets: [statusesToBeShown.length > 0 ? statusDataSet : emptyDataSet],
 
-      for (const [status, value] of statuses) {
-        data.push(value);
-        backgroundColor.push(cssVars.get(`--workload-status-${status.toLowerCase()}`).toString());
-        tooltipLabels.push(percent => `${capitalize(status)}: ${percent}`);
-        chartData.labels.push(`${capitalize(status)}: ${value}`);
-      }
+    labels: statusesToBeShown.map(
+      ([status, value]) => `${capitalize(status)}: ${value}`,
+    ),
+  };
 
-      chartData.datasets.push({
-        data,
-        backgroundColor,
-        label: "Status",
-        tooltipLabels,
-      });
-    }
-
-    return (
-      <PieChart
-        data={chartData}
-        options={{
-          elements: {
-            arc: {
-              borderWidth: 0,
+  return (
+    <div className="OverviewWorkloadStatus">
+      <div className="flex column align-center box grow">
+        <PieChart
+          data={chartData}
+          options={{
+            elements: {
+              arc: {
+                borderWidth: 0,
+              },
             },
-          },
-        }}
-      />
-    );
-  }
-
-  render() {
-    return (
-      <div className="OverviewWorkloadStatus" ref={e => this.elem = e}>
-        <div className="flex column align-center box grow">
-          {this.renderChart()}
-        </div>
+          }}
+          data-testid={`workload-overview-status-chart-${workload.title.toLowerCase().replace(/\s+/, "-")}`}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
 
 export const OverviewWorkloadStatus = withInjectables<Dependencies, OverviewWorkloadStatusProps>(NonInjectedOverviewWorkloadStatus, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
   }),
 });

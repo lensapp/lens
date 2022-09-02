@@ -8,6 +8,7 @@ import appEventBusInjectable from "./app-event-bus.injectable";
 const emitEventInjectable = getInjectable({
   id: "emit-event",
   instantiate: (di) => di.inject(appEventBusInjectable).emit,
+  decorable: false,
 });
 
 export default emitEventInjectable;

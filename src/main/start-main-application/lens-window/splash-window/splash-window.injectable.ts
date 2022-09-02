@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { lensWindowInjectionToken } from "../application-window/lens-window-injection-token";
 import createLensWindowInjectable from "../application-window/create-lens-window.injectable";
 import staticFilesDirectoryInjectable from "../../../../common/vars/static-files-directory.injectable";
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
@@ -30,8 +29,6 @@ const splashWindowInjectable = getInjectable({
       centered: true,
     });
   },
-
-  injectionToken: lensWindowInjectionToken,
 });
 
 export default splashWindowInjectable;

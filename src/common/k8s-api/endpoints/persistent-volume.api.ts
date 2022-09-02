@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectScope, LabelSelector, ObjectReference, TypedLocalObjectReference } from "../kube-object";
+import type { ClusterScopedMetadata, LabelSelector, ObjectReference, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { unitsToBytes } from "../../utils";
 import type { DerivedKubeApiOptions } from "../kube-api";
@@ -64,7 +64,11 @@ export interface PersistentVolumeStatus {
   reason?: string;
 }
 
-export class PersistentVolume extends KubeObject<PersistentVolumeStatus, PersistentVolumeSpec, KubeObjectScope.Cluster> {
+export class PersistentVolume extends KubeObject<
+  ClusterScopedMetadata,
+  PersistentVolumeStatus,
+  PersistentVolumeSpec
+> {
   static kind = "PersistentVolume";
   static namespaced = false;
   static apiBase = "/api/v1/persistentvolumes";

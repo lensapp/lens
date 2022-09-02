@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { autoBind } from "../../utils";
@@ -42,7 +42,11 @@ export interface SecretData extends KubeJsonApiData<KubeObjectMetadata<KubeObjec
   data?: Partial<Record<string, string>>;
 }
 
-export class Secret extends KubeObject<void, void, KubeObjectScope.Namespace> {
+export class Secret extends KubeObject<
+  NamespaceScopedMetadata,
+  void,
+  void
+> {
   static readonly kind = "Secret";
   static readonly namespaced = true;
   static readonly apiBase = "/api/v1/secrets";

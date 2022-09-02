@@ -5,9 +5,9 @@
 
 import React from "react";
 import { Button } from "../components/button";
-import type { NotificationsStore } from "../components/notifications";
 import { Notifications } from "../components/notifications";
 import type { NavigateToPortForwards } from "../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
+import type { NotificationsStore } from "../components/notifications/notifications.store";
 
 interface AboutPortForwardingDependencies {
   navigateToPortForwards: NavigateToPortForwards;

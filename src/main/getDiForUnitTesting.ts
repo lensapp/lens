@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import glob from "glob";
-import { kebabCase, memoize, noop } from "lodash/fp";
+import { kebabCase, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -18,9 +17,6 @@ import extensionsStoreInjectable from "../extensions/extensions-store/extensions
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
 import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
-import type { ClusterStore } from "../common/cluster-store/cluster-store";
-import type { Cluster } from "../common/cluster/cluster";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
 import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
@@ -37,7 +33,6 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
-import setupRunnablesForAfterRootFrameIsReadyInjectable from "./start-main-application/runnables/setup-runnables-for-after-root-frame-is-ready.injectable";
 import setupSentryInjectable from "./start-main-application/runnables/setup-sentry.injectable";
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
@@ -60,13 +55,10 @@ import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/r
 import showMessagePopupInjectable from "./electron-app/features/show-message-popup.injectable";
 import clusterFramesInjectable from "../common/cluster-frames.injectable";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
-import ipcMainInjectable from "./utils/channel/ipc-main/ipc-main.injectable";
-import createElectronWindowForInjectable from "./start-main-application/lens-window/application-window/create-electron-window.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
-import sendToChannelInElectronBrowserWindowInjectable from "./start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
@@ -81,7 +73,7 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
-import appVersionInjectable from "../common/get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "../common/vars/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import execFileInjectable from "../common/fs/exec-file.injectable";
@@ -99,6 +91,10 @@ import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-rel
 import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
+import type { HotbarStore } from "../common/hotbars/store";
+import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
+import type { GlobalOverride } from "../common/test-utils/get-global-override";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -107,29 +103,43 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   const di = createContainer("main");
 
-  registerMobX(di);
-
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
-
-  for (const filePath of getInjectableFilePaths()) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const injectableInstance = require(filePath).default;
-
-    di.register({
-      ...injectableInstance,
-      aliases: [injectableInstance, ...(injectableInstance.aliases || [])],
-    });
-  }
 
   di.preventSideEffects();
 
+  const injectables: Injectable<any, any, any>[] = (global as any).mainInjectablePaths.map(
+    (filePath: string) => require(filePath).default,
+  );
+
+  runInAction(() => {
+    registerMobX(di);
+
+    chunk(100)(injectables).forEach(chunkInjectables => {
+      di.register(...chunkInjectables);
+    });
+  });
+
   if (doGeneralOverrides) {
+    const globalOverrides: GlobalOverride[] = (global as any).mainGlobalOverridePaths.map(
+      (filePath: string) => require(filePath).default,
+    );
+
+    globalOverrides.forEach(globalOverride => {
+      di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
+    });
+
+    di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-    di.override(hotbarStoreInjectable, () => ({ load: () => {} }));
+
+    di.override(hotbarStoreInjectable, () => ({
+      load: () => {},
+      getActive: () => ({ name: "some-hotbar", items: [] }),
+      getDisplayIndex: () => "0",
+    }) as unknown as HotbarStore);
+
     di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
-    di.override(clusterStoreInjectable, () => ({ provideInitialFromMain: () => {}, getById: (id) => (void id, {}) as Cluster }) as ClusterStore);
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
     overrideOperatingSystem(di);
@@ -198,19 +208,12 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   return di;
 }
 
-const getInjectableFilePaths = memoize(() => [
-  ...glob.sync("./**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../extensions/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-  ...glob.sync("../common/**/*.injectable.{ts,tsx}", { cwd: __dirname }),
-]);
-
 // TODO: Reorganize code in Runnables to get rid of requirement for override
 const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
   [
     initializeExtensionsInjectable,
     setupIpcMainHandlersInjectable,
     setupLensProxyInjectable,
-    setupRunnablesForAfterRootFrameIsReadyInjectable,
     setupSentryInjectable,
     setupShellInjectable,
     setupSyncingOfWeblinksInjectable,
@@ -250,31 +253,16 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(shouldStartHiddenInjectable, () => false);
   di.override(showMessagePopupInjectable, () => () => {});
   di.override(waitForElectronToBeReadyInjectable, () => () => Promise.resolve());
-  di.override(ipcMainInjectable, () => ({}));
   di.override(getElectronThemeInjectable, () => () => "dark");
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
   di.override(electronQuitAndInstallUpdateInjectable, () => () => {});
   di.override(setUpdateOnQuitInjectable, () => () => {});
   di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
+  di.override(focusApplicationInjectable, () => () => {});
 
   di.override(checkForPlatformUpdatesInjectable, () => () => {
     throw new Error("Tried to check for platform updates without explicit override.");
   });
-
-  di.override(createElectronWindowForInjectable, () => () => ({
-    show: () => {},
-
-    close: () => {},
-
-    send: (arg) => {
-      const sendFake = di.inject(sendToChannelInElectronBrowserWindowInjectable) as any;
-
-      sendFake(null, arg);
-    },
-
-    loadFile: async () => {},
-    loadUrl: async () => {},
-  }));
 
   di.override(
     getElectronAppPathInjectable,

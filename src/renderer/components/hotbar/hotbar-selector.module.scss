@@ -6,9 +6,10 @@
 .HotbarSelector {
   display: flex;
   align-items: center;
-  height: 26px;
+  height: 25px;
   background-color: var(--layoutBackground);
   position: relative;
+  justify-content: center;
 
   &:before {
     content: " ";
@@ -21,8 +22,7 @@
 
   .HotbarIndex {
     display: flex;
-    flex-grow: 1;
-    align-items: center;
+    width: 3ch;
   }
 
   .Badge {
@@ -30,21 +30,17 @@
     background: var(--secondaryBackground);
     width: 100%;
     color: var(--settingsColor);
-    padding-top: 3px;
+    padding: 0px calc(var(--padding) / 2);
   }
 
   .Icon {
-    --size: 16px;
-    padding: 0 4px 0 0px;
-    margin: 0px 4px;
-
     &:hover {
       box-shadow: none;
       background-color: transparent;
     }
 
-    &.previous {
-      transform: rotateY(180deg);
+    &:focus-visible {
+      z-index: 1;
     }
   }
 }

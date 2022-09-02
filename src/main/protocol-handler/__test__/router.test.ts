@@ -5,7 +5,6 @@
 
 import * as uuid from "uuid";
 
-import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { delay, noop } from "../../../common/utils";
 import type { ExtensionsStore, IsEnabledExtensionDescriptor } from "../../../extensions/extensions-store/extensions-store";
@@ -14,14 +13,12 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../../../common/get-configuration-file-model/app-version/app-version.injectable";
 import { LensExtension } from "../../../extensions/lens-extension";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-
-jest.mock("../../../common/ipc");
+import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -33,6 +30,7 @@ describe("protocol router tests", () => {
   let extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   let lpr: LensProtocolRouterMain;
   let enabledExtensions: Set<string>;
+  let broadcastMessageMock: jest.Mock;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -44,9 +42,11 @@ describe("protocol router tests", () => {
     } as unknown as ExtensionsStore));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(appVersionInjectable);
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    broadcastMessageMock = jest.fn();
+    di.override(broadcastMessageInjectable, () => broadcastMessageMock);
 
     extensionInstances = di.inject(extensionInstancesInjectable);
     lpr = di.inject(lensProtocolRouterMainInjectable);
@@ -56,12 +56,12 @@ describe("protocol router tests", () => {
 
   it("should broadcast invalid protocol on non-lens URLs", async () => {
     await lpr.route("https://google.ca");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInvalid, "invalid protocol", "https://google.ca");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInvalid, "invalid protocol", "https://google.ca");
   });
 
   it("should broadcast invalid host on non internal or non extension URLs", async () => {
     await lpr.route("lens://foobar");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInvalid, "invalid host", "lens://foobar");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInvalid, "invalid host", "lens://foobar");
   });
 
   it("should not throw when has valid host", async () => {
@@ -103,8 +103,8 @@ describe("protocol router tests", () => {
     }
 
     await delay(50);
-    expect(broadcastMessage).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
-    expect(broadcastMessage).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
+    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
+    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
   });
 
   it("should call handler if matches", async () => {
@@ -119,7 +119,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(true);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page", "matched");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page", "matched");
   });
 
   it("should call most exact handler", async () => {
@@ -135,7 +135,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe("foo");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo", "matched");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo", "matched");
   });
 
   it("should call most exact handler for an extension", async () => {
@@ -176,7 +176,7 @@ describe("protocol router tests", () => {
 
     await delay(50);
     expect(called).toBe("foob");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob", "matched");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob", "matched");
   });
 
   it("should work with non-org extensions", async () => {
@@ -246,7 +246,7 @@ describe("protocol router tests", () => {
     await delay(50);
 
     expect(called).toBe(1);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page", "matched");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page", "matched");
   });
 
   it("should throw if urlSchema is invalid", () => {
@@ -268,7 +268,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(3);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
   });
 
   it("should call most exact handler with 2 found handlers", async () => {
@@ -285,6 +285,6 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(1);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
+    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
   });
 });

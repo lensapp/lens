@@ -14,7 +14,6 @@ import type { Align, ListChildComponentProps, ListOnScrollProps } from "react-wi
 import { VariableSizeList } from "react-window";
 import { cssNames, noop } from "../../utils";
 import type { TableRowProps } from "../table/table-row";
-import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import AutoSizer from "react-virtualized-auto-sizer";
 
@@ -59,7 +58,7 @@ function VirtualListInner<T extends { getId(): string } | string>({
   const listRef = createRef<VariableSizeList>();
   const prevItems = useRef(items);
   const prevRowHeights = useRef(rowHeights);
-  const scrollToSelectedItem = useCallback(debounce(() => {
+  const scrollToSelectedItem = useCallback(() => {
     if (!selectedItemId) {
       return;
     }
@@ -71,9 +70,9 @@ function VirtualListInner<T extends { getId(): string } | string>({
     ));
 
     if (index >= 0) {
-      listRef.current?.scrollToItem(index, "start");
+      listRef.current?.scrollToItem(index, "smart");
     }
-  }), [selectedItemId, [items]]);
+  }, [selectedItemId, [items]]);
   const getItemSize = (index: number) => rowHeights[index];
 
   useImperativeHandle(forwardedRef, () => ({
@@ -88,7 +87,7 @@ function VirtualListInner<T extends { getId(): string } | string>({
   useEffect(() => {
     try {
       if (prevItems.current.length !== items.length || !isEqual(prevRowHeights.current, rowHeights)) {
-        listRef.current?.resetAfterIndex(0, false);
+        listRef.current?.resetAfterIndex(0);
       }
     } finally {
       prevItems.current = items;

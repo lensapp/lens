@@ -7,13 +7,13 @@ import "./kube-object-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { computed, observable, reaction, makeObservable } from "mobx";
+import type { IComputedValue } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { Drawer } from "../drawer";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectMenu } from "../kube-object-menu";
-import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { CustomResourceDetails } from "../+custom-resources";
 import { KubeObjectMeta } from "../kube-object-meta";
 import type { PageParam } from "../../navigation";
@@ -24,7 +24,8 @@ import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.in
 import customResourceDefinitionStoreInjectable from "../+custom-resources/definition.store.injectable";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 import kubeDetailsUrlParamInjectable from "../kube-detail-params/kube-details-url.injectable";
-
+import kubeObjectDetailItemsInjectable from "./kube-object-detail-items/kube-object-detail-items.injectable";
+import currentKubeObjectInDetailsInjectable from "./current-kube-object-in-details.injectable";
 
 export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
   className?: string;
@@ -32,6 +33,8 @@ export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
 }
 
 interface Dependencies {
+  detailComponents: IComputedValue<React.ElementType[]>;
+  kubeObject: IComputedValue<KubeObject | undefined>;
   kubeDetailsUrlParam: PageParam<string>;
   apiManager: ApiManager;
   hideDetails: HideDetails;
@@ -48,20 +51,12 @@ class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
     makeObservable(this);
   }
 
-  @computed get path() {
+  get path() {
     return this.props.kubeDetailsUrlParam.get();
   }
 
-  @computed get object() {
-    try {
-      return this.props.apiManager
-        .getStore(this.path)
-        ?.getByPath(this.path);
-    } catch (error) {
-      console.error(`[KUBE-OBJECT-DETAILS]: failed to get store or object: ${error}`, { path: this.path });
-
-      return undefined;
-    }
+  get object() {
+    return this.props.kubeObject.get();
   }
 
   componentDidMount(): void {
@@ -107,13 +102,7 @@ class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
   }
 
   renderContents(object: KubeObject) {
-    const { isLoading, loadingError } = this;
-    const details = KubeObjectDetailRegistry
-      .getInstance()
-      .getItemsForKind(object.kind, object.apiVersion)
-      .map((item, index) => (
-        <item.components.Details object={object} key={`object-details-${index}`} />
-      ));
+    const details = this.props.detailComponents.get();
 
     if (details.length === 0) {
       const crd = this.props.customResourceDefinitionStore.getByObject(object);
@@ -123,26 +112,22 @@ class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
        * any defined details we should try and display at least some details
        */
       if (crd) {
-        details.push(<CustomResourceDetails
-          key={object.getId()}
-          object={object}
-          crd={crd}
-        />);
+        return (
+          <CustomResourceDetails
+            key={object.getId()}
+            object={object}
+            crd={crd}
+          />
+        );
+      } else {
+        // if we still don't have any details to show, just show the standard object metadata
+        return <KubeObjectMeta key={object.getId()} object={object} />;
       }
     }
 
-    if (details.length === 0) {
-      // if we still don't have any details to show, just show the standard object metadata
-      details.push(<KubeObjectMeta key={object.getId()} object={object} />);
-    }
-
-    return (
-      <>
-        {isLoading && <Spinner center/>}
-        {loadingError && <div className="box center">{loadingError}</div>}
-        {details}
-      </>
-    );
+    return details.map((DetailComponent, index) => (
+      <DetailComponent key={index} object={object} />
+    ));
   }
 
   render() {
@@ -156,6 +141,8 @@ class NonInjectedKubeObjectDetails extends React.Component<Dependencies> {
         toolbar={object && <KubeObjectMenu object={object} toolbar={true}/>}
         onClose={this.props.hideDetails}
       >
+        {isLoading && <Spinner center/>}
+        {loadingError && <div className="box center">{loadingError}</div>}
         {object && this.renderContents(object)}
       </Drawer>
     );
@@ -169,5 +156,7 @@ export const KubeObjectDetails = withInjectables<Dependencies>(NonInjectedKubeOb
     customResourceDefinitionStore: di.inject(customResourceDefinitionStoreInjectable),
     hideDetails: di.inject(hideDetailsInjectable),
     kubeDetailsUrlParam: di.inject(kubeDetailsUrlParamInjectable),
+    detailComponents: di.inject(kubeObjectDetailItemsInjectable),
+    kubeObject: di.inject(currentKubeObjectInDetailsInjectable),
   }),
 });

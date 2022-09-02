@@ -104,11 +104,11 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
   renderTab(tab: DockTab) {
     switch (tab.kind) {
       case TabKind.CREATE_RESOURCE:
-        return <CreateResource tab={tab} />;
+        return <CreateResource tabId={tab.id} />;
       case TabKind.EDIT_RESOURCE:
-        return <EditResource tab={tab} />;
+        return <EditResource tabId={tab.id} />;
       case TabKind.INSTALL_CHART:
-        return <InstallChart tab={tab} />;
+        return <InstallChart tabId={tab.id} />;
       case TabKind.UPGRADE_CHART:
         return <UpgradeChart tab={tab} />;
       case TabKind.POD_LOGS:
@@ -124,7 +124,10 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
     if (!isOpen || !selectedTab) return null;
 
     return (
-      <div className={`tab-content ${selectedTab.kind}`} style={{ flexBasis: height }}>
+      <div
+        className={`tab-content ${selectedTab.kind}`}
+        style={{ flexBasis: height }}
+        data-testid={`dock-tab-content-for-${selectedTab.id}`}>
         {this.renderTab(selectedTab)}
       </div>
     );
@@ -161,6 +164,7 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
           <div className={cssNames("toolbar flex gaps align-center box grow", { "pl-0": tabs.length == 0 })}>
             <div className="dock-menu box grow">
               <MenuActions
+                id="menu-actions-for-dock"
                 usePortal
                 triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }}
                 closeOnScroll={false}

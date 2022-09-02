@@ -191,10 +191,14 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
   ];
   const kubectlArgs = [
     "get",
-    "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
     "-f", "-",
     "--output", "json",
+    // Temporary workaround for https://github.com/lensapp/lens/issues/6031
+    // and other potential issues where resources can't be found. Showing
+    // no resources is better than the app hard-locking, and at least
+    // the helm metadata is shown.
+    "--ignore-not-found",
   ];
 
   try {
@@ -209,9 +213,13 @@ async function getResources(name: string, namespace: string, kubeconfigPath: str
         .on("exit", (code, signal) => {
           if (typeof code === "number") {
             if (code === 0) {
-              const output = json.parse(stdout) as { items: JsonObject[] };
+              if (stdout === "") {
+                resolve([]);
+              } else {
+                const output = json.parse(stdout) as { items: JsonObject[] };
 
-              resolve(output.items);
+                resolve(output.items);
+              }
             } else {
               reject(stderr);
             }

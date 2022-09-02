@@ -16,14 +16,17 @@ const extensionPreferencesModelInjectable = getInjectable({
     const route = di.inject(extensionPreferencesRouteInjectable);
     const pathParameters = di.inject(routePathParametersInjectable, route);
     const extensions = di.inject(rendererExtensionsInjectable);
-      
+
     return computed(() => {
       const { extensionId, tabId } = pathParameters.get();
       const targetExtension = extensions.get().find((extension) => extension.sanitizedExtensionId === extensionId);
-      
+      const targetAppTab = targetExtension?.appPreferenceTabs.find(tab => tab.id === tabId);
+      const preferencePageTitle = targetAppTab?.title || `${targetExtension?.manifest.name || "Extension"} preferences`;
+
       return {
         extensionName: targetExtension?.manifest.name,
         preferenceItems: getExtensionPreferenceItems(targetExtension, tabId),
+        preferencePageTitle,
       };
     });
   },

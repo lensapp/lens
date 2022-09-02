@@ -5,16 +5,16 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
-import navigateToPodsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/deployments/navigate-to-deployments.injectable";
 import namespaceStoreInjectable from "../../../+namespaces/store.injectable";
 import replicasetsStoreInjectable from "../../../+workloads-replicasets/store.injectable";
 import { computed } from "mobx";
+import navigateToReplicasetsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/replicasets/navigate-to-replicasets.injectable";
 
 const replicasetsWorkloadInjectable = getInjectable({
   id: "replicasets-workload",
 
   instantiate: (di) => {
-    const navigate = di.inject(navigateToPodsInjectable);
+    const navigate = di.inject(navigateToReplicasetsInjectable);
     const namespaceStore = di.inject(namespaceStoreInjectable);
     const store = di.inject(replicasetsStoreInjectable);
 

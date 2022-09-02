@@ -10,18 +10,19 @@ import { BarChart, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { ResourceMetricsContext } from "../resource-metrics";
-import type { ThemeStore } from "../../themes/store";
+import type { LensTheme } from "../../themes/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import themeStoreInjectable from "../../themes/store.injectable";
+import type { IComputedValue } from "mobx";
+import activeThemeInjectable from "../../themes/active.injectable";
 
 export interface VolumeClaimDiskChartProps {}
 
 interface Dependencies {
-  themeStore: ThemeStore;
+  activeTheme: IComputedValue<LensTheme>;
 }
 
 const NonInjectedVolumeClaimDiskChart = observer(({
-  themeStore,
+  activeTheme,
 }: Dependencies & VolumeClaimDiskChartProps) => {
   const { metrics, tab, object } = useContext(ResourceMetricsContext) ?? {};
 
@@ -29,7 +30,7 @@ const NonInjectedVolumeClaimDiskChart = observer(({
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
   const id = object.getId();
-  const { chartCapacityColor } = themeStore.activeTheme.colors;
+  const { chartCapacityColor } = activeTheme.get().colors;
   const { diskUsage, diskCapacity } = metrics;
   const usage = normalizeMetrics(diskUsage).data.result[0].values;
   const capacity = normalizeMetrics(diskCapacity).data.result[0].values;
@@ -65,6 +66,6 @@ const NonInjectedVolumeClaimDiskChart = observer(({
 export const VolumeClaimDiskChart = withInjectables<Dependencies, VolumeClaimDiskChartProps>(NonInjectedVolumeClaimDiskChart, {
   getProps: (di, props) => ({
     ...props,
-    themeStore: di.inject(themeStoreInjectable),
+    activeTheme: di.inject(activeThemeInjectable),
   }),
 });

@@ -25,21 +25,29 @@ export {
 export {
   KubeObject,
   KubeStatus,
+  type OwnerReference,
   type KubeObjectMetadata,
+  type NamespaceScopedMetadata,
+  type ClusterScopedMetadata,
   type BaseKubeJsonApiObjectMetadata,
   type KubeJsonApiObjectMetadata,
   type KubeStatusData,
 } from "../../common/k8s-api/kube-object";
 
 export {
+  type KubeJsonApiData,
+} from "../../common/k8s-api/kube-json-api";
+
+export {
   KubeObjectStore,
+  type JsonPatch,
   type KubeObjectStoreLoadAllParams,
   type KubeObjectStoreLoadingParams,
   type KubeObjectStoreSubscribeParams,
 } from "../../common/k8s-api/kube-object.store";
 
 export {
-  type PodContainer as IPodContainer,
+  type Container as IPodContainer,
   type PodContainerStatus as IPodContainerStatus,
   Pod,
   PodApi as PodsApi,
@@ -59,6 +67,7 @@ export {
   LimitRange,
   HorizontalPodAutoscaler,
   PodDisruptionBudget,
+  PriorityClass,
   Service,
   Endpoints as Endpoint,
   Ingress, IngressApi,

@@ -4,12 +4,13 @@
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
+import type { WorkloadStatus } from "../overview-workload-status";
 
 export interface Workload {
   resourceName: string;
   open: () => void;
   amountOfItems: IComputedValue<number>;
-  status: IComputedValue<Partial<Record<string, number>>>;
+  status: IComputedValue<WorkloadStatus>;
   title: string;
   orderNumber: number;
 }

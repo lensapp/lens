@@ -5,6 +5,10 @@
 
 .Ingresses {
   .TableCell {
+    &.checkbox .Checkbox {
+      align-items: flex-start;
+    }
+
     &.rules {
       flex-grow: 3.0;
       overflow-x: scroll;
@@ -14,8 +18,13 @@
         display: none;
       }
 
-      span:not(:last-of-type) {
-        margin-right: 1em;
+      .ingressRule {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ingressRule + .ingressRule {
+        margin-top: 6px;
       }
     }
 

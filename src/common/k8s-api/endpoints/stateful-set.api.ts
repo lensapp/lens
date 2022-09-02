@@ -7,7 +7,7 @@ import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pod.api";
-import type { KubeObjectScope, LabelSelector } from "../kube-object";
+import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
 import type { PersistentVolumeClaimTemplateSpec } from "./types/persistent-volume-claim-template-spec";
@@ -81,7 +81,11 @@ export interface StatefulSetStatus {
   collisionCount: number;
 }
 
-export class StatefulSet extends KubeObject<StatefulSetStatus, StatefulSetSpec, KubeObjectScope.Namespace> {
+export class StatefulSet extends KubeObject<
+  NamespaceScopedMetadata,
+  StatefulSetStatus,
+  StatefulSetSpec
+> {
   static readonly kind = "StatefulSet";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/apps/v1/statefulsets";

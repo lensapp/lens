@@ -19,15 +19,19 @@ export interface TableRowProps<Item> extends React.DOMAttributes<HTMLDivElement>
   sortItem?: Item; // data for sorting callback in <Table sortable={}/>
   searchItem?: Item; // data for searching filters in <Table searchable={}/>
   disabled?: boolean;
+  testId?: string;
 }
 
 export class TableRow<Item> extends React.Component<TableRowProps<Item>> {
   render() {
-    const { className, nowrap, selected, disabled, children, sortItem, searchItem, ...rowProps } = this.props;
+    const { className, nowrap, selected, disabled, children, sortItem, searchItem, testId, ...rowProps } = this.props;
     const classNames = cssNames("TableRow", className, { selected, nowrap, disabled });
 
     return (
-      <div className={classNames} {...rowProps}>
+      <div
+        className={classNames}
+        data-testid={testId}
+        {...rowProps}>
         {children}
       </div>
     );

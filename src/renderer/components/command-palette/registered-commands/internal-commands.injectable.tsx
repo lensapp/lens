@@ -5,7 +5,6 @@
 
 import React from "react";
 import type { RegisteredEntitySetting } from "../../../../extensions/registries";
-import { EntitySettingRegistry } from "../../../../extensions/registries";
 import { HotbarAddCommand } from "../../hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../../hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../../hotbar/hotbar-switch-command";
@@ -25,19 +24,21 @@ import navigateToResourceQuotasInjectable from "../../../../common/front-end-rou
 import navigateToLimitRangesInjectable from "../../../../common/front-end-routing/routes/cluster/config/limit-ranges/navigate-to-limit-ranges.injectable";
 import navigateToHorizontalPodAutoscalersInjectable from "../../../../common/front-end-routing/routes/cluster/config/horizontal-pod-autoscalers/navigate-to-horizontal-pod-autoscalers.injectable";
 import navigateToPodDisruptionBudgetsInjectable from "../../../../common/front-end-routing/routes/cluster/config/pod-disruption-budgets/navigate-to-pod-disruption-budgets.injectable";
+import navigateToPriorityClassesInjectable from "../../../../common/front-end-routing/routes/cluster/config/priority-classes/navigate-to-priority-classes.injectable";
 import navigateToServicesInjectable from "../../../../common/front-end-routing/routes/cluster/network/services/navigate-to-services.injectable";
 import navigateToEndpointsInjectable from "../../../../common/front-end-routing/routes/cluster/network/endpoints/navigate-to-endpoints.injectable";
 import navigateToIngressesInjectable from "../../../../common/front-end-routing/routes/cluster/network/ingresses/navigate-to-ingresses.injectable";
 import navigateToNetworkPoliciesInjectable from "../../../../common/front-end-routing/routes/cluster/network/network-policies/navigate-to-network-policies.injectable";
 import navigateToNodesInjectable from "../../../../common/front-end-routing/routes/cluster/nodes/navigate-to-nodes.injectable";
 import navigateToPodsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/pods/navigate-to-pods.injectable";
-import navigateToDeploymentsInjectable  from "../../../../common/front-end-routing/routes/cluster/workloads/deployments/navigate-to-deployments.injectable";
+import navigateToDeploymentsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/deployments/navigate-to-deployments.injectable";
 import navigateToDaemonsetsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/daemonsets/navigate-to-daemonsets.injectable";
 import navigateToStatefulsetsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/statefulsets/navigate-to-statefulsets.injectable";
 import navigateToJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/jobs/navigate-to-jobs.injectable";
 import navigateToCronJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/cron-jobs/navigate-to-cron-jobs.injectable";
 import navigateToCustomResourcesInjectable from "../../../../common/front-end-routing/routes/cluster/custom-resources/custom-resources/navigate-to-custom-resources.injectable";
 import navigateToEntitySettingsInjectable from "../../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import getEntitySettingCommandsInjectable from "./get-entity-setting-commands.injectable";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -57,6 +58,7 @@ interface Dependencies {
   navigateToLimitRanges: () => void;
   navigateToHorizontalPodAutoscalers: () => void;
   navigateToPodDisruptionBudgets: () => void;
+  navigateToPriorityClasses: () => void;
   navigateToServices: () => void;
   navigateToEndpoints: () => void;
   navigateToIngresses: () => void;
@@ -126,6 +128,12 @@ function getInternalCommands(dependencies: Dependencies): CommandRegistration[] 
       title: "Cluster: View PodDisruptionBudgets",
       isActive: isKubernetesClusterActive,
       action: () => dependencies.navigateToPodDisruptionBudgets(),
+    },
+    {
+      id: "cluster.viewPriorityClasses",
+      title: "Cluster: View PriorityClasses",
+      isActive: isKubernetesClusterActive,
+      action: () => dependencies.navigateToPriorityClasses(),
     },
     {
       id: "cluster.viewServices",
@@ -247,9 +255,7 @@ const internalCommandsInjectable = getInjectable({
 
   instantiate: (di) => getInternalCommands({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
-    getEntitySettingItems: EntitySettingRegistry
-      .getInstance()
-      .getItemsForKind,
+    getEntitySettingItems: di.inject(getEntitySettingCommandsInjectable),
     createTerminalTab: di.inject(createTerminalTabInjectable),
     navigateToPreferences: di.inject(navigateToPreferencesInjectable),
     navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
@@ -260,6 +266,7 @@ const internalCommandsInjectable = getInjectable({
     navigateToLimitRanges: di.inject(navigateToLimitRangesInjectable),
     navigateToHorizontalPodAutoscalers: di.inject(navigateToHorizontalPodAutoscalersInjectable),
     navigateToPodDisruptionBudgets: di.inject(navigateToPodDisruptionBudgetsInjectable),
+    navigateToPriorityClasses: di.inject(navigateToPriorityClassesInjectable),
     navigateToServices: di.inject(navigateToServicesInjectable),
     navigateToEndpoints: di.inject(navigateToEndpointsInjectable),
     navigateToIngresses: di.inject(navigateToIngressesInjectable),

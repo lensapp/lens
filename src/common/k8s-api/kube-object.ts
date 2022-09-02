@@ -15,8 +15,8 @@ import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { JsonObject } from "type-fest";
 
-export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Status, infer Spec, infer Scope>
-  ? KubeJsonApiData<KubeObjectMetadata<Scope>, Status, Spec>
+export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>
+  ? KubeJsonApiData<Metadata, Status, Spec>
   : never;
 
 export interface KubeObjectConstructorData {
@@ -25,7 +25,7 @@ export interface KubeObjectConstructorData {
   readonly apiBase?: string;
 }
 
-export type KubeObjectConstructor<K extends KubeObject<any, any, KubeObjectScope>, Data> = (new (data: Data) => K) & KubeObjectConstructorData;
+export type KubeObjectConstructor<K extends KubeObject, Data> = (new (data: Data) => K) & KubeObjectConstructorData;
 
 export interface OwnerReference {
   apiVersion: string;
@@ -199,9 +199,11 @@ export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScop
   [key: string]: unknown;
 }
 
-export type KubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = Namespaced extends KubeObjectScope.Namespace
-  ? BaseKubeJsonApiObjectMetadata<KubeObjectScope.Namespace> & { readonly namespace: string }
-  : BaseKubeJsonApiObjectMetadata<Namespaced>;
+export type KubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = BaseKubeJsonApiObjectMetadata<Namespaced> & (
+  Namespaced extends KubeObjectScope.Namespace
+    ? { readonly namespace: string }
+    : {}
+);
 
 export type KubeObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = KubeJsonApiObjectMetadata<Namespaced> & {
   readonly selfLink: string;
@@ -209,6 +211,9 @@ export type KubeObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectSc
   readonly name: string;
   readonly resourceVersion: string;
 };
+
+export type NamespaceScopedMetadata = KubeObjectMetadata<KubeObjectScope.Namespace>;
+export type ClusterScopedMetadata = KubeObjectMetadata<KubeObjectScope.Cluster>;
 
 export interface KubeStatusData {
   kind: string;
@@ -371,9 +376,9 @@ export type ScopedNamespace<Namespaced extends KubeObjectScope> = (
 );
 
 export class KubeObject<
+  Metadata extends KubeObjectMetadata<KubeObjectScope> = KubeObjectMetadata<KubeObjectScope>,
   Status = unknown,
   Spec = unknown,
-  Namespaced extends KubeObjectScope = KubeObjectScope,
 > implements ItemObject {
   static readonly kind?: string;
   static readonly namespaced?: boolean;
@@ -381,7 +386,7 @@ export class KubeObject<
 
   apiVersion!: string;
   kind!: string;
-  metadata!: KubeObjectMetadata<Namespaced>;
+  metadata!: Metadata;
   status?: Status;
   spec!: Spec;
 
@@ -393,7 +398,7 @@ export class KubeObject<
     return new KubeObject(data);
   }
 
-  static isNonSystem(item: KubeJsonApiData | KubeObject<unknown, unknown, KubeObjectScope>) {
+  static isNonSystem(item: KubeJsonApiData | KubeObject<KubeObjectMetadata<KubeObjectScope>, unknown, unknown>) {
     return !item.metadata.name?.startsWith("system:");
   }
 
@@ -488,7 +493,7 @@ export class KubeObject<
     ...KubeObject.nonEditablePathPrefixes,
   ]);
 
-  constructor(data: KubeJsonApiData<KubeObjectMetadata<Namespaced>, Status, Spec>) {
+  constructor(data: KubeJsonApiData<Metadata, Status, Spec>) {
     if (typeof data !== "object") {
       throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
     }
@@ -524,7 +529,7 @@ export class KubeObject<
     return this.metadata.name;
   }
 
-  getNs(): ScopedNamespace<Namespaced> {
+  getNs(): Metadata["namespace"] {
     // avoid "null" serialization via JSON.stringify when post data
     return (this.metadata.namespace || undefined) as never;
   }

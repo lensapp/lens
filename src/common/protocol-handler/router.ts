@@ -8,7 +8,6 @@ import { matchPath } from "react-router";
 import { countBy } from "lodash";
 import { isDefined, iter } from "../utils";
 import { pathToRegexp } from "path-to-regexp";
-import logger from "../../main/logger";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
@@ -17,6 +16,7 @@ import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler";
 import { when } from "mobx";
 import { ipcRenderer } from "electron";
+import type { Logger } from "../logger";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -66,6 +66,7 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 export interface LensProtocolRouterDependencies {
   readonly extensionLoader: ExtensionLoader;
   readonly extensionsStore: ExtensionsStore;
+  readonly logger: Logger;
 }
 
 export abstract class LensProtocolRouter {
@@ -112,7 +113,17 @@ export abstract class LensProtocolRouter {
     }
 
     // if no exact match pick the one that is the most specific
-    return matches.sort(([a], [b]) => compareMatches(a, b))[0] ?? null;
+    return matches.sort(([a], [b]) => {
+      if (a.path === "/") {
+        return 1;
+      }
+
+      if (b.path === "/") {
+        return -1;
+      }
+
+      return countBy(b.path)["/"] - countBy(a.path)["/"];
+    })[0] ?? null;
   }
 
   /**
@@ -130,7 +141,7 @@ export abstract class LensProtocolRouter {
         data.extensionName = extensionName;
       }
 
-      logger.info(`${LensProtocolRouter.LoggingPrefix}: No handler found`, data);
+      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: No handler found`, data);
 
       return RouteAttempt.MISSING;
     }
@@ -183,7 +194,7 @@ export abstract class LensProtocolRouter {
         timeout: 5_000,
       });
     } catch (error) {
-      logger.info(
+      this.dependencies.logger.info(
         `${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${error})`,
       );
 
@@ -193,18 +204,18 @@ export abstract class LensProtocolRouter {
     const extension = extensionLoader.getInstanceByName(name);
 
     if (!extension) {
-      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but does not have a class for ${ipcRenderer ? "renderer" : "main"}`);
+      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but does not have a class for ${ipcRenderer ? "renderer" : "main"}`);
 
       return name;
     }
 
     if (!this.dependencies.extensionsStore.isEnabled(extension)) {
-      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
+      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;
     }
 
-    logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched`);
+    this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched`);
 
     return extension;
   }
@@ -250,7 +261,7 @@ export abstract class LensProtocolRouter {
    */
   public addInternalHandler(urlSchema: string, handler: RouteHandler): this {
     pathToRegexp(urlSchema); // verify now that the schema is valid
-    logger.info(`${LensProtocolRouter.LoggingPrefix}: internal registering ${urlSchema}`);
+    this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: internal registering ${urlSchema}`);
     this.internalRoutes.set(urlSchema, handler);
 
     return this;
@@ -263,22 +274,4 @@ export abstract class LensProtocolRouter {
   public removeInternalHandler(urlSchema: string): void {
     this.internalRoutes.delete(urlSchema);
   }
-}
-
-/**
- * a comparison function for `array.sort(...)`. Sort order should be most path
- * parts to least path parts.
- * @param a the left side to compare
- * @param b the right side to compare
- */
-function compareMatches<T>(a: match<T>, b: match<T>): number {
-  if (a.path === "/") {
-    return 1;
-  }
-
-  if (b.path === "/") {
-    return -1;
-  }
-
-  return countBy(b.path)["/"] - countBy(a.path)["/"];
 }

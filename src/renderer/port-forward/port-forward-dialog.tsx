@@ -14,7 +14,6 @@ import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
 import { cssNames } from "../utils";
 import type { PortForwardStore } from "./port-forward-store/port-forward-store";
-import { openPortForward } from "./port-forward-utils";
 import { Checkbox } from "../components/checkbox";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { PortForwardDialogData, PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
@@ -23,6 +22,8 @@ import logger from "../../common/logger";
 import portForwardStoreInjectable from "./port-forward-store/port-forward-store.injectable";
 import aboutPortForwardingInjectable from "./about-port-forwarding.injectable";
 import notifyErrorPortForwardingInjectable from "./notify-error-port-forwarding.injectable";
+import type { OpenPortForward } from "./open-port-forward.injectable";
+import openPortForwardInjectable from "./open-port-forward.injectable";
 
 export interface PortForwardDialogProps extends Partial<DialogProps> {}
 
@@ -31,6 +32,7 @@ interface Dependencies {
   model: PortForwardDialogModel;
   aboutPortForwarding: () => void;
   notifyErrorPortForwarding: (message: string) => void;
+  openPortForward: OpenPortForward;
 }
 
 @observer
@@ -89,7 +91,7 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
       }
 
       if (portForward.status === "Active" && data.openInBrowser) {
-        openPortForward(portForward);
+        this.props.openPortForward(portForward);
       }
     } catch (error) {
       logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
@@ -127,6 +129,7 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
                 value={this.desiredPort === 0 ? "" : String(this.desiredPort)}
                 placeholder={"Random"}
                 onChange={this.changePort}
+                autoFocus
               />
             </div>
             <Checkbox
@@ -176,6 +179,7 @@ export const PortForwardDialog = withInjectables<Dependencies, PortForwardDialog
       model: di.inject(portForwardDialogModelInjectable),
       aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
       notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
+      openPortForward: di.inject(openPortForwardInjectable),
       ...props,
     }),
   },

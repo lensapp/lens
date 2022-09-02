@@ -8,8 +8,8 @@ import listHelmChartsInjectable from "../helm-service/list-helm-charts.injectabl
 import getActiveHelmRepositoriesInjectable from "../repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { AsyncResult } from "../../../common/utils/async-result";
 import type { HelmRepo } from "../../../common/helm/helm-repo";
-
-jest.mock("../helm-chart-manager");
+import { sortCharts } from "../../../common/utils";
+import helmChartManagerInjectable from "../helm-chart-manager.injectable";
 
 describe("Helm Service tests", () => {
   let listHelmCharts: () => Promise<any>;
@@ -19,6 +19,11 @@ describe("Helm Service tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     getActiveHelmRepositoriesMock = jest.fn();
+
+    di.override(
+      helmChartManagerInjectable,
+      (di, repo) => new HelmChartManagerFake(repo) as unknown,
+    );
 
     di.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
 
@@ -195,3 +200,145 @@ describe("Helm Service tests", () => {
     });
   });
 });
+
+const charts = new Map([
+  ["stable", {
+    "invalid-semver": sortCharts([
+      {
+        apiVersion: "3.0.0",
+        name: "weird-versioning",
+        version: "I am not semver",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "weird-versioning",
+        version: "v4.3.0",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "weird-versioning",
+        version: "I am not semver but more",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "weird-versioning",
+        version: "v4.4.0",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+    ]),
+    "apm-server": sortCharts([
+      {
+        apiVersion: "3.0.0",
+        name: "apm-server",
+        version: "2.1.7",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "apm-server",
+        version: "2.1.6",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+    ]),
+    "redis": sortCharts([
+      {
+        apiVersion: "3.0.0",
+        name: "apm-server",
+        version: "1.0.0",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "apm-server",
+        version: "0.0.9",
+        repo: "stable",
+        digest: "test",
+        created: "now",
+      },
+    ]),
+  }],
+  ["experiment", {
+    "fairwind": sortCharts([
+      {
+        apiVersion: "3.0.0",
+        name: "fairwind",
+        version: "0.0.1",
+        repo: "experiment",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "fairwind",
+        version: "0.0.2",
+        repo: "experiment",
+        digest: "test",
+        deprecated: true,
+        created: "now",
+      },
+    ]),
+  }],
+  ["bitnami", {
+    "hotdog": sortCharts([
+      {
+        apiVersion: "3.0.0",
+        name: "hotdog",
+        version: "1.0.1",
+        repo: "bitnami",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "hotdog",
+        version: "1.0.2",
+        repo: "bitnami",
+        digest: "test",
+        created: "now",
+      },
+    ]),
+    "pretzel": sortCharts([
+      {
+        apiVersion: "3.0.0",
+        name: "pretzel",
+        version: "1.0",
+        repo: "bitnami",
+        digest: "test",
+        created: "now",
+      },
+      {
+        apiVersion: "3.0.0",
+        name: "pretzel",
+        version: "1.0.1",
+        repo: "bitnami",
+        digest: "test",
+        created: "now",
+      },
+    ]),
+  }],
+]);
+
+class HelmChartManagerFake {
+  constructor(private repo: HelmRepo){ }
+
+  public async charts(): Promise<any> {
+    return charts.get(this.repo.name) ?? {};
+  }
+}

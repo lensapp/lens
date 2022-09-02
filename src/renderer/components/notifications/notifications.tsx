@@ -9,14 +9,22 @@ import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import type { Disposer } from "../../utils";
 import { cssNames, prevDefault } from "../../utils";
-import type { Notification, NotificationMessage, NotificationsStore } from "./notifications.store";
-import { NotificationStatus } from "./notifications.store";
+import type { CreateNotificationOptions, Notification, NotificationMessage, NotificationsStore } from "./notifications.store";
 import { Animate } from "../animate";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { asLegacyGlobalForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import notificationsStoreInjectable from "./notifications-store.injectable";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import showSuccessNotificationInjectable from "./show-success-notification.injectable";
+import type { ShowCheckedErrorNotification } from "./show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "./show-checked-error.injectable";
+import showErrorNotificationInjectable from "./show-error-notification.injectable";
+import showInfoNotificationInjectable from "./show-info-notification.injectable";
+import showShortInfoNotificationInjectable from "./show-short-info.injectable";
+
+export type ShowNotification = (message: NotificationMessage, opts?: CreateNotificationOptions) => Disposer;
 
 interface Dependencies {
   store: NotificationsStore;
@@ -103,58 +111,16 @@ export const Notifications = withInjectables<Dependencies>(
     }),
   },
 ) as React.FC & {
-  ok: (message: NotificationMessage) => () => void;
-  checkedError: (message: unknown, fallback: string, customOpts?: Partial<Omit<Notification, "message">>) => () => void;
-  error: (message: NotificationMessage, customOpts?: Partial<Omit<Notification, "message">>) => () => void;
-  shortInfo: (message: NotificationMessage, customOpts?: Partial<Omit<Notification, "message">>) => () => void;
-  info: (message: NotificationMessage, customOpts?: Partial<Omit<Notification, "message">>) => () => void;
+  ok: ShowNotification;
+  checkedError: ShowCheckedErrorNotification;
+  error: ShowNotification;
+  shortInfo: ShowNotification;
+  info: ShowNotification;
 };
 
-/**
- * @deprecated
- */
-const _notificationStore = asLegacyGlobalForExtensionApi(notificationsStoreInjectable);
-
-Notifications.ok = (message: NotificationMessage) => {
-  return _notificationStore.add({
-    message,
-    timeout: 2_500,
-    status: NotificationStatus.OK,
-  });
-};
-
-Notifications.checkedError = (message, fallback, customOpts = {}) => {
-  if (typeof message === "string" || message instanceof Error || message instanceof JsonApiErrorParsed) {
-    return Notifications.error(message, customOpts);
-  }
-
-  console.warn("Unknown notification error message, falling back to default", message);
-
-  return Notifications.error(fallback, customOpts);
-};
-
-Notifications.error = (message, customOpts= {}) => {
-  return _notificationStore.add({
-    message,
-    timeout: 10_000,
-    status: NotificationStatus.ERROR,
-    ...customOpts,
-  });
-};
-
-Notifications.shortInfo = (message, customOpts = {}) => {
-  return Notifications.info(message, {
-    timeout: 5_000,
-    ...customOpts,
-  });
-};
-
-Notifications.info = (message, customOpts = {}) => {
-  return _notificationStore.add({
-    status: NotificationStatus.INFO,
-    timeout: 0,
-    message,
-    ...customOpts,
-  });
-};
+Notifications.ok = asLegacyGlobalFunctionForExtensionApi(showSuccessNotificationInjectable);
+Notifications.error = asLegacyGlobalFunctionForExtensionApi(showErrorNotificationInjectable);
+Notifications.checkedError = asLegacyGlobalFunctionForExtensionApi(showCheckedErrorNotificationInjectable);
+Notifications.info = asLegacyGlobalFunctionForExtensionApi(showInfoNotificationInjectable);
+Notifications.shortInfo = asLegacyGlobalFunctionForExtensionApi(showShortInfoNotificationInjectable);
 

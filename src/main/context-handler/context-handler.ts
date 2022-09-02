@@ -131,9 +131,8 @@ export class ContextHandler implements ClusterContextHandler {
 
   async resolveAuthProxyUrl(): Promise<string> {
     const kubeAuthProxy = await this.ensureServerHelper();
-    const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `https://127.0.0.1:${kubeAuthProxy.port}${kubeAuthProxy.apiPrefix}${path}`;
+    return `https://127.0.0.1:${kubeAuthProxy.port}${kubeAuthProxy.apiPrefix}`;
   }
 
   resolveAuthProxyCa() {
@@ -156,6 +155,12 @@ export class ContextHandler implements ClusterContextHandler {
 
     if (this.clusterUrl.hostname) {
       headers.Host = this.clusterUrl.hostname;
+
+      // fix current IPv6 inconsistency in url.Parse() and httpProxy.
+      // with url.Parse the IPv6 Hostname has no Square brackets but httpProxy needs the Square brackets to work.
+      if (headers.Host.includes(":")) {
+        headers.Host = `[${headers.Host}]`;
+      }
     }
 
     return {
@@ -202,6 +207,8 @@ export class ContextHandler implements ClusterContextHandler {
   }
 
   stopServer() {
+    this.prometheus = undefined;
+    this.prometheusProvider = undefined;
     this.kubeAuthProxy?.exit();
     this.kubeAuthProxy = undefined;
     this.apiTarget = undefined;

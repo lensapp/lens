@@ -5,7 +5,7 @@
 
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeObjectScope, KubeObjectStatus } from "../kube-object";
+import type { ClusterScopedMetadata, KubeObjectStatus } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { metricsApi } from "./metrics.api";
 import type { PodMetricData } from "./pod.api";
@@ -23,7 +23,11 @@ export interface NamespaceStatus extends KubeObjectStatus {
   phase?: string;
 }
 
-export class Namespace extends KubeObject<NamespaceStatus, NamespaceSpec, KubeObjectScope.Cluster> {
+export class Namespace extends KubeObject<
+  ClusterScopedMetadata,
+  NamespaceStatus,
+  NamespaceSpec
+> {
   static readonly kind = "Namespace";
   static readonly namespaced = false;
   static readonly apiBase = "/api/v1/namespaces";

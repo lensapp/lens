@@ -5,14 +5,16 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { object } from "../../../common/utils";
-import { HelmChartManager } from "../helm-chart-manager";
 import getActiveHelmRepositoriesInjectable from "../repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
+import type { HelmRepo } from "../../../common/helm/helm-repo";
+import helmChartManagerInjectable from "../helm-chart-manager.injectable";
 
 const listHelmChartsInjectable = getInjectable({
   id: "list-helm-charts",
 
   instantiate: (di) => {
     const getActiveHelmRepositories = di.inject(getActiveHelmRepositoriesInjectable);
+    const getChartManager = (repo: HelmRepo) => di.inject(helmChartManagerInjectable, repo);
 
     return async () => {
       const result = await getActiveHelmRepositories();
@@ -27,7 +29,7 @@ const listHelmChartsInjectable = getInjectable({
             async (repo) =>
               [
                 repo.name,
-                await HelmChartManager.forRepo(repo).charts(),
+                await getChartManager(repo).charts(),
               ] as const,
           ),
         ),

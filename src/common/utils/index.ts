@@ -3,13 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-/**
- * A function that does nothing
- */
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
-}
-
 export * from "./abort-controller";
 export * from "./app-version";
 export * from "./autobind";
@@ -27,7 +20,8 @@ export * from "./formatDuration";
 export * from "./getRandId";
 export * from "./hash-set";
 export * from "./n-fircate";
-export * from "./openBrowser";
+export * from "./noop";
+export * from "./observable-crate/impl";
 export * from "./paths";
 export * from "./promise-exec";
 export * from "./readonly";

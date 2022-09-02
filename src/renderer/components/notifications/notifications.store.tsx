@@ -19,6 +19,12 @@ export enum NotificationStatus {
   INFO = "info",
 }
 
+export interface CreateNotificationOptions {
+  id?: NotificationId;
+  timeout?: number;
+  onClose?(): void;
+}
+
 export interface Notification {
   id?: NotificationId;
   message: NotificationMessage;

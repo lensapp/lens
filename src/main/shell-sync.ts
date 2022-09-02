@@ -8,6 +8,7 @@ import os from "os";
 import { app } from "electron";
 import logger from "./logger";
 import { isSnap } from "../common/vars";
+import { unionPATHs } from "../common/utils/union-env-path";
 
 /**
  * shellSync loads what would have been the environment if this application was
@@ -25,7 +26,8 @@ export async function shellSync() {
   }
 
   if (!isSnap) {
-    process.env.PATH = env.PATH;
+    // Prefer the synced PATH over the initial one
+    process.env.PATH = unionPATHs(env.PATH ?? "",  process.env.PATH ?? "");
   }
 
   // The spread operator allows joining of objects. The precedence is last to first.

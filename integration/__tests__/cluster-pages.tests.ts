@@ -113,13 +113,13 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await frame.waitForSelector(".LogList .list span.active");
 
       const showTimestampsButton = await frame.waitForSelector(
-        ".LogControls .show-timestamps",
+        "[data-testid='log-controls'] .show-timestamps",
       );
 
       await showTimestampsButton.click();
 
       const showPreviousButton = await frame.waitForSelector(
-        ".LogControls .show-previous",
+        "[data-testid='log-controls'] .show-previous",
       );
 
       await showPreviousButton.click();

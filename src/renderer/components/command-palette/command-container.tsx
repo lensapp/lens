@@ -4,7 +4,7 @@
  */
 
 
-import "./command-container.scss";
+import styles from "./command-container.module.scss";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
@@ -22,6 +22,7 @@ import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.inje
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
+import { onKeyboardShortcut } from "../../utils/on-keyboard-shortcut";
 
 interface Dependencies {
   addWindowEventListener: AddWindowEventListener;
@@ -34,47 +35,38 @@ interface Dependencies {
 
 @observer
 class NonInjectedCommandContainer extends React.Component<Dependencies> {
-  private escHandler = (event: KeyboardEvent) => {
-    if (event.key === "Escape") {
-      event.stopPropagation();
-      this.props.commandOverlay.close();
-    }
-  };
-
-  handleCommandPalette = () => {
-    const matchedClusterId = this.props.matchedClusterId.get();
-
-    if (matchedClusterId !== undefined) {
-      broadcastMessage(`command-palette:${matchedClusterId}:open`);
-    } else {
-      this.props.commandOverlay.open(<CommandDialog />);
-    }
-  };
-
-  onKeyboardShortcut(action: () => void) {
-    return ({ key, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEvent) => {
-      const ctrlOrCmd = this.props.isMac ? metaKey && !ctrlKey : !metaKey && ctrlKey;
-
-      if (key === "p" && shiftKey && ctrlOrCmd && !altKey) {
-        action();
-      }
-    };
-  }
-
   componentDidMount() {
-    const { clusterId, addWindowEventListener, commandOverlay } = this.props;
+    const { clusterId, addWindowEventListener, commandOverlay, matchedClusterId, isMac } = this.props;
 
     const action = clusterId
       ? () => commandOverlay.open(<CommandDialog />)
-      : this.handleCommandPalette;
+      : () => {
+        const matchedId = matchedClusterId.get();
+
+        if (matchedId) {
+          broadcastMessage(`command-palette:${matchedClusterId}:open`);
+        } else {
+          commandOverlay.open(<CommandDialog />);
+        }
+      };
     const ipcChannel = clusterId
       ? `command-palette:${clusterId}:open`
       : "command-palette:open";
 
     disposeOnUnmount(this, [
       this.props.legacyOnChannelListen(ipcChannel, action),
-      addWindowEventListener("keydown", this.onKeyboardShortcut(action)),
-      addWindowEventListener("keyup", this.escHandler, true),
+      addWindowEventListener("keydown", onKeyboardShortcut(
+        isMac
+          ? "Shift+Cmd+P"
+          : "Shift+Ctrl+P",
+        action,
+      )),
+      addWindowEventListener("keydown", (event) => {
+        if (event.code === "Escape") {
+          event.stopPropagation();
+          this.props.commandOverlay.close();
+        }
+      }),
     ]);
   }
 
@@ -84,11 +76,11 @@ class NonInjectedCommandContainer extends React.Component<Dependencies> {
     return (
       <Dialog
         isOpen={commandOverlay.isOpen}
-        animated={true}
+        animated={false}
         onClose={commandOverlay.close}
         modal={false}
       >
-        <div id="command-container">
+        <div className={styles.CommandContainer} data-testid="command-container">
           {commandOverlay.component}
         </div>
       </Dialog>

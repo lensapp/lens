@@ -31,7 +31,7 @@ const NonInjectedOverviewStatuses = observer(
               </a>
             </div>
 
-            <OverviewWorkloadStatus status={workload.status.get()} />
+            <OverviewWorkloadStatus workload={workload} />
           </div>
         ))}
       </div>

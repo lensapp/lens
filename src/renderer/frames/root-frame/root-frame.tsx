@@ -3,25 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { injectSystemCAs } from "../../../common/system-ca";
 import React from "react";
-import { observer } from "mobx-react";
-import { ClusterManager } from "../../components/cluster-manager";
-import { ErrorBoundary } from "../../components/error-boundary";
-import { Notifications } from "../../components/notifications";
-import { ConfirmDialog } from "../../components/confirm-dialog";
-import { CommandContainer } from "../../components/command-palette/command-container";
+import { Observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import broadcastThatRootFrameIsRenderedInjectable from "./broadcast-that-root-frame-is-rendered.injectable";
-
-// Todo: remove import-time side-effect.
-injectSystemCAs();
+import type { RootFrameChildComponent } from "./root-frame-child-component-injection-token";
+import { rootFrameChildComponentInjectionToken } from "./root-frame-child-component-injection-token";
 
 interface Dependencies {
   broadcastThatRootFrameIsRendered: () => void;
+  childComponents: RootFrameChildComponent[];
 }
 
-@observer
 class NonInjectedRootFrame extends React.Component<Dependencies> {
   static displayName = "RootFrame";
 
@@ -32,12 +25,12 @@ class NonInjectedRootFrame extends React.Component<Dependencies> {
   render() {
     return (
       <>
-        <ErrorBoundary>
-          <ClusterManager />
-        </ErrorBoundary>
-        <Notifications />
-        <ConfirmDialog />
-        <CommandContainer />
+        {this.props.childComponents
+          .map((child) => (
+            <Observer key={child.id}>
+              {() => (child.shouldRender.get() ? <child.Component /> : null) }
+            </Observer>
+          ))}
       </>
     );
   }
@@ -49,6 +42,7 @@ export const RootFrame = withInjectables<Dependencies>(
   {
     getProps: (di, props) => ({
       broadcastThatRootFrameIsRendered: di.inject(broadcastThatRootFrameIsRenderedInjectable),
+      childComponents: di.injectMany(rootFrameChildComponentInjectionToken),
       ...props,
     }),
   },

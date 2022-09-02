@@ -12,19 +12,22 @@ import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
 import type { ThemeStore } from "../../../themes/store";
 import { disposer } from "../../../utils";
-import { isMac } from "../../../../common/vars";
 import { once } from "lodash";
 import { clipboard } from "electron";
 import logger from "../../../../common/logger";
 import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
 import assert from "assert";
 import { TerminalChannels } from "../../../../common/terminal/channels";
+import { LinkProvider } from "xterm-link-provider";
+import type { OpenLinkInBrowser } from "../../../../common/utils/open-link-in-browser.injectable";
 
 export interface TerminalDependencies {
   readonly spawningPool: HTMLElement;
   readonly terminalConfig: IComputedValue<TerminalConfig>;
   readonly terminalCopyOnSelect: IComputedValue<boolean>;
   readonly themeStore: ThemeStore;
+  readonly isMac: boolean;
+  openLinkInBrowser: OpenLinkInBrowser;
 }
 
 export interface TerminalArguments {
@@ -93,7 +96,6 @@ export class Terminal {
     this.xterm.loadAddon(this.fitAddon);
 
     this.xterm.open(this.dependencies.spawningPool);
-    this.xterm.registerLinkMatcher(/https?:\/\/[^\s]+/i, this.onClickLink);
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
     this.xterm.onSelectionChange(this.onSelectionChange);
 
@@ -108,7 +110,16 @@ export class Terminal {
     this.api.on("data", this.onApiData);
     window.addEventListener("resize", this.onResize);
 
+    const linkProvider = new LinkProvider(
+      this.xterm,
+      /https?:\/\/[^\s]+/i,
+      (event, link) => this.dependencies.openLinkInBrowser(link),
+      undefined,
+      0,
+    );
+
     this.disposer.push(
+      this.xterm.registerLinkProvider(linkProvider),
       reaction(() => this.theme, colors => this.xterm.setOption("theme", colors), {
         fireImmediately: true,
       }),
@@ -119,6 +130,9 @@ export class Terminal {
       () => this.api.removeAllListeners(),
       () => window.removeEventListener("resize", this.onResize),
       () => this.elem.removeEventListener("contextmenu", this.onContextMenu),
+      this.xterm.onResize(({ cols, rows }) => {
+        this.api.sendTerminalSize(cols, rows);
+      }),
     );
   }
 
@@ -127,21 +141,7 @@ export class Terminal {
     this.xterm.dispose();
   }
 
-  fit = () => {
-    try {
-      const { cols, rows } = this.fitAddon.proposeDimensions();
-
-      // attempt to resize/fit terminal when it's not visible in DOM will crash with exception
-      // see: https://github.com/xtermjs/xterm.js/issues/3118
-      if (isNaN(cols) || isNaN(rows)) return;
-
-      this.fitAddon.fit();
-      this.api.sendTerminalSize(cols, rows);
-    } catch (error) {
-      // see https://github.com/lensapp/lens/issues/1891
-      logger.error(`[TERMINAL]: failed to resize terminal to fit`, error);
-    }
-  };
+  fit = () => this.fitAddon.fit();
 
   fitLazy = debounce(this.fit, 250);
 
@@ -178,10 +178,6 @@ export class Terminal {
     this.fit();
     setTimeout(() => this.focus(), 250); // delay used to prevent focus on active tab
     this.viewport.scrollTop = this.scrollPos; // restore last scroll position
-  };
-
-  onClickLink = (evt: MouseEvent, link: string) => {
-    window.open(link, "_blank");
   };
 
   onContextMenu = () => {
@@ -240,7 +236,7 @@ export class Terminal {
     }
 
     //Ctrl+K: clear the entire buffer, making the prompt line the new first line on mac os
-    if (isMac && metaKey) {
+    if (this.dependencies.isMac && metaKey) {
       switch (code) {
         case "KeyK":
           this.onClear();

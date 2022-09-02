@@ -55,7 +55,7 @@
   display: flex;
   align-items: center;
   color: var(--color);
-  padding: 6px var(--padding);
+  padding: calc(var(--padding) / 2) var(--padding);
   margin-bottom: -3px;
   white-space: nowrap;
   text-decoration: none;

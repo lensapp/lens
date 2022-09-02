@@ -5,12 +5,18 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { showAbout } from "./menu";
 import showMessagePopupInjectable from "../electron-app/features/show-message-popup.injectable";
+import appVersionInjectable from "../../common/vars/app-version.injectable";
+import buildVersionInjectable from "./build-version.injectable";
 
 const showAboutInjectable = getInjectable({
   id: "show-about",
 
   instantiate: (di) =>
-    showAbout({ showMessagePopup: di.inject(showMessagePopupInjectable) }),
+    showAbout({ 
+      appVersion: di.inject(buildVersionInjectable),
+      extensionApiVersion: di.inject(appVersionInjectable),
+      showMessagePopup: di.inject(showMessagePopupInjectable),
+    }),
 });
 
 export default showAboutInjectable;

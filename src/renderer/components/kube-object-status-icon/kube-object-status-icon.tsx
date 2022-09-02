@@ -7,12 +7,15 @@ import "./kube-object-status-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames, formatDuration, getOrInsert } from "../../utils";
+import { cssNames, formatDuration, getOrInsert, isDefined } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import statusesForKubeObjectInjectable from "./statuses-for-kube-object.injectable";
+import kubeObjectStatusTextsForObjectInjectable from "./kube-object-status-texts-for-object.injectable";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-status";
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
+import type { IComputedValue } from "mobx";
+import { observer } from "mobx-react";
+import type { KubeObjectStatusText } from "./kube-object-status-text-injection-token";
 
 function statusClassName(level: KubeObjectStatusLevel): string {
   switch (level) {
@@ -76,9 +79,10 @@ export interface KubeObjectStatusIconProps {
 }
 
 interface Dependencies {
-  statuses: KubeObjectStatus[];
+  statuses: IComputedValue<KubeObjectStatusText[]>;
 }
 
+@observer
 class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIconProps & Dependencies> {
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
     const filteredStatuses = statuses.filter((item) => item.level == level);
@@ -104,7 +108,11 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
   }
 
   render() {
-    const statuses = this.props.statuses;
+    const statusTexts = this.props.statuses.get();
+
+    const statuses = statusTexts
+      .map((statusText) => statusText.resolve(this.props.object))
+      .filter(isDefined);
 
     if (statuses.length === 0) {
       return null;
@@ -116,6 +124,7 @@ class NonInjectedKubeObjectStatusIcon extends React.Component<KubeObjectStatusIc
       <Icon
         material={maxLevel}
         className={cssNames("KubeObjectStatusIcon", maxLevel)}
+        data-testid={`kube-object-status-icon-for-${this.props.object.getId()}`}
         tooltip={{
           children: (
             <div className="KubeObjectStatusTooltip">
@@ -135,7 +144,7 @@ export const KubeObjectStatusIcon = withInjectables<Dependencies, KubeObjectStat
 
   {
     getProps: (di, props) => ({
-      statuses: di.inject(statusesForKubeObjectInjectable, props.object),
+      statuses: di.inject(kubeObjectStatusTextsForObjectInjectable, props.object),
       ...props,
     }),
   },

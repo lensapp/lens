@@ -13,10 +13,17 @@ import logger from "../../main/logger";
 import type { ClusterFrameInfo } from "../cluster-frames";
 import { clusterFrameMap } from "../cluster-frames";
 import type { Disposer } from "../utils";
+import ipcMainInjectable from "../../main/utils/channel/ipc-main/ipc-main.injectable";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 
 export const broadcastMainChannel = "ipc:broadcast-main";
 
 export function ipcMainHandle(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  const ipcMain = di.inject(ipcMainInjectable);
+
   ipcMain.handle(channel, async (event, ...args) => {
     return sanitizePayload(await listener(event, ...args));
   });
@@ -78,12 +85,20 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
 }
 
 export function ipcMainOn(channel: string, listener: (event: Electron.IpcMainEvent, ...args: any[]) => any): Disposer {
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  const ipcMain = di.inject(ipcMainInjectable);
+
   ipcMain.on(channel, listener);
 
   return () => ipcMain.off(channel, listener);
 }
 
 export function ipcRendererOn(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  const ipcRenderer = di.inject(ipcRendererInjectable);
+
   ipcRenderer.on(channel, listener);
 
   return () => ipcRenderer.off(channel, listener);

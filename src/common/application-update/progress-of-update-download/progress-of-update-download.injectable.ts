@@ -4,11 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import createSyncBoxInjectable from "../../utils/sync-box/create-sync-box.injectable";
+import type { SyncBox } from "../../utils/sync-box/sync-box-injection-token";
 import { syncBoxInjectionToken } from "../../utils/sync-box/sync-box-injection-token";
 
 export interface ProgressOfDownload {
   percentage: number;
+  failed?: string;
 }
+
+export type ProgressOfUpdateDownload = SyncBox<ProgressOfDownload>;
 
 const progressOfUpdateDownloadInjectable = getInjectable({
   id: "progress-of-update-download-state",

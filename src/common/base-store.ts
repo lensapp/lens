@@ -19,7 +19,7 @@ import { kebabCase } from "lodash";
 import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "./get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "./get-configuration-file-model/app-version/app-version.injectable";
+import appVersionInjectable from "./vars/app-version.injectable";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: {
@@ -31,7 +31,7 @@ export interface BaseStoreParams<T> extends ConfOptions<T> {
 /**
  * Note: T should only contain base JSON serializable types.
  */
-export abstract class BaseStore<T> extends Singleton {
+export abstract class BaseStore<T extends object> extends Singleton {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
 
@@ -59,10 +59,10 @@ export abstract class BaseStore<T> extends Singleton {
     const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
 
     this.storeConfig = getConfigurationFileModel({
-      ...this.params,
       projectName: "lens",
       projectVersion: di.inject(appVersionInjectable),
       cwd: this.cwd(),
+      ...this.params,
     });
 
     const res: any = this.fromStore(this.storeConfig.store);

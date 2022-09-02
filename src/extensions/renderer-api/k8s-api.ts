@@ -25,6 +25,7 @@ import resourceQuotaApiInjectable from "../../common/k8s-api/endpoints/resource-
 import limitRangeApiInjectable from "../../common/k8s-api/endpoints/limit-range.api.injectable";
 import horizontalPodAutoscalerApiInjectable from "../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api.injectable";
 import podDisruptionBudgetApiInjectable from "../../common/k8s-api/endpoints/pod-disruption-budget.api.injectable";
+import priorityClassStoreApiInjectable from "../../common/k8s-api/endpoints/priority-class.api.injectable";
 import serviceApiInjectable from "../../common/k8s-api/endpoints/service.api.injectable";
 import endpointsApiInjectable from "../../common/k8s-api/endpoints/endpoint.api.injectable";
 import ingressApiInjectable from "../../common/k8s-api/endpoints/ingress.api.injectable";
@@ -68,6 +69,7 @@ export const limitRangeApi = asLegacyGlobalForExtensionApi(limitRangeApiInjectab
 export const serviceApi = asLegacyGlobalForExtensionApi(serviceApiInjectable);
 export const hpaApi = asLegacyGlobalForExtensionApi(horizontalPodAutoscalerApiInjectable);
 export const pdbApi = asLegacyGlobalForExtensionApi(podDisruptionBudgetApiInjectable);
+export const pcApi = asLegacyGlobalForExtensionApi(priorityClassStoreApiInjectable);
 export const endpointApi = asLegacyGlobalForExtensionApi(endpointsApiInjectable);
 export const ingressApi = asLegacyGlobalForExtensionApi(ingressApiInjectable);
 export const networkPolicyApi = asLegacyGlobalForExtensionApi(networkPolicyApiInjectable);
@@ -102,6 +104,7 @@ export type { ResourceQuotaStore as ResourceQuotasStore } from "../../renderer/c
 export type { LimitRangeStore as LimitRangesStore } from "../../renderer/components/+config-limit-ranges/store";
 export type { HorizontalPodAutoscalerStore as HPAStore } from "../../renderer/components/+config-autoscalers/store";
 export type { PodDisruptionBudgetStore as PodDisruptionBudgetsStore } from "../../renderer/components/+config-pod-disruption-budgets/store";
+export type { PriorityClassStore as PriorityClassStoreStore } from "../../renderer/components/+config-priority-classes/store";
 export type { ServiceStore } from "../../renderer/components/+network-services/store";
 export type { EndpointsStore as EndpointStore } from "../../renderer/components/+network-endpoints/store";
 export type { IngressStore } from "../../renderer/components/+network-ingresses/store";

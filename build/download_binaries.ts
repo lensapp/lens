@@ -13,7 +13,6 @@ import { promisify } from "util";
 import { pipeline as _pipeline, Transform, Writable } from "stream";
 import type { SingleBar } from "cli-progress";
 import { MultiBar } from "cli-progress";
-import AbortController from "abort-controller";
 import { extract } from "tar-stream";
 import gunzip from "gunzip-maybe";
 import { getBinaryName, normalizedPlatform } from "../src/common/vars";

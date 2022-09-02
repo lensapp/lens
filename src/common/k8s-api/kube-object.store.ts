@@ -15,12 +15,12 @@ import { ItemStore } from "../item.store";
 import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
 import type { RequestInit } from "node-fetch";
-import AbortController from "abort-controller";
 import type { Patch } from "rfc6902";
 import logger from "../logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import { entries } from "../utils/objects";
+import AbortController from "abort-controller";
 
 export type OnLoadFailure = (error: unknown) => void;
 
@@ -83,6 +83,8 @@ export type KubeApiDataFrom<K extends KubeObject, A> = A extends KubeApi<K, infe
     : never
   : never;
 
+export type JsonPatch = Patch;
+
 export abstract class KubeObjectStore<
   K extends KubeObject = KubeObject,
   A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
@@ -90,7 +92,7 @@ export abstract class KubeObjectStore<
 > extends ItemStore<K> {
   static readonly defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
-  public readonly api: A;
+  public readonly api!: A;
   public readonly limit: number | undefined;
   public readonly bufferSize: number;
   @observable private loadedNamespaces: string[] | undefined = undefined;
@@ -103,9 +105,18 @@ export abstract class KubeObjectStore<
     return when(() => Boolean(this.loadedNamespaces));
   }
 
-  constructor(api: A, opts?: KubeObjectStoreOptions) {
+  constructor(api: A, opts?: KubeObjectStoreOptions);
+  /**
+   * @deprecated Supply API instance through constructor
+   */
+  constructor();
+  constructor(api?: A, opts?: KubeObjectStoreOptions) {
     super();
-    this.api = api;
+
+    if (api) {
+      this.api = api;
+    }
+
     this.limit = opts?.limit;
     this.bufferSize = opts?.bufferSize ?? 50_000;
 
@@ -344,7 +355,7 @@ export abstract class KubeObjectStore<
   async loadFromPath(resourcePath: string) {
     const { namespace, name } = parseKubeApi(resourcePath);
 
-    assert(name && namespace, "Both name and namesapce must be part of resourcePath");
+    assert(name, "name must be part of resourcePath");
 
     return this.load({ name, namespace });
   }
@@ -376,7 +387,7 @@ export abstract class KubeObjectStore<
     return newItem;
   }
 
-  async patch(item: K, patch: Patch): Promise<K> {
+  async patch(item: K, patch: JsonPatch): Promise<K> {
     const rawItem = await this.api.patch(
       {
         name: item.getName(), namespace: item.getNs(),
@@ -466,7 +477,8 @@ export abstract class KubeObjectStore<
       callback,
     });
 
-    const { signal } = abortController;
+    // TODO: upgrade node-fetch once we are starting to use ES modules
+    const signal = abortController.signal;
 
     const callback: KubeApiWatchCallback<D> = (data, error) => {
       if (!this.isLoaded || error?.type === "aborted") return;

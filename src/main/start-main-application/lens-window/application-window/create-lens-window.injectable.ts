@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensWindow, SendToViewArgs } from "./lens-window-injection-token";
 import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
 import createElectronWindowForInjectable from "./create-electron-window.injectable";
 import assert from "assert";
+import type { ClusterFrameInfo } from "../../../../common/cluster-frames";
 
 export interface ElectronWindow {
   show: () => void;
@@ -14,6 +14,24 @@ export interface ElectronWindow {
   send: (args: SendToViewArgs) => void;
   loadFile: (filePath: string) => Promise<void>;
   loadUrl: (url: string) => Promise<void>;
+  reload: () => void;
+}
+
+export interface SendToViewArgs {
+  channel: string;
+  frameInfo?: ClusterFrameInfo;
+  data?: unknown[];
+}
+
+export interface LensWindow {
+  id: string;
+  start: () => Promise<void>;
+  close: () => void;
+  show: () => void;
+  send: (args: SendToViewArgs) => void;
+  isVisible: boolean;
+  isStarting: boolean;
+  reload: () => void;
 }
 
 export interface LensWindowConfiguration {
@@ -30,6 +48,7 @@ export interface LensWindowConfiguration {
   onFocus?: () => void;
   onBlur?: () => void;
   onDomReady?: () => void;
+  onClose?: () => void;
 }
 
 const createLensWindowInjectable = getInjectable({
@@ -97,6 +116,7 @@ const createLensWindowInjectable = getInjectable({
           browserWindow?.close();
           browserWindow = undefined;
           windowIsShown = false;
+          configuration.onClose?.();
         },
 
         send: (args: SendToViewArgs) => {
@@ -105,6 +125,14 @@ const createLensWindowInjectable = getInjectable({
           }
 
           return browserWindow.send(args);
+        },
+
+        reload: () => {
+          if (!browserWindow) {
+            throw new Error(`Tried to reload window "${configuration.id}" but the window was closed`);
+          }
+
+          return browserWindow.reload();
         },
       };
     };

@@ -9,7 +9,6 @@ import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import { ClusterMetadataKey } from "../../../common/cluster-types";
 import logger from "../../logger";
 import type { Cluster } from "../../../common/cluster/cluster";
-import type { IMetricsQuery } from "./metrics-query";
 import { clusterRoute } from "../../router/route";
 import { isObject } from "lodash";
 import { isRequestError } from "../../../common/utils";
@@ -31,11 +30,11 @@ const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[],
         } catch (error) {
           if (isRequestError(error)) {
             if (lastAttempt || (error.statusCode && error.statusCode >= 400 && error.statusCode < 500)) {
-              logger.error("[Metrics]: metrics not available", error?.response ? error.response?.body : error);
-              throw new Error("Metrics not available");
+              throw new Error("Metrics not available", { cause: error });
             }
+          } else if (error instanceof Error) {
+            throw new Error("Metrics not available", { cause: error });
           } else {
-            logger.error("[Metrics]: metrics not available", error);
             throw new Error("Metrics not available");
           }
 
@@ -60,7 +59,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
     const getMetrics = di.inject(getMetricsInjectable);
     const loadMetrics = loadMetricsFor(getMetrics);
 
-    const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
+    const queryParams = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 
     try {
