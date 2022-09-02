@@ -19,6 +19,7 @@ import quitAndInstallUpdateInjectable from "../../main/application-update/quit-a
 import appVersionInjectable from "../../common/vars/app-version.injectable";
 import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 
 describe("analytics for installing update", () => {
   let builder: ApplicationBuilder;
@@ -51,6 +52,8 @@ describe("analytics for installing update", () => {
 
       mainDi.override(publishIsConfiguredInjectable, () => true);
 
+      mainDi.unoverride(emitEventInjectable);
+
       const eventBus = mainDi.inject(appEventBusInjectable);
 
       eventBus.addListener(analyticsListenerMock);
@@ -65,7 +68,6 @@ describe("analytics for installing update", () => {
       mainDi.permitSideEffects(periodicalCheckForUpdatesInjectable);
 
       await builder.render();
-
     });
 
     it("sends event to analytics for being checked periodically", () => {
