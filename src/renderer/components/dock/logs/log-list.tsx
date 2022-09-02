@@ -62,19 +62,14 @@ export const LogList = observer(({ model }: LogListProps) => {
     const { scrollTop } = parentRef.current as HTMLDivElement;
 
     if (scrollTop === 0) {
-      const oldLogsAmount = visibleLogs.get().length;
+      const logs = model.logs.get();
+      const firstLog = logs[0];
+
       await model.loadLogs();
-      const newLogsAmount = visibleLogs.get().length;
 
-      
-      const scrollToIndex = newLogsAmount - oldLogsAmount;
-      console.log("new logs loaded", oldLogsAmount, newLogsAmount, scrollToIndex);
+      const scrollToIndex = model.logs.get().findIndex(log => log === firstLog);
 
-      setTimeout(() => {
-        rowVirtualizer.scrollToIndex(scrollToIndex, { align: 'start', smoothScroll: false });
-      }, 1000)
-
-      // rowVirtualizer.scrollToIndex(scrollToIndex, { align: 'start', smoothScroll: false });
+      rowVirtualizer.scrollToIndex(scrollToIndex, { align: 'start', smoothScroll: false });
     }
   };
 
