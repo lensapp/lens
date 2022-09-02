@@ -25,6 +25,7 @@ import reloadLogsInjectable from "../../renderer/components/dock/logs/reload-log
 import setLogTabDataInjectable from "../../renderer/components/dock/logs/set-log-tab-data.injectable";
 import stopLoadingLogsInjectable from "../../renderer/components/dock/logs/stop-loading-logs.injectable";
 import { dockerPod } from "../../renderer/components/dock/logs/__test__/pod.mock";
+import type { Container } from "../../common/k8s-api/endpoints";
 
 describe("download logs options in pod logs dock tab", () => {
   let rendered: RenderResult;
@@ -84,10 +85,10 @@ describe("download logs options in pod logs dock tab", () => {
       const windowDi = builder.applicationWindow.only.di;
       const pod = dockerPod;
       const createLogsTab = windowDi.inject(createPodLogsTabInjectable);
-      const container = {
+      const container: Container = {
         name: "docker-exporter",
         image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull",
+        imagePullPolicy: "Always",
       };
 
       const dockStore = windowDi.inject(dockStoreInjectable);
