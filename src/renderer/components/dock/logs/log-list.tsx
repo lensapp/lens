@@ -78,7 +78,7 @@ export const LogList = observer(({ model }: LogListProps) => {
       // Initial scroll to bottom
       rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
     }, 200)
-  }, [])
+  }, [model.logTabData.get()?.selectedPodId])
 
   return (
     <div
