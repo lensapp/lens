@@ -83,6 +83,10 @@ export const LogList = observer(({ model }: LogListProps) => {
     rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
   }, [model.logTabData.get()]);
 
+  useEffect(() => {
+    rowVirtualizer.scrollToIndex(model.searchStore.occurrences[model.searchStore.activeOverlayIndex], { align: 'end', smoothScroll: false });
+  }, [model.searchStore.activeOverlayIndex])
+
   return (
     <div
       ref={parentRef}
