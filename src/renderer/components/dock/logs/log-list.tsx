@@ -1,3 +1,5 @@
+import styles from "./log-list.module.scss";
+
 import { useVirtualizer } from '@tanstack/react-virtual';
 import AnsiUp from 'ansi_up';
 import DOMPurify from 'dompurify';
@@ -87,43 +89,30 @@ export const LogList = observer(({ model }: LogListProps) => {
   return (
     <div
       ref={parentRef}
-      style={{
-        flexGrow: 1,
-        overflow: 'auto', // Make it scroll!
-      }}
+      className={styles.LogList}
       onScroll={onScroll}
     >
       <div
         style={{
           height: `${rowVirtualizer.getTotalSize()}px`,
-          width: '100%',
-          position: 'relative',
         }}
+        className={styles.virtualizer}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => (
           <div
             key={virtualRow.index}
             ref={virtualRow.measureElement}
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
               transform: `translateY(${virtualRow.start}px)`,
             }}
+            className={styles.rowWrapper}
           >
             <div>
               <LogRow rowIndex={virtualRow.index} model={model} />
             </div>
           </div>
         ))}
-        <div style={{
-          width: "100%",
-          height: "1px",
-          background: "red",
-          position: "absolute",
-          bottom: 0,
-        }}></div>
+        <div className={styles.lastLine}></div>
       </div>
     </div>
   )
