@@ -17,11 +17,11 @@
   width: 100%;
   font-family: var(--font-monospace);
   font-size: smaller;
-  padding: 0 16px;
   line-height: 120%;
 
   > * {
     -webkit-font-smoothing: auto; // Better readability on non-retina screens
+    padding: 2px 16px;
   }
 }
 

@@ -1,0 +1,20 @@
+.overlay {
+  --overlay-bg: #8cc474b8;
+  --overlay-active-bg: orange;
+
+  border-radius: 2px;
+  -webkit-font-smoothing: auto;
+  background-color: var(--overlay-bg);
+
+  span {
+    background-color: var(--overlay-bg)!important; // Rewriting inline styles from AnsiUp library
+  }
+
+  &.active {
+    background-color: var(--overlay-active-bg);
+
+    span {
+      background-color: var(--overlay-active-bg)!important; // Rewriting inline styles from AnsiUp library
+    }
+  }
+}
