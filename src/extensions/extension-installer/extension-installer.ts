@@ -25,7 +25,7 @@ export class ExtensionInstaller {
   constructor(private dependencies: Dependencies) {}
 
   get npmPath() {
-    return __non_webpack_require__.resolve("npm/bin/npm-cli");
+    return __non_webpack_require__.resolve("npm");
   }
 
   /**
@@ -58,7 +58,7 @@ export class ExtensionInstaller {
 
     try {
       logger.info(`${logModule} installing package from ${name} to ${this.dependencies.extensionPackageRootDirectory}`);
-      await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock", "--no-save", name]);
+      await this.npm(["install", "--no-audit", "--only=prod", "--package-lock=false", "--prefer-offline", "--no-package-lock", name]);
       logger.info(`${logModule} package ${name} installed to ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
