@@ -54,6 +54,11 @@ export interface LogTabData {
    * Whether to show the logs of the previous container instance
    */
   showPrevious: boolean;
+
+  /**
+   * Whether to wrap logs lines to avoid horizontal scrolling.
+   */
+  wrap: boolean;
 }
 
 interface Dependencies {

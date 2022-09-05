@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import React, { useEffect, useRef } from 'react';
 import type { LogTabViewModel } from './logs-view-model';
 import { LogRow } from "./log-row";
+import { cssNames } from "../../../utils";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -106,7 +107,7 @@ export const LogList = observer(({ model }: LogListProps) => {
             style={{
               transform: `translateY(${virtualRow.start}px)`,
             }}
-            className={styles.rowWrapper}
+            className={cssNames(styles.rowWrapper, { [styles.wrap]: model.logTabData.get()?.wrap })}
           >
             <div>
               <LogRow rowIndex={virtualRow.index} model={model} />
