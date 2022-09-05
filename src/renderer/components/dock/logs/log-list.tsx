@@ -80,6 +80,10 @@ export const LogList = observer(({ model }: LogListProps) => {
     }, 200)
   }, [model.logTabData.get()?.selectedPodId])
 
+  useEffect(() => {
+    rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
+  }, [model.logTabData.get()]);
+
   return (
     <div
       ref={parentRef}
