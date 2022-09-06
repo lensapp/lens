@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from 'react';
 import type { LogTabViewModel } from './logs-view-model';
 import { LogRow } from "./log-row";
 import { cssNames } from "../../../utils";
+import { v4 as getRandomId } from "uuid";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -14,6 +15,7 @@ export interface LogListProps {
 export const LogList = observer(({ model }: LogListProps) => {
   const [toBottomVisible, setToBottomVisible] = React.useState(false);
   const [lastLineVisible, setLastLineVisible] = React.useState(true);
+  const [rowKeySuffix, setRowKeySuffix] = React.useState(getRandomId());
 
   const { visibleLogs } = model;
   const parentRef = useRef<HTMLDivElement>(null)
@@ -82,6 +84,7 @@ export const LogList = observer(({ model }: LogListProps) => {
 
   useEffect(() => {
     rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
+    setRowKeySuffix(getRandomId());
   }, [model.logTabData.get()]);
 
   useEffect(() => {
@@ -102,7 +105,7 @@ export const LogList = observer(({ model }: LogListProps) => {
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => (
           <div
-            key={virtualRow.index}
+            key={virtualRow.index + rowKeySuffix}
             ref={virtualRow.measureElement}
             style={{
               transform: `translateY(${virtualRow.start}px)`,
