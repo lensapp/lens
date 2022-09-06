@@ -1885,7 +1885,7 @@
 </tr>
 <tr>
 <td align="left"><code>unionInputValidators</code></td>
-<td align="left">(<code>baseValidator</code>: <code>Pick</code>&lt;<code>SyncInputValidator</code>, <code>"condition"</code> | <code>"message"</code>>, ...<code>validators</code>: <code>SyncInputValidator</code>[]) =&gt; <code>SyncInputValidator</code></td>
+<td align="left">(<code>baseValidator</code>: <code>Pick</code>&lt;<code>SyncInputValidator</code>, <code>"message"</code> | <code>"condition"</code>>, ...<code>validators</code>: <code>SyncInputValidator</code>[]) =&gt; <code>SyncInputValidator</code></td>
 </tr>
 </tbody>
 </table>
@@ -3006,7 +3006,7 @@ valid if one of the input validators matches the input</p>
 <tbody>
 <tr>
 <td align="left"><code>baseValidator</code></td>
-<td align="left"><code>Simplify</code>&lt;<code>Except</code>&lt;<code>Pick</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>, <code>"condition"</code> | <code>"message"</code>>, <code>"message"</code>> &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<code>Pick</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>, <code>"condition"</code> | <code>"message"</code>>, <code>"message"</code>>>></td>
+<td align="left"><code>Simplify</code>&lt;<code>Except</code>&lt;<code>Pick</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>, <code>"message"</code> | <code>"condition"</code>>, <code>"message"</code>> &amp; <code>Required</code>&lt;<code>Pick</code>&lt;<code>Pick</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>, <code>"message"</code> | <code>"condition"</code>>, <code>"message"</code>>>></td>
 </tr>
 <tr>
 <td align="left"><code>...validators</code></td>
