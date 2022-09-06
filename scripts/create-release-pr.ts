@@ -8,7 +8,7 @@ import fse from "fs-extra";
 import { basename } from "path";
 import { createInterface } from "readline";
 import semver from "semver";
-import { inspect, promisify } from "util";
+import { promisify } from "util";
 
 const {
   SemVer,
@@ -26,6 +26,10 @@ const options = commandLineArgs([
   },
   {
     name: "preid",
+  },
+  {
+    name: "check-commits",
+    type: Boolean,
   },
 ]);
 
@@ -79,10 +83,22 @@ if (basename(process.cwd()) === "scripts") {
   console.error(errorMessages.wrongCwd);
 }
 
-
-const currentVersion = new SemVer((await fse.readJson("./package.json")).version);
+const packageJson = await fse.readJson("./package.json");
+const currentVersion = new SemVer(packageJson.version);
 
 console.log(`current version: ${currentVersion.format()}`);
+
+const newVersion = currentVersion.inc(options.type, options.preid);
+const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
+const prBranch = `release/v${newVersion.format()}`;
+
+await fse.writeJson("./package.json", { ...packageJson, version: newVersion.format() }, { spaces: 2 });
+await exec(`git checkout -b ${prBranch}`);
+await exec("git add package.json");
+await exec(`git commit -sm "Release ${newVersion.format()}"`);
+
+console.log(`new version: ${newVersion.format()}`);
+
 console.log("fetching tags...");
 await exec("git fetch --tags --force");
 
@@ -92,25 +108,6 @@ const [previousReleasedVersion] = actualTags
   .filter((v): v is string => typeof v === "string")
   .sort((l, r) => semverRcompare(l, r))
   .filter(version => semverLte(version, currentVersion));
-
-const npmVersionArgs = [
-  "npm",
-  "version",
-  options.type,
-];
-
-if (options.preid) {
-  npmVersionArgs.push(`--preid=${options.preid}`);
-}
-
-npmVersionArgs.push("--git-tag-version false");
-
-await exec(npmVersionArgs.join(" "));
-
-const newVersion = new SemVer((await fse.readJson("./package.json")).version);
-const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
-
-console.log(`new version: ${newVersion.format()}`);
 
 const getMergedPrsArgs = [
   "gh",
@@ -146,6 +143,10 @@ interface GithubPrData {
   title: string;
 }
 
+interface ExtendedGithubPrData extends Omit<GithubPrData, "mergedAt"> {
+  mergedAt: Date;
+}
+
 console.log("retreiving last 500 PRs to create release PR body...");
 const mergedPrs = JSON.parse((await exec(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout) as GithubPrData[];
 const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone?.title === newVersionMilestone);
@@ -159,7 +160,7 @@ const relaventPrs = relaventPrsQuery
   .filter(query => query.stdout)
   .map(query => query.pr)
   .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"))
-  .map(pr => ({ ...pr, mergedAt: new Date(pr.mergedAt) }))
+  .map(pr => ({ ...pr, mergedAt: new Date(pr.mergedAt) } as ExtendedGithubPrData))
   .sort((left, right) => {
     const leftAge = left.mergedAt.valueOf();
     const rightAge = right.mergedAt.valueOf();
@@ -175,75 +176,55 @@ const relaventPrs = relaventPrsQuery
     return -1;
   });
 
-console.log(inspect(relaventPrs, false, null, true));
-
 const enhancementPrLabelName = "enhancement";
 const bugfixPrLabelName = "bug";
 
-const enhancementPrs = relaventPrs.filter(pr => pr.labels.some(label => label.name === enhancementPrLabelName));
-const bugfixPrs = relaventPrs.filter(pr => pr.labels.some(label => label.name === bugfixPrLabelName));
-const maintenencePrs = relaventPrs.filter(pr => pr.labels.every(label => label.name !== bugfixPrLabelName && label.name !== enhancementPrLabelName));
+const isEnhancementPr = (pr: ExtendedGithubPrData) => pr.labels.some(label => label.name === enhancementPrLabelName);
+const isBugfixPr = (pr: ExtendedGithubPrData) => pr.labels.some(label => label.name === bugfixPrLabelName);
 
-console.log("Found:");
-console.log(`${enhancementPrs.length} enhancement PRs`);
-console.log(`${bugfixPrs.length} bug fix PRs`);
-console.log(`${maintenencePrs.length} maintenence PRs`);
+const prLines = {
+  enhancement: [] as string[],
+  bugfix: [] as string[],
+  maintenence: [] as string[],
+};
 
-const prBodyLines = [
-  `## Changes since ${previousReleasedVersion}`,
-  "",
-];
-
-function getPrEntry(pr) {
+function getPrEntry(pr: ExtendedGithubPrData) {
   return `- ${pr.title} (**[#${pr.number}](https://github.com/lensapp/lens/pull/${pr.number})**) https://github.com/${pr.author.login}`;
 }
 
-if (enhancementPrs.length > 0) {
-  prBodyLines.push(
-    "## 🚀 Features",
-    "",
-    ...enhancementPrs.map(getPrEntry),
-    "",
-  );
-}
-
-if (bugfixPrs.length > 0) {
-  prBodyLines.push(
-    "## 🐛 Bug Fixes",
-    "",
-    ...bugfixPrs.map(getPrEntry),
-    "",
-  );
-}
-
-if (maintenencePrs.length > 0) {
-  prBodyLines.push(
-    "## 🧰 Maintenance",
-    "",
-    ...maintenencePrs.map(getPrEntry),
-    "",
-  );
-}
-
-const prBody = prBodyLines.join("\n");
+const rl = createInterface(process.stdin);
 const prBase = newVersion.patch === 0
   ? "master"
   : `release/v${newVersion.major}.${newVersion.minor}`;
-const createPrArgs = [
-  "pr",
-  "create",
-  "--base", prBase,
-  "--title", `release ${newVersion.format()}`,
-  "--label", "skip-changelog",
-  "--body-file", "-",
-];
 
-const rl = createInterface(process.stdin);
+function askQuestion(question: string): Promise<boolean> {
+  return new Promise<boolean>(resolve => {
+    function _askQuestion() {
+      console.log(question);
 
-if (prBase !== "master") {
-  console.log("Cherry-picking commits to current branch");
+      rl.once("line", (answer) => {
+        const cleaned = answer.trim().toLowerCase();
 
-  for (const pr of relaventPrs) {
+        if (cleaned === "y") {
+          resolve(true);
+        } else if (cleaned === "n") {
+          resolve(false);
+        } else {
+          _askQuestion();
+        }
+      });
+    }
+
+    _askQuestion();
+  });
+}
+
+async function handleRelaventPr(pr: ExtendedGithubPrData) {
+  if (options["check-commits"] && !(await askQuestion(`Would you like to use #${pr.number}: ${pr.title}? - Y/N`))) {
+    return;
+  }
+
+  if (prBase !== "master") {
     try {
       const promise = exec(`git cherry-pick ${pr.mergeCommit.oid}`);
 
@@ -255,10 +236,70 @@ if (prBase !== "master") {
       await promise;
     } catch {
       console.error(`Failed to cherry-pick ${pr.mergeCommit.oid}, please resolve conflicts and then press enter here:`);
-      await new Promise<void>(resolve => rl.on("line", () => resolve()));
+      await new Promise<void>(resolve => rl.once("line", () => resolve()));
     }
   }
+
+  if (isEnhancementPr(pr)) {
+    prLines.enhancement.push(getPrEntry(pr));
+  } else if (isBugfixPr(pr)) {
+    prLines.bugfix.push(getPrEntry(pr));
+  } else {
+    prLines.maintenence.push(getPrEntry(pr));
+  }
 }
+
+for (const pr of relaventPrs) {
+  await handleRelaventPr(pr);
+}
+
+rl.close();
+
+const prBodyLines = [
+  `## Changes since ${previousReleasedVersion}`,
+  "",
+  ...(
+    prLines.enhancement.length > 0
+      ? [
+        "## 🚀 Features",
+        "",
+        ...prLines.enhancement,
+        "",
+      ]
+      : []
+  ),
+  ...(
+    prLines.bugfix.length > 0
+      ? [
+        "## 🐛 Bug Fixes",
+        "",
+        ...prLines.bugfix,
+        "",
+      ]
+      : []
+  ),
+  ...(
+    prLines.maintenence.length > 0
+      ? [
+        "## 🧰 Maintenance",
+        "",
+        ...prLines.maintenence,
+        "",
+      ]
+      : []
+  ),
+];
+const prBody = prBodyLines.join("\n");
+const createPrArgs = [
+  "pr",
+  "create",
+  "--base", prBase,
+  "--title", `Release ${newVersion.format()}`,
+  "--label", "skip-changelog",
+  "--body-file", "-",
+];
+
+await exec(`git push --set-upstream origin ${prBranch}`);
 
 const createPrProcess = execFile("gh", createPrArgs);
 
