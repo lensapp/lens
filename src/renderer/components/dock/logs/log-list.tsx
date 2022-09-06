@@ -9,6 +9,7 @@ import { cssNames } from "../../../utils";
 import { v4 as getRandomId } from "uuid";
 import { useScrollToBottomButton } from "./use-scroll-to-bottom";
 import { useInitialScrollToBottom } from "./use-initial-scroll-to-bottom";
+import { ToBottom } from "./to-bottom";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -111,6 +112,9 @@ export const LogList = observer(({ model }: LogListProps) => {
         ))}
         <div className={styles.lastLine}></div>
       </div>
+      {toBottomVisible && (
+        <ToBottom onClick={scrollToBottom} />
+      )}
     </div>
   )
 });
