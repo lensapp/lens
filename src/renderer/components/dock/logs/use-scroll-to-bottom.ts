@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export function useScrollToBottomButton(scrolledParent: HTMLDivElement | null): [isVisible: boolean, setVisibility: () => void] {
+export function useJumpToBottomButton(scrolledParent: HTMLDivElement | null): [isVisible: boolean, setVisibility: () => void] {
   const [isVisible, setToBottomVisible] = useState(false);
 
   const setVisibility = () => {

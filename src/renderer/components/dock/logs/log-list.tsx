@@ -7,7 +7,7 @@ import type { LogTabViewModel } from './logs-view-model';
 import { LogRow } from "./log-row";
 import { cssNames } from "../../../utils";
 import { v4 as getRandomId } from "uuid";
-import { useScrollToBottomButton } from "./use-scroll-to-bottom";
+import { useJumpToBottomButton } from "./use-scroll-to-bottom";
 import { useInitialScrollToBottom } from "./use-initial-scroll-to-bottom";
 import { ToBottom } from "./to-bottom";
 
@@ -21,7 +21,7 @@ export const LogList = observer(({ model }: LogListProps) => {
   
   const { visibleLogs } = model;
   const parentRef = useRef<HTMLDivElement>(null)
-  const [toBottomVisible, setButtonVisibility] = useScrollToBottomButton(parentRef.current);
+  const [toBottomVisible, setButtonVisibility] = useJumpToBottomButton(parentRef.current);
   const rowVirtualizer = useVirtualizer({
     count: visibleLogs.get().length,
     getScrollElement: () => parentRef.current,
