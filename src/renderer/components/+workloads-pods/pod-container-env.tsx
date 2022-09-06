@@ -83,16 +83,16 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
           const { name, key } = configMapKeyRef;
           const configMap = configMapStore.getByName(name, namespace);
 
-          secretValue = configMap ?
-            configMap.data[key] :
-            `configMapKeyRef(${name}${key})`;
+          secretValue = configMap
+            ? configMap.data[key]
+            : `configMapKeyRef(${name}${key})`;
         }
       }
 
       return (
         <div className="variable" key={name}>
           <span className="var-name">{name}</span>
-          :
+          {` : `}
           {secretValue}
         </div>
       );
@@ -126,7 +126,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
             {prefix}
             {name}
           </span>
-          :
+          {` : `}
           {value}
         </div>
       ));
@@ -144,14 +144,15 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
             {prefix}
             {key}
           </span>
-          :
+          {` : `}
           <SecretKey
             reference={{
               name: secret.getName(),
               key,
             }}
             namespace={namespace}
-            secretStore={secretStore} />
+            secretStore={secretStore}
+          />
         </div>
       ));
   };
