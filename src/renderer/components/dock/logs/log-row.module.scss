@@ -1,4 +1,7 @@
 .LogRow {
+  padding: 2px calc(var(--padding) * 2);
+  line-height: 150%;
+
   &:hover {
     background: var(--logRowHoverBackground);
   }
