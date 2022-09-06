@@ -46,7 +46,7 @@ export function LogRow({ rowIndex, model }: { rowIndex: number; model: LogTabVie
   }
 
   return (
-    <div>
+    <div className={styles.LogRow}>
       {contents.length > 1 ? contents : (
         <span dangerouslySetInnerHTML={{ __html: ansiToHtml(log) }} />
       )}

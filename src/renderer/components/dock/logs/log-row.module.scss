@@ -1,3 +1,9 @@
+.LogRow {
+  &:hover {
+    background: var(--logRowHoverBackground);
+  }
+}
+
 .overlay {
   --overlay-bg: #8cc474b8;
   --overlay-active-bg: orange;
