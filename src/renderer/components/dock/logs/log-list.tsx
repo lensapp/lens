@@ -7,18 +7,19 @@ import type { LogTabViewModel } from './logs-view-model';
 import { LogRow } from "./log-row";
 import { cssNames } from "../../../utils";
 import { v4 as getRandomId } from "uuid";
+import { useScrollToBottomButton } from "./use-scroll-to-bottom";
 
 export interface LogListProps {
   model: LogTabViewModel;
 }
 
 export const LogList = observer(({ model }: LogListProps) => {
-  const [toBottomVisible, setToBottomVisible] = React.useState(false);
   const [lastLineVisible, setLastLineVisible] = React.useState(true);
   const [rowKeySuffix, setRowKeySuffix] = React.useState(getRandomId());
-
+  
   const { visibleLogs } = model;
   const parentRef = useRef<HTMLDivElement>(null)
+  const [toBottomVisible, setButtonVisibility] = useScrollToBottomButton(parentRef.current);
   const rowVirtualizer = useVirtualizer({
     count: visibleLogs.get().length,
     getScrollElement: () => parentRef.current,
@@ -31,20 +32,9 @@ export const LogList = observer(({ model }: LogListProps) => {
   const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
     if (!parentRef.current) return;
 
-    setToBottomVisibility();
+    setButtonVisibility();
     setLastLineVisibility();
     onScrollToTop();
-  }
-
-  // TODO: Move to its own hook
-  const setToBottomVisibility = () => {
-    const { scrollTop, scrollHeight } = parentRef.current as HTMLDivElement;
-    // console.log("scrolling", scrollHeight, scrollTop, rowVirtualizer.getTotalSize())
-    if (scrollHeight - scrollTop > 4000) {
-      setToBottomVisible(true);
-    } else {
-      setToBottomVisible(false);
-    }
   }
 
   const setLastLineVisibility = () => {
