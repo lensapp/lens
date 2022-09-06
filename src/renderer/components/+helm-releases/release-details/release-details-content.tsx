@@ -34,10 +34,16 @@ interface Dependencies {
 }
 
 const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & ReleaseDetailsContentProps) => {
-  const failedToLoad = model.failedToLoad.get();
+  const loadingError = model.loadingError.get();
 
-  if (failedToLoad) {
-    return <div data-testid="helm-release-detail-error">Failed to load release</div>;
+  if (loadingError) {
+    return (
+      <div data-testid="helm-release-detail-error">
+        Failed to load release:
+        {" "}
+        {loadingError}
+      </div>
+    );
   }
 
 
@@ -58,8 +64,7 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
       </DrawerItem>
 
       <DrawerItem name="Updated">
-        {model.release.getUpdated()}
-        {` ago (${model.release.updated})`}
+        {`${model.release.getUpdated()} ago (${model.release.updated})`}
       </DrawerItem>
 
       <DrawerItem name="Namespace">{model.release.getNs()}</DrawerItem>

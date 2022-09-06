@@ -21,19 +21,23 @@ interface ReleaseDetailsDrawerProps {
 
 interface Dependencies {
   model: ReleaseDetailsModel;
-  closeDrawer: () => void;
+  navigateToHelmReleases: () => void;
 }
 
-const NonInjectedReleaseDetailsDrawerToolbar = observer(
-  ({ model, closeDrawer }: Dependencies & ReleaseDetailsDrawerProps) =>
-    model.failedToLoad.get() ? null : (
+const NonInjectedReleaseDetailsDrawerToolbar = observer(({
+  model,
+  navigateToHelmReleases,
+}: Dependencies & ReleaseDetailsDrawerProps) => (
+  model.loadingError.get()
+    ? null
+    : (
       <HelmReleaseMenu
         release={model.release}
         toolbar
-        hideDetails={closeDrawer}
+        hideDetails={navigateToHelmReleases}
       />
-    ),
-);
+    )
+));
 
 export const ReleaseDetailsDrawerToolbar = withInjectables<
   Dependencies,
@@ -43,7 +47,7 @@ export const ReleaseDetailsDrawerToolbar = withInjectables<
 
   getProps: async (di, props) => ({
     model: await di.inject(releaseDetailsModelInjectable, props.targetRelease),
-    closeDrawer: di.inject(navigateToHelmReleasesInjectable),
+    navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
     ...props,
   }),
 });

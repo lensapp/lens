@@ -54,7 +54,7 @@ const releaseDetailsModelInjectable = getInjectable({
       showCheckedErrorNotification,
       showSuccessNotification,
       createUpgradeChartTab,
-      closeDrawer: navigateToHelmReleases,
+      navigateToHelmReleases,
     });
 
     await model.load();
@@ -63,47 +63,46 @@ const releaseDetailsModelInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, release: TargetHelmRelease) =>
-      `${release.namespace}/${release.name}`,
+    getInstanceKey: (di, release: TargetHelmRelease) => `${release.namespace}/${release.name}`,
   }),
 });
 
 export default releaseDetailsModelInjectable;
 
 export interface OnlyUserSuppliedValuesAreShownToggle {
-  value: IObservableValue<boolean>;
+  readonly value: IObservableValue<boolean>;
   toggle: () => Promise<void>;
 }
 
 export interface ConfigurationInput {
-  nonSavedValue: IObservableValue<string>;
-  isLoading: IObservableValue<boolean>;
-  isSaving: IObservableValue<boolean>;
+  readonly nonSavedValue: IObservableValue<string>;
+  readonly isLoading: IObservableValue<boolean>;
+  readonly isSaving: IObservableValue<boolean>;
   onChange: (value: string) => void;
   save: () => Promise<void>;
 }
 
 interface Dependencies {
+  readonly targetRelease: TargetHelmRelease;
+  readonly activeTheme: IComputedValue<LensTheme>;
   callForHelmRelease: CallForHelmRelease;
-  targetRelease: TargetHelmRelease;
-  activeTheme: IComputedValue<LensTheme>;
   callForHelmReleaseConfiguration: CallForHelmReleaseConfiguration;
   getResourceDetailsUrl: GetResourceDetailsUrl;
   updateRelease: CallForHelmReleaseUpdate;
   showCheckedErrorNotification: ShowCheckedErrorNotification;
   showSuccessNotification: ShowNotification;
   createUpgradeChartTab: (release: HelmRelease) => string;
-  closeDrawer: () => void;
+  navigateToHelmReleases: () => void;
 }
 
 export class ReleaseDetailsModel {
-  id = `${this.dependencies.targetRelease.namespace}/${this.dependencies.targetRelease.name}`;
+  readonly id = `${this.dependencies.targetRelease.namespace}/${this.dependencies.targetRelease.name}`;
 
-  constructor(private dependencies: Dependencies) {}
+  constructor(private readonly dependencies: Dependencies) {}
 
-  private detailedRelease = observable.box<DetailedHelmRelease | undefined>();
+  private readonly detailedRelease = observable.box<DetailedHelmRelease | undefined>();
 
-  readonly failedToLoad = observable.box(false);
+  readonly loadingError = observable.box<string>();
 
   readonly configuration: ConfigurationInput = {
     nonSavedValue: observable.box(""),
@@ -179,7 +178,7 @@ export class ReleaseDetailsModel {
 
     if (!result.callWasSuccessful) {
       runInAction(() => {
-        this.failedToLoad.set(true);
+        this.loadingError.set(result.error);
       });
 
       return;
@@ -257,13 +256,13 @@ export class ReleaseDetailsModel {
   }
 
   close = () => {
-    this.dependencies.closeDrawer();
+    this.dependencies.navigateToHelmReleases();
   };
 
   startUpgradeProcess = () => {
     this.dependencies.createUpgradeChartTab(this.release);
 
-    this.dependencies.closeDrawer();
+    this.dependencies.navigateToHelmReleases();
   };
 }
 

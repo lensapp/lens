@@ -6,12 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncResult } from "../../../../../common/utils/async-result";
 import execHelmInjectable from "../../../exec-helm/exec-helm.injectable";
 import yaml from "js-yaml";
-
-export interface HelmResourceManifest {
-  metadata: {
-    namespace: string;
-  };
-}
+import type { KubeJsonApiData } from "../../../../../common/k8s-api/kube-json-api";
 
 const callForHelmManifestInjectable = getInjectable({
   id: "call-for-helm-manifest",
@@ -23,7 +18,7 @@ const callForHelmManifestInjectable = getInjectable({
       name: string,
       namespace: string,
       kubeconfigPath: string,
-    ): Promise<AsyncResult<HelmResourceManifest[]>> => {
+    ): Promise<AsyncResult<KubeJsonApiData[]>> => {
       const result = await execHelm(
         "get",
         "manifest",
@@ -42,7 +37,7 @@ const callForHelmManifestInjectable = getInjectable({
         callWasSuccessful: true,
         response: yaml
           .loadAll(result.response)
-          .filter((manifest) => !!manifest) as HelmResourceManifest[],
+          .filter((manifest) => !!manifest) as KubeJsonApiData[],
       };
     };
 

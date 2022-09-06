@@ -16,8 +16,7 @@ const navigateToHelmReleasesInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const route = di.inject(helmReleasesRouteInjectable);
 
-    return (parameters) =>
-      navigateToRoute(route, { parameters });
+    return (parameters) => navigateToRoute(route, { parameters });
   },
 });
 

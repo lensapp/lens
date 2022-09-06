@@ -10,13 +10,13 @@ import execFileWithInputInjectable from "./exec-file-with-input/exec-file-with-i
 import { getErrorMessage } from "../../../../../common/utils/get-error-message";
 import { map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
-import type { HelmResourceManifest } from "../call-for-helm-manifest/call-for-helm-manifest.injectable";
+import type { KubeJsonApiData } from "../../../../../common/k8s-api/kube-json-api";
 
 export type CallForKubeResourcesByManifest = (
   namespace: string,
   kubeconfigPath: string,
   kubectlPath: string,
-  resourceManifests: HelmResourceManifest[]
+  resourceManifests: KubeJsonApiData[]
 ) => Promise<JsonObject[]>;
 
 const callForKubeResourcesByManifestInjectable = getInjectable({
