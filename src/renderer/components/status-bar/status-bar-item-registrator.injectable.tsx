@@ -4,6 +4,7 @@
  */
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
@@ -38,6 +39,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
     const id = `${getRandomId()}-status-bar-item-for-extension-${extension.sanitizedExtensionId}`;
     let component: React.ComponentType;
     let position: "left" | "right";
+    let visible: IComputedValue<boolean> | undefined;
 
     if (registration?.item) {
       const { item } = registration;
@@ -54,7 +56,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
           </>
         );
     } else if (registration?.components) {
-      const { position: pos = "right", Item } = registration.components;
+      const { position: pos = "right", Item, visible: componentVisible } = registration.components;
 
       if (pos !== "left" && pos !== "right") {
         throw new TypeError("StatusBarRegistration.components.position must be either 'right' or 'left'");
@@ -62,6 +64,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
 
       position = pos;
       component = Item;
+      visible = componentVisible;
     } else {
       logger.warn("StatusBarRegistration must have valid item or components field");
 
@@ -74,7 +77,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
       instantiate: () => ({
         component,
         position,
-        visible: computed(() => true),
+        visible: visible ?? computed(() => true),
       }),
 
       injectionToken: statusBarItemInjectionToken,

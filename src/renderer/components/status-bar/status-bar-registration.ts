@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { IComputedValue } from "mobx";
+
 /**
  * The props for StatusBar item component
  */
@@ -23,6 +25,11 @@ export interface StatusBarComponents {
    * @default "right"
    */
   position?: "left" | "right";
+
+  /**
+   * If specified, controls item visibility
+   */
+  visible?: IComputedValue<boolean>;
 }
 
 /**
