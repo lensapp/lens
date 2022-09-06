@@ -8,6 +8,7 @@ import { LogRow } from "./log-row";
 import { cssNames } from "../../../utils";
 import { v4 as getRandomId } from "uuid";
 import { useScrollToBottomButton } from "./use-scroll-to-bottom";
+import { useInitialScrollToBottom } from "./use-initial-scroll-to-bottom";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -25,9 +26,15 @@ export const LogList = observer(({ model }: LogListProps) => {
     getScrollElement: () => parentRef.current,
     estimateSize: () => 38,
     overscan: 5,
-    scrollPaddingEnd: 0,
-    scrollPaddingStart: 0,
   });
+
+  const scrollTo = (index: number) => {
+    rowVirtualizer.scrollToIndex(index, { align: 'start', smoothScroll: false });
+  }
+
+  const scrollToBottom = () => {
+    scrollTo(visibleLogs.get().length - 1);
+  }
 
   const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
     if (!parentRef.current) return;
@@ -48,7 +55,7 @@ export const LogList = observer(({ model }: LogListProps) => {
   }
 
   /**
-   * Check if user scrolled to top and new logs should be loaded
+   * Loads new logs if user scrolled to the top
    */
    const onScrollToTop = async () => {
     const { scrollTop } = parentRef.current as HTMLDivElement;
@@ -61,19 +68,14 @@ export const LogList = observer(({ model }: LogListProps) => {
 
       const scrollToIndex = model.logs.get().findIndex(log => log === firstLog);
 
-      rowVirtualizer.scrollToIndex(scrollToIndex, { align: 'start', smoothScroll: false });
+      scrollTo(scrollToIndex);
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      // Initial scroll to bottom
-      rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
-    }, 200)
-  }, [model.logTabData.get()?.selectedPodId])
+  useInitialScrollToBottom(model, scrollToBottom);
 
   useEffect(() => {
-    rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
+    // rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
     setRowKeySuffix(getRandomId());
   }, [model.logTabData.get()]);
 
