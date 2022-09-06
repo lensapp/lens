@@ -40,7 +40,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -51,13 +51,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -74,7 +72,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -88,9 +86,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -101,7 +97,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -115,13 +111,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -138,7 +132,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -152,9 +146,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -165,7 +157,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -176,13 +168,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -199,7 +189,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -213,9 +203,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -226,7 +214,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -240,13 +228,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -560,7 +546,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -571,13 +557,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -594,7 +578,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -608,9 +592,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -621,7 +603,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -635,13 +617,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -658,7 +638,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -672,9 +652,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -685,7 +663,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -696,13 +674,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -719,7 +695,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -733,9 +709,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -746,7 +720,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -760,13 +734,11 @@ exports[`disable workloads overview details when cluster is not relevant given e
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1075,7 +1047,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -1086,13 +1058,11 @@ exports[`disable workloads overview details when cluster is not relevant given n
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1109,7 +1079,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -1123,9 +1093,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -1136,7 +1104,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -1150,13 +1118,11 @@ exports[`disable workloads overview details when cluster is not relevant given n
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1173,7 +1139,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -1187,9 +1153,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -1200,7 +1164,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -1211,13 +1175,11 @@ exports[`disable workloads overview details when cluster is not relevant given n
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1234,7 +1196,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -1248,9 +1210,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -1261,7 +1221,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -1275,13 +1235,11 @@ exports[`disable workloads overview details when cluster is not relevant given n
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"

@@ -15,7 +15,7 @@ export class PrometheusOperator extends PrometheusProvider {
   readonly isConfigurable: boolean = true;
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
-    return this.getFirstNamespacedService(client, "operated-prometheus=true", "self-monitor=true");
+    return this.getFirstNamespacedService(client, "operated-prometheus=true");
   }
 
   public getQuery(opts: Record<string, string>, queryName: string): string {
