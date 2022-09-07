@@ -15,10 +15,10 @@ import directoryForUserDataInjectable from "../../common/app-paths/directory-for
 import mockFs from "mock-fs";
 import { delay } from "../../renderer/utils";
 import { observable, when } from "mobx";
-import appVersionInjectable from "../../common/vars/app-version.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
+import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -33,7 +33,7 @@ describe("ExtensionDiscovery", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
-    di.override(appVersionInjectable, () => "5.0.0");
+    di.override(extensionApiVersionInjectable, () => "5.0.0");
 
     readJsonFileMock = jest.fn();
     di.override(readJsonFileInjectable, () => readJsonFileMock);

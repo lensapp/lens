@@ -35,7 +35,6 @@ import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectab
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable, computed, runInAction } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
-import appVersionInjectable from "../common/vars/app-version.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
@@ -113,8 +112,6 @@ export const getDiForUnitTesting = (
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
-
-    di.override(appVersionInjectable, () => "1.0.0");
 
     di.override(historyInjectable, () => createMemoryHistory());
     di.override(legacyOnChannelListenInjectable, () => () => noop);

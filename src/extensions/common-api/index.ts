@@ -4,7 +4,7 @@
  */
 
 // APIs
-import * as App from "./app";
+import App from "./app";
 import * as EventBus from "./event-bus";
 import * as Store from "./stores";
 import * as Util from "./utils";

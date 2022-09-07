@@ -3,18 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import packageJsonInjectable from "../../common/vars/package-json.injectable";
-import { has } from "lodash/fp";
+import applicationInformationInjectable from "../../common/vars/application-information.injectable";
 
-// TOOO: Rename to something less technical
 const publishIsConfiguredInjectable = getInjectable({
   id: "publish-is-configured",
-
-  instantiate: (di) => {
-    const packageJson = di.inject(packageJsonInjectable);
-
-    return has("build.publish", packageJson);
-  },
+  instantiate: (di) => Boolean(di.inject(applicationInformationInjectable).build.publish?.length),
 });
 
 export default publishIsConfiguredInjectable;

@@ -3,21 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { initializeSentryReporting } from "../../../common/sentry";
 import { init } from "@sentry/electron/main";
 import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/before-electron-is-ready-injection-token";
+import initializeSentryReportingWithInjectable from "../../../common/error-reporting/initialize-sentry-reporting.injectable";
 
 const setupSentryInjectable = getInjectable({
   id: "setup-sentry",
+  instantiate: (di) => {
+    const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
 
-  instantiate: () => ({
-    run: () => {
-      initializeSentryReporting(init);
-    },
-  }),
-
-  causesSideEffects: true,
-
+    return {
+      run: () => initializeSentryReportingWith(init),
+    };
+  },
   injectionToken: beforeElectronIsReadyInjectionToken,
 });
 

@@ -3,18 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getRouteInjectable } from "../../router/router.injectable";
-import { getAppVersion } from "../../../common/utils";
 import { route } from "../../router/route";
+import buildVersionInjectable from "../../vars/build-version.injectable";
 
 const getVersionRouteInjectable = getRouteInjectable({
   id: "get-version-route",
 
-  instantiate: () => route({
+  instantiate: (di) => route({
     method: "get",
     path: `/version`,
   })(() => ({
     response: {
-      version: getAppVersion(),
+      version: di.inject(buildVersionInjectable),
     },
   })),
 });

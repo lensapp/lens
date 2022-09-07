@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { docsUrl, productName, supportUrl } from "../../common/vars";
+import { docsUrl, supportUrl } from "../../common/vars";
 import { broadcastMessage } from "../../common/ipc";
 import type { MenuItemConstructorOptions } from "electron";
 import { webContents } from "electron";
 import loggerInjectable from "../../common/logger.injectable";
-import appNameInjectable from "../app-paths/app-name/app-name.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
 import updatingIsEnabledInjectable from "../application-update/updating-is-enabled.injectable";
 import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
@@ -24,6 +23,8 @@ import reloadCurrentApplicationWindowInjectable from "../start-main-application/
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
 import processCheckingForUpdatesInjectable from "../application-update/check-for-updates/process-checking-for-updates.injectable";
 import openLinkInBrowserInjectable from "../../common/utils/open-link-in-browser.injectable";
+import appNameInjectable from "../../common/vars/app-name.injectable";
+import productNameInjectable from "../../common/vars/product-name.injectable";
 
 function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
@@ -39,6 +40,7 @@ const applicationMenuItemsInjectable = getInjectable({
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
     const appName = di.inject(appNameInjectable);
+    const productName = di.inject(productNameInjectable);
     const isMac = di.inject(isMacInjectable);
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const electronMenuItems = di.inject(electronMenuItemsInjectable);

@@ -11,8 +11,9 @@ import logger from "../../main/logger";
 import { app } from "electron";
 import { ClusterStore } from "../cluster-store/cluster-store";
 import yaml from "js-yaml";
-import { productName } from "../vars";
 import { requestKubectlApplyAll, requestKubectlDeleteAll } from "../../renderer/ipc";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import productNameInjectable from "../vars/product-name.injectable";
 
 export class ResourceStack {
   constructor(protected cluster: KubernetesCluster, protected name: string) {}
@@ -97,6 +98,8 @@ export class ResourceStack {
 
   protected async renderTemplates(folderPath: string, templateContext: any): Promise<string[]> {
     const resources: string[] = [];
+    const di = getLegacyGlobalDiForExtensionApi();
+    const productName = di.inject(productNameInjectable);
 
     logger.info(`[RESOURCE-STACK]: render templates from ${folderPath}`);
     const files = await fse.readdir(folderPath);

@@ -21,8 +21,8 @@ import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-update-on-quit.injectable";
 import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
 import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import appVersionInjectable from "../../common/vars/app-version.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import buildVersionInjectable from "../../main/vars/build-version.injectable";
 
 describe("selection of update stability", () => {
   let builder: ApplicationBuilder;
@@ -268,7 +268,7 @@ describe("selection of update stability", () => {
 
   it('given no update channel selection is stored and currently using stable release, when user checks for updates, checks for updates from "latest" update channel by default', async () => {
     builder.beforeApplicationStart((mainDi) => {
-      mainDi.override(appVersionInjectable, () => "1.0.0");
+      mainDi.override(buildVersionInjectable, () => "1.0.0");
     });
 
     await builder.render();
@@ -285,7 +285,7 @@ describe("selection of update stability", () => {
 
   it('given no update channel selection is stored and currently using alpha release, when checking for updates, checks for updates from "alpha" channel', async () => {
     builder.beforeApplicationStart((mainDi) => {
-      mainDi.override(appVersionInjectable, () => "1.0.0-alpha");
+      mainDi.override(buildVersionInjectable, () => "1.0.0-alpha");
     });
 
     await builder.render();
@@ -299,7 +299,7 @@ describe("selection of update stability", () => {
 
   it('given no update channel selection is stored and currently using beta release, when checking for updates, checks for updates from "beta" channel', async () => {
     builder.beforeApplicationStart((mainDi) => {
-      mainDi.override(appVersionInjectable, () => "1.0.0-beta");
+      mainDi.override(buildVersionInjectable, () => "1.0.0-beta");
     });
 
     await builder.render();
@@ -313,7 +313,7 @@ describe("selection of update stability", () => {
 
   it("given update channel selection is stored and currently using prerelease, when checking for updates, checks for updates from stored channel", async () => {
     builder.beforeApplicationStart((mainDi) => {
-      mainDi.override(appVersionInjectable, () => "1.0.0-alpha");
+      mainDi.override(buildVersionInjectable, () => "1.0.0-alpha");
 
       // TODO: Switch to more natural way of setting initial value
       // TODO: UserStore is currently responsible for getting and setting initial value

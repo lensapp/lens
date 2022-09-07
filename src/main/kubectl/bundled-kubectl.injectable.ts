@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getBundledKubectlVersion } from "../../common/utils";
+import bundledKubectlVersionInjectable from "../../common/vars/bundled-kubectl-version.injectable";
 import createKubectlInjectable from "./create-kubectl.injectable";
 
 const bundledKubectlInjectable = getInjectable({
@@ -11,8 +11,7 @@ const bundledKubectlInjectable = getInjectable({
 
   instantiate: (di) => {
     const createKubectl = di.inject(createKubectlInjectable);
-
-    const bundledKubectlVersion = getBundledKubectlVersion();
+    const bundledKubectlVersion = di.inject(bundledKubectlVersionInjectable);
 
     return createKubectl(bundledKubectlVersion);
   },
