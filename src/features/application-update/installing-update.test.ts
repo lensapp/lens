@@ -91,7 +91,7 @@ describe("installing update", () => {
       it("checks for updates", () => {
         expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
           expect.any(Object),
-          { allowDowngrade: true },
+          { allowDowngrade: false },
         );
       });
 
