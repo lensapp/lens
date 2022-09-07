@@ -13,11 +13,10 @@ import type { LogTabViewModel } from "./logs-view-model";
 
 export interface PodLogSearchProps {
   onSearch?: (query: string) => void;
-  scrollToOverlay: (lineNumber: number | undefined) => void;
   model: LogTabViewModel;
 }
 
-export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabData, searchStore, ...model }}: PodLogSearchProps) => {
+export const LogSearch = observer(({ onSearch, model: { logTabData, searchStore, ...model }}: PodLogSearchProps) => {
   const tabData = logTabData.get();
 
   if (!tabData) {
@@ -33,17 +32,14 @@ export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabD
   const setSearch = (query: string) => {
     searchStore.onSearch(logs, query);
     onSearch?.(query);
-    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onPrevOverlay = () => {
     setPrevOverlayActive();
-    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onNextOverlay = () => {
     setNextOverlayActive();
-    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onClear = () => {

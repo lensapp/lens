@@ -3,12 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React, { createRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { InfoPanel } from "../info-panel";
 import { LogResourceSelector } from "./resource-selector";
-import type { LogListRef } from "./list";
-// import { LogList } from "./list";
 import { LogSearch } from "./search";
 import { LogControls } from "./controls";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -20,7 +18,6 @@ import type { SubscribeStores } from "../../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../../+workloads-pods/store";
 import podStoreInjectable from "../../+workloads-pods/store.injectable";
-import { noop } from "lodash";
 import { LogList } from "./log-list";
 
 export interface LogsDockTabProps {
@@ -41,7 +38,6 @@ const NonInjectedLogsDockTab = observer(({
   subscribeStores,
   podStore,
 }: Dependencies & LogsDockTabProps) => {
-  const logListElement = createRef<LogListRef>();
   const data = model.logTabData.get();
 
   useEffect(() => {
@@ -55,27 +51,6 @@ const NonInjectedLogsDockTab = observer(({
     namespaces: data ? [data.namespace] : [],
   }), [data?.namespace]);
 
-  const scrollToOverlay = (overlayLine: number | undefined) => {
-    if (!logListElement.current || overlayLine === undefined) {
-      return;
-    }
-
-    // Scroll vertically
-    logListElement.current.scrollToItem(overlayLine, "center");
-    // Scroll horizontally in timeout since virtual list need some time to prepare its contents
-    setTimeout(() => {
-      const overlay = document.querySelector(".PodLogs .list span.active");
-
-      if (!overlay) return;
-      // Note: .scrollIntoViewIfNeeded() is non-standard and thus not present in js-dom.
-      overlay?.scrollIntoViewIfNeeded?.();
-    }, 100);
-  };
-
-  if (!data) {
-    return null;
-  }
-
   return (
     <div className={cssNames("PodLogs flex column", className)}>
       <InfoPanel
@@ -83,10 +58,7 @@ const NonInjectedLogsDockTab = observer(({
         controls={(
           <div className="flex gaps">
             <LogResourceSelector model={model} />
-            <LogSearch
-              model={model}
-              scrollToOverlay={noop}
-            />
+            <LogSearch model={model}/>
           </div>
         )}
         showSubmitClose={false}
