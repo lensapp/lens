@@ -33,8 +33,6 @@ const navigateToRouteInjectable = getInjectable({
     };
   },
 
-  tags: ["emit-telemetry"],
-
   injectionToken: navigateToRouteInjectionToken,
 });
 
