@@ -100,8 +100,8 @@ describe("status-bar-items-originating-from-extensions", () => {
                 components: {
                   Item: () => <div data-testid="some-testId">right4</div>,
                   position: "right" as const,
-                  visible: computed(() => false),
                 },
+                visible: computed(() => false),
               },
               {
                 components: {

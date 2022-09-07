@@ -39,7 +39,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
     const id = `${getRandomId()}-status-bar-item-for-extension-${extension.sanitizedExtensionId}`;
     let component: React.ComponentType;
     let position: "left" | "right";
-    let visible: IComputedValue<boolean> | undefined;
+    const visible: IComputedValue<boolean> | undefined = registration?.visible;
 
     if (registration?.item) {
       const { item } = registration;
@@ -56,7 +56,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
           </>
         );
     } else if (registration?.components) {
-      const { position: pos = "right", Item, visible: componentVisible } = registration.components;
+      const { position: pos = "right", Item } = registration.components;
 
       if (pos !== "left" && pos !== "right") {
         throw new TypeError("StatusBarRegistration.components.position must be either 'right' or 'left'");
@@ -64,7 +64,6 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
 
       position = pos;
       component = Item;
-      visible = componentVisible;
     } else {
       logger.warn("StatusBarRegistration must have valid item or components field");
 

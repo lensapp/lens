@@ -25,11 +25,6 @@ export interface StatusBarComponents {
    * @default "right"
    */
   position?: "left" | "right";
-
-  /**
-   * If specified, controls item visibility
-   */
-  visible?: IComputedValue<boolean>;
 }
 
 /**
@@ -45,4 +40,9 @@ export interface StatusBarRegistration {
    * The newer API, allows for registering a component instead of a ReactNode
    */
   components?: StatusBarComponents;
+
+  /**
+   * If specified, controls item visibility
+   */
+  visible?: IComputedValue<boolean>;
 }
