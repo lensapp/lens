@@ -56,6 +56,7 @@ describe("download logs options in pod logs dock tab", () => {
         namespace: "default",
         showPrevious: true,
         showTimestamps: false,
+        wrap: false,
       }));
       windowDi.override(setLogTabDataInjectable, () => jest.fn());
       windowDi.override(loadLogsInjectable, () => jest.fn());

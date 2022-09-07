@@ -1,5 +1,11 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
 import styles from "./log-list.module.scss";
 
+import throttle from "lodash/throttle";
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { observer } from 'mobx-react';
 import React, { useEffect, useRef } from 'react';
@@ -16,7 +22,7 @@ export interface LogListProps {
 }
 
 export const LogList = observer(({ model }: LogListProps) => {
-  const [lastLineVisible, setLastLineVisible] = React.useState(true);
+  // const [lastLineVisible, setLastLineVisible] = React.useState(true);
   const [rowKeySuffix, setRowKeySuffix] = React.useState(getRandomId());
   
   const { visibleLogs } = model;
@@ -37,28 +43,28 @@ export const LogList = observer(({ model }: LogListProps) => {
     scrollTo(visibleLogs.get().length - 1);
   }
 
-  const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
+  const onScroll = throttle(() => {
     if (!parentRef.current) return;
 
     setButtonVisibility();
     setLastLineVisibility();
     onScrollToTop();
-  }
+  }, 1_000, { trailing: true, leading: true });
 
   const setLastLineVisibility = () => {
-    const { scrollTop, scrollHeight } = parentRef.current as HTMLDivElement;
+    // const { scrollTop, scrollHeight } = parentRef.current as HTMLDivElement;
 
-    if (scrollHeight - scrollTop < 4000) {
-      setLastLineVisible(true);
-    } else {
-      setLastLineVisible(false);
-    }
+    // if (scrollHeight - scrollTop < 4000) {
+    //   setLastLineVisible(true);
+    // } else {
+    //   setLastLineVisible(false);
+    // }
   }
 
   /**
    * Loads new logs if user scrolled to the top
    */
-   const onScrollToTop = async () => {
+  const onScrollToTop = async () => {
     const { scrollTop } = parentRef.current as HTMLDivElement;
 
     if (scrollTop === 0) {

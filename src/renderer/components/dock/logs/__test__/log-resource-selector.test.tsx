@@ -46,6 +46,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
   return new LogTabViewModel(tabId, {
     getLogs: jest.fn(),
     getLogsWithoutTimestamps: jest.fn(),
+    getVisibleLogs: jest.fn(),
     getTimestampSplitLogs: jest.fn(),
     getLogTabData: jest.fn(),
     setLogTabData: jest.fn(),
@@ -73,6 +74,7 @@ function getOnePodViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependenc
       namespace: selectedPod.getNs(),
       showPrevious: false,
       showTimestamps: false,
+      wrap: false,
     }),
     getPodById: (id) => {
       if (id === selectedPod.getId()) {
@@ -101,6 +103,7 @@ const getFewPodsTabData = (tabId: TabId, deps: Partial<LogTabViewModelDependenci
       namespace: selectedPod.getNs(),
       showPrevious: false,
       showTimestamps: false,
+      wrap: false,
     }),
     getPodById: (id) => {
       if (id === selectedPod.getId()) {

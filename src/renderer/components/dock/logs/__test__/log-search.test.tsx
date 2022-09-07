@@ -20,6 +20,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
   return new LogTabViewModel(tabId, {
     getLogs: jest.fn(),
     getLogsWithoutTimestamps: jest.fn(),
+    getVisibleLogs: jest.fn(),
     getTimestampSplitLogs: jest.fn(),
     getLogTabData: jest.fn(),
     setLogTabData: jest.fn(),
@@ -47,6 +48,7 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
       namespace: selectedPod.getNs(),
       showPrevious: false,
       showTimestamps: false,
+      wrap: false,
     }),
     getPodById: (id) => {
       if (id === selectedPod.getId()) {
@@ -71,10 +73,7 @@ describe("LogSearch tests", () => {
   it("renders w/o errors", () => {
     const model = getOnePodViewModel("foobar");
     const { container } = render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={jest.fn()}
-      />,
+      <LogSearch model={model}/>,
     );
 
     expect(container).toBeInstanceOf(HTMLElement);
@@ -90,10 +89,7 @@ describe("LogSearch tests", () => {
     });
 
     render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={scrollToOverlay}
-      />,
+      <LogSearch model={model}/>,
     );
 
     userEvent.click(await screen.findByPlaceholderText("Search..."));
@@ -112,10 +108,7 @@ describe("LogSearch tests", () => {
     });
 
     render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={scrollToOverlay}
-      />,
+      <LogSearch model={model}/>,
     );
 
     userEvent.click(await screen.findByPlaceholderText("Search..."));
@@ -134,10 +127,7 @@ describe("LogSearch tests", () => {
     });
 
     render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={scrollToOverlay}
-      />,
+      <LogSearch model={model}/>,
     );
 
     userEvent.click(await screen.findByText("keyboard_arrow_down"));
