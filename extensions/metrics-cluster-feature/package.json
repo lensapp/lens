@@ -19,7 +19,6 @@
   ],
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
-    "npm": "^8.5.3",
     "semver": "^7.3.2"
   }
 }
