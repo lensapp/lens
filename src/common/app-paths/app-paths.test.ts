@@ -85,7 +85,7 @@ describe("app-paths", () => {
         recent: "some-recent",
         temp: "some-temp",
         videos: "some-videos",
-        userData: "some-app-data/some-app-name",
+        userData: "some-app-data/some-product-name",
       });
     });
 
@@ -108,7 +108,7 @@ describe("app-paths", () => {
         recent: "some-recent",
         temp: "some-temp",
         videos: "some-videos",
-        userData: "some-app-data/some-app-name",
+        userData: "some-app-data/some-product-name",
       });
     });
   });
@@ -134,7 +134,7 @@ describe("app-paths", () => {
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
-        userData: `some-integration-testing-app-data/some-app-name`,
+        userData: `some-integration-testing-app-data/some-product-name`,
       });
     });
 
@@ -143,7 +143,7 @@ describe("app-paths", () => {
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
-        userData: "some-integration-testing-app-data/some-app-name",
+        userData: "some-integration-testing-app-data/some-product-name",
       });
     });
   });
