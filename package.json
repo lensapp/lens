@@ -371,7 +371,7 @@
     "cli-progress": "^3.11.2",
     "color": "^3.2.1",
     "command-line-args": "^5.2.1",
-    "concurrently": "^7.3.0",
+    "concurrently": "^7.4.0",
     "css-loader": "^6.7.1",
     "deepdash": "^5.3.9",
     "dompurify": "^2.4.0",
