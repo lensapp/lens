@@ -14,7 +14,7 @@ interface IntersectionObserverOptions {
    * disconnect the IntersectionObserver instance after
    * intersection.
    */
-  triggerOnce: boolean;
+  triggerOnce?: boolean;
 
   /**
    * Number from 0 to 1 representing the percentage
@@ -22,7 +22,7 @@ interface IntersectionObserverOptions {
    * considered as visible. Can also be an array of
    * thresholds.
    */
-  threshold: number | number[];
+  threshold?: number | number[];
 
   /**
    * Element that is used as the viewport for checking visibility
@@ -38,7 +38,7 @@ interface IntersectionObserverOptions {
 }
 
 function useIntersectionObserver(
-  element: Element,
+  element: Element | null,
   {
     threshold = 0,
     rootMargin = "0%",

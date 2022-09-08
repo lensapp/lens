@@ -16,18 +16,20 @@ import { v4 as getRandomId } from "uuid";
 import { useJumpToBottomButton } from "./use-scroll-to-bottom";
 import { useInitialScrollToBottom } from "./use-initial-scroll-to-bottom";
 import { ToBottom } from "./to-bottom";
+import useIntersectionObserver from "../../../hooks/useIntersectionObserver";
 
 export interface LogListProps {
   model: LogTabViewModel;
 }
 
 export const LogList = observer(({ model }: LogListProps) => {
-  // const [lastLineVisible, setLastLineVisible] = React.useState(true);
-  const [rowKeySuffix, setRowKeySuffix] = React.useState(getRandomId());
-  
   const { visibleLogs } = model;
-  const parentRef = useRef<HTMLDivElement>(null)
+  const parentRef = useRef<HTMLDivElement>(null);
+  const lastLineRef = useRef<HTMLDivElement>(null);
+  const [rowKeySuffix, setRowKeySuffix] = React.useState(getRandomId());
   const [toBottomVisible, setButtonVisibility] = useJumpToBottomButton(parentRef.current);
+  const entry = useIntersectionObserver(lastLineRef.current, {});
+
   const rowVirtualizer = useVirtualizer({
     count: visibleLogs.get().length,
     getScrollElement: () => parentRef.current,
@@ -47,19 +49,8 @@ export const LogList = observer(({ model }: LogListProps) => {
     if (!parentRef.current) return;
 
     setButtonVisibility();
-    setLastLineVisibility();
     onScrollToTop();
   }, 1_000, { trailing: true, leading: true });
-
-  const setLastLineVisibility = () => {
-    // const { scrollTop, scrollHeight } = parentRef.current as HTMLDivElement;
-
-    // if (scrollHeight - scrollTop < 4000) {
-    //   setLastLineVisible(true);
-    // } else {
-    //   setLastLineVisible(false);
-    // }
-  }
 
   /**
    * Loads new logs if user scrolled to the top
@@ -83,6 +74,7 @@ export const LogList = observer(({ model }: LogListProps) => {
 
   useEffect(() => {
     // rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
+    // Refresh list
     setRowKeySuffix(getRandomId());
   }, [model.logTabData.get()]);
 
@@ -91,6 +83,12 @@ export const LogList = observer(({ model }: LogListProps) => {
 
     scrollTo(model.searchStore.occurrences[model.searchStore.activeOverlayIndex]);
   }, [model.searchStore.searchQuery, model.searchStore.activeOverlayIndex])
+
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      scrollToBottom();
+    }
+  }, [model.visibleLogs.get().length]);
 
   return (
     <div
@@ -118,7 +116,7 @@ export const LogList = observer(({ model }: LogListProps) => {
             </div>
           </div>
         ))}
-        <div className={styles.lastLine}></div>
+        <div className={styles.lastLine} ref={lastLineRef}></div>
       </div>
       {toBottomVisible && (
         <ToBottom onClick={scrollToBottom} />
