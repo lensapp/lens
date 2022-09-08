@@ -11496,7 +11496,21 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         <div
           class="drawer-title-text flex gaps align-center"
         >
-          
+          some-release
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="content_copy"
+            >
+              content_copy
+            </span>
+          </i>
+          <div>
+            Copy
+          </div>
         </div>
         <i
           class="Icon material interactive focusable"

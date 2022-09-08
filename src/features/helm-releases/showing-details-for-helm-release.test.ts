@@ -288,15 +288,42 @@ describe("showing details for helm release", () => {
             });
           });
 
-          it("when release resolve with no data, renders", async () => {
-            await callForHelmReleaseMock.resolve(undefined);
 
-            expect(rendered.baseElement).toMatchSnapshot();
+          describe("when call for release resolves with error", () => {
+            beforeEach(async () => {
+              await callForHelmReleaseMock.resolve({
+                callWasSuccessful: false,
+                error: "some-error",
+              });
+            });
+
+            it("renders", async () => {
+              expect(rendered.baseElement).toMatchSnapshot();
+            });
+
+            it("does not show spinner anymore", () => {
+              expect(
+                rendered.queryByTestId("helm-release-detail-content-spinner"),
+              ).not.toBeInTheDocument();
+            });
+
+            it("shows error message about missing release", () => {
+              expect(
+                rendered.getByTestId("helm-release-detail-error"),
+              ).toBeInTheDocument();
+            });
+
+            it("does not call for release configuration", () => {
+              expect(callForHelmReleaseConfigurationMock).not.toHaveBeenCalled();
+            });
           });
 
-          describe("when details resolve", () => {
+          describe("when call for release resolve with release", () => {
             beforeEach(async () => {
-              await callForHelmReleaseMock.resolve(detailedReleaseFake);
+              await callForHelmReleaseMock.resolve({
+                callWasSuccessful: true,
+                response: detailedReleaseFake,
+              });
             });
 
             it("renders", () => {
