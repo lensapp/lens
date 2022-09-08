@@ -48,9 +48,9 @@ describe("get helm release resources", () => {
     });
 
     it("calls for release manifest", () => {
-      expect(execHelmMock).toHaveBeenCalledWith(
+      expect(execHelmMock).toHaveBeenCalledWith([
         "get", "manifest", "some-release", "--namespace", "some-namespace", "--kubeconfig", "/some-kubeconfig-path",
-      );
+      ]);
     });
 
     it("does not call for resources yet", () => {
