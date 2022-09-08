@@ -5,18 +5,19 @@
 
 import styles from "./log-list.module.scss";
 
-import throttle from "lodash/throttle";
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { observer } from 'mobx-react';
-import React, { useEffect, useRef } from 'react';
-import type { LogTabViewModel } from './logs-view-model';
-import { LogRow } from "./log-row";
+import React, { useRef } from 'react';
 import { cssNames } from "../../../utils";
-import { v4 as getRandomId } from "uuid";
-import { useJumpToBottomButton } from "./use-scroll-to-bottom";
-import { useInitialScrollToBottom } from "./use-initial-scroll-to-bottom";
+import { LogRow } from "./log-row";
+import type { LogTabViewModel } from './logs-view-model';
 import { ToBottom } from "./to-bottom";
-import useIntersectionObserver from "../../../hooks/useIntersectionObserver";
+import { useInitialScrollToBottom } from "./use-initial-scroll-to-bottom";
+import { useOnScrollTop } from "./use-on-scroll-top";
+import { useRefreshListOnDataChange } from "./use-refresh-list-on-data-change";
+import { useScrollOnSearch } from "./use-scroll-on-search";
+import { useJumpToBottomButton } from "./use-scroll-to-bottom";
+import { useStickToBottomOnLogsLoad } from "./use-stick-to-bottom-on-logs-load";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -25,10 +26,9 @@ export interface LogListProps {
 export const LogList = observer(({ model }: LogListProps) => {
   const { visibleLogs } = model;
   const parentRef = useRef<HTMLDivElement>(null);
-  const lastLineRef = useRef<HTMLDivElement>(null);
-  const [rowKeySuffix, setRowKeySuffix] = React.useState(getRandomId());
+  const topLineRef = useRef<HTMLDivElement>(null);
+  const bottomLineRef = useRef<HTMLDivElement>(null);
   const [toBottomVisible, setButtonVisibility] = useJumpToBottomButton(parentRef.current);
-  const entry = useIntersectionObserver(lastLineRef.current, {});
 
   const rowVirtualizer = useVirtualizer({
     count: visibleLogs.get().length,
@@ -45,50 +45,21 @@ export const LogList = observer(({ model }: LogListProps) => {
     scrollTo(visibleLogs.get().length - 1);
   }
 
-  const onScroll = throttle(() => {
+  const onScroll = () => {
     if (!parentRef.current) return;
 
     setButtonVisibility();
-    onScrollToTop();
-  }, 1_000, { trailing: true, leading: true });
-
-  /**
-   * Loads new logs if user scrolled to the top
-   */
-  const onScrollToTop = async () => {
-    const { scrollTop } = parentRef.current as HTMLDivElement;
-
-    if (scrollTop === 0) {
-      const logs = model.logs.get();
-      const firstLog = logs[0];
-
-      await model.loadLogs();
-
-      const scrollToIndex = model.logs.get().findIndex(log => log === firstLog);
-
-      scrollTo(scrollToIndex);
-    }
   };
 
   useInitialScrollToBottom(model, scrollToBottom);
 
-  useEffect(() => {
-    // rowVirtualizer.scrollToIndex(visibleLogs.get().length - 1, { align: 'end', smoothScroll: false });
-    // Refresh list
-    setRowKeySuffix(getRandomId());
-  }, [model.logTabData.get()]);
+  const uniqRowKey = useRefreshListOnDataChange(model.logTabData.get());
 
-  useEffect(() => {
-    if (!model.searchStore.occurrences.length) return;
+  useScrollOnSearch(model.searchStore, scrollTo);
 
-    scrollTo(model.searchStore.occurrences[model.searchStore.activeOverlayIndex]);
-  }, [model.searchStore.searchQuery, model.searchStore.activeOverlayIndex])
+  useStickToBottomOnLogsLoad({ bottomLineRef, model, scrollToBottom });
 
-  useEffect(() => {
-    if (entry?.isIntersecting) {
-      scrollToBottom();
-    }
-  }, [model.visibleLogs.get().length]);
+  useOnScrollTop({ topLineRef, model, scrollTo });
 
   return (
     <div
@@ -102,9 +73,10 @@ export const LogList = observer(({ model }: LogListProps) => {
         }}
         className={styles.virtualizer}
       >
+        <div className={styles.firstLine} ref={topLineRef}></div>
         {rowVirtualizer.getVirtualItems().map((virtualRow) => (
           <div
-            key={virtualRow.index + rowKeySuffix}
+            key={virtualRow.index + uniqRowKey}
             ref={virtualRow.measureElement}
             style={{
               transform: `translateY(${virtualRow.start}px)`,
@@ -116,7 +88,7 @@ export const LogList = observer(({ model }: LogListProps) => {
             </div>
           </div>
         ))}
-        <div className={styles.lastLine} ref={lastLineRef}></div>
+        <div className={styles.lastLine} ref={bottomLineRef}></div>
       </div>
       {toBottomVisible && (
         <ToBottom onClick={scrollToBottom} />
