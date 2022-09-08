@@ -56,6 +56,14 @@ const execFileWithInputInjectable = getInjectable({
 
         execution.on("exit", (code, signal) => {
           if (!isNumber(code)) {
+            /**
+             * According to https://nodejs.org/api/child_process.html#class-childprocess (section about the "exit" event)
+             * it says the following:
+             *
+             * If the process exited, code is the final exit code of the process, otherwise null.
+             * If the process terminated due to receipt of a signal, signal is the string name of the signal, otherwise null.
+             * One of the two will always be non-null.
+             */
             resolve({
               callWasSuccessful: false,
               error: `Exited via ${signal}`,

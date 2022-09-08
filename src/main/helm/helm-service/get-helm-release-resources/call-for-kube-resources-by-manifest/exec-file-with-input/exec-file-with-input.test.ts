@@ -15,7 +15,7 @@ describe("exec-file-with-input", () => {
   let execFileMock: jest.Mock;
 
   let executionStub: EventEmitter & {
-    stdin: { end: jest.Mock };
+    stdin: { end: (chunk: any) => void };
     stdout: EventEmitter;
     stderr: EventEmitter;
   };
@@ -25,10 +25,11 @@ describe("exec-file-with-input", () => {
 
     di.unoverride(execFileWithInputInjectable);
 
-    executionStub = new EventEmitter() as any;
-    executionStub.stdin = { end: jest.fn() };
-    executionStub.stdout = new EventEmitter();
-    executionStub.stderr = new EventEmitter();
+    executionStub = Object.assign(new EventEmitter(), {
+      stdin: { end: jest.fn() },
+      stdout: new EventEmitter(),
+      stderr: new EventEmitter(),
+    });
 
     execFileMock = jest.fn(() => executionStub);
 
@@ -66,10 +67,14 @@ describe("exec-file-with-input", () => {
     });
 
     it("calls for file with arguments", () => {
-      expect(execFileMock).toHaveBeenCalledWith("./some-file-path", [
-        "some-arg",
-        "some-other-arg",
-      ]);
+      expect(execFileMock).toHaveBeenCalledWith(
+        "./some-file-path",
+        [
+          "some-arg",
+          "some-other-arg",
+        ],
+        { "maxBuffer": 8589934592 },
+      );
     });
 
     it("calls with input", () => {
@@ -116,13 +121,13 @@ describe("exec-file-with-input", () => {
         });
 
         it("when execution exits without exit code, resolves with failure", async () => {
-          executionStub.emit("exit");
+          executionStub.emit("exit", null, "SIGKILL");
 
           const actual = await actualPromise;
 
           expect(actual).toEqual({
             callWasSuccessful: false,
-            error: "Exited without exit code",
+            error: "Exited via SIGKILL",
           });
         });
 
@@ -171,13 +176,13 @@ describe("exec-file-with-input", () => {
             });
 
             it("when execution exits without exit code, resolves with failure", async () => {
-              executionStub.emit("exit");
+              executionStub.emit("exit", null, "some-signal");
 
               const actual = await actualPromise;
 
               expect(actual).toEqual({
                 callWasSuccessful: false,
-                error: "Exited without exit code",
+                error: "Exited via some-signal",
               });
             });
 
