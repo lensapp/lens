@@ -328,7 +328,7 @@
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^16.2.14",
     "@types/lodash": "^4.14.184",
-    "@types/marked": "^4.0.6",
+    "@types/marked": "^4.0.7",
     "@types/md5-file": "^4.0.2",
     "@types/mini-css-extract-plugin": "^2.4.0",
     "@types/mock-fs": "^4.13.1",
