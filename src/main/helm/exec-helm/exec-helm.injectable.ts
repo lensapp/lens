@@ -8,7 +8,7 @@ import helmBinaryPathInjectable from "../helm-binary-path.injectable";
 import type { AsyncResult } from "../../../common/utils/async-result";
 import { getErrorMessage } from "../../../common/utils/get-error-message";
 
-export type ExecHelm = (...args: string[]) => Promise<AsyncResult<string>>;
+export type ExecHelm = (args: string[]) => Promise<AsyncResult<string>>;
 
 const execHelmInjectable = getInjectable({
   id: "exec-helm",
@@ -17,9 +17,11 @@ const execHelmInjectable = getInjectable({
     const execFile = di.inject(execFileInjectable);
     const helmBinaryPath = di.inject(helmBinaryPathInjectable);
 
-    return async (...args) => {
+    return async (args) => {
       try {
-        const response = await execFile(helmBinaryPath, args);
+        const response = await execFile(helmBinaryPath, args, {
+          maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
+        });
 
         return { callWasSuccessful: true, response };
       } catch (error) {

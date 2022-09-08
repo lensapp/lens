@@ -19,7 +19,7 @@ const callForHelmManifestInjectable = getInjectable({
       namespace: string,
       kubeconfigPath: string,
     ): Promise<AsyncResult<KubeJsonApiData[]>> => {
-      const result = await execHelm(
+      const result = await execHelm([
         "get",
         "manifest",
         name,
@@ -27,7 +27,7 @@ const callForHelmManifestInjectable = getInjectable({
         namespace,
         "--kubeconfig",
         kubeconfigPath,
-      );
+      ]);
 
       if (!result.callWasSuccessful) {
         return { callWasSuccessful: false, error: result.error };

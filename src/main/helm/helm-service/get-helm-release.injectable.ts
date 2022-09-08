@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import loggerInjectable from "../../../common/logger.injectable";
 import { isObject, json } from "../../../common/utils";
-import { execHelm } from "../exec";
+import execHelmInjectable from "../exec-helm/exec-helm.injectable";
 import getHelmReleaseResourcesInjectable from "./get-helm-release-resources/get-helm-release-resources.injectable";
 
 const getHelmReleaseInjectable = getInjectable({
@@ -14,6 +14,7 @@ const getHelmReleaseInjectable = getInjectable({
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const execHelm = di.inject(execHelmInjectable);
     const getHelmReleaseResources = di.inject(getHelmReleaseResourcesInjectable);
 
     return async (cluster: Cluster, releaseName: string, namespace: string) => {
@@ -34,11 +35,13 @@ const getHelmReleaseInjectable = getInjectable({
         "json",
       ];
 
-      const release = json.parse(
-        await execHelm(args, {
-          maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
-        }),
-      );
+      const result = await execHelm(args);
+
+      if (!result.callWasSuccessful) {
+        return undefined;
+      }
+
+      const release = json.parse(result.response);
 
       if (!isObject(release) || Array.isArray(release)) {
         return undefined;
