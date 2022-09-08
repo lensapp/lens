@@ -5,12 +5,12 @@
 
 import styles from "./log-list.module.scss";
 
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { observer } from 'mobx-react';
-import React, { useRef } from 'react';
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { observer } from "mobx-react";
+import React, { useRef } from "react";
 import { cssNames } from "../../../utils";
 import { LogRow } from "./log-row";
-import type { LogTabViewModel } from './logs-view-model';
+import type { LogTabViewModel } from "./logs-view-model";
 import { ToBottom } from "./to-bottom";
 import { useInitialScrollToBottom } from "./use-initial-scroll-to-bottom";
 import { useOnScrollTop } from "./use-on-scroll-top";
@@ -38,12 +38,12 @@ export const LogList = observer(({ model }: LogListProps) => {
   });
 
   const scrollTo = (index: number) => {
-    rowVirtualizer.scrollToIndex(index, { align: 'start', smoothScroll: false });
-  }
+    rowVirtualizer.scrollToIndex(index, { align: "start", smoothScroll: false });
+  };
 
   const scrollToBottom = () => {
     scrollTo(visibleLogs.get().length - 1);
-  }
+  };
 
   const onScroll = () => {
     if (!parentRef.current) return;
@@ -94,6 +94,6 @@ export const LogList = observer(({ model }: LogListProps) => {
         <ToBottom onClick={scrollToBottom} />
       )}
     </div>
-  )
+  );
 });
 

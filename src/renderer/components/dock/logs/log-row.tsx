@@ -1,11 +1,15 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import styles from "./log-row.module.scss";
 
-import AnsiUp from 'ansi_up';
-import DOMPurify from 'dompurify';
-import React from 'react';
-import { SearchStore } from '../../../search-store/search-store';
-import { cssNames } from '../../../utils';
-import type { LogTabViewModel } from './logs-view-model';
+import AnsiUp from "ansi_up";
+import DOMPurify from "dompurify";
+import React from "react";
+import { SearchStore } from "../../../search-store/search-store";
+import { cssNames } from "../../../utils";
+import type { LogTabViewModel } from "./logs-view-model";
 
 const colorConverter = new AnsiUp();
 

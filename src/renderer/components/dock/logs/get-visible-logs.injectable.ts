@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import { getInjectable } from "@ogre-tools/injectable";
 import moment from "moment";
 import userStoreInjectable from "../../../../common/user-store/user-store.injectable";
@@ -13,7 +17,7 @@ const getVisibleLogsInjectable = getInjectable({
     return (tabId: TabId) => {
       const getLogTabData = di.inject(getLogTabDataInjectable);
       const getTimestampSplitLogs = di.inject(getTimestampSplitLogsInjectable);
-      const userStore = di.inject(userStoreInjectable)
+      const userStore = di.inject(userStoreInjectable);
       const logTabData = getLogTabData(tabId);
 
       if (!logTabData) {
@@ -31,8 +35,8 @@ const getVisibleLogsInjectable = getInjectable({
       return getTimestampSplitLogs(tabId).map(([logTimestamp, log]) => (
         `${logTimestamp && moment.tz(logTimestamp, userStore.localeTimezone).format()}${log}`
       ));
-    }
-  }
+    };
+  },
 });
 
 export default getVisibleLogsInjectable;

@@ -1,4 +1,8 @@
-import { useState } from 'react';
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+import { useState } from "react";
 
 export function useJumpToBottomButton(scrolledParent: HTMLDivElement | null): [isVisible: boolean, setVisibility: () => void] {
   const [isVisible, setToBottomVisible] = useState(false);
@@ -13,7 +17,7 @@ export function useJumpToBottomButton(scrolledParent: HTMLDivElement | null): [i
     } else {
       setToBottomVisible(false);
     }
-  }
+  };
 
   return [isVisible, setVisibility];
 }
