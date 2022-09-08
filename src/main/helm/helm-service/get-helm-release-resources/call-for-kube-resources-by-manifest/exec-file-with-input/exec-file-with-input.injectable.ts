@@ -26,7 +26,9 @@ const execFileWithInputInjectable = getInjectable({
         let execution: ChildProcess;
 
         try {
-          execution = execFile(filePath, commandArguments);
+          execution = execFile(filePath, commandArguments, {
+            maxBuffer: 8 * 1024 * 1024 * 1024, // 8 MiB
+          });
         } catch (e) {
           resolve({ callWasSuccessful: false, error: e });
 
@@ -56,7 +58,7 @@ const execFileWithInputInjectable = getInjectable({
           if (!isNumber(code)) {
             resolve({
               callWasSuccessful: false,
-              error: "Exited without exit code",
+              error: `Exited via ${signal}`,
             });
 
             return;
