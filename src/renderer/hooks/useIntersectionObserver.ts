@@ -37,7 +37,7 @@ interface IntersectionObserverOptions {
   rootMargin?: string;
 }
 
-function useIntersectionObserver(
+export function useIntersectionObserver(
   element: Element | null,
   {
     threshold = 0,
@@ -64,5 +64,3 @@ function useIntersectionObserver(
 
   return entry;
 }
-
-export default useIntersectionObserver;

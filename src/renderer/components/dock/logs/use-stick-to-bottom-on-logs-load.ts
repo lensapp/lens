@@ -5,7 +5,7 @@
 
 import type { RefObject } from "react";
 import { useEffect } from "react";
-import useIntersectionObserver from "../../../hooks/useIntersectionObserver";
+import { useIntersectionObserver } from "../../../hooks";
 import type { LogTabViewModel } from "./logs-view-model";
 
 interface UseStickToBottomProps {

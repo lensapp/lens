@@ -10,3 +10,4 @@ export * from "./useInterval";
 export * from "./useMutationObserver";
 export * from "./useResizeObserver";
 export * from "./use-toggle";
+export * from "./useIntersectionObserver";
