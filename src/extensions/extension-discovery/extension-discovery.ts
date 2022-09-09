@@ -363,7 +363,8 @@ export class ExtensionDiscovery {
       const id = this.getInstalledManifestPath(manifest.name);
       const isEnabled = this.dependencies.extensionsStore.isEnabled({ id, isBundled });
       const extensionDir = path.dirname(manifestPath);
-      const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
+      const packedName = manifest.name.replaceAll("@", "").replaceAll("/", "-");
+      const npmPackage = path.join(extensionDir, `${packedName}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await this.dependencies.pathExists(npmPackage)) ? npmPackage : extensionDir;
       const isCompatible = isBundled || this.dependencies.isCompatibleExtension(manifest);
 
