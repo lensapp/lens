@@ -390,27 +390,10 @@ export class ExtensionDiscovery {
 
   async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
-
-    await this.installBundledPackages(this.packageJsonPath, bundledExtensions);
-
     const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
-
-    for (const extension of userExtensions) {
-      if (!(await this.dependencies.pathExists(extension.manifestPath))) {
-        try {
-          await this.dependencies.installExtension(extension.absolutePath);
-        } catch (error) {
-          const message = error instanceof Error
-            ? error.message
-            : String(error || "unknown error");
-          const { name, version } = extension.manifest;
-
-          this.dependencies.logger.error(`${logModule}: failed to install user extension ${name}@${version}: ${message}`);
-        }
-      }
-    }
-
     const extensions = bundledExtensions.concat(userExtensions);
+
+    await this.installBundledPackages(this.packageJsonPath, extensions);
 
     return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
   }
@@ -420,10 +403,13 @@ export class ExtensionDiscovery {
    */
   installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]): Promise<void> {
     const dependencies = Object.fromEntries(
-      extensions.map(extension => [extension.manifest.name, extension.absolutePath]),
+      extensions.filter(extension => extension.isBundled).map(extension => [extension.manifest.name, extension.absolutePath]),
+    );
+    const optionalDependencies = Object.fromEntries(
+      extensions.filter(extension => !extension.isBundled).map(extension => [extension.manifest.name, extension.absolutePath]),
     );
 
-    return this.dependencies.installExtensions(packageJsonPath, { dependencies });
+    return this.dependencies.installExtensions(packageJsonPath, { dependencies, optionalDependencies });
   }
 
   async loadBundledExtensions(): Promise<InstalledExtension[]> {
