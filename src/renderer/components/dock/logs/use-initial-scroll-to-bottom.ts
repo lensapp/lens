@@ -7,8 +7,9 @@ import type { LogTabViewModel } from "./logs-view-model";
 
 export function useInitialScrollToBottom(model: LogTabViewModel, callback: () => void) {
   useEffect(() => {
+    // TODO: Consider more precise way to check when list ready to scroll
     setTimeout(() => {
       callback();
-    }, 300); // Giving some time virtual library to render its rows
+    }, 800); // Giving some time virtual library to render its rows
   }, [model.logTabData.get()?.selectedPodId]);
 }
