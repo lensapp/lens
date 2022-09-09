@@ -13,9 +13,8 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"

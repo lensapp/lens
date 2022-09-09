@@ -13,9 +13,8 @@ exports[`encourage user to update when sufficient time passed since update was d
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -233,9 +232,8 @@ exports[`encourage user to update when sufficient time passed since update was d
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
