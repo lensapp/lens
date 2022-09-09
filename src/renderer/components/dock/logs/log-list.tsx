@@ -73,7 +73,11 @@ export const LogList = observer(({ model }: LogListProps) => {
         }}
         className={styles.virtualizer}
       >
-        <div className={styles.firstLine} ref={topLineRef}></div>
+        <div
+          className={styles.anchorLine}
+          ref={topLineRef}
+          style={{ top: 0 }}
+        />
         {rowVirtualizer.getVirtualItems().map((virtualRow) => (
           <div
             key={virtualRow.index + uniqRowKey}
@@ -88,7 +92,11 @@ export const LogList = observer(({ model }: LogListProps) => {
             </div>
           </div>
         ))}
-        <div className={styles.lastLine} ref={bottomLineRef}></div>
+        <div
+          className={styles.anchorLine}
+          ref={bottomLineRef}
+          style={{ bottom: 0 }}
+        />
       </div>
       {toBottomVisible && (
         <ToBottom onClick={scrollToBottom} />

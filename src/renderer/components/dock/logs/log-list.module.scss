@@ -29,18 +29,9 @@
   }
 }
 
-.firstLine {
+.anchorLine {
   width: 100%;
   height: 1px;
-  top: 0;
-  background-color: var(--logsBackground);
-  position: absolute;
-}
-
-.lastLine {
-  width: 100%;
-  height: 1px;
-  bottom: 0;
   background-color: var(--logsBackground);
   position: absolute;
 }
