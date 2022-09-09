@@ -19,11 +19,7 @@ export interface PodLogSearchProps {
 export const LogSearch = observer(({ onSearch, model: { logTabData, searchStore, ...model }}: PodLogSearchProps) => {
   const tabData = logTabData.get();
 
-  if (!tabData) {
-    return null;
-  }
-
-  const logs = tabData.showTimestamps
+  const logs = tabData?.showTimestamps
     ? model.logs.get()
     : model.logsWithoutTimestamps.get();
   const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
