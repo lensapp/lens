@@ -65,7 +65,6 @@ const NonInjectedLogsDockTab = observer(({
         showButtons={false}
         showStatusPanel={false}
       />
-      {/* <LogList model={model} ref={logListElement} /> */}
       <LogList model={model} />
       <LogControls model={model} />
     </div>
