@@ -15,8 +15,6 @@ import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 import type { NavigateToCatalog } from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import navigateToCatalogInjectable from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import catalogRouteInjectable from "../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { UpdateButton } from "../../update-button";
 import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
@@ -28,10 +26,12 @@ import closeWindowInjectable from "./close-window.injectable";
 import maximizeWindowInjectable from "./maximize-window.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
 import watchHistoryStateInjectable from "../../../remote-helpers/watch-history-state.injectable";
+import welcomeRouteInjectable from "../../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
+import navigateToWelcomeInjectable from "../../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 
 interface Dependencies {
-  navigateToCatalog: NavigateToCatalog;
-  catalogRouteIsActive: IComputedValue<boolean>;
+  navigateToWelcomePage: NavigateToCatalog;
+  welcomeRouteIsActive: IComputedValue<boolean>;
   items: IComputedValue<TopBarRegistration[]>;
   isWindows: boolean;
   isLinux: boolean;
@@ -48,8 +48,8 @@ interface Dependencies {
 
 const NonInjectedTopBar = observer(({
   items,
-  navigateToCatalog,
-  catalogRouteIsActive,
+  navigateToWelcomePage,
+  welcomeRouteIsActive,
   isWindows,
   isLinux,
   prevEnabled,
@@ -65,7 +65,7 @@ const NonInjectedTopBar = observer(({
   const elem = useRef<HTMLDivElement | null>(null);
 
   const goHome = () => {
-    navigateToCatalog();
+    navigateToWelcomePage();
   };
 
   const windowSizeToggle = (evt: React.MouseEvent) => {
@@ -103,7 +103,7 @@ const NonInjectedTopBar = observer(({
           data-testid="home-button"
           material="home"
           onClick={goHome}
-          disabled={catalogRouteIsActive.get()}
+          disabled={welcomeRouteIsActive.get()}
         />
         <Icon
           data-testid="history-back"
@@ -182,15 +182,15 @@ const renderRegisteredItems = (items: TopBarRegistration[]) => (
 
 export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
   getProps: (di) => ({
-    navigateToCatalog: di.inject(navigateToCatalogInjectable),
+    navigateToWelcomePage: di.inject(navigateToWelcomeInjectable),
     items: di.inject(topBarItemsInjectable),
     isLinux: di.inject(isLinuxInjectable),
     isWindows: di.inject(isWindowsInjectable),
     prevEnabled: di.inject(topBarPrevEnabledInjectable),
     nextEnabled: di.inject(topBarNextEnabledInjectable),
-    catalogRouteIsActive: di.inject(
+    welcomeRouteIsActive: di.inject(
       routeIsActiveInjectable,
-      di.inject(catalogRouteInjectable),
+      di.inject(welcomeRouteInjectable),
     ),
     openAppContextMenu: di.inject(openAppContextMenuInjectable),
     goBack: di.inject(goBackInjectable),
