@@ -10,6 +10,6 @@ export function useInitialScrollToBottom(model: LogTabViewModel, callback: () =>
     // TODO: Consider more precise way to check when list ready to scroll
     setTimeout(() => {
       callback();
-    }, 800); // Giving some time virtual library to render its rows
+    }, 500); // Giving some time virtual library to render its rows
   }, [model.logTabData.get()?.selectedPodId]);
 }
