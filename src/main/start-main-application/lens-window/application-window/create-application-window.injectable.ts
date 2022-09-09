@@ -10,6 +10,7 @@ import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./wait-until-bundled-extensions-are-loaded.injectable";
 import { applicationWindowInjectionToken } from "./application-window-injection-token";
+import { runInAction } from "mobx";
 
 const createApplicationWindowInjectable = getInjectable({
   id: "create-application-window",
@@ -49,7 +50,9 @@ const createApplicationWindowInjectable = getInjectable({
           },
 
           onClose: () => {
-            parentDi.deregister(windowInjectable);
+            runInAction(() => {
+              parentDi.deregister(windowInjectable);
+            });
           },
 
           beforeOpen: waitUntilBundledExtensionsAreLoaded,
@@ -59,7 +62,9 @@ const createApplicationWindowInjectable = getInjectable({
       injectionToken: applicationWindowInjectionToken,
     });
 
-    parentDi.register(windowInjectable);
+    runInAction(() => {
+      parentDi.register(windowInjectable);
+    });
 
     return parentDi.inject(windowInjectable);
   },

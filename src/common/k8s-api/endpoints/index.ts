@@ -41,3 +41,4 @@ export * from "./service-account.api";
 export * from "./stateful-set.api";
 export * from "./storage-class.api";
 export * from "./legacy-globals";
+export * from "./types";

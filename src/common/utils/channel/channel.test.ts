@@ -18,6 +18,7 @@ import { requestChannelListenerInjectionToken } from "./request-channel-listener
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "../../test-utils/get-promise-status";
+import { runInAction } from "mobx";
 
 type TestMessageChannel = MessageChannel<string>;
 type TestRequestChannel = RequestChannel<string, string>;
@@ -47,12 +48,16 @@ describe("channel", () => {
       });
 
       builder.beforeApplicationStart((mainDi) => {
-        mainDi.register(testMessageChannelInjectable);
+        runInAction(() => {
+          mainDi.register(testMessageChannelInjectable);
+        });
       });
 
       builder.beforeWindowStart((windowDi) => {
-        windowDi.register(testChannelListenerInTestWindowInjectable);
-        windowDi.register(testMessageChannelInjectable);
+        runInAction(() => {
+          windowDi.register(testChannelListenerInTestWindowInjectable);
+          windowDi.register(testMessageChannelInjectable);
+        });
       });
 
       mainDi = builder.mainDi;
@@ -126,12 +131,16 @@ describe("channel", () => {
       });
 
       applicationBuilder.beforeApplicationStart((mainDi) => {
-        mainDi.register(testChannelListenerInMainInjectable);
-        mainDi.register(testMessageChannelInjectable);
+        runInAction(() => {
+          mainDi.register(testChannelListenerInMainInjectable);
+          mainDi.register(testMessageChannelInjectable);
+        });
       });
 
       applicationBuilder.beforeWindowStart((windowDi) => {
-        windowDi.register(testMessageChannelInjectable);
+        runInAction(() => {
+          windowDi.register(testMessageChannelInjectable);
+        });
       });
 
       await applicationBuilder.render();
@@ -172,12 +181,16 @@ describe("channel", () => {
       });
 
       applicationBuilder.beforeApplicationStart((mainDi) => {
-        mainDi.register(testChannelListenerInMainInjectable);
-        mainDi.register(testRequestChannelInjectable);
+        runInAction(() => {
+          mainDi.register(testChannelListenerInMainInjectable);
+          mainDi.register(testRequestChannelInjectable);
+        });
       });
 
       applicationBuilder.beforeWindowStart((windowDi) => {
-        windowDi.register(testRequestChannelInjectable);
+        runInAction(() => {
+          windowDi.register(testRequestChannelInjectable);
+        });
       });
 
       await applicationBuilder.render();

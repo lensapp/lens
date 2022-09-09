@@ -207,6 +207,8 @@ export class ContextHandler implements ClusterContextHandler {
   }
 
   stopServer() {
+    this.prometheus = undefined;
+    this.prometheusProvider = undefined;
     this.kubeAuthProxy?.exit();
     this.kubeAuthProxy = undefined;
     this.apiTarget = undefined;

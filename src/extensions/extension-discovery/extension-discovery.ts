@@ -27,12 +27,8 @@ import type { Watch } from "../../common/fs/watch/watch.injectable";
 interface Dependencies {
   extensionLoader: ExtensionLoader;
   extensionsStore: ExtensionsStore;
-
   extensionInstallationStateStore: ExtensionInstallationStateStore;
-
-  isCompatibleBundledExtension: (manifest: LensExtensionManifest) => boolean;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
-
   installExtension: (name: string) => Promise<void>;
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
   extensionPackageRootDirectory: string;
@@ -102,7 +98,7 @@ export class ExtensionDiscovery {
 
   public events = new EventEmitter();
 
-  constructor(protected dependencies : Dependencies) {
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
   }
 
@@ -369,7 +365,7 @@ export class ExtensionDiscovery {
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await this.dependencies.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      const isCompatible = (isBundled && this.dependencies.isCompatibleBundledExtension(manifest)) || this.dependencies.isCompatibleExtension(manifest);
+      const isCompatible = isBundled || this.dependencies.isCompatibleExtension(manifest);
 
       return {
         id,

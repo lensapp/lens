@@ -143,7 +143,9 @@ export const getApplicationBuilder = () => {
     doGeneralOverrides: true,
   });
 
-  mainDi.register(mainExtensionsStateInjectable);
+  runInAction(() => {
+    mainDi.register(mainExtensionsStateInjectable);
+  });
 
   const overrideChannelsForWindow = overrideChannels(mainDi);
 
@@ -184,7 +186,9 @@ export const getApplicationBuilder = () => {
 
     overrideChannelsForWindow(windowDi, windowId);
 
-    windowDi.register(rendererExtensionsStateInjectable);
+    runInAction(() => {
+      windowDi.register(rendererExtensionsStateInjectable);
+    });
 
     windowDi.override(
       currentlyInClusterFrameInjectable,
@@ -552,9 +556,11 @@ export const getApplicationBuilder = () => {
             getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
           );
 
-          mainExtensionInstances.forEach(
-            enableExtensionFor(mainDi, mainExtensionsStateInjectable),
-          );
+          runInAction(() => {
+            mainExtensionInstances.forEach(
+              enableExtensionFor(mainDi, mainExtensionsStateInjectable),
+            );
+          });
         });
       },
 

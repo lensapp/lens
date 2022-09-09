@@ -167,6 +167,7 @@ describe("add custom helm repository in preferences", () => {
               expect(execFileMock).toHaveBeenCalledWith(
                 "some-helm-binary-path",
                 ["repo", "add", "some-custom-repository", "http://some.url"],
+                { "maxBuffer": 34359738368 },
               );
             });
 
@@ -365,6 +366,7 @@ describe("add custom helm repository in preferences", () => {
                     "--cert-file",
                     "some-cert-file",
                   ],
+                  { "maxBuffer": 34359738368 },
                 );
               });
             });

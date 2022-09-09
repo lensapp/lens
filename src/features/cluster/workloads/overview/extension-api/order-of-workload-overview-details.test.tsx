@@ -8,7 +8,7 @@ import React from "react";
 import getRandomIdInjectable from "../../../../../common/utils/get-random-id.injectable";
 import { workloadOverviewDetailInjectionToken } from "../../../../../renderer/components/+workloads-overview/workload-overview-details/workload-overview-detail-injection-token";
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 
 describe("order of workload overview details", () => {
   let rendered: RenderResult;
@@ -20,11 +20,13 @@ describe("order of workload overview details", () => {
       windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
 
-      windowDi.register(
-        someCoreItemWithLowOrderNumberInjectable,
-        someCoreItemWithHighOrderNumberInjectable,
-        someCoreItemWithDefaultOrderNumberInjectable,
-      );
+      runInAction(() => {
+        windowDi.register(
+          someCoreItemWithLowOrderNumberInjectable,
+          someCoreItemWithHighOrderNumberInjectable,
+          someCoreItemWithDefaultOrderNumberInjectable,
+        );
+      });
     });
 
     builder.setEnvironmentToClusterFrame();

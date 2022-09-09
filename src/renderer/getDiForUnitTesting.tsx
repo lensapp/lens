@@ -33,7 +33,7 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
-import { observable, computed } from "mobx";
+import { observable, computed, runInAction } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import appVersionInjectable from "../common/vars/app-version.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
@@ -68,26 +68,30 @@ import getEntitySettingCommandsInjectable from "./components/command-palette/reg
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 
-export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
-  const {
-    doGeneralOverrides = false,
-  } = opts;
+export const getDiForUnitTesting = (
+  opts: { doGeneralOverrides?: boolean } = {},
+) => {
+  const { doGeneralOverrides = false } = opts;
 
   const di = createContainer("renderer");
 
-  registerMobX(di);
+  di.preventSideEffects();
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
-  const injectables: Injectable<any, any, any>[] = (global as any).rendererInjectablePaths.map(
+  const injectables: Injectable<any, any, any>[] = (
+      global as any
+  ).rendererInjectablePaths.map(
     (filePath: string) => require(filePath).default,
   );
 
-  chunk(100)(injectables).forEach(chunkInjectables => {
-    di.register(...chunkInjectables);
-  });
+  runInAction(() => {
+    registerMobX(di);
 
-  di.preventSideEffects();
+    chunk(100)(injectables).forEach((chunkInjectables) => {
+      di.register(...chunkInjectables);
+    });
+  });
 
   if (doGeneralOverrides) {
     const globalOverrides: GlobalOverride[] = (global as any).rendererGlobalOverridePaths.map(

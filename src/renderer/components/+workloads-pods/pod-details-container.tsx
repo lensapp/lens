@@ -6,7 +6,7 @@
 import "./pod-details-container.scss";
 
 import React from "react";
-import type { PodContainer, PodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
+import type { Container, PodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames, isDefined } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -27,7 +27,7 @@ import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-activ
 
 export interface PodDetailsContainerProps {
   pod: Pod;
-  container: PodContainer;
+  container: Container;
   metrics?: Partial<Record<string, MetricData>>;
 }
 

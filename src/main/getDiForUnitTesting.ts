@@ -55,7 +55,7 @@ import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/r
 import showMessagePopupInjectable from "./electron-app/features/show-message-popup.injectable";
 import clusterFramesInjectable from "../common/cluster-frames.injectable";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
@@ -83,12 +83,10 @@ import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-val
 import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
 import deleteHelmReleaseInjectable from "./helm/helm-service/delete-helm-release.injectable";
 import getHelmReleaseHistoryInjectable from "./helm/helm-service/get-helm-release-history.injectable";
-import getHelmReleaseInjectable from "./helm/helm-service/get-helm-release.injectable";
 import getHelmReleaseValuesInjectable from "./helm/helm-service/get-helm-release-values.injectable";
 import installHelmChartInjectable from "./helm/helm-service/install-helm-chart.injectable";
 import listHelmReleasesInjectable from "./helm/helm-service/list-helm-releases.injectable";
 import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
-import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
@@ -103,19 +101,21 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   const di = createContainer("main");
 
-  registerMobX(di);
-
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
+
+  di.preventSideEffects();
 
   const injectables: Injectable<any, any, any>[] = (global as any).mainInjectablePaths.map(
     (filePath: string) => require(filePath).default,
   );
 
-  chunk(100)(injectables).forEach(chunkInjectables => {
-    di.register(...chunkInjectables);
-  });
+  runInAction(() => {
+    registerMobX(di);
 
-  di.preventSideEffects();
+    chunk(100)(injectables).forEach(chunkInjectables => {
+      di.register(...chunkInjectables);
+    });
+  });
 
   if (doGeneralOverrides) {
     const globalOverrides: GlobalOverride[] = (global as any).mainGlobalOverridePaths.map(
@@ -166,12 +166,10 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       listHelmChartsInjectable,
       deleteHelmReleaseInjectable,
       getHelmReleaseHistoryInjectable,
-      getHelmReleaseInjectable,
       getHelmReleaseValuesInjectable,
       installHelmChartInjectable,
       listHelmReleasesInjectable,
       rollbackHelmReleaseInjectable,
-      updateHelmReleaseInjectable,
       writeJsonFileInjectable,
       readJsonFileInjectable,
       readFileInjectable,

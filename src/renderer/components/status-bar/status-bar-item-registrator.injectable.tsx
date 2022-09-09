@@ -4,6 +4,7 @@
  */
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
@@ -38,6 +39,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
     const id = `${getRandomId()}-status-bar-item-for-extension-${extension.sanitizedExtensionId}`;
     let component: React.ComponentType;
     let position: "left" | "right";
+    const visible: IComputedValue<boolean> | undefined = registration?.visible;
 
     if (registration?.item) {
       const { item } = registration;
@@ -74,7 +76,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
       instantiate: () => ({
         component,
         position,
-        visible: computed(() => true),
+        visible: visible ?? computed(() => true),
       }),
 
       injectionToken: statusBarItemInjectionToken,

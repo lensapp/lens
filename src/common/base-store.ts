@@ -59,10 +59,10 @@ export abstract class BaseStore<T extends object> extends Singleton {
     const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
 
     this.storeConfig = getConfigurationFileModel({
-      ...this.params,
       projectName: "lens",
       projectVersion: di.inject(appVersionInjectable),
       cwd: this.cwd(),
+      ...this.params,
     });
 
     const res: any = this.fromStore(this.storeConfig.store);

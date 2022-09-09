@@ -11,9 +11,9 @@ import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import type { IComputedValue } from "mobx";
-import { ReleaseDetailsContent } from "./release-details-content";
 import type { TargetHelmRelease } from "./target-helm-release.injectable";
 import targetHelmReleaseInjectable from "./target-helm-release.injectable";
+import { ReleaseDetailsDrawer } from "./release-details-drawer";
 
 interface Dependencies {
   targetRelease: IComputedValue<
@@ -25,7 +25,7 @@ const NonInjectedReleaseDetails = observer(
   ({ targetRelease }: Dependencies) => {
     const release = targetRelease.get();
 
-    return release ? <ReleaseDetailsContent targetRelease={release} /> : null;
+    return release ? <ReleaseDetailsDrawer targetRelease={release} /> : null;
   },
 );
 

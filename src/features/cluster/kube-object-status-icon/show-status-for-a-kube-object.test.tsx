@@ -9,7 +9,7 @@ import { useFakeTime } from "../../../common/test-utils/use-fake-time";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IAtom } from "mobx";
-import { createAtom, computed } from "mobx";
+import { runInAction, createAtom, computed } from "mobx";
 import { frontEndRouteInjectionToken } from "../../../common/front-end-routing/front-end-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../renderer/routes/route-specific-component-injection-token";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
@@ -94,14 +94,17 @@ describe("show status for a kube object", () => {
     });
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.register(
-        testRouteInjectable,
-        testRouteComponentInjectable,
-        infoStatusInjectable,
-        warningStatusInjectable,
-        criticalStatusInjectable,
-        someAtomInjectable,
-      );
+      runInAction(() => {
+        windowDi.register(
+          testRouteInjectable,
+          testRouteComponentInjectable,
+          infoStatusInjectable,
+          warningStatusInjectable,
+          criticalStatusInjectable,
+          someAtomInjectable,
+        );
+
+      });
     });
 
     builder.setEnvironmentToClusterFrame();
@@ -141,7 +144,9 @@ describe("show status for a kube object", () => {
 
     describe("when status for irrelevant kube object kind emerges", () => {
       beforeEach(() => {
-        windowDi.register(statusForIrrelevantKubeObjectKindInjectable);
+        runInAction(() => {
+          windowDi.register(statusForIrrelevantKubeObjectKindInjectable);
+        });
 
         rerenderParent();
       });
@@ -161,7 +166,9 @@ describe("show status for a kube object", () => {
 
     describe("when status for irrelevant kube object api version emerges", () => {
       beforeEach(() => {
-        windowDi.register(statusForIrrelevantKubeObjectApiVersionInjectable);
+        runInAction(() => {
+          windowDi.register(statusForIrrelevantKubeObjectApiVersionInjectable);
+        });
 
         rerenderParent();
       });

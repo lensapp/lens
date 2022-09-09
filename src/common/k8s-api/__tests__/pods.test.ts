@@ -4,7 +4,7 @@
  */
 
 import assert from "assert";
-import type { PodContainer, PodContainerStatus } from "../endpoints";
+import type { Container, PodContainerStatus } from "../endpoints";
 import { Pod } from "../endpoints";
 
 interface GetDummyPodOptions {
@@ -22,8 +22,8 @@ function getDummyPod(rawOpts: GetDummyPodOptions = {}): Pod {
     initRunning = 0,
   } = rawOpts;
 
-  const containers: PodContainer[] = [];
-  const initContainers: PodContainer[] = [];
+  const containers: Container[] = [];
+  const initContainers: Container[] = [];
   const containerStatuses: PodContainerStatus[] = [];
   const initContainerStatuses: PodContainerStatus[] = [];
   const pod = new Pod({
@@ -58,7 +58,7 @@ function getDummyPod(rawOpts: GetDummyPodOptions = {}): Pod {
 
     containers.push({
       image: "dummy",
-      imagePullPolicy: "dummy",
+      imagePullPolicy: "Always",
       name,
     });
     containerStatuses.push({
@@ -80,7 +80,7 @@ function getDummyPod(rawOpts: GetDummyPodOptions = {}): Pod {
 
     containers.push({
       image: "dummy",
-      imagePullPolicy: "dummy",
+      imagePullPolicy: "Always",
       name,
     });
     containerStatuses.push({
@@ -105,7 +105,7 @@ function getDummyPod(rawOpts: GetDummyPodOptions = {}): Pod {
 
     initContainers.push({
       image: "dummy",
-      imagePullPolicy: "dummy",
+      imagePullPolicy: "Always",
       name,
     });
     initContainerStatuses.push({
@@ -127,7 +127,7 @@ function getDummyPod(rawOpts: GetDummyPodOptions = {}): Pod {
 
     initContainers.push({
       image: "dummy",
-      imagePullPolicy: "dummy",
+      imagePullPolicy: "Always",
       name,
     });
     initContainerStatuses.push({
@@ -169,7 +169,7 @@ describe("Pods", () => {
     function getNamedContainer(name: string) {
       return {
         image: "dummy",
-        imagePullPolicy: "dummy",
+        imagePullPolicy: "Always",
         name,
       };
     }
