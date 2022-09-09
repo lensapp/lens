@@ -29,12 +29,14 @@ export const LogList = observer(({ model }: LogListProps) => {
   const topLineRef = useRef<HTMLDivElement>(null);
   const bottomLineRef = useRef<HTMLDivElement>(null);
   const [toBottomVisible, setButtonVisibility] = useJumpToBottomButton(parentRef.current);
+  const uniqRowKey = useRefreshListOnDataChange(model.logTabData.get());
 
   const rowVirtualizer = useVirtualizer({
     count: visibleLogs.get().length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 38,
     overscan: 5,
+    enableSmoothScroll: false,
   });
 
   const scrollTo = (index: number) => {
@@ -52,13 +54,8 @@ export const LogList = observer(({ model }: LogListProps) => {
   };
 
   useInitialScrollToBottom(model, scrollToBottom);
-
-  const uniqRowKey = useRefreshListOnDataChange(model.logTabData.get());
-
   useScrollOnSearch(model.searchStore, scrollTo);
-
   useStickToBottomOnLogsLoad({ bottomLineRef, model, scrollToBottom });
-
   useOnScrollTop({ topLineRef, model, scrollTo });
 
   return (
