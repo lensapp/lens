@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { buildVersionInjectionToken } from "../../../common/vars/build-semantic-version.injectable";
-import buildVersionAsyncSyncBoxInjectable from "./box.injectable";
+import buildVersionAsyncSyncBoxInjectable from "./state.injectable";
 
 const buildVersionInjectable = getInjectable({
   id: "build-version",

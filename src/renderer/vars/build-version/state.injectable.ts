@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { createAsyncSyncBox } from "../../../common/async-sync/create";
+import { createInitializableState } from "../../../common/initializable-state/create";
 import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
 import { buildVersionChannel } from "../../../common/vars/build-semantic-version.injectable";
 
-const buildVersionAsyncSyncBoxInjectable = createAsyncSyncBox({
+const buildVersionAsyncSyncBoxInjectable = createInitializableState({
   id: "build-version",
   init: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);

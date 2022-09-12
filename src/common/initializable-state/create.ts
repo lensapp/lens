@@ -6,20 +6,20 @@
 import type { DiContainerForInjection } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 
-export interface CreateAsyncSyncBoxArgs<T> {
+export interface CreateInitializableStateArgs<T> {
   id: string;
   init: (di: DiContainerForInjection) => Promise<T>;
 }
 
-type AsyncSyncBoxValue<T> = { set: false } | { set: true; value: T };
+type InitializableStateValue<T> = { set: false } | { set: true; value: T };
 
-export function createAsyncSyncBox<T>(args: CreateAsyncSyncBoxArgs<T>) {
+export function createInitializableState<T>(args: CreateInitializableStateArgs<T>) {
   const { id, init } = args;
 
   return getInjectable({
     id,
     instantiate: (di) => {
-      let box: AsyncSyncBoxValue<T> = {
+      let box: InitializableStateValue<T> = {
         set: false,
       };
       let initCalled = false;

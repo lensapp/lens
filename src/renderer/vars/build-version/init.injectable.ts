@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
-import buildVersionAsyncSyncBoxInjectable from "./box.injectable";
+import buildVersionAsyncSyncBoxInjectable from "./state.injectable";
 
 const initializeBuildVersionAsyncSyncBoxInjectable = getInjectable({
   id: "initialize-build-version-async-sync-box",
