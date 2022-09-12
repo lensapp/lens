@@ -11,11 +11,25 @@ import isWindowsInjectable from "../../common/vars/is-windows.injectable";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import * as Preferences from "./user-preferences";
+import type { UserPreferenceExtensionItems } from "./user-preferences";
+import { Preferences } from "./user-preferences";
 import { slackUrl, issuesTrackerUrl } from "../../common/vars";
 import { buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
 
-const App = {
+export interface AppExtensionItems {
+  readonly Preferences: UserPreferenceExtensionItems;
+  readonly version: string;
+  readonly appName: string;
+  readonly slackUrl: string;
+  readonly issuesTrackerUrl: string;
+  readonly isSnap: boolean;
+  readonly isWindows: boolean;
+  readonly isMac: boolean;
+  readonly isLinux: boolean;
+  getEnabledExtensions: () => string[];
+}
+
+export const App: AppExtensionItems = {
   Preferences,
   getEnabledExtensions: asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable),
   get version() {
@@ -51,5 +65,3 @@ const App = {
   slackUrl,
   issuesTrackerUrl,
 };
-
-export default App;
