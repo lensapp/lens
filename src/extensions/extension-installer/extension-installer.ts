@@ -42,7 +42,7 @@ export class ExtensionInstaller {
       });
 
       logger.info(`${logModule} installing dependencies at ${this.dependencies.extensionPackageRootDirectory}`);
-      await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"]);
+      await this.npm(["install", "--audit=false", "--fund=false", "--only=prod", "--prefer-offline"]);
       logger.info(`${logModule} dependencies installed at ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
@@ -58,7 +58,7 @@ export class ExtensionInstaller {
 
     try {
       logger.info(`${logModule} installing package from ${name} to ${this.dependencies.extensionPackageRootDirectory}`);
-      await this.npm(["install", "--no-audit", "--only=prod", "--package-lock=false", "--prefer-offline", "--no-package-lock", name]);
+      await this.npm(["install", "--audit=false", "--fund=false", "--only=prod", "--prefer-offline", name]);
       logger.info(`${logModule} package ${name} installed to ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
