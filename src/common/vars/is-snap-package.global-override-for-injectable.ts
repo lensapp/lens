@@ -4,6 +4,6 @@
  */
 
 import { getGlobalOverride } from "../test-utils/get-global-override";
-import isSnapInjectable from "./is-snap.injectable";
+import isSnapPackageInjectable from "./is-snap-package.injectable";
 
-export default getGlobalOverride(isSnapInjectable, () => false);
+export default getGlobalOverride(isSnapPackageInjectable, () => false);

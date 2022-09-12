@@ -6,7 +6,7 @@
 import appNameInjectable from "../../common/vars/app-name.injectable";
 import isLinuxInjectable from "../../common/vars/is-linux.injectable";
 import isMacInjectable from "../../common/vars/is-mac.injectable";
-import isSnapInjectable from "../../common/vars/is-snap.injectable";
+import isSnapPackageInjectable from "../../common/vars/is-snap-package.injectable";
 import isWindowsInjectable from "../../common/vars/is-windows.injectable";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -31,7 +31,7 @@ const App = {
   get isSnap() {
     const di = getLegacyGlobalDiForExtensionApi();
 
-    return di.inject(isSnapInjectable);
+    return di.inject(isSnapPackageInjectable);
   },
   get isWindows() {
     const di = getLegacyGlobalDiForExtensionApi();

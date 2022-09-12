@@ -8,7 +8,7 @@ import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of
 import { shellEnv } from "../../utils/shell-env";
 import os from "os";
 import { unionPATHs } from "../../../common/utils/union-env-path";
-import isSnapInjectable from "../../../common/vars/is-snap.injectable";
+import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
 import electronAppInjectable from "../../electron-app/electron-app.injectable";
 
 const setupShellInjectable = getInjectable({
@@ -16,7 +16,7 @@ const setupShellInjectable = getInjectable({
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
-    const isSnap = di.inject(isSnapInjectable);
+    const isSnapPackage = di.inject(isSnapPackageInjectable);
     const electronApp = di.inject(electronAppInjectable);
 
     return {
@@ -32,7 +32,7 @@ const setupShellInjectable = getInjectable({
           env.LANG += ".UTF-8";
         }
 
-        if (!isSnap) {
+        if (!isSnapPackage) {
           // Prefer the synced PATH over the initial one
           process.env.PATH = unionPATHs(env.PATH ?? "",  process.env.PATH ?? "");
         }
