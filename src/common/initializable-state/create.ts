@@ -17,7 +17,9 @@ export interface InitializableState<T> {
   init: () => Promise<void>;
 }
 
-type InitializableStateValue<T> = { set: false } | { set: true; value: T };
+type InitializableStateValue<T> =
+  | { set: false }
+  | { set: true; value: T } ;
 
 export function createInitializableState<T>(args: CreateInitializableStateArgs<T>): Injectable<InitializableState<T>, unknown, void> {
   const { id, init, injectionToken } = args;
@@ -33,7 +35,7 @@ export function createInitializableState<T>(args: CreateInitializableStateArgs<T
       return {
         init: async () => {
           if (initCalled) {
-            throw new Error(`Cannot initialized AsyncSyncBox ${id}) more than once`);
+            throw new Error(`Cannot initialize InitializableState(${id}) more than once`);
           }
 
           initCalled = true;
@@ -44,11 +46,11 @@ export function createInitializableState<T>(args: CreateInitializableStateArgs<T
         },
         get: () => {
           if (!initCalled) {
-            throw new Error(`AsyncSyncBox(${id}) has not been initialized yet`);
+            throw new Error(`InitializableState(${id}) has not been initialized yet`);
           }
 
-          if (!box.set) {
-            throw new Error(`AsyncSyncBox(${id}) has not finished initializing`);
+          if (box.set === false) {
+            throw new Error(`InitializableState(${id}) has not finished initializing`);
           }
 
           return box.value;
