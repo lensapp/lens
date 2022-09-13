@@ -14,7 +14,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { TopBarRegistration } from "./top-bar-registration";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
-import type { NavigateToCatalog } from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { UpdateButton } from "../../update-button";
 import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
@@ -30,7 +29,7 @@ import welcomeRouteInjectable from "../../../../common/front-end-routing/routes/
 import navigateToWelcomeInjectable from "../../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
 
 interface Dependencies {
-  navigateToWelcomePage: NavigateToCatalog;
+  navigateToWelcomePage: () => void;
   welcomeRouteIsActive: IComputedValue<boolean>;
   items: IComputedValue<TopBarRegistration[]>;
   isWindows: boolean;
