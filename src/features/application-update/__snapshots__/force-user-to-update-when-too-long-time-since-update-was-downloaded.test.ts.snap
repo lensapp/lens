@@ -13,9 +13,8 @@ exports[`force user to update when too long since update was downloaded when app
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -233,9 +232,8 @@ exports[`force user to update when too long since update was downloaded when app
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -500,9 +498,8 @@ exports[`force user to update when too long since update was downloaded when app
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"

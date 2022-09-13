@@ -13,9 +13,8 @@ exports[`periodical checking of updates given updater is enabled and configurati
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
