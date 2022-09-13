@@ -4,17 +4,17 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import packageJsonInjectable from "../../../vars/package-json.injectable";
+import welcomeRouteConfigInjectable from "./welcome-route-config.injectable";
 import { frontEndRouteInjectionToken } from "../../front-end-route-injection-token";
 
 const welcomeRouteInjectable = getInjectable({
   id: "welcome-route",
 
   instantiate: (di) => {
-    const packageJson = di.inject(packageJsonInjectable);
+    const welcomeRoute = di.inject(welcomeRouteConfigInjectable);
 
     return {
-      path: packageJson.config.welcomeRoute,
+      path: welcomeRoute,
       clusterFrame: false,
       isEnabled: computed(() => true),
     };
