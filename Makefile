@@ -53,7 +53,6 @@ integration: build
 
 .PHONY: build
 build: node_modules binaries/client
-	yarn run npm:fix-build-version
 	$(MAKE) build-extensions -B
 	yarn run build:tray-icons
 	yarn run compile
@@ -62,10 +61,6 @@ ifeq "$(DETECTED_OS)" "Windows"
 	rm -rf node_modules/win-ca/pem
 endif
 	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
-
-.PHONY: update-extension-locks
-update-extension-locks:
-	$(foreach dir, $(extensions), (cd $(dir) && rm package-lock.json && ../../node_modules/.bin/npm install --package-lock-only);)
 
 .NOTPARALLEL: $(extension_node_modules)
 $(extension_node_modules): node_modules
