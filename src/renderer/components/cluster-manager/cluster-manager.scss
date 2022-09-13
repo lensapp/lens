@@ -25,6 +25,10 @@
     grid-area: menu;
   }
 
+  .error {
+    z-index: 1;
+  }
+
   #lens-views {
     position: absolute;
     left: 0;
