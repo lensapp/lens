@@ -22,7 +22,7 @@ describe("setting-welcome-page", () => {
     applicationBuilder = getApplicationBuilder();
   });
 
-  describe("given no extension sets the welcome page", () => {
+  describe("given configuration of welcome page route is the default", () => {
     beforeEach(async () => {
       applicationBuilder.beforeApplicationStart((mainDi) => {
         mainDi.override(welcomeRouteConfigInjectable, () => "/welcome");
@@ -45,14 +45,14 @@ describe("setting-welcome-page", () => {
       expect(welcomeRoute.path).toEqual("/welcome");
     });
 
-    it("navigates to the default welcome page", () => {
+    it("launches to the default welcome page", () => {
       const welcomePage = rendered.getByTestId("welcome-page");  // from the Welcome component (welcome.tsx)
 
       expect(welcomePage).toBeInTheDocument();
     });
   });
 
-  describe("given an extension specifies a custom welcome page", () => {
+  describe("given configuration of welcome page route is set to a custom page", () => {
     beforeEach(async () => {
       applicationBuilder.beforeApplicationStart((mainDi) => {
         mainDi.override(welcomeRouteConfigInjectable, () => "/extension/some-extension-name/some-welcome-page");
@@ -74,7 +74,7 @@ describe("setting-welcome-page", () => {
       expect(welcomeRoute.path).toEqual("/extension/some-extension-name/some-welcome-page");
     });
 
-    it("navigates to the custom welcome page", () => {
+    it("launches to the custom welcome page ", () => {
       const welcomePage = rendered.getByTestId("some-welcome-test-id");
 
       expect(welcomePage).toBeInTheDocument();
