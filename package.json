@@ -363,7 +363,7 @@
     "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
-    "@typescript-eslint/parser": "^5.36.2",
+    "@typescript-eslint/parser": "^5.37.0",
     "adr": "^1.4.1",
     "ansi_up": "^5.1.0",
     "chart.js": "^2.9.4",
