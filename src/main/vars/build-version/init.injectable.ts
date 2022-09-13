@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
+import { beforeApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/before-application-is-loading-injection-token";
 import buildVersionInjectable from "./build-version.injectable";
 
-const initializeBuildVersionInjectable = getInjectable({
-  id: "initialize-build-version",
+const initializeBuildVersionAsyncSyncBoxInjectable = getInjectable({
+  id: "initialize-build-version-async-sync-box",
   instantiate: (di) => {
     const buildVersion = di.inject(buildVersionInjectable);
 
@@ -15,7 +15,7 @@ const initializeBuildVersionInjectable = getInjectable({
       run: () => buildVersion.init(),
     };
   },
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 
-export default initializeBuildVersionInjectable;
+export default initializeBuildVersionAsyncSyncBoxInjectable;

@@ -3,18 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DiContainerForInjection } from "@ogre-tools/injectable";
+import type { DiContainerForInjection, Injectable, InjectionToken } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 
 export interface CreateInitializableStateArgs<T> {
   id: string;
-  init: (di: DiContainerForInjection) => Promise<T>;
+  init: (di: DiContainerForInjection) => Promise<T> | T;
+  injectionToken?: InjectionToken<InitializableState<T>, void>;
+}
+
+export interface InitializableState<T> {
+  get: () => T;
+  init: () => Promise<void>;
 }
 
 type InitializableStateValue<T> = { set: false } | { set: true; value: T };
 
-export function createInitializableState<T>(args: CreateInitializableStateArgs<T>) {
-  const { id, init } = args;
+export function createInitializableState<T>(args: CreateInitializableStateArgs<T>): Injectable<InitializableState<T>, unknown, void> {
+  const { id, init, injectionToken } = args;
 
   return getInjectable({
     id,
@@ -49,5 +55,6 @@ export function createInitializableState<T>(args: CreateInitializableStateArgs<T
         },
       };
     },
+    injectionToken,
   });
 }

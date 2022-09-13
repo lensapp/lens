@@ -14,7 +14,7 @@ import processCheckingForUpdatesInjectable from "../../main/application-update/c
 import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { updateChannels } from "../../common/application-update/update-channels";
-import buildVersionInjectable from "../../main/vars/build-version.injectable";
+import buildVersionInjectable from "../../main/vars/build-version/build-version.injectable";
 
 describe("downgrading version update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -102,7 +102,9 @@ describe("downgrading version update", () => {
     },
   ].forEach(({ appVersion, updateChannel, downgradeIsAllowed }) => {
     it(`given application version "${appVersion}" and update channel "${updateChannel.id}", when checking for updates, can${downgradeIsAllowed ? "": "not"} downgrade`, async () => {
-      mainDi.override(buildVersionInjectable, () => appVersion);
+      mainDi.override(buildVersionInjectable, () => ({
+        get: () => appVersion,
+      }));
 
       await applicationBuilder.render();
 
