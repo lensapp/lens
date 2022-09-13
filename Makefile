@@ -87,7 +87,7 @@ src/extensions/npm/extensions/dist: src/extensions/npm/extensions/node_modules
 	yarn compile:extension-types
 
 src/extensions/npm/extensions/node_modules: src/extensions/npm/extensions/package.json
-	cd src/extensions/npm/extensions/ && ../../../../node_modules/.bin/npm install --no-audit --no-fund
+	cd src/extensions/npm/extensions/ && ../../../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
 .PHONY: build-npm
 build-npm: build-extension-types src/extensions/npm/extensions/__mocks__
