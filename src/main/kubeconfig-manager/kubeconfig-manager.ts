@@ -15,9 +15,10 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { DeleteFile } from "../../common/fs/delete-file.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
+import type { LazyInitializableState } from "../../common/initializable-state/create-lazy";
 
 export interface KubeconfigManagerDependencies {
-  readonly directoryForTemp: string;
+  readonly directoryForTemp: LazyInitializableState<string>;
   readonly logger: Logger;
   readonly lensProxyPort: { get: () => number };
   joinPaths: JoinPaths;
@@ -97,7 +98,7 @@ export class KubeconfigManager {
     const { cluster } = this;
     const { contextName, id } = cluster;
     const tempFile = this.dependencies.joinPaths(
-      this.dependencies.directoryForTemp,
+      this.dependencies.directoryForTemp.get(),
       `kubeconfig-${id}`,
     );
     const kubeConfig = await cluster.getKubeconfig();

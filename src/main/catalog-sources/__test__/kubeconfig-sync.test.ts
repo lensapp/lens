@@ -9,7 +9,7 @@ import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
-import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp.injectable";
 import { iter, strictGet } from "../../../common/utils";
 import type { ComputeKubeconfigDiff } from "../kubeconfig-sync/compute-diff.injectable";
 import computeKubeconfigDiffInjectable from "../kubeconfig-sync/compute-diff.injectable";
@@ -44,14 +44,14 @@ describe("kubeconfig-sync.source tests", () => {
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
-
     clusters = new Map();
     di.override(getClusterByIdInjectable, () => id => clusters.get(id));
     di.override(directoryForUserDataInjectable, () => ({
       get: () => "some-directory-for-user-data",
     }));
-    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(directoryForTempInjectable, () => ({
+      get: () => "some-directory-for-temp",
+    }));
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");

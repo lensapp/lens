@@ -7,7 +7,7 @@ import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import type { Cluster } from "../../common/cluster/cluster";
 import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kubeconfig-manager.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
-import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { parse } from "url";
@@ -45,7 +45,9 @@ describe("kubeconfig manager tests", () => {
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
+    di.override(directoryForTempInjectable, () => ({
+      get: () => "/some-directory-for-temp",
+    }));
     di.override(directoryForUserDataInjectable, () => ({
       get: () => "/some-directory-for-user-data",
     }));

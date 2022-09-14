@@ -23,7 +23,7 @@ import path from "path";
 import spawnInjectable from "../child-process/spawn.injectable";
 import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
-import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
@@ -74,7 +74,9 @@ describe("kube auth proxy tests", () => {
     di.override(directoryForUserDataInjectable, () => ({
       get: () => "some-directory-for-user-data",
     }));
-    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(directoryForTempInjectable, () => ({
+      get: () => "some-directory-for-temp",
+    }));
 
     spawnMock = jest.fn();
     di.override(spawnInjectable, () => spawnMock);
