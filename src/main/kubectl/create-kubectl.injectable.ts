@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { KubectlDependencies } from "./kubectl";
 import { Kubectl } from "./kubectl";
-import directoryForKubectlBinariesInjectable from "../../common/app-paths/directory-for-kubectl-binaries/directory-for-kubectl-binaries.injectable";
+import directoryForKubectlBinariesInjectable from "../../common/app-paths/directory-for-kubectl-binaries.injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "./normalized-arch.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";

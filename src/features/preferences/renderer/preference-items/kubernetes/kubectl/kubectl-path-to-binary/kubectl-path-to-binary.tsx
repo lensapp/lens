@@ -9,11 +9,12 @@ import type { UserStore } from "../../../../../../../common/user-store";
 import userStoreInjectable from "../../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Input, InputValidators } from "../../../../../../../renderer/components/input";
-import directoryForKubectlBinariesInjectable from "../../../../../../../common/app-paths/directory-for-kubectl-binaries/directory-for-kubectl-binaries.injectable";
+import directoryForKubectlBinariesInjectable from "../../../../../../../common/app-paths/directory-for-kubectl-binaries.injectable";
+import type { LazyInitializableState } from "../../../../../../../common/initializable-state/create-lazy";
 
 interface Dependencies {
   userStore: UserStore;
-  defaultPathForKubectlBinaries: string;
+  defaultPathForKubectlBinaries: LazyInitializableState<string>;
 }
 
 const NonInjectedKubectlPathToBinary = observer(
@@ -30,7 +31,7 @@ const NonInjectedKubectlPathToBinary = observer(
         <SubTitle title="Path to kubectl binary" />
         <Input
           theme="round-black"
-          placeholder={defaultPathForKubectlBinaries}
+          placeholder={defaultPathForKubectlBinaries.get()}
           value={binariesPath}
           validators={pathValidator}
           onChange={setBinariesPath}
