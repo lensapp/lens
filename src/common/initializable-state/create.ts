@@ -17,7 +17,7 @@ export interface InitializableState<T> {
   init: () => Promise<void>;
 }
 
-type InitializableStateValue<T> =
+export type InitializableStateValue<T> =
   | { set: false }
   | { set: true; value: T } ;
 
