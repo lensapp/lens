@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { AppPaths } from "./app-path-injection-token";
-import { appPathsInjectionToken } from "./app-path-injection-token";
+import type { AppPaths } from "./token";
+import { appPathsInjectionToken } from "./token";
 import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import type { PathName } from "./app-path-names";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
@@ -130,7 +130,7 @@ describe("app-paths", () => {
     });
 
     it("given in renderer, when injecting path for app data, has integration specific app data path", () => {
-      const { appData, userData } = windowDi.inject(appPathsInjectionToken);
+      const { appData, userData } = windowDi.inject(appPathsInjectionToken).get();
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
@@ -139,7 +139,7 @@ describe("app-paths", () => {
     });
 
     it("given in main, when injecting path for app data, has integration specific app data path", () => {
-      const { appData, userData } = windowDi.inject(appPathsInjectionToken);
+      const { appData, userData } = windowDi.inject(appPathsInjectionToken).get();
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
