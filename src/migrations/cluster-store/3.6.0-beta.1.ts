@@ -14,7 +14,7 @@ import type { ClusterModel } from "../../common/cluster-types";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs.injectable";
-import getCustomKubeConfigDirectoryInjectable from "../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import getCustomKubeConfigDirectoryInjectable from "../../common/app-paths/get-custom-kube-config-directory.injectable";
 import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 

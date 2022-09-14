@@ -10,7 +10,7 @@ import fse from "fs-extra";
 import type { ClusterStore } from "../cluster-store/cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
-import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory.injectable";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
