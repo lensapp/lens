@@ -7,20 +7,20 @@ import { computed } from "mobx";
 import welcomeRouteConfigInjectable from "./welcome-route-config.injectable";
 import { frontEndRouteInjectionToken } from "../../front-end-route-injection-token";
 
-const welcomeRouteInjectable = getInjectable({
-  id: "welcome-route",
+const defaultWelcomeRouteInjectable = getInjectable({
+  id: "default-welcome-route",
 
   instantiate: (di) => {
     const welcomeRoute = di.inject(welcomeRouteConfigInjectable);
 
     return {
-      path: welcomeRoute,
+      path: "/welcome",
       clusterFrame: false,
-      isEnabled: computed(() => true),
+      isEnabled: computed(() => welcomeRoute === "/welcome"),
     };
   },
 
   injectionToken: frontEndRouteInjectionToken,
 });
 
-export default welcomeRouteInjectable;
+export default defaultWelcomeRouteInjectable;

@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
-import { matches } from "lodash/fp";
 import { computed } from "mobx";
 import currentRouteInjectable from "./current-route.injectable";
 import { routeSpecificComponentInjectionToken } from "./route-specific-component-injection-token";
@@ -24,11 +23,13 @@ const currentRouteComponentInjectable = getInjectable({
         return undefined;
       }
 
-      const routeSpecificComponent = routeComponents
+      return routeComponents
         .get()
-        .find(matches({ route: currentRoute }));
-
-      return routeSpecificComponent?.Component;
+        .find(({ route }) => (
+          route.path === currentRoute.path
+          && route.clusterFrame === currentRoute.clusterFrame
+        ))
+        ?.Component;
     });
   },
 });

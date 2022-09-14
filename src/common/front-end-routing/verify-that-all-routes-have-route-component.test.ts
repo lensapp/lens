@@ -5,7 +5,7 @@
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import { frontEndRouteInjectionToken } from "./front-end-route-injection-token";
-import { filter, map, matches } from "lodash/fp";
+import { filter, map } from "lodash/fp";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { ClusterStore } from "../cluster-store/cluster-store";
 import { pipeline } from "@ogre-tools/fp";
@@ -27,9 +27,11 @@ describe("verify-that-all-routes-have-component", () => {
       routes,
 
       map(
-        (route) => ({
-          path: route.path,
-          routeComponent: routeComponents.find(matches({ route })),
+        (currentRoute) => ({
+          path: currentRoute.path,
+          routeComponent: routeComponents.find(({ route }) => (
+            route.path === currentRoute.path
+            && route.clusterFrame === currentRoute.clusterFrame)),
         }),
       ),
 
