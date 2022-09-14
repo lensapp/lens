@@ -112,7 +112,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
           <code>~/.kube/config</code>
           {" file. "}
           <a
-            href={`${docsUrl}/catalog/add-cluster/`}
+            href={`${docsUrl}/getting-started/add-cluster/`}
             rel="noreferrer"
             target="_blank"
           >
