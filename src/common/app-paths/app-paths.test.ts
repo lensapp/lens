@@ -67,7 +67,7 @@ describe("app-paths", () => {
     });
 
     it("given in renderer, when injecting app paths, returns application specific app paths", () => {
-      const actual = windowDi.inject(appPathsInjectionToken);
+      const actual = windowDi.inject(appPathsInjectionToken).get();
 
       expect(actual).toEqual({
         appData: "some-app-data",
@@ -90,7 +90,7 @@ describe("app-paths", () => {
     });
 
     it("given in main, when injecting app paths, returns application specific app paths", () => {
-      const actual = mainDi.inject(appPathsInjectionToken);
+      const actual = mainDi.inject(appPathsInjectionToken).get();
 
       expect(actual).toEqual({
         appData: "some-app-data",
