@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
 import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DockStore, DockTab } from "../dock/store";
@@ -25,7 +25,9 @@ describe("DockStore", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
 
     dockStore = di.inject(dockStoreInjectable);
   });

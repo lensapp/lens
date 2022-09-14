@@ -18,7 +18,7 @@ import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
 import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
@@ -65,7 +65,9 @@ describe("<Catalog />", () => {
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
 
     di.override(broadcastMessageInjectable, () => async () => {});
 

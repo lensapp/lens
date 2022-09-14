@@ -15,7 +15,7 @@ import extensionLoaderInjectable from "../../../../extensions/extension-loader/e
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
 import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 import assert from "assert";
 import type { InstallExtensionFromInput } from "../install-extension-from-input.injectable";
@@ -43,7 +43,9 @@ describe("Extensions", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
     di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
 
     render = renderFor(di);

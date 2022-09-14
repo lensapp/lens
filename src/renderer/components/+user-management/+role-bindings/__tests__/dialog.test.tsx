@@ -10,7 +10,7 @@ import { RoleBindingDialog } from "../dialog";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
-import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data.injectable";
 import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../../../stores-apis-can-be-created.injectable";
 
@@ -21,7 +21,9 @@ describe("RoleBindingDialog tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
 
     render = renderFor(di);
 

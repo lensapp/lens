@@ -8,7 +8,7 @@ import { Console } from "console";
 import { stdout, stderr } from "process";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+  from "../../common/app-paths/directory-for-user-data.injectable";
 import searchStoreInjectable from "./search-store.injectable";
 
 jest.mock("electron", () => ({
@@ -31,7 +31,9 @@ describe("search store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
 
     searchStore = di.inject(searchStoreInjectable);
   });

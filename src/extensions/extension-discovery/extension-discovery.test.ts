@@ -8,7 +8,7 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
-import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
 import { delay } from "../../renderer/utils";
 import { observable, runInAction, when } from "mobx";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
@@ -31,7 +31,9 @@ describe("ExtensionDiscovery", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "/some-directory-for-user-data",
+    }));
     di.override(installExtensionInjectable, () => () => Promise.resolve());
     di.override(extensionApiVersionInjectable, () => "5.0.0");
 

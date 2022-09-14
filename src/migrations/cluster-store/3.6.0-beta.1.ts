@@ -12,12 +12,9 @@ import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
 import type { ClusterModel } from "../../common/cluster-types";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import directoryForKubeConfigsInjectable
-  from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import getCustomKubeConfigDirectoryInjectable
-  from "../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
+import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import getCustomKubeConfigDirectoryInjectable from "../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 
@@ -74,7 +71,7 @@ export default {
         if (clusterModel.preferences?.icon) {
           migrationLog(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName}`);
           const iconPath = clusterModel.preferences.icon.replace("store://", "");
-          const fileData = fse.readFileSync(joinPaths(userDataPath, iconPath));
+          const fileData = fse.readFileSync(joinPaths(userDataPath.get(), iconPath));
 
           clusterModel.preferences.icon = `data:;base64,${fileData.toString("base64")}`;
         } else {

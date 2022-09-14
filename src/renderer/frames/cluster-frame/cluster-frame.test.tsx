@@ -17,7 +17,7 @@ import { computed } from "mobx";
 import type { Cluster } from "../../../common/cluster/cluster";
 import createClusterInjectable from "../../create-cluster/create-cluster.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
@@ -43,7 +43,9 @@ describe("<ClusterFrame />", () => {
 
     di.override(subscribeStoresInjectable, () => jest.fn().mockImplementation(() => jest.fn()));
     di.override(legacyOnChannelListenInjectable, () => jest.fn().mockImplementation(() => jest.fn()));
-    di.override(directoryForUserDataInjectable, () => "/some/irrelavent/path");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "/some/irrelavent/path",
+    }));
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     useFakeTime("2000-01-01 12:00:00am");

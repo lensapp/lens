@@ -17,7 +17,7 @@ import hasCategoryForEntityInjectable from "../catalog/has-category-for-entity.i
 import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 import loggerInjectable from "../logger.injectable";
 import type { Logger } from "../logger";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
@@ -100,7 +100,9 @@ describe("HotbarStore", () => {
 
     di.override(loggerInjectable, () => loggerMock);
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
 
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);

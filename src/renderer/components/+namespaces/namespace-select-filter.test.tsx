@@ -7,7 +7,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
@@ -36,7 +36,9 @@ describe("<NamespaceSelectFilter />", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-    di.override(directoryForUserDataInjectable, () => "/some-directory");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "/some-directory",
+    }));
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     namespaceStore = di.inject(namespaceStoreInjectable);
 

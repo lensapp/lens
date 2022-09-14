@@ -14,7 +14,7 @@ import listNamespacesInjectable from "../../common/cluster/list-namespaces.injec
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import { parse } from "url";
-import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
@@ -32,7 +32,9 @@ describe("create clusters", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
     const clusterServerUrl = "https://192.168.64.3:8443";
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");

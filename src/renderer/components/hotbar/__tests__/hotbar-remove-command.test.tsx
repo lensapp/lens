@@ -14,7 +14,7 @@ import { renderFor } from "../../test-utils/renderFor";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { ConfirmDialog } from "../../confirm-dialog";
 import mockFs from "mock-fs";
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import type { HotbarStore } from "../../../../common/hotbars/store";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
@@ -44,7 +44,9 @@ describe("<HotbarRemoveCommand />", () => {
     mockFs();
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
 
     di.permitSideEffects(hotbarStoreInjectable);
     di.permitSideEffects(getConfigurationFileModelInjectable);

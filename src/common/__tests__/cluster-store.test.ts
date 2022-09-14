@@ -15,7 +15,7 @@ import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import assert from "assert";
@@ -86,7 +86,9 @@ describe("cluster-store", () => {
 
     mockFs();
 
-    mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    mainDi.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
     mainDi.override(directoryForTempInjectable, () => "some-temp-directory");
     mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
     mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");

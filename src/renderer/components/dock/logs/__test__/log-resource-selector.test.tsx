@@ -12,7 +12,7 @@ import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
-import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data.injectable";
 import callForLogsInjectable from "../call-for-logs.injectable";
 import type { LogTabViewModelDependencies } from "../logs-view-model";
 import { LogTabViewModel } from "../logs-view-model";
@@ -130,7 +130,9 @@ describe("<LogResourceSelector />", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
     di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);

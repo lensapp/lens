@@ -8,7 +8,7 @@ import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import { iter, strictGet } from "../../../common/utils";
 import type { ComputeKubeconfigDiff } from "../kubeconfig-sync/compute-diff.injectable";
@@ -30,6 +30,9 @@ import watchInjectable from "../../../common/fs/watch/watch.injectable";
 import EventEmitter from "events";
 import type { ReadStream, Stats } from "fs";
 import createReadFileStreamInjectable from "../../../common/fs/create-read-file-stream.injectable";
+import kubectlBinaryNameInjectable from "../../kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../../kubectl/normalized-arch.injectable";
+import normalizedPlatformInjectable from "../../../common/vars/normalized-platform.injectable";
 
 describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;
@@ -41,11 +44,17 @@ describe("kubeconfig-sync.source tests", () => {
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
 
     clusters = new Map();
     di.override(getClusterByIdInjectable, () => id => clusters.get(id));
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
+    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
 
     kubeconfigSyncs = observable.map();
 

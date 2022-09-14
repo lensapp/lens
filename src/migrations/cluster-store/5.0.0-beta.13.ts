@@ -9,7 +9,7 @@ import { migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import { moveSync, removeSync } from "fs-extra";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
 import { isDefined } from "../../common/utils";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 
@@ -100,7 +100,7 @@ export default {
       }
     };
 
-    const folder = joinPaths(userDataPath, "lens-local-storage");
+    const folder = joinPaths(userDataPath.get(), "lens-local-storage");
     const oldClusters: ClusterModel[] = store.get("clusters") ?? [];
     const clusters = new Map<string, ClusterModel>();
 

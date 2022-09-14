@@ -15,7 +15,7 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import assert from "assert";
 import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
@@ -77,10 +77,9 @@ describe("<DockTabs />", () => {
     render = renderFor(di);
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");
-    di.override(
-      directoryForUserDataInjectable,
-      () => "some-test-suite-specific-directory-for-user-data",
-    );
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-test-suite-specific-directory-for-user-data",
+    }));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
 

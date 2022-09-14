@@ -4,7 +4,7 @@
  */
 
 import fse from "fs-extra";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
 import { isErrnoException } from "../utils";
 import { getInjectable } from "@ogre-tools/injectable";
 import joinPathsInjectable from "../path/join-paths.injectable";
@@ -14,7 +14,7 @@ export type UserStoreFileNameMigration = () => Promise<void>;
 const userStoreFileNameMigrationInjectable = getInjectable({
   id: "user-store-file-name-migration",
   instantiate: (di): UserStoreFileNameMigration => {
-    const userDataPath = di.inject(directoryForUserDataInjectable);
+    const userDataPath = di.inject(directoryForUserDataInjectable).get();
     const joinPaths = di.inject(joinPathsInjectable);
     const configJsonPath = joinPaths(userDataPath, "config.json");
     const lensUserStoreJsonPath = joinPaths(userDataPath, "lens-user-store.json");

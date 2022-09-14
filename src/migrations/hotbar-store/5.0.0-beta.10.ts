@@ -13,7 +13,7 @@ import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
 import catalogCatalogEntityInjectable from "../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 import { isDefined, isErrnoException } from "../../common/utils";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
@@ -39,7 +39,7 @@ export default {
 
     const di = getLegacyGlobalDiForExtensionApi();
 
-    const userDataPath = di.inject(directoryForUserDataInjectable);
+    const userDataPath = di.inject(directoryForUserDataInjectable).get();
     const joinPaths = di.inject(joinPathsInjectable);
 
     // Hotbars might be empty, if some of the previous migrations weren't run

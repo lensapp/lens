@@ -7,7 +7,7 @@ import mockFs from "mock-fs";
 import { BaseStore } from "../base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 
@@ -79,7 +79,9 @@ describe("BaseStore", () => {
   beforeEach(() => {
     const mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
+    mainDi.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-user-data-directory",
+    }));
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
 
     TestStore.resetInstance();

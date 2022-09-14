@@ -9,7 +9,7 @@ import type { IObservableArray } from "mobx";
 import { computed, observable } from "mobx";
 import type { StatusBarItems } from "./status-bar-items.injectable";
 import statusBarItemsInjectable from "./status-bar-items.injectable";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import type { ApplicationBuilder } from "../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../test-utils/get-application-builder";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
@@ -26,7 +26,9 @@ describe("<StatusBar />", () => {
     builder.beforeWindowStart((windowDi) => {
       windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
-      windowDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+      windowDi.override(directoryForUserDataInjectable, () => ({
+        get: () => "some-directory-for-user-data",
+      }));
     });
 
     builder.extensions.enable({

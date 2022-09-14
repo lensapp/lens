@@ -17,7 +17,7 @@ import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
 import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "./app-paths/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "./get-configuration-file-model/get-configuration-file-model.injectable";
 import storeMigrationVersionInjectable from "./vars/store-migration-version.injectable";
 
@@ -94,10 +94,10 @@ export abstract class BaseStore<T extends object> extends Singleton {
     return this.storeConfig?.path || "";
   }
 
-  protected cwd() {
+  protected cwd(): string {
     const di = getLegacyGlobalDiForExtensionApi();
 
-    return di.inject(directoryForUserDataInjectable);
+    return di.inject(directoryForUserDataInjectable).get();
   }
 
   protected saveToFile(model: T) {

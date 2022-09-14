@@ -2,21 +2,18 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
+import { createLazyInitializableState } from "../initializable-state/create-lazy";
 import joinPathsInjectable from "../path/join-paths.injectable";
 
-const directoryForLensLocalStorageInjectable = getInjectable({
+const directoryForLensLocalStorageInjectable = createLazyInitializableState({
   id: "directory-for-lens-local-storage",
 
-  instantiate: (di) => {
+  init: (di) => {
     const joinPaths = di.inject(joinPathsInjectable);
     const directoryForUserData = di.inject(directoryForUserDataInjectable);
 
-    return joinPaths(
-      directoryForUserData,
-      "lens-local-storage",
-    );
+    return joinPaths(directoryForUserData.get(), "lens-local-storage");
   },
 });
 

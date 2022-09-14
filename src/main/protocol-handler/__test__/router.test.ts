@@ -17,7 +17,7 @@ import { LensExtension } from "../../../extensions/lens-extension";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 
 function throwIfDefined(val: any): void {
@@ -43,7 +43,9 @@ describe("protocol router tests", () => {
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "some-directory-for-user-data",
+    }));
 
     broadcastMessageMock = jest.fn();
     di.override(broadcastMessageInjectable, () => broadcastMessageMock);
