@@ -223,7 +223,7 @@
     "@ogre-tools/injectable-extension-for-auto-registration": "10.1.0",
     "@ogre-tools/injectable-extension-for-mobx": "10.1.0",
     "@ogre-tools/injectable-react": "10.1.0",
-    "@sentry/electron": "^3.0.7",
+    "@sentry/electron": "^3.0.8",
     "@sentry/integrations": "^6.19.3",
     "@side/jest-runtime": "^1.0.1",
     "@types/circular-dependency-plugin": "5.0.5",

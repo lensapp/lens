@@ -1474,10 +1474,10 @@
     "@sentry/utils" "6.19.2"
     tslib "^1.9.3"
 
-"@sentry/electron@^3.0.7":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@sentry/electron/-/electron-3.0.7.tgz#d32ebd27d7fc9b0e7e8dd8498ee797fcaafb5a13"
-  integrity sha512-Rahi1jgvjHnx1jGkkPPvDCxSCAME7xc2eBcFCLb4R/WDuNblR7tgJUuAtzv9JpxUgRHy1oLNct0wcvIu1mcXoA==
+"@sentry/electron@^3.0.8":
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/@sentry/electron/-/electron-3.0.8.tgz#ad4aaa0290c31fb5eb3ed06377da46ee501ec97d"
+  integrity sha512-D330t0rRswAYreFtzIICD5uQH7Wp2e7g6GEFTGisTouHY9+qSu7q9J/hGe5Vase5cY5277/YmUaUKRrVxj/2DQ==
   dependencies:
     "@sentry/browser" "6.19.2"
     "@sentry/core" "6.19.2"
