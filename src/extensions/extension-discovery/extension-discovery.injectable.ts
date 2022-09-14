@@ -9,7 +9,7 @@ import isCompatibleExtensionInjectable from "./is-compatible-extension/is-compat
 import extensionsStoreInjectable from "../extensions-store/extensions-store.injectable";
 import extensionInstallationStateStoreInjectable from "../extension-installation-state-store/extension-installation-state-store.injectable";
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
-import extensionPackageRootDirectoryInjectable from "../extension-installer/extension-package-root-directory/extension-package-root-directory.injectable";
+import extensionPackageRootDirectoryInjectable from "../extension-installer/extension-package-root-directory.injectable";
 import installExtensionsInjectable from "../extension-installer/install-extensions/install-extensions.injectable";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";

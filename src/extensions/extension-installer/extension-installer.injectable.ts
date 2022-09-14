@@ -4,17 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionInstaller } from "./extension-installer";
-import extensionPackageRootDirectoryInjectable from "./extension-package-root-directory/extension-package-root-directory.injectable";
+import extensionPackageRootDirectoryInjectable from "./extension-package-root-directory.injectable";
 
 const extensionInstallerInjectable = getInjectable({
   id: "extension-installer",
 
-  instantiate: (di) =>
-    new ExtensionInstaller({
-      extensionPackageRootDirectory: di.inject(
-        extensionPackageRootDirectoryInjectable,
-      ),
-    }),
+  instantiate: (di) => new ExtensionInstaller({
+    extensionPackageRootDirectory: di.inject(extensionPackageRootDirectoryInjectable),
+  }),
 });
 
 export default extensionInstallerInjectable;

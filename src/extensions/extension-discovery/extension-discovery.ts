@@ -32,12 +32,13 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove-path.injectable";
 import type TypedEventEmitter from "typed-emitter";
+import type { LazyInitializableState } from "../../common/initializable-state/create-lazy";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
   readonly extensionsStore: ExtensionsStore;
   readonly extensionInstallationStateStore: ExtensionInstallationStateStore;
-  readonly extensionPackageRootDirectory: string;
+  readonly extensionPackageRootDirectory: LazyInitializableState<string>;
   readonly staticFilesDirectory: string;
   readonly logger: Logger;
   readonly isProduction: boolean;
@@ -134,11 +135,11 @@ export class ExtensionDiscovery {
   }
 
   get packageJsonPath(): string {
-    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, manifestFilename);
+    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory.get(), manifestFilename);
   }
 
   get inTreeTargetPath(): string {
-    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, "extensions");
+    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory.get(), "extensions");
   }
 
   get inTreeFolderPath(): string {
@@ -146,7 +147,7 @@ export class ExtensionDiscovery {
   }
 
   get nodeModulesPath(): string {
-    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, "node_modules");
+    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory.get(), "node_modules");
   }
 
   /**
@@ -322,13 +323,15 @@ export class ExtensionDiscovery {
       throw new Error("ExtensionDiscovery.load() can be only be called once");
     }
 
+    const extensionPackageRootDirectory = this.dependencies.extensionPackageRootDirectory.get();
+
     this.loadStarted = true;
 
     this.dependencies.logger.info(
-      `${logModule} loading extensions from ${this.dependencies.extensionPackageRootDirectory}`,
+      `${logModule} loading extensions from ${extensionPackageRootDirectory}`,
     );
 
-    await this.dependencies.removePath(this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, "package-lock.json"));
+    await this.dependencies.removePath(this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory.get(), "package-lock.json"));
 
     const canWriteToInTreeFolder = await this.dependencies.accessPath(this.inTreeFolderPath, constants.W_OK);
 
