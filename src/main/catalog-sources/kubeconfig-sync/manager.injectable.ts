@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs.injectable";
 import { KubeconfigSyncManager } from "./manager";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
 import watchKubeconfigFileChangesInjectable from "./watch-file-changes.injectable";

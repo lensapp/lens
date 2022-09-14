@@ -25,9 +25,10 @@ import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
+import type { LazyInitializableState } from "../initializable-state/create-lazy";
 
 export interface ClusterDependencies {
-  readonly directoryForKubeConfigs: string;
+  readonly directoryForKubeConfigs: LazyInitializableState<string>;
   readonly logger: Logger;
   readonly detectorRegistry: DetectorRegistry;
   createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
@@ -729,6 +730,6 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   isInLocalKubeconfig() {
-    return this.kubeConfigPath.startsWith(this.dependencies.directoryForKubeConfigs);
+    return this.kubeConfigPath.startsWith(this.dependencies.directoryForKubeConfigs.get());
   }
 }

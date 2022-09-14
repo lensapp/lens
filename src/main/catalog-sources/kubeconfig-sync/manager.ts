@@ -11,9 +11,10 @@ import { iter } from "../../../common/utils";
 import type { KubeconfigSyncValue } from "../../../common/user-store";
 import type { Logger } from "../../../common/logger";
 import type { WatchKubeconfigFileChanges } from "./watch-file-changes.injectable";
+import type { LazyInitializableState } from "../../../common/initializable-state/create-lazy";
 
 interface KubeconfigSyncManagerDependencies {
-  readonly directoryForKubeConfigs: string;
+  readonly directoryForKubeConfigs: LazyInitializableState<string>;
   readonly logger: Logger;
   readonly kubeconfigSyncs: ObservableMap<string, KubeconfigSyncValue>;
   watchKubeconfigFileChanges: WatchKubeconfigFileChanges;
@@ -52,7 +53,7 @@ export class KubeconfigSyncManager {
     this.dependencies.logger.info(`starting requested syncs`);
 
     // This must be done so that c&p-ed clusters are visible
-    this.startNewSync(this.dependencies.directoryForKubeConfigs);
+    this.startNewSync(this.dependencies.directoryForKubeConfigs.get());
 
     for (const filePath of this.dependencies.kubeconfigSyncs.keys()) {
       this.startNewSync(filePath);

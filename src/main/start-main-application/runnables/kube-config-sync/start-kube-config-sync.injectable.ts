@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsLoadedInjectionToken } from "../../runnable-tokens/after-application-is-loaded-injection-token";
-import directoryForKubeConfigsInjectable from "../../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import directoryForKubeConfigsInjectable from "../../../../common/app-paths/directory-for-kube-configs.injectable";
 import ensureDirInjectable from "../../../../common/fs/ensure-dir.injectable";
 import kubeconfigSyncManagerInjectable from "../../../catalog-sources/kubeconfig-sync/manager.injectable";
 import addKubeconfigSyncAsEntitySourceInjectable from "./add-source.injectable";
@@ -20,7 +20,7 @@ const startKubeConfigSyncInjectable = getInjectable({
     return {
       id: "start-kubeconfig-sync",
       run: async () => {
-        await ensureDir(directoryForKubeConfigs);
+        await ensureDir(directoryForKubeConfigs.get());
 
         kubeConfigSyncManager.startSync();
       },

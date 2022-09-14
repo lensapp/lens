@@ -12,7 +12,7 @@ import { migrationLog } from "../helpers";
 import { isErrnoException } from "../../common/utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
-import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import isLogicalChildPathInjectable from "../../common/path/is-logical-child-path.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
@@ -26,7 +26,7 @@ export default {
       const di = getLegacyGlobalDiForExtensionApi();
 
       const userDataPath = di.inject(directoryForUserDataInjectable).get();
-      const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable);
+      const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable).get();
       const joinPaths = di.inject(joinPathsInjectable);
       const isLogicalChildPath = di.inject(isLogicalChildPathInjectable);
       const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
