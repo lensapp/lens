@@ -6,9 +6,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { UpdateChannelId } from "../application-update/update-channels";
 import appSemanticVersionInjectable from "./app-semantic-version.injectable";
 
-const currentReleaseIdInjectable = getInjectable({
+const releaseChannelInjectable = getInjectable({
   id: "release-channel",
-  instantiate: (di): UpdateChannelId | undefined => {
+  instantiate: (di): UpdateChannelId => {
     const appSemanticVersion = di.inject(appSemanticVersionInjectable);
     const currentReleaseChannel = appSemanticVersion.prerelease[0];
 
@@ -18,9 +18,9 @@ const currentReleaseIdInjectable = getInjectable({
       case "alpha":
         return currentReleaseChannel;
       default:
-        return undefined;
+        return "latest";
     }
   },
 });
 
-export default currentReleaseIdInjectable;
+export default releaseChannelInjectable;
