@@ -208,7 +208,8 @@
         "lens"
       ],
       "role": "Viewer"
-    }
+    },
+    "publish": []
   },
   "resolutions": {
     "@astronautlabs/jsonpath/underscore": "^1.12.1"

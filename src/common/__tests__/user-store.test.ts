@@ -23,8 +23,6 @@ jest.mock("electron", () => ({
 
 import type { UserStore } from "../user-store";
 import { Console } from "console";
-import { SemVer } from "semver";
-import electron from "electron";
 import { stdout, stderr } from "process";
 import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -34,7 +32,7 @@ import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../vars/app-version.injectable";
+import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -86,13 +84,6 @@ describe("user store tests", () => {
       userStore.resetTheme();
       expect(userStore.colorTheme).toBe(defaultThemeId);
     });
-
-    it("correctly calculates if the last seen version is an old release", () => {
-      expect(userStore.isNewVersion).toBe(true);
-
-      userStore.lastSeenAppVersion = (new SemVer(electron.app.getVersion())).inc("major").format();
-      expect(userStore.isNewVersion).toBe(false);
-    });
   });
 
   describe("migrations", () => {
@@ -125,7 +116,7 @@ describe("user store tests", () => {
         },
       });
 
-      di.override(appVersionInjectable, () => "10.0.0");
+      di.override(storeMigrationVersionInjectable, () => "10.0.0");
 
       userStore = di.inject(userStoreInjectable);
     });

@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import packageInfo from "../../../../package.json";
+import applicationInformationInjectable from "./application-information.injectable";
 
 const productNameInjectable = getInjectable({
   id: "product-name",
-  instantiate: () => packageInfo.productName,
-  causesSideEffects: true,
+  instantiate: (di) => di.inject(applicationInformationInjectable).productName,
 });
 
 export default productNameInjectable;

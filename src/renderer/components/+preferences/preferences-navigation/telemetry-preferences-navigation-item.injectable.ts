@@ -8,14 +8,14 @@ import routeIsActiveInjectable from "../../../routes/route-is-active.injectable"
 import { computed } from "mobx";
 import telemetryPreferenceItemsInjectable from "../telemetry-preference-items.injectable";
 import telemetryPreferencesRouteInjectable from "../../../../common/front-end-routing/routes/preferences/telemetry/telemetry-preferences-route.injectable";
-import sentryDnsUrlInjectable from "../sentry-dns-url.injectable";
+import sentryDataSourceNameInjectable from "../../../../common/vars/sentry-dsn-url.injectable";
 import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab.injectable";
 
 const terminalPreferencesNavigationItemInjectable = getInjectable({
   id: "telemetry-preferences-navigation-item",
 
   instantiate: (di) => {
-    const sentryDnsUrl = di.inject(sentryDnsUrlInjectable);
+    const sentryDataSourceName = di.inject(sentryDataSourceNameInjectable);
 
     const telemetryPreferenceItems = di.inject(
       telemetryPreferenceItemsInjectable,
@@ -37,7 +37,7 @@ const terminalPreferencesNavigationItemInjectable = getInjectable({
       isActive: routeIsActive,
 
       isVisible: computed(
-        () => !!sentryDnsUrl || telemetryPreferenceItems.get().length > 0,
+        () => !!sentryDataSourceName || telemetryPreferenceItems.get().length > 0,
       ),
 
       orderNumber: 60,

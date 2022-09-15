@@ -18,13 +18,13 @@ import { createClusterInjectionToken } from "../cluster/create-cluster-injection
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../vars/app-version.injectable";
 import assert from "assert";
 import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
 import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../main/kubectl/normalized-arch.injectable";
 import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
 import fsInjectable from "../fs/fs.injectable";
+import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -372,7 +372,7 @@ users:
 
       mockFs(mockOpts);
 
-      mainDi.override(appVersionInjectable, () => "3.6.0");
+      mainDi.override(storeMigrationVersionInjectable, () => "3.6.0");
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 

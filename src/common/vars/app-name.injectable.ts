@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import isDevelopmentInjectable from "../../../common/vars/is-development.injectable";
+import isDevelopmentInjectable from "./is-development.injectable";
 import productNameInjectable from "./product-name.injectable";
 
 const appNameInjectable = getInjectable({
@@ -15,8 +15,6 @@ const appNameInjectable = getInjectable({
 
     return `${productName}${isDevelopment ? "Dev" : ""}`;
   },
-
-  causesSideEffects: true,
 });
 
 export default appNameInjectable;

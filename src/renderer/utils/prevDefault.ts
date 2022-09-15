@@ -17,7 +17,7 @@ import type React from "react";
 //  <Icon onClick={prevDefault(() => console.log('stay on the page and open dialog'))}/>
 // </a>
 
-export function prevDefault<E extends React.SyntheticEvent | Event>(callback: (evt: E) => any) {
+export function prevDefault<E extends React.SyntheticEvent | Event, R>(callback: (evt: E) => R): (event: E) => R {
   return function (evt: E) {
     evt.preventDefault();
     evt.stopPropagation();

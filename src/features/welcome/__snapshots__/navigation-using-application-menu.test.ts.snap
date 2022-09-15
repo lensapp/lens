@@ -76,7 +76,7 @@ exports[`welcome - navigation using application menu renders 1`] = `
               style="width: 320px;"
             >
               <h2>
-                Welcome to OpenLens!
+                Welcome to some-product-name!
               </h2>
               <p>
                 To get you started we have auto-detected your clusters in your
@@ -915,7 +915,7 @@ exports[`welcome - navigation using application menu when navigated somewhere el
               style="width: 320px;"
             >
               <h2>
-                Welcome to OpenLens!
+                Welcome to some-product-name!
               </h2>
               <p>
                 To get you started we have auto-detected your clusters in your

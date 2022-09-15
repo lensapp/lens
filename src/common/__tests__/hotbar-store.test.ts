@@ -8,7 +8,6 @@ import mockFs from "mock-fs";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "../vars/app-version.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import hotbarStoreInjectable from "../hotbars/store.injectable";
 import type { HotbarStore } from "../hotbars/store";
@@ -19,6 +18,7 @@ import catalogCatalogEntityInjectable from "../catalog-entities/general-catalog-
 import loggerInjectable from "../logger.injectable";
 import type { Logger } from "../logger";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -348,7 +348,7 @@ describe("HotbarStore", () => {
 
       mockFs(configurationToBeMigrated);
 
-      di.override(appVersionInjectable, () => "5.0.0-beta.10");
+      di.override(storeMigrationVersionInjectable, () => "5.0.0-beta.10");
 
       hotbarStore = di.inject(hotbarStoreInjectable);
 

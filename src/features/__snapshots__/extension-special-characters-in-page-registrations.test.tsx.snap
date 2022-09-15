@@ -76,7 +76,7 @@ exports[`extension special characters in page registrations renders 1`] = `
               style="width: 320px;"
             >
               <h2>
-                Welcome to OpenLens!
+                Welcome to some-product-name!
               </h2>
               <p>
                 To get you started we have auto-detected your clusters in your

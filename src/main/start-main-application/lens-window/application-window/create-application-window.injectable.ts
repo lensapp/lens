@@ -6,11 +6,11 @@ import { getInjectable } from "@ogre-tools/injectable";
 import createLensWindowInjectable from "./create-lens-window.injectable";
 import lensProxyPortInjectable from "../../../lens-proxy/lens-proxy-port.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
-import appNameInjectable from "../../../app-paths/app-name/app-name.injectable";
 import appEventBusInjectable from "../../../../common/app-event-bus/app-event-bus.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./wait-until-bundled-extensions-are-loaded.injectable";
 import { applicationWindowInjectionToken } from "./application-window-injection-token";
 import { runInAction } from "mobx";
+import appNameInjectable from "../../../../common/vars/app-name.injectable";
 
 const createApplicationWindowInjectable = getInjectable({
   id: "create-application-window",

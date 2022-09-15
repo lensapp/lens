@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import productNameInjectable from "../../../app-paths/app-name/product-name.injectable";
 import showApplicationWindowInjectable from "../../../start-main-application/lens-window/show-application-window.injectable";
 import showAboutInjectable from "../../../menu/show-about.injectable";
 import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
@@ -11,6 +10,7 @@ import { computed } from "mobx";
 import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";
 import { withErrorSuppression } from "../../../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
+import productNameInjectable from "../../../../common/vars/product-name.injectable";
 
 const aboutAppTrayItemInjectable = getInjectable({
   id: "about-app-tray-item",
@@ -32,15 +32,10 @@ const aboutAppTrayItemInjectable = getInjectable({
       click: pipeline(
         async () => {
           await showApplicationWindow();
-
-          await showAbout();
+          showAbout();
         },
-
         withErrorLoggingFor(() => "[TRAY]: Opening of show about failed."),
-
-        // TODO: Find out how to improve typing so that instead of
-        // x => withErrorSuppression(x) there could only be withErrorSuppression
-        (x) => withErrorSuppression(x),
+        withErrorSuppression,
       ),
     };
   },

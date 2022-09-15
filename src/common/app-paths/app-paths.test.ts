@@ -7,7 +7,6 @@ import { appPathsInjectionToken } from "./app-path-injection-token";
 import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-path/get-electron-app-path.injectable";
 import type { PathName } from "./app-path-names";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
-import appNameInjectable from "../../main/app-paths/app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "../../main/app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -53,8 +52,6 @@ describe("app-paths", () => {
             defaultAppPathsStub[key] = path;
           },
       );
-
-      mainDi.override(appNameInjectable, () => "some-app-name");
     });
   });
 
@@ -88,7 +85,7 @@ describe("app-paths", () => {
         recent: "some-recent",
         temp: "some-temp",
         videos: "some-videos",
-        userData: "some-app-data/some-app-name",
+        userData: "some-app-data/some-product-name",
       });
     });
 
@@ -111,7 +108,7 @@ describe("app-paths", () => {
         recent: "some-recent",
         temp: "some-temp",
         videos: "some-videos",
-        userData: "some-app-data/some-app-name",
+        userData: "some-app-data/some-product-name",
       });
     });
   });
@@ -137,7 +134,7 @@ describe("app-paths", () => {
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
-        userData: `some-integration-testing-app-data/some-app-name`,
+        userData: `some-integration-testing-app-data/some-product-name`,
       });
     });
 
@@ -146,7 +143,7 @@ describe("app-paths", () => {
 
       expect({ appData, userData }).toEqual({
         appData: "some-integration-testing-app-data",
-        userData: "some-integration-testing-app-data/some-app-name",
+        userData: "some-integration-testing-app-data/some-product-name",
       });
     });
   });

@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { sentryDsn } from "../../../common/vars";
 
-const sentryDnsUrlInjectable = getInjectable({
-  id: "sentry-dns-url",
-  instantiate: () => sentryDsn,
+const isSnapPackageInjectable = getInjectable({
+  id: "is-snap",
+  instantiate: () => Boolean(process.env.SNAP),
+  causesSideEffects: true,
 });
 
-export default sentryDnsUrlInjectable;
+export default isSnapPackageInjectable;

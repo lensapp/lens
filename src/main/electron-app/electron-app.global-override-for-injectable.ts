@@ -4,6 +4,8 @@
  */
 
 import { getGlobalOverride } from "../../common/test-utils/get-global-override";
-import buildVersionInjectable from "./build-version.injectable";
+import electronAppInjectable from "./electron-app.injectable";
 
-export default getGlobalOverride(buildVersionInjectable, () => "6.0.0");
+export default getGlobalOverride(electronAppInjectable, () => ({
+  getVersion: () => "6.0.0",
+} as Electron.App));

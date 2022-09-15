@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import packageJson from "../../../package.json";
+import { init } from "@sentry/electron/main";
 
-const packageJsonInjectable = getInjectable({
-  id: "package-json",
-  instantiate: () => packageJson,
+const initializeSentryOnMainInjectable = getInjectable({
+  id: "initialize-sentry-on-main",
+  instantiate: () => init,
   causesSideEffects: true,
 });
 
-export default packageJsonInjectable;
+export default initializeSentryOnMainInjectable;

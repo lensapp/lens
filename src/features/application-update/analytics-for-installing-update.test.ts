@@ -16,10 +16,10 @@ import processCheckingForUpdatesInjectable from "../../main/application-update/c
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
-import appVersionInjectable from "../../common/vars/app-version.injectable";
 import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
+import getBuildVersionInjectable from "../../main/vars/build-version/get-build-version.injectable";
 
 describe("analytics for installing update", () => {
   let builder: ApplicationBuilder;
@@ -36,7 +36,7 @@ describe("analytics for installing update", () => {
     analyticsListenerMock = jest.fn();
 
     builder.beforeApplicationStart(mainDi => {
-      mainDi.override(appVersionInjectable, () => "42.0.0");
+      mainDi.override(getBuildVersionInjectable, () => () => "42.0.0");
 
       checkForPlatformUpdatesMock = asyncFn();
 

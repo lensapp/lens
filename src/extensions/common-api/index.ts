@@ -4,10 +4,10 @@
  */
 
 // APIs
-import * as App from "./app";
+import { App } from "./app";
 import * as EventBus from "./event-bus";
 import * as Store from "./stores";
-import * as Util from "./utils";
+import { Util } from "./utils";
 import * as Catalog from "./catalog";
 import * as Types from "./types";
 import * as Proxy from "./proxy";

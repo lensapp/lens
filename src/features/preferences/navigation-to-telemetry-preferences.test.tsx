@@ -7,7 +7,7 @@ import React from "react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import navigateToTelemetryPreferencesInjectable from "../../common/front-end-routing/routes/preferences/telemetry/navigate-to-telemetry-preferences.injectable";
-import sentryDnsUrlInjectable from "../../renderer/components/+preferences/sentry-dns-url.injectable";
+import sentryDataSourceNameInjectable from "../../common/vars/sentry-dsn-url.injectable";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("preferences - navigation to telemetry preferences", () => {
@@ -114,7 +114,7 @@ describe("preferences - navigation to telemetry preferences", () => {
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
-        windowDi.override(sentryDnsUrlInjectable, () => "some-sentry-dns-url");
+        windowDi.override(sentryDataSourceNameInjectable, () => "some-sentry-dns-url");
       });
 
       rendered = await builder.render();
@@ -144,7 +144,7 @@ describe("preferences - navigation to telemetry preferences", () => {
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
-        windowDi.override(sentryDnsUrlInjectable, () => null);
+        windowDi.override(sentryDataSourceNameInjectable, () => null);
       });
 
       rendered = await builder.render();

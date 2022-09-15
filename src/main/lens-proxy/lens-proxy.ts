@@ -7,7 +7,7 @@ import net from "net";
 import type http from "http";
 import spdy from "spdy";
 import type httpProxy from "http-proxy";
-import { apiPrefix, apiKubePrefix, contentSecurityPolicy } from "../../common/vars";
+import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import logger from "../logger";
@@ -26,9 +26,10 @@ interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
   shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
   kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
-  router: Router;
-  proxy: httpProxy;
-  lensProxyPort: { set: (portNumber: number) => void };
+  readonly router: Router;
+  readonly proxy: httpProxy;
+  readonly lensProxyPort: { set: (portNumber: number) => void };
+  readonly contentSecurityPolicy: string;
 }
 
 const watchParam = "watch";
@@ -63,7 +64,7 @@ export class LensProxy {
   protected closed = false;
   protected retryCounters = new Map<string, number>();
 
-  constructor(private dependencies: Dependencies) {
+  constructor(private readonly dependencies: Dependencies) {
     this.configureProxy(dependencies.proxy);
 
     this.proxyServer = spdy.createServer({
@@ -239,10 +240,7 @@ export class LensProxy {
       }
     }
 
-    if (contentSecurityPolicy) {
-      res.setHeader("Content-Security-Policy", contentSecurityPolicy);
-    }
-
+    res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
     this.dependencies.router.route(cluster, req, res);
   }
 }
