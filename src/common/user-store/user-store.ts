@@ -13,7 +13,7 @@ import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
 import type { SelectedUpdateChannel } from "../application-update/selected-update-channel/selected-update-channel.injectable";
-import type { UpdateChannelId } from "../application-update/update-channels";
+import type { ReleaseChannel } from "../application-update/update-channels";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -167,7 +167,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
     // TODO: Switch to action-based saving instead saving stores by reaction
     if (preferences?.updateChannel) {
-      this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as UpdateChannelId);
+      this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as ReleaseChannel);
     }
   }
 

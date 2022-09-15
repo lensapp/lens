@@ -12,7 +12,7 @@ import type { CheckForPlatformUpdates } from "../../main/application-update/chec
 import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { UpdateChannel, UpdateChannelId } from "../../common/application-update/update-channels";
+import type { UpdateChannel, ReleaseChannel } from "../../common/application-update/update-channels";
 import { updateChannels } from "../../common/application-update/update-channels";
 import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
@@ -89,7 +89,7 @@ describe("selection of update stability", () => {
     describe('given update channel "alpha" is selected, when checking for updates', () => {
       let selectedUpdateChannel: {
         value: IComputedValue<UpdateChannel>;
-        setValue: (channelId: UpdateChannelId) => void;
+        setValue: (channelId: ReleaseChannel) => void;
       };
 
       beforeEach(() => {
@@ -180,7 +180,7 @@ describe("selection of update stability", () => {
     describe('given update channel "beta" is selected', () => {
       let selectedUpdateChannel: {
         value: IComputedValue<UpdateChannel>;
-        setValue: (channelId: UpdateChannelId) => void;
+        setValue: (channelId: ReleaseChannel) => void;
       };
 
       beforeEach(() => {
@@ -254,7 +254,7 @@ describe("selection of update stability", () => {
       // TODO: UserStore is currently responsible for getting and setting initial value
       const selectedUpdateChannel = mainDi.inject(selectedUpdateChannelInjectable);
 
-      selectedUpdateChannel.setValue("something-invalid" as UpdateChannelId);
+      selectedUpdateChannel.setValue("something-invalid" as ReleaseChannel);
     });
 
     await builder.render();
