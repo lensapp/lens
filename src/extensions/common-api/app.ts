@@ -35,7 +35,7 @@ export const App: AppExtensionItems = {
   get version() {
     const di = getLegacyGlobalDiForExtensionApi();
 
-    return di.inject(buildVersionInjectionToken);
+    return di.inject(buildVersionInjectionToken).get();
   },
   get appName() {
     const di = getLegacyGlobalDiForExtensionApi();
