@@ -16,6 +16,7 @@ export default getGlobalOverride(applicationInformationInjectable, () => ({
     bundledHelmVersion: "3.7.2",
     sentryDsn: "",
     contentSecurityPolicy: "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
+    welcomeRoute: "/welcome",
   },
   copyright: "some-copyright-information",
   description: "some-descriptive-text",
