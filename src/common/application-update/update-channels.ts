@@ -24,7 +24,7 @@ const alphaChannel: UpdateChannel = {
   moreStableUpdateChannel: betaChannel,
 };
 
-export const updateChannels: Record<UpdateChannelId, UpdateChannel> = {
+export const updateChannels = {
   latest: latestChannel,
   beta: betaChannel,
   alpha: alphaChannel,

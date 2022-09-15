@@ -105,7 +105,7 @@ describe("selection of update stability", () => {
       it('checks updates from update channel "alpha"', () => {
         expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
           updateChannels.alpha,
-          { allowDowngrade: true },
+          { allowDowngrade: false },
         );
       });
 
@@ -132,7 +132,7 @@ describe("selection of update stability", () => {
         it('checks updates from update channel "beta"', () => {
           expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
             updateChannels.beta,
-            { allowDowngrade: true },
+            { allowDowngrade: false },
           );
         });
 
@@ -159,7 +159,7 @@ describe("selection of update stability", () => {
           it('finally checks updates from update channel "latest"', () => {
             expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
               updateChannels.latest,
-              { allowDowngrade: true },
+              { allowDowngrade: false },
             );
           });
 
@@ -279,7 +279,7 @@ describe("selection of update stability", () => {
 
     expect(checkForPlatformUpdatesMock).toHaveBeenCalledWith(
       updateChannels.latest,
-      { allowDowngrade: true },
+      { allowDowngrade: false },
     );
   });
 

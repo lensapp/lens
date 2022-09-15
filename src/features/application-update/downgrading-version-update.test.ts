@@ -42,23 +42,58 @@ describe("downgrading version update", () => {
   [
     {
       updateChannel: updateChannels.latest,
+      appVersion: "4.0.0",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.beta,
+      appVersion: "4.0.0",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.alpha,
+      appVersion: "4.0.0",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.latest,
+      appVersion: "4.0.0-latest",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.beta,
+      appVersion: "4.0.0-latest",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.alpha,
+      appVersion: "4.0.0-latest",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.latest,
       appVersion: "4.0.0-beta",
       downgradeIsAllowed: true,
     },
     {
       updateChannel: updateChannels.beta,
       appVersion: "4.0.0-beta",
-      downgradeIsAllowed: false,
-    },
-    {
-      updateChannel: updateChannels.beta,
-      appVersion: "4.0.0-beta.1",
       downgradeIsAllowed: false,
     },
     {
       updateChannel: updateChannels.alpha,
       appVersion: "4.0.0-beta",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.latest,
+      appVersion: "4.0.0-alpha",
       downgradeIsAllowed: true,
+    },
+    {
+      updateChannel: updateChannels.beta,
+      appVersion: "4.0.0-alpha",
+      downgradeIsAllowed: false,
     },
     {
       updateChannel: updateChannels.alpha,
