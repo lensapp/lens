@@ -4,11 +4,15 @@
  */
 import { createInitializableState } from "../../../common/initializable-state/create";
 import { buildVersionInjectionToken } from "../../../common/vars/build-semantic-version.injectable";
-import electronAppInjectable from "../../electron-app/electron-app.injectable";
+import getBuildVersionInjectable from "./get-build-version.injectable";
 
 const buildVersionInjectable = createInitializableState({
   id: "build-version",
-  init: (di) => di.inject(electronAppInjectable).getVersion(),
+  init: (di) => {
+    const getBuildVersion = di.inject(getBuildVersionInjectable);
+
+    return getBuildVersion();
+  },
   injectionToken: buildVersionInjectionToken,
 });
 
