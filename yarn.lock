@@ -3017,10 +3017,10 @@ acorn@^8.8.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.0.tgz#88c0187620435c7f6015803f5539dae05a9dbea8"
   integrity sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w==
 
-adr@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/adr/-/adr-1.4.1.tgz#78fd4aaaa3fd7c739f3caf89fa30202a6230e855"
-  integrity sha512-WRgljcIOPkWqEWaDTTd4mKmhpiUbucrUmc+gmXyFg2gF2EiQefJhBK0hhEKSIE+Ga+lDhDdk94qROvmG7gCdAQ==
+adr@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/adr/-/adr-1.4.2.tgz#61fae2edbe2c9d53b35aebcd6b159612075aaf3d"
+  integrity sha512-/ZYxh/y4na56zyY+1M+9CkKEpw8abWWrr2ZsixoifdUaFppMDO7NYUiFQSudE6TVnsf18SxjRHrDb9n7LY4slw==
   dependencies:
     colors "^1.3.3"
     commander "^5.1.0"
