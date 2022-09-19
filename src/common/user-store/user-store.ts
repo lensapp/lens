@@ -34,7 +34,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     });
 
     makeObservable(this);
-    this.load();
   }
 
   @observable lastSeenAppVersion = "0.0.0";
