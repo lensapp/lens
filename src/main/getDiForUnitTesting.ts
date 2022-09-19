@@ -132,7 +132,11 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       getDisplayIndex: () => "0",
     }) as unknown as HotbarStore);
 
-    di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
+    di.override(userStoreInjectable, () => ({
+      startMainReactions: () => {},
+      extensionRegistryUrl: { customUrl: "some-custom-url" },
+      load: () => {},
+    }) as Partial<UserStore> as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
