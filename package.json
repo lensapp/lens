@@ -177,6 +177,7 @@
       ]
     },
     "win": {
+      "artifactName": "${productName} Setup ${version}.exe",
       "target": [
         "nsis"
       ],
