@@ -34,6 +34,7 @@ const userStoreFileNameMigrationInjectable = getInjectable({
       }
     };
   },
+  causesSideEffects: true,
 });
 
 export default userStoreFileNameMigrationInjectable;
