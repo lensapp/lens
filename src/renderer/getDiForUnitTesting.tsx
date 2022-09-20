@@ -66,6 +66,7 @@ import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injecta
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
+import type { PartialDeep } from "type-fest";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
@@ -184,17 +185,14 @@ export const getDiForUnitTesting = (
 
     di.override(defaultShellInjectable, () => "some-default-shell");
 
-    di.override(
-      userStoreInjectable,
-      () =>
-        ({
-          isTableColumnHidden: () => false,
-          extensionRegistryUrl: { customUrl: "some-custom-url" },
-          syncKubeconfigEntries: observable.map(),
-          terminalConfig: { fontSize: 42 },
-          editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
-        } as unknown as UserStore),
-    );
+    di.override(userStoreInjectable, () => ({
+      isTableColumnHidden: () => false,
+      extensionRegistryUrl: { customUrl: "some-custom-url" },
+      syncKubeconfigEntries: observable.map(),
+      terminalConfig: { fontSize: 42 },
+      editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
+      load: () => {},
+    } as PartialDeep<UserStore> as UserStore));
 
     di.override(apiManagerInjectable, () => new ApiManager());
 
