@@ -20,6 +20,7 @@ const initializeSentryReportingWithInjectable = getInjectable({
   instantiate: (di): InitializeSentryReportingWith => {
     const sentryDataSourceName = di.inject(sentryDataSourceNameInjectable);
     const isProduction = di.inject(isProductionInjectable);
+    const userStore = di.inject(userStoreInjectable);
 
     if (!sentryDataSourceName) {
       return () => {};
@@ -27,9 +28,6 @@ const initializeSentryReportingWithInjectable = getInjectable({
 
     return (initSentry) => initSentry({
       beforeSend: (event) => {
-        // TODO: remove loading from userStoreInjectable so that this can be moved out
-        const userStore = di.inject(userStoreInjectable);
-
         if (userStore.allowErrorReporting) {
           return event;
         }

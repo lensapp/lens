@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
 import type { ReleaseChannel } from "../application-update/update-channels";
+import { createInitializableState } from "../initializable-state/create";
 import buildSemanticVersionInjectable from "./build-semantic-version.injectable";
 
-const releaseChannelInjectable = getInjectable({
+const releaseChannelInjectable = createInitializableState({
   id: "release-channel",
-  instantiate: (di): ReleaseChannel => {
+  init: (di): ReleaseChannel => {
     const buildSemanticVersion = di.inject(buildSemanticVersionInjectable);
     const currentReleaseChannel = buildSemanticVersion.get().prerelease[0];
 

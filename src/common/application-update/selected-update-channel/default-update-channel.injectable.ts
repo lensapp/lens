@@ -8,7 +8,7 @@ import { updateChannels } from "../update-channels";
 
 const defaultUpdateChannelInjectable = createInitializableState({
   id: "default-update-channel",
-  init: (di) => updateChannels[di.inject(releaseChannelInjectable)],
+  init: (di) => updateChannels[di.inject(releaseChannelInjectable).get()],
 });
 
 export default defaultUpdateChannelInjectable;

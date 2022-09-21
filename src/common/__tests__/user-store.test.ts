@@ -33,6 +33,8 @@ import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
+import releaseChannelInjectable from "../vars/release-channel.injectable";
+import defaultUpdateChannelInjectable from "../application-update/selected-update-channel/default-update-channel.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -40,7 +42,7 @@ describe("user store tests", () => {
   let userStore: UserStore;
   let di: DiContainer;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
@@ -49,6 +51,12 @@ describe("user store tests", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(userStoreInjectable);
+
+    di.override(releaseChannelInjectable, () => ({
+      get: () => "latest" as const,
+      init: async () => {},
+    }));
+    await di.inject(defaultUpdateChannelInjectable).init();
 
     di.unoverride(userStoreInjectable);
   });
@@ -62,6 +70,7 @@ describe("user store tests", () => {
       mockFs({ "some-directory-for-user-data": { "config.json": "{}", "kube_config": "{}" }});
 
       userStore = di.inject(userStoreInjectable);
+      userStore.load();
     });
 
     it("allows setting and retrieving lastSeenAppVersion", () => {
@@ -119,6 +128,7 @@ describe("user store tests", () => {
       di.override(storeMigrationVersionInjectable, () => "10.0.0");
 
       userStore = di.inject(userStoreInjectable);
+      userStore.load();
     });
 
     it("sets last seen app version to 0.0.0", () => {
