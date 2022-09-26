@@ -31,7 +31,7 @@
     static-eval "2.0.2"
     underscore "1.7.0"
 
-"@async-fn/jest@1.6.4":
+"@async-fn/jest@1.6.4", "@async-fn/jest@^1.6.4":
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/@async-fn/jest/-/jest-1.6.4.tgz#202f6a070847123e81c7c6bd5bee5a8f12ebbd40"
   integrity sha512-m3T/m6a39f5dbqFj79BGCqudkm42McgMXD7M0ZorKeqqdAbNazay7t+VDOz5qqFHO12frFbbhAB5GnFPoGADPA==
@@ -1396,46 +1396,56 @@
     read-package-json-fast "^2.0.3"
     which "^2.0.2"
 
-"@ogre-tools/fp@10.1.0", "@ogre-tools/fp@^10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-10.1.0.tgz#e83c4dad97416c62d89913c0c0a34e734ae06b8b"
-  integrity sha512-ZqGQXytucSWbSoNjrdyHAiIWO0LotxBU+aI5hCcqedWg9TzNzf78YKD6ngHXxVEwT/JYsslxXMxzE4LNdo8Cbg==
+"@ogre-tools/fp@10.3.2", "@ogre-tools/fp@^10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-10.3.2.tgz#41fe406842bd523d7e7ba0792a682d9aaaa33d9c"
+  integrity sha512-4J1hqjHXDyMgtb2QxsGVOUEgiE7+bcPRLuTv2iJHvBlaXIeTdNuOsNZTVhJvhTv/jxXL+AHq1XjaCDLHe6XxAQ==
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-auto-registration@10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-10.1.0.tgz#a46d23cf5cf880e416a46238ecb54e7f933f9d89"
-  integrity sha512-G9UKcaYr4DHViXHIKigzy6jI2ZhQC+K6idc1M4W/l4IazaV26Gwj1MSI5nrJ6Z4aRAzILFKM4dzkvZNFjkyGrw==
+"@ogre-tools/injectable-extension-for-auto-registration@10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-10.3.2.tgz#c3672100aef5ab109893e436d4cec965de744e06"
+  integrity sha512-s9/fTTt6Se87mFuSqdGTYjgqVmW54D7ZlsGQUa8Zw2wL3zu6Mgf3B71rwMzOOghnv4gJ/P/yB8u0xEhAUS+yCg==
   dependencies:
-    "@ogre-tools/fp" "^10.1.0"
-    "@ogre-tools/injectable" "^10.1.0"
+    "@ogre-tools/fp" "^10.3.2"
+    "@ogre-tools/injectable" "^10.3.2"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-mobx@10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-10.1.0.tgz#b1efaafb048f2ceb5588daad708dbeffbd2ec7d1"
-  integrity sha512-G5A6FSgBMTlD6Qdd6xzeuVzcyHGS+tTUW7DCBbYLJqZ3Y8/PprSomhunrNrrcuZdM0K16BpQT8o6OHw4Z/Kqiw==
+"@ogre-tools/injectable-extension-for-mobx@10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-10.3.2.tgz#8eba467bf20295d3153b2ac3b8fed1206f448027"
+  integrity sha512-QYlm26pUnRLyn9EcKeG0bJySCmIKiJxHdHViq77ncHuHo9s+PcxFQJwV4yQljhxcKiAInw/LF8qmRl2ZjJ7X1A==
   dependencies:
-    "@ogre-tools/fp" "^10.1.0"
-    "@ogre-tools/injectable" "^10.1.0"
+    "@ogre-tools/fp" "^10.3.2"
+    "@ogre-tools/injectable" "^10.3.2"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-react@10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-10.1.0.tgz#5c9b4b5eb9e5843cc966629131104055180ba18c"
-  integrity sha512-4ReLJm8QcruCEm4KFhbsXLki3YiKRwlg3Mg7C2d8KyUfg+MUA5VdvgQSn3HthnyejiXlYCinqJLw83IryX/GNA==
+"@ogre-tools/injectable-react@10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-10.3.2.tgz#4d870e7a01e675efec16f28424da78ee2c6d3774"
+  integrity sha512-4a9p+s6isRdyO+sGs6OzSFb0mv/ZKicn+rXiT7LLA5TN/mU/D9l+VKZivnuvSgzGKkkhkEhaPaqVBhBHDs17vQ==
   dependencies:
-    "@ogre-tools/fp" "^10.1.0"
-    "@ogre-tools/injectable" "^10.1.0"
+    "@ogre-tools/fp" "^10.3.2"
+    "@ogre-tools/injectable" "^10.3.2"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable@10.1.0", "@ogre-tools/injectable@^10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-10.1.0.tgz#5051cc6a673576028e00439fc3e3f053ecdda030"
-  integrity sha512-7h7P5nfAFqnSny341FFT6cbJCmXVlGqA4zwTOpwKsGyC1h90NWtQZ+PUxY5MKl7rFWW/wpXgAKQqtf27Vy41Qw==
+"@ogre-tools/injectable-utils@10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-utils/-/injectable-utils-10.3.2.tgz#c156f28ac8d8ef759e586df22267ac885bcb9c1c"
+  integrity sha512-Ce16SfQyYaoysuSYTQsmDdu37vfrx7OjX5zJ0gNg8yTgzdoZN2fBAQooBG0PLd8Tjg3ae7jfu+ZNc3bC59BiSA==
   dependencies:
-    "@ogre-tools/fp" "^10.1.0"
+    "@async-fn/jest" "^1.6.4"
+    "@ogre-tools/fp" "^10.3.2"
+    "@ogre-tools/injectable" "^10.3.2"
+    lodash "^4.17.21"
+
+"@ogre-tools/injectable@10.3.2", "@ogre-tools/injectable@^10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-10.3.2.tgz#9f0c726c17072e2e6f4aab45cad6ddde393bef42"
+  integrity sha512-hZR3ELS6mwkS30u50/4sD/5qfHy3609iCWr9zN9s6XTCiPqxEMFFy1cnNGgVqjI1MBgB/aHeq9BGNgZzbHWpIw==
+  dependencies:
+    "@ogre-tools/fp" "^10.3.2"
     lodash "^4.17.21"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.7":
@@ -9605,7 +9615,6 @@ npm@^8.19.2:
     "@npmcli/fs" "^2.1.0"
     "@npmcli/map-workspaces" "^2.0.3"
     "@npmcli/package-json" "^2.0.0"
-    "@npmcli/promise-spawn" "^3.0.0"
     "@npmcli/run-script" "^4.2.1"
     abbrev "~1.1.1"
     archy "~1.0.0"
@@ -9616,7 +9625,6 @@ npm@^8.19.2:
     cli-table3 "^0.6.2"
     columnify "^1.6.0"
     fastest-levenshtein "^1.0.12"
-    fs-minipass "^2.1.0"
     glob "^8.0.1"
     graceful-fs "^4.2.10"
     hosted-git-info "^5.1.0"
@@ -9636,7 +9644,6 @@ npm@^8.19.2:
     libnpmteam "^4.0.4"
     libnpmversion "^3.0.7"
     make-fetch-happen "^10.2.0"
-    minimatch "^5.1.0"
     minipass "^3.1.6"
     minipass-pipeline "^1.2.4"
     mkdirp "^1.0.4"
