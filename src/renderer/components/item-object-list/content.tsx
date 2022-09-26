@@ -195,7 +195,7 @@ class NonInjectedItemListLayoutContent<
       )
       : (
         <p>
-          Remove
+          {"Remove "}
           <b>{selectedCount}</b>
           {" items "}
           <b>{selectedNames}</b>
