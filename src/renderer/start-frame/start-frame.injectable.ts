@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { runManyFor } from "../../common/runnable/run-many-for";
+import { runManyFor } from "@ogre-tools/injectable-utils";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
 
 const startFrameInjectable = getInjectable({

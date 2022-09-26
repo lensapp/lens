@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import rootFrameRenderedChannelInjectable from "../../../../common/root-frame-rendered-channel/root-frame-rendered-channel.injectable";
-import { runManyFor } from "../../../../common/runnable/run-many-for";
+import { runManyFor } from "@ogre-tools/injectable-utils";
 import { afterRootFrameIsReadyInjectionToken } from "../../runnable-tokens/after-root-frame-is-ready-injection-token";
 import { messageChannelListenerInjectionToken } from "../../../../common/utils/channel/message-channel-listener-injection-token";
 

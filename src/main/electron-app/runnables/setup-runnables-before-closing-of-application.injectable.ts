@@ -9,7 +9,7 @@ import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/
 import electronAppInjectable from "../electron-app.injectable";
 import isIntegrationTestingInjectable from "../../../common/vars/is-integration-testing.injectable";
 import autoUpdaterInjectable from "../features/auto-updater.injectable";
-import { runManySyncFor } from "../../../common/runnable/run-many-sync-for";
+import { runManySyncFor } from "@ogre-tools/injectable-utils";
 
 const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 import electronAppInjectable from "../electron-app.injectable";
-import { runManyFor } from "../../../common/runnable/run-many-for";
+import { runManyFor } from "@ogre-tools/injectable-utils";
 import { afterWindowIsOpenedInjectionToken } from "../../start-main-application/runnable-tokens/after-window-is-opened-injection-token";
 
 const setupRunnablesAfterWindowIsOpenedInjectable = getInjectable({

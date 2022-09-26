@@ -4,8 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-import { runManyFor } from "../../common/runnable/run-many-for";
-import { runManySyncFor } from "../../common/runnable/run-many-sync-for";
 import { beforeElectronIsReadyInjectionToken } from "./runnable-tokens/before-electron-is-ready-injection-token";
 import { beforeApplicationIsLoadingInjectionToken } from "./runnable-tokens/before-application-is-loading-injection-token";
 import { onLoadOfApplicationInjectionToken } from "./runnable-tokens/on-load-of-application-injection-token";
@@ -17,7 +15,7 @@ import { find, map, startsWith, toLower } from "lodash/fp";
 import commandLineArgumentsInjectable from "../utils/command-line-arguments.injectable";
 import waitForElectronToBeReadyInjectable from "../electron-app/features/wait-for-electron-to-be-ready.injectable";
 import createFirstApplicationWindowInjectable from "./lens-window/application-window/create-first-application-window.injectable";
-
+import { runManyFor, runManySyncFor } from "@ogre-tools/injectable-utils";
 const startMainApplicationInjectable = getInjectable({
   id: "start-main-application",
 
