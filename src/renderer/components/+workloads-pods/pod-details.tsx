@@ -119,11 +119,14 @@ export class PodDetails extends React.Component<PodDetailsProps> {
         <DrawerItem name="Service Account">
           {pod.getServiceAccountName()}
         </DrawerItem>
-        <DrawerItem name="Priority Class">
+        <DrawerItem name="Priority Class" hidden={pod.getPriorityClassName() === ""}>
           {pod.getPriorityClassName()}
         </DrawerItem>
         <DrawerItem name="QoS Class">
           {pod.getQosClass()}
+        </DrawerItem>
+        <DrawerItem name="Runtime Class" hidden={pod.getRuntimeClassName() === ""}>
+          {pod.getRuntimeClassName()}
         </DrawerItem>
 
         <DrawerItem
@@ -155,31 +158,35 @@ export class PodDetails extends React.Component<PodDetailsProps> {
           <PodDetailsSecrets pod={pod} />
         </DrawerItem>
 
-        {initContainers.length > 0 && (
-          <>
-            <DrawerTitle>Init Containers</DrawerTitle>
-            {initContainers.map(container => (
-              <PodDetailsContainer
-                key={container.name}
-                pod={pod}
-                container={container}
-              />
-            ))}
-          </>
-        )}
+        {
+          initContainers.length > 0 && (
+            <>
+              <DrawerTitle>Init Containers</DrawerTitle>
+              {initContainers.map(container => (
+                <PodDetailsContainer
+                  key={container.name}
+                  pod={pod}
+                  container={container}
+                />
+              ))}
+            </>
+          )
+        }
 
         <DrawerTitle>Containers</DrawerTitle>
-        {containers.map(container => (
-          <PodDetailsContainer
-            key={container.name}
-            pod={pod}
-            container={container}
-            metrics={getItemMetrics(toJS(this.containerMetrics), container.name)}
-          />
-        ))}
+        {
+          containers.map(container => (
+            <PodDetailsContainer
+              key={container.name}
+              pod={pod}
+              container={container}
+              metrics={getItemMetrics(toJS(this.containerMetrics), container.name)}
+            />
+          ))
+        }
 
         <PodVolumes pod={pod} />
-      </div>
+      </div >
     );
   }
 }
