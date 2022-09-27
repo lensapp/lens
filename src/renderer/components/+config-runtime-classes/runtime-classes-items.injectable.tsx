@@ -5,26 +5,26 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 
-import priorityClassesRouteInjectable from "../../../common/front-end-routing/routes/cluster/config/priority-classes/priority-classes-route.injectable";
+import runtimeClassesRouteInjectable from "../../../common/front-end-routing/routes/cluster/config/runtime-classes/runtime-classes-route.injectable";
 import { configSidebarItemId } from "../+config/config-sidebar-items.injectable";
 import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
-import navigateToPriorityClassesInjectable from "../../../common/front-end-routing/routes/cluster/config/priority-classes/navigate-to-priority-classes.injectable";
+import navigateToRuntimeClassesInjectable from "../../../common/front-end-routing/routes/cluster/config/runtime-classes/navigate-to-runtime-classes.injectable";
 
-const priorityClassesSidebarItemsInjectable = getInjectable({
-  id: "priority-classes-sidebar-items",
+const runtimeClassesSidebarItemsInjectable = getInjectable({
+  id: "runtime-classes-sidebar-items",
 
   instantiate: (di) => {
-    const route = di.inject(priorityClassesRouteInjectable);
-    const navigateToPriorityClasses = di.inject(navigateToPriorityClassesInjectable);
+    const route = di.inject(runtimeClassesRouteInjectable);
+    const navigateToRuntimeClasses = di.inject(navigateToRuntimeClassesInjectable);
     const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
     return computed(() => [
       {
-        id: "priority-classes",
+        id: "runtime-classes",
         parentId: configSidebarItemId,
-        title: "Priority Classes",
-        onClick: navigateToPriorityClasses,
+        title: "Runtime Classes",
+        onClick: navigateToRuntimeClasses,
         isActive: routeIsActive,
         isVisible: route.isEnabled,
         orderNumber: 70,
@@ -35,4 +35,4 @@ const priorityClassesSidebarItemsInjectable = getInjectable({
   injectionToken: sidebarItemsInjectionToken,
 });
 
-export default priorityClassesSidebarItemsInjectable;
+export default runtimeClassesSidebarItemsInjectable;

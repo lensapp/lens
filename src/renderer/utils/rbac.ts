@@ -32,6 +32,7 @@ export const ResourceNames: Record<KubeResource, string> = {
   "podsecuritypolicies": "Pod Security Policies",
   "poddisruptionbudgets": "Pod Disruption Budgets",
   "priorityclasses": "Priority Classes",
+  "runtimeclasses": "Runtime Classes",
   "limitranges": "Limit Ranges",
   "roles": "Roles",
   "rolebindings": "Role Bindings",

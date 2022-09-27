@@ -7,7 +7,7 @@ import { PriorityClasses } from "./priority-classes";
 import priorityClassesRouteInjectable from "../../../common/front-end-routing/routes/cluster/config/priority-classes/priority-classes-route.injectable";
 import { routeSpecificComponentInjectionToken } from "../../routes/route-specific-component-injection-token";
 
-const podDisruptionBudgetsRouteComponentInjectable = getInjectable({
+const priorityClassesRouteComponentInjectable = getInjectable({
   id: "priority-classes-route-component",
 
   instantiate: (di) => ({
@@ -18,4 +18,4 @@ const podDisruptionBudgetsRouteComponentInjectable = getInjectable({
   injectionToken: routeSpecificComponentInjectionToken,
 });
 
-export default podDisruptionBudgetsRouteComponentInjectable;
+export default priorityClassesRouteComponentInjectable;
