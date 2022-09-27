@@ -13,7 +13,7 @@ import type { IClassName } from "../../renderer/utils/cssNames";
 import { cssNames } from "../../renderer/utils/cssNames";
 
 export interface UtilsExtensionItems {
-  Singleton: Singleton;
+  Singleton: typeof Singleton;
   prevDefault: <E extends React.SyntheticEvent | Event, R>(callback: (evt: E) => R) => (evt: E) => R;
   stopPropagation: (evt: Event | React.SyntheticEvent) => void;
   cssNames: (...classNames: IClassName[]) => string;
