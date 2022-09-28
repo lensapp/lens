@@ -9,7 +9,7 @@ import { promiseExecFile } from "../../common/utils/promise-exec";
 import logger from "../logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
-import { SemVer } from "semver";
+import { SemVer, coerce } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
 import { promisify } from "util";
@@ -45,11 +45,12 @@ export class Kubectl {
 
   constructor(protected readonly dependencies: KubectlDependencies, clusterVersion: string) {
     let version: SemVer;
+    const bundledVersion = new SemVer(this.dependencies.bundledKubectlVersion);
 
     try {
       version = new SemVer(clusterVersion);
     } catch {
-      version = new SemVer(this.dependencies.bundledKubectlVersion);
+      version = bundledVersion;
     }
 
     const fromMajorMinor = this.dependencies.kubectlVersionMap.get(`${version.major}.${version.minor}`);
@@ -62,7 +63,10 @@ export class Kubectl {
       this.kubectlVersion = fromMajorMinor;
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using version map`);
     } else {
-      this.kubectlVersion = version.format();
+      /* this is the version (without possible prelease tag) to get from the download mirror */
+      const ver = coerce(version.format()) ?? bundledVersion;
+
+      this.kubectlVersion = ver.format();
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
