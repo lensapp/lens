@@ -158,35 +158,31 @@ export class PodDetails extends React.Component<PodDetailsProps> {
           <PodDetailsSecrets pod={pod} />
         </DrawerItem>
 
-        {
-          initContainers.length > 0 && (
-            <>
-              <DrawerTitle>Init Containers</DrawerTitle>
-              {initContainers.map(container => (
-                <PodDetailsContainer
-                  key={container.name}
-                  pod={pod}
-                  container={container}
-                />
-              ))}
-            </>
-          )
-        }
+        {initContainers.length > 0 && (
+          <>
+            <DrawerTitle>Init Containers</DrawerTitle>
+            {initContainers.map(container => (
+              <PodDetailsContainer
+                key={container.name}
+                pod={pod}
+                container={container}
+              />
+            ))}
+          </>
+        )}
 
         <DrawerTitle>Containers</DrawerTitle>
-        {
-          containers.map(container => (
-            <PodDetailsContainer
-              key={container.name}
-              pod={pod}
-              container={container}
-              metrics={getItemMetrics(toJS(this.containerMetrics), container.name)}
-            />
-          ))
-        }
+        {containers.map(container => (
+          <PodDetailsContainer
+            key={container.name}
+            pod={pod}
+            container={container}
+            metrics={getItemMetrics(toJS(this.containerMetrics), container.name)}
+          />
+        ))}
 
         <PodVolumes pod={pod} />
-      </div >
+      </div>
     );
   }
 }
