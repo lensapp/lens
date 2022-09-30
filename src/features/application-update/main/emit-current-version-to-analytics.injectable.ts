@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { afterApplicationIsLoadedInjectionToken } from "../../../main/start-main-application/runnable-tokens/after-application-is-loaded-injection-token";
 import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import { getCurrentDateTime } from "../../../common/utils/date/get-current-date-time";
-import buildVersionInjectable from "../../../common/vars/build-version/build-version.injectable";
+import buildVersionInjectable from "../../../main/vars/build-version/build-version.injectable";
 
 const emitCurrentVersionToAnalyticsInjectable = getInjectable({
   id: "emit-current-version-to-analytics",

@@ -2,9 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ReleaseChannel } from "../application-update/update-channels";
 import { createInitializableState } from "../initializable-state/create";
 import buildSemanticVersionInjectable from "./build-semantic-version.injectable";
+import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 
 const releaseChannelInjectable = createInitializableState({
   id: "release-channel",
