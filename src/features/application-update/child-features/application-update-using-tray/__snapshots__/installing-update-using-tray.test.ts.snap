@@ -16,9 +16,8 @@ exports[`installing update using tray when started renders 1`] = `
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -96,7 +95,7 @@ exports[`installing update using tray when started renders 1`] = `
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -237,9 +236,8 @@ exports[`installing update using tray when started when user checks for updates 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -317,7 +315,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -458,9 +456,8 @@ exports[`installing update using tray when started when user checks for updates 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -538,7 +535,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -679,9 +676,8 @@ exports[`installing update using tray when started when user checks for updates 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -781,7 +777,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -922,9 +918,8 @@ exports[`installing update using tray when started when user checks for updates 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -1024,7 +1019,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1165,9 +1160,8 @@ exports[`installing update using tray when started when user checks for updates 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -1245,7 +1239,7 @@ exports[`installing update using tray when started when user checks for updates 
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your

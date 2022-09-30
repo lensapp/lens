@@ -16,9 +16,8 @@ exports[`encourage user to update when sufficient time passed since update was d
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -118,7 +117,7 @@ exports[`encourage user to update when sufficient time passed since update was d
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -259,9 +258,8 @@ exports[`encourage user to update when sufficient time passed since update was d
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -339,7 +337,7 @@ exports[`encourage user to update when sufficient time passed since update was d
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your

@@ -16,9 +16,8 @@ exports[`extendability-using-extension-api given an extension with a weakly type
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -96,7 +95,7 @@ exports[`extendability-using-extension-api given an extension with a weakly type
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -236,9 +235,8 @@ exports[`extendability-using-extension-api given an extension with top-bar items
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -325,7 +323,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -465,9 +463,8 @@ exports[`extendability-using-extension-api given an extension with top-bar items
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -545,7 +542,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -685,9 +682,8 @@ exports[`extendability-using-extension-api renders 1`] = `
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive focusable"
+              class="Icon material interactive disabled focusable"
               data-testid="home-button"
-              tabindex="0"
             >
               <span
                 class="icon"
@@ -765,7 +761,7 @@ exports[`extendability-using-extension-api renders 1`] = `
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
