@@ -252,7 +252,7 @@ class NonInjectedItemListLayoutContent<
   }
 
   renderTableHeader() {
-    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store, tableId } = this.props;
 
     if (!renderTableHeader) {
       return null;
@@ -283,7 +283,10 @@ class NonInjectedItemListLayoutContent<
             ))
         }
         <TableCell className="menu">
-          {isConfigurable && this.renderColumnVisibilityMenu()}
+          {(isConfigurable && tableId)
+            ? this.renderColumnVisibilityMenu(tableId)
+            : undefined
+          }
         </TableCell>
       </TableHead>
     );
@@ -341,8 +344,8 @@ class NonInjectedItemListLayoutContent<
     return !isConfigurable || !tableId || !this.props.userStore.isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
-  renderColumnVisibilityMenu() {
-    const { renderTableHeader = [], tableId } = this.props;
+  renderColumnVisibilityMenu(tableId: string) {
+    const { renderTableHeader = [] } = this.props;
 
     return (
       <MenuActions
@@ -354,20 +357,16 @@ class NonInjectedItemListLayoutContent<
         {
           renderTableHeader
             .filter(isDefined)
-            .map((cellProps, index) => (
-              !cellProps.showWithColumn && (
-                <MenuItem key={index} className="input">
-                  <Checkbox
-                    label={cellProps.title ?? `<${cellProps.className}>`}
-                    value={this.showColumn(cellProps)}
-                    onChange={(
-                      tableId
-                        ? (() => cellProps.id && this.props.userStore.toggleTableColumnVisibility(tableId, cellProps.id))
-                        : undefined
-                    )}
-                  />
-                </MenuItem>
-              )
+            .filter((props): props is TableCellProps & { id: string } => !!props.id)
+            .filter(props => !props.showWithColumn)
+            .map((cellProps) => (
+              <MenuItem key={cellProps.id} className="input">
+                <Checkbox
+                  label={cellProps.title ?? `<${cellProps.className}>`}
+                  value={this.showColumn(cellProps)}
+                  onChange={() => this.props.userStore.toggleTableColumnVisibility(tableId, cellProps.id)}
+                />
+              </MenuItem>
             ))
         }
       </MenuActions>
