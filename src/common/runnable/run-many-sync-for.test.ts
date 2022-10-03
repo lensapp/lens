@@ -21,13 +21,19 @@ describe("runManySyncFor", () => {
 
       const someInjectable = getInjectable({
         id: "some-injectable",
-        instantiate: () => ({ run: () => runMock("some-call") }),
+        instantiate: () => ({
+          id: "some-injectable",
+          run: () => runMock("some-call"),
+        }),
         injectionToken: someInjectionTokenForRunnables,
       });
 
       const someOtherInjectable = getInjectable({
         id: "some-other-injectable",
-        instantiate: () => ({ run: () => runMock("some-other-call") }),
+        instantiate: () => ({
+          id: "some-other-injectable",
+          run: () => runMock("some-other-call"),
+        }),
         injectionToken: someInjectionTokenForRunnables,
       });
 
@@ -62,6 +68,7 @@ describe("runManySyncFor", () => {
         id: "some-injectable-1",
 
         instantiate: (di) => ({
+          id: "some-injectable-1",
           run: () => runMock("third-level-run"),
           runAfter: di.inject(someInjectable2),
         }),
@@ -73,6 +80,7 @@ describe("runManySyncFor", () => {
         id: "some-injectable-2",
 
         instantiate: (di) => ({
+          id: "some-injectable-2",
           run: () => runMock("second-level-run"),
           runAfter: di.inject(someInjectable3),
         }),
@@ -82,7 +90,10 @@ describe("runManySyncFor", () => {
 
       const someInjectable3 = getInjectable({
         id: "some-injectable-3",
-        instantiate: () => ({ run: () => runMock("first-level-run") }),
+        instantiate: () => ({
+          id: "some-injectable-3",
+          run: () => runMock("first-level-run"),
+        }),
         injectionToken: someInjectionTokenForRunnables,
       });
 
@@ -115,6 +126,7 @@ describe("runManySyncFor", () => {
       id: "some-runnable-1",
 
       instantiate: (di) => ({
+        id: "some-runnable-1",
         run: () => runMock("some-runnable-1"),
         runAfter: di.inject(someOtherInjectable),
       }),
@@ -126,6 +138,7 @@ describe("runManySyncFor", () => {
       id: "some-runnable-2",
 
       instantiate: () => ({
+        id: "some-runnable-2",
         run: () => runMock("some-runnable-2"),
       }),
 
@@ -139,7 +152,7 @@ describe("runManySyncFor", () => {
     );
 
     return expect(() => runMany()).rejects.toThrow(
-      "Tried to run runnable after other runnable which does not same injection token.",
+      'Tried to run runnable "some-runnable-1" after the runnable "some-runnable-2" which does not share the "some-injection-token" injection token.',
     );
   });
 
@@ -161,6 +174,7 @@ describe("runManySyncFor", () => {
         id: "some-runnable-1",
 
         instantiate: () => ({
+          id: "some-runnable-1",
           run: (parameter) => runMock("run-of-some-runnable-1", parameter),
         }),
 
@@ -171,6 +185,7 @@ describe("runManySyncFor", () => {
         id: "some-runnable-2",
 
         instantiate: () => ({
+          id: "some-runnable-2",
           run: (parameter) => runMock("run-of-some-runnable-2", parameter),
         }),
 

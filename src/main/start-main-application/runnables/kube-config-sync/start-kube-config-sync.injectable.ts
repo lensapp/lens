@@ -7,6 +7,7 @@ import { afterApplicationIsLoadedInjectionToken } from "../../runnable-tokens/af
 import directoryForKubeConfigsInjectable from "../../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import ensureDirInjectable from "../../../../common/fs/ensure-dir.injectable";
 import kubeconfigSyncManagerInjectable from "../../../catalog-sources/kubeconfig-sync/manager.injectable";
+import addKubeconfigSyncAsEntitySourceInjectable from "./add-source.injectable";
 
 const startKubeConfigSyncInjectable = getInjectable({
   id: "start-kubeconfig-sync",
@@ -17,11 +18,13 @@ const startKubeConfigSyncInjectable = getInjectable({
     const ensureDir = di.inject(ensureDirInjectable);
 
     return {
+      id: "start-kubeconfig-sync",
       run: async () => {
         await ensureDir(directoryForKubeConfigs);
 
         kubeConfigSyncManager.startSync();
       },
+      runAfter: di.inject(addKubeconfigSyncAsEntitySourceInjectable),
     };
   },
 

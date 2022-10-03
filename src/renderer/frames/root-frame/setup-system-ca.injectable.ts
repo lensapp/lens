@@ -10,6 +10,7 @@ const setupSystemCaInjectable = getInjectable({
   id: "setup-system-ca",
 
   instantiate: () => ({
+    id: "setup-system-ca",
     run: async () => {
       await injectSystemCAs();
     },

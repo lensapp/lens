@@ -25,6 +25,7 @@ const provideInitialValuesForSyncBoxesInjectable = getInjectable({
       di.inject(createSyncBoxStateInjectable, syncBox.id).set(state);
 
     return {
+      id: "provide-initial-values-for-sync-boxes",
       run: async () => {
         const initialValues = await requestFromChannel(syncBoxInitialValueChannel);
 

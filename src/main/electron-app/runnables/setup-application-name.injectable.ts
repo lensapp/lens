@@ -15,6 +15,7 @@ const setupApplicationNameInjectable = getInjectable({
     const appName = di.inject(appNameInjectable);
 
     return {
+      id: "setup-application-name",
       run: () => {
         app.setName(appName);
       },

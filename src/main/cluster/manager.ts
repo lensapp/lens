@@ -3,36 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "../common/ipc/cluster";
+import "../../common/ipc/cluster";
 import type http from "http";
+import type { ObservableSet } from "mobx";
 import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
-import type { Cluster } from "../common/cluster/cluster";
-import logger from "./logger";
-import { apiKubePrefix } from "../common/vars";
-import { getClusterIdFromHost, isErrnoException } from "../common/utils";
-import type { KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
-import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../common/catalog-entities/kubernetes-cluster";
-import { ipcMainOn } from "../common/ipc";
+import type { Cluster } from "../../common/cluster/cluster";
+import logger from "../logger";
+import { apiKubePrefix } from "../../common/vars";
+import { getClusterIdFromHost, isErrnoException } from "../../common/utils";
+import type { KubernetesClusterPrometheusMetrics } from "../../common/catalog-entities/kubernetes-cluster";
+import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
+import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
-import type { ClusterStore } from "../common/cluster-store/cluster-store";
-import type { ClusterId } from "../common/cluster-types";
-import type { CatalogEntityRegistry } from "./catalog";
+import type { ClusterStore } from "../../common/cluster-store/cluster-store";
+import type { ClusterId } from "../../common/cluster-types";
+import type { CatalogEntityRegistry } from "../catalog";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
 const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKubernetesClusterStatus));
 
 interface Dependencies {
-  store: ClusterStore;
-  catalogEntityRegistry: CatalogEntityRegistry;
+  readonly store: ClusterStore;
+  readonly catalogEntityRegistry: CatalogEntityRegistry;
+  readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
 }
 
 export class ClusterManager {
-  deleting = observable.set<ClusterId>();
-
   @observable visibleCluster: ClusterId | undefined = undefined;
 
-  constructor(private dependencies: Dependencies) {
+  constructor(private readonly dependencies: Dependencies) {
     makeObservable(this);
   }
 
@@ -69,7 +69,7 @@ export class ClusterManager {
       }
     });
 
-    observe(this.deleting, change => {
+    observe(this.dependencies.clustersThatAreBeingDeleted, change => {
       if (change.type === "add") {
         this.updateEntityStatus(this.dependencies.catalogEntityRegistry.findById(change.newValue) as KubernetesCluster);
       }
@@ -141,7 +141,7 @@ export class ClusterManager {
 
   @action
   protected updateEntityStatus(entity: KubernetesCluster, cluster?: Cluster) {
-    if (this.deleting.has(entity.getId())) {
+    if (this.dependencies.clustersThatAreBeingDeleted.has(entity.getId())) {
       entity.status.phase = LensKubernetesClusterStatus.DELETING;
       entity.status.enabled = false;
     } else {

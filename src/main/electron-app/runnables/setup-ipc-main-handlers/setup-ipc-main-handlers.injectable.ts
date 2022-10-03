@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import { setupIpcMainHandlers } from "./setup-ipc-main-handlers";
 import loggerInjectable from "../../../../common/logger.injectable";
-import clusterManagerInjectable from "../../../cluster-manager.injectable";
+import clusterManagerInjectable from "../../../cluster/manager.injectable";
 import applicationMenuItemsInjectable from "../../../menu/application-menu-items.injectable";
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
@@ -14,6 +14,7 @@ import { onLoadOfApplicationInjectionToken } from "../../../start-main-applicati
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
 import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
 import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
+import clustersThatAreBeingDeletedInjectable from "../../../cluster/are-being-deleted.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -32,8 +33,10 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const clusterStore = di.inject(clusterStoreInjectable);
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
     const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
+    const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);
 
     return {
+      id: "setup-ipc-main-handlers",
       run: () => {
         logger.debug("[APP-MAIN] initializing ipc main handlers");
 
@@ -46,6 +49,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
           clusterStore,
           operatingSystemTheme,
           askUserForFilePaths,
+          clustersThatAreBeingDeleted,
         });
       },
     };

@@ -16,6 +16,7 @@ const hideDockForLastClosedWindowInjectable = getInjectable({
     const getVisibleWindows = di.inject(getVisibleWindowsInjectable);
 
     return {
+      id: "hide-dock-when-there-are-no-windows",
       run: () => {
         const visibleWindows = getVisibleWindows();
 

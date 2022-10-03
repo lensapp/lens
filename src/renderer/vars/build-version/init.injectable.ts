@@ -12,6 +12,7 @@ const initializeBuildVersionInjectable = getInjectable({
     const buildVersion = di.inject(buildVersionInjectable);
 
     return {
+      id: "initialize-build-version",
       run: () => buildVersion.init(),
     };
   },

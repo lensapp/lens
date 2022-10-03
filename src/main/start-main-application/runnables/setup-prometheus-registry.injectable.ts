@@ -18,6 +18,7 @@ const setupPrometheusRegistryInjectable = getInjectable({
     const prometheusProviderRegistry = di.inject(prometheusProviderRegistryInjectable);
 
     return {
+      id: "setup-prometheus-registry",
       run: () => {
         prometheusProviderRegistry
           .registerProvider(new PrometheusLens())

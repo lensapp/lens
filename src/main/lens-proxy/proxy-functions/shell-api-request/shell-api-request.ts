@@ -7,7 +7,7 @@ import logger from "../../../logger";
 import type WebSocket from "ws";
 import { Server as WebSocketServer } from "ws";
 import type { ProxyApiRequestArgs } from "../types";
-import type { ClusterManager } from "../../../cluster-manager";
+import type { ClusterManager } from "../../../cluster/manager";
 import URLParse from "url-parse";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
