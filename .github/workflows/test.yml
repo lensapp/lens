@@ -8,7 +8,7 @@ on:
       - master
 jobs:
   test:
-    name: Run '${{ matrix.type }}' Tests
+    name: ${{ matrix.type }} tests on ${{ matix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
