@@ -26,7 +26,6 @@
     "compile:main": "yarn run webpack --config webpack/main.ts",
     "compile:renderer": "yarn run webpack --config webpack/renderer.ts",
     "compile:extension-types": "yarn run webpack --config webpack/extensions.ts",
-    "npm:fix-build-version": "yarn run ts-node build/set_build_version.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
     "build:linux": "yarn run compile && electron-builder --linux --dir",
     "build:mac": "yarn run compile && electron-builder --mac --dir",

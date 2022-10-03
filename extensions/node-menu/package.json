@@ -1,6 +1,6 @@
 {
   "name": "lens-node-menu",
-  "version": "0.0.1",
+  "version": "6.1.0",
   "description": "Lens node menu",
   "renderer": "dist/renderer.js",
   "lens": {
