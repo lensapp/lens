@@ -26,6 +26,8 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
     const stdoutStream = new Writable(stdoutBuffer);
 
     const handler = (page: Page) => {
+      console.log(`Page opened: ${page.url()}`);
+
       if (page.url().startsWith("http://localhost")) {
         cleanup();
         resolve(page);
