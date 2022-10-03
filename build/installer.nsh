@@ -1,10 +1,6 @@
 !macro customInit
   ; Make sure all old extensions are removed
   RMDir /r "$INSTDIR\resources\extensions"
-  ; Workaround for old node_modules having already duplicate extensions
-  RMDir /r "$APPDATA\${APP_FILENAME}\node_modules\lens-license"
-  RMDir /r "$APPDATA\${APP_FILENAME}\node_modules\lens-survey"
-  RMDir /r "$APPDATA\${APP_FILENAME}\node_modules\lens-telemetry"
 
   ; Workaround for installer handing when the app directory is removed manually
   ${ifNot} ${FileExists} "$INSTDIR"
