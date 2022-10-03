@@ -10,6 +10,7 @@ const setupImmerInjectable = getInjectable({
   id: "setup-immer",
 
   instantiate: () => ({
+    id: "setup-immer",
     run: () => {
       // Docs: https://immerjs.github.io/immer/
       // Required in `utils/storage-helper.ts`

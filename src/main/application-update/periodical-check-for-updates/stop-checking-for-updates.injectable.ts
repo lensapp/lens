@@ -13,6 +13,7 @@ const stopCheckingForUpdatesInjectable = getInjectable({
     const periodicalCheckForUpdates = di.inject(periodicalCheckForUpdatesInjectable);
 
     return {
+      id: "stop-checking-for-updates",
       run: async () => {
         if (periodicalCheckForUpdates.started) {
           await periodicalCheckForUpdates.stop();

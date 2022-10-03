@@ -11,6 +11,7 @@ const setupHotbarStoreInjectable = getInjectable({
   id: "setup-hotbar-store",
 
   instantiate: (di) => ({
+    id: "setup-hotbar-store",
     run: () => {
       const hotbarStore = di.inject(hotbarStoreInjectable);
 

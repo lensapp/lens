@@ -13,6 +13,7 @@ const startListeningOfChannelsInjectable = getInjectable({
     const listeningOfChannels = di.inject(listeningOfChannelsInjectable);
 
     return {
+      id: "start-listening-of-channels-renderer",
       run: async () => {
         await listeningOfChannels.start();
       },

@@ -12,10 +12,10 @@ import { appEventBus } from "../../../../common/app-event-bus/event-bus";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
-import type { ClusterManager } from "../../../cluster-manager";
+import type { ClusterManager } from "../../../cluster/manager";
 import { ResourceApplier } from "../../../resource-applier";
 import { remove } from "fs-extra";
-import type { IComputedValue } from "mobx";
+import type { IComputedValue, ObservableSet } from "mobx";
 import type { GetAbsolutePath } from "../../../../common/path/get-absolute-path.injectable";
 import type { MenuItemOpts } from "../../../menu/application-menu-items.injectable";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
@@ -34,9 +34,20 @@ interface Dependencies {
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
+  clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
 }
 
-export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore, operatingSystemTheme, askUserForFilePaths }: Dependencies) => {
+export const setupIpcMainHandlers = ({
+  applicationMenuItems,
+  directoryForLensLocalStorage,
+  getAbsolutePath,
+  clusterManager,
+  catalogEntityRegistry,
+  clusterStore,
+  operatingSystemTheme,
+  askUserForFilePaths,
+  clustersThatAreBeingDeleted,
+}: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -101,11 +112,11 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
   });
 
   ipcMainHandle(clusterSetDeletingHandler, (event, clusterId: string) => {
-    clusterManager.deleting.add(clusterId);
+    clustersThatAreBeingDeleted.add(clusterId);
   });
 
   ipcMainHandle(clusterClearDeletingHandler, (event, clusterId: string) => {
-    clusterManager.deleting.delete(clusterId);
+    clustersThatAreBeingDeleted.delete(clusterId);
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
