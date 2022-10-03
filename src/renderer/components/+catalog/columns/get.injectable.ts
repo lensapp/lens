@@ -47,7 +47,10 @@ const getCategoryColumnsInjectable = getInjectable({
         }
 
         tableRowRenderers.push(registration.renderCell);
-        renderTableHeader.push(registration.titleProps);
+        renderTableHeader.push({
+          id: registration.id,
+          ...registration.titleProps,
+        });
       }
 
       return {
