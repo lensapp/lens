@@ -19,7 +19,7 @@
         
       
       <link rel="icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-7.1.8+insiders-2.9.2">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-7.1.8+insiders-2.9.2">
     
     
       
@@ -1024,7 +1024,8 @@ network. Cannot be updated.</p>
 <p>• <code>Optional</code> <strong>stdin</strong>: <code>boolean</code></p>
 <p>Whether this container should allocate a buffer for stdin in the container runtime. If this is
 not set, reads from stdin in the container will always result in EOF.</p>
-<p><strong><code>default</code></strong> false</p>
+<p><strong><code>Default</code></strong></p>
+<p>false</p>
 <hr />
 <h3 id="stdinonce">stdinOnce<a class="headerlink" href="#stdinonce" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>stdinOnce</strong>: <code>boolean</code></p>
@@ -1035,7 +1036,8 @@ sessions.</p>
 client attaches to stdin, and then remains open and accepts data until the client disconnects,
 at which time stdin is closed and remains closed until the container is restarted.</p>
 <p>If this flag is false, a container processes that reads from stdin will never receive an EOF.</p>
-<p><strong><code>default</code></strong> false</p>
+<p><strong><code>Default</code></strong></p>
+<p>false</p>
 <hr />
 <h3 id="terminationmessagepath">terminationMessagePath<a class="headerlink" href="#terminationmessagepath" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>terminationMessagePath</strong>: <code>string</code></p>
@@ -1044,7 +1046,8 @@ is mounted into the container's filesystem. Message written is intended to be br
 status, such as an assertion failure message.</p>
 <p>Will be truncated by the node if greater than 4096 bytes.
 The total message length across all containers will be limited to 12kb. Cannot be updated.</p>
-<p><strong><code>default</code></strong> "/dev/termination-log"</p>
+<p><strong><code>Default</code></strong></p>
+<p>"/dev/termination-log"</p>
 <hr />
 <h3 id="terminationmessagepolicy">terminationMessagePolicy<a class="headerlink" href="#terminationmessagepolicy" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>terminationMessagePolicy</strong>: <code>"File"</code> | <code>"FallbackToLogsOnError"</code></p>
@@ -1060,12 +1063,14 @@ termination message file is empty and the container exited with an error.</p>
 </li>
 </ul>
 <p>The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Cannot be updated.</p>
-<p><strong><code>default</code></strong> "File"</p>
+<p><strong><code>Default</code></strong></p>
+<p>"File"</p>
 <hr />
 <h3 id="tty">tty<a class="headerlink" href="#tty" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>tty</strong>: <code>boolean</code></p>
 <p>Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.</p>
-<p><strong><code>default</code></strong> false</p>
+<p><strong><code>Default</code></strong></p>
+<p>false</p>
 <hr />
 <h3 id="volumedevices">volumeDevices<a class="headerlink" href="#volumedevices" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>volumeDevices</strong>: <code>VolumeDevice</code>[]</p>

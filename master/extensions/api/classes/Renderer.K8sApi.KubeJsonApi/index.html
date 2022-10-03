@@ -13,17 +13,17 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Util/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeJsonApi/">
       
       
         
       
       <link rel="icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-7.1.8+insiders-2.9.2">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-7.1.8+insiders-2.9.2">
     
     
       
-        <title>Namespace: Util - Lens Extension Development</title>
+        <title>Class: KubeJsonApi - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#namespace-util" class="md-skip">
+        <a href="#class-kubejsonapi" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Namespace: Util
+              Class: KubeJsonApi
             
           </span>
         </div>
@@ -712,6 +712,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -720,15 +727,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
-    Classes
+  <a href="#constructors" class="md-nav__link">
+    Constructors
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#functions" class="md-nav__link">
-    Functions
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
   </a>
   
 </li>
@@ -739,51 +753,161 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#functions_1" class="md-nav__link">
-    Functions
+  <a href="#constructors_1" class="md-nav__link">
+    Constructors
   </a>
   
-    <nav class="md-nav" aria-label="Functions">
+    <nav class="md-nav" aria-label="Constructors">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cssnames" class="md-nav__link">
-    cssNames
+  <a href="#constructor" class="md-nav__link">
+    constructor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties_1" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config" class="md-nav__link">
+    config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getappversion" class="md-nav__link">
-    getAppVersion
+  <a href="#ondata" class="md-nav__link">
+    onData
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#openbrowser" class="md-nav__link">
-    openBrowser
+  <a href="#onerror" class="md-nav__link">
+    onError
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#openexternal" class="md-nav__link">
-    openExternal
+  <a href="#reqinit" class="md-nav__link">
+    reqInit
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#prevdefault" class="md-nav__link">
-    prevDefault
+  <a href="#configdefault" class="md-nav__link">
+    configDefault
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#stoppropagation" class="md-nav__link">
-    stopPropagation
+  <a href="#reqinitdefault" class="md-nav__link">
+    reqInitDefault
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#del" class="md-nav__link">
+    del
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get" class="md-nav__link">
+    get
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getresponse" class="md-nav__link">
+    getResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseerror" class="md-nav__link">
+    parseError
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseresponse" class="md-nav__link">
+    parseResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patch" class="md-nav__link">
+    patch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post" class="md-nav__link">
+    post
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#put" class="md-nav__link">
+    put
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request" class="md-nav__link">
+    request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writelog" class="md-nav__link">
+    writeLog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forcluster" class="md-nav__link">
+    forCluster
   </a>
   
 </li>
@@ -807,25 +931,44 @@
                 
                 
                 
-                <h1 id="namespace-util">Namespace: Util<a class="headerlink" href="#namespace-util" title="Permanent link">#</a></h1>
-<p><a href="../Common/">Common</a>.Util</p>
+                <h1 id="class-kubejsonapi">Class: KubeJsonApi<a class="headerlink" href="#class-kubejsonapi" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeJsonApi</p>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><code>JsonApi</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>></li>
+</ul>
+<p>↳ <strong><code>KubeJsonApi</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
+<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="../../classes/Common.Util.Singleton/">Singleton</a></li>
+<li><a href="./#constructor">constructor</a></li>
 </ul>
-<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#cssnames">cssNames</a></li>
-<li><a href="./#getappversion">getAppVersion</a></li>
-<li><a href="./#openbrowser">openBrowser</a></li>
-<li><a href="./#openexternal">openExternal</a></li>
-<li><a href="./#prevdefault">prevDefault</a></li>
-<li><a href="./#stoppropagation">stopPropagation</a></li>
+<li><a href="./#config">config</a></li>
+<li><a href="./#ondata">onData</a></li>
+<li><a href="./#onerror">onError</a></li>
+<li><a href="./#reqinit">reqInit</a></li>
+<li><a href="./#configdefault">configDefault</a></li>
+<li><a href="./#reqinitdefault">reqInitDefault</a></li>
 </ul>
-<h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
-<h3 id="cssnames">cssNames<a class="headerlink" href="#cssnames" title="Permanent link">#</a></h3>
-<p>▸ <strong>cssNames</strong>(...<code>classNames</code>): <code>string</code></p>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#del">del</a></li>
+<li><a href="./#get">get</a></li>
+<li><a href="./#getresponse">getResponse</a></li>
+<li><a href="./#parseerror">parseError</a></li>
+<li><a href="./#parseresponse">parseResponse</a></li>
+<li><a href="./#patch">patch</a></li>
+<li><a href="./#post">post</a></li>
+<li><a href="./#put">put</a></li>
+<li><a href="./#request">request</a></li>
+<li><a href="./#writelog">writeLog</a></li>
+<li><a href="./#forcluster">forCluster</a></li>
+</ul>
+<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
+<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
+<p>• <strong>new KubeJsonApi</strong>(<code>config</code>, <code>reqInit?</code>)</p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -836,22 +979,46 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>...classNames</code></td>
-<td align="left"><code>IClassName</code>[]</td>
+<td align="left"><code>config</code></td>
+<td align="left"><code>JsonApiConfig</code></td>
+</tr>
+<tr>
+<td align="left"><code>reqInit?</code></td>
+<td align="left"><code>RequestInit</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p>JsonApi&lt;KubeJsonApiData>.constructor</p>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="config">config<a class="headerlink" href="#config" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>config</strong>: <code>JsonApiConfig</code></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p>JsonApi.config</p>
 <hr />
-<h3 id="getappversion">getAppVersion<a class="headerlink" href="#getappversion" title="Permanent link">#</a></h3>
-<p>▸ <strong>getAppVersion</strong>(): <code>string</code></p>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
+<h3 id="ondata">onData<a class="headerlink" href="#ondata" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>onData</strong>: <code>EventEmitter</code>&lt;[<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>, <code>Response</code>]></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>JsonApi.onData</p>
 <hr />
-<h3 id="openbrowser">openBrowser<a class="headerlink" href="#openbrowser" title="Permanent link">#</a></h3>
-<p>▸ <strong>openBrowser</strong>(<code>url</code>): <code>Promise</code>&lt;<code>void</code>></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<h3 id="onerror">onError<a class="headerlink" href="#onerror" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>onError</strong>: <code>EventEmitter</code>&lt;[<code>JsonApiErrorParsed</code>, <code>Response</code>]></p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>JsonApi.onError</p>
+<hr />
+<h3 id="reqinit">reqInit<a class="headerlink" href="#reqinit" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>reqInit</strong>: <code>Defaulted</code>&lt;<code>RequestInit</code>, <code>"headers"</code>></p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p>JsonApi.reqInit</p>
+<hr />
+<h3 id="configdefault">configDefault<a class="headerlink" href="#configdefault" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>configDefault</strong>: <code>Partial</code>&lt;<code>JsonApiConfig</code>></p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p>JsonApi.configDefault</p>
+<hr />
+<h3 id="reqinitdefault">reqInitDefault<a class="headerlink" href="#reqinitdefault" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <code>Readonly</code> <strong>reqInitDefault</strong>: <code>Object</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -861,37 +1028,20 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>url</code></td>
+<td align="left"><code>headers</code></td>
+<td align="left">{ <code>content-type</code>: <code>string</code> = "application/json" }</td>
+</tr>
+<tr>
+<td align="left"><code>headers.content-type</code></td>
 <td align="left"><code>string</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
-<hr />
-<h3 id="openexternal">openExternal<a class="headerlink" href="#openexternal" title="Permanent link">#</a></h3>
-<p>▸ <strong>openExternal</strong>(<code>url</code>): <code>Promise</code>&lt;<code>void</code>></p>
-<p><strong><code>deprecated</code></strong> Use <a href="./#openbrowser">openBrowser</a> instead</p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>url</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
-<hr />
-<h3 id="prevdefault">prevDefault<a class="headerlink" href="#prevdefault" title="Permanent link">#</a></h3>
-<p>▸ <strong>prevDefault</strong>&lt;<code>E</code>>(<code>callback</code>): (<code>evt</code>: <code>E</code>) =&gt; <code>any</code></p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p>JsonApi.reqInitDefault</p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="del">del<a class="headerlink" href="#del" title="Permanent link">#</a></h3>
+<p>▸ <strong>del</strong>&lt;<code>OutData</code>, <code>Query</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>OutData</code>></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -902,8 +1052,104 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>E</code></td>
-<td align="left">extends <code>Event</code> | <code>SyntheticEvent</code>&lt;<code>Element</code>, <code>Event</code>></td>
+<td align="left"><code>OutData</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
+</tr>
+<tr>
+<td align="left"><code>Query</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>QueryParam</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><code>ParamsAndQuery</code>&lt;<code>JsonApiParams</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>, <code>Query</code>></td>
+</tr>
+<tr>
+<td align="left"><code>reqInit</code></td>
+<td align="left"><code>RequestInit</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p>JsonApi.del</p>
+<hr />
+<h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">#</a></h3>
+<p>▸ <strong>get</strong>&lt;<code>OutData</code>, <code>Query</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>OutData</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
+</tr>
+<tr>
+<td align="left"><code>Query</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>QueryParam</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><code>ParamsAndQuery</code>&lt;<code>JsonApiParams</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>, <code>Query</code>></td>
+</tr>
+<tr>
+<td align="left"><code>reqInit</code></td>
+<td align="left"><code>RequestInit</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p>JsonApi.get</p>
+<hr />
+<h3 id="getresponse">getResponse<a class="headerlink" href="#getresponse" title="Permanent link">#</a></h3>
+<p>▸ <strong>getResponse</strong>&lt;<code>Query</code>>(<code>path</code>, <code>params?</code>, <code>init?</code>): <code>Promise</code>&lt;<code>Response</code>></p>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Query</code></td>
 </tr>
 </tbody>
 </table>
@@ -917,15 +1163,27 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>callback</code></td>
-<td align="left">(<code>evt</code>: <code>E</code>) =&gt; <code>any</code></td>
+<td align="left"><code>path</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><code>ParamsAndQuery</code>&lt;<code>JsonApiParams</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>, <code>Query</code>></td>
+</tr>
+<tr>
+<td align="left"><code>init</code></td>
+<td align="left"><code>RequestInit</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>fn</code></p>
-<p>▸ (<code>evt</code>): <code>any</code></p>
-<h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h5>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>Response</code>></p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p>JsonApi.getResponse</p>
+<hr />
+<h3 id="parseerror">parseError<a class="headerlink" href="#parseerror" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>parseError</strong>(<code>error</code>, <code>res</code>): <code>string</code>[]</p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -935,16 +1193,35 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>evt</code></td>
-<td align="left"><code>E</code></td>
+<td align="left"><code>error</code></td>
+<td align="left"><code>string</code> | <code>KubeJsonApiError</code></td>
+</tr>
+<tr>
+<td align="left"><code>res</code></td>
+<td align="left"><code>Response</code></td>
 </tr>
 </tbody>
 </table>
-<h5 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h5>
-<p><code>any</code></p>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
+<p>JsonApi.parseError</p>
 <hr />
-<h3 id="stoppropagation">stopPropagation<a class="headerlink" href="#stoppropagation" title="Permanent link">#</a></h3>
-<p>▸ <strong>stopPropagation</strong>(<code>evt</code>): <code>void</code></p>
+<h3 id="parseresponse">parseResponse<a class="headerlink" href="#parseresponse" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>parseResponse</strong>&lt;<code>OutData</code>>(<code>res</code>, <code>log</code>): <code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>OutData</code></td>
+</tr>
+</tbody>
+</table>
 <h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -955,13 +1232,257 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>evt</code></td>
-<td align="left"><code>Event</code> | <code>SyntheticEvent</code>&lt;<code>Element</code>, <code>Event</code>></td>
+<td align="left"><code>res</code></td>
+<td align="left"><code>Response</code></td>
+</tr>
+<tr>
+<td align="left"><code>log</code></td>
+<td align="left"><code>JsonApiLog</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p>JsonApi.parseResponse</p>
+<hr />
+<h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
+<p>▸ <strong>patch</strong>&lt;<code>OutData</code>, <code>Query</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>OutData</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
+</tr>
+<tr>
+<td align="left"><code>Query</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>QueryParam</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><code>ParamsAndQuery</code>&lt;<code>Omit</code>&lt;<code>JsonApiParams</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>, <code>"data"</code>>, <code>Query</code>> &amp; { <code>data?</code>: <code>Patch</code> | <code>PartialObjectDeep</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>  }</td>
+</tr>
+<tr>
+<td align="left"><code>reqInit</code></td>
+<td align="left"><code>RequestInit</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p>JsonApi.patch</p>
+<hr />
+<h3 id="post">post<a class="headerlink" href="#post" title="Permanent link">#</a></h3>
+<p>▸ <strong>post</strong>&lt;<code>OutData</code>, <code>Query</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>OutData</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
+</tr>
+<tr>
+<td align="left"><code>Query</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>QueryParam</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><code>ParamsAndQuery</code>&lt;<code>JsonApiParams</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>, <code>Query</code>></td>
+</tr>
+<tr>
+<td align="left"><code>reqInit</code></td>
+<td align="left"><code>RequestInit</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p>JsonApi.post</p>
+<hr />
+<h3 id="put">put<a class="headerlink" href="#put" title="Permanent link">#</a></h3>
+<p>▸ <strong>put</strong>&lt;<code>OutData</code>, <code>Query</code>>(<code>path</code>, <code>params?</code>, <code>reqInit?</code>): <code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>OutData</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>></td>
+</tr>
+<tr>
+<td align="left"><code>Query</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>QueryParam</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><code>ParamsAndQuery</code>&lt;<code>JsonApiParams</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>, <code>Query</code>></td>
+</tr>
+<tr>
+<td align="left"><code>reqInit</code></td>
+<td align="left"><code>RequestInit</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p>JsonApi.put</p>
+<hr />
+<h3 id="request">request<a class="headerlink" href="#request" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>request</strong>&lt;<code>OutData</code>, <code>Query</code>>(<code>path</code>, <code>params</code>, <code>init</code>): <code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="type-parameters_7">Type parameters<a class="headerlink" href="#type-parameters_7" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>OutData</code></td>
+<td align="left"><code>OutData</code></td>
+</tr>
+<tr>
+<td align="left"><code>Query</code></td>
+<td align="left"><code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>QueryParam</code>>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params</code></td>
+<td align="left"><code>undefined</code> | <code>ParamsAndQuery</code>&lt;<code>Omit</code>&lt;<code>JsonApiParams</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>>, <code>"data"</code>>, <code>Query</code>> &amp; { <code>data?</code>: <code>unknown</code>  }</td>
+</tr>
+<tr>
+<td align="left"><code>init</code></td>
+<td align="left"><code>Defaulted</code>&lt;<code>RequestInit</code>, <code>"method"</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>OutData</code>></p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p>JsonApi.request</p>
+<hr />
+<h3 id="writelog">writeLog<a class="headerlink" href="#writelog" title="Permanent link">#</a></h3>
+<p>▸ <code>Protected</code> <strong>writeLog</strong>(<code>log</code>): <code>void</code></p>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>log</code></td>
+<td align="left"><code>JsonApiLog</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<p>JsonApi.writeLog</p>
+<hr />
+<h3 id="forcluster">forCluster<a class="headerlink" href="#forcluster" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>forCluster</strong>(<code>clusterId</code>): <a href="./"><code>KubeJsonApi</code></a></p>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>clusterId</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<p><a href="./"><code>KubeJsonApi</code></a></p>
                 
               
               

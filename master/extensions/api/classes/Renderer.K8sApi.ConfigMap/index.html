@@ -19,7 +19,7 @@
         
       
       <link rel="icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-7.1.8+insiders-2.9.2">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-7.1.8+insiders-2.9.2">
     
     
       
@@ -1244,7 +1244,8 @@
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">#</a></h3>
 <p>▸ <strong>delete</strong>(<code>params?</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
-<p><strong><code>deprecated</code></strong> use KubeApi.delete instead</p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>use KubeApi.delete instead</p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1267,7 +1268,8 @@
 <hr />
 <h3 id="getage">getAge<a class="headerlink" href="#getage" title="Permanent link">#</a></h3>
 <p>▸ <strong>getAge</strong>(<code>humanize?</code>, <code>compact?</code>, <code>fromNow?</code>): <code>string</code> | <code>number</code></p>
-<p><strong><code>deprecated</code></strong> This function computes a new "now" on every call might cause subtle issues if called multiple times</p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>This function computes a new "now" on every call might cause subtle issues if called multiple times</p>
 <p>NOTE: this function also is not reactive to updates in the current time so it should not be used for renderering</p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
@@ -1404,7 +1406,8 @@ creation timestamp of this object.</p>
 <hr />
 <h3 id="gettimedifffromnow">getTimeDiffFromNow<a class="headerlink" href="#gettimedifffromnow" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTimeDiffFromNow</strong>(): <code>number</code></p>
-<p><strong><code>deprecated</code></strong> This function computes a new "now" on every call which might cause subtle issues if called multiple times</p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>This function computes a new "now" on every call which might cause subtle issues if called multiple times</p>
 <p>NOTE: Generally you can use <code>getCreationTimestamp</code> instead.</p>
 <h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
@@ -1413,7 +1416,8 @@ creation timestamp of this object.</p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
 <p>▸ <strong>patch</strong>(<code>patch</code>): <code>Promise</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
-<p><strong><code>deprecated</code></strong> use KubeApi.patch instead</p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>use KubeApi.patch instead</p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1447,7 +1451,8 @@ creation timestamp of this object.</p>
 <p>Note: this is brittle if <code>data</code> is not actually partial (but instead whole).
 As fields such as <code>resourceVersion</code> will probably out of date. This is a
 common race condition.</p>
-<p><strong><code>deprecated</code></strong> use KubeApi.update instead</p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>use KubeApi.update instead</p>
 <h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>

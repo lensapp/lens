@@ -19,7 +19,7 @@
         
       
       <link rel="icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-7.1.8+insiders-2.9.2">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-7.1.8+insiders-2.9.2">
     
     
       
@@ -1069,12 +1069,12 @@
 <h3 id="disposers">[Disposers]<a class="headerlink" href="#disposers" title="Permanent link">#</a></h3>
 <p>• <strong>[Disposers]</strong>: <code>ExtendableDisposer</code></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>LensExtension.__@Disposers@29133</p>
+<p>LensExtension.__@Disposers@29308</p>
 <hr />
 <h3 id="lensextensiondependencies">[lensExtensionDependencies]<a class="headerlink" href="#lensextensiondependencies" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>[lensExtensionDependencies]</strong>: <code>LensMainExtensionDependencies</code></p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p>LensExtension.__@lensExtensionDependencies@29136</p>
+<p>LensExtension.__@lensExtensionDependencies@29311</p>
 <hr />
 <h3 id="appmenus">appMenus<a class="headerlink" href="#appmenus" title="Permanent link">#</a></h3>
 <p>• <strong>appMenus</strong>: <code>MenuRegistration</code>[] = <code>[]</code></p>
@@ -1108,9 +1108,11 @@
 <p>• <code>Optional</code> <strong>terminalShellEnvModifier</strong>: <a href="../../modules/Common.Types/#shellenvmodifier"><code>ShellEnvModifier</code></a></p>
 <p>implement this to modify the shell environment that Lens terminals are opened with. The ShellEnvModifier type has the signature</p>
 <p>(ctx: ShellEnvContext, env: Record<string, string | undefined>) =&gt; Record<string, string | undefined></p>
-<p><strong><code>param</code></strong> the shell environment context, specifically the relevant catalog entity for the terminal. This can be used, for example, to get
+<p><strong><code>Param</code></strong></p>
+<p>the shell environment context, specifically the relevant catalog entity for the terminal. This can be used, for example, to get
 cluster-specific information that can be made available in the shell environment by the implementation of terminalShellEnvModifier</p>
-<p><strong><code>param</code></strong> the current shell environment that the terminal will be opened with. The implementation should modify this as desired.</p>
+<p><strong><code>Param</code></strong></p>
+<p>the current shell environment that the terminal will be opened with. The implementation should modify this as desired.</p>
 <hr />
 <h3 id="traymenus">trayMenus<a class="headerlink" href="#traymenus" title="Permanent link">#</a></h3>
 <p>• <strong>trayMenus</strong>: <a href="../../interfaces/Common.Types.TrayMenuRegistration/"><code>TrayMenuRegistration</code></a>[] = <code>[]</code></p>
