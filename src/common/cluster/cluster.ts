@@ -16,7 +16,7 @@ import type { VersionDetector } from "../../main/cluster-detectors/version-detec
 import type { DetectorRegistry } from "../../main/cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
-import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../cluster-types";
+import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
 import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
@@ -237,9 +237,16 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.preferences.defaultNamespace;
   }
 
-  constructor(private readonly dependencies: ClusterDependencies, model: ClusterModel, configData: ClusterConfigData) {
+  constructor(private readonly dependencies: ClusterDependencies, { id, ...model }: ClusterModel, configData: ClusterConfigData) {
     makeObservable(this);
-    this.id = model.id;
+
+    const { error } = clusterModelIdChecker.validate({ id });
+
+    if (error) {
+      throw error;
+    }
+
+    this.id = id;
     this.updateModel(model);
     this.apiUrl = configData.clusterServerUrl;
 
@@ -260,6 +267,12 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @action updateModel(model: UpdateClusterModel) {
     // Note: do not assign ID as that should never be updated
+
+    const { error } = updateClusterModelChecker.validate(model, { allowUnknown: true });
+
+    if (error) {
+      throw error;
+    }
 
     this.kubeConfigPath = model.kubeConfigPath;
     this.contextName = model.contextName;
