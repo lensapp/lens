@@ -13,8 +13,9 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
           class="items"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="home-button"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -398,8 +399,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           class="items"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="home-button"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -816,8 +818,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           class="items"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="home-button"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1313,8 +1316,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           class="items"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="home-button"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1810,8 +1814,9 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
           class="items"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="home-button"
+            tabindex="0"
           >
             <span
               class="icon"

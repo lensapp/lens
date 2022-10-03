@@ -26,9 +26,12 @@ import requestHelmChartsInjectable from "../../../common/k8s-api/endpoints/helm-
 import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 import requestHelmChartReadmeInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
 import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
+import type { RequestDetailedHelmRelease } from "../../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
+import requestDetailedHelmReleaseInjectable from "../../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;
+  let requestDetailedHelmReleaseMock: AsyncFnMock<RequestDetailedHelmRelease>;
   let requestHelmChartsMock: AsyncFnMock<RequestHelmCharts>;
   let requestHelmChartVersionsMock: AsyncFnMock<RequestHelmChartVersions>;
   let requestHelmChartReadmeMock: AsyncFnMock<RequestHelmChartReadme>;
@@ -40,6 +43,7 @@ describe("installing helm chart from new tab", () => {
 
     builder.setEnvironmentToClusterFrame();
 
+    requestDetailedHelmReleaseMock = asyncFn();
     requestHelmChartsMock = asyncFn();
     requestHelmChartVersionsMock = asyncFn();
     requestHelmChartReadmeMock = asyncFn();
@@ -48,6 +52,7 @@ describe("installing helm chart from new tab", () => {
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
+      windowDi.override(requestDetailedHelmReleaseInjectable, () => requestDetailedHelmReleaseMock);
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartReadmeInjectable, () => requestHelmChartReadmeMock);
