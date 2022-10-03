@@ -10,6 +10,8 @@ import * as uuid from "uuid";
 import type { ElectronApplication, Frame, Page } from "playwright";
 import { _electron as electron } from "playwright";
 import { noop } from "lodash";
+import { disposer } from "../../src/common/utils";
+import { Writable } from "stream";
 
 export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
@@ -18,19 +20,32 @@ export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
 };
 
 async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promise<Page> {
-  const deadline = Date.now() + timeout;
+  return new Promise((resolve, reject) => {
+    const cleanup = disposer();
+    const stdoutBuffer = Buffer.from("");
+    const stdoutStream = new Writable(stdoutBuffer);
 
-  for (; Date.now() < deadline;) {
-    for (const page of app.windows()) {
+    const handler = (page: Page) => {
       if (page.url().startsWith("http://localhost")) {
-        return page;
+        cleanup();
+        resolve(page);
       }
-    }
+    };
 
-    await new Promise(resolve => setTimeout(resolve, 2_000));
-  }
+    app.addListener("window", handler);
+    cleanup.push(() => app.removeListener("window", handler));
 
-  throw new Error(`Lens did not open the main window within ${timeout}ms`);
+    app.process().stdout?.pipe(stdoutStream);
+    cleanup.push(() => app.process().stdout?.unpipe(stdoutStream));
+
+    const timeoutId = setTimeout(() => {
+      cleanup();
+      console.log(stdoutBuffer.toString("utf8"));
+      reject(new Error(`Lens did not open the main window within ${timeout}ms`));
+    }, timeout);
+
+    cleanup.push(() => clearTimeout(timeoutId));
+  });
 }
 
 async function attemptStart() {
@@ -49,7 +64,7 @@ async function attemptStart() {
       ...process.env,
     },
     timeout: 100_000,
-  } as Parameters<typeof electron["launch"]>[0]);
+  });
 
   try {
     const window = await getMainWindow(app);
