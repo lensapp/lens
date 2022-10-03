@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { AppPaths } from "./token";
-import type { RequestChannel } from "../utils/channel/request-channel-injection-token";
+import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
 
 export type AppPathsChannel = RequestChannel<void, AppPaths>;
 

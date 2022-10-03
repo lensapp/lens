@@ -11,11 +11,12 @@ import { StorageHelper } from "../storageHelper";
 import type { JsonObject, JsonValue } from "type-fest";
 import type { Logger } from "../../../common/logger";
 import type { JoinPaths } from "../../../common/path/join-paths.injectable";
+import type { LazyInitializableState } from "../../../common/initializable-state/create-lazy";
 
 interface Dependencies {
   storage: { initialized: boolean; loaded: boolean; data: Record<string, any> };
   logger: Logger;
-  directoryForLensLocalStorage: string;
+  directoryForLensLocalStorage: LazyInitializableState<string>;
   readJsonFile: (filePath: string) => Promise<JsonValue>;
   writeJsonFile: (filePath: string, contentObject: JsonObject) => Promise<void>;
   joinPaths: JoinPaths;
@@ -44,7 +45,7 @@ export const createStorage = ({
     storage.initialized = true;
 
     (async () => {
-      const filePath = joinPaths(directoryForLensLocalStorage, `${hostedClusterId || "app"}.json`);
+      const filePath = joinPaths(directoryForLensLocalStorage.get(), `${hostedClusterId || "app"}.json`);
 
       try {
         storage.data = (await readJsonFile(filePath)) as JsonObject;

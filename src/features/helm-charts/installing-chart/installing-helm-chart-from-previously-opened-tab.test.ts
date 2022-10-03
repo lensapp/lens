@@ -39,7 +39,9 @@ describe("installing helm chart from previously opened tab", () => {
     builder.beforeWindowStart((windowDi) => {
       storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
-      windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
+      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
+        get: () => "/some-directory-for-lens-local-storage",
+      }));
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);

@@ -39,10 +39,9 @@ describe("cluster - sidebar and tab navigation for core", () => {
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(storageSaveDelayInjectable, () => 250);
 
-      windowDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/some-directory-for-lens-local-storage",
-      );
+      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
+        get: () => "/some-directory-for-lens-local-storage",
+      }));
     });
   });
 

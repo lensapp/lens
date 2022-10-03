@@ -5,7 +5,7 @@
 
 import type { DiContainer } from "@ogre-tools/injectable";
 import { WebSocket } from "ws";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import platformInjectable from "../../../common/vars/platform.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -25,7 +25,9 @@ describe("technical unit tests for local shell sessions", () => {
       doGeneralOverrides: true,
     });
 
-    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => ({
+      get: () => "/some-directory-for-user-data",
+    }));
     di.override(buildVersionInjectable, () => ({
       get: () => "1.1.1",
     }));

@@ -11,13 +11,14 @@ import path from "path";
 import { BaseStore } from "../../../common/base-store";
 import type { LensExtensionId } from "../../lens-extension";
 import { getOrInsertWith, toJS } from "../../../common/utils";
+import type { LazyInitializableState } from "../../../common/initializable-state/create-lazy";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
 interface Dependencies {
-  directoryForExtensionData: string;
+  readonly directoryForExtensionData: LazyInitializableState<string>;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
@@ -45,7 +46,7 @@ export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
       const salt = randomBytes(32).toString("hex");
       const hashedName = SHA256(`${extensionName}/${salt}`).toString();
 
-      return path.resolve(this.dependencies.directoryForExtensionData, hashedName);
+      return path.resolve(this.dependencies.directoryForExtensionData.get(), hashedName);
     });
 
     await fse.ensureDir(dirPath);

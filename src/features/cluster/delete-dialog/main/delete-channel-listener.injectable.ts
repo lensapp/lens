@@ -38,7 +38,7 @@ const deleteClusterChannelListenerInjectable = getRequestChannelListenerInjectab
       clusterStore.clusters.delete(cluster.id);
 
       // remove the local storage file
-      const localStorageFilePath = joinPaths(directoryForLensLocalStorage, `${cluster.id}.json`);
+      const localStorageFilePath = joinPaths(directoryForLensLocalStorage.get(), `${cluster.id}.json`);
 
       await deleteFile(localStorageFilePath).catch(noop);
     };

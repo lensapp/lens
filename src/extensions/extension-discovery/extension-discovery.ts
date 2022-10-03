@@ -15,7 +15,7 @@ import type { ExtensionInstallationStateStore } from "../extension-installation-
 import type { PackageJson } from "type-fest";
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
 import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
-import type { ReadJson } from "../../common/fs/read-json-file.injectable";
+import type { ReadJsonFile } from "../../common/fs/read-json-file.injectable";
 import type { Logger } from "../../common/logger";
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { Watch } from "../../common/fs/watch/watch.injectable";
@@ -47,7 +47,7 @@ interface Dependencies {
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
   installExtension: (name: string) => Promise<void>;
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
-  readJsonFile: ReadJson;
+  readJsonFile: ReadJsonFile;
   pathExists: PathExists;
   removePath: RemovePath;
   lstat: LStat;

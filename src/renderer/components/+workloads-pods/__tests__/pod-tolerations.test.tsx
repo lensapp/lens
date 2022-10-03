@@ -40,7 +40,9 @@ describe("<PodTolerations />", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForLensLocalStorageInjectable, () => "some-directory-for-lens-local-storage" );
+    di.override(directoryForLensLocalStorageInjectable, () => ({
+      get: () => "some-directory-for-lens-local-storage",
+    }));
 
     render = renderFor(di);
   });

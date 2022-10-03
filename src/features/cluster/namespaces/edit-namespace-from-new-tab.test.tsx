@@ -45,10 +45,9 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
     showErrorNotificationMock = jest.fn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/some-directory-for-lens-local-storage",
-      );
+      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
+        get: () => "/some-directory-for-lens-local-storage",
+      }));
 
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 

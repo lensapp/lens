@@ -34,7 +34,6 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import releaseChannelInjectable from "../vars/release-channel.injectable";
-import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -58,7 +57,6 @@ describe("user store tests", () => {
       get: () => "latest" as const,
       init: async () => {},
     }));
-    await di.inject(defaultUpdateChannelInjectable).init();
 
     di.unoverride(userStoreInjectable);
   });

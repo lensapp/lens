@@ -6,7 +6,6 @@
 import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import fse from "fs-extra";
 import { DockTabs } from "../dock-tabs";
 import type { DockStore, DockTab } from "../dock/store";
 import { TabKind } from "../dock/store";
@@ -16,7 +15,6 @@ import dockStoreInjectable from "../dock/store.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
-import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import assert from "assert";
 import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 
@@ -78,20 +76,13 @@ describe("<DockTabs />", () => {
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");
     di.override(directoryForUserDataInjectable, () => ({
-      get: () => "some-test-suite-specific-directory-for-user-data",
+      get: () => "/some-test-suite-specific-directory-for-user-data",
     }));
-
-    di.permitSideEffects(getConfigurationFileModelInjectable);
 
     dockStore = di.inject(dockStoreInjectable);
 
     await dockStore.whenReady;
     dockStore.tabs = initialTabs;
-  });
-
-  afterEach(() => {
-    // TODO: A unit test may not cause side effects. Here accessing file system is a side effect.
-    fse.remove("some-test-suite-specific-directory-for-user-data");
   });
 
   it("renders w/o errors", () => {

@@ -30,10 +30,9 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     callForNamespaceMock = asyncFn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/some-directory-for-lens-local-storage",
-      );
+      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
+        get: () => "/some-directory-for-lens-local-storage",
+      }));
 
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 

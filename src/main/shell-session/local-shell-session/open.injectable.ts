@@ -7,7 +7,7 @@ import type { LocalShellSessionDependencies } from "./local-shell-session";
 import { LocalShellSession } from "./local-shell-session";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
 import modifyTerminalShellEnvInjectable from "../shell-env-modifier/modify-terminal-shell-env.injectable";
-import directoryForBinariesInjectable from "../../../common/app-paths/directory-for-binaries/directory-for-binaries.injectable";
+import directoryForBinariesInjectable from "../../../common/app-paths/directory-for-binaries.injectable";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";

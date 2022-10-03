@@ -2,11 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { createInitializableState } from "../initializable-state/create";
+import { createLazyInitializableState } from "../initializable-state/create-lazy";
 import buildSemanticVersionInjectable from "./build-semantic-version.injectable";
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 
-const releaseChannelInjectable = createInitializableState({
+const releaseChannelInjectable = createLazyInitializableState({
   id: "release-channel",
   init: (di): ReleaseChannel => {
     const buildSemanticVersion = di.inject(buildSemanticVersionInjectable);

@@ -7,7 +7,7 @@ import { createHash } from "crypto";
 import type { ObservableMap } from "mobx";
 import { action } from "mobx";
 import { homedir } from "os";
-import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs.injectable";
 import type { CatalogEntity } from "../../../common/catalog";
 import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
@@ -79,7 +79,7 @@ const computeKubeconfigDiffInjectable = getInjectable({
 
             const entity = catalogEntityFromCluster(cluster);
 
-            if (!filePath.startsWith(directoryForKubeConfigs)) {
+            if (!filePath.startsWith(directoryForKubeConfigs.get())) {
               entity.metadata.labels.file = filePath.replace(homedir(), "~");
             }
             source.set(contextName, [cluster, entity]);
