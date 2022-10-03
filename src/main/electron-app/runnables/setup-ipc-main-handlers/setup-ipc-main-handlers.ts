@@ -15,7 +15,7 @@ import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster/manager";
 import { ResourceApplier } from "../../../resource-applier";
 import type { IComputedValue } from "mobx";
-import type { MenuItemOpts } from "../../../menu/application-menu-items.injectable";
+import type { MenuItemOpts } from "../../../../features/application-menu/main/application-menu-items.injectable";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";

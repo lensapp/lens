@@ -3,28 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { docsUrl, supportUrl } from "../../common/vars";
-import { broadcastMessage } from "../../common/ipc";
+import { docsUrl, supportUrl } from "../../../common/vars";
+import { broadcastMessage } from "../../../common/ipc";
 import type { MenuItemConstructorOptions } from "electron";
 import { webContents } from "electron";
-import loggerInjectable from "../../common/logger.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
-import updatingIsEnabledInjectable from "../../features/application-update/main/updating-is-enabled/updating-is-enabled.injectable";
-import navigateToPreferencesInjectable from "../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
-import navigateToExtensionsInjectable from "../../common/front-end-routing/routes/extensions/navigate-to-extensions.injectable";
-import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import navigateToWelcomeInjectable from "../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
-import navigateToAddClusterInjectable from "../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
-import stopServicesAndExitAppInjectable from "../stop-services-and-exit-app.injectable";
-import isMacInjectable from "../../common/vars/is-mac.injectable";
+import updatingIsEnabledInjectable from "../../application-update/main/updating-is-enabled/updating-is-enabled.injectable";
+import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import navigateToExtensionsInjectable from "../../../common/front-end-routing/routes/extensions/navigate-to-extensions.injectable";
+import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import navigateToWelcomeInjectable from "../../../common/front-end-routing/routes/welcome/navigate-to-welcome.injectable";
+import navigateToAddClusterInjectable from "../../../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
+import stopServicesAndExitAppInjectable from "../../../main/stop-services-and-exit-app.injectable";
+import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import { computed } from "mobx";
-import showAboutInjectable from "./show-about.injectable";
-import reloadCurrentApplicationWindowInjectable from "../start-main-application/lens-window/reload-current-application-window.injectable";
-import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
-import processCheckingForUpdatesInjectable from "../../features/application-update/main/process-checking-for-updates.injectable";
-import openLinkInBrowserInjectable from "../../common/utils/open-link-in-browser.injectable";
-import appNameInjectable from "../../common/vars/app-name.injectable";
-import productNameInjectable from "../../common/vars/product-name.injectable";
+import showAboutInjectable from "./menu-items/primary-for-mac/show-about-application/show-about.injectable";
+import reloadCurrentApplicationWindowInjectable from "../../../main/start-main-application/lens-window/reload-current-application-window.injectable";
+import showApplicationWindowInjectable from "../../../main/start-main-application/lens-window/show-application-window.injectable";
+import processCheckingForUpdatesInjectable from "../../application-update/main/process-checking-for-updates.injectable";
+import openLinkInBrowserInjectable from "../../../common/utils/open-link-in-browser.injectable";
+import appNameInjectable from "../../../common/vars/app-name.injectable";
+import productNameInjectable from "../../../common/vars/product-name.injectable";
+
+
+import applicationMenuItemInjectionToken from "./menu-items/application-menu-item-injection-token";
 
 function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
@@ -46,57 +49,35 @@ const applicationMenuItemsInjectable = getInjectable({
     const electronMenuItems = di.inject(electronMenuItemsInjectable);
     const showAbout = di.inject(showAboutInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
-    const reloadApplicationWindow = di.inject(reloadCurrentApplicationWindowInjectable);
+
+    const reloadApplicationWindow = di.inject(
+      reloadCurrentApplicationWindowInjectable,
+    );
+
     const navigateToPreferences = di.inject(navigateToPreferencesInjectable);
     const navigateToExtensions = di.inject(navigateToExtensionsInjectable);
     const navigateToCatalog = di.inject(navigateToCatalogInjectable);
     const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
     const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
-    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
+
+    const processCheckingForUpdates = di.inject(
+      processCheckingForUpdatesInjectable,
+    );
+
     const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
 
     logger.info(`[MENU]: autoUpdateEnabled=${updatingIsEnabled}`);
+
+    const menuItems = di
+      .injectMany(applicationMenuItemInjectionToken)
+      .filter(x => x.isShown !== false);
 
     return computed((): MenuItemOpts[] => {
       const macAppMenu: MenuItemOpts = {
         label: appName,
         id: "root",
         submenu: [
-          {
-            label: `About ${productName}`,
-            id: "about",
-            click() {
-              showAbout();
-            },
-          },
-          ...ignoreIf(!updatingIsEnabled, [
-            {
-              id: "check-for-updates",
-              label: "Check for updates",
-              click() {
-                processCheckingForUpdates("application-menu").then(() => showApplicationWindow());
-              },
-            },
-          ]),
-          { type: "separator" },
-          {
-            label: "Preferences",
-            accelerator: "CmdOrCtrl+,",
-            id: "preferences",
-            click() {
-              navigateToPreferences();
-            },
-          },
-          {
-            label: "Extensions",
-            accelerator: "CmdOrCtrl+Shift+E",
-            id: "extensions",
-            click() {
-              navigateToExtensions();
-            },
-          },
-          { type: "separator" },
           { role: "services" },
           { type: "separator" },
           { role: "hide" },
@@ -113,6 +94,7 @@ const applicationMenuItemsInjectable = getInjectable({
           },
         ],
       };
+
       const fileMenu: MenuItemOpts = {
         label: "File",
         id: "file",
@@ -325,9 +307,10 @@ const applicationMenuItemsInjectable = getInjectable({
         appMenu.delete("mac");
       }
 
-      return [...appMenu.values()];
+      return [...menuItems, ...appMenu.values()];
     });
   },
 });
 
 export default applicationMenuItemsInjectable;
+

@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { setupIpcMainHandlers } from "./setup-ipc-main-handlers";
 import loggerInjectable from "../../../../common/logger.injectable";
 import clusterManagerInjectable from "../../../cluster/manager.injectable";
-import applicationMenuItemsInjectable from "../../../menu/application-menu-items.injectable";
+import applicationMenuItemsInjectable from "../../../../features/application-menu/main/application-menu-items.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import { onLoadOfApplicationInjectionToken } from "../../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";

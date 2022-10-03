@@ -31,7 +31,6 @@ import setupLensProxyInjectable from "./start-main-application/runnables/setup-l
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
-import applicationMenuInjectable from "./menu/application-menu.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/runnables/setup-system-ca.injectable";
 import setupDeepLinkingInjectable from "./electron-app/runnables/setup-deep-linking.injectable";
@@ -147,8 +146,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(stopServicesAndExitAppInjectable, () => () => {});
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
-
-    di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
 
     overrideFunctionalInjectables(di, [
       getHelmChartVersionsInjectable,

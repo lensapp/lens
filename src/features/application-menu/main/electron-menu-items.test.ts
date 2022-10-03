@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import { LensMainExtension } from "../../extensions/lens-main-extension";
+import { LensMainExtension } from "../../../extensions/lens-main-extension";
 import electronMenuItemsInjectable from "./electron-menu-items.injectable";
 import type { IComputedValue } from "mobx";
 import { computed, ObservableMap, runInAction } from "mobx";
 import type { MenuRegistration } from "./menu-registration";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
+import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
+import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 
 describe("electron-menu-items", () => {
   let di: DiContainer;

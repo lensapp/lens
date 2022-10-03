@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import mainExtensionsInjectable from "../../extensions/main-extensions.injectable";
+import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 
 const electronMenuItemsInjectable = getInjectable({
   id: "electron-menu-items",
