@@ -26,6 +26,7 @@ const setupLensProxyInjectable = getInjectable({
     const buildVersion = di.inject(buildVersionInjectable);
 
     return {
+      id: "setup-lens-proxy",
       run: async () => {
         try {
           logger.info("🔌 Starting LensProxy");

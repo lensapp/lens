@@ -13,6 +13,7 @@ const stopSyncingThemeFromOperatingSystemInjectable = getInjectable({
     const syncTheme = di.inject(syncThemeFromOperatingSystemInjectable);
 
     return {
+      id: "stop-syncing-theme-from-operating-system",
       run: async () => {
         await syncTheme.stop();
       },

@@ -11,8 +11,9 @@ import { filter, forEach, map, tap } from "lodash/fp";
 import { throwWithIncorrectHierarchyFor } from "./throw-with-incorrect-hierarchy-for";
 
 export interface Runnable<TParameter = void> {
+  id: string;
   run: Run<TParameter>;
-  runAfter?: this;
+  runAfter?: Runnable<TParameter>;
 }
 
 type Run<Param> = (parameter: Param) => Promise<void> | void;
@@ -25,7 +26,7 @@ export function runManyFor(di: DiContainerForInjection): RunMany {
   return (injectionToken) => async (parameter) => {
     const allRunnables = di.injectMany(injectionToken);
 
-    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor(allRunnables);
+    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor((injectionToken as any).id, allRunnables);
 
     const recursedRun = async (
       runAfterRunnable: Runnable<any> | undefined = undefined,

@@ -104,9 +104,17 @@ export const getDiForUnitTesting = (
 
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(platformInjectable, () => "darwin");
-    di.override(startTopbarStateSyncInjectable, () => ({
-      run: () => {},
-    }));
+
+    [
+      startTopbarStateSyncInjectable,
+      setupSystemCaInjectable,
+      setupOnApiErrorListenersInjectable,
+    ].forEach((injectable) => {
+      di.override(injectable, () => ({
+        id: injectable.id,
+        run: () => {},
+      }));
+    });
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
@@ -179,9 +187,6 @@ export const getDiForUnitTesting = (
     }) as unknown as HotbarStore);
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-
-    di.override(setupSystemCaInjectable, () => ({ run: () => {} }));
-    di.override(setupOnApiErrorListenersInjectable, () => ({ run: () => {} }));
 
     di.override(defaultShellInjectable, () => "some-default-shell");
 

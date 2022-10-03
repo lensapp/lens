@@ -17,6 +17,7 @@ const setupAppPathsInjectable = getInjectable({
     const appPathsState = di.inject(appPathsStateInjectable);
 
     return {
+      id: "setup-app-paths",
       run: async () => {
         const appPaths = await requestFromChannel(
           appPathsChannel,

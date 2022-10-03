@@ -7,12 +7,13 @@ import defaultUpdateChannelInjectable from "../../../common/application-update/s
 import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
 import initReleaseChannelInjectable from "../release-channel/init.injectable";
 
-const initDefaultUpdateChannelInjectableInjectable = getInjectable({
-  id: "init-default-update-channel-injectable",
+const initDefaultUpdateChannelInjectable = getInjectable({
+  id: "init-default-update-channel",
   instantiate: (di) => {
     const defaultUpdateChannel = di.inject(defaultUpdateChannelInjectable);
 
     return {
+      id: "init-default-update-channel",
       run: () => defaultUpdateChannel.init(),
       runAfter: di.inject(initReleaseChannelInjectable),
     };
@@ -20,4 +21,4 @@ const initDefaultUpdateChannelInjectableInjectable = getInjectable({
   injectionToken: beforeFrameStartsInjectionToken,
 });
 
-export default initDefaultUpdateChannelInjectableInjectable;
+export default initDefaultUpdateChannelInjectable;

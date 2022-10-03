@@ -13,6 +13,7 @@ const initReleaseChannelInjectable = getInjectable({
     const releaseChannel = di.inject(releaseChannelInjectable);
 
     return {
+      id: "init-release-channel",
       run: () => releaseChannel.init(),
       runAfter: di.inject(initSemanticBuildVersionInjectable),
     };

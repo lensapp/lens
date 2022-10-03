@@ -5,9 +5,9 @@
 
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { ClusterManager } from "../../main/cluster-manager";
+import type { ClusterManager } from "../../main/cluster/manager";
 import exitAppInjectable from "../../main/electron-app/features/exit-app.injectable";
-import clusterManagerInjectable from "../../main/cluster-manager.injectable";
+import clusterManagerInjectable from "../../main/cluster/manager.injectable";
 import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 

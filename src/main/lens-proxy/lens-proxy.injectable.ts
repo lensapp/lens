@@ -7,7 +7,7 @@ import { LensProxy } from "./lens-proxy";
 import { kubeApiUpgradeRequest } from "./proxy-functions";
 import routerInjectable from "../router/router.injectable";
 import httpProxy from "http-proxy";
-import clusterManagerInjectable from "../cluster-manager.injectable";
+import clusterManagerInjectable from "../cluster/manager.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
 import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";

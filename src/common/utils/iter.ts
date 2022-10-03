@@ -11,6 +11,7 @@ interface Iterator<T> {
   find(fn: (val: T) => unknown): T | undefined;
   collect<U>(fn: (values: Iterable<T>) => U): U;
   map<U>(fn: (val: T) => U): Iterator<U>;
+  flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
   join(sep?: string): string;
 }
 
@@ -19,6 +20,7 @@ export function pipeline<T>(src: IterableIterator<T>): Iterator<T> {
     filter: (fn) => pipeline(filter(src, fn)),
     filterMap: (fn) => pipeline(filterMap(src, fn)),
     map: (fn) => pipeline(map(src, fn)),
+    flatMap: (fn) => pipeline(flatMap(src, fn)),
     find: (fn) => find(src, fn),
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),

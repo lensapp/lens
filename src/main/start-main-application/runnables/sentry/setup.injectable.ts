@@ -14,6 +14,7 @@ const setupSentryInjectable = getInjectable({
     const initializeSentryOnMain = di.inject(initializeSentryOnMainInjectable);
 
     return {
+      id: "setup-sentry",
       run: () => initializeSentryReportingWith(initializeSentryOnMain),
     };
   },

@@ -15,6 +15,7 @@ const setupDeviceShutdownInjectable = getInjectable({
     const exitApp = di.inject(exitAppInjectable);
 
     return {
+      id: "setup-device-shutdown",
       run: () => {
         powerMonitor.on("shutdown", async () => {
           exitApp();
