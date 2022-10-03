@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./sidebar-item.scss";
+import styles from  "./sidebar-items.module.scss";
 
 import React from "react";
 import { computed, makeObservable } from "mobx";
@@ -70,7 +70,7 @@ class NonInjectedSidebarItem extends React.Component<
     }
 
     return (
-      <ul className={cssNames("sub-menu", { active: this.isActive })}>
+      <ul className={cssNames(styles.subMenu, { [styles.active]: this.isActive })}>
         {this.props.item.children.map(item => <SidebarItem key={item.registration.id} item={item} />)}
       </ul>
     );
@@ -79,7 +79,7 @@ class NonInjectedSidebarItem extends React.Component<
   render() {
     return (
       <div
-        className={cssNames("SidebarItem")}
+        className={styles.SidebarItem}
         data-testid={`sidebar-item-${this.id}`}
         data-is-active-test={this.isActive}
         data-parent-id-test={this.registration.parentId}
@@ -87,11 +87,7 @@ class NonInjectedSidebarItem extends React.Component<
         <NavLink
           to={""}
           isActive={() => this.isActive}
-
-          className={cssNames("nav-item flex gaps align-center", {
-            expandable: this.isExpandable,
-          })}
-
+          className={styles.navItem}
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -105,10 +101,10 @@ class NonInjectedSidebarItem extends React.Component<
           data-testid={`sidebar-item-link-for-${this.id}`}
         >
           {this.registration.getIcon?.()}
-          <span className="link-text box grow">{this.registration.title}</span>
+          <span>{this.registration.title}</span>
           {this.isExpandable && (
             <Icon
-              className="expand-icon box right"
+              className={styles.expandIcon}
               material={
                 this.expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"
               }

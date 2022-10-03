@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { PrometheusLens } from "../../prometheus/lens";
 import { PrometheusHelm } from "../../prometheus/helm";
+import { PrometheusHelm14 } from "../../prometheus/helm-14";
 import { PrometheusOperator } from "../../prometheus/operator";
 import { PrometheusStacklight } from "../../prometheus/stacklight";
 import prometheusProviderRegistryInjectable from "../../prometheus/prometheus-provider-registry.injectable";
@@ -20,6 +21,7 @@ const setupPrometheusRegistryInjectable = getInjectable({
       run: () => {
         prometheusProviderRegistry
           .registerProvider(new PrometheusLens())
+          .registerProvider(new PrometheusHelm14())
           .registerProvider(new PrometheusHelm())
           .registerProvider(new PrometheusOperator())
           .registerProvider(new PrometheusStacklight());

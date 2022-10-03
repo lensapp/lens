@@ -19,10 +19,7 @@ const checkForUpdatesStartingFromChannelInjectable = getInjectable({
   id: "check-for-updates-starting-from-channel",
 
   instantiate: (di) => {
-    const checkForPlatformUpdates = di.inject(
-      checkForPlatformUpdatesInjectable,
-    );
-
+    const checkForPlatformUpdates = di.inject(checkForPlatformUpdatesInjectable);
     const updateCanBeDowngraded = di.inject(updateCanBeDowngradedInjectable);
 
     const _recursiveCheck = async (

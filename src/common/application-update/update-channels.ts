@@ -4,7 +4,7 @@
  */
 
 
-export type UpdateChannelId = "alpha" | "beta" | "latest";
+export type ReleaseChannel = "alpha" | "beta" | "latest";
 
 const latestChannel: UpdateChannel = {
   id: "latest",
@@ -24,14 +24,14 @@ const alphaChannel: UpdateChannel = {
   moreStableUpdateChannel: betaChannel,
 };
 
-export const updateChannels: Record<UpdateChannelId, UpdateChannel> = {
+export const updateChannels = {
   latest: latestChannel,
   beta: betaChannel,
   alpha: alphaChannel,
 };
 
 export interface UpdateChannel {
-  readonly id: UpdateChannelId;
+  readonly id: ReleaseChannel;
   readonly label: string;
   readonly moreStableUpdateChannel: UpdateChannel | null;
 }

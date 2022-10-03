@@ -20,7 +20,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
   let actualPromise: Promise<string>;
 
   beforeEach(() => {
-    di = getDiForUnitTesting();
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     logErrorMock = jest.fn();
     di.override(logErrorInjectable, () => logErrorMock);

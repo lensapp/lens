@@ -17,11 +17,11 @@ const removeHelmRepositoryInjectable = getInjectable({
     return async (repo: HelmRepo) => {
       logger.info(`[HELM]: removing repo ${repo.name} (${repo.url})`);
 
-      return execHelm(
+      return execHelm([
         "repo",
         "remove",
         repo.name,
-      );
+      ]);
     };
   },
 });

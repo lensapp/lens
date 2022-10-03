@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { AppPaths } from "../../common/app-paths/app-path-injection-token";
 import getElectronAppPathInjectable from "./get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-app-path.injectable";
-import appNameInjectable from "./app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
 import { pathNames } from "../../common/app-paths/app-path-names";
@@ -14,6 +13,7 @@ import { fromPairs, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import { beforeElectronIsReadyInjectionToken } from "../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
+import appNameInjectable from "../../common/vars/app-name.injectable";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",

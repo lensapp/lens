@@ -9,7 +9,6 @@ import { promiseExecFile } from "../../common/utils/promise-exec";
 import logger from "../logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
-import { getBundledKubectlVersion } from "../../common/utils/app-version";
 import { SemVer } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
@@ -17,26 +16,6 @@ import { promisify } from "util";
 import stream from "stream";
 import { noop } from "lodash/fp";
 
-const bundledVersion = getBundledKubectlVersion();
-const kubectlMap: Map<string, string> = new Map([
-  ["1.7", "1.8.15"],
-  ["1.8", "1.9.10"],
-  ["1.9", "1.10.13"],
-  ["1.10", "1.11.10"],
-  ["1.11", "1.12.10"],
-  ["1.12", "1.13.12"],
-  ["1.13", "1.13.12"],
-  ["1.14", "1.14.10"],
-  ["1.15", "1.15.11"],
-  ["1.16", "1.16.15"],
-  ["1.17", "1.17.17"],
-  ["1.18", "1.18.20"],
-  ["1.19", "1.19.12"],
-  ["1.20", "1.20.8"],
-  ["1.21", "1.21.9"],
-  ["1.22", "1.22.6"],
-  ["1.23", bundledVersion],
-]);
 const initScriptVersionString = "# lens-initscript v3";
 
 export interface KubectlDependencies {
@@ -52,6 +31,8 @@ export interface KubectlDependencies {
     readonly downloadKubectlBinaries: boolean;
     readonly downloadMirror: string;
   };
+  readonly bundledKubectlVersion: string;
+  readonly kubectlVersionMap: Map<string, string>;
 }
 
 export class Kubectl {
@@ -60,7 +41,6 @@ export class Kubectl {
   protected readonly path: string;
   protected readonly dirname: string;
 
-  public static readonly bundledKubectlVersion = bundledVersion;
   public static invalidBundle = false;
 
   constructor(protected readonly dependencies: KubectlDependencies, clusterVersion: string) {
@@ -69,10 +49,10 @@ export class Kubectl {
     try {
       version = new SemVer(clusterVersion);
     } catch {
-      version = new SemVer(Kubectl.bundledKubectlVersion);
+      version = new SemVer(this.dependencies.bundledKubectlVersion);
     }
 
-    const fromMajorMinor = kubectlMap.get(`${version.major}.${version.minor}`);
+    const fromMajorMinor = this.dependencies.kubectlVersionMap.get(`${version.major}.${version.minor}`);
 
     /**
      * minorVersion is the first two digits of kube server version if the version map includes that,
@@ -189,7 +169,7 @@ export class Kubectl {
   }
 
   protected async checkBundled(): Promise<boolean> {
-    if (this.kubectlVersion === Kubectl.bundledKubectlVersion) {
+    if (this.kubectlVersion === this.dependencies.bundledKubectlVersion) {
       try {
         const exist = await pathExists(this.path);
 

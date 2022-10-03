@@ -35,6 +35,7 @@ export {
 } from "../../common/k8s-api/kube-object";
 
 export {
+  KubeJsonApi,
   type KubeJsonApiData,
 } from "../../common/k8s-api/kube-json-api";
 
@@ -47,7 +48,7 @@ export {
 } from "../../common/k8s-api/kube-object.store";
 
 export {
-  type PodContainer as IPodContainer,
+  type Container as IPodContainer,
   type PodContainerStatus as IPodContainerStatus,
   Pod,
   PodApi as PodsApi,

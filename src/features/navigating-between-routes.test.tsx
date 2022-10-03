@@ -5,7 +5,7 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import type { RenderResult } from "@testing-library/react";
 import { routeSpecificComponentInjectionToken } from "../renderer/routes/route-specific-component-injection-token";
 import { observer } from "mobx-react";
@@ -32,8 +32,10 @@ describe("navigating between routes", () => {
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
-        windowDi.register(testRouteWithoutPathParametersInjectable);
-        windowDi.register(testRouteWithoutPathParametersComponentInjectable);
+        runInAction(() => {
+          windowDi.register(testRouteWithoutPathParametersInjectable);
+          windowDi.register(testRouteWithoutPathParametersComponentInjectable);
+        });
       });
 
       rendered = await builder.render();
@@ -106,8 +108,10 @@ describe("navigating between routes", () => {
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
-        windowDi.register(routeWithOptionalPathParametersInjectable);
-        windowDi.register(routeWithOptionalPathParametersComponentInjectable);
+        runInAction(() => {
+          windowDi.register(routeWithOptionalPathParametersInjectable);
+          windowDi.register(routeWithOptionalPathParametersComponentInjectable);
+        });
       });
 
       rendered = await builder.render();

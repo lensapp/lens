@@ -7,7 +7,7 @@ import type { match, RouteProps } from "react-router";
 import { matchPath } from "react-router";
 import observableHistoryInjectable from "./observable-history.injectable";
 
-export type MatchRoute = <Params>(route: string | string[] | RouteProps) => match<Params> | null;
+export type MatchRoute = <Params extends { [K in keyof Params]?: string }>(route: string | string[] | RouteProps) => match<Params> | null;
 
 const matchRouteInjectable = getInjectable({
   id: "match-route",

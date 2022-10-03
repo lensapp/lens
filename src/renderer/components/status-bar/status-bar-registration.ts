@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { IComputedValue } from "mobx";
+
 /**
  * The props for StatusBar item component
  */
@@ -38,4 +40,9 @@ export interface StatusBarRegistration {
    * The newer API, allows for registering a component instead of a ReactNode
    */
   components?: StatusBarComponents;
+
+  /**
+   * If specified, controls item visibility
+   */
+  visible?: IComputedValue<boolean>;
 }

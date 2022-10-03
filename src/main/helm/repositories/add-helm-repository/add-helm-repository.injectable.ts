@@ -54,7 +54,7 @@ const addHelmRepositoryInjectable = getInjectable({
         args.push("--cert-file", certFile);
       }
 
-      return await execHelm(...args);
+      return await execHelm(args);
     };
   },
 });

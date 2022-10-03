@@ -8,6 +8,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
+import { computed } from "mobx";
 
 describe("status-bar-items-originating-from-extensions", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -65,7 +66,7 @@ describe("status-bar-items-originating-from-extensions", () => {
 
       const rightSide = rendered.getByTestId("status-bar-right");
 
-      const actual = getTestStatusBarTexts(rightSide, [
+      const actual = getExpectedTestStatusBarTexts(rightSide, [
         "extension1",
         "extension2",
       ]);
@@ -97,6 +98,13 @@ describe("status-bar-items-originating-from-extensions", () => {
               },
               {
                 components: {
+                  Item: () => <div data-testid="some-testId">right4</div>,
+                  position: "right" as const,
+                },
+                visible: computed(() => false),
+              },
+              {
+                components: {
                   Item: () => <div data-testid="some-testId">left1</div>,
                   position: "left" as const,
                 },
@@ -121,7 +129,7 @@ describe("status-bar-items-originating-from-extensions", () => {
       it("shows right side status bar items in the correct order", () => {
         const rightSide = rendered.getByTestId("status-bar-right");
 
-        const actual = getTestStatusBarTexts(rightSide, [
+        const actual = getExpectedTestStatusBarTexts(rightSide, [
           "right1",
           "right2",
           "right3",
@@ -130,10 +138,16 @@ describe("status-bar-items-originating-from-extensions", () => {
         expect(actual).toEqual(["right3", "right2", "right1"]);
       });
 
+      it("doesn't show invisible status bar item", () => {
+        const rightSide = rendered.getByTestId("status-bar-right");
+
+        expect(getTestStatusBarTexts(rightSide)).not.toContain("right4");
+      });
+
       it("shows left side status bar items in the correct order", () => {
         const leftSide = rendered.getByTestId("status-bar-left");
 
-        const actual = getTestStatusBarTexts(leftSide, ["left2", "left1"]);
+        const actual = getExpectedTestStatusBarTexts(leftSide, ["left2", "left1"]);
 
         expect(actual).toEqual(["left1", "left2"]);
       });
@@ -149,7 +163,9 @@ describe("status-bar-items-originating-from-extensions", () => {
   });
 });
 
-const getTestStatusBarTexts = (actual: HTMLElement, expectedTexts: string[]) =>
+const getTestStatusBarTexts = (actual: HTMLElement) =>
   Array.from(actual.children)
-    .map((elem) => elem.textContent)
-    .filter((elem) => elem && expectedTexts.includes(elem));
+    .map((elem) => String(elem.textContent));
+
+const getExpectedTestStatusBarTexts = (actual: HTMLElement, expectedTexts: string[]) =>
+  getTestStatusBarTexts(actual).filter((textContent) => textContent && expectedTexts.includes(textContent));

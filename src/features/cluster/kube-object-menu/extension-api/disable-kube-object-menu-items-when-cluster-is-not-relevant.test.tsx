@@ -10,7 +10,7 @@ import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getInjectable } from "@ogre-tools/injectable";
 import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
@@ -32,7 +32,10 @@ describe("disable kube object menu items when cluster is not relevant", () => {
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-      windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+
+      runInAction(() => {
+        windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+      });
     });
 
     isEnabledForClusterMock = asyncFn();

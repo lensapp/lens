@@ -11,10 +11,11 @@ import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import { Input } from "../../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
-import { productName } from "../../../../common/vars";
 import type { MetricProviderInfo } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { Spinner } from "../../spinner";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import productNameInjectable from "../../../../common/vars/product-name.injectable";
 
 export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
@@ -24,8 +25,12 @@ const autoDetectPrometheus = Symbol("auto-detect-prometheus");
 
 type ProviderValue = typeof autoDetectPrometheus | string;
 
+interface Dependencies {
+  productName: string;
+}
+
 @observer
-export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusSettingProps> {
+class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometheusSettingProps & Dependencies> {
   @observable path = "";
   @observable selectedOption: ProviderValue = autoDetectPrometheus;
   @observable loading = true;
@@ -46,7 +51,7 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
     ];
   }
 
-  constructor(props: ClusterPrometheusSettingProps) {
+  constructor(props: ClusterPrometheusSettingProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -155,7 +160,7 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
                 placeholder="<namespace>/<service>:<port>"
               />
               <small className="hint">
-                {`An address to an existing Prometheus installation (<namespace>/<service>:<port>). ${productName} tries to auto-detect address if left empty.`}
+                {`An address to an existing Prometheus installation (<namespace>/<service>:<port>). ${this.props.productName} tries to auto-detect address if left empty.`}
               </small>
             </section>
           </>
@@ -164,3 +169,10 @@ export class ClusterPrometheusSetting extends React.Component<ClusterPrometheusS
     );
   }
 }
+
+export const ClusterPrometheusSetting = withInjectables<Dependencies, ClusterPrometheusSettingProps>(NonInjectedClusterPrometheusSetting, {
+  getProps: (di, props) => ({
+    ...props,
+    productName: di.inject(productNameInjectable),
+  }),
+});

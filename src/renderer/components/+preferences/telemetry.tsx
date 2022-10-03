@@ -12,7 +12,7 @@ import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { Preferences } from "./preferences";
 import telemetryPreferenceItemsInjectable from "./telemetry-preference-items.injectable";
-import sentryDnsUrlInjectable from "./sentry-dns-url.injectable";
+import sentryDataSourceNameInjectable from "../../../common/vars/sentry-dsn-url.injectable";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import type { AppPreferenceRegistration } from "./app-preferences/app-preference-registration";
 
@@ -74,7 +74,7 @@ export const Telemetry = withInjectables<Dependencies>(
   {
     getProps: (di) => ({
       telemetryPreferenceItems: di.inject(telemetryPreferenceItemsInjectable),
-      sentryDnsUrl: di.inject(sentryDnsUrlInjectable),
+      sentryDnsUrl: di.inject(sentryDataSourceNameInjectable),
       userStore: di.inject(userStoreInjectable),
     }),
   },

@@ -7,7 +7,6 @@
 
 import moment from "moment";
 import { apiBase } from "../index";
-import type { IMetricsQuery } from "../../../main/routes/metrics/metrics-query";
 
 export interface MetricData {
   status: string;
@@ -55,28 +54,33 @@ export interface IResourceMetrics<T extends MetricData> {
   networkTransmit: T;
 }
 
+async function getMetrics(query: string, reqParams?: IMetricsReqParams): Promise<MetricData>;
+async function getMetrics(query: string[], reqParams?: IMetricsReqParams): Promise<MetricData[]>;
+async function getMetrics<MetricNames extends string>(query: Record<MetricNames, Partial<Record<string, string>>>, reqParams?: IMetricsReqParams): Promise<Record<MetricNames, MetricData>>;
+
+async function getMetrics(query: string | string[] | Partial<Record<string, Partial<Record<string, string>>>>, reqParams: IMetricsReqParams = {}): Promise<MetricData | MetricData[] | Partial<Record<string, MetricData>>> {
+  const { range = 3600, step = 60, namespace } = reqParams;
+  let { start, end } = reqParams;
+
+  if (!start && !end) {
+    const timeNow = Date.now() / 1000;
+    const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
+
+    start = now - range;
+    end = now;
+  }
+
+  return apiBase.post("/metrics", {
+    data: query,
+    query: {
+      start, end, step,
+      "kubernetes_namespace": namespace,
+    },
+  });
+}
+
 export const metricsApi = {
-  async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: MetricData } : MetricData> {
-    const { range = 3600, step = 60, namespace } = reqParams;
-    let { start, end } = reqParams;
-
-    if (!start && !end) {
-      const timeNow = Date.now() / 1000;
-      const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
-
-      start = now - range;
-      end = now;
-    }
-
-    return apiBase.post("/metrics", {
-      data: query,
-      query: {
-        start, end, step,
-        "kubernetes_namespace": namespace,
-      },
-    });
-  },
-
+  getMetrics,
   async getMetricProviders(): Promise<MetricProviderInfo[]> {
     return apiBase.get("/metrics/providers");
   },

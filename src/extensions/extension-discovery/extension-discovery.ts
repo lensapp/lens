@@ -27,12 +27,8 @@ import type { Watch } from "../../common/fs/watch/watch.injectable";
 interface Dependencies {
   extensionLoader: ExtensionLoader;
   extensionsStore: ExtensionsStore;
-
   extensionInstallationStateStore: ExtensionInstallationStateStore;
-
-  isCompatibleBundledExtension: (manifest: LensExtensionManifest) => boolean;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
-
   installExtension: (name: string) => Promise<void>;
   installExtensions: (packageJsonPath: string, packagesJson: PackageJson) => Promise<void>;
   extensionPackageRootDirectory: string;
@@ -102,7 +98,7 @@ export class ExtensionDiscovery {
 
   public events = new EventEmitter();
 
-  constructor(protected dependencies : Dependencies) {
+  constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
   }
 
@@ -367,9 +363,10 @@ export class ExtensionDiscovery {
       const id = this.getInstalledManifestPath(manifest.name);
       const isEnabled = this.dependencies.extensionsStore.isEnabled({ id, isBundled });
       const extensionDir = path.dirname(manifestPath);
-      const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
+      const packedName = manifest.name.replaceAll("@", "").replaceAll("/", "-");
+      const npmPackage = path.join(extensionDir, `${packedName}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await this.dependencies.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      const isCompatible = (isBundled && this.dependencies.isCompatibleBundledExtension(manifest)) || this.dependencies.isCompatibleExtension(manifest);
+      const isCompatible = isBundled || this.dependencies.isCompatibleExtension(manifest);
 
       return {
         id,
@@ -394,27 +391,10 @@ export class ExtensionDiscovery {
 
   async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
-
-    await this.installBundledPackages(this.packageJsonPath, bundledExtensions);
-
     const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
-
-    for (const extension of userExtensions) {
-      if (!(await this.dependencies.pathExists(extension.manifestPath))) {
-        try {
-          await this.dependencies.installExtension(extension.absolutePath);
-        } catch (error) {
-          const message = error instanceof Error
-            ? error.message
-            : String(error || "unknown error");
-          const { name, version } = extension.manifest;
-
-          this.dependencies.logger.error(`${logModule}: failed to install user extension ${name}@${version}: ${message}`);
-        }
-      }
-    }
-
     const extensions = bundledExtensions.concat(userExtensions);
+
+    await this.installBundledPackages(this.packageJsonPath, extensions);
 
     return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
   }
@@ -424,10 +404,13 @@ export class ExtensionDiscovery {
    */
   installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]): Promise<void> {
     const dependencies = Object.fromEntries(
-      extensions.map(extension => [extension.manifest.name, extension.absolutePath]),
+      extensions.filter(extension => extension.isBundled).map(extension => [extension.manifest.name, extension.absolutePath]),
+    );
+    const optionalDependencies = Object.fromEntries(
+      extensions.filter(extension => !extension.isBundled).map(extension => [extension.manifest.name, extension.absolutePath]),
     );
 
-    return this.dependencies.installExtensions(packageJsonPath, { dependencies });
+    return this.dependencies.installExtensions(packageJsonPath, { dependencies, optionalDependencies });
   }
 
   async loadBundledExtensions(): Promise<InstalledExtension[]> {

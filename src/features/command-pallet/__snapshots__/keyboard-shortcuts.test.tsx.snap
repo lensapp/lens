@@ -40,9 +40,8 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
             </div>
           </div>
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -159,7 +158,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -323,9 +322,8 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
             </div>
           </div>
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -442,7 +440,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -606,9 +604,8 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
             </div>
           </div>
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -725,7 +722,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -901,9 +898,8 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
             </div>
           </div>
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -1020,7 +1016,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1157,9 +1153,8 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -1222,7 +1217,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1359,9 +1354,8 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -1424,7 +1418,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1561,9 +1555,8 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -1626,7 +1619,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -1775,9 +1768,8 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           class="items"
         >
           <i
-            class="Icon material interactive focusable"
+            class="Icon material interactive disabled focusable"
             data-testid="home-button"
-            tabindex="0"
           >
             <span
               class="icon"
@@ -1840,7 +1832,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your

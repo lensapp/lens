@@ -7,7 +7,6 @@ import { kebabCase, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import appNameInjectable from "./app-paths/app-name/app-name.injectable";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
@@ -33,7 +32,6 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
-import setupSentryInjectable from "./start-main-application/runnables/setup-sentry.injectable";
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
@@ -55,7 +53,7 @@ import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/r
 import showMessagePopupInjectable from "./electron-app/features/show-message-popup.injectable";
 import clusterFramesInjectable from "../common/cluster-frames.injectable";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
 import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
@@ -63,7 +61,6 @@ import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectab
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
 import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync-theme-from-operating-system.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
-import productNameInjectable from "./app-paths/app-name/product-name.injectable";
 import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
@@ -73,7 +70,6 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
-import appVersionInjectable from "../common/vars/app-version.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import execFileInjectable from "../common/fs/exec-file.injectable";
@@ -83,12 +79,10 @@ import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-val
 import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
 import deleteHelmReleaseInjectable from "./helm/helm-service/delete-helm-release.injectable";
 import getHelmReleaseHistoryInjectable from "./helm/helm-service/get-helm-release-history.injectable";
-import getHelmReleaseInjectable from "./helm/helm-service/get-helm-release.injectable";
 import getHelmReleaseValuesInjectable from "./helm/helm-service/get-helm-release-values.injectable";
 import installHelmChartInjectable from "./helm/helm-service/install-helm-chart.injectable";
 import listHelmReleasesInjectable from "./helm/helm-service/list-helm-releases.injectable";
 import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
-import updateHelmReleaseInjectable from "./helm/helm-service/update-helm-release.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
@@ -103,19 +97,21 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   const di = createContainer("main");
 
-  registerMobX(di);
-
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
+
+  di.preventSideEffects();
 
   const injectables: Injectable<any, any, any>[] = (global as any).mainInjectablePaths.map(
     (filePath: string) => require(filePath).default,
   );
 
-  chunk(100)(injectables).forEach(chunkInjectables => {
-    di.register(...chunkInjectables);
-  });
+  runInAction(() => {
+    registerMobX(di);
 
-  di.preventSideEffects();
+    chunk(100)(injectables).forEach(chunkInjectables => {
+      di.register(...chunkInjectables);
+    });
+  });
 
   if (doGeneralOverrides) {
     const globalOverrides: GlobalOverride[] = (global as any).mainGlobalOverridePaths.map(
@@ -136,7 +132,11 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       getDisplayIndex: () => "0",
     }) as unknown as HotbarStore);
 
-    di.override(userStoreInjectable, () => ({ startMainReactions: () => {}, extensionRegistryUrl: { customUrl: "some-custom-url" }}) as UserStore);
+    di.override(userStoreInjectable, () => ({
+      startMainReactions: () => {},
+      extensionRegistryUrl: { customUrl: "some-custom-url" },
+      load: () => {},
+    }) as Partial<UserStore> as UserStore);
     di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
@@ -147,9 +147,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(isDevelopmentInjectable, () => false);
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
-
-    di.override(productNameInjectable, () => "some-product-name");
-    di.override(appVersionInjectable, () => "1.0.0");
 
     di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
 
@@ -166,12 +163,10 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       listHelmChartsInjectable,
       deleteHelmReleaseInjectable,
       getHelmReleaseHistoryInjectable,
-      getHelmReleaseInjectable,
       getHelmReleaseValuesInjectable,
       installHelmChartInjectable,
       listHelmReleasesInjectable,
       rollbackHelmReleaseInjectable,
-      updateHelmReleaseInjectable,
       writeJsonFileInjectable,
       readJsonFileInjectable,
       readFileInjectable,
@@ -181,7 +176,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     // TODO: Remove usages of globally exported appEventBus to get rid of this
     di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
-    di.override(appNameInjectable, () => "some-app-name");
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
     });
@@ -212,7 +206,6 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     initializeExtensionsInjectable,
     setupIpcMainHandlersInjectable,
     setupLensProxyInjectable,
-    setupSentryInjectable,
     setupShellInjectable,
     setupSyncingOfWeblinksInjectable,
     setupSystemCaInjectable,

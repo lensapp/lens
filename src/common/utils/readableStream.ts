@@ -4,6 +4,7 @@
  */
 
 import { Readable } from "readable-stream";
+import type { ReadableStreamDefaultReadResult } from "stream/web";
 import type { TypedArray } from "type-fest";
 
 /**

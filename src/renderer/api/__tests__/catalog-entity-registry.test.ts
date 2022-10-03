@@ -80,7 +80,7 @@ describe("CatalogEntityRegistry", () => {
   let catalogCategoryRegistry: CatalogCategoryRegistry;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting();
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     entityRegistry = di.inject(catalogEntityRegistryInjectable);
     catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);

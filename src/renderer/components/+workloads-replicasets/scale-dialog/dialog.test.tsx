@@ -43,12 +43,12 @@ const dummyReplicaSet = new ReplicaSet({
         containers: [{
           name: "dummy",
           image: "dummy",
-          imagePullPolicy: "dummy",
+          imagePullPolicy: "Always",
         }],
         initContainers: [{
           name: "dummy",
           image: "dummy",
-          imagePullPolicy: "dummy",
+          imagePullPolicy: "Always",
         }],
         priority: 1,
         serviceAccountName: "dummy",

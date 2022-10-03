@@ -9,7 +9,7 @@ import asyncFn from "@async-fn/jest";
 import type { AppUpdater, UpdateCheckResult } from "electron-updater";
 import type { CheckForPlatformUpdates } from "./check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "./check-for-platform-updates.injectable";
-import type { UpdateChannel, UpdateChannelId } from "../../../common/application-update/update-channels";
+import type { UpdateChannel, ReleaseChannel } from "../../../common/application-update/update-channels";
 import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { Logger } from "../../../common/logger";
@@ -47,7 +47,7 @@ describe("check-for-platform-updates", () => {
 
     beforeEach(() => {
       const testUpdateChannel: UpdateChannel = {
-        id: "some-update-channel" as UpdateChannelId,
+        id: "some-update-channel" as ReleaseChannel,
         label: "Some update channel",
         moreStableUpdateChannel: null,
       };

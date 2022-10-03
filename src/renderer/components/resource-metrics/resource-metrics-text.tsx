@@ -19,19 +19,15 @@ export function ResourceMetricsText({ metrics }: ResourceMetricsTextProps) {
     return null;
   }
 
-  const { cpuUsage, cpuRequests, cpuLimits, memoryUsage, memoryRequests, memoryLimits } = getMetricLastPoints(metrics);
+  const { cpuUsage, memoryUsage } = getMetricLastPoints(metrics);
 
   return (
     <>
       <DrawerItem name="CPU" labelsOnly>
         {cpuUsage > 0 && <Badge label={`Usage: ${cpuUsage.toPrecision(2)}`}/>}
-        {cpuRequests > 0 && <Badge label={`Requests: ${cpuRequests.toPrecision(2)}`}/>}
-        {cpuLimits > 0 && <Badge label={`Limits: ${cpuLimits.toPrecision(2)}`}/>}
       </DrawerItem>
       <DrawerItem name="Memory" labelsOnly>
         {memoryUsage > 0 && <Badge label={`Usage: ${bytesToUnits(memoryUsage)}`}/>}
-        {memoryRequests > 0 && <Badge label={`Requests: ${bytesToUnits(memoryRequests)}`}/>}
-        {memoryLimits > 0 && <Badge label={`Limits: ${bytesToUnits(memoryLimits)}`}/>}
       </DrawerItem>
     </>
   );

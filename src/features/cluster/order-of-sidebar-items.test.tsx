@@ -7,7 +7,7 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
 import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import { noop } from "lodash/fp";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -22,7 +22,9 @@ describe("cluster - order of sidebar items", () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.register(testSidebarItemsInjectable);
+      runInAction(() => {
+        windowDi.register(testSidebarItemsInjectable);
+      });
     });
   });
 

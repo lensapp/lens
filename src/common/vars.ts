@@ -5,7 +5,6 @@
 
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
 import path from "path";
-import packageInfo from "../../package.json";
 import type { ThemeId } from "../renderer/themes/store";
 import { lazyInitialized } from "./utils/lazy-initialized";
 
@@ -25,7 +24,6 @@ export const isWindows = process.platform === "win32";
 export const isLinux = process.platform === "linux";
 
 export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
-export const isSnap = !!process.env.SNAP;
 
 /**
  * @deprecated Switch to using isTestEnvInjectable
@@ -41,13 +39,6 @@ export const isProduction = process.env.NODE_ENV === "production";
  * @deprecated Switch to using isDevelopmentInjectable
  */
 export const isDevelopment = !isTestEnv && !isProduction;
-
-export const productName = packageInfo.productName;
-
-/**
- * @deprecated Switch to using appNameInjectable
- */
-export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
 
 export const publicPath = "/build/" as string;
 export const defaultThemeId: ThemeId = "lens-dark";
@@ -139,6 +130,3 @@ export const lensBlogWeblinkId = "lens-blog-link";
 export const kubernetesDocumentationWeblinkId = "kubernetes-documentation-link";
 
 export const docsUrl = "https://docs.k8slens.dev/main" as string;
-
-export const sentryDsn = packageInfo.config?.sentryDsn ?? "";
-export const contentSecurityPolicy = packageInfo.config?.contentSecurityPolicy ?? "";

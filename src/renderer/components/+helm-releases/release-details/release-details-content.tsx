@@ -8,8 +8,8 @@ import "./release-details.scss";
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { Drawer, DrawerItem, DrawerTitle } from "../../drawer";
-import { cssNames, stopPropagation } from "../../../utils";
+import { DrawerItem, DrawerTitle } from "../../drawer";
+import { stopPropagation } from "../../../utils";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigurationInput, MinimalResourceGroup, OnlyUserSuppliedValuesAreShownToggle, ReleaseDetailsModel } from "./release-details-model/release-details-model.injectable";
@@ -20,7 +20,6 @@ import { Badge } from "../../badge";
 import { SubTitle } from "../../layout/sub-title";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ReactiveDuration } from "../../duration/reactive-duration";
-import { HelmReleaseMenu } from "../release-menu";
 import { Checkbox } from "../../checkbox";
 import { MonacoEditor } from "../../monaco-editor";
 import { Spinner } from "../../spinner";
@@ -35,97 +34,86 @@ interface Dependencies {
 }
 
 const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & ReleaseDetailsContentProps) => {
-  const isLoading = model.isLoading.get();
+  const loadingError = model.loadingError.get();
+
+  if (loadingError) {
+    return (
+      <div data-testid="helm-release-detail-error">
+        Failed to load release:
+        {" "}
+        {loadingError}
+      </div>
+    );
+  }
+
 
   return (
-    <Drawer
-      className={cssNames("ReleaseDetails", model.activeTheme)}
-      usePortal={true}
-      open={true}
-      title={isLoading ? "" : model.release.getName()}
-      onClose={model.close}
-      testIdForClose="close-helm-release-detail"
-      toolbar={
-        !isLoading && (
-          <HelmReleaseMenu
-            release={model.release}
-            toolbar
-            hideDetails={model.close}
+    <div>
+      <DrawerItem name="Chart" className="chart">
+        <div className="flex gaps align-center">
+          <span>{model.release.chart}</span>
+
+          <Button
+            primary
+            label="Upgrade"
+            className="box right upgrade"
+            onClick={model.startUpgradeProcess}
+            data-testid="helm-release-upgrade-button"
           />
-        )
-      }
-      data-testid={`helm-release-details-for-${model.id}`}
-    >
-      {isLoading ? (
-        <Spinner center data-testid="helm-release-detail-content-spinner" />
-      ) : (
-        <div>
-          <DrawerItem name="Chart" className="chart">
-            <div className="flex gaps align-center">
-              <span>{model.release.chart}</span>
+        </div>
+      </DrawerItem>
 
-              <Button
-                primary
-                label="Upgrade"
-                className="box right upgrade"
-                onClick={model.startUpgradeProcess}
-                data-testid="helm-release-upgrade-button"
-              />
-            </div>
-          </DrawerItem>
+      <DrawerItem name="Updated">
+        {`${model.release.getUpdated()} ago (${model.release.updated})`}
+      </DrawerItem>
 
-          <DrawerItem name="Updated">
-            {model.release.getUpdated()}
-            {` ago (${model.release.updated})`}
-          </DrawerItem>
+      <DrawerItem name="Namespace">{model.release.getNs()}</DrawerItem>
 
-          <DrawerItem name="Namespace">{model.release.getNs()}</DrawerItem>
+      <DrawerItem name="Version" onClick={stopPropagation}>
+        <div className="version flex gaps align-center">
+          <span>{model.release.getVersion()}</span>
+        </div>
+      </DrawerItem>
 
-          <DrawerItem name="Version" onClick={stopPropagation}>
-            <div className="version flex gaps align-center">
-              <span>{model.release.getVersion()}</span>
-            </div>
-          </DrawerItem>
+      <DrawerItem
+        name="Status"
+        className="status"
+        labelsOnly>
+        <Badge
+          label={model.release.getStatus()}
+          className={kebabCase(model.release.getStatus())}
+        />
+      </DrawerItem>
 
-          <DrawerItem
-            name="Status"
-            className="status"
-            labelsOnly>
-            <Badge
-              label={model.release.getStatus()}
-              className={kebabCase(model.release.getStatus())}
-            />
-          </DrawerItem>
+      <ReleaseValues
+        configuration={model.configuration}
+        onlyUserSuppliedValuesAreShown={
+          model.onlyUserSuppliedValuesAreShown
+        }
+      />
 
-          <ReleaseValues
-            configuration={model.configuration}
-            onlyUserSuppliedValuesAreShown={
-              model.onlyUserSuppliedValuesAreShown
-            }
-          />
+      <DrawerTitle>Notes</DrawerTitle>
 
-          <DrawerTitle>Notes</DrawerTitle>
+      {model.notes && <div className="notes">{model.notes}</div>}
 
-          {model.notes && <div className="notes">{model.notes}</div>}
+      <DrawerTitle>Resources</DrawerTitle>
 
-          <DrawerTitle>Resources</DrawerTitle>
-
-          {model.groupedResources.length > 0 && (
-            <div className="resources">
-              {model.groupedResources.map((group) => (
-                <ResourceGroup key={group.kind} group={group} />
-              ))}
-            </div>
-          )}
+      {model.groupedResources.length > 0 && (
+        <div className="resources">
+          {model.groupedResources.map((group) => (
+            <ResourceGroup key={group.kind} group={group} />
+          ))}
         </div>
       )}
-    </Drawer>
+    </div>
   );
 });
 
 export const ReleaseDetailsContent = withInjectables<Dependencies, ReleaseDetailsContentProps>(NonInjectedReleaseDetailsContent, {
-  getProps: (di, props) => ({
-    model: di.inject(releaseDetailsModelInjectable, props.targetRelease),
+  getPlaceholder: () => <Spinner center data-testid="helm-release-detail-content-spinner" />,
+
+  getProps: async (di, props) => ({
+    model: await di.inject(releaseDetailsModelInjectable, props.targetRelease),
     ...props,
   }),
 });

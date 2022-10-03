@@ -4,10 +4,13 @@
  */
 
 import { UserStore } from "../../common/user-store";
-
-/**
- * Get the configured kubectl binaries path.
- */
-export function getKubectlPath(): string | undefined {
-  return UserStore.getInstance().kubectlBinariesPath;
+export interface UserPreferenceExtensionItems {
+  /**
+   * Get the configured kubectl binaries path.
+   */
+  getKubectlPath: () => string | undefined;
 }
+
+export const Preferences: UserPreferenceExtensionItems = {
+  getKubectlPath: () => UserStore.getInstance().kubectlBinariesPath,
+};

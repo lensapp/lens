@@ -39,7 +39,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
           >
             <a
               aria-current="page"
-              class="nav-item flex gaps align-center active"
+              class="navItem active"
               data-testid="sidebar-item-link-for-cluster-overview"
               href="/"
             >
@@ -50,9 +50,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Cluster
               </span>
             </a>
@@ -63,7 +61,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-nodes"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-nodes"
               href="/"
             >
@@ -74,9 +72,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Nodes
               </span>
             </a>
@@ -87,7 +83,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-workloads"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
@@ -98,13 +94,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Workloads
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -121,7 +115,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-config"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-config"
               href="/"
             >
@@ -135,9 +129,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   list
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Config
               </span>
             </a>
@@ -148,7 +140,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-network"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-network"
               href="/"
             >
@@ -162,13 +154,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   device_hub
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Network
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -185,7 +175,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-storage"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-storage"
               href="/"
             >
@@ -199,9 +189,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   storage
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Storage
               </span>
             </a>
@@ -212,7 +200,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-namespaces"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-namespaces"
               href="/"
             >
@@ -226,9 +214,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   layers
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Namespaces
               </span>
             </a>
@@ -239,7 +225,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-helm"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-helm"
               href="/"
             >
@@ -250,13 +236,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Helm
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -273,7 +257,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-user-management"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-user-management"
               href="/"
             >
@@ -287,9 +271,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   security
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Access Control
               </span>
             </a>
@@ -300,7 +282,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-custom-resources"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-custom-resources"
               href="/"
             >
@@ -314,13 +296,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   extension
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Custom Resources
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -518,7 +498,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
           >
             <a
               aria-current="page"
-              class="nav-item flex gaps align-center active"
+              class="navItem active"
               data-testid="sidebar-item-link-for-cluster-overview"
               href="/"
             >
@@ -529,9 +509,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Cluster
               </span>
             </a>
@@ -542,7 +520,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-nodes"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-nodes"
               href="/"
             >
@@ -553,9 +531,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Nodes
               </span>
             </a>
@@ -566,7 +542,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-workloads"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
@@ -577,13 +553,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Workloads
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -600,7 +574,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-config"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-config"
               href="/"
             >
@@ -614,9 +588,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   list
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Config
               </span>
             </a>
@@ -627,7 +599,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-network"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-network"
               href="/"
             >
@@ -641,13 +613,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   device_hub
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Network
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -664,7 +634,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-storage"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-storage"
               href="/"
             >
@@ -678,9 +648,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   storage
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Storage
               </span>
             </a>
@@ -691,7 +659,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-namespaces"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-namespaces"
               href="/"
             >
@@ -705,9 +673,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   layers
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Namespaces
               </span>
             </a>
@@ -718,7 +684,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-helm"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-helm"
               href="/"
             >
@@ -729,13 +695,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Helm
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -752,7 +716,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-user-management"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-user-management"
               href="/"
             >
@@ -766,9 +730,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   security
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Access Control
               </span>
             </a>
@@ -779,7 +741,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             data-testid="sidebar-item-custom-resources"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-custom-resources"
               href="/"
             >
@@ -793,13 +755,11 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                   extension
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Custom Resources
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -1004,7 +964,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
           >
             <a
               aria-current="page"
-              class="nav-item flex gaps align-center expandable active"
+              class="navItem active"
               data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
@@ -1015,13 +975,11 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Workloads
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -1038,7 +996,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             data-testid="sidebar-item-config"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-config"
               href="/"
             >
@@ -1052,9 +1010,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   list
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Config
               </span>
             </a>
@@ -1065,7 +1021,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             data-testid="sidebar-item-network"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-network"
               href="/"
             >
@@ -1079,13 +1035,11 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   device_hub
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Network
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -1102,7 +1056,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             data-testid="sidebar-item-storage"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-storage"
               href="/"
             >
@@ -1116,9 +1070,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   storage
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Storage
               </span>
             </a>
@@ -1129,7 +1081,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             data-testid="sidebar-item-namespaces"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-namespaces"
               href="/"
             >
@@ -1143,9 +1095,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   layers
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Namespaces
               </span>
             </a>
@@ -1156,7 +1106,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             data-testid="sidebar-item-helm"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-helm"
               href="/"
             >
@@ -1167,13 +1117,11 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   class="icon"
                 />
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Helm
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -1190,7 +1138,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             data-testid="sidebar-item-user-management"
           >
             <a
-              class="nav-item flex gaps align-center"
+              class="navItem"
               data-testid="sidebar-item-link-for-user-management"
               href="/"
             >
@@ -1204,9 +1152,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   security
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Access Control
               </span>
             </a>
@@ -1217,7 +1163,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             data-testid="sidebar-item-custom-resources"
           >
             <a
-              class="nav-item flex gaps align-center expandable"
+              class="navItem"
               data-testid="sidebar-item-link-for-custom-resources"
               href="/"
             >
@@ -1231,13 +1177,11 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                   extension
                 </span>
               </i>
-              <span
-                class="link-text box grow"
-              >
+              <span>
                 Custom Resources
               </span>
               <i
-                class="Icon expand-icon box right material focusable"
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"

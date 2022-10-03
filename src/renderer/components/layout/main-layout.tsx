@@ -54,7 +54,7 @@ class NonInjectedMainLayout extends React.Component<MainLayoutProps & Dependenci
             getCurrentExtent={() => sidebarWidth}
             onDrag={this.onSidebarResize}
             onDoubleClick={() => this.onSidebarResize(defaultSidebarWidth)}
-            minExtent={120}
+            minExtent={150}
             maxExtent={400}
           />
         </div>

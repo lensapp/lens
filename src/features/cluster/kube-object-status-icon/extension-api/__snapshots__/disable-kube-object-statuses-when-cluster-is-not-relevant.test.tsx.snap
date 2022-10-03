@@ -39,7 +39,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -50,13 +50,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -73,7 +71,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -87,9 +85,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -100,7 +96,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -114,13 +110,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -137,7 +131,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -151,9 +145,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -164,7 +156,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -175,13 +167,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -198,7 +188,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -212,9 +202,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -225,7 +213,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -239,13 +227,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -474,7 +460,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -485,13 +471,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -508,7 +492,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -522,9 +506,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -535,7 +517,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -549,13 +531,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -572,7 +552,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -586,9 +566,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -599,7 +577,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -610,13 +588,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -633,7 +609,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -647,9 +623,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -660,7 +634,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -674,13 +648,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -869,7 +841,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -880,13 +852,11 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -903,7 +873,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -917,9 +887,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -930,7 +898,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -944,13 +912,11 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -967,7 +933,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -981,9 +947,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -994,7 +958,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -1005,13 +969,11 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1028,7 +990,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               data-testid="sidebar-item-user-management"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -1042,9 +1004,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
               </a>
@@ -1055,7 +1015,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -1069,13 +1029,11 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"

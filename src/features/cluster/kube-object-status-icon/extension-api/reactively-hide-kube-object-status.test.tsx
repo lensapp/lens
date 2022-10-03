@@ -29,7 +29,10 @@ describe("reactively hide kube object status", () => {
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-      windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+
+      runInAction(() => {
+        windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+      });
     });
 
     someObservable = observable.box(false);

@@ -5,7 +5,6 @@
 
 import type { ElectronApplication, Page } from "playwright";
 import * as utils from "../helpers/utils";
-import { isWindows } from "../../src/common/vars";
 
 describe("Lens command palette", () => {
   let window: Page, cleanup: () => Promise<void>, app: ElectronApplication;
@@ -20,8 +19,7 @@ describe("Lens command palette", () => {
   }, 10*60*1000);
 
   describe("menu", () => {
-    // skip on windows due to suspected playwright issue with Electron 14
-    utils.itIf(!isWindows)("opens command dialog from menu", async () => {
+    it("opens command dialog from menu", async () => {
       await app.evaluate(async ({ app }) => {
         await app.applicationMenu
           ?.getMenuItemById("view")

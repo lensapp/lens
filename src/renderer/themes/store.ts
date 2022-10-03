@@ -17,10 +17,10 @@ import type { ReadonlyDeep } from "type-fest/source/readonly-deep";
 import assert from "assert";
 
 export type ThemeId = string;
-
+export type LensThemeType = "dark" | "light";
 export interface LensTheme {
   name: string;
-  type: "dark" | "light";
+  type: LensThemeType;
   colors: Record<string, string>;
   description: string;
   author: string;

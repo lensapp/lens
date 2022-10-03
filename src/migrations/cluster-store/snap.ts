@@ -6,13 +6,14 @@
 // Fix embedded kubeconfig paths under snap config
 
 import type { ClusterModel } from "../../common/cluster-types";
-import { getAppVersion } from "../../common/utils/app-version";
 import fs from "fs";
 import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
+import packageJson from "../../../package.json";
 
 export default {
-  version: getAppVersion(), // Run always after upgrade
+  // TODO: replace with injection once migrations are made as injectables
+  version: packageJson.version, // Run always after upgrade
   run(store) {
     if (!process.env["SNAP"]) return;
 

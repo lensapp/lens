@@ -39,7 +39,9 @@ describe("reactively hide kube object detail item", () => {
           } as unknown as ApiManager),
       );
 
-      windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+      runInAction(() => {
+        windowDi.register(testRouteInjectable, testRouteComponentInjectable);
+      });
     });
 
     someObservable = observable.box(false);

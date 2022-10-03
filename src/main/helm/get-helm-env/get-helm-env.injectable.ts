@@ -18,7 +18,7 @@ const getHelmEnvInjectable = getInjectable({
     const execHelm = di.inject(execHelmInjectable);
 
     return async (): Promise<AsyncResult<HelmEnv>> => {
-      const result = await execHelm("env");
+      const result = await execHelm(["env"]);
 
       if (!result.callWasSuccessful) {
         return { callWasSuccessful: false, error: result.error };

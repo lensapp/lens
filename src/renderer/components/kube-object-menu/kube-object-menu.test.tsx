@@ -14,7 +14,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import clusterInjectable from "./dependencies/cluster.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
@@ -34,11 +34,13 @@ describe("kube-object-menu", () => {
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.register(
-      someMenuItemInjectable,
-      someOtherMenuItemInjectable,
-      someAnotherMenuItemInjectable,
-    );
+    runInAction(() => {
+      di.register(
+        someMenuItemInjectable,
+        someOtherMenuItemInjectable,
+        someAnotherMenuItemInjectable,
+      );
+    });
 
     render = renderFor(di);
 

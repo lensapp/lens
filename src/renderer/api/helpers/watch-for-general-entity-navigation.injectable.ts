@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { reaction, when } from "mobx";
+import type { GeneralEntity } from "../../../common/catalog-entities";
 import generalCategoryInjectable from "../../../common/catalog/categories/general.injectable";
 import isActiveRouteInjectable from "../../navigation/is-route-active.injectable";
 import observableHistoryInjectable from "../../navigation/observable-history.injectable";
@@ -30,7 +31,7 @@ const watchForGeneralEntityNavigationInjectable = getInjectable({
           dispose.push(reaction(
             () => observableHistory.location,
             () => {
-              const entities = entityRegistry.getItemsForCategory(generalCategory);
+              const entities = entityRegistry.getItemsForCategory(generalCategory) as GeneralEntity[];
               const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
 
               if (activeEntity) {

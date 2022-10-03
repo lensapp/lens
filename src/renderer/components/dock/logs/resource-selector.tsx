@@ -12,7 +12,7 @@ import { Badge } from "../../badge";
 import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import type { LogTabViewModel } from "./logs-view-model";
-import type { PodContainer, Pod } from "../../../../common/k8s-api/endpoints";
+import type { Container, Pod } from "../../../../common/k8s-api/endpoints";
 import type { SingleValue } from "react-select";
 
 export interface LogResourceSelectorProps {
@@ -40,7 +40,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
   }));
   const allContainers = pod.getAllContainers();
   const container = allContainers.find(container => container.name === selectedContainer) ?? null;
-  const onContainerChange = (option: SingleValue<SelectOption<PodContainer>>) => {
+  const onContainerChange = (option: SingleValue<SelectOption<Container>>) => {
     if (!option) {
       return;
     }
@@ -105,7 +105,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
         menuClass="pod-selector-menu"
       />
       <span>Container</span>
-      <Select<PodContainer, SelectOption<PodContainer>, false>
+      <Select<Container, SelectOption<Container>, false>
         id="container-selector-input"
         options={containerSelectOptions}
         value={container}

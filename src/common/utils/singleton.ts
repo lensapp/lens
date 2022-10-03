@@ -27,7 +27,7 @@ export class Singleton {
    * @param args The constructor arguments for the child class
    * @returns An instance of the child class
    */
-  static createInstance<T, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
+  static createInstance<T extends Singleton, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
     if (!Singleton.instances.has(this)) {
       if (Singleton.creating.length > 0) {
         throw new TypeError(`Cannot create a second singleton (${this.name}) while creating a first (${Singleton.creating})`);

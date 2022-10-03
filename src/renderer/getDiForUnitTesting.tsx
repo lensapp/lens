@@ -33,9 +33,8 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
 import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
-import { observable, computed } from "mobx";
+import { observable, computed, runInAction } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
-import appVersionInjectable from "../common/vars/app-version.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
@@ -67,27 +66,32 @@ import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injecta
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
+import type { PartialDeep } from "type-fest";
 
-export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {}) => {
-  const {
-    doGeneralOverrides = false,
-  } = opts;
+export const getDiForUnitTesting = (
+  opts: { doGeneralOverrides?: boolean } = {},
+) => {
+  const { doGeneralOverrides = false } = opts;
 
   const di = createContainer("renderer");
 
-  registerMobX(di);
+  di.preventSideEffects();
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
-  const injectables: Injectable<any, any, any>[] = (global as any).rendererInjectablePaths.map(
+  const injectables: Injectable<any, any, any>[] = (
+      global as any
+  ).rendererInjectablePaths.map(
     (filePath: string) => require(filePath).default,
   );
 
-  chunk(100)(injectables).forEach(chunkInjectables => {
-    di.register(...chunkInjectables);
-  });
+  runInAction(() => {
+    registerMobX(di);
 
-  di.preventSideEffects();
+    chunk(100)(injectables).forEach((chunkInjectables) => {
+      di.register(...chunkInjectables);
+    });
+  });
 
   if (doGeneralOverrides) {
     const globalOverrides: GlobalOverride[] = (global as any).rendererGlobalOverridePaths.map(
@@ -109,8 +113,6 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
     di.override(joinPathsInjectable, () => joinPathsFake);
-
-    di.override(appVersionInjectable, () => "1.0.0");
 
     di.override(historyInjectable, () => createMemoryHistory());
     di.override(legacyOnChannelListenInjectable, () => () => noop);
@@ -183,17 +185,14 @@ export const getDiForUnitTesting = (opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(defaultShellInjectable, () => "some-default-shell");
 
-    di.override(
-      userStoreInjectable,
-      () =>
-        ({
-          isTableColumnHidden: () => false,
-          extensionRegistryUrl: { customUrl: "some-custom-url" },
-          syncKubeconfigEntries: observable.map(),
-          terminalConfig: { fontSize: 42 },
-          editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
-        } as unknown as UserStore),
-    );
+    di.override(userStoreInjectable, () => ({
+      isTableColumnHidden: () => false,
+      extensionRegistryUrl: { customUrl: "some-custom-url" },
+      syncKubeconfigEntries: observable.map(),
+      terminalConfig: { fontSize: 42 },
+      editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
+      load: () => {},
+    } as PartialDeep<UserStore> as UserStore));
 
     di.override(apiManagerInjectable, () => new ApiManager());
 

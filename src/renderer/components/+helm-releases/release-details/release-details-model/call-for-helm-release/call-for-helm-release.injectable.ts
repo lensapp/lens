@@ -7,6 +7,7 @@ import type { HelmReleaseDto } from "../../../../../../common/k8s-api/endpoints/
 import callForHelmReleasesInjectable from "../../../call-for-helm-releases/call-for-helm-releases.injectable";
 import type { HelmReleaseDetails } from "./call-for-helm-release-details/call-for-helm-release-details.injectable";
 import callForHelmReleaseDetailsInjectable from "./call-for-helm-release-details/call-for-helm-release-details.injectable";
+import type { AsyncResult } from "../../../../../../common/utils/async-result";
 
 export interface DetailedHelmRelease {
   release: HelmReleaseDto;
@@ -16,7 +17,7 @@ export interface DetailedHelmRelease {
 export type CallForHelmRelease = (
   name: string,
   namespace: string
-) => Promise<DetailedHelmRelease | undefined>;
+) => Promise<AsyncResult<DetailedHelmRelease | undefined>>;
 
 const callForHelmReleaseInjectable = getInjectable({
   id: "call-for-helm-release",
@@ -36,10 +37,13 @@ const callForHelmReleaseInjectable = getInjectable({
       );
 
       if (!release) {
-        return undefined;
+        return {
+          callWasSuccessful: false,
+          error: `Release ${name} didn't exist in ${namespace} namespace.`,
+        };
       }
 
-      return { release, details };
+      return { callWasSuccessful: true, response: { release, details }};
     };
   },
 });

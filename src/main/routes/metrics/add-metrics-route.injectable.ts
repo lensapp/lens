@@ -9,7 +9,6 @@ import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import { ClusterMetadataKey } from "../../../common/cluster-types";
 import logger from "../../logger";
 import type { Cluster } from "../../../common/cluster/cluster";
-import type { IMetricsQuery } from "./metrics-query";
 import { clusterRoute } from "../../router/route";
 import { isObject } from "lodash";
 import { isRequestError } from "../../../common/utils";
@@ -60,7 +59,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
     const getMetrics = di.inject(getMetricsInjectable);
     const loadMetrics = loadMetricsFor(getMetrics);
 
-    const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
+    const queryParams = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 
     try {

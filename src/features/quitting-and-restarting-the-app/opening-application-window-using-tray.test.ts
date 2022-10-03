@@ -13,6 +13,7 @@ import focusApplicationInjectable from "../../main/electron-app/features/focus-a
 import type { CreateElectronWindow } from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import splashWindowInjectable from "../../main/start-main-application/lens-window/splash-window/splash-window.injectable";
+import { runInAction } from "mobx";
 
 describe("opening application window using tray", () => {
   describe("given application has started", () => {
@@ -61,10 +62,12 @@ describe("opening application window using tray", () => {
           return browserWindow;
         });
 
-        (mainDi as any).decorateFunction(
-          createElectronWindowInjectable,
-          createElectronWindowMock,
-        );
+        runInAction(() => {
+          (mainDi as any).decorateFunction(
+            createElectronWindowInjectable,
+            createElectronWindowMock,
+          );
+        });
 
         expectWindowsToBeOpen = expectWindowsToBeOpenFor(builder);
       });
