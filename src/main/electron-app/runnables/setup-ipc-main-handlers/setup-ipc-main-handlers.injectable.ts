@@ -12,7 +12,6 @@ import { onLoadOfApplicationInjectionToken } from "../../../start-main-applicati
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
 import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
 import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
-import clustersThatAreBeingDeletedInjectable from "../../../cluster/are-being-deleted.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -25,7 +24,6 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const clusterStore = di.inject(clusterStoreInjectable);
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
     const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
-    const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);
 
     return {
       id: "setup-ipc-main-handlers",
@@ -39,7 +37,6 @@ const setupIpcMainHandlersInjectable = getInjectable({
           clusterStore,
           operatingSystemTheme,
           askUserForFilePaths,
-          clustersThatAreBeingDeleted,
         });
       },
     };
