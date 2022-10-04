@@ -2,32 +2,19 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
 
-import applicationMenuItemInjectionToken from "../../application-menu-item-injection-token";
+import {
+  getApplicationMenuSeparatorInjectable,
+} from "../../get-application-menu-separator-injectable";
 
-export const separatorAfterCheckForUpdatesInjectable = getInjectable({
-  id: "separator-after-check-for-updates",
-
-  instantiate: () => ({
-    id: "separator-after-check-for-updates",
-    parentId: "primary-for-mac",
-    type: "separator" as const,
-    orderNumber: 30,
-  }),
-
-  injectionToken: applicationMenuItemInjectionToken,
+export const separator1 = getApplicationMenuSeparatorInjectable({
+  id: "separator-1",
+  parentId: "primary-for-mac",
+  orderNumber: 30,
 });
 
-export const separatorAfterExtensionsInjectable = getInjectable({
-  id: "separator-after-extensions",
-
-  instantiate: () => ({
-    id: "separator-after-extensions",
-    parentId: "primary-for-mac",
-    type: "separator" as const,
-    orderNumber: 70,
-  }),
-
-  injectionToken: applicationMenuItemInjectionToken,
+export const separator2 = getApplicationMenuSeparatorInjectable({
+  id: "separator-2",
+  parentId: "primary-for-mac",
+  orderNumber: 70,
 });
