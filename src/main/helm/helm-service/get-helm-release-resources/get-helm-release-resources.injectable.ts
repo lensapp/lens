@@ -11,7 +11,6 @@ export type GetHelmReleaseResources = (
   name: string,
   namespace: string,
   kubeconfigPath: string,
-  kubectlPath: string
 ) => Promise<AsyncResult<KubeJsonApiData[], string>>;
 
 const getHelmReleaseResourcesInjectable = getInjectable({
