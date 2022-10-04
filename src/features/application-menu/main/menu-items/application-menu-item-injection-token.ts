@@ -21,7 +21,13 @@ export interface Separator extends Shared {
   type: "separator";
 }
 
-const applicationMenuItemInjectionToken = getInjectionToken<ApplicationMenuItem | Separator>({
+export interface OperationSystemAction extends Shared {
+  role: "services" | "hide" | "hideOthers" | "unhide";
+}
+
+const applicationMenuItemInjectionToken = getInjectionToken<
+  ApplicationMenuItem | Separator | OperationSystemAction
+>({
   id: "application-menu-item-injection-token",
 });
 

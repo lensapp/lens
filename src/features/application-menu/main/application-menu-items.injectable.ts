@@ -25,8 +25,6 @@ import processCheckingForUpdatesInjectable from "../../application-update/main/p
 import openLinkInBrowserInjectable from "../../../common/utils/open-link-in-browser.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
 import productNameInjectable from "../../../common/vars/product-name.injectable";
-
-
 import applicationMenuItemInjectionToken from "./menu-items/application-menu-item-injection-token";
 
 function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
@@ -78,12 +76,6 @@ const applicationMenuItemsInjectable = getInjectable({
         label: appName,
         id: "root",
         submenu: [
-          { role: "services" },
-          { type: "separator" },
-          { role: "hide" },
-          { role: "hideOthers" },
-          { role: "unhide" },
-          { type: "separator" },
           {
             label: "Quit",
             accelerator: "Cmd+Q",
