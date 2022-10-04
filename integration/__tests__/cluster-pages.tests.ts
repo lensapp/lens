@@ -19,7 +19,9 @@ import { describeIf } from "../../src/test-utils/skippers";
 const TEST_NAMESPACE = "integration-tests";
 
 describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
-  let window: Page, cleanup: () => Promise<void>, frame: Frame;
+  let window: Page;
+  let cleanup: undefined | (() => Promise<void>);
+  let frame: Frame;
 
   beforeEach(async () => {
     ({ window, cleanup } = await utils.start());
@@ -29,7 +31,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   }, 10 * 60 * 1000);
 
   afterEach(async () => {
-    await cleanup();
+    await cleanup?.();
   }, 10 * 60 * 1000);
 
   it("shows cluster context menu in sidebar", async () => {

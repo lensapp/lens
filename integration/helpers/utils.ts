@@ -28,6 +28,7 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
 
       if (page.url().startsWith("http://localhost")) {
         cleanup();
+        console.log(stdoutBuf);
         resolve(page);
       }
     };
