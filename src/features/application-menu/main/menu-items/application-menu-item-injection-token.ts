@@ -25,9 +25,9 @@ export interface OperationSystemAction extends Shared {
   role: "services" | "hide" | "hideOthers" | "unhide";
 }
 
-const applicationMenuItemInjectionToken = getInjectionToken<
-  ApplicationMenuItem | Separator | OperationSystemAction
->({
+export type ApplicationMenuItemTypes = ApplicationMenuItem | Separator | OperationSystemAction;
+
+const applicationMenuItemInjectionToken = getInjectionToken<ApplicationMenuItemTypes>({
   id: "application-menu-item-injection-token",
 });
 

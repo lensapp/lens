@@ -23,9 +23,13 @@ import reloadCurrentApplicationWindowInjectable from "../../../main/start-main-a
 import showApplicationWindowInjectable from "../../../main/start-main-application/lens-window/show-application-window.injectable";
 import processCheckingForUpdatesInjectable from "../../application-update/main/process-checking-for-updates.injectable";
 import openLinkInBrowserInjectable from "../../../common/utils/open-link-in-browser.injectable";
-import appNameInjectable from "../../../common/vars/app-name.injectable";
 import productNameInjectable from "../../../common/vars/product-name.injectable";
+import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
 import applicationMenuItemInjectionToken from "./menu-items/application-menu-item-injection-token";
+import { filter, map, sortBy } from "lodash/fp";
+import { pipeline } from "@ogre-tools/fp";
+import type { Composite } from "./menu-items/get-composite/get-composite";
+import getComposite from "./menu-items/get-composite/get-composite";
 
 function ignoreIf(check: boolean, menuItems: MenuItemOpts[]) {
   return check ? [] : menuItems;
@@ -40,7 +44,7 @@ const applicationMenuItemsInjectable = getInjectable({
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
-    const appName = di.inject(appNameInjectable);
+
     const productName = di.inject(productNameInjectable);
     const isMac = di.inject(isMacInjectable);
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
@@ -65,19 +69,58 @@ const applicationMenuItemsInjectable = getInjectable({
 
     const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
 
-    logger.info(`[MENU]: autoUpdateEnabled=${updatingIsEnabled}`);
+    // Todo: find out what to do with this.
+    // logger.info(`[MENU]: autoUpdateEnabled=${updatingIsEnabled}`);
 
-    const menuItems = di
-      .injectMany(applicationMenuItemInjectionToken)
-      .filter(x => x.isShown !== false);
+    const allShown = pipeline(
+      di.injectMany(applicationMenuItemInjectionToken),
+      filter((x) => x.isShown !== false),
+    );
+
+    const roots = allShown.filter((x) => x.parentId === null);
+
+    const toMenuItemOpt = (
+      x: Composite<ApplicationMenuItemTypes>,
+    ): MenuItemOpts => ({
+      // @ts-ignore
+      label: x.value.label,
+      id: x.id,
+
+      submenu: pipeline(
+        x.children,
+        sortBy(x => x.value.orderNumber),
+        map(toMenuItemOpt),
+      ),
+
+      // @ts-ignore
+      type: x.value.type,
+      // @ts-ignore
+      role: x.value.role,
+      // @ts-ignore
+      click: x.value.click,
+      // @ts-ignore
+      accelerator: x.value.accelerator,
+    });
+
+    const menuItems = pipeline(
+      roots,
+
+      map((root) =>
+        getComposite({
+          source: allShown,
+          // @ts-ignore
+          rootId: root.id,
+          // @ts-ignore
+          getId: (x) => x.id,
+          // @ts-ignore
+          getParentId: (x) => x.parentId,
+        }),
+      ),
+
+      map(toMenuItemOpt),
+    );
 
     return computed((): MenuItemOpts[] => {
-      const macAppMenu: MenuItemOpts = {
-        label: appName,
-        id: "root",
-        submenu: [],
-      };
-
       const fileMenu: MenuItemOpts = {
         label: "File",
         id: "file",
@@ -263,7 +306,6 @@ const applicationMenuItemsInjectable = getInjectable({
       };
       // Prepare menu items order
       const appMenu = new Map([
-        ["mac", macAppMenu],
         ["file", fileMenu],
         ["edit", editMenu],
         ["view", viewMenu],
@@ -296,4 +338,3 @@ const applicationMenuItemsInjectable = getInjectable({
 });
 
 export default applicationMenuItemsInjectable;
-
