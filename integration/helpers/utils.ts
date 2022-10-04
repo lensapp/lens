@@ -11,7 +11,6 @@ import type { ElectronApplication, Frame, Page } from "playwright";
 import { _electron as electron } from "playwright";
 import { noop } from "lodash";
 import { disposer } from "../../src/common/utils";
-import { Writable } from "stream";
 
 export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
