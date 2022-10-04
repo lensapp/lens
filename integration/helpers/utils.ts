@@ -23,7 +23,7 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
     const cleanup = disposer();
     let stdoutBuf = "";
 
-    const handler = (page: Page) => {
+    const onWindow = (page: Page) => {
       console.log(`Page opened: ${page.url()}`);
 
       if (page.url().startsWith("http://localhost")) {
@@ -33,6 +33,9 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
       }
     };
 
+    app.on("window", onWindow);
+    cleanup.push(() => app.off("window", onWindow));
+
     const onClose = () => {
       cleanup();
       reject(new Error("App has unnexpectedly closed"));
@@ -41,17 +44,12 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
     app.on("close", onClose);
     cleanup.push(() => app.off("close", onClose));
 
-    app.addListener("window", handler);
-    cleanup.push(() => app.removeListener("window", handler));
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const stdout = app.process().stdout!;
+    const onData = (chunk: any) => stdoutBuf += chunk.toString();
 
-    const { stdout } = app.process();
-
-    if (stdout) {
-      const onData = (chunk: any) => stdoutBuf += chunk.toString();
-
-      stdout.on("data", onData);
-      cleanup.push(() => stdout.off("data", onData));
-    }
+    stdout.on("data", onData);
+    cleanup.push(() => stdout.off("data", onData));
 
     const timeoutId = setTimeout(() => {
       cleanup();
