@@ -19,8 +19,6 @@ const getHelmReleaseInjectable = getInjectable({
 
     return async (cluster: Cluster, releaseName: string, namespace: string) => {
       const kubeconfigPath = await cluster.getProxyKubeconfigPath();
-      const kubectl = await cluster.ensureKubectl();
-      const kubectlPath = await kubectl.getPath();
 
       logger.debug("Fetch release");
 
@@ -51,7 +49,6 @@ const getHelmReleaseInjectable = getInjectable({
         releaseName,
         namespace,
         kubeconfigPath,
-        kubectlPath,
       );
 
       if (!resourcesResult.callWasSuccessful) {
