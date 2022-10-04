@@ -75,16 +75,7 @@ const applicationMenuItemsInjectable = getInjectable({
       const macAppMenu: MenuItemOpts = {
         label: appName,
         id: "root",
-        submenu: [
-          {
-            label: "Quit",
-            accelerator: "Cmd+Q",
-            id: "quit",
-            click() {
-              stopServicesAndExitApp();
-            },
-          },
-        ],
+        submenu: [],
       };
 
       const fileMenu: MenuItemOpts = {
