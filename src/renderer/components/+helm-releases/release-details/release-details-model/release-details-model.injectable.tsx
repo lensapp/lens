@@ -222,12 +222,12 @@ export class ReleaseDetailsModel {
   }
 
   @computed get notes() {
-    return this.details.info.notes;
+    return this.details?.info.notes ?? "";
   }
 
   @computed get groupedResources(): MinimalResourceGroup[] {
     return pipeline(
-      this.details.resources,
+      this.details?.resources ?? [],
       groupBy((resource) => resource.kind),
       (grouped) => Object.entries(grouped),
 
@@ -271,20 +271,17 @@ export interface MinimalResource {
   name: string;
   namespace: string | undefined;
   detailsUrl: string | undefined;
-  creationTimestamp: string | undefined;
 }
 
 const toMinimalResourceFor =
   (getResourceDetailsUrl: GetResourceDetailsUrl, kind: string) =>
     (resource: KubeJsonApiData): MinimalResource => {
-      const { creationTimestamp, name, namespace, uid } = resource.metadata;
+      const { name, namespace, uid } = resource.metadata;
 
       return {
         uid,
         name,
         namespace,
-        creationTimestamp,
-
         detailsUrl: getResourceDetailsUrl(
           kind,
           resource.apiVersion,

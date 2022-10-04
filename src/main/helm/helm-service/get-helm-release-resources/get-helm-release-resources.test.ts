@@ -10,9 +10,10 @@ import type { ExecHelm } from "../../exec-helm/exec-helm.injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { JsonObject } from "type-fest";
 import type { ExecFileWithInput } from "./call-for-kube-resources-by-manifest/exec-file-with-input/exec-file-with-input.injectable";
 import execFileWithInputInjectable from "./call-for-kube-resources-by-manifest/exec-file-with-input/exec-file-with-input.injectable";
+import type { AsyncResult } from "../../../../common/utils/async-result";
+import type { KubeJsonApiData } from "../../../../common/k8s-api/kube-json-api";
 
 describe("get helm release resources", () => {
   let getHelmReleaseResources: GetHelmReleaseResources;
@@ -36,7 +37,7 @@ describe("get helm release resources", () => {
   });
 
   describe("when called", () => {
-    let actualPromise: Promise<JsonObject[]>;
+    let actualPromise: Promise<AsyncResult<KubeJsonApiData[], string>>;
 
     beforeEach(() => {
       actualPromise = getHelmReleaseResources(

@@ -24,7 +24,7 @@ const getHelmReleaseInjectable = getInjectable({
 
       logger.debug("Fetch release");
 
-      const args = [
+      const result = await execHelm([
         "status",
         releaseName,
         "--namespace",
@@ -33,11 +33,11 @@ const getHelmReleaseInjectable = getInjectable({
         kubeconfigPath,
         "--output",
         "json",
-      ];
-
-      const result = await execHelm(args);
+      ]);
 
       if (!result.callWasSuccessful) {
+        logger.warn(`Failed to exectute helm: ${result.error}`);
+
         return undefined;
       }
 
@@ -47,14 +47,23 @@ const getHelmReleaseInjectable = getInjectable({
         return undefined;
       }
 
-      release.resources = await getHelmReleaseResources(
+      const resourcesResult = await getHelmReleaseResources(
         releaseName,
         namespace,
         kubeconfigPath,
         kubectlPath,
       );
 
-      return release;
+      if (!resourcesResult.callWasSuccessful) {
+        logger.warn(`Failed to get helm release resources: ${resourcesResult.error}`);
+
+        return undefined;
+      }
+
+      return {
+        ...release,
+        resources: resourcesResult.response,
+      };
     };
   },
 
