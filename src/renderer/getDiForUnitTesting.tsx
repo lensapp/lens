@@ -5,9 +5,7 @@
 
 import { noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
-import {
-  createContainer,
-} from "@ogre-tools/injectable";
+import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
@@ -68,9 +66,11 @@ export const getDiForUnitTesting = (
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
   const injectables: Injectable<any, any, any>[] = (
-      global as any
-  ).rendererInjectablePaths.map(
-    (filePath: string) => require(filePath).default,
+    global as any
+  ).rendererInjectablePaths.flatMap((filePath: string) =>
+    Object.values(require(filePath)).filter(
+      (maybeInjectable: any) => isInjectable(maybeInjectable),
+    ),
   );
 
   runInAction(() => {
