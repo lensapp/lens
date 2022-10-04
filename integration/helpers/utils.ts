@@ -22,8 +22,7 @@ export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
 async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promise<Page> {
   return new Promise((resolve, reject) => {
     const cleanup = disposer();
-    const stdoutBuffer = Buffer.from("");
-    const stdoutStream = new Writable(stdoutBuffer);
+    let stdoutBuf = "";
 
     const handler = (page: Page) => {
       console.log(`Page opened: ${page.url()}`);
@@ -37,12 +36,18 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
     app.addListener("window", handler);
     cleanup.push(() => app.removeListener("window", handler));
 
-    app.process().stdout?.pipe(stdoutStream);
-    cleanup.push(() => app.process().stdout?.unpipe(stdoutStream));
+    const { stdout } = app.process();
+
+    if (stdout) {
+      const onData = (chunk: any) => stdoutBuf += chunk.toString();
+      
+      stdout.on("data", onData);
+      cleanup.push(() => stdout.off("data", onData));
+    }
 
     const timeoutId = setTimeout(() => {
       cleanup();
-      console.log(stdoutBuffer.toString("utf8"));
+      console.log(stdoutBuf);
       reject(new Error(`Lens did not open the main window within ${timeout}ms`));
     }, timeout);
 
