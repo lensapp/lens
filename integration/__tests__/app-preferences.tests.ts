@@ -24,10 +24,9 @@ describe("preferences page tests", () => {
 
     await app.evaluate(async ({ app }) => {
       await app.applicationMenu
-        ?.getMenuItemById(process.platform === "darwin" ? "root" : "file")
-        ?.submenu
-        ?.getMenuItemById("preferences")
-        ?.click();
+        .getMenuItemById(process.platform === "darwin" ? "root" : "file")
+        .submenu.getMenuItemById("preferences")
+        .click();
     });
   }, 10*60*1000);
 

@@ -18,6 +18,14 @@ export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
   "darwin": "./dist/mac/OpenLens.app/Contents/MacOS/OpenLens",
 };
 
+export function itIf(condition: boolean) {
+  return condition ? it : it.skip;
+}
+
+export function describeIf(condition: boolean) {
+  return condition ? describe : describe.skip;
+}
+
 async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promise<Page> {
   return new Promise((resolve, reject) => {
     const cleanup = disposer();
