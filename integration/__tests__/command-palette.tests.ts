@@ -7,15 +7,17 @@ import type { ElectronApplication, Page } from "playwright";
 import * as utils from "../helpers/utils";
 
 describe("Lens command palette", () => {
-  let window: Page, cleanup: () => Promise<void>, app: ElectronApplication;
-
+  let window: Page;
+  let cleanup: undefined | (() => Promise<void>);
+  let app: ElectronApplication;
+  
   beforeEach(async () => {
     ({ window, cleanup, app } = await utils.start());
     await utils.clickWelcomeButton(window);
   }, 10*60*1000);
 
   afterEach(async () => {
-    await cleanup();
+    await cleanup?.();
   }, 10*60*1000);
 
   describe("menu", () => {

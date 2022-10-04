@@ -7,13 +7,14 @@ on:
     branches:
       - master
 jobs:
-  build:
-    name: Test
+  test:
+    name: ${{ matrix.type }} tests on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macos-11, windows-2019]
+        type: [unit, smoke]
         node-version: [16.x]
     steps:
       - name: Checkout Release from lens
@@ -51,25 +52,16 @@ jobs:
           retry_on: error
           command: make node_modules
 
-      - run: make build-npm
-        name: Generate npm package
-
-      - uses: nick-fields/retry@v2
-        name: Build bundled extensions
-        with:
-          timeout_minutes: 15
-          max_attempts: 3
-          retry_on: error
-          command: make -j2 build-extensions
-
       - run: make test
         name: Run tests
+        if: ${{ matrix.type == 'unit' }}
 
       - run: make test-extensions
         name: Run In-tree Extension tests
+        if: ${{ matrix.type == 'unit' }}
 
       - run: make ci-validate-dev
-        if: contains(github.event.pull_request.labels.*.name, 'dependencies')
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') && matrix.type == 'unit' }}
         name: Validate dev mode will work
 
       - name: Install integration test dependencies
@@ -77,7 +69,7 @@ jobs:
         uses: medyagh/setup-minikube@master
         with:
           minikube-version: latest
-        if: runner.os == 'Linux'
+        if: ${{ runner.os == 'Linux' && matrix.type == 'smoke' }}
 
       - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
         name: Run Linux integration tests
@@ -88,11 +80,11 @@ jobs:
         shell: bash
         env:
           ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
-        if: runner.os == 'macOS'
+        if: ${{ runner.os == 'macOS' && matrix.type == 'smoke' }}
 
       - run: make integration
         name: Run Windows integration tests
         shell: bash
         env:
           ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --ia32"
-        if: runner.os == 'Windows'
+        if: ${{ runner.os == 'Windows' && matrix.type == 'smoke' }}
