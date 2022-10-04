@@ -13,7 +13,8 @@ import type { ElectronApplication, Page } from "playwright";
 import * as utils from "../helpers/utils";
 
 describe("preferences page tests", () => {
-  let window: Page, cleanup: () => Promise<void>;
+  let window: Page;
+  let cleanup: undefined | (() => Promise<void>);
 
   beforeEach(async () => {
     let app: ElectronApplication;
@@ -31,7 +32,7 @@ describe("preferences page tests", () => {
   }, 10*60*1000);
 
   afterEach(async () => {
-    await cleanup();
+    await cleanup?.();
   }, 10*60*1000);
 
   it('shows "preferences" and can navigate through the tabs', async () => {
