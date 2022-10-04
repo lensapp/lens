@@ -5,7 +5,8 @@
 
 import { kebabCase, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
-import { createContainer } from "@ogre-tools/injectable";
+// @ts-ignore
+import { createContainer, injectableSymbol } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
@@ -95,8 +96,12 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   di.preventSideEffects();
 
-  const injectables: Injectable<any, any, any>[] = (global as any).mainInjectablePaths.map(
-    (filePath: string) => require(filePath).default,
+  const injectables: Injectable<any, any, any>[] = (
+    global as any
+  ).mainInjectablePaths.flatMap((filePath: string) =>
+    Object.values(require(filePath)).filter(
+      (maybeInjectable: any) => maybeInjectable.aliasType === injectableSymbol,
+    ),
   );
 
   runInAction(() => {
