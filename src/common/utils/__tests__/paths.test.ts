@@ -3,11 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { describeIf } from "../../../test-utils/skippers";
+import { describeIf } from "../../../../integration/helpers/utils";
+import { isWindows } from "../../vars";
 import { isLogicalChildPath } from "../paths";
 
 describe("isLogicalChildPath", () => {
-  describeIf(process.platform === "win32")("windows tests", () => {
+  describeIf(isWindows)("windows tests", () => {
     it.each([
       {
         parentPath: "C:\\Foo",
@@ -39,7 +40,7 @@ describe("isLogicalChildPath", () => {
     });
   });
 
-  describeIf(process.platform !== "win32")("posix tests", () => {
+  describeIf(!isWindows)("posix tests", () => {
     it.each([
       {
         parentPath: "/foo",
