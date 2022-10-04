@@ -33,6 +33,14 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
       }
     };
 
+    const onClose = () => {
+      cleanup();
+      reject(new Error("App has unnexpectedly closed"));
+    };
+
+    app.on("close", onClose);
+    cleanup.push(() => app.off("close", onClose));
+
     app.addListener("window", handler);
     cleanup.push(() => app.removeListener("window", handler));
 
@@ -40,7 +48,7 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
 
     if (stdout) {
       const onData = (chunk: any) => stdoutBuf += chunk.toString();
-      
+
       stdout.on("data", onData);
       cleanup.push(() => stdout.off("data", onData));
     }
