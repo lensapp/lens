@@ -1415,13 +1415,13 @@
   dependencies:
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-auto-registration@10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-10.1.0.tgz#a46d23cf5cf880e416a46238ecb54e7f933f9d89"
-  integrity sha512-G9UKcaYr4DHViXHIKigzy6jI2ZhQC+K6idc1M4W/l4IazaV26Gwj1MSI5nrJ6Z4aRAzILFKM4dzkvZNFjkyGrw==
+"@ogre-tools/injectable-extension-for-auto-registration@10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-10.3.2.tgz#c3672100aef5ab109893e436d4cec965de744e06"
+  integrity sha512-s9/fTTt6Se87mFuSqdGTYjgqVmW54D7ZlsGQUa8Zw2wL3zu6Mgf3B71rwMzOOghnv4gJ/P/yB8u0xEhAUS+yCg==
   dependencies:
-    "@ogre-tools/fp" "^10.1.0"
-    "@ogre-tools/injectable" "^10.1.0"
+    "@ogre-tools/fp" "^10.3.2"
+    "@ogre-tools/injectable" "^10.3.2"
     lodash "^4.17.21"
 
 "@ogre-tools/injectable-extension-for-mobx@10.3.2":
