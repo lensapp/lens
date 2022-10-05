@@ -831,13 +831,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#menucontextvalue" class="md-nav__link">
-    MenuContextValue
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#monacocustomtheme" class="md-nav__link">
     MonacoCustomTheme
   </a>
@@ -1165,6 +1158,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#menu" class="md-nav__link">
+    Menu
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#menuactions" class="md-nav__link">
     MenuActions
   </a>
@@ -1370,7 +1370,6 @@
 <ul>
 <li><a href="../../classes/Renderer.Component.DrawerParamToggler/">DrawerParamToggler</a></li>
 <li><a href="../../classes/Renderer.Component.Input/">Input</a></li>
-<li><a href="../../classes/Renderer.Component.Menu/">Menu</a></li>
 <li><a href="../../classes/Renderer.Component.MenuItem/">MenuItem</a></li>
 <li><a href="../../classes/Renderer.Component.NotificationsStore/">NotificationsStore</a></li>
 <li><a href="../../classes/Renderer.Component.PageLayout/">PageLayout</a></li>
@@ -1422,6 +1421,7 @@
 <li><a href="../../interfaces/Renderer.Component.LineProgressProps/">LineProgressProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.MainLayoutProps/">MainLayoutProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.MenuActionsProps/">MenuActionsProps</a></li>
+<li><a href="../../interfaces/Renderer.Component.MenuContextValue/">MenuContextValue</a></li>
 <li><a href="../../interfaces/Renderer.Component.MenuItemProps/">MenuItemProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.MenuPosition/">MenuPosition</a></li>
 <li><a href="../../interfaces/Renderer.Component.MenuProps/">MenuProps</a></li>
@@ -1472,7 +1472,6 @@
 <li><a href="./#inputvalidationresult">InputValidationResult</a></li>
 <li><a href="./#inputvalidator">InputValidator</a></li>
 <li><a href="./#legacyautoconvertedoptions">LegacyAutoConvertedOptions</a></li>
-<li><a href="./#menucontextvalue">MenuContextValue</a></li>
 <li><a href="./#monacocustomtheme">MonacoCustomTheme</a></li>
 <li><a href="./#monacoeditorid">MonacoEditorId</a></li>
 <li><a href="./#monacotheme">MonacoTheme</a></li>
@@ -1522,6 +1521,7 @@
 <li><a href="./#kubeobjectmeta">KubeObjectMeta</a></li>
 <li><a href="./#lineprogress">LineProgress</a></li>
 <li><a href="./#mainlayout">MainLayout</a></li>
+<li><a href="./#menu">Menu</a></li>
 <li><a href="./#menuactions">MenuActions</a></li>
 <li><a href="./#monacoeditor">MonacoEditor</a></li>
 <li><a href="./#namespaceselect">NamespaceSelect</a></li>
@@ -1665,9 +1665,6 @@
 <p>Ƭ <strong>LegacyAutoConvertedOptions</strong>: <code>string</code>[]</p>
 <p><strong><code>Deprecated</code></strong></p>
 <p>This should not be used anymore, convert the options yourself.</p>
-<hr />
-<h3 id="menucontextvalue">MenuContextValue<a class="headerlink" href="#menucontextvalue" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>MenuContextValue</strong>: <a href="../../classes/Renderer.Component.Menu/"><code>Menu</code></a></p>
 <hr />
 <h3 id="monacocustomtheme">MonacoCustomTheme<a class="headerlink" href="#monacocustomtheme" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>MonacoCustomTheme</strong>: <code>"clouds-midnight"</code></p>
@@ -1892,7 +1889,7 @@
 </table>
 <hr />
 <h3 id="menucontext">MenuContext<a class="headerlink" href="#menucontext" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>MenuContext</strong>: <code>Context</code>&lt;<code>null</code> | <a href="../../classes/Renderer.Component.Menu/"><code>Menu</code></a>></p>
+<p>• <code>Const</code> <strong>MenuContext</strong>: <code>Context</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.Component.MenuContextValue/"><code>MenuContextValue</code></a>></p>
 <hr />
 <h3 id="cpuoptions">cpuOptions<a class="headerlink" href="#cpuoptions" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>cpuOptions</strong>: <code>ChartOptions</code></p>
@@ -2384,9 +2381,33 @@
 <h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
+<h3 id="menu">Menu<a class="headerlink" href="#menu" title="Permanent link">#</a></h3>
+<p>▸ <strong>Menu</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>props</code></td>
+<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>></td>
+</tr>
+<tr>
+<td align="left"><code>context?</code></td>
+<td align="left"><code>any</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<hr />
 <h3 id="menuactions">MenuActions<a class="headerlink" href="#menuactions" title="Permanent link">#</a></h3>
 <p>▸ <strong>MenuActions</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
-<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
+<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2405,13 +2426,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
 <h3 id="monacoeditor">MonacoEditor<a class="headerlink" href="#monacoeditor" title="Permanent link">#</a></h3>
 <p>▸ <strong>MonacoEditor</strong>(<code>props</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <p><strong>NOTE</strong>: Exotic components are not callable.</p>
-<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
+<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2426,7 +2447,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
+<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="namespaceselect">NamespaceSelect<a class="headerlink" href="#namespaceselect" title="Permanent link">#</a></h3>
@@ -2446,7 +2467,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
+<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2461,12 +2482,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
+<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p><code>JSX.Element</code></p>
 <hr />
 <h3 id="namespaceselectfilter">NamespaceSelectFilter<a class="headerlink" href="#namespaceselectfilter" title="Permanent link">#</a></h3>
 <p>▸ <strong>NamespaceSelectFilter</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
-<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
+<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2485,12 +2506,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
+<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
 <h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">#</a></h3>
 <p>▸ <strong>Notifications</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
-<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
+<h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2513,12 +2534,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
+<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
 <h3 id="piechart">PieChart<a class="headerlink" href="#piechart" title="Permanent link">#</a></h3>
 <p>▸ <strong>PieChart</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
-<h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
+<h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2537,45 +2558,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
+<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
 <h3 id="radio">Radio<a class="headerlink" href="#radio" title="Permanent link">#</a></h3>
 <p>▸ <strong>Radio</strong>&lt;<code>T</code>>(<code>__namedParameters</code>): <code>Element</code></p>
 <h4 id="type-parameters_9">Type parameters<a class="headerlink" href="#type-parameters_9" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>T</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.RadioProps/"><code>RadioProps</code></a>&lt;<code>T</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
-<p><code>Element</code></p>
-<hr />
-<h3 id="radiogroup">RadioGroup<a class="headerlink" href="#radiogroup" title="Permanent link">#</a></h3>
-<p>▸ <strong>RadioGroup</strong>&lt;<code>T</code>>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2599,11 +2587,44 @@
 <tbody>
 <tr>
 <td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.RadioGroupProps/"><code>RadioGroupProps</code></a>&lt;<code>T</code>></td>
+<td align="left"><a href="../../interfaces/Renderer.Component.RadioProps/"><code>RadioProps</code></a>&lt;<code>T</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
+<p><code>Element</code></p>
+<hr />
+<h3 id="radiogroup">RadioGroup<a class="headerlink" href="#radiogroup" title="Permanent link">#</a></h3>
+<p>▸ <strong>RadioGroup</strong>&lt;<code>T</code>>(<code>__namedParameters</code>): <code>Element</code></p>
+<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_32">Parameters<a class="headerlink" href="#parameters_32" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>__namedParameters</code></td>
+<td align="left"><a href="../../interfaces/Renderer.Component.RadioGroupProps/"><code>RadioGroupProps</code></a>&lt;<code>T</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="select">Select<a class="headerlink" href="#select" title="Permanent link">#</a></h3>
@@ -2635,7 +2656,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_32">Parameters<a class="headerlink" href="#parameters_32" title="Permanent link">#</a></h4>
+<h4 id="parameters_33">Parameters<a class="headerlink" href="#parameters_33" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2650,12 +2671,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
+<h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
 <p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="statusbrick">StatusBrick<a class="headerlink" href="#statusbrick" title="Permanent link">#</a></h3>
 <p>▸ <strong>StatusBrick</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
-<h4 id="parameters_33">Parameters<a class="headerlink" href="#parameters_33" title="Permanent link">#</a></h4>
+<h4 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2674,12 +2695,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
+<h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
 <h3 id="submenu">SubMenu<a class="headerlink" href="#submenu" title="Permanent link">#</a></h3>
 <p>▸ <strong>SubMenu</strong>(<code>props</code>): <code>Element</code></p>
-<h4 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h4>
+<h4 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2694,12 +2715,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
+<h4 id="returns_35">Returns<a class="headerlink" href="#returns_35" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="switch">Switch<a class="headerlink" href="#switch" title="Permanent link">#</a></h3>
 <p>▸ <strong>Switch</strong>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h4>
+<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2714,14 +2735,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_35">Returns<a class="headerlink" href="#returns_35" title="Permanent link">#</a></h4>
+<h4 id="returns_36">Returns<a class="headerlink" href="#returns_36" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="switcher">Switcher<a class="headerlink" href="#switcher" title="Permanent link">#</a></h3>
 <p>▸ <strong>Switcher</strong>(<code>__namedParameters</code>): <code>Element</code></p>
 <p><strong><code>Deprecated</code></strong></p>
 <p>Use <Switch/> instead from "../switch.tsx".</p>
-<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
+<h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2736,12 +2757,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_36">Returns<a class="headerlink" href="#returns_36" title="Permanent link">#</a></h4>
+<h4 id="returns_37">Returns<a class="headerlink" href="#returns_37" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="tablayout">TabLayout<a class="headerlink" href="#tablayout" title="Permanent link">#</a></h3>
 <p>▸ <strong>TabLayout</strong>(<code>__namedParameters</code>): <code>Element</code></p>
-<h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
+<h4 id="parameters_38">Parameters<a class="headerlink" href="#parameters_38" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2756,7 +2777,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_37">Returns<a class="headerlink" href="#returns_37" title="Permanent link">#</a></h4>
+<h4 id="returns_38">Returns<a class="headerlink" href="#returns_38" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <hr />
 <h3 id="table">Table<a class="headerlink" href="#table" title="Permanent link">#</a></h3>
@@ -2774,7 +2795,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_38">Parameters<a class="headerlink" href="#parameters_38" title="Permanent link">#</a></h4>
+<h4 id="parameters_39">Parameters<a class="headerlink" href="#parameters_39" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2789,13 +2810,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_38">Returns<a class="headerlink" href="#returns_38" title="Permanent link">#</a></h4>
+<h4 id="returns_39">Returns<a class="headerlink" href="#returns_39" title="Permanent link">#</a></h4>
 <p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
 <hr />
 <h3 id="asyncinputvalidator">asyncInputValidator<a class="headerlink" href="#asyncinputvalidator" title="Permanent link">#</a></h3>
 <p>▸ <strong>asyncInputValidator</strong>(<code>validator</code>): <code>AsyncInputValidator</code></p>
 <p>A helper function to create an AsyncInputValidator</p>
-<h4 id="parameters_39">Parameters<a class="headerlink" href="#parameters_39" title="Permanent link">#</a></h4>
+<h4 id="parameters_40">Parameters<a class="headerlink" href="#parameters_40" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2810,12 +2831,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_39">Returns<a class="headerlink" href="#returns_39" title="Permanent link">#</a></h4>
+<h4 id="returns_40">Returns<a class="headerlink" href="#returns_40" title="Permanent link">#</a></h4>
 <p><code>AsyncInputValidator</code></p>
 <hr />
 <h3 id="createterminaltab">createTerminalTab<a class="headerlink" href="#createterminaltab" title="Permanent link">#</a></h3>
 <p>▸ <strong>createTerminalTab</strong>(<code>tabParams?</code>): <code>Required</code>&lt;<code>DockTabCreate</code>></p>
-<h4 id="parameters_40">Parameters<a class="headerlink" href="#parameters_40" title="Permanent link">#</a></h4>
+<h4 id="parameters_41">Parameters<a class="headerlink" href="#parameters_41" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2830,14 +2851,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_40">Returns<a class="headerlink" href="#returns_40" title="Permanent link">#</a></h4>
+<h4 id="returns_41">Returns<a class="headerlink" href="#returns_41" title="Permanent link">#</a></h4>
 <p><code>Required</code>&lt;<code>DockTabCreate</code>></p>
 <hr />
 <h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
 <p><strong><code>Deprecated</code></strong></p>
 <p>use <code>di.inject(getDetailsUrlInjectable)</code> instead</p>
-<h4 id="parameters_41">Parameters<a class="headerlink" href="#parameters_41" title="Permanent link">#</a></h4>
+<h4 id="parameters_42">Parameters<a class="headerlink" href="#parameters_42" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2860,13 +2881,13 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_41">Returns<a class="headerlink" href="#returns_41" title="Permanent link">#</a></h4>
+<h4 id="returns_42">Returns<a class="headerlink" href="#returns_42" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <hr />
 <h3 id="inputvalidator_1">inputValidator<a class="headerlink" href="#inputvalidator_1" title="Permanent link">#</a></h3>
 <p>▸ <strong>inputValidator</strong>(<code>validator</code>): <code>SyncInputValidator</code></p>
 <p>A helper function to create an SyncInputValidator</p>
-<h4 id="parameters_42">Parameters<a class="headerlink" href="#parameters_42" title="Permanent link">#</a></h4>
+<h4 id="parameters_43">Parameters<a class="headerlink" href="#parameters_43" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2881,12 +2902,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_42">Returns<a class="headerlink" href="#returns_42" title="Permanent link">#</a></h4>
+<h4 id="returns_43">Returns<a class="headerlink" href="#returns_43" title="Permanent link">#</a></h4>
 <p><code>SyncInputValidator</code></p>
 <hr />
 <h3 id="isasyncvalidator">isAsyncValidator<a class="headerlink" href="#isasyncvalidator" title="Permanent link">#</a></h3>
 <p>▸ <strong>isAsyncValidator</strong>(<code>validator</code>): validator is AsyncInputValidator</p>
-<h4 id="parameters_43">Parameters<a class="headerlink" href="#parameters_43" title="Permanent link">#</a></h4>
+<h4 id="parameters_44">Parameters<a class="headerlink" href="#parameters_44" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2901,12 +2922,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_43">Returns<a class="headerlink" href="#returns_43" title="Permanent link">#</a></h4>
+<h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
 <p>validator is AsyncInputValidator</p>
 <hr />
 <h3 id="issvg">isSvg<a class="headerlink" href="#issvg" title="Permanent link">#</a></h3>
 <p>▸ <strong>isSvg</strong>(<code>content</code>): <code>boolean</code></p>
-<h4 id="parameters_44">Parameters<a class="headerlink" href="#parameters_44" title="Permanent link">#</a></h4>
+<h4 id="parameters_45">Parameters<a class="headerlink" href="#parameters_45" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2921,7 +2942,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
+<h4 id="returns_45">Returns<a class="headerlink" href="#returns_45" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <hr />
 <h3 id="onmultiselectfor">onMultiSelectFor<a class="headerlink" href="#onmultiselectfor" title="Permanent link">#</a></h3>
@@ -2949,7 +2970,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_45">Parameters<a class="headerlink" href="#parameters_45" title="Permanent link">#</a></h4>
+<h4 id="parameters_46">Parameters<a class="headerlink" href="#parameters_46" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2964,14 +2985,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_45">Returns<a class="headerlink" href="#returns_45" title="Permanent link">#</a></h4>
+<h4 id="returns_46">Returns<a class="headerlink" href="#returns_46" title="Permanent link">#</a></h4>
 <p><a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>true</code>, <code>Group</code>>[<code>"onChange"</code>]</p>
 <hr />
 <h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>showDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
 <p><strong><code>Deprecated</code></strong></p>
 <p>use <code>di.inject(showDetailsInjectable)</code> instead</p>
-<h4 id="parameters_46">Parameters<a class="headerlink" href="#parameters_46" title="Permanent link">#</a></h4>
+<h4 id="parameters_47">Parameters<a class="headerlink" href="#parameters_47" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2990,14 +3011,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_46">Returns<a class="headerlink" href="#returns_46" title="Permanent link">#</a></h4>
+<h4 id="returns_47">Returns<a class="headerlink" href="#returns_47" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="unioninputvalidatorsasync">unionInputValidatorsAsync<a class="headerlink" href="#unioninputvalidatorsasync" title="Permanent link">#</a></h3>
 <p>▸ <strong>unionInputValidatorsAsync</strong>(<code>baseValidator</code>, ...<code>validators</code>): <code>AsyncInputValidator</code></p>
 <p>Create a new input validator from a list of syncronous or async input validators. Will match as
 valid if one of the input validators matches the input</p>
-<h4 id="parameters_47">Parameters<a class="headerlink" href="#parameters_47" title="Permanent link">#</a></h4>
+<h4 id="parameters_48">Parameters<a class="headerlink" href="#parameters_48" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -3016,7 +3037,7 @@ valid if one of the input validators matches the input</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_47">Returns<a class="headerlink" href="#returns_47" title="Permanent link">#</a></h4>
+<h4 id="returns_48">Returns<a class="headerlink" href="#returns_48" title="Permanent link">#</a></h4>
 <p><code>AsyncInputValidator</code></p>
 <hr />
 <h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
@@ -3034,7 +3055,7 @@ valid if one of the input validators matches the input</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_48">Parameters<a class="headerlink" href="#parameters_48" title="Permanent link">#</a></h4>
+<h4 id="parameters_49">Parameters<a class="headerlink" href="#parameters_49" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -3049,7 +3070,7 @@ valid if one of the input validators matches the input</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_48">Returns<a class="headerlink" href="#returns_48" title="Permanent link">#</a></h4>
+<h4 id="returns_49">Returns<a class="headerlink" href="#returns_49" title="Permanent link">#</a></h4>
 <p><code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></p>
                 
               

@@ -954,6 +954,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#formaturlforlisting" class="md-nav__link">
+    formatUrlForListing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formaturlfornotlisting" class="md-nav__link">
+    formatUrlForNotListing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get" class="md-nav__link">
     get
   </a>
@@ -1125,6 +1139,8 @@
 <li><a href="./#checkpreferredversion">checkPreferredVersion</a></li>
 <li><a href="./#create">create</a></li>
 <li><a href="./#delete">delete</a></li>
+<li><a href="./#formaturlforlisting">formatUrlForListing</a></li>
+<li><a href="./#formaturlfornotlisting">formatUrlForNotListing</a></li>
 <li><a href="./#get">get</a></li>
 <li><a href="./#getresourceversion">getResourceVersion</a></li>
 <li><a href="./#geturl">getUrl</a></li>
@@ -1276,9 +1292,57 @@
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>></p>
 <hr />
+<h3 id="formaturlforlisting">formatUrlForListing<a class="headerlink" href="#formaturlforlisting" title="Permanent link">#</a></h3>
+<p>▸ <strong>formatUrlForListing</strong>(<code>namespace</code>): <code>string</code></p>
+<p>This method differs from <a href="./#formaturlfornotlisting">formatUrlForNotListing</a> because this treats <code>""</code> as "all namespaces"</p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>namespace</code></td>
+<td align="left"><code>string</code></td>
+<td align="left">The namespace to list in or <code>""</code> for all namespaces</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<hr />
+<h3 id="formaturlfornotlisting">formatUrlForNotListing<a class="headerlink" href="#formaturlfornotlisting" title="Permanent link">#</a></h3>
+<p>▸ <strong>formatUrlForNotListing</strong>(<code>resource?</code>, <code>query?</code>): <code>string</code></p>
+<p>Format a URL pathname and query for acting upon a specific resource.</p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>resource?</code></td>
+<td align="left"><code>Partial</code>&lt;<code>ResourceDescriptor</code>></td>
+</tr>
+<tr>
+<td align="left"><code>query?</code></td>
+<td align="left"><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<hr />
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">#</a></h3>
 <p>▸ <strong>get</strong>(<code>desc</code>, <code>query?</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1297,57 +1361,11 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
 <hr />
 <h3 id="getresourceversion">getResourceVersion<a class="headerlink" href="#getresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>getResourceVersion</strong>(<code>namespace?</code>): <code>undefined</code> | <code>string</code></p>
-<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>namespace</code></td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>""</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>undefined</code> | <code>string</code></p>
-<hr />
-<h3 id="geturl">getUrl<a class="headerlink" href="#geturl" title="Permanent link">#</a></h3>
-<p>▸ <strong>getUrl</strong>(<code>__namedParameters?</code>, <code>query?</code>): <code>string</code></p>
-<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><code>Partial</code>&lt;<code>ResourceDescriptor</code>></td>
-</tr>
-<tr>
-<td align="left"><code>query?</code></td>
-<td align="left"><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<hr />
-<h3 id="getwatchurl">getWatchUrl<a class="headerlink" href="#getwatchurl" title="Permanent link">#</a></h3>
-<p>▸ <strong>getWatchUrl</strong>(<code>namespace?</code>, <code>query?</code>): <code>string</code></p>
 <h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1363,19 +1381,64 @@
 <td align="left"><code>string</code></td>
 <td align="left"><code>""</code></td>
 </tr>
-<tr>
-<td align="left"><code>query</code></td>
-<td align="left"><code>KubeApiQueryParams</code></td>
-<td align="left"><code>{}</code></td>
-</tr>
 </tbody>
 </table>
 <h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>undefined</code> | <code>string</code></p>
+<hr />
+<h3 id="geturl">getUrl<a class="headerlink" href="#geturl" title="Permanent link">#</a></h3>
+<p>▸ <strong>getUrl</strong>(<code>resource?</code>, <code>query?</code>): <code>string</code></p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>use <a href="./#formaturlfornotlisting">formatUrlForNotListing</a> instead</p>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>resource?</code></td>
+<td align="left"><code>Partial</code>&lt;<code>ResourceDescriptor</code>></td>
+</tr>
+<tr>
+<td align="left"><code>query?</code></td>
+<td align="left"><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<hr />
+<h3 id="getwatchurl">getWatchUrl<a class="headerlink" href="#getwatchurl" title="Permanent link">#</a></h3>
+<p>▸ <strong>getWatchUrl</strong>(<code>namespace?</code>, <code>query?</code>): <code>string</code></p>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>namespace?</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>query</code></td>
+<td align="left"><code>KubeApiQueryParams</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <hr />
 <h3 id="list">list<a class="headerlink" href="#list" title="Permanent link">#</a></h3>
 <p>▸ <strong>list</strong>(<code>__namedParameters?</code>, <code>query?</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>[]></p>
-<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1394,12 +1457,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>[]></p>
 <hr />
 <h3 id="modifywatchevent">modifyWatchEvent<a class="headerlink" href="#modifywatchevent" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>modifyWatchEvent</strong>(<code>event</code>): <code>void</code></p>
-<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1414,12 +1477,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="normalizequery">normalizeQuery<a class="headerlink" href="#normalizequery" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>normalizeQuery</strong>(<code>query?</code>): <code>Partial</code>&lt;<code>KubeApiQueryParams</code>></p>
-<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1434,12 +1497,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></p>
 <hr />
 <h3 id="parseresponse">parseResponse<a class="headerlink" href="#parseresponse" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>parseResponse</strong>(<code>data</code>, <code>namespace?</code>): <code>null</code> | <code>Object</code> | <code>Object</code>[]</p>
-<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1458,44 +1521,114 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>Object</code> | <code>Object</code>[]</p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
-<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data</code>, <code>strategy?</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
-<th align="left">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td align="left"><code>desc</code></td>
 <td align="left"><code>ResourceDescriptor</code></td>
-<td align="left"><code>undefined</code></td>
+</tr>
+<tr>
+<td align="left"><code>data</code></td>
+<td align="left"><code>PartialDeep</code>&lt;<code>Object</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
+<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data</code>, <code>strategy</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>desc</code></td>
+<td align="left"><code>ResourceDescriptor</code></td>
+</tr>
+<tr>
+<td align="left"><code>data</code></td>
+<td align="left"><code>PartialDeep</code>&lt;<code>Object</code>></td>
+</tr>
+<tr>
+<td align="left"><code>strategy</code></td>
+<td align="left"><code>"merge"</code> | <code>"strategic"</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
+<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data</code>, <code>strategy</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>desc</code></td>
+<td align="left"><code>ResourceDescriptor</code></td>
+</tr>
+<tr>
+<td align="left"><code>data</code></td>
+<td align="left"><code>Patch</code></td>
+</tr>
+<tr>
+<td align="left"><code>strategy</code></td>
+<td align="left"><code>"json"</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
+<p>▸ <strong>patch</strong>(<code>desc</code>, <code>data</code>, <code>strategy</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
+<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>desc</code></td>
+<td align="left"><code>ResourceDescriptor</code></td>
 </tr>
 <tr>
 <td align="left"><code>data</code></td>
 <td align="left"><code>Patch</code> | <code>PartialDeep</code>&lt;<code>Object</code>></td>
-<td align="left"><code>undefined</code></td>
 </tr>
 <tr>
 <td align="left"><code>strategy</code></td>
 <td align="left"><code>KubeApiPatchType</code></td>
-<td align="left"><code>"strategic"</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
 <hr />
 <h3 id="refreshresourceversion">refreshResourceVersion<a class="headerlink" href="#refreshresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>refreshResourceVersion</strong>(<code>params?</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>[]></p>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1510,12 +1643,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>[]></p>
 <hr />
 <h3 id="setresourceversion">setResourceVersion<a class="headerlink" href="#setresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>setResourceVersion</strong>(<code>namespace?</code>, <code>newVersion</code>): <code>void</code></p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1537,12 +1670,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(<code>__namedParameters</code>, <code>data</code>): <code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
-<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1561,12 +1694,12 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>null</code> | <code>Object</code>></p>
 <hr />
 <h3 id="watch">watch<a class="headerlink" href="#watch" title="Permanent link">#</a></h3>
 <p>▸ <strong>watch</strong>(<code>opts?</code>): () =&gt; <code>void</code></p>
-<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1576,15 +1709,15 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>opts</code></td>
+<td align="left"><code>opts?</code></td>
 <td align="left"><code>KubeApiWatchOptions</code>&lt;<code>Object</code>, <code>Data</code>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>fn</code></p>
 <p>▸ (): <code>void</code></p>
-<h5 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h5>
+<h5 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
                 
               

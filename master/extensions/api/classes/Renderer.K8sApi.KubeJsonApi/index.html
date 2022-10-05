@@ -788,6 +788,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ondata" class="md-nav__link">
     onData
   </a>
@@ -905,13 +912,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#forcluster" class="md-nav__link">
-    forCluster
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -946,6 +946,7 @@
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#config">config</a></li>
+<li><a href="./#dependencies">dependencies</a></li>
 <li><a href="./#ondata">onData</a></li>
 <li><a href="./#onerror">onError</a></li>
 <li><a href="./#reqinit">reqInit</a></li>
@@ -964,11 +965,10 @@
 <li><a href="./#put">put</a></li>
 <li><a href="./#request">request</a></li>
 <li><a href="./#writelog">writeLog</a></li>
-<li><a href="./#forcluster">forCluster</a></li>
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new KubeJsonApi</strong>(<code>config</code>, <code>reqInit?</code>)</p>
+<p>• <strong>new KubeJsonApi</strong>(<code>dependencies</code>, <code>config</code>, <code>reqInit?</code>)</p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -978,6 +978,10 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td align="left"><code>dependencies</code></td>
+<td align="left"><code>JsonApiDependencies</code></td>
+</tr>
 <tr>
 <td align="left"><code>config</code></td>
 <td align="left"><code>JsonApiConfig</code></td>
@@ -996,24 +1000,29 @@
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>JsonApi.config</p>
 <hr />
+<h3 id="dependencies">dependencies<a class="headerlink" href="#dependencies" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>dependencies</strong>: <code>JsonApiDependencies</code></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>JsonApi.dependencies</p>
+<hr />
 <h3 id="ondata">onData<a class="headerlink" href="#ondata" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>onData</strong>: <code>EventEmitter</code>&lt;[<a href="../../interfaces/Renderer.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubejsonapiobjectmetadata"><code>KubeJsonApiObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>>, <code>Response</code>]></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p>JsonApi.onData</p>
 <hr />
 <h3 id="onerror">onError<a class="headerlink" href="#onerror" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>onError</strong>: <code>EventEmitter</code>&lt;[<code>JsonApiErrorParsed</code>, <code>Response</code>]></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>JsonApi.onError</p>
 <hr />
 <h3 id="reqinit">reqInit<a class="headerlink" href="#reqinit" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <code>Readonly</code> <strong>reqInit</strong>: <code>Defaulted</code>&lt;<code>RequestInit</code>, <code>"headers"</code>></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>JsonApi.reqInit</p>
 <hr />
 <h3 id="configdefault">configDefault<a class="headerlink" href="#configdefault" title="Permanent link">#</a></h3>
 <p>▪ <code>Static</code> <code>Readonly</code> <strong>configDefault</strong>: <code>Partial</code>&lt;<code>JsonApiConfig</code>></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>JsonApi.configDefault</p>
 <hr />
 <h3 id="reqinitdefault">reqInitDefault<a class="headerlink" href="#reqinitdefault" title="Permanent link">#</a></h3>
@@ -1037,7 +1046,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>JsonApi.reqInitDefault</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="del">del<a class="headerlink" href="#del" title="Permanent link">#</a></h3>
@@ -1086,7 +1095,7 @@
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>OutData</code>></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>JsonApi.del</p>
 <hr />
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">#</a></h3>
@@ -1135,7 +1144,7 @@
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>OutData</code>></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>JsonApi.get</p>
 <hr />
 <h3 id="getresponse">getResponse<a class="headerlink" href="#getresponse" title="Permanent link">#</a></h3>
@@ -1178,7 +1187,7 @@
 </table>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>Response</code>></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>JsonApi.getResponse</p>
 <hr />
 <h3 id="parseerror">parseError<a class="headerlink" href="#parseerror" title="Permanent link">#</a></h3>
@@ -1243,7 +1252,7 @@
 </table>
 <h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>OutData</code>></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>JsonApi.parseResponse</p>
 <hr />
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link">#</a></h3>
@@ -1292,7 +1301,7 @@
 </table>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>OutData</code>></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>JsonApi.patch</p>
 <hr />
 <h3 id="post">post<a class="headerlink" href="#post" title="Permanent link">#</a></h3>
@@ -1341,7 +1350,7 @@
 </table>
 <h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>OutData</code>></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>JsonApi.post</p>
 <hr />
 <h3 id="put">put<a class="headerlink" href="#put" title="Permanent link">#</a></h3>
@@ -1390,7 +1399,7 @@
 </table>
 <h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>OutData</code>></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>JsonApi.put</p>
 <hr />
 <h3 id="request">request<a class="headerlink" href="#request" title="Permanent link">#</a></h3>
@@ -1439,7 +1448,7 @@
 </table>
 <h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<code>OutData</code>></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>JsonApi.request</p>
 <hr />
 <h3 id="writelog">writeLog<a class="headerlink" href="#writelog" title="Permanent link">#</a></h3>
@@ -1461,28 +1470,8 @@
 </table>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>JsonApi.writeLog</p>
-<hr />
-<h3 id="forcluster">forCluster<a class="headerlink" href="#forcluster" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>forCluster</strong>(<code>clusterId</code>): <a href="./"><code>KubeJsonApi</code></a></p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>clusterId</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><a href="./"><code>KubeJsonApi</code></a></p>
                 
               
               
