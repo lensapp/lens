@@ -9,7 +9,6 @@ import type { KubeConfig } from "@kubernetes/client-node";
 import { HttpError } from "@kubernetes/client-node";
 import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
-import { loadConfigFromFile } from "../kube-helpers";
 import type { KubeApiResource, KubeResource } from "../rbac";
 import { apiResourceRecord, apiResources } from "../rbac";
 import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
@@ -25,6 +24,7 @@ import type { ListNamespaces } from "./list-namespaces.injectable";
 import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
+import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -37,6 +37,7 @@ export interface ClusterDependencies {
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
   broadcastMessage: BroadcastMessage;
+  loadConfigfromFile: LoadConfigfromFile;
 }
 
 /**
@@ -500,7 +501,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   async getKubeconfig(): Promise<KubeConfig> {
-    const { config } = await loadConfigFromFile(this.kubeConfigPath);
+    const { config } = await this.dependencies.loadConfigfromFile(this.kubeConfigPath);
 
     return config;
   }
@@ -510,7 +511,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   async getProxyKubeconfig(): Promise<KubeConfig> {
     const proxyKCPath = await this.getProxyKubeconfigPath();
-    const { config } = await loadConfigFromFile(proxyKCPath);
+    const { config } = await this.dependencies.loadConfigfromFile(proxyKCPath);
 
     return config;
   }

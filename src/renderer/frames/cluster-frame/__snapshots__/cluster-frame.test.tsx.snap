@@ -383,6 +383,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -392,7 +393,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -849,6 +852,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -858,7 +862,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -1379,6 +1385,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -1388,7 +1395,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>

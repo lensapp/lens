@@ -457,6 +457,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -466,7 +467,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -990,6 +993,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -999,7 +1003,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -1543,6 +1549,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -1552,7 +1559,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -1976,6 +1985,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -1985,7 +1995,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -2388,6 +2400,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -2397,7 +2410,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -2941,6 +2956,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -2950,7 +2966,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>
@@ -3474,6 +3492,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                     >
                       <i
                         class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
                         tabindex="0"
                       >
                         <span
@@ -3483,7 +3502,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                           close
                         </span>
                       </i>
-                      <div>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
                         Close ⌘+W
                       </div>
                     </div>

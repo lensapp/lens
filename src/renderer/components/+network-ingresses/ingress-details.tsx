@@ -16,19 +16,26 @@ import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { computeRuleDeclarations, getMetricsForIngress, type IngressMetricData } from "../../../common/k8s-api/endpoints/ingress.api";
+import { computeRuleDeclarations } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
+import type { IngressMetricData, RequestIngressMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import requestIngressMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
 
 export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 }
 
+interface Dependencies {
+  requestIngressMetrics: RequestIngressMetrics;
+}
+
 @observer
-export class IngressDetails extends React.Component<IngressDetailsProps> {
+class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & Dependencies> {
   @observable metrics: IngressMetricData | null = null;
 
-  constructor(props: IngressDetailsProps) {
+  constructor(props: IngressDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -42,9 +49,9 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
   }
 
   loadMetrics = async () => {
-    const { object: ingress } = this.props;
+    const { object: ingress, requestIngressMetrics } = this.props;
 
-    this.metrics = await getMetricsForIngress(ingress.getName(), ingress.getNs());
+    this.metrics = await requestIngressMetrics(ingress.getName(), ingress.getNs());
   };
 
   renderPaths(ingress: Ingress) {
@@ -170,3 +177,10 @@ export class IngressDetails extends React.Component<IngressDetailsProps> {
     );
   }
 }
+
+export const IngressDetails = withInjectables<Dependencies, IngressDetailsProps>(NonInjectedIngressDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    requestIngressMetrics: di.inject(requestIngressMetricsInjectable),
+  }),
+});

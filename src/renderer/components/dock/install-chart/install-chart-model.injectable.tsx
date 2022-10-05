@@ -5,36 +5,31 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import installChartTabStoreInjectable from "./store.injectable";
 import { waitUntilDefined } from "../../../../common/utils";
-import type { CallForHelmChartValues } from "./chart-data/call-for-helm-chart-values.injectable";
-import callForHelmChartValuesInjectable from "./chart-data/call-for-helm-chart-values.injectable";
 import type { IChartInstallData, InstallChartTabStore } from "./store";
 import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
 import React from "react";
-import {
-  action,
-  computed,
-  observable,
-  runInAction,
-} from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import assert from "assert";
-import type { CallForCreateHelmRelease } from "../../+helm-releases/create-release/call-for-create-helm-release.injectable";
-import callForCreateHelmReleaseInjectable from "../../+helm-releases/create-release/call-for-create-helm-release.injectable";
+import type { RequestCreateHelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
+import requestCreateHelmReleaseInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import type { HelmReleaseUpdateDetails } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { NavigateToHelmReleases } from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import type { SingleValue } from "react-select";
-import type { CallForHelmChartVersions } from "../../+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
-import callForHelmChartVersionsInjectable from "../../+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
+import type { RequestHelmChartValues } from "../../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
+import requestHelmChartValuesInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
+import type { RequestHelmChartVersions } from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 
 const installChartModelInjectable = getInjectable({
   id: "install-chart-model",
 
   instantiate: async (di, tabId: string) => {
     const store = di.inject(installChartTabStoreInjectable);
-    const callForHelmChartValues = di.inject(callForHelmChartValuesInjectable);
-    const callForHelmChartVersions = di.inject(callForHelmChartVersionsInjectable);
-    const callForCreateHelmRelease = di.inject(callForCreateHelmReleaseInjectable);
+    const requestHelmChartValues = di.inject(requestHelmChartValuesInjectable);
+    const requestHelmChartVersions = di.inject(requestHelmChartVersionsInjectable);
+    const callForCreateHelmRelease = di.inject(requestCreateHelmReleaseInjectable);
     const dockStore = di.inject(dockStoreInjectable);
     const navigateToHelmReleases = di.inject(navigateToHelmReleasesInjectable);
     const closeTab = () => dockStore.closeTab(tabId);
@@ -49,8 +44,8 @@ const installChartModelInjectable = getInjectable({
       callForCreateHelmRelease,
       closeTab,
       navigateToHelmReleases,
-      callForHelmChartValues,
-      callForHelmChartVersions,
+      requestHelmChartValues,
+      requestHelmChartVersions,
       store,
     });
 
@@ -71,9 +66,9 @@ interface Dependencies {
   closeTab: () => void;
   navigateToHelmReleases: NavigateToHelmReleases;
   waitForChart: () => Promise<void>;
-  callForCreateHelmRelease: CallForCreateHelmRelease;
-  callForHelmChartValues: CallForHelmChartValues;
-  callForHelmChartVersions: CallForHelmChartVersions;
+  callForCreateHelmRelease: RequestCreateHelmRelease;
+  requestHelmChartValues: RequestHelmChartValues;
+  requestHelmChartVersions: RequestHelmChartVersions;
   store: InstallChartTabStore;
 }
 
@@ -127,7 +122,7 @@ export class InstallChartModel {
         this.configuration.isLoading.set(true);
       });
 
-      const configuration = await this.dependencies.callForHelmChartValues(
+      const configuration = await this.dependencies.requestHelmChartValues(
         this.chart.repo,
         this.chart.name,
         version,
@@ -193,13 +188,13 @@ export class InstallChartModel {
     await this.dependencies.waitForChart();
 
     const [defaultConfiguration, versions] = await Promise.all([
-      this.dependencies.callForHelmChartValues(
+      this.dependencies.requestHelmChartValues(
         this.chart.repo,
         this.chart.name,
         this.chart.version,
       ),
 
-      this.dependencies.callForHelmChartVersions(
+      this.dependencies.requestHelmChartVersions(
         this.chart.repo,
         this.chart.name,
       ),

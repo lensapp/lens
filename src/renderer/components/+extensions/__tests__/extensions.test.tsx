@@ -5,14 +5,11 @@
 
 import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
-import fse from "fs-extra";
 import React from "react";
 import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Extensions } from "../extensions";
-import mockFs from "mock-fs";
-import { mockWindow } from "../../../../../__mocks__/windowMock";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
@@ -20,18 +17,15 @@ import { renderFor } from "../../test-utils/renderFor";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
-import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import assert from "assert";
-import type { InstallFromInput } from "../install-from-input/install-from-input";
-import installFromInputInjectable from "../install-from-input/install-from-input.injectable";
+import type { InstallExtensionFromInput } from "../install-extension-from-input.injectable";
+import installExtensionFromInputInjectable from "../install-extension-from-input.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { observable, when } from "mobx";
+import type { DeleteFile } from "../../../../common/fs/delete-file.injectable";
+import deleteFileInjectable from "../../../../common/fs/delete-file.injectable";
 
-mockWindow();
-
-jest.setTimeout(30000);
-jest.mock("fs-extra");
 jest.mock("../../notifications");
 
 jest.mock("../../../../common/utils/downloadFile", () => ({
@@ -52,9 +46,10 @@ jest.mock("../../../../common/utils/tar");
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
   let extensionDiscovery: ExtensionDiscovery;
-  let installFromInput: jest.MockedFunction<InstallFromInput>;
+  let installExtensionFromInput: jest.MockedFunction<InstallExtensionFromInput>;
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
+  let deleteFileMock: jest.MockedFunction<DeleteFile>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -62,17 +57,13 @@ describe("Extensions", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
 
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    mockFs({
-      "some-directory-for-user-data": {},
-    });
-
     render = renderFor(di);
 
-    installFromInput = jest.fn();
+    installExtensionFromInput = jest.fn();
+    di.override(installExtensionFromInputInjectable, () => installExtensionFromInput);
 
-    di.override(installFromInputInjectable, () => installFromInput);
+    deleteFileMock = jest.fn();
+    di.override(deleteFileInjectable, () => deleteFileMock);
 
     extensionLoader = di.inject(extensionLoaderInjectable);
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
@@ -93,10 +84,6 @@ describe("Extensions", () => {
     });
 
     extensionDiscovery.uninstallExtension = jest.fn(() => Promise.resolve());
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
@@ -138,8 +125,8 @@ describe("Extensions", () => {
 
     const resolveInstall = observable.box(false);
 
-    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve());
-    installFromInput.mockImplementation(async (input) => {
+    deleteFileMock.mockReturnValue(Promise.resolve());
+    installExtensionFromInput.mockImplementation(async (input) => {
       expect(input).toBe("https://test.extensionurl/package.tgz");
 
       const clear = extensionInstallationStateStore.startPreInstall();

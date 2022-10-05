@@ -4,7 +4,7 @@
  */
 
 import type { OpenDialogOptions } from "electron";
-import { clusterActivateHandler, clusterClearDeletingHandler, clusterDeleteHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetDeletingHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
+import { clusterActivateHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
 import { openFilePickingDialogChannel } from "../../common/ipc/dialog";
@@ -58,18 +58,6 @@ export function requestClusterActivation(clusterId: ClusterId, force?: boolean):
 
 export function requestClusterDisconnection(clusterId: ClusterId, force?: boolean): Promise<void> {
   return requestMain(clusterDisconnectHandler, clusterId, force);
-}
-
-export function requestSetClusterAsDeleting(clusterId: ClusterId): Promise<void> {
-  return requestMain(clusterSetDeletingHandler, clusterId);
-}
-
-export function requestClearClusterAsDeleting(clusterId: ClusterId): Promise<void> {
-  return requestMain(clusterClearDeletingHandler, clusterId);
-}
-
-export function requestDeleteCluster(clusterId: ClusterId): Promise<void> {
-  return requestMain(clusterDeleteHandler, clusterId);
 }
 
 export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {

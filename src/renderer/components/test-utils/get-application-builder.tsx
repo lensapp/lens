@@ -6,7 +6,7 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import type { IComputedValue, ObservableMap } from "mobx";
-import { computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
@@ -66,10 +66,26 @@ import closeAllWindowsInjectable from "../../../main/start-main-application/lens
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
+import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
+import { Namespace } from "../../../common/k8s-api/endpoints";
+import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
 type LensWindowWithHelpers = LensWindow & { rendered: RenderResult; di: DiContainer };
+
+const createNamespacesFor = (namespaces: Set<string>): Namespace[] => (
+  Array.from(namespaces, (namespace) => new Namespace({
+    apiVersion: "v1",
+    kind: "Namespace",
+    metadata: {
+      name: namespace,
+      resourceVersion: "1",
+      selfLink: `/api/v1/namespaces/${namespace}`,
+      uid: `namespace-${namespace}`,
+    },
+  }))
+);
 
 export interface ApplicationBuilder {
   mainDi: DiContainer;
@@ -99,6 +115,7 @@ export interface ApplicationBuilder {
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
+  afterWindowStart: (callback: Callback) => ApplicationBuilder;
 
   startHidden: () => Promise<void>;
   render: () => Promise<RenderResult>;
@@ -112,7 +129,6 @@ export interface ApplicationBuilder {
   applicationMenu: {
     click: (path: string) => void;
   };
-
   preferences: {
     close: () => void;
     navigate: () => void;
@@ -121,7 +137,10 @@ export interface ApplicationBuilder {
       click: (id: string) => void;
     };
   };
-
+  namespaces: {
+    add: (namespace: string) => void;
+    select: (namespace: string) => void;
+  };
   helmCharts: {
     navigate: NavigateToHelmCharts;
   };
@@ -151,6 +170,11 @@ export const getApplicationBuilder = () => {
 
   const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeWindowStartCallbacks: Callback[] = [];
+  const afterWindowStartCallbacks: Callback[] = [];
+
+  const fsState = new Map();
+
+  overrideFsWithFakes(mainDi, fsState);
 
   let environment = environments.application;
 
@@ -185,6 +209,7 @@ export const getApplicationBuilder = () => {
     const windowDi = getRendererDi({ doGeneralOverrides: true });
 
     overrideChannelsForWindow(windowDi, windowId);
+    overrideFsWithFakes(windowDi, fsState);
 
     runInAction(() => {
       windowDi.register(rendererExtensionsStateInjectable);
@@ -218,6 +243,10 @@ export const getApplicationBuilder = () => {
 
         await startFrame();
 
+        for (const callback of afterWindowStartCallbacks) {
+          await callback(windowDi);
+        }
+
         const history = windowDi.inject(historyInjectable);
 
         const render = renderFor(windowDi);
@@ -245,9 +274,12 @@ export const getApplicationBuilder = () => {
 
   let applicationHasStarted = false;
 
+  const namespaces = observable.set<string>();
+  const namespaceItems = observable.array<Namespace>();
+  const selectedNamespaces = observable.set<string>();
+
   const builder: ApplicationBuilder = {
     mainDi,
-
     applicationWindow: {
       closeAll: () => {
         const closeAll = mainDi.inject(closeAllWindowsInjectable);
@@ -306,7 +338,13 @@ export const getApplicationBuilder = () => {
         return builder.applicationWindow.get(id);
       },
     },
-
+    namespaces: {
+      add: action((namespace) => {
+        namespaces.add(namespace);
+        namespaceItems.replace(createNamespacesFor(namespaces));
+      }),
+      select: action((namespace) => selectedNamespaces.add(namespace)),
+    },
     applicationMenu: {
       click: (path: string) => {
         const applicationMenuItems = mainDi.inject(
@@ -461,6 +499,7 @@ export const getApplicationBuilder = () => {
         );
 
         const clusterStub = {
+          id: "some-cluster-id",
           accessibleNamespaces: [],
           isAllowedResource: isAllowedResource(allowedResourcesState),
         } as unknown as Cluster;
@@ -469,21 +508,26 @@ export const getApplicationBuilder = () => {
           computed(() => catalogEntityFromCluster(clusterStub)),
         );
 
+        windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
+
         // TODO: Figure out a way to remove this stub.
         const namespaceStoreStub = {
           isLoaded: true,
-          contextNamespaces: [],
-          contextItems: [],
-          api: {
-            kind: "Namespace",
+          get contextNamespaces() {
+            return Array.from(selectedNamespaces);
           },
-          items: [],
+          get allowedNamespaces() {
+            return Array.from(namespaces);
+          },
+          contextItems: namespaceItems,
+          api: windowDi.inject(namespaceApiInjectable),
+          items: namespaceItems,
           selectNamespaces: () => {},
           getByPath: () => undefined,
           pickOnlySelected: () => [],
           isSelectedAll: () => false,
-          getTotalCount: () => 0,
-        } as unknown as NamespaceStore;
+          getTotalCount: () => namespaceItems.length,
+        } as Partial<NamespaceStore> as NamespaceStore;
 
         const clusterFrameContextFake = new ClusterFrameContext(
           clusterStub,
@@ -495,7 +539,6 @@ export const getApplicationBuilder = () => {
 
         windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
-        windowDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
         windowDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
 
         // Todo: get rid of global state.
@@ -611,6 +654,18 @@ export const getApplicationBuilder = () => {
       });
 
       beforeWindowStartCallbacks.push(callback);
+
+      return builder;
+    },
+
+    afterWindowStart(callback) {
+      const alreadyRenderedWindows = builder.applicationWindow.getAll();
+
+      alreadyRenderedWindows.forEach((window) => {
+        callback(window.di);
+      });
+
+      afterWindowStartCallbacks.push(callback);
 
       return builder;
     },

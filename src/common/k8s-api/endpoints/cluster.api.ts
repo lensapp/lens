@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { MetricData, IMetricsReqParams } from "./metrics.api";
-import { metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -28,50 +26,11 @@ export class ClusterApi extends KubeApi<Cluster> {
   }
 }
 
-export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqParams): Promise<ClusterMetricData> {
-  const nodes = nodeNames.join("|");
-  const opts = { category: "cluster", nodes };
-
-  return metricsApi.getMetrics({
-    memoryUsage: opts,
-    workloadMemoryUsage: opts,
-    memoryRequests: opts,
-    memoryLimits: opts,
-    memoryCapacity: opts,
-    memoryAllocatableCapacity: opts,
-    cpuUsage: opts,
-    cpuRequests: opts,
-    cpuLimits: opts,
-    cpuCapacity: opts,
-    cpuAllocatableCapacity: opts,
-    podUsage: opts,
-    podCapacity: opts,
-    podAllocatableCapacity: opts,
-    fsSize: opts,
-    fsUsage: opts,
-  }, params);
-}
-
 export enum ClusterStatus {
   ACTIVE = "Active",
   CREATING = "Creating",
   REMOVING = "Removing",
   ERROR = "Error",
-}
-
-export interface ClusterMetricData extends Partial<Record<string, MetricData>> {
-  memoryUsage: MetricData;
-  memoryRequests: MetricData;
-  memoryLimits: MetricData;
-  memoryCapacity: MetricData;
-  cpuUsage: MetricData;
-  cpuRequests: MetricData;
-  cpuLimits: MetricData;
-  cpuCapacity: MetricData;
-  podUsage: MetricData;
-  podCapacity: MetricData;
-  fsSize: MetricData;
-  fsUsage: MetricData;
 }
 
 export interface Cluster {

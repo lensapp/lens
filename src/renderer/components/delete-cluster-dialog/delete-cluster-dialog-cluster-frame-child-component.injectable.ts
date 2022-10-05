@@ -17,8 +17,6 @@ const deleteClusterDialogClusterFrameChildComponentInjectable = getInjectable({
   }),
 
   injectionToken: clusterFrameChildComponentInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default deleteClusterDialogClusterFrameChildComponentInjectable;

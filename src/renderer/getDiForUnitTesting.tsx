@@ -20,10 +20,6 @@ import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
-import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
-import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
-import joinPathsInjectable from "../common/path/join-paths.injectable";
-import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
@@ -32,7 +28,6 @@ import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
-import setupOnApiErrorListenersInjectable from "./api/setup-on-api-errors.injectable";
 import { observable, computed, runInAction } from "mobx";
 import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
@@ -54,7 +49,6 @@ import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./componen
 import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
 import replicasetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-replicasets/scale-dialog/replicaset-scale-dialog-cluster-frame-child-component.injectable";
 import statefulsetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-statefulsets/scale/statefulset-scale-dialog-cluster-frame-child-component.injectable";
-import deleteClusterDialogClusterFrameChildComponentInjectable from "./components/delete-cluster-dialog/delete-cluster-dialog-cluster-frame-child-component.injectable";
 import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/kube-object-details/kube-object-details-cluster-frame-child-component.injectable";
 import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
 import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
@@ -65,6 +59,7 @@ import forceUpdateModalRootFrameComponentInjectable from "./application-update/f
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
+import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import type { PartialDeep } from "type-fest";
 
@@ -108,7 +103,6 @@ export const getDiForUnitTesting = (
     [
       startTopbarStateSyncInjectable,
       setupSystemCaInjectable,
-      setupOnApiErrorListenersInjectable,
     ].forEach((injectable) => {
       di.override(injectable, () => ({
         id: injectable.id,
@@ -118,9 +112,6 @@ export const getDiForUnitTesting = (
 
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
-
-    di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
-    di.override(joinPathsInjectable, () => joinPathsFake);
 
     di.override(historyInjectable, () => createMemoryHistory());
     di.override(legacyOnChannelListenInjectable, () => () => noop);
@@ -150,7 +141,6 @@ export const getDiForUnitTesting = (
       deploymentScaleDialogClusterFrameChildComponentInjectable,
       replicasetScaleDialogClusterFrameChildComponentInjectable,
       statefulsetScaleDialogClusterFrameChildComponentInjectable,
-      deleteClusterDialogClusterFrameChildComponentInjectable,
       kubeObjectDetailsClusterFrameChildComponentInjectable,
       kubeconfigDialogClusterFrameChildComponentInjectable,
       portForwardDialogClusterFrameChildComponentInjectable,
@@ -164,6 +154,7 @@ export const getDiForUnitTesting = (
       }));
     });
 
+    di.override(environmentVariablesInjectable, () => ({}));
     di.override(watchHistoryStateInjectable, () => () => () => {});
     di.override(openAppContextMenuInjectable, () => () => {});
     di.override(goBackInjectable, () => () => {});
@@ -187,7 +178,6 @@ export const getDiForUnitTesting = (
     }) as unknown as HotbarStore);
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-
     di.override(defaultShellInjectable, () => "some-default-shell");
 
     di.override(userStoreInjectable, () => ({

@@ -6,11 +6,12 @@
 import { action, observable, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { Cluster, ClusterApi } from "../../../../common/k8s-api/endpoints";
-import { getMetricsByNodeNames, type ClusterMetricData } from "../../../../common/k8s-api/endpoints";
 import type { StorageLayer } from "../../../utils";
 import { autoBind } from "../../../utils";
-import { type IMetricsReqParams, normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
 import type { NodeStore } from "../../+nodes/store";
+import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import type { RequestMetricsParams } from "../../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
+import { normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
 
 export enum MetricType {
   MEMORY = "memory",
@@ -30,11 +31,15 @@ export interface ClusterOverviewStorageState {
 interface ClusterOverviewStoreDependencies {
   readonly storage: StorageLayer<ClusterOverviewStorageState>;
   readonly nodeStore: NodeStore;
+  requestClusterMetricsByNodeNames: RequestClusterMetricsByNodeNames;
 }
 
 export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> implements ClusterOverviewStorageState {
-  @observable metrics: Partial<ClusterMetricData> = {};
-  @observable metricsLoaded = false;
+  @observable metrics: ClusterMetricData | undefined = undefined;
+
+  get metricsLoaded() {
+    return !!this.metrics;
+  }
 
   get metricType(): MetricType {
     return this.dependencies.storage.get().metricType;
@@ -64,9 +69,10 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
     // TODO: refactor, seems not a correct place to be
     // auto-refresh metrics on user-action
     reaction(() => this.metricNodeRole, () => {
-      if (!this.metricsLoaded) return;
-      this.resetMetrics();
-      this.loadMetrics();
+      if (this.metrics) {
+        this.resetMetrics();
+        this.loadMetrics();
+      }
     });
 
     // check which node type to select
@@ -79,13 +85,12 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
   }
 
   @action
-  async loadMetrics(params?: IMetricsReqParams) {
+  async loadMetrics(params?: RequestMetricsParams) {
     await when(() => this.dependencies.nodeStore.isLoaded);
     const { masterNodes, workerNodes } = this.dependencies.nodeStore;
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
 
-    this.metrics = await getMetricsByNodeNames(nodes.map(node => node.getName()), params);
-    this.metricsLoaded = true;
+    this.metrics = await this.dependencies.requestClusterMetricsByNodeNames(nodes.map(node => node.getName()), params);
   }
 
   getMetricsValues(source: Partial<ClusterMetricData>): [number, string][] {
@@ -101,8 +106,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
 
   @action
   resetMetrics() {
-    this.metrics = {};
-    this.metricsLoaded = false;
+    this.metrics = undefined;
   }
 
   reset() {

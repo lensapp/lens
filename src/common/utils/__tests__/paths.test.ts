@@ -3,12 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { describeIf } from "../../../../integration/helpers/utils";
-import { isWindows } from "../../vars";
-import { isLogicalChildPath } from "../paths";
+import type { DiContainer } from "@ogre-tools/injectable";
+import path from "path";
+import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
+import getAbsolutePathInjectable from "../../path/get-absolute-path.injectable";
+import getDirnameOfPathInjectable from "../../path/get-dirname.injectable";
+import type { IsLogicalChildPath } from "../../path/is-logical-child-path.injectable";
+import isLogicalChildPathInjectable from "../../path/is-logical-child-path.injectable";
 
 describe("isLogicalChildPath", () => {
-  describeIf(isWindows)("windows tests", () => {
+  let di: DiContainer;
+  let isLogicalChildPath: IsLogicalChildPath;
+
+  beforeEach(() => {
+    di = getDiForUnitTesting();
+  });
+
+  describe("when using win32 paths", () => {
+    beforeEach(() => {
+      di.override(getAbsolutePathInjectable, () => path.win32.resolve);
+      di.override(getDirnameOfPathInjectable, () => path.win32.dirname);
+      isLogicalChildPath = di.inject(isLogicalChildPathInjectable);
+    });
+
     it.each([
       {
         parentPath: "C:\\Foo",
@@ -40,7 +57,13 @@ describe("isLogicalChildPath", () => {
     });
   });
 
-  describeIf(!isWindows)("posix tests", () => {
+  describe("when using posix paths", () => {
+    beforeEach(() => {
+      di.override(getAbsolutePathInjectable, () => path.posix.resolve);
+      di.override(getDirnameOfPathInjectable, () => path.posix.dirname);
+      isLogicalChildPath = di.inject(isLogicalChildPathInjectable);
+    });
+
     it.each([
       {
         parentPath: "/foo",

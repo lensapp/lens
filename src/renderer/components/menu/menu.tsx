@@ -13,9 +13,15 @@ import { Animate } from "../animate";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import isEqual from "lodash/isEqual";
+import type { RequestAnimationFrame } from "../animate/request-animation-frame.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import requestAnimationFrameInjectable from "../animate/request-animation-frame.injectable";
 
 export const MenuContext = React.createContext<MenuContextValue | null>(null);
-export type MenuContextValue = Menu;
+export interface MenuContextValue {
+  readonly props: Readonly<MenuProps>;
+  close: () => void;
+}
 
 export interface MenuPosition {
   left?: boolean;
@@ -62,10 +68,14 @@ const defaultPropsMenu: Partial<MenuProps> = {
   animated: true,
 };
 
-export class Menu extends React.Component<MenuProps, State> {
+interface Dependencies {
+  requestAnimationFrame: RequestAnimationFrame;
+}
+
+class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
   static defaultProps = defaultPropsMenu as object;
 
-  constructor(props: MenuProps) {
+  constructor(props: MenuProps & Dependencies) {
     super(props);
     autoBind(this);
   }
@@ -371,6 +381,13 @@ export class Menu extends React.Component<MenuProps, State> {
       : menu;
   }
 }
+
+export const Menu = withInjectables<Dependencies, MenuProps>(NonInjectedMenu, {
+  getProps: (di, props) => ({
+    ...props,
+    requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
+  }),
+});
 
 export function SubMenu(props: Partial<MenuProps>) {
   const { className, ...menuProps } = props;

@@ -4,16 +4,16 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import callForHelmChartReadmeInjectable from "./readme/call-for-helm-chart-readme.injectable";
 import helmChartDetailsVersionSelectionInjectable from "./versions/helm-chart-details-version-selection.injectable";
 import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
+import requestHelmChartReadmeInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
 
 const readmeOfSelectedHelmChartInjectable = getInjectable({
   id: "readme-of-selected-helm-chart",
 
   instantiate: (di, chart: HelmChart) => {
     const selection = di.inject(helmChartDetailsVersionSelectionInjectable, chart);
-    const callForHelmChartReadme = di.inject(callForHelmChartReadmeInjectable);
+    const requestHelmChartReadme = di.inject(requestHelmChartReadmeInjectable);
 
     return asyncComputed(async () => {
       const chartVersion = selection.value.get();
@@ -22,7 +22,7 @@ const readmeOfSelectedHelmChartInjectable = getInjectable({
         return "";
       }
 
-      return await callForHelmChartReadme(
+      return await requestHelmChartReadme(
         chartVersion.getRepository(),
         chartVersion.getName(),
         chartVersion.getVersion(),

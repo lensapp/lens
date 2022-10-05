@@ -5,7 +5,6 @@
 
 import fse from "fs-extra";
 import { isNull } from "lodash";
-import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store";
 import type { Hotbar, HotbarItem } from "../../common/hotbars/types";
@@ -17,6 +16,7 @@ import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-glo
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import catalogCatalogEntityInjectable from "../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
 import { isDefined, isErrnoException } from "../../common/utils";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -40,6 +40,7 @@ export default {
     const di = getLegacyGlobalDiForExtensionApi();
 
     const userDataPath = di.inject(directoryForUserDataInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
 
     // Hotbars might be empty, if some of the previous migrations weren't run
     if (hotbars.length === 0) {
@@ -56,8 +57,8 @@ export default {
     }
 
     try {
-      const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
-      const { clusters = [] }: ClusterStoreModel = fse.readJSONSync(path.join(userDataPath, "lens-cluster-store.json"));
+      const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json"));
+      const { clusters = [] }: ClusterStoreModel = fse.readJSONSync(joinPaths(userDataPath, "lens-cluster-store.json"));
       const workspaceHotbars = new Map<string, PartialHotbar>(); // mapping from WorkspaceId to HotBar
 
       for (const { id, name } of workspaceStoreData.workspaces) {

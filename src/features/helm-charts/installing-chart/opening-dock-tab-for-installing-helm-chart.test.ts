@@ -8,69 +8,44 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import type { CallForHelmCharts } from "../../../renderer/components/+helm-charts/helm-charts/call-for-helm-charts.injectable";
-import callForHelmChartsInjectable from "../../../renderer/components/+helm-charts/helm-charts/call-for-helm-charts.injectable";
 import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
-import callForHelmChartValuesInjectable from "../../../renderer/components/dock/install-chart/chart-data/call-for-helm-chart-values.injectable";
-import callForCreateHelmReleaseInjectable from "../../../renderer/components/+helm-releases/create-release/call-for-create-helm-release.injectable";
-import type { CallForHelmChartReadme } from "../../../renderer/components/+helm-charts/details/readme/call-for-helm-chart-readme.injectable";
-import callForHelmChartReadmeInjectable from "../../../renderer/components/+helm-charts/details/readme/call-for-helm-chart-readme.injectable";
-import type { CallForHelmChartVersions } from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
-import callForHelmChartVersionsInjectable from "../../../renderer/components/+helm-charts/details/versions/call-for-helm-chart-versions.injectable";
+import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import { flushPromises } from "../../../common/test-utils/flush-promises";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
+import type { RequestHelmCharts } from "../../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
+import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import type { RequestHelmChartReadme } from "../../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
+import requestHelmChartsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
+import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
+import requestHelmChartReadmeInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
+import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
 
 describe("opening dock tab for installing helm chart", () => {
   let builder: ApplicationBuilder;
-  let callForHelmChartsMock: AsyncFnMock<CallForHelmCharts>;
-  let callForHelmChartVersionsMock: AsyncFnMock<CallForHelmChartVersions>;
-  let callForHelmChartReadmeMock: AsyncFnMock<CallForHelmChartReadme>;
-  let callForHelmChartValuesMock: jest.Mock;
+  let requestHelmChartsMock: AsyncFnMock<RequestHelmCharts>;
+  let requestHelmChartVersionsMock: AsyncFnMock<RequestHelmChartVersions>;
+  let requestHelmChartReadmeMock: AsyncFnMock<RequestHelmChartReadme>;
+  let requestHelmChartValuesMock: jest.Mock;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    callForHelmChartsMock = asyncFn();
-    callForHelmChartVersionsMock = asyncFn();
-    callForHelmChartReadmeMock = asyncFn();
-    callForHelmChartValuesMock = jest.fn();
+    requestHelmChartsMock = asyncFn();
+    requestHelmChartVersionsMock = asyncFn();
+    requestHelmChartReadmeMock = asyncFn();
+    requestHelmChartValuesMock = jest.fn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(
-        directoryForLensLocalStorageInjectable,
-        () => "/some-directory-for-lens-local-storage",
-      );
-
+      windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
-
-      windowDi.override(
-        callForHelmChartsInjectable,
-        () => callForHelmChartsMock,
-      );
-
-      windowDi.override(
-        callForHelmChartVersionsInjectable,
-        () => callForHelmChartVersionsMock,
-      );
-
-      windowDi.override(
-        callForHelmChartReadmeInjectable,
-        () => callForHelmChartReadmeMock,
-      );
-
-      windowDi.override(
-        callForHelmChartValuesInjectable,
-        () => callForHelmChartValuesMock,
-      );
-
-      windowDi.override(
-        callForCreateHelmReleaseInjectable,
-        () => jest.fn(),
-      );
-
+      windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
+      windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
+      windowDi.override(requestHelmChartReadmeInjectable, () => requestHelmChartReadmeMock);
+      windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
+      windowDi.override(requestCreateHelmReleaseInjectable, () => jest.fn());
       windowDi.override(getRandomInstallChartTabIdInjectable, () =>
         jest
           .fn(() => "some-irrelevant-tab-id")
@@ -102,12 +77,12 @@ describe("opening dock tab for installing helm chart", () => {
     });
 
     it("calls for charts", () => {
-      expect(callForHelmChartsMock).toHaveBeenCalled();
+      expect(requestHelmChartsMock).toHaveBeenCalled();
     });
 
     describe("when charts resolve", () => {
       beforeEach(async () => {
-        await callForHelmChartsMock.resolve([
+        await requestHelmChartsMock.resolve([
           HelmChart.create({
             apiVersion: "some-api-version",
             name: "some-name",
@@ -160,7 +135,7 @@ describe("opening dock tab for installing helm chart", () => {
         });
 
         it("calls for chart versions", () => {
-          expect(callForHelmChartVersionsMock).toHaveBeenCalledWith(
+          expect(requestHelmChartVersionsMock).toHaveBeenCalledWith(
             "some-repository",
             "some-name",
           );
@@ -174,7 +149,7 @@ describe("opening dock tab for installing helm chart", () => {
 
         describe("when chart versions resolve", () => {
           beforeEach(async () => {
-            await callForHelmChartVersionsMock.resolve([
+            await requestHelmChartVersionsMock.resolve([
               HelmChart.create({
                 apiVersion: "some-api-version",
                 name: "some-name",
@@ -210,7 +185,7 @@ describe("opening dock tab for installing helm chart", () => {
           });
 
           it("calls for chart readme for the version", () => {
-            expect(callForHelmChartReadmeMock).toHaveBeenCalledWith(
+            expect(requestHelmChartReadmeMock).toHaveBeenCalledWith(
               "some-repository",
               "some-name",
               "some-version",
@@ -243,7 +218,7 @@ describe("opening dock tab for installing helm chart", () => {
 
           describe("when readme resolves", () => {
             beforeEach(async () => {
-              await callForHelmChartReadmeMock.resolve("some-readme");
+              await requestHelmChartReadmeMock.resolve("some-readme");
             });
 
             it("renders", () => {
@@ -258,7 +233,7 @@ describe("opening dock tab for installing helm chart", () => {
 
             describe("when selecting different version", () => {
               beforeEach(() => {
-                callForHelmChartReadmeMock.mockClear();
+                requestHelmChartReadmeMock.mockClear();
 
                 builder.select
                   .openMenu(
@@ -280,7 +255,7 @@ describe("opening dock tab for installing helm chart", () => {
               });
 
               it("calls for chart readme for the version", () => {
-                expect(callForHelmChartReadmeMock).toHaveBeenCalledWith(
+                expect(requestHelmChartReadmeMock).toHaveBeenCalledWith(
                   "some-repository",
                   "some-name",
                   "some-other-version",
@@ -289,7 +264,7 @@ describe("opening dock tab for installing helm chart", () => {
 
               describe("when readme resolves", () => {
                 beforeEach(async () => {
-                  await callForHelmChartReadmeMock.resolve("some-readme");
+                  await requestHelmChartReadmeMock.resolve("some-readme");
                 });
 
                 it("renders", () => {
@@ -305,7 +280,7 @@ describe("opening dock tab for installing helm chart", () => {
 
                   await flushPromises();
 
-                  expect(callForHelmChartValuesMock).toHaveBeenCalledWith(
+                  expect(requestHelmChartValuesMock).toHaveBeenCalledWith(
                     "some-repository",
                     "some-name",
                     "some-other-version",
@@ -316,7 +291,7 @@ describe("opening dock tab for installing helm chart", () => {
 
             describe("when selecting to install the chart", () => {
               beforeEach(() => {
-                callForHelmChartVersionsMock.mockClear();
+                requestHelmChartVersionsMock.mockClear();
 
                 const installButton = rendered.getByTestId(
                   "install-chart-for-some-repository-some-name",

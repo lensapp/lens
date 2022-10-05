@@ -146,13 +146,11 @@ class NonInjectedDialog extends React.PureComponent<DialogProps & Dependencies &
   };
 
   render() {
-    const { modal, animated, pinned, "data-testid": testId } = this.props;
-    let { className } = this.props;
+    const { modal, animated, pinned, "data-testid": testId, className } = this.props;
 
-    className = cssNames("Dialog flex center", className, { modal, pinned });
     let dialog = (
       <div
-        className={className}
+        className={cssNames("Dialog flex center", className, { modal, pinned })}
         onClick={stopPropagation}
         ref={this.ref}
         data-testid={testId}

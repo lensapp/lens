@@ -4,12 +4,13 @@
  */
 
 import "./animate.scss";
-import React from "react";
-import { observable, makeObservable } from "mobx";
-import { observer } from "mobx-react";
+import React, { useEffect, useState } from "react";
 import { cssNames, noop } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { RequestAnimationFrame } from "./request-animation-frame.injectable";
 import requestAnimationFrameInjectable from "./request-animation-frame.injectable";
+import defaultEnterDurationForAnimatedInjectable from "./default-enter-duration.injectable";
+import defaultLeaveDurationForAnimatedInjectable from "./default-leave-duration.injectable";
 
 export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
 
@@ -24,115 +25,89 @@ export interface AnimateProps {
 }
 
 interface Dependencies {
-  requestAnimationFrame: (callback: () => void) => void;
+  requestAnimationFrame: RequestAnimationFrame;
+  defaultEnterDuration: number;
+  defaultLeaveDuration: number;
 }
 
-@observer
-class DefaultedAnimate extends React.Component<AnimateProps & Dependencies & typeof DefaultedAnimate.defaultProps> {
-  static defaultProps = {
-    name: "opacity",
-    enter: true,
-    onEnter: noop,
-    onLeave: noop,
-    enterDuration: 100,
-    leaveDuration: 100,
-  };
+const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
+  const {
+    requestAnimationFrame,
+    defaultEnterDuration,
+    defaultLeaveDuration,
+    ...props
+  } = propsAndDeps;
+  const {
+    children,
+    enter = true,
+    enterDuration = defaultEnterDuration,
+    leaveDuration = defaultLeaveDuration,
+    name = "opacity",
+    onEnter: onEnterHandler = noop<[]>,
+    onLeave: onLeaveHandler = noop<[]>,
+  } = props;
 
-  @observable isVisible = !!this.props.enter;
-  @observable statusClassName = {
-    enter: false,
-    leave: false,
-  };
+  const [isVisible, setIsVisible] = useState(false);
+  const [showClassNameEnter, setShowClassNameEnter] = useState(false);
+  const [showClassNameLeave, setShowClassNameLeave] = useState(false);
 
-  constructor(props: AnimateProps & Dependencies & typeof DefaultedAnimate.defaultProps) {
-    super(props);
-    makeObservable(this);
-  }
+  const contentElem = React.Children.only(children) as React.ReactElement<React.HTMLAttributes<any>>;
+  const classNames = cssNames("Animate", name, contentElem.props.className, {
+    enter: showClassNameEnter,
+    leave: showClassNameLeave,
+  });
 
-  get contentElem() {
-    return React.Children.only(this.props.children) as React.ReactElement<React.HTMLAttributes<any>>;
-  }
-
-  private toggle(enter: boolean) {
+  useEffect(() => {
     if (enter) {
-      this.enter();
-    } else {
-      this.leave();
-    }
-  }
+      setIsVisible(true);
 
-  componentDidMount() {
-    this.toggle(this.props.enter);
-  }
+      requestAnimationFrame(() => {
+        setShowClassNameEnter(true);
+        onEnterHandler();
+      });
 
-  componentDidUpdate(prevProps: Readonly<AnimateProps>): void {
-    const { enter } = this.props;
+      return noop;
+    } else if (isVisible) {
+      setShowClassNameLeave(true);
+      onLeaveHandler();
 
-    if (prevProps.enter !== enter) {
-      this.toggle(enter);
-    }
-  }
+      // Cleanup after duration
+      const handle = setTimeout(() => {
+        setIsVisible(false);
+        setShowClassNameEnter(false);
+        setShowClassNameLeave(false);
+      }, leaveDuration);
 
-  enter() {
-    this.isVisible = true; // triggers render() to apply css-animation in existing dom
-
-    this.props.requestAnimationFrame(() => {
-      this.statusClassName.enter = true;
-      this.props.onEnter();
-    });
-  }
-
-  leave() {
-    if (!this.isVisible) return;
-    this.statusClassName.leave = true;
-    this.props.onLeave();
-    this.resetAfterLeaveDuration();
-  }
-
-  resetAfterLeaveDuration() {
-    setTimeout(() => this.reset(), this.props.leaveDuration);
-  }
-
-  reset() {
-    this.isVisible = false;
-    this.statusClassName.enter = false;
-    this.statusClassName.leave = false;
-  }
-
-  render() {
-    if (!this.isVisible) {
-      return null;
+      return () => clearTimeout(handle);
     }
 
-    const { name, enterDuration, leaveDuration } = this.props;
-    const contentElem = this.contentElem;
-    const cssVarsForAnimation = {
-      "--enter-duration": `${enterDuration}ms`,
-      "--leave-duration": `${leaveDuration}ms`,
-    } as React.CSSProperties;
+    return noop;
+  }, [enter]);
 
-    return React.cloneElement(contentElem, {
-      className: cssNames("Animate", name, contentElem.props.className, this.statusClassName),
-      children: contentElem.props.children,
-      style: {
-        ...contentElem.props.style,
-        ...cssVarsForAnimation,
-      },
-    });
+  if (!isVisible) {
+    return null;
   }
-}
 
-export const NonInjectedAnimate = (props: AnimateProps & Dependencies) => <DefaultedAnimate {...props} />;
+  const cssVarsForAnimation = {
+    "--enter-duration": `${enterDuration}ms`,
+    "--leave-duration": `${leaveDuration}ms`,
+  } as React.CSSProperties;
 
-export const Animate = withInjectables<Dependencies, AnimateProps>(
-  NonInjectedAnimate,
+  return React.cloneElement(contentElem, {
+    className: classNames,
+    children: contentElem.props.children,
+    style: {
+      ...contentElem.props.style,
+      ...cssVarsForAnimation,
+    },
+  });
+};
 
-  {
-    getProps: (di, props) => ({
-      requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
-      ...props,
-    }),
-  },
-);
-
-
+export const Animate = withInjectables<Dependencies, AnimateProps>(NonInjectedAnimate, {
+  getProps: (di, props) => ({
+    ...props,
+    requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
+    defaultEnterDuration: di.inject(defaultEnterDurationForAnimatedInjectable),
+    defaultLeaveDuration: di.inject(defaultLeaveDurationForAnimatedInjectable),
+  }),
+});

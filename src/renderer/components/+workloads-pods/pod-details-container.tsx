@@ -105,7 +105,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
           <StatusBrick className={cssNames(state, { ready })}/>
           {name}
         </div>
-        {!isMetricHidden && !isInitContainer && (
+        {(!isMetricHidden && !isInitContainer && metrics) && (
           <ResourceMetrics
             object={pod}
             tabs={[

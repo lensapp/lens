@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import getAbsolutePathInjectable from "../path/get-absolute-path.injectable";
+import joinPathsInjectable from "../path/join-paths.injectable";
 import lensResourcesDirInjectable from "./lens-resources-dir.injectable";
 
 const staticFilesDirectoryInjectable = getInjectable({
   id: "static-files-directory",
 
   instantiate: (di) => {
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
     const lensResourcesDir = di.inject(lensResourcesDirInjectable);
 
-    return getAbsolutePath(lensResourcesDir, "static");
+    return joinPaths(lensResourcesDir, "static");
   },
 });
 

@@ -5,14 +5,14 @@
 
 import fs from "fs";
 import * as yaml from "js-yaml";
-import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
-import { iter, put, sortCharts } from "../../common/utils";
+import { iter, put, sortBySemverVersion } from "../../common/utils";
 import { execHelm } from "./exec";
 import type { SetRequired } from "type-fest";
 import { assert } from "console";
 import type { HelmRepo } from "../../common/helm/helm-repo";
 import type { HelmChartManagerCache } from "./helm-chart-manager-cache.injectable";
 import type { Logger } from "../../common/logger";
+import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
 
 export interface HelmCacheFile {
   apiVersion: string;
@@ -118,7 +118,7 @@ function normalizeHelmCharts(repoName: string, entries: RepoHelmChartList): Repo
         Object.entries(entries),
         ([name, charts]) => [
           name,
-          sortCharts(
+          sortBySemverVersion(
             charts.map(chart => ({
               ...chart,
               created: Date.parse(chart.created).toString(),

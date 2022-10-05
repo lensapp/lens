@@ -909,7 +909,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       <input
                         class="input box grow"
                         disabled=""
-                        placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                        placeholder="/some-electron-app-path-for-user-data/binaries"
                         spellcheck="false"
                         value=""
                       />
@@ -940,7 +940,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                     >
                       <input
                         class="input box grow"
-                        placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                        placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                         spellcheck="false"
                         value=""
                       />

@@ -10,8 +10,8 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import type { PodMetricData } from "../../../common/k8s-api/endpoints";
-import { nodeApi, Pod, getMetricsForPods } from "../../../common/k8s-api/endpoints";
+import type { NodeApi } from "../../../common/k8s-api/endpoints";
+import { Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { cssNames, toJS } from "../../utils";
@@ -24,21 +24,34 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getItemMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 import { PodVolumes } from "./details/volumes/view";
+import type { PodMetricData, RequestPodMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import requestPodMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
 
 export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 }
 
+interface Dependencies {
+  requestPodMetrics: RequestPodMetrics;
+  getActiveClusterEntity: GetActiveClusterEntity;
+  getDetailsUrl: GetDetailsUrl;
+  nodeApi: NodeApi;
+}
+
 @observer
-export class PodDetails extends React.Component<PodDetailsProps> {
+class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependencies> {
   @observable metrics: PodMetricData | null = null;
   @observable containerMetrics: PodMetricData | null = null;
 
-  constructor(props: PodDetailsProps) {
+  constructor(props: PodDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -53,14 +66,14 @@ export class PodDetails extends React.Component<PodDetailsProps> {
   }
 
   loadMetrics = async () => {
-    const { object: pod } = this.props;
+    const { object: pod, requestPodMetrics } = this.props;
 
-    this.metrics = await getMetricsForPods([pod], pod.getNs());
-    this.containerMetrics = await getMetricsForPods([pod], pod.getNs(), "container, namespace");
+    this.metrics = await requestPodMetrics([pod], pod.getNs());
+    this.containerMetrics = await requestPodMetrics([pod], pod.getNs(), "container, namespace");
   };
 
   render() {
-    const { object: pod } = this.props;
+    const { object: pod, getActiveClusterEntity, getDetailsUrl, nodeApi } = this.props;
 
     if (!pod) {
       return null;
@@ -183,3 +196,13 @@ export class PodDetails extends React.Component<PodDetailsProps> {
     );
   }
 }
+
+export const PodDetails = withInjectables<Dependencies, PodDetailsProps>(NonInjectedPodDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    requestPodMetrics: di.inject(requestPodMetricsInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    nodeApi: di.inject(nodeApiInjectable),
+  }),
+});

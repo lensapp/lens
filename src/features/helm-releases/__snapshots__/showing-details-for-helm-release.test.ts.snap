@@ -661,6 +661,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -670,7 +671,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -1404,6 +1407,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -1413,7 +1417,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -2131,7 +2137,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -2154,6 +2160,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -2212,7 +2219,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -2235,6 +2242,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -2315,6 +2323,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -2324,7 +2333,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -3042,7 +3053,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -3065,6 +3076,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -3123,7 +3135,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -3146,6 +3158,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -3226,6 +3239,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -3235,7 +3249,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -4014,7 +4030,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -4037,6 +4053,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -4095,7 +4112,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -4118,6 +4135,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -4198,6 +4216,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -4207,7 +4226,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -4986,7 +5007,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -5009,6 +5030,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -5067,7 +5089,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -5090,6 +5112,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -5170,6 +5193,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -5179,7 +5203,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -5280,6 +5306,7 @@ exports[`showing details for helm release given application is started when navi
         >
           <li
             class="MenuItem"
+            data-testid="upgrade-chart-menu-item-for-some-namespace/some-name"
             tabindex="0"
           >
             <i
@@ -5365,7 +5392,7 @@ exports[`showing details for helm release given application is started when navi
                 class="flex gaps align-center"
               >
                 <span>
-                  some-chart
+                  some-chart-1.0.0
                 </span>
                 <button
                   class="Button box right upgrade primary"
@@ -5419,7 +5446,9 @@ exports[`showing details for helm release given application is started when navi
               <div
                 class="version flex gaps align-center"
               >
-                <span />
+                <span>
+                  1.0.0
+                </span>
               </div>
             </span>
           </div>
@@ -6210,7 +6239,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -6233,6 +6262,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -6291,7 +6321,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -6314,6 +6344,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -6394,6 +6425,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -6403,7 +6435,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -6504,6 +6538,7 @@ exports[`showing details for helm release given application is started when navi
         >
           <li
             class="MenuItem"
+            data-testid="upgrade-chart-menu-item-for-some-namespace/some-name"
             tabindex="0"
           >
             <i
@@ -6589,7 +6624,7 @@ exports[`showing details for helm release given application is started when navi
                 class="flex gaps align-center"
               >
                 <span>
-                  some-chart
+                  some-chart-1.0.0
                 </span>
                 <button
                   class="Button box right upgrade primary"
@@ -6643,7 +6678,9 @@ exports[`showing details for helm release given application is started when navi
               <div
                 class="version flex gaps align-center"
               >
-                <span />
+                <span>
+                  1.0.0
+                </span>
               </div>
             </span>
           </div>
@@ -7434,7 +7471,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -7457,6 +7494,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -7515,7 +7553,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -7538,6 +7576,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -7618,6 +7657,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -7627,7 +7667,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -7728,6 +7770,7 @@ exports[`showing details for helm release given application is started when navi
         >
           <li
             class="MenuItem"
+            data-testid="upgrade-chart-menu-item-for-some-namespace/some-name"
             tabindex="0"
           >
             <i
@@ -7813,7 +7856,7 @@ exports[`showing details for helm release given application is started when navi
                 class="flex gaps align-center"
               >
                 <span>
-                  some-chart
+                  some-chart-1.0.0
                 </span>
                 <button
                   class="Button box right upgrade primary"
@@ -7867,7 +7910,9 @@ exports[`showing details for helm release given application is started when navi
               <div
                 class="version flex gaps align-center"
               >
-                <span />
+                <span>
+                  1.0.0
+                </span>
               </div>
             </span>
           </div>
@@ -8008,7 +8053,7 @@ exports[`showing details for helm release given application is started when navi
 </body>
 `;
 
-exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves when changing the configuration when saving when update resolves with failure renders 1`] = `
+exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves when changing the configuration when saving when requestHelmCharts resolves when requestHelmChartVersions resolves when update resolves with failure renders 1`] = `
 <body>
   <div>
     <div
@@ -8669,6 +8714,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -8678,7 +8724,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -8779,6 +8827,7 @@ exports[`showing details for helm release given application is started when navi
         >
           <li
             class="MenuItem"
+            data-testid="upgrade-chart-menu-item-for-some-namespace/some-name"
             tabindex="0"
           >
             <i
@@ -8864,7 +8913,7 @@ exports[`showing details for helm release given application is started when navi
                 class="flex gaps align-center"
               >
                 <span>
-                  some-chart
+                  some-chart-1.0.0
                 </span>
                 <button
                   class="Button box right upgrade primary"
@@ -8918,7 +8967,9 @@ exports[`showing details for helm release given application is started when navi
               <div
                 class="version flex gaps align-center"
               >
-                <span />
+                <span>
+                  1.0.0
+                </span>
               </div>
             </span>
           </div>
@@ -9059,7 +9110,7 @@ exports[`showing details for helm release given application is started when navi
 </body>
 `;
 
-exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves when changing the configuration when saving when update resolves with success renders 1`] = `
+exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves when changing the configuration when saving when requestHelmCharts resolves when requestHelmChartVersions resolves when update resolves with success renders 1`] = `
 <body>
   <div>
     <div
@@ -9720,6 +9771,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -9729,7 +9781,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -9830,6 +9884,7 @@ exports[`showing details for helm release given application is started when navi
         >
           <li
             class="MenuItem"
+            data-testid="upgrade-chart-menu-item-for-some-namespace/some-name"
             tabindex="0"
           >
             <i
@@ -9915,7 +9970,7 @@ exports[`showing details for helm release given application is started when navi
                 class="flex gaps align-center"
               >
                 <span>
-                  some-chart
+                  some-chart-1.0.0
                 </span>
                 <button
                   class="Button box right upgrade primary"
@@ -9969,7 +10024,9 @@ exports[`showing details for helm release given application is started when navi
               <div
                 class="version flex gaps align-center"
               >
-                <span />
+                <span>
+                  1.0.0
+                </span>
               </div>
             </span>
           </div>
@@ -10762,7 +10819,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -10785,6 +10842,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -10843,7 +10901,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -10866,6 +10924,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -10946,6 +11005,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -10955,7 +11015,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -11056,6 +11118,7 @@ exports[`showing details for helm release given application is started when navi
         >
           <li
             class="MenuItem"
+            data-testid="upgrade-chart-menu-item-for-some-namespace/some-name"
             tabindex="0"
           >
             <i
@@ -11141,7 +11204,7 @@ exports[`showing details for helm release given application is started when navi
                 class="flex gaps align-center"
               >
                 <span>
-                  some-chart
+                  some-chart-1.0.0
                 </span>
                 <button
                   class="Button box right upgrade primary"
@@ -11195,7 +11258,9 @@ exports[`showing details for helm release given application is started when navi
               <div
                 class="version flex gaps align-center"
               >
-                <span />
+                <span>
+                  1.0.0
+                </span>
               </div>
             </span>
           </div>
@@ -11986,7 +12051,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -12009,6 +12074,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -12067,7 +12133,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -12090,6 +12156,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -12170,6 +12237,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -12179,7 +12247,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -12219,6 +12289,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -12228,7 +12299,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -12955,7 +13028,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -12978,6 +13051,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -13036,7 +13110,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -13059,6 +13133,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -13139,6 +13214,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -13148,7 +13224,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -13930,7 +14008,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -13953,6 +14031,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -14011,7 +14090,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -14034,6 +14113,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -14114,6 +14194,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -14123,7 +14204,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -14841,7 +14924,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -14864,6 +14947,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -14922,7 +15006,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -14945,6 +15029,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -15025,6 +15110,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -15034,7 +15120,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -15813,7 +15901,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                1.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -15836,6 +15924,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-namespace/some-name"
                                     id="menu-actions-for-release-menu-for-some-namespace/some-name"
                                     tabindex="0"
                                   >
@@ -15894,7 +15983,7 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell version"
                               >
-                                
+                                2.0.0
                               </div>
                               <div
                                 class="TableCell app-version"
@@ -15917,6 +16006,7 @@ exports[`showing details for helm release given application is started when navi
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="menu-actions-icon-for-release-menu-for-some-other-namespace/some-other-name"
                                     id="menu-actions-for-release-menu-for-some-other-namespace/some-other-name"
                                     tabindex="0"
                                   >
@@ -15997,6 +16087,7 @@ exports[`showing details for helm release given application is started when navi
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -16006,7 +16097,9 @@ exports[`showing details for helm release given application is started when navi
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>

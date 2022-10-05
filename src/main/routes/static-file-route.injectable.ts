@@ -11,8 +11,6 @@ import path from "path";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import httpProxy from "http-proxy";
 import readFileBufferInjectable from "../../common/fs/read-file-buffer.injectable";
-import type { GetAbsolutePath } from "../../common/path/get-absolute-path.injectable";
-import getAbsolutePathInjectable from "../../common/path/get-absolute-path.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import { webpackDevServerPort } from "../../../webpack/vars";
@@ -20,11 +18,13 @@ import type { LensApiRequest, RouteResponse } from "../router/route";
 import { route } from "../router/route";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 import appNameInjectable from "../../common/vars/app-name.injectable";
+import type { GetAbsolutePath } from "../../common/path/get-absolute-path.injectable";
+import getAbsolutePathInjectable from "../../common/path/get-absolute-path.injectable";
 
 interface ProductionDependencies {
   readFileBuffer: (path: string) => Promise<Buffer>;
-  getAbsolutePath: GetAbsolutePath;
   joinPaths: JoinPaths;
+  getAbsolutePath: GetAbsolutePath;
   staticFilesDirectory: string;
   appName: string;
 }
@@ -98,8 +98,8 @@ const staticFileRouteInjectable = getRouteInjectable({
   instantiate: (di) => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const readFileBuffer = di.inject(readFileBufferInjectable);
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
+    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
     const appName = di.inject(appNameInjectable);
 
@@ -114,10 +114,10 @@ const staticFileRouteInjectable = getRouteInjectable({
         })
         : handleStaticFileInProduction({
           readFileBuffer,
-          getAbsolutePath,
           joinPaths,
           staticFilesDirectory,
           appName,
+          getAbsolutePath,
         }),
     );
   },

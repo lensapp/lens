@@ -9,6 +9,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import type { V1Secret } from "@kubernetes/client-node";
 import { CoreV1Api } from "@kubernetes/client-node";
 import { clusterRoute } from "../../router/route";
+import { dump } from "js-yaml";
 
 const getServiceAccountRouteInjectable = getRouteInjectable({
   id: "get-service-account-route",
@@ -50,43 +51,15 @@ const getServiceAccountRouteInjectable = getRouteInjectable({
 
 export default getServiceAccountRouteInjectable;
 
-interface ServiceAccountKubeConfig {
-  apiVersion: string;
-  kind: string;
-  clusters: {
-    name: string;
-    cluster: {
-      server: string;
-      "certificate-authority-data": string;
-    };
-  }[];
-  users: {
-    name: string;
-    user: {
-      token: string;
-    };
-  }[];
-  contexts: {
-    name: string;
-    context: {
-      user: string;
-      cluster: string;
-      namespace: string | undefined;
-    };
-  }[];
-  "current-context": string;
-}
-
-function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster): ServiceAccountKubeConfig | undefined {
+function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster): string | undefined {
   if (!secret.data || !secret.metadata) {
     return undefined;
   }
 
   const { token, "ca.crt": caCrt } = secret.data;
-
   const tokenData = Buffer.from(token, "base64");
 
-  return {
+  return dump({
     "apiVersion": "v1",
     "kind": "Config",
     "clusters": [
@@ -117,5 +90,5 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
       },
     ],
     "current-context": cluster.contextName,
-  };
+  });
 }

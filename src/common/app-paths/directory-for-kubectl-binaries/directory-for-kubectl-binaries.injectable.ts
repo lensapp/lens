@@ -4,17 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForBinariesInjectable from "../directory-for-binaries/directory-for-binaries.injectable";
-import getAbsolutePathInjectable from "../../path/get-absolute-path.injectable";
+import joinPathsInjectable from "../../path/join-paths.injectable";
 
 const directoryForKubectlBinariesInjectable = getInjectable({
   id: "directory-for-kubectl-binaries",
 
   instantiate: (di) => {
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
     const directoryForBinaries = di.inject(directoryForBinariesInjectable);
 
-
-    return getAbsolutePath(directoryForBinaries, "kubectl");
+    return joinPaths(directoryForBinaries, "kubectl");
   },
 });
 

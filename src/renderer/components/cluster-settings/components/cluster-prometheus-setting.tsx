@@ -11,10 +11,10 @@ import type { SelectOption } from "../../select";
 import { Select } from "../../select";
 import { Input } from "../../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
-import type { MetricProviderInfo } from "../../../../common/k8s-api/endpoints/metrics.api";
-import { metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { Spinner } from "../../spinner";
+import type { MetricProviderInfo, RequestMetricsProviders } from "../../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import requestMetricsProvidersInjectable from "../../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
 import productNameInjectable from "../../../../common/vars/product-name.injectable";
 
 export interface ClusterPrometheusSettingProps {
@@ -27,6 +27,7 @@ type ProviderValue = typeof autoDetectPrometheus | string;
 
 interface Dependencies {
   productName: string;
+  requestMetricsProviders: RequestMetricsProviders;
 }
 
 @observer
@@ -85,8 +86,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
       }),
     );
 
-    metricsApi
-      .getMetricProviders()
+    this.props.requestMetricsProviders()
       .then(values => {
         this.loading = false;
         this.loadedOptions.replace(values.map(provider => [provider.id, provider]));
@@ -174,5 +174,6 @@ export const ClusterPrometheusSetting = withInjectables<Dependencies, ClusterPro
   getProps: (di, props) => ({
     ...props,
     productName: di.inject(productNameInjectable),
+    requestMetricsProviders: di.inject(requestMetricsProvidersInjectable),
   }),
 });

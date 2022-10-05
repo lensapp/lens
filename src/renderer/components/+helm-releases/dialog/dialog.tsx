@@ -13,20 +13,23 @@ import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import { getReleaseHistory, type HelmReleaseRevision } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select } from "../../select";
 import { Notifications } from "../../notifications";
 import orderBy from "lodash/orderBy";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import releaseRollbackDialogStateInjectable from "./state.injectable";
+import type { RollbackRelease } from "../rollback-release/rollback-release.injectable";
 import rollbackReleaseInjectable from "../rollback-release/rollback-release.injectable";
+import type { HelmReleaseRevision, RequestHelmReleaseHistory } from "../../../../common/k8s-api/endpoints/helm-releases.api/request-history.injectable";
+import requestHelmReleaseHistoryInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-history.injectable";
 
 export interface ReleaseRollbackDialogProps extends DialogProps {
 }
 
 interface Dependencies {
-  rollbackRelease: (releaseName: string, namespace: string, revisionNumber: number) => Promise<void>;
+  rollbackRelease: RollbackRelease;
   state: IObservableValue<HelmRelease | undefined>;
+  requestHelmReleaseHistory: RequestHelmReleaseHistory;
 }
 
 @observer
@@ -48,7 +51,7 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
   onOpen = async (release: HelmRelease) => {
     this.isLoading.set(true);
 
-    const releases = await getReleaseHistory(release.getName(), release.getNs());
+    const releases = await this.props.requestHelmReleaseHistory(release.getName(), release.getNs());
 
     runInAction(() => {
       this.revisions.replace(orderBy(releases, "revision", "desc"));
@@ -134,14 +137,11 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
   }
 }
 
-export const ReleaseRollbackDialog = withInjectables<Dependencies, ReleaseRollbackDialogProps>(
-  NonInjectedReleaseRollbackDialog,
-
-  {
-    getProps: (di, props) => ({
-      rollbackRelease: di.inject(rollbackReleaseInjectable),
-      state: di.inject(releaseRollbackDialogStateInjectable),
-      ...props,
-    }),
-  },
-);
+export const ReleaseRollbackDialog = withInjectables<Dependencies, ReleaseRollbackDialogProps>(NonInjectedReleaseRollbackDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    rollbackRelease: di.inject(rollbackReleaseInjectable),
+    state: di.inject(releaseRollbackDialogStateInjectable),
+    requestHelmReleaseHistory: di.inject(requestHelmReleaseHistoryInjectable),
+  }),
+});

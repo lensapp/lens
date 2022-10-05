@@ -2250,13 +2250,6 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
   integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
 
-"@types/minipass@*":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@types/minipass/-/minipass-3.1.2.tgz#e2d7f9df0698aff421dcf145b4fc05b8183b9030"
-  integrity sha512-foLGjgrJkUjLG/o2t2ymlZGEoBNBa/TfoUZ7oCTkOjP1T43UGBJspovJou/l3ZuHvye2ewR5cZNtp2zyWgILMA==
-  dependencies:
-    "@types/node" "*"
-
 "@types/mkdirp@^1.0.0":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-1.0.2.tgz#8d0bad7aa793abe551860be1f7ae7f3198c16666"
@@ -2561,13 +2554,13 @@
   dependencies:
     "@types/node" "*"
 
-"@types/tar@^4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@types/tar/-/tar-4.0.5.tgz#5f953f183e36a15c6ce3f336568f6051b7b183f3"
-  integrity sha512-cgwPhNEabHaZcYIy5xeMtux2EmYBitfqEceBUi2t5+ETy4dW6kswt6WX4+HqLeiiKOo42EXbGiDmVJ2x+vi37Q==
+"@types/tar@^6.1.2":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@types/tar/-/tar-6.1.2.tgz#e60108a7d1b08cc91bf2faf1286cc08fdad48bbe"
+  integrity sha512-bnX3RRm70/n1WMwmevdOAeDU4YP7f5JSubgnuU+yrO+xQQjwDboJj3u2NTJI5ngCQhXihqVVAH5h5J8YpdpEvg==
   dependencies:
-    "@types/minipass" "*"
     "@types/node" "*"
+    minipass "^3.3.5"
 
 "@types/tcp-port-used@^1.0.1":
   version "1.0.1"
@@ -4515,13 +4508,6 @@ create-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
-
-cross-fetch@^3.0.4:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
-  integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
-  dependencies:
-    node-fetch "2.6.7"
 
 cross-spawn@^6.0.0:
   version "6.0.5"
@@ -7748,14 +7734,6 @@ jest-environment-node@^28.1.3:
     jest-mock "^28.1.3"
     jest-util "^28.1.3"
 
-jest-fetch-mock@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/jest-fetch-mock/-/jest-fetch-mock-3.0.3.tgz#31749c456ae27b8919d69824f1c2bd85fe0a1f3b"
-  integrity sha512-Ux1nWprtLrdrH4XwE7O7InRY6psIi3GOsqNESJgMJ+M5cv4A8Lh7SN9d2V2kKRZ8ebAfcd1LNyZguAOb6JiDqw==
-  dependencies:
-    cross-fetch "^3.0.4"
-    promise-polyfill "^8.1.3"
-
 jest-get-type@^28.0.2:
   version "28.0.2"
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-28.0.2.tgz#34622e628e4fdcd793d46db8a242227901fcf203"
@@ -9123,6 +9101,13 @@ minipass@^3.0.0, minipass@^3.1.0, minipass@^3.1.1, minipass@^3.1.3, minipass@^3.
   dependencies:
     yallist "^4.0.0"
 
+minipass@^3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/minipass/-/minipass-3.3.5.tgz#6da7e53a48db8a856eeb9153d85b230a2119e819"
+  integrity sha512-rQ/p+KfKBkeNwo04U15i+hOwoVBVmekmm/HcfTkTN2t9pbQKCMm4eN5gFeqgrrSp/kH/7BYYhTIHOxGqzbBPaA==
+  dependencies:
+    yallist "^4.0.0"
+
 minizlib@^2.0.0, minizlib@^2.1.1, minizlib@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-2.1.2.tgz#e90d3466ba209b932451508a11ce3d3632145931"
@@ -9341,7 +9326,7 @@ node-addon-api@^5.0.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-5.0.0.tgz#7d7e6f9ef89043befdb20c1989c905ebde18c501"
   integrity sha512-CvkDw2OEnme7ybCykJpVcKH+uAOLV2qLqiyla128dN9TkEWfrYmxG6C2boDe5KcNQqZF3orkqzGgOMvZ/JNekA==
 
-node-fetch@2.6.7, node-fetch@^2.6.7:
+node-fetch@^2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
@@ -10452,11 +10437,6 @@ promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
-
-promise-polyfill@^8.1.3:
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.2.3.tgz#2edc7e4b81aff781c88a0d577e5fe9da822107c6"
-  integrity sha512-Og0+jCRQetV84U8wVjMNccfGCnMQ9mGs9Hv78QFe+pSDD3gWTpz0y+1QCuxy5d/vBFuZ3iwP2eycAkvqIMPmWg==
 
 promise-retry@^2.0.1:
   version "2.0.1"

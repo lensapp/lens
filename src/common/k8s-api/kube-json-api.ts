@@ -6,8 +6,6 @@
 import type { JsonApiData, JsonApiError } from "./json-api";
 import { JsonApi } from "./json-api";
 import type { Response } from "node-fetch";
-import { apiKubePrefix, isDebugging } from "../vars";
-import { apiBase } from "./api-base";
 import type { KubeJsonApiObjectMetadata } from "./kube-object";
 
 export interface KubeJsonApiListMetadata {
@@ -47,20 +45,6 @@ export interface KubeJsonApiError extends JsonApiError {
 }
 
 export class KubeJsonApi extends JsonApi<KubeJsonApiData> {
-  static forCluster(clusterId: string): KubeJsonApi {
-    const url = new URL(apiBase.config.serverAddress);
-
-    return new this({
-      serverAddress: apiBase.config.serverAddress,
-      apiBase: apiKubePrefix,
-      debug: isDebugging,
-    }, {
-      headers: {
-        "Host": `${clusterId}.localhost:${url.port}`,
-      },
-    });
-  }
-
   protected parseError(error: KubeJsonApiError | string, res: Response): string[] {
     if (typeof error === "string") {
       return [error];

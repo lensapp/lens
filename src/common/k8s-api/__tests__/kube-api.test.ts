@@ -2,37 +2,43 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import { forRemoteCluster, KubeApi } from "../kube-api";
-import { KubeJsonApi } from "../kube-json-api";
-import { KubeObject } from "../kube-object";
-import { delay } from "../../utils/delay";
+import type { KubeApiWatchCallback } from "../kube-api";
+import { KubeApi } from "../kube-api";
+import type { KubeJsonApi, KubeJsonApiData } from "../kube-json-api";
 import { PassThrough } from "stream";
-import { ApiManager } from "../api-manager";
-import type { FetchMock } from "jest-fetch-mock/types";
-import { DeploymentApi, Ingress, IngressApi, Pod, PodApi } from "../endpoints";
+import type { ApiManager } from "../api-manager";
+import { Deployment, DeploymentApi, Ingress, IngressApi, NamespaceApi, Pod, PodApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import autoRegistrationInjectable from "../api-manager/auto-registration.injectable";
+import type { Fetch } from "../../fetch/fetch.injectable";
+import fetchInjectable from "../../fetch/fetch.injectable";
+import type { CreateKubeApiForRemoteCluster } from "../create-kube-api-for-remote-cluster.injectable";
+import createKubeApiForRemoteClusterInjectable from "../create-kube-api-for-remote-cluster.injectable";
+import { Response } from "node-fetch";
+import type { AsyncFnMock } from "@async-fn/jest";
+import asyncFn from "@async-fn/jest";
+import { flushPromises } from "../../test-utils/flush-promises";
+import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
+import type { IKubeWatchEvent } from "../kube-watch-event";
+import type { KubeJsonApiDataFor } from "../kube-object";
 import AbortController from "abort-controller";
 
-jest.mock("../api-manager");
-
-const mockFetch = fetch as FetchMock;
-
-describe("forRemoteCluster", () => {
-  let apiManager: jest.Mocked<ApiManager>;
+describe("createKubeApiForRemoteCluster", () => {
+  let createKubeApiForRemoteCluster: CreateKubeApiForRemoteCluster;
+  let fetchMock: AsyncFnMock<Fetch>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    apiManager = new ApiManager() as jest.Mocked<ApiManager>;
+    fetchMock = asyncFn();
+    di.override(fetchInjectable, () => fetchMock);
 
-    di.override(apiManagerInjectable, () => apiManager);
+    createKubeApiForRemoteCluster = di.inject(createKubeApiForRemoteClusterInjectable);
   });
 
   it("builds api client for KubeObject", async () => {
-    const api = forRemoteCluster({
+    const api = createKubeApiForRemoteCluster({
       cluster: {
         server: "https://127.0.0.1:6443",
       },
@@ -44,232 +50,523 @@ describe("forRemoteCluster", () => {
     expect(api).toBeInstanceOf(KubeApi);
   });
 
-  it("builds api client for given KubeApi", async () => {
-    const api = forRemoteCluster({
-      cluster: {
-        server: "https://127.0.0.1:6443",
-      },
-      user: {
-        token: "daa",
-      },
-    }, Pod, PodApi);
+  describe("when building for remote cluster with specific constructor", () => {
+    let api: PodApi;
 
-    expect(api).toBeInstanceOf(PodApi);
-  });
-
-  it("calls right api endpoint", async () => {
-    const api = forRemoteCluster({
-      cluster: {
-        server: "https://127.0.0.1:6443",
-      },
-      user: {
-        token: "daa",
-      },
-    }, Pod);
-
-    mockFetch.mockResponse(async (request: any) => {
-      expect(request.url).toEqual("https://127.0.0.1:6443/api/v1/pods");
-
-      return {
-        body: "hello",
-      };
+    beforeEach(() => {
+      api = createKubeApiForRemoteCluster({
+        cluster: {
+          server: "https://127.0.0.1:6443",
+        },
+        user: {
+          token: "daa",
+        },
+      }, Pod, PodApi);
     });
 
-    expect.hasAssertions();
+    it("uses the constructor", () => {
+      expect(api).toBeInstanceOf(PodApi);
+    });
 
-    await api.list();
+    describe("when calling list without namespace", () => {
+      let listRequest: Promise<Pod[] | null>;
+
+      beforeEach(async () => {
+        listRequest = api.list();
+
+        // This is required because of how JS promises work
+        await flushPromises();
+      });
+
+      it("should request pods from default namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "https://127.0.0.1:6443/api/v1/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when request resolves with data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["https://127.0.0.1:6443/api/v1/pods"],
+            new Response(JSON.stringify({
+              kind: "PodList",
+              apiVersion: "v1",
+              metadata:{
+                resourceVersion: "452899",
+              },
+              items: [],
+            })),
+          );
+        });
+
+        it("resolves the list call", async () => {
+          expect(await listRequest).toEqual([]);
+        });
+      });
+    });
   });
 });
 
 describe("KubeApi", () => {
   let request: KubeJsonApi;
-  let apiManager: jest.Mocked<ApiManager>;
+  let registerApiSpy: jest.SpiedFunction<ApiManager["registerApi"]>;
+  let fetchMock: AsyncFnMock<Fetch>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    request = new KubeJsonApi({
+    fetchMock = asyncFn();
+    di.override(fetchInjectable, () => fetchMock);
+
+    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
+
+    request = createKubeJsonApi({
       serverAddress: `http://127.0.0.1:9999`,
       apiBase: "/api-kube",
     });
-    apiManager = new ApiManager() as jest.Mocked<ApiManager>;
+    registerApiSpy = jest.spyOn(di.inject(apiManagerInjectable), "registerApi");
 
-    di.override(apiManagerInjectable, () => apiManager);
     di.inject(autoRegistrationInjectable);
   });
 
-  it("uses url from apiBase if apiBase contains the resource", async () => {
-    mockFetch.mockResponse(async (request: any) => {
-      if (request.url === "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1") {
-        return {
-          body: JSON.stringify({
-            resources: [{
-              name: "ingresses",
-            }],
-          }),
-        };
-      } else if (request.url === "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1") {
-        // Even if the old API contains ingresses, KubeApi should prefer the apiBase url
-        return {
-          body: JSON.stringify({
-            resources: [{
-              name: "ingresses",
-            }],
-          }),
-        };
-      } else {
-        return {
-          body: JSON.stringify({
-            resources: [],
-          }),
-        };
-      }
-    });
+  describe("on first call to IngressApi.get()", () => {
+    let ingressApi: IngressApi;
+    let getCall: Promise<Ingress | null>;
 
-    const apiBase = "/apis/networking.k8s.io/v1/ingresses";
-    const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
-    const kubeApi = new IngressApi({
-      request,
-      objectConstructor: Ingress,
-      apiBase,
-      fallbackApiBases: [fallbackApiBase],
-      checkPreferredVersion: true,
-    });
-
-    await kubeApi.get({
-      name: "foo",
-      namespace: "default",
-    });
-    expect(kubeApi.apiPrefix).toEqual("/apis");
-    expect(kubeApi.apiGroup).toEqual("networking.k8s.io");
-  });
-
-  it("uses url from fallbackApiBases if apiBase lacks the resource", async () => {
-    mockFetch.mockResponse(async (request: any) => {
-      if (request.url === "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1") {
-        return {
-          body: JSON.stringify({
-            resources: [],
-          }),
-        };
-      } else if (request.url === "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1") {
-        return {
-          body: JSON.stringify({
-            resources: [{
-              name: "ingresses",
-            }],
-          }),
-        };
-      } else {
-        return {
-          body: JSON.stringify({
-            resources: [],
-          }),
-        };
-      }
-    });
-
-    const apiBase = "apis/networking.k8s.io/v1/ingresses";
-    const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
-    const kubeApi = new IngressApi({
-      request,
-      objectConstructor: Object.assign(KubeObject, { apiBase }),
-      kind: "Ingress",
-      fallbackApiBases: [fallbackApiBase],
-      checkPreferredVersion: true,
-    });
-
-    await kubeApi.get({
-      name: "foo",
-      namespace: "default",
-    });
-    expect(kubeApi.apiPrefix).toEqual("/apis");
-    expect(kubeApi.apiGroup).toEqual("extensions");
-  });
-
-  describe("checkPreferredVersion", () => {
-    it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred", async () => {
-      expect.hasAssertions();
-
-      const api = new IngressApi({
+    beforeEach(async () => {
+      ingressApi = new IngressApi({
+        request,
         objectConstructor: Ingress,
-        checkPreferredVersion: true,
+        apiBase: "/apis/networking.k8s.io/v1/ingresses",
         fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
-        request: {
-          get: jest.fn()
-            .mockImplementation((path: string) => {
-              switch (path) {
-                case "/apis/networking.k8s.io/v1":
-                  throw new Error("no");
-                case "/apis/extensions/v1beta1":
-                  return {
-                    resources: [
-                      {
-                        name: "ingresses",
-                      },
-                    ],
-                  };
-                case "/apis/extensions":
-                  return {
-                    preferredVersion: {
-                      version: "v1beta1",
-                    },
-                  };
-                default:
-                  throw new Error("unknown path");
-              }
-            }),
-        } as Partial<KubeJsonApi> as KubeJsonApi,
+        checkPreferredVersion: true,
+      });
+      getCall = ingressApi.get({
+        name: "foo",
+        namespace: "default",
       });
 
-      await (api as any).checkPreferredVersion();
-
-      expect(api.apiVersionPreferred).toBe("v1beta1");
-      expect(apiManager.registerApi).toBeCalledWith(api);
+      // This is needed because of how JS promises work
+      await flushPromises();
     });
 
-    it("registers with apiManager if checkPreferredVersion changes apiVersionPreferred with non-grouped apis", async () => {
-      expect.hasAssertions();
+    it("requests resources from the versioned api group from the initial apiBase", () => {
+      expect(fetchMock.mock.lastCall).toMatchObject([
+        "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1",
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+          method: "get",
+        },
+      ]);
+    });
 
-      const api = new PodApi({
-        objectConstructor: Pod,
-        checkPreferredVersion: true,
-        fallbackApiBases: ["/api/v1beta1/pods"],
-        request: {
-          get: jest.fn()
-            .mockImplementation((path: string) => {
-              switch (path) {
-                case "/api/v1":
-                  throw new Error("no");
-                case "/api/v1beta1":
-                  return {
-                    resources: [
-                      {
-                        name: "pods",
-                      },
-                    ],
-                  };
-                case "/api":
-                  return {
-                    preferredVersion: {
-                      version: "v1beta1",
-                    },
-                  };
-                default:
-                  throw new Error("unknown path");
-              }
-            }),
-        } as Partial<KubeJsonApi> as KubeJsonApi,
+    describe("when resource request fufills with a resource", () => {
+      beforeEach(async () => {
+        await fetchMock.resolveSpecific(
+          ["http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1"],
+          new Response(JSON.stringify({
+            resources: [{
+              name: "ingresses",
+            }],
+          })),
+        );
       });
 
-      await (api as any).checkPreferredVersion();
+      it("requests the perferred version of that api group", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
 
-      expect(api.apiVersionPreferred).toBe("v1beta1");
-      expect(apiManager.registerApi).toBeCalledWith(api);
+      describe("when the preferred version resolves with v1", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/apis/networking.k8s.io"],
+            new Response(JSON.stringify({
+              preferredVersion: {
+                version: "v1",
+              },
+            })),
+          );
+        });
+
+        it("makes the request to get the resource", () => {
+          expect(fetchMock.mock.lastCall).toMatchObject([
+            "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1/namespaces/default/ingresses/foo",
+            {
+              headers: {
+                "content-type": "application/json",
+              },
+              method: "get",
+            },
+          ]);
+        });
+
+        it("sets fields in the api instance", () => {
+          expect(ingressApi).toEqual(expect.objectContaining({
+            apiVersionPreferred: "v1",
+            apiPrefix: "/apis",
+            apiGroup: "networking.k8s.io",
+          }));
+        });
+
+        it("registers the api with the changes info", () => {
+          expect(registerApiSpy).toBeCalledWith(ingressApi);
+        });
+
+        describe("when the request resolves with no data", () => {
+          let result: Ingress | null;
+
+          beforeEach(async () => {
+            await fetchMock.resolveSpecific(
+              ["http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1/namespaces/default/ingresses/foo"],
+              new Response(JSON.stringify({})),
+            );
+            result = await getCall;
+          });
+
+          it("results in the get call resolving to null", () => {
+            expect(result).toBeNull();
+          });
+
+          describe("on the second call to IngressApi.get()", () => {
+            let getCall: Promise<Ingress | null>;
+
+            beforeEach(async () => {
+              getCall = ingressApi.get({
+                name: "foo1",
+                namespace: "default",
+              });
+
+              // This is needed because of how JS promises work
+              await flushPromises();
+            });
+
+            it("makes the request to get the resource", () => {
+              expect(fetchMock.mock.lastCall).toMatchObject([
+                "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1/namespaces/default/ingresses/foo1",
+                {
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  method: "get",
+                },
+              ]);
+            });
+
+            describe("when the request resolves with no data", () => {
+              let result: Ingress | null;
+
+              beforeEach(async () => {
+                await fetchMock.resolveSpecific(
+                  ["http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1/namespaces/default/ingresses/foo1"],
+                  new Response(JSON.stringify({})),
+                );
+                result = await getCall;
+              });
+
+              it("results in the get call resolving to null", () => {
+                expect(result).toBeNull();
+              });
+            });
+          });
+        });
+
+        describe("when the request resolves with data", () => {
+          let result: Ingress | null;
+
+          beforeEach(async () => {
+            await fetchMock.resolveSpecific(
+              ["http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1/namespaces/default/ingresses/foo"],
+              new Response(JSON.stringify({
+                apiVersion: "v1",
+                kind: "Ingress",
+                metadata: {
+                  name: "foo",
+                  namespace: "default",
+                  resourceVersion: "1",
+                  uid: "12345",
+                },
+              })),
+            );
+            result = await getCall;
+          });
+
+          it("results in the get call resolving to an instance", () => {
+            expect(result).toBeInstanceOf(Ingress);
+          });
+
+          describe("on the second call to IngressApi.get()", () => {
+            let getCall: Promise<Ingress | null>;
+
+            beforeEach(async () => {
+              getCall = ingressApi.get({
+                name: "foo1",
+                namespace: "default",
+              });
+
+              // This is needed because of how JS promises work
+              await flushPromises();
+            });
+
+            it("makes the request to get the resource", () => {
+              expect(fetchMock.mock.lastCall).toMatchObject([
+                "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1/namespaces/default/ingresses/foo1",
+                {
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  method: "get",
+                },
+              ]);
+            });
+
+            describe("when the request resolves with no data", () => {
+              let result: Ingress | null;
+
+              beforeEach(async () => {
+                await fetchMock.resolveSpecific(
+                  ["http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1/namespaces/default/ingresses/foo1"],
+                  new Response(JSON.stringify({})),
+                );
+                result = await getCall;
+              });
+
+              it("results in the get call resolving to null", () => {
+                expect(result).toBeNull();
+              });
+            });
+          });
+        });
+      });
+    });
+
+    describe("when resource request fufills with no resource", () => {
+      beforeEach(async () => {
+        await fetchMock.resolveSpecific(
+          ["http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1"],
+          new Response(JSON.stringify({
+            resources: [],
+          })),
+        );
+      });
+
+      it("requests the resources from the base api url from the fallback api", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when resource request fufills with a resource", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1"],
+            new Response(JSON.stringify({
+              resources: [{
+                name: "ingresses",
+              }],
+            })),
+          );
+        });
+
+        it("requests the preferred version for that api group", () => {
+          expect(fetchMock.mock.lastCall).toMatchObject([
+            "http://127.0.0.1:9999/api-kube/apis/extensions",
+            {
+              headers: {
+                "content-type": "application/json",
+              },
+              method: "get",
+            },
+          ]);
+        });
+
+        describe("when the preferred version request resolves to v1beta1", () => {
+          beforeEach(async () => {
+            await fetchMock.resolveSpecific(
+              ["http://127.0.0.1:9999/api-kube/apis/extensions"],
+              new Response(JSON.stringify({
+                preferredVersion: {
+                  version: "v1beta1",
+                },
+              })),
+            );
+          });
+
+          it("makes the request to get the resource", () => {
+            expect(fetchMock.mock.lastCall).toMatchObject([
+              "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1/namespaces/default/ingresses/foo",
+              {
+                headers: {
+                  "content-type": "application/json",
+                },
+                method: "get",
+              },
+            ]);
+          });
+
+          it("sets fields in the api instance", () => {
+            expect(ingressApi).toEqual(expect.objectContaining({
+              apiVersionPreferred: "v1beta1",
+              apiPrefix: "/apis",
+              apiGroup: "extensions",
+            }));
+          });
+
+          it("registers the api with the changes info", () => {
+            expect(registerApiSpy).toBeCalledWith(ingressApi);
+          });
+
+          describe("when the request resolves with no data", () => {
+            let result: Ingress | null;
+
+            beforeEach(async () => {
+              await fetchMock.resolveSpecific(
+                ["http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1/namespaces/default/ingresses/foo"],
+                new Response(JSON.stringify({})),
+              );
+              result = await getCall;
+            });
+
+            it("results in the get call resolving to null", () => {
+              expect(result).toBeNull();
+            });
+
+            describe("on the second call to IngressApi.get()", () => {
+              let getCall: Promise<Ingress | null>;
+
+              beforeEach(async () => {
+                getCall = ingressApi.get({
+                  name: "foo1",
+                  namespace: "default",
+                });
+
+                // This is needed because of how JS promises work
+                await flushPromises();
+              });
+
+              it("makes the request to get the resource", () => {
+                expect(fetchMock.mock.lastCall).toMatchObject([
+                  "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1/namespaces/default/ingresses/foo1",
+                  {
+                    headers: {
+                      "content-type": "application/json",
+                    },
+                    method: "get",
+                  },
+                ]);
+              });
+
+              describe("when the request resolves with no data", () => {
+                let result: Ingress | null;
+
+                beforeEach(async () => {
+                  await fetchMock.resolveSpecific(
+                    ["http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1/namespaces/default/ingresses/foo1"],
+                    new Response(JSON.stringify({})),
+                  );
+                  result = await getCall;
+                });
+
+                it("results in the get call resolving to null", () => {
+                  expect(result).toBeNull();
+                });
+              });
+            });
+          });
+
+          describe("when the request resolves with data", () => {
+            let result: Ingress | null;
+
+            beforeEach(async () => {
+              await fetchMock.resolveSpecific(
+                ["http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1/namespaces/default/ingresses/foo"],
+                new Response(JSON.stringify({
+                  apiVersion: "v1beta1",
+                  kind: "Ingress",
+                  metadata: {
+                    name: "foo",
+                    namespace: "default",
+                    resourceVersion: "1",
+                    uid: "12345",
+                  },
+                })),
+              );
+              result = await getCall;
+            });
+
+            it("results in the get call resolving to an instance", () => {
+              expect(result).toBeInstanceOf(Ingress);
+            });
+
+            describe("on the second call to IngressApi.get()", () => {
+              let getCall: Promise<Ingress | null>;
+
+              beforeEach(async () => {
+                getCall = ingressApi.get({
+                  name: "foo1",
+                  namespace: "default",
+                });
+
+                // This is needed because of how JS promises work
+                await flushPromises();
+              });
+
+              it("makes the request to get the resource", () => {
+                expect(fetchMock.mock.lastCall).toMatchObject([
+                  "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1/namespaces/default/ingresses/foo1",
+                  {
+                    headers: {
+                      "content-type": "application/json",
+                    },
+                    method: "get",
+                  },
+                ]);
+              });
+
+              describe("when the request resolves with no data", () => {
+                let result: Ingress | null;
+
+                beforeEach(async () => {
+                  await fetchMock.resolveSpecific(
+                    ["http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1/namespaces/default/ingresses/foo1"],
+                    new Response(JSON.stringify({})),
+                  );
+                  result = await getCall;
+                });
+
+                it("results in the get call resolving to null", () => {
+                  expect(result).toBeNull();
+                });
+              });
+            });
+          });
+        });
+      });
     });
   });
 
-  describe("patch", () => {
+  describe("patching deployments", () => {
     let api: DeploymentApi;
 
     beforeEach(() => {
@@ -278,140 +575,377 @@ describe("KubeApi", () => {
       });
     });
 
-    it("sends strategic patch by default", async () => {
-      expect.hasAssertions();
+    describe("when patching a resource without providing a strategy", () => {
+      let patchRequest: Promise<Deployment | null>;
 
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("PATCH");
-        expect(request.headers.get("content-type")).toMatch("strategic-merge-patch");
-        expect(request.body?.toString()).toEqual(JSON.stringify({ spec: { replicas: 2 }}));
+      beforeEach(async () => {
+        patchRequest = api.patch({ name: "test", namespace: "default" }, {
+          spec: { replicas: 2 },
+        });
 
-        return {};
+        // This is needed because of how JS promises work
+        await flushPromises();
       });
 
-      await api.patch({ name: "test", namespace: "default" }, {
-        spec: { replicas: 2 },
+      it("requests a patch using strategic merge", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test",
+          {
+            headers: {
+              "content-type": "application/strategic-merge-patch+json",
+            },
+            method: "patch",
+            body: JSON.stringify({ spec: { replicas: 2 }}),
+          },
+        ]);
+      });
+
+      describe("when the patch request resolves with data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
+            new Response(JSON.stringify({
+              apiVersion: "v1",
+              kind: "Deployment",
+              metadata: {
+                name: "test",
+                namespace: "default",
+                resourceVersion: "1",
+                uid: "12345",
+              },
+              spec: {
+                replicas: 2,
+              },
+            })),
+          );
+        });
+
+        it("resolves the patch call", async () => {
+          expect(await patchRequest).toBeInstanceOf(Deployment);
+        });
       });
     });
 
-    it("allows to use merge patch", async () => {
-      expect.hasAssertions();
+    describe("when patching a resource using json patch", () => {
+      let patchRequest: Promise<Deployment | null>;
 
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("PATCH");
-        expect(request.headers.get("content-type")).toMatch("merge-patch");
-        expect(request.body?.toString()).toEqual(JSON.stringify({ spec: { replicas: 2 }}));
+      beforeEach(async () => {
+        patchRequest = api.patch({ name: "test", namespace: "default" }, [
+          { op: "replace", path: "/spec/replicas", value: 2 },
+        ], "json");
 
-        return {};
+        // This is needed because of how JS promises work
+        await flushPromises();
       });
 
-      await api.patch({ name: "test", namespace: "default" }, {
-        spec: { replicas: 2 },
-      }, "merge");
+      it("requests a patch using json merge", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test",
+          {
+            headers: {
+              "content-type": "application/json-patch+json",
+            },
+            method: "patch",
+            body: JSON.stringify([
+              { op: "replace", path: "/spec/replicas", value: 2 },
+            ]),
+          },
+        ]);
+      });
+
+      describe("when the patch request resolves with data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
+            new Response(JSON.stringify({
+              apiVersion: "v1",
+              kind: "Deployment",
+              metadata: {
+                name: "test",
+                namespace: "default",
+                resourceVersion: "1",
+                uid: "12345",
+              },
+              spec: {
+                replicas: 2,
+              },
+            })),
+          );
+        });
+
+        it("resolves the patch call", async () => {
+          expect(await patchRequest).toBeInstanceOf(Deployment);
+        });
+      });
     });
 
-    it("allows to use json patch", async () => {
-      expect.hasAssertions();
+    describe("when patching a resource using merge patch", () => {
+      let patchRequest: Promise<Deployment | null>;
 
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("PATCH");
-        expect(request.headers.get("content-type")).toMatch("json-patch");
-        expect(request.body?.toString()).toEqual(JSON.stringify([{ op: "replace", path: "/spec/replicas", value: 2 }]));
+      beforeEach(async () => {
+        patchRequest = api.patch(
+          { name: "test", namespace: "default" },
+          { metadata: { annotations: { provisioned: "True" }}},
+          "merge",
+        );
 
-        return {};
+        // This is needed because of how JS promises work
+        await flushPromises();
       });
 
-      await api.patch({ name: "test", namespace: "default" }, [
-        { op: "replace", path: "/spec/replicas", value: 2 },
-      ], "json");
-    });
-
-    it("allows deep partial patch", async () => {
-      expect.hasAssertions();
-
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("PATCH");
-        expect(request.headers.get("content-type")).toMatch("merge-patch");
-        expect(request.body?.toString()).toEqual(JSON.stringify({ metadata: { annotations: { provisioned: "true" }}}));
-
-        return {};
+      it("requests a patch using json merge", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test",
+          {
+            headers: {
+              "content-type": "application/merge-patch+json",
+            },
+            method: "patch",
+            body: JSON.stringify({ metadata: { annotations: { provisioned: "True" }}}),
+          },
+        ]);
       });
 
-      await api.patch(
-        { name: "test", namespace: "default" },
-        { metadata: { annotations: { provisioned: "true" }}},
-        "merge",
-      );
+      describe("when the patch request resolves with data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
+            new Response(JSON.stringify({
+              apiVersion: "v1",
+              kind: "Deployment",
+              metadata: {
+                name: "test",
+                namespace: "default",
+                resourceVersion: "1",
+                uid: "12345",
+                annotations: {
+                  provisioned: "True",
+                },
+              },
+            })),
+          );
+        });
+
+        it("resolves the patch call", async () => {
+          expect(await patchRequest).toBeInstanceOf(Deployment);
+        });
+      });
     });
   });
 
-  describe("delete", () => {
+  describe("deleting pods (namespace scoped resource)", () => {
     let api: PodApi;
 
     beforeEach(() => {
       api = new PodApi({
         request,
-        objectConstructor: Pod,
       });
     });
 
-    it("sends correct request with empty namespace", async () => {
-      expect.hasAssertions();
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("DELETE");
-        expect(request.url).toEqual("http://127.0.0.1:9999/api-kube/api/v1/pods/foo?propagationPolicy=Background");
+    describe("when deleting by just name", () => {
+      let deleteRequest: Promise<KubeJsonApiData>;
 
-        return {};
+      beforeEach(async () => {
+        deleteRequest = api.delete({ name: "foo" });
+
+        // This is required for how JS promises work
+        await flushPromises();
       });
 
-      await api.delete({ name: "foo", namespace: "" });
+      it("requests deleting pod in default namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "delete",
+          },
+        ]);
+      });
+
+      describe("when request resolves", () => {
+        beforeEach(async () => {
+          fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
+            new Response("{}"),
+          );
+        });
+
+        it("resolves the call", async () => {
+          expect(await deleteRequest).toBeDefined();
+        });
+      });
     });
 
-    it("sends correct request without namespace", async () => {
-      expect.hasAssertions();
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("DELETE");
-        expect(request.url).toEqual("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background");
+    describe("when deleting by name and empty namespace", () => {
+      let deleteRequest: Promise<KubeJsonApiData>;
 
-        return {};
+      beforeEach(async () => {
+        deleteRequest = api.delete({ name: "foo", namespace: "" });
+
+        // This is required for how JS promises work
+        await flushPromises();
       });
 
-      await api.delete({ name: "foo" });
+      it("requests deleting pod in default namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "delete",
+          },
+        ]);
+      });
+
+      describe("when request resolves", () => {
+        beforeEach(async () => {
+          fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
+            new Response("{}"),
+          );
+        });
+
+        it("resolves the call", async () => {
+          expect(await deleteRequest).toBeDefined();
+        });
+      });
     });
 
-    it("sends correct request with namespace", async () => {
-      expect.hasAssertions();
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("DELETE");
-        expect(request.url).toEqual("http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods/foo?propagationPolicy=Background");
+    describe("when deleting by name and namespace", () => {
+      let deleteRequest: Promise<KubeJsonApiData>;
 
-        return {};
+      beforeEach(async () => {
+        deleteRequest = api.delete({ name: "foo", namespace: "test" });
+
+        // This is required for how JS promises work
+        await flushPromises();
       });
 
-      await api.delete({ name: "foo", namespace: "kube-system" });
-    });
-
-    it("allows to change propagationPolicy", async () => {
-      expect.hasAssertions();
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("DELETE");
-        expect(request.url).toMatch("propagationPolicy=Orphan");
-
-        return {};
+      it("requests deleting pod in given namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "delete",
+          },
+        ]);
       });
 
-      await api.delete({ name: "foo", namespace: "default", propagationPolicy: "Orphan" });
+      describe("when request resolves", () => {
+        beforeEach(async () => {
+          fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background"],
+            new Response("{}"),
+          );
+        });
+
+        it("resolves the call", async () => {
+          expect(await deleteRequest).toBeDefined();
+        });
+      });
     });
   });
 
-  describe("watch", () => {
+  describe("deleting namespaces (cluser scoped resource)", () => {
+    let api: NamespaceApi;
+
+    beforeEach(() => {
+      api = new NamespaceApi({
+        request,
+      });
+    });
+
+    describe("when deleting by just name", () => {
+      let deleteRequest: Promise<KubeJsonApiData>;
+
+      beforeEach(async () => {
+        deleteRequest = api.delete({ name: "foo" });
+
+        // This is required for how JS promises work
+        await flushPromises();
+      });
+
+      it("requests deleting Namespace without namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "delete",
+          },
+        ]);
+      });
+
+      describe("when request resolves", () => {
+        beforeEach(async () => {
+          fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
+            new Response("{}"),
+          );
+        });
+
+        it("resolves the call", async () => {
+          expect(await deleteRequest).toBeDefined();
+        });
+      });
+    });
+
+    describe("when deleting by name and empty namespace", () => {
+      let deleteRequest: Promise<KubeJsonApiData>;
+
+      beforeEach(async () => {
+        deleteRequest = api.delete({ name: "foo", namespace: "" });
+
+        // This is required for how JS promises work
+        await flushPromises();
+      });
+
+      it("requests deleting Namespace without namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "delete",
+          },
+        ]);
+      });
+
+      describe("when request resolves", () => {
+        beforeEach(async () => {
+          fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
+            new Response("{}"),
+          );
+        });
+
+        it("resolves the call", async () => {
+          expect(await deleteRequest).toBeDefined();
+        });
+      });
+    });
+
+    describe("when deleting by name and namespace", () => {
+      it("rejects request", () => {
+        expect(api.delete({ name: "foo", namespace: "test" })).rejects.toBeDefined();
+      });
+    });
+  });
+
+  describe("watching pods", () => {
     let api: PodApi;
     let stream: PassThrough;
 
     beforeEach(() => {
       api = new PodApi({
         request,
-        objectConstructor: Pod,
       });
       stream = new PassThrough();
     });
@@ -421,184 +955,341 @@ describe("KubeApi", () => {
       stream.destroy();
     });
 
-    it("sends a valid watch request", () => {
-      const spy = jest.spyOn(request, "getResponse");
+    describe("when watching in a namespace", () => {
+      let stopWatch: () => void;
+      let callback: jest.MockedFunction<KubeApiWatchCallback>;
 
-      mockFetch.mockResponse(async () => {
-        return {
-          // needed for https://github.com/jefflau/jest-fetch-mock/issues/218
-          body: stream as unknown as string,
-        };
+      beforeEach(async () => {
+        callback = jest.fn();
+        stopWatch = api.watch({
+          namespace: "kube-system",
+          callback,
+        });
+
+        await flushPromises();
       });
 
-      api.watch({ namespace: "kube-system" });
-      expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", expect.anything(), expect.anything());
+      it("requests the watch", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with a stream", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ([url, init]) => {
+              const isMatch = url === "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=";
+
+              if (isMatch) {
+                init?.signal?.addEventListener("abort", () => {
+                  stream.destroy();
+                });
+              }
+
+              return isMatch;
+            },
+            new Response(stream),
+          );
+        });
+
+        describe("when some data comes back on the stream", () => {
+          beforeEach(() => {
+            stream.emit("data", `${JSON.stringify({
+              type: "ADDED",
+              object: {
+                apiVersion: "v1",
+                kind: "Pod",
+                metadata: {
+                  name: "foobar",
+                  namespace: "kube-system",
+                  resourceVersion: "1",
+                  uid: "123456",
+                },
+              },
+            } as IKubeWatchEvent<KubeJsonApiDataFor<Pod>>)}\n`);
+          });
+
+          it("calls the callback with the data", () => {
+            expect(callback).toBeCalledWith(
+              {
+                type: "ADDED",
+                object: {
+                  apiVersion: "v1",
+                  kind: "Pod",
+                  metadata: {
+                    name: "foobar",
+                    namespace: "kube-system",
+                    resourceVersion: "1",
+                    selfLink: "/api/v1/namespaces/kube-system/pods/foobar",
+                    uid: "123456",
+                  },
+                },
+              },
+              null,
+            );
+          });
+
+          describe("when stopping the watch", () => {
+            beforeEach(() => {
+              stopWatch();
+            });
+
+            it("closes the stream", () => {
+              expect(stream.destroyed).toBe(true);
+            });
+          });
+        });
+      });
     });
 
-    it("sends timeout as a query parameter", async () => {
-      const spy = jest.spyOn(request, "getResponse");
+    describe("when watching in a namespace with an abort controller provided", () => {
+      let callback: jest.MockedFunction<KubeApiWatchCallback>;
+      let abortController: AbortController;
 
-      mockFetch.mockResponse(async () => {
-        return {
-          // needed for https://github.com/jefflau/jest-fetch-mock/issues/218
-          body: stream as unknown as string,
-        };
+      beforeEach(async () => {
+        callback = jest.fn();
+        abortController = new AbortController();
+        api.watch({
+          namespace: "kube-system",
+          callback,
+          abortController,
+        });
+
+        await flushPromises();
       });
 
-      api.watch({ namespace: "kube-system", timeout: 60 });
-      expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
+      it("requests the watch", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with a stream", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ([url, init]) => {
+              const isMatch = url === "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=";
+
+              if (isMatch) {
+                init?.signal?.addEventListener("abort", () => {
+                  stream.destroy();
+                });
+              }
+
+              return isMatch;
+            },
+            new Response(stream),
+          );
+        });
+
+        describe("when some data comes back on the stream", () => {
+          beforeEach(() => {
+            stream.emit("data", `${JSON.stringify({
+              type: "ADDED",
+              object: {
+                apiVersion: "v1",
+                kind: "Pod",
+                metadata: {
+                  name: "foobar",
+                  namespace: "kube-system",
+                  resourceVersion: "1",
+                  uid: "123456",
+                },
+              },
+            } as IKubeWatchEvent<KubeJsonApiDataFor<Pod>>)}\n`);
+          });
+
+          it("calls the callback with the data", () => {
+            expect(callback).toBeCalledWith(
+              {
+                type: "ADDED",
+                object: {
+                  apiVersion: "v1",
+                  kind: "Pod",
+                  metadata: {
+                    name: "foobar",
+                    namespace: "kube-system",
+                    resourceVersion: "1",
+                    selfLink: "/api/v1/namespaces/kube-system/pods/foobar",
+                    uid: "123456",
+                  },
+                },
+              },
+              null,
+            );
+          });
+
+          describe("when stopping the watch via the controller", () => {
+            beforeEach(() => {
+              abortController.abort();
+            });
+
+            it("closes the stream", () => {
+              expect(stream.destroyed).toBe(true);
+            });
+          });
+        });
+      });
     });
 
-    it("aborts watch using abortController", (done) => {
-      const spy = jest.spyOn(request, "getResponse");
+    describe("when watching in a namespace with a timeout", () => {
+      let stopWatch: () => void;
+      let callback: jest.MockedFunction<KubeApiWatchCallback>;
 
-      mockFetch.mockResponse(async request => {
-        request.signal.addEventListener("abort", () => {
-          done();
-        });
-
-        return {
-          // needed for https://github.com/jefflau/jest-fetch-mock/issues/218
-          body: stream as unknown as string,
-        };
-      });
-
-      const abortController = new AbortController();
-
-      api.watch({
-        namespace: "kube-system",
-        timeout: 60,
-        abortController,
-      });
-
-      expect(spy).toHaveBeenCalledWith("/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=", { query: { timeoutSeconds: 60 }}, expect.anything());
-      delay(100).then(() => abortController.abort());
-    });
-
-    describe("retries", () => {
-      it("if request ended", (done) => {
-        const spy = jest.spyOn(request, "getResponse");
-
-        jest.spyOn(stream, "on").mockImplementation((event: string | symbol, callback: Function) => {
-          // End the request in 100ms.
-          if (event === "end") {
-            setTimeout(() => {
-              callback();
-            }, 100);
-          }
-
-          return stream;
-        });
-
-        // we need to mock using jest as jest-fetch-mock doesn't support mocking the body completely
-        jest.spyOn(global, "fetch").mockImplementation(async () => {
-          return {
-            ok: true,
-            body: stream as never,
-          } as Partial<Response> as Response;
-        });
-
-        api.watch({
+      beforeEach(async () => {
+        callback = jest.fn();
+        stopWatch = api.watch({
           namespace: "kube-system",
+          callback,
+          timeout: 60,
         });
 
-        expect(spy).toHaveBeenCalledTimes(1);
-
-        setTimeout(() => {
-          expect(spy).toHaveBeenCalledTimes(2);
-          done();
-        }, 2000);
+        await flushPromises();
       });
 
-      it("if request not closed after timeout", (done) => {
-        const spy = jest.spyOn(request, "getResponse");
-
-        mockFetch.mockResponse(async () => {
-          return {
-            // needed for https://github.com/jefflau/jest-fetch-mock/issues/218
-            body: stream as unknown as string,
-          };
-        });
-
-        const timeoutSeconds = 1;
-
-        api.watch({
-          namespace: "kube-system",
-          timeout: timeoutSeconds,
-        });
-
-        expect(spy).toHaveBeenCalledTimes(1);
-
-        setTimeout(() => {
-          expect(spy).toHaveBeenCalledTimes(2);
-          done();
-        }, timeoutSeconds * 1000 * 1.2);
+      it("requests the watch", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
       });
 
-      it("retries only once if request ends and timeout is set", (done) => {
-        const spy = jest.spyOn(request, "getResponse");
+      describe("when the request resolves with a stream", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ([url, init]) => {
+              const isMatch = url === "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60";
 
-        jest.spyOn(stream, "on").mockImplementation((event: string | symbol, callback: Function) => {
-          // End the request in 100ms.
-          if (event === "end") {
-            setTimeout(() => {
-              callback();
-            }, 100);
-          }
+              if (isMatch) {
+                init?.signal?.addEventListener("abort", () => {
+                  stream.destroy();
+                });
+              }
 
-          return stream;
+              return isMatch;
+            },
+            new Response(stream),
+          );
         });
 
-        // we need to mock using jest as jest-fetch-mock doesn't support mocking the body completely
-        jest.spyOn(global, "fetch").mockImplementation(async () => {
-          return {
-            ok: true,
-            body: stream as never,
-          } as Partial<Response> as Response;
+        describe("when some data comes back on the stream", () => {
+          beforeEach(() => {
+            stream.emit("data", `${JSON.stringify({
+              type: "ADDED",
+              object: {
+                apiVersion: "v1",
+                kind: "Pod",
+                metadata: {
+                  name: "foobar",
+                  namespace: "kube-system",
+                  resourceVersion: "1",
+                  uid: "123456",
+                },
+              },
+            } as IKubeWatchEvent<KubeJsonApiDataFor<Pod>>)}\n`);
+          });
+
+          it("calls the callback with the data", () => {
+            expect(callback).toBeCalledWith(
+              {
+                type: "ADDED",
+                object: {
+                  apiVersion: "v1",
+                  kind: "Pod",
+                  metadata: {
+                    name: "foobar",
+                    namespace: "kube-system",
+                    resourceVersion: "1",
+                    selfLink: "/api/v1/namespaces/kube-system/pods/foobar",
+                    uid: "123456",
+                  },
+                },
+              },
+              null,
+            );
+          });
+
+          describe("when stopping the watch", () => {
+            beforeEach(() => {
+              stopWatch();
+            });
+
+            it("closes the stream", () => {
+              expect(stream.destroyed).toBe(true);
+            });
+          });
+
+          describe("when the watch ends", () => {
+            beforeEach(() => {
+              stream.end();
+            });
+
+            it("requests a new watch", () => {
+              expect(fetchMock.mock.lastCall).toMatchObject([
+                "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60",
+                {
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  method: "get",
+                },
+              ]);
+            });
+
+            describe("when stopping the watch", () => {
+              beforeEach(() => {
+                stopWatch();
+              });
+
+              it("closes the stream", () => {
+                expect(stream.destroyed).toBe(true);
+              });
+            });
+          });
         });
-
-        const timeoutSeconds = 0.5;
-
-        api.watch({
-          namespace: "kube-system",
-          timeout: timeoutSeconds,
-        });
-
-        expect(spy).toHaveBeenCalledTimes(1);
-
-        setTimeout(() => {
-          expect(spy).toHaveBeenCalledTimes(2);
-          done();
-        }, 2000);
-      });
-
-      afterEach(() => {
-        jest.clearAllMocks();
       });
     });
   });
 
-  describe("create", () => {
+  describe("creating pods", () => {
     let api: PodApi;
 
     beforeEach(() => {
       api = new PodApi({
         request,
-        objectConstructor: Pod,
       });
     });
 
-    it("should add kind and apiVersion", async () => {
-      expect.hasAssertions();
+    describe("when creating a pod", () => {
+      let createRequest: Promise<Pod | null>;
 
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("POST");
-        expect(JSON.parse(String(request.body))).toEqual({
-          kind: "Pod",
-          apiVersion: "v1",
+      beforeEach(async () => {
+        createRequest = api.create({
+          name: "foobar",
+          namespace: "default",
+        }, {
           metadata: {
-            name: "foobar",
-            namespace: "default",
+            labels: {
+              foo: "bar",
+            },
           },
           spec: {
             containers: [
@@ -617,101 +1308,324 @@ describe("KubeApi", () => {
           },
         });
 
-        return {};
+        // This is required because of how JS promises work
+        await flushPromises();
       });
 
-      await api.create({
-        name: "foobar",
-        namespace: "default",
-      }, {
-        spec: {
-          containers: [
-            {
-              name: "web",
-              image: "nginx",
-              ports: [
-                {
-                  name: "web",
-                  containerPort: 80,
-                  protocol: "TCP",
+      it("should request to create a pod with full descriptor", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "post",
+            body: JSON.stringify({
+              metadata: {
+                labels: {
+                  foo: "bar",
                 },
-              ],
-            },
-          ],
-        },
-      });
-    });
-
-    it("doesn't override metadata.labels", async () => {
-      expect.hasAssertions();
-
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("POST");
-        expect(JSON.parse(String(request.body))).toEqual({
-          kind: "Pod",
-          apiVersion: "v1",
-          metadata: {
-            name: "foobar",
-            namespace: "default",
-            labels: {
-              foo: "bar",
-            },
+                name: "foobar",
+                namespace: "default",
+              },
+              spec: {
+                containers: [{
+                  name: "web",
+                  image: "nginx",
+                  ports: [{
+                    name: "web",
+                    containerPort: 80,
+                    protocol: "TCP",
+                  }],
+                }],
+              },
+              kind: "Pod",
+              apiVersion: "v1",
+            }),
           },
+        ]);
+      });
+
+      describe("when request resolves with data", () => {
+        beforeEach(async () =>  {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods"],
+            new Response(JSON.stringify({
+              kind: "Pod",
+              apiVersion: "v1",
+              metadata: {
+                name: "foobar",
+                namespace: "default",
+                labels: {
+                  foo: "bar",
+                },
+                resourceVersion: "1",
+                uid: "123456798",
+              },
+              spec: {
+                containers: [{
+                  name: "web",
+                  image: "nginx",
+                  ports: [{
+                    name: "web",
+                    containerPort: 80,
+                    protocol: "TCP",
+                  }],
+                }],
+              },
+            })),
+          );
         });
 
-        return {};
-      });
-
-      await api.create({
-        name: "foobar",
-        namespace: "default",
-      }, {
-        metadata: {
-          labels: {
-            foo: "bar",
-          },
-        },
+        it("call should resolve in a Pod instance", async () => {
+          expect(await createRequest).toBeInstanceOf(Pod);
+        });
       });
     });
   });
 
-  describe("update", () => {
+  describe("updating pods", () => {
     let api: PodApi;
 
     beforeEach(() => {
       api = new PodApi({
         request,
-        objectConstructor: Pod,
       });
     });
 
-    it("doesn't override metadata.labels", async () => {
-      expect.hasAssertions();
+    describe("when updating a pod", () => {
+      let updateRequest: Promise<Pod | null>;
 
-      mockFetch.mockResponse(async request => {
-        expect(request.method).toEqual("PUT");
-        expect(JSON.parse(String(request.body))).toEqual({
+      beforeEach(async () => {
+        updateRequest = api.update({
+          name: "foobar",
+          namespace: "default",
+        }, {
+          kind: "Pod",
+          apiVersion: "v1",
           metadata: {
-            name: "foobar",
-            namespace: "default",
             labels: {
               foo: "bar",
             },
           },
+          spec: {
+            containers: [{
+              name: "web",
+              image: "nginx",
+              ports: [{
+                name: "web",
+                containerPort: 80,
+                protocol: "TCP",
+              }],
+            }],
+          },
         });
 
-        return {};
+        await flushPromises();
       });
 
-      await api.update({
-        name: "foobar",
-        namespace: "default",
-      }, {
-        metadata: {
-          labels: {
-            foo: "bar",
+      it("should request that the pod is updated", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foobar",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "put",
+            body: JSON.stringify({
+              kind: "Pod",
+              apiVersion: "v1",
+              metadata: {
+                labels: {
+                  foo: "bar",
+                },
+                name: "foobar",
+                namespace: "default",
+              },
+              spec: {
+                containers: [{
+                  name: "web",
+                  image: "nginx",
+                  ports: [{
+                    name: "web",
+                    containerPort: 80,
+                    protocol: "TCP",
+                  }],
+                }],
+              },
+            }),
           },
-        },
+        ]);
+      });
+
+      describe("when the request resolves with data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foobar"],
+            new Response(JSON.stringify({
+              kind: "Pod",
+              apiVersion: "v1",
+              metadata: {
+                name: "foobar",
+                namespace: "default",
+                labels: {
+                  foo: "bar",
+                },
+                resourceVersion: "1",
+                uid: "123456798",
+              },
+              spec: {
+                containers: [{
+                  name: "web",
+                  image: "nginx",
+                  ports: [{
+                    name: "web",
+                    containerPort: 80,
+                    protocol: "TCP",
+                  }],
+                }],
+              },
+            })),
+          );
+        });
+
+        it("the call should resolve to a Pod", async () => {
+          expect(await updateRequest).toBeInstanceOf(Pod);
+        });
+      });
+    });
+  });
+
+  describe("listing pods", () => {
+    let api: PodApi;
+
+    beforeEach(() => {
+      api = new PodApi({
+        request,
+      });
+    });
+
+    describe("when listing pods with no descriptor", () => {
+      let listRequest: Promise<Pod[] | null>;
+
+      beforeEach(async () => {
+        listRequest = api.list();
+
+        await flushPromises();
+      });
+
+      it("should request that the pods from all namespaces", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with empty data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/pods"],
+            new Response(JSON.stringify({
+              kind: "PodList",
+              apiVersion: "v1",
+              metadata: {},
+              items: [],
+            })),
+          );
+        });
+
+        it("the call should resolve to an empty list", async () => {
+          expect(await listRequest).toEqual([]);
+        });
+      });
+    });
+
+    describe("when listing pods with descriptor with namespace=''", () => {
+      let listRequest: Promise<Pod[] | null>;
+
+      beforeEach(async () => {
+        listRequest = api.list({
+          namespace: "",
+        });
+
+        await flushPromises();
+      });
+
+      it("should request that the pods from all namespaces", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with empty data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/pods"],
+            new Response(JSON.stringify({
+              kind: "PodList",
+              apiVersion: "v1",
+              metadata: {},
+              items: [],
+            })),
+          );
+        });
+
+        it("the call should resolve to an empty list", async () => {
+          expect(await listRequest).toEqual([]);
+        });
+      });
+    });
+
+    describe("when listing pods with descriptor with namespace='default'", () => {
+      let listRequest: Promise<Pod[] | null>;
+
+      beforeEach(async () => {
+        listRequest = api.list({
+          namespace: "default",
+        });
+
+        await flushPromises();
+      });
+
+      it("should request that the pods from just the default namespace", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+
+      describe("when the request resolves with empty data", () => {
+        beforeEach(async () => {
+          await fetchMock.resolveSpecific(
+            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods"],
+            new Response(JSON.stringify({
+              kind: "PodList",
+              apiVersion: "v1",
+              metadata: {},
+              items: [],
+            })),
+          );
+        });
+
+        it("the call should resolve to an empty list", async () => {
+          expect(await listRequest).toEqual([]);
+        });
       });
     });
   });

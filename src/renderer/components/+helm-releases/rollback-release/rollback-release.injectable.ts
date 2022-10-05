@@ -3,17 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { rollbackRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
+import requestHelmReleaseRollbackInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-rollback.injectable";
 import releasesInjectable from "../releases.injectable";
+
+export type RollbackRelease = (name: string, namespace: string, revision: number) => Promise<void>;
 
 const rollbackReleaseInjectable = getInjectable({
   id: "rollback-release",
 
-  instantiate: (di) => {
+  instantiate: (di): RollbackRelease => {
     const releases = di.inject(releasesInjectable);
+    const requestHelmReleaseRollback = di.inject(requestHelmReleaseRollbackInjectable);
 
-    return async (name: string, namespace: string, revision: number) => {
-      await rollbackRelease(name, namespace, revision);
+    return async (name, namespace, revision) => {
+      await requestHelmReleaseRollback(name, namespace, revision);
 
       releases.invalidate();
     };

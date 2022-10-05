@@ -548,6 +548,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -557,7 +558,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -1183,6 +1186,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -1192,7 +1196,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -1823,6 +1829,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -1832,7 +1839,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -2532,6 +2541,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -2541,7 +2551,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -2581,6 +2593,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-second-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -2590,7 +2603,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-second-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -3216,6 +3231,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -3225,7 +3241,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -3265,6 +3283,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-second-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -3274,7 +3293,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-second-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -3972,6 +3993,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -3981,7 +4003,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -4021,6 +4045,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-second-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -4030,7 +4055,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-second-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -4730,6 +4757,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -4739,7 +4767,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -5453,6 +5483,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -5462,7 +5493,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -6171,6 +6204,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -6180,7 +6214,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -6880,6 +6916,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -6889,7 +6926,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -7589,6 +7628,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -7598,7 +7638,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -8845,6 +8887,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -8854,7 +8897,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -10657,6 +10702,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -10666,7 +10712,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>

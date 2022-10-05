@@ -8,7 +8,7 @@ import listHelmChartsInjectable from "../helm-service/list-helm-charts.injectabl
 import getActiveHelmRepositoriesInjectable from "../repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { AsyncResult } from "../../../common/utils/async-result";
 import type { HelmRepo } from "../../../common/helm/helm-repo";
-import { sortCharts } from "../../../common/utils";
+import { sortBySemverVersion } from "../../../common/utils";
 import helmChartManagerInjectable from "../helm-chart-manager.injectable";
 
 describe("Helm Service tests", () => {
@@ -203,7 +203,7 @@ describe("Helm Service tests", () => {
 
 const charts = new Map([
   ["stable", {
-    "invalid-semver": sortCharts([
+    "invalid-semver": sortBySemverVersion([
       {
         apiVersion: "3.0.0",
         name: "weird-versioning",
@@ -237,7 +237,7 @@ const charts = new Map([
         created: "now",
       },
     ]),
-    "apm-server": sortCharts([
+    "apm-server": sortBySemverVersion([
       {
         apiVersion: "3.0.0",
         name: "apm-server",
@@ -255,7 +255,7 @@ const charts = new Map([
         created: "now",
       },
     ]),
-    "redis": sortCharts([
+    "redis": sortBySemverVersion([
       {
         apiVersion: "3.0.0",
         name: "apm-server",
@@ -275,7 +275,7 @@ const charts = new Map([
     ]),
   }],
   ["experiment", {
-    "fairwind": sortCharts([
+    "fairwind": sortBySemverVersion([
       {
         apiVersion: "3.0.0",
         name: "fairwind",
@@ -296,7 +296,7 @@ const charts = new Map([
     ]),
   }],
   ["bitnami", {
-    "hotdog": sortCharts([
+    "hotdog": sortBySemverVersion([
       {
         apiVersion: "3.0.0",
         name: "hotdog",
@@ -314,7 +314,7 @@ const charts = new Map([
         created: "now",
       },
     ]),
-    "pretzel": sortCharts([
+    "pretzel": sortBySemverVersion([
       {
         apiVersion: "3.0.0",
         name: "pretzel",

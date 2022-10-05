@@ -3,24 +3,32 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type WebSocket from "ws";
-import path from "path";
-import { UserStore } from "../../../common/user-store";
-import type { Cluster } from "../../../common/cluster/cluster";
-import type { ClusterId } from "../../../common/cluster-types";
+import type { UserStore } from "../../../common/user-store";
+import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-session";
 import { ShellSession } from "../shell-session";
-import type { Kubectl } from "../../kubectl/kubectl";
-import { baseBinariesDir } from "../../../common/vars";
+import type { ModifyTerminalShellEnv } from "../shell-env-modifier/modify-terminal-shell-env.injectable";
+import type { JoinPaths } from "../../../common/path/join-paths.injectable";
+import type { GetDirnameOfPath } from "../../../common/path/get-dirname.injectable";
+import type { GetBasenameOfPath } from "../../../common/path/get-basename.injectable";
+
+export interface LocalShellSessionDependencies extends ShellSessionDependencies {
+  readonly directoryForBinaries: string;
+  readonly userStore: UserStore;
+  modifyTerminalShellEnv: ModifyTerminalShellEnv;
+  joinPaths: JoinPaths;
+  getDirnameOfPath: GetDirnameOfPath;
+  getBasenameOfPath: GetBasenameOfPath;
+}
 
 export class LocalShellSession extends ShellSession {
   ShellType = "shell";
 
-  constructor(protected shellEnvModify: (clusterId: ClusterId, env: Record<string, string | undefined>) => Record<string, string | undefined>, kubectl: Kubectl, websocket: WebSocket, cluster: Cluster, terminalId: string) {
-    super(kubectl, websocket, cluster, terminalId);
+  constructor(protected readonly dependencies: LocalShellSessionDependencies, args: ShellSessionArgs) {
+    super(dependencies, args);
   }
 
   protected getPathEntries(): string[] {
-    return [baseBinariesDir.get()];
+    return [this.dependencies.directoryForBinaries];
   }
 
   protected get cwd(): string | undefined {
@@ -31,7 +39,7 @@ export class LocalShellSession extends ShellSession {
     let env = await this.getCachedShellEnv();
 
     // extensions can modify the env
-    env = this.shellEnvModify(this.cluster.id, env);
+    env = this.dependencies.modifyTerminalShellEnv(this.cluster.id, env);
 
     const shell = env.PTYSHELL;
 
@@ -45,16 +53,18 @@ export class LocalShellSession extends ShellSession {
   }
 
   protected async getShellArgs(shell: string): Promise<string[]> {
-    const pathFromPreferences = UserStore.getInstance().kubectlBinariesPath || this.kubectl.getBundledPath();
-    const kubectlPathDir = UserStore.getInstance().downloadKubectlBinaries ? await this.kubectlBinDirP : path.dirname(pathFromPreferences);
+    const pathFromPreferences = this.dependencies.userStore.kubectlBinariesPath || this.kubectl.getBundledPath();
+    const kubectlPathDir = this.dependencies.userStore.downloadKubectlBinaries
+      ? await this.kubectlBinDirP
+      : this.dependencies.getDirnameOfPath(pathFromPreferences);
 
-    switch(path.basename(shell)) {
+    switch(this.dependencies.getBasenameOfPath(shell)) {
       case "powershell.exe":
-        return ["-NoExit", "-command", `& {$Env:PATH="${kubectlPathDir};${baseBinariesDir.get()};$Env:PATH"}`];
+        return ["-NoExit", "-command", `& {$Env:PATH="${kubectlPathDir};${this.dependencies.directoryForBinaries};$Env:PATH"}`];
       case "bash":
-        return ["--init-file", path.join(await this.kubectlBinDirP, ".bash_set_path")];
+        return ["--init-file", this.dependencies.joinPaths(await this.kubectlBinDirP, ".bash_set_path")];
       case "fish":
-        return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${baseBinariesDir.get()}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
+        return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${this.dependencies.directoryForBinaries}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
       case "zsh":
         return ["--login"];
       default:
