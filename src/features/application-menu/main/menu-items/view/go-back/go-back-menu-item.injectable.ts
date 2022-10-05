@@ -10,13 +10,14 @@ const goBackMenuItemInjectable = getInjectable({
   id: "go-back-menu-item",
 
   instantiate: () => ({
+    kind: "clickable-menu-item" as const,
     parentId: "view",
     id: "go-back",
     orderNumber: 40,
     label: "Back",
-    accelerator: "CmdOrCtrl+[",
+    keyboardShortcut: "CmdOrCtrl+[",
 
-    click: () => {
+    onClick: () => {
       webContents
         .getAllWebContents()
         .filter((wc) => wc.getType() === "window")

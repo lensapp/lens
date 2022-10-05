@@ -29,7 +29,7 @@ describe("welcome - navigation using application menu", () => {
 
   describe("when navigated somewhere else", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.preferences");
+      applicationBuilder.applicationMenu.click("root.primary-for-mac.navigate-to-preferences");
     });
 
     it("renders", () => {
@@ -44,7 +44,7 @@ describe("welcome - navigation using application menu", () => {
 
     describe("when navigated to welcome using application menu", () => {
       beforeEach(() => {
-        applicationBuilder.applicationMenu.click("help.welcome");
+        applicationBuilder.applicationMenu.click("root.help.navigate-to-welcome");
       });
 
       it("renders", () => {

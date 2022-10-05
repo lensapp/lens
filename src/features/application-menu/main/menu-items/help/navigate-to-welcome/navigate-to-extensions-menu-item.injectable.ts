@@ -13,12 +13,13 @@ const navigateToWelcomeMenuItem = getInjectable({
     const navigateToWelcome = di.inject(navigateToWelcomeInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: "help",
       id: "navigate-to-welcome",
       orderNumber: 10,
       label: "Welcome",
 
-      click: () => {
+      onClick: () => {
         navigateToWelcome();
       },
     };

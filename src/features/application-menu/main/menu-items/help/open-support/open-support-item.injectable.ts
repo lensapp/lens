@@ -16,13 +16,14 @@ const openSupportItemInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: "help",
       id: "open-support",
       orderNumber: 30,
       label: "Support",
 
       // TODO: Convert to async/await
-      click: () => {
+      onClick: () => {
         openLinkInBrowser(supportUrl).catch((error) => {
           logger.error("[MENU]: failed to open browser", { error });
         });

@@ -13,11 +13,13 @@ const closeWindowMenuItemInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
 
     return {
+      id: "close-window",
+      kind: "os-action-menu-item" as const,
       parentId: "file",
       orderNumber: 60,
-      role: "close" as const,
+      actionName: "close" as const,
       label: "Close Window",
-      accelerator: "Shift+Cmd+W",
+      keyboardShortcut: "Shift+Cmd+W",
       isShown: isMac,
     };
   },

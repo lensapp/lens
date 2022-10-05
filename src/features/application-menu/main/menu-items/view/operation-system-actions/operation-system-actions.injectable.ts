@@ -10,33 +10,33 @@ export const actionForToggleDevTools = getApplicationMenuOperationSystemActionIn
   id: "toggle-dev-tools",
   parentId: "view",
   orderNumber: 70,
-  role: "toggleDevTools",
+  actionName: "toggleDevTools",
 });
 
 export const actionForResetZoom = getApplicationMenuOperationSystemActionInjectable({
   id: "reset-zoom",
   parentId: "view",
   orderNumber: 90,
-  role: "resetZoom",
+  actionName: "resetZoom",
 });
 
 export const actionForZoomIn = getApplicationMenuOperationSystemActionInjectable({
   id: "zoom-in",
   parentId: "view",
   orderNumber: 100,
-  role: "zoomIn",
+  actionName: "zoomIn",
 });
 
 export const actionForZoomOut = getApplicationMenuOperationSystemActionInjectable({
   id: "zoom-out",
   parentId: "view",
   orderNumber: 110,
-  role: "zoomOut",
+  actionName: "zoomOut",
 });
 
 export const actionForToggleFullScreen = getApplicationMenuOperationSystemActionInjectable({
   id: "toggle-full-screen",
   parentId: "view",
   orderNumber: 130,
-  role: "togglefullscreen",
+  actionName: "togglefullscreen",
 });

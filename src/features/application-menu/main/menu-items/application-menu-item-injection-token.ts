@@ -3,63 +3,104 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { BrowserWindow, MenuItem, KeyboardEvent } from "electron";
+import type { BrowserWindow, KeyboardEvent, MenuItemConstructorOptions, MenuItem as ElectronMenuItem } from "electron";
+import type { SetOptional } from "type-fest";
 
-interface Shared {
-  parentId: string | null;
-  orderNumber: number;
+export interface MayHaveKeyboardShortcut {
+  keyboardShortcut?: string;
+}
+
+export interface Showable {
   isShown?: boolean;
 }
+export const isShown = (showable: Showable) => showable.isShown !== false;
 
-export interface ApplicationMenuItem extends Shared {
-  label: string;
-  accelerator?: string;
-  id: string;
-
+export interface Clickable {
   // TODO: This leaky abstraction is exposed in Extension API, therefore cannot be updated
-  click?: (
-    menuItem: MenuItem,
-    browserWindow: BrowserWindow | undefined,
-    event: KeyboardEvent
-  ) => void;
+  onClick: (menuItem: ElectronMenuItem, browserWindow: (BrowserWindow) | (undefined), event: KeyboardEvent) => void;
 }
 
-export interface Separator extends Shared {
-  type: "separator";
+export interface Labeled {
+  label: string;
 }
 
-export interface OperationSystemAction extends Shared {
-  label?: string;
-  accelerator?: string;
+export interface MaybeLabeled extends SetOptional<Labeled, "label"> {}
 
-  role:
-    | "services"
-    | "hide"
-    | "hideOthers"
-    | "unhide"
-    | "close"
-    | "undo"
-    | "redo"
-    | "cut"
-    | "copy"
-    | "paste"
-    | "delete"
-    | "selectAll"
-    | "toggleDevTools"
-    | "resetZoom"
-    | "zoomIn"
-    | "zoomOut"
-    | "togglefullscreen";
+export interface CanBeChildOfParent {
+  parentId: string;
 }
+
+export interface Orderable {
+  orderNumber: number;
+}
+
+export interface Identifiable {
+  id: string;
+}
+
+type ApplicationMenuItemType<T extends string> =
+  // Note: "kind" is being used for Discriminated unions of TypeScript to achieve type narrowing.
+  // See: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions
+  & Kind<T>
+  & Identifiable
+  & CanBeChildOfParent
+  & Showable
+  & Orderable;
+
+interface Kind<T extends string> { kind: T }
+
+export type TopLevelMenu =
+  & ApplicationMenuItemType<"top-level-menu">
+  & { parentId: "root" }
+  & Labeled
+  & MayHaveElectronRole;
+
+interface MayHaveElectronRole {
+  role?: ElectronRoles;
+}
+
+type ElectronRoles = Exclude<MenuItemConstructorOptions["role"], undefined>;
+
+export type SubMenu =
+  & ApplicationMenuItemType<"sub-menu">
+  & Labeled
+  & CanBeChildOfParent;
+
+export type ClickableMenuItem =
+  & ApplicationMenuItemType<"clickable-menu-item">
+  & MenuItem
+  & Labeled
+  & Clickable;
+
+export type OsActionMenuItem =
+  & ApplicationMenuItemType<"os-action-menu-item">
+  & MenuItem
+  & MaybeLabeled
+  & TriggersElectronAction;
+
+type MenuItem =
+  & CanBeChildOfParent
+  & MayHaveKeyboardShortcut;
+
+interface TriggersElectronAction {
+  actionName: ElectronRoles;
+}
+
+// Todo: SeparatorMenuItem
+export type Separator =
+  & ApplicationMenuItemType<"separator">
+  & CanBeChildOfParent;
 
 export type ApplicationMenuItemTypes =
-  | ApplicationMenuItem
+  | TopLevelMenu
+  | SubMenu
+  | OsActionMenuItem
+  | ClickableMenuItem
   | Separator
-  | OperationSystemAction;
+;
 
-const applicationMenuItemInjectionToken =
-  getInjectionToken<ApplicationMenuItemTypes>({
-    id: "application-menu-item-injection-token",
-  });
+const applicationMenuItemInjectionToken = getInjectionToken<ApplicationMenuItemTypes>({
+  id: "application-menu-item-injection-token",
+});
 
 export default applicationMenuItemInjectionToken;

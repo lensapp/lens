@@ -15,13 +15,14 @@ const navigateToPreferencesMenuItemInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: isMac ? "primary-for-mac" : "file",
       id: "navigate-to-preferences",
       orderNumber: isMac ? 40 : 30,
       label: "Preferences",
-      accelerator: isMac ? "CmdOrCtrl+," : "Ctrl+,",
+      keyboardShortcut: isMac ? "CmdOrCtrl+," : "Ctrl+,",
 
-      click: () => {
+      onClick: () => {
         navigateToPreferences();
       },
     };

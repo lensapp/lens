@@ -13,13 +13,14 @@ const navigateToCatalogMenuItemInjectable = getInjectable({
     const navigateToCatalog = di.inject(navigateToCatalogInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: "view",
       id: "navigate-to-catalog",
       orderNumber: 10,
       label: "Catalog",
-      accelerator: "Shift+CmdOrCtrl+C",
+      keyboardShortcut: "Shift+CmdOrCtrl+C",
 
-      click: () => {
+      onClick: () => {
         navigateToCatalog();
       },
     };

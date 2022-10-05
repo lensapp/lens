@@ -15,13 +15,14 @@ const navigateToExtensionsMenuItem = getInjectable({
     const isMac = di.inject(isMacInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: isMac ? "primary-for-mac" : "file",
       id: "navigate-to-extensions",
       orderNumber: isMac ? 50 : 40,
       label: "Extensions",
-      accelerator: isMac ? "CmdOrCtrl+Shift+E" : "Ctrl+Shift+E",
+      keyboardShortcut: isMac ? "CmdOrCtrl+Shift+E" : "Ctrl+Shift+E",
 
-      click: () => {
+      onClick: () => {
         navigateToExtensions();
       },
     };

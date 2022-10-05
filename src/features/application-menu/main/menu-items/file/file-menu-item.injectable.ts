@@ -9,8 +9,9 @@ const fileMenuItemInjectable = getInjectable({
   id: "file-application-menu-item",
 
   instantiate: () => ({
-    parentId: null,
+    kind: "top-level-menu" as const,
     id: "file",
+    parentId: "root" as const,
     orderNumber: 20,
     label: "File",
   }),

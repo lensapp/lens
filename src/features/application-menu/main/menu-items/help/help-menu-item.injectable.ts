@@ -9,10 +9,12 @@ const helpMenuItemInjectable = getInjectable({
   id: "help-application-menu-item",
 
   instantiate: () => ({
-    parentId: null,
+    kind: "top-level-menu" as const,
     id: "help",
+    parentId: "root" as const,
     orderNumber: 50,
     label: "Help",
+    role: "help" as const,
   }),
 
   injectionToken: applicationMenuItemInjectionToken,

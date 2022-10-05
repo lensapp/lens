@@ -15,13 +15,14 @@ const reloadMenuItemInjectable = getInjectable({
     );
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: "view",
       id: "reload",
       orderNumber: 60,
       label: "Reload",
-      accelerator: "CmdOrCtrl+R",
+      keyboardShortcut: "CmdOrCtrl+R",
 
-      click: () => {
+      onClick: () => {
         reloadApplicationWindow();
       },
     };

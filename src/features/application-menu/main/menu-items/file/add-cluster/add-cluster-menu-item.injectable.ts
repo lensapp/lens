@@ -13,13 +13,14 @@ const addClusterMenuItemInjectable = getInjectable({
     const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: "file",
       id: "add-cluster",
       orderNumber: 10,
       label: "Add Cluster",
-      accelerator: "CmdOrCtrl+Shift+A",
+      keyboardShortcut: "CmdOrCtrl+Shift+A",
 
-      click: () => {
+      onClick: () => {
         navigateToAddCluster();
       },
     };

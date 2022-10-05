@@ -13,9 +13,3 @@ export const separator1 = getApplicationMenuSeparatorInjectable({
   orderNumber: 20,
   isShownOnlyOnMac: true,
 });
-
-export const separator2 = getApplicationMenuSeparatorInjectable({
-  id: "separator-2-for-file",
-  parentId: "file",
-  orderNumber: 50,
-});

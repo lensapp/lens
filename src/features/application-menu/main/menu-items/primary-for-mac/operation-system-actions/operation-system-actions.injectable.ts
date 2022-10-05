@@ -11,26 +11,26 @@ export const actionForServices = getApplicationMenuOperationSystemActionInjectab
   id: "services",
   parentId: "primary-for-mac",
   orderNumber: 80,
-  role: "services",
+  actionName: "services",
 });
 
 export const actionForHide = getApplicationMenuOperationSystemActionInjectable({
   id: "hide",
   parentId: "primary-for-mac",
   orderNumber: 100,
-  role: "hide",
+  actionName: "hide",
 });
 
 export const actionForHideOthers = getApplicationMenuOperationSystemActionInjectable({
   id: "hide-others",
   parentId: "primary-for-mac",
   orderNumber: 110,
-  role: "hideOthers",
+  actionName: "hideOthers",
 });
 
 export const actionForUnhide = getApplicationMenuOperationSystemActionInjectable({
   id: "unhide",
   parentId: "primary-for-mac",
   orderNumber: 120,
-  role: "unhide",
+  actionName: "unhide",
 });

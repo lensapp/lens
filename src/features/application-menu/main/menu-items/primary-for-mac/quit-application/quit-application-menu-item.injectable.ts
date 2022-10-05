@@ -15,14 +15,15 @@ const quitApplicationMenuItemInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       id: "quit",
       label: "Quit",
 
       parentId: isMac ? "primary-for-mac" : "file",
       orderNumber: isMac ? 140 : 70,
-      accelerator: isMac ? "Cmd+Q" : "Alt+F4",
+      keyboardShortcut: isMac ? "Cmd+Q" : "Alt+F4",
 
-      click: () => {
+      onClick: () => {
         stopServicesAndExitApp();
       },
     };

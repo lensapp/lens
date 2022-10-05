@@ -11,7 +11,10 @@ const getApplicationMenuSeparatorInjectable = ({
   id,
   isShownOnlyOnMac = false,
   ...rest
-}: { id: string; isShownOnlyOnMac?: boolean } & Omit<Separator, "type">) =>
+}: { isShownOnlyOnMac?: boolean } & Omit<
+  Separator,
+  "kind" | "isShown"
+>) =>
   getInjectable({
     id: `application-menu-separator/${id}`,
 
@@ -21,8 +24,9 @@ const getApplicationMenuSeparatorInjectable = ({
 
       return {
         ...rest,
+        id,
+        kind: "separator" as const,
         isShown,
-        type: "separator" as const,
       };
     },
 

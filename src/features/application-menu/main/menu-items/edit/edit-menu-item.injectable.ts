@@ -9,8 +9,9 @@ const editMenuItemInjectable = getInjectable({
   id: "edit-application-menu-item",
 
   instantiate: () => ({
-    parentId: null,
+    kind: "top-level-menu" as const,
     id: "edit",
+    parentId: "root" as const,
     orderNumber: 30,
     label: "Edit",
   }),

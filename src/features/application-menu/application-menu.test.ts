@@ -6,6 +6,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import populateApplicationMenuInjectable from "./main/populate-application-menu.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import { getCompositePaths } from "./main/menu-items/get-composite/get-composite-paths/get-composite-paths";
 
 describe("application-menu", () => {
   let builder: ApplicationBuilder;
@@ -35,18 +36,21 @@ describe("application-menu", () => {
   });
 
   describe("given enough time passes", () => {
+    let applicationMenuPaths: string[];
+
     beforeEach(() => {
       advanceFakeTime(100);
-    });
-
-    it("populates application menu", () => {
-      expect(populateApplicationMenuMock).toHaveBeenCalledWith(
-        expect.any(Array),
+      applicationMenuPaths = getCompositePaths(
+        populateApplicationMenuMock.mock.calls[0][0],
       );
     });
 
-    it("populates application menu lol", () => {
-      expect(populateApplicationMenuMock.mock.calls).toMatchSnapshot();
+    it("populates application menu with at least something", () => {
+      expect(applicationMenuPaths.length).toBeGreaterThan(0);
+    });
+
+    it("populates application menu", () => {
+      expect(applicationMenuPaths).toMatchSnapshot();
     });
   });
 });

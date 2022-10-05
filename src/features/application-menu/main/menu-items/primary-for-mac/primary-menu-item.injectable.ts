@@ -15,7 +15,8 @@ const primaryMenuItemInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
 
     return {
-      parentId: null,
+      kind: "top-level-menu" as const,
+      parentId: "root" as const,
       id: "primary-for-mac",
       orderNumber: 10,
       label: appName,

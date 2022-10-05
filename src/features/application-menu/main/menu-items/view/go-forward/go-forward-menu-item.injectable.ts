@@ -10,13 +10,14 @@ const goForwardMenuItemInjectable = getInjectable({
   id: "go-forward-menu-item",
 
   instantiate: () => ({
+    kind: "clickable-menu-item" as const,
     parentId: "view",
     id: "go-forward",
     orderNumber: 50,
     label: "Forward",
-    accelerator: "CmdOrCtrl+]",
+    keyboardShortcut: "CmdOrCtrl+]",
 
-    click: () => {
+    onClick: () => {
       webContents
         .getAllWebContents()
         .filter((wc) => wc.getType() === "window")

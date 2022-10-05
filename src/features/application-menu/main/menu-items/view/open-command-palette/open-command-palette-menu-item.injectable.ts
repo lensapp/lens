@@ -13,13 +13,14 @@ const openCommandPaletteMenuItemInjectable = getInjectable({
     const broadcastMessage = di.inject(broadcastMessageInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       parentId: "view",
       id: "open-command-palette",
       orderNumber: 20,
       label: "Command Palette...",
-      accelerator: "Shift+CmdOrCtrl+P",
+      keyboardShortcut: "Shift+CmdOrCtrl+P",
 
-      click(_m, _b, event) {
+      onClick(_m, _b, event) {
         /**
          * Don't broadcast unless it was triggered by menu iteration so that
          * there aren't double events in renderer

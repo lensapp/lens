@@ -17,12 +17,9 @@ import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { compact, filter, first, flatMap, get, join, last, map, matches } from "lodash/fp";
+import { filter, first, get, join, last, map, matches } from "lodash/fp";
 import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
-import type { MenuItemOpts } from "../../../features/application-menu/main/application-menu-items.injectable";
-import applicationMenuItemsInjectable from "../../../features/application-menu/main/application-menu-items.injectable";
-import type { MenuItem, MenuItemConstructorOptions } from "electron";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
@@ -68,6 +65,11 @@ import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-exte
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
+import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
+import { getCompositePaths } from "../../../features/application-menu/main/menu-items/get-composite/get-composite-paths/get-composite-paths";
+import { normalizeComposite } from "../../../features/application-menu/main/menu-items/get-composite/normalize-composite/normalize-composite";
+import type { ClickableMenuItem } from "../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
+import type { Composite } from "../../../features/application-menu/main/menu-items/get-composite/get-composite";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -127,6 +129,7 @@ export interface ApplicationBuilder {
 
   applicationMenu: {
     click: (path: string) => void;
+    items: string[];
   };
   preferences: {
     close: () => void;
@@ -343,37 +346,35 @@ export const getApplicationBuilder = () => {
       select: action((namespace) => selectedNamespaces.add(namespace)),
     },
     applicationMenu: {
+      get items() {
+        const composite = mainDi.inject(
+          applicationMenuItemCompositeInjectable,
+        ).get();
+
+        return getCompositePaths(composite);
+      },
+
       click: (path: string) => {
-        const applicationMenuItems = mainDi.inject(
-          applicationMenuItemsInjectable,
-        );
+        const composite = mainDi.inject(
+          applicationMenuItemCompositeInjectable,
+        ).get();
 
-        const menuItems = pipeline(
-          applicationMenuItems.get(),
-          flatMap(toFlatChildren(null)),
-          filter((menuItem) => !!menuItem.click),
-        );
+        const clickableMenuItems = normalizeComposite(composite).filter(isClickableMenuItem);
+        const clickableMenuItemMap = new Map(clickableMenuItems);
+        // TODO: find out why this any!? The typing of above map is strict, so why map.get() isn't?
+        const clickableMenuItem = clickableMenuItemMap.get(path);
 
-        const menuItem = menuItems.find((menuItem) => menuItem.path === path);
-
-        if (!menuItem) {
-          const availableIds = menuItems.map(get("path")).join('", "');
+        if (clickableMenuItem === undefined) {
+          const clickableIds = [...clickableMenuItemMap.keys()];
 
           throw new Error(
-            `Tried to click application menu item with ID "${path}" which does not exist. Available IDs are: "${availableIds}"`,
+            `Tried to click application menu item with unknown path "${path}". Available clickable paths are: \n"${clickableIds.join('",\n"')}"`,
           );
         }
 
-        menuItem.click?.(
-          {
-            menu: null as never,
-            commandId: 0,
-            userAccelerator: null,
-            ...menuItem,
-          } as MenuItem,
-          undefined,
-          {},
-        );
+        // Todo: prevent leaking of Electron.
+        // @ts-ignore
+        clickableMenuItem.value.onClick();
       },
     },
 
@@ -747,25 +748,6 @@ export const getApplicationBuilder = () => {
   return builder;
 };
 
-export type ToFlatChildren = (opts: MenuItemConstructorOptions) => (MenuItemOpts & { path: string })[];
-
-function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
-  return ({ submenu = [], ...menuItem }) => [
-    {
-      ...menuItem,
-      path: pipeline([parentId, menuItem.id], compact, join(".")),
-    },
-    ...(
-      Array.isArray(submenu)
-        ? submenu.flatMap(toFlatChildren(menuItem.id))
-        : [{
-          ...submenu,
-          path: pipeline([parentId, menuItem.id], compact, join(".")),
-        }]
-    ),
-  ];
-}
-
 export const rendererExtensionsStateInjectable = getInjectable({
   id: "renderer-extensions-state",
   instantiate: () => observable.map<string, LensRendererExtension>(),
@@ -896,4 +878,10 @@ const disableExtensionFor =
         extensionsState.delete(id);
       });
     };
+
+const isClickableMenuItem = (
+  pathAndComposite: readonly [path: string, composite: any],
+): pathAndComposite is [string, Composite<ClickableMenuItem>] =>
+  pathAndComposite[1].value.kind === "clickable-menu-item";
+
 

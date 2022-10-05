@@ -17,12 +17,13 @@ const aboutMenuItemInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       id: "about",
       parentId: isMac ? "primary-for-mac" : "help",
       orderNumber: isMac ? 10 : 40,
       label: `About ${productName}`,
 
-      click() {
+      onClick() {
         showAbout();
       },
     };

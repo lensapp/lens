@@ -24,13 +24,14 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
     const isMac = di.inject(isMacInjectable);
 
     return {
+      kind: "clickable-menu-item" as const,
       id: "check-for-updates",
       parentId: isMac ? "primary-for-mac" : "help",
       orderNumber: isMac ? 20 : 50,
       label: "Check for updates",
       isShown: updatingIsEnabled,
 
-      click: () => {
+      onClick: () => {
         // Todo: implement using async/await
         processCheckingForUpdates("application-menu").then(() =>
           showApplicationWindow(),

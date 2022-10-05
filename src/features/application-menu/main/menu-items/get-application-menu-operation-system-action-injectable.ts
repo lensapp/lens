@@ -3,20 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { OperationSystemAction } from "./application-menu-item-injection-token";
+import type { OsActionMenuItem } from "./application-menu-item-injection-token";
 import applicationMenuItemInjectionToken from "./application-menu-item-injection-token";
 
 const getApplicationMenuOperationSystemActionInjectable = ({
   id,
-  role,
   ...rest
-}: { id: string } & OperationSystemAction) =>
+}: Omit<OsActionMenuItem, "kind" >) =>
   getInjectable({
     id: `application-menu-operation-system-action/${id}`,
 
     instantiate: () => ({
       ...rest,
-      role,
+      id,
+      kind: "os-action-menu-item" as const,
     }),
 
     injectionToken: applicationMenuItemInjectionToken,

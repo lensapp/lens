@@ -3,25 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import {
-  getApplicationMenuOperationSystemActionInjectable,
-} from "../../get-application-menu-operation-system-action-injectable";
-import {
-  getApplicationMenuSeparatorInjectable,
-} from "../../get-application-menu-separator-injectable";
+import { getApplicationMenuOperationSystemActionInjectable } from "../../get-application-menu-operation-system-action-injectable";
+import { getApplicationMenuSeparatorInjectable } from "../../get-application-menu-separator-injectable";
 
 export const actionForUndo = getApplicationMenuOperationSystemActionInjectable({
   id: "undo",
   parentId: "edit",
   orderNumber: 10,
-  role: "undo",
+  actionName: "undo",
 });
 
 export const actionForRedo = getApplicationMenuOperationSystemActionInjectable({
   id: "redo",
   parentId: "edit",
   orderNumber: 20,
-  role: "redo",
+  actionName: "redo",
 });
 
 export const separator1 = getApplicationMenuSeparatorInjectable({
@@ -34,28 +30,28 @@ export const actionForCut = getApplicationMenuOperationSystemActionInjectable({
   id: "cut",
   parentId: "edit",
   orderNumber: 40,
-  role: "cut",
+  actionName: "cut",
 });
 
 export const actionForCopy = getApplicationMenuOperationSystemActionInjectable({
   id: "copy",
   parentId: "edit",
   orderNumber: 50,
-  role: "copy",
+  actionName: "copy",
 });
 
 export const actionForPaste = getApplicationMenuOperationSystemActionInjectable({
   id: "paste",
   parentId: "edit",
   orderNumber: 60,
-  role: "paste",
+  actionName: "paste",
 });
 
 export const actionForDelete = getApplicationMenuOperationSystemActionInjectable({
   id: "delete",
   parentId: "edit",
   orderNumber: 70,
-  role: "delete",
+  actionName: "delete",
 });
 
 export const separator2 = getApplicationMenuSeparatorInjectable({
@@ -68,6 +64,6 @@ export const actionForSelectAll = getApplicationMenuOperationSystemActionInjecta
   id: "selectAll",
   parentId: "edit",
   orderNumber: 90,
-  role: "selectAll",
+  actionName: "selectAll",
 });
 

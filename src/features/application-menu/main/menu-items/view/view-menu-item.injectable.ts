@@ -9,7 +9,8 @@ const viewMenuItemInjectable = getInjectable({
   id: "view-application-menu-item",
 
   instantiate: () => ({
-    parentId: null,
+    kind: "top-level-menu" as const,
+    parentId: "root" as const,
     id: "view",
     orderNumber: 40,
     label: "View",
