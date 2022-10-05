@@ -70,5 +70,76 @@ describe("get helm release resources", () => {
         response: [],
       });
     });
+
+    it("when call to manifest resolves with resources, resolves with resources", async () => {
+      await execHelmMock.resolve({
+        callWasSuccessful: true,
+        response: `---
+apiVersion: v1
+kind: SomeKind
+metadata:
+  name: some-resource-with-same-namespace
+  namespace: some-namespace
+---
+apiVersion: v1
+kind: SomeOtherKind
+metadata:
+  name: some-resource-without-namespace
+---
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: collection-sumologic-fluentd-logs
+      namespace: some-namespace
+---
+apiVersion: v1
+kind: SomeKind
+metadata:
+  name: some-resource-with-different-namespace
+  namespace: some-other-namespace
+---
+`,
+      });
+
+      expect(await actualPromise).toEqual({
+        callWasSuccessful: true,
+        response: [
+          {
+            apiVersion: "v1",
+            kind: "SomeKind",
+            metadata: {
+              name: "some-resource-with-same-namespace",
+              namespace: "some-namespace",
+            },
+          },
+          {
+            apiVersion: "v1",
+            kind: "SomeOtherKind",
+            metadata: {
+              name: "some-resource-without-namespace",
+            },
+          },
+          {
+            apiVersion: "monitoring.coreos.com/v1",
+            kind: "ServiceMonitor",
+            metadata: {
+              name: "collection-sumologic-fluentd-logs",
+              namespace: "some-namespace",
+            },
+          },
+          {
+            apiVersion: "v1",
+            kind: "SomeKind",
+            metadata: {
+              name: "some-resource-with-different-namespace",
+              namespace: "some-other-namespace",
+            },
+          },
+        ],
+      });
+    });
   });
 });
