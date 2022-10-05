@@ -73,7 +73,7 @@ jobs:
 
       - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
         name: Run Linux integration tests
-        if: runner.os == 'Linux'
+        if: ${{ runner.os == 'Linux' && matrix.type == 'smoke' }}
 
       - run: make integration
         name: Run macOS integration tests
