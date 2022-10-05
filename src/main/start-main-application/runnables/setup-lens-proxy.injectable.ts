@@ -12,6 +12,7 @@ import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
+import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -69,6 +70,7 @@ const setupLensProxyInjectable = getInjectable({
           return exitApp();
         }
       },
+      runAfter: di.inject(initializeBuildVersionInjectable),
     };
   },
 
