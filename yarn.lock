@@ -1401,10 +1401,17 @@
     read-package-json-fast "^2.0.3"
     which "^2.0.2"
 
-"@ogre-tools/fp@10.1.0", "@ogre-tools/fp@^10.1.0":
+"@ogre-tools/fp@10.1.0":
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-10.1.0.tgz#e83c4dad97416c62d89913c0c0a34e734ae06b8b"
   integrity sha512-ZqGQXytucSWbSoNjrdyHAiIWO0LotxBU+aI5hCcqedWg9TzNzf78YKD6ngHXxVEwT/JYsslxXMxzE4LNdo8Cbg==
+  dependencies:
+    lodash "^4.17.21"
+
+"@ogre-tools/fp@^10.1.0", "@ogre-tools/fp@^10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-10.3.2.tgz#41fe406842bd523d7e7ba0792a682d9aaaa33d9c"
+  integrity sha512-4J1hqjHXDyMgtb2QxsGVOUEgiE7+bcPRLuTv2iJHvBlaXIeTdNuOsNZTVhJvhTv/jxXL+AHq1XjaCDLHe6XxAQ==
   dependencies:
     lodash "^4.17.21"
 
@@ -1417,13 +1424,13 @@
     "@ogre-tools/injectable" "^10.1.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable-extension-for-mobx@10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-10.1.0.tgz#b1efaafb048f2ceb5588daad708dbeffbd2ec7d1"
-  integrity sha512-G5A6FSgBMTlD6Qdd6xzeuVzcyHGS+tTUW7DCBbYLJqZ3Y8/PprSomhunrNrrcuZdM0K16BpQT8o6OHw4Z/Kqiw==
+"@ogre-tools/injectable-extension-for-mobx@10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-10.3.2.tgz#8eba467bf20295d3153b2ac3b8fed1206f448027"
+  integrity sha512-QYlm26pUnRLyn9EcKeG0bJySCmIKiJxHdHViq77ncHuHo9s+PcxFQJwV4yQljhxcKiAInw/LF8qmRl2ZjJ7X1A==
   dependencies:
-    "@ogre-tools/fp" "^10.1.0"
-    "@ogre-tools/injectable" "^10.1.0"
+    "@ogre-tools/fp" "^10.3.2"
+    "@ogre-tools/injectable" "^10.3.2"
     lodash "^4.17.21"
 
 "@ogre-tools/injectable-react@10.1.0":
@@ -1435,12 +1442,20 @@
     "@ogre-tools/injectable" "^10.1.0"
     lodash "^4.17.21"
 
-"@ogre-tools/injectable@10.1.0", "@ogre-tools/injectable@^10.1.0":
+"@ogre-tools/injectable@10.1.0":
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-10.1.0.tgz#5051cc6a673576028e00439fc3e3f053ecdda030"
   integrity sha512-7h7P5nfAFqnSny341FFT6cbJCmXVlGqA4zwTOpwKsGyC1h90NWtQZ+PUxY5MKl7rFWW/wpXgAKQqtf27Vy41Qw==
   dependencies:
     "@ogre-tools/fp" "^10.1.0"
+    lodash "^4.17.21"
+
+"@ogre-tools/injectable@^10.1.0", "@ogre-tools/injectable@^10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-10.3.2.tgz#9f0c726c17072e2e6f4aab45cad6ddde393bef42"
+  integrity sha512-hZR3ELS6mwkS30u50/4sD/5qfHy3609iCWr9zN9s6XTCiPqxEMFFy1cnNGgVqjI1MBgB/aHeq9BGNgZzbHWpIw==
+  dependencies:
+    "@ogre-tools/fp" "^10.3.2"
     lodash "^4.17.21"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.7":
