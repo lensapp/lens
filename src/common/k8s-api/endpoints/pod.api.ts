@@ -677,6 +677,10 @@ export class Pod extends KubeObject<
     return this.spec?.priorityClassName || "";
   }
 
+  getRuntimeClassName() {
+    return this.spec?.runtimeClassName || "";
+  }
+
   getServiceAccountName() {
     return this.spec?.serviceAccountName || "";
   }

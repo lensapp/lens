@@ -132,11 +132,14 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
         <DrawerItem name="Service Account">
           {pod.getServiceAccountName()}
         </DrawerItem>
-        <DrawerItem name="Priority Class">
+        <DrawerItem name="Priority Class" hidden={pod.getPriorityClassName() === ""}>
           {pod.getPriorityClassName()}
         </DrawerItem>
         <DrawerItem name="QoS Class">
           {pod.getQosClass()}
+        </DrawerItem>
+        <DrawerItem name="Runtime Class" hidden={pod.getRuntimeClassName() === ""}>
+          {pod.getRuntimeClassName()}
         </DrawerItem>
 
         <DrawerItem
