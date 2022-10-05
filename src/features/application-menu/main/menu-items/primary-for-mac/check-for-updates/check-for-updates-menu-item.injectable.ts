@@ -8,6 +8,7 @@ import applicationMenuItemInjectionToken from "../../application-menu-item-injec
 import processCheckingForUpdatesInjectable from "../../../../../application-update/main/process-checking-for-updates.injectable";
 import showApplicationWindowInjectable from "../../../../../../main/start-main-application/lens-window/show-application-window.injectable";
 import updatingIsEnabledInjectable from "../../../../../application-update/main/updating-is-enabled/updating-is-enabled.injectable";
+import isMacInjectable from "../../../../../../common/vars/is-mac.injectable";
 
 const checkForUpdatesMenuItemInjectable = getInjectable({
   id: "check-for-updates-menu-item",
@@ -20,11 +21,12 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
 
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
+    const isMac = di.inject(isMacInjectable);
 
     return {
-      parentId: "primary-for-mac",
       id: "check-for-updates",
-      orderNumber: 20,
+      parentId: isMac ? "primary-for-mac" : "help",
+      orderNumber: isMac ? 20 : 50,
       label: "Check for updates",
       isShown: updatingIsEnabled,
 

@@ -5,15 +5,26 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Separator } from "./application-menu-item-injection-token";
 import applicationMenuItemInjectionToken from "./application-menu-item-injection-token";
+import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 
-const getApplicationMenuSeparatorInjectable = ({ id, ...rest }: { id: string } & Omit<Separator, "type">) =>
+const getApplicationMenuSeparatorInjectable = ({
+  id,
+  isShownOnlyOnMac = false,
+  ...rest
+}: { id: string; isShownOnlyOnMac?: boolean } & Omit<Separator, "type">) =>
   getInjectable({
     id: `application-menu-separator/${id}`,
 
-    instantiate: () => ({
-      ...rest,
-      type: "separator" as const,
-    }),
+    instantiate: (di) => {
+      const isMac = di.inject(isMacInjectable);
+      const isShown = isShownOnlyOnMac ? isMac : true;
+
+      return {
+        ...rest,
+        isShown,
+        type: "separator" as const,
+      };
+    },
 
     injectionToken: applicationMenuItemInjectionToken,
   });

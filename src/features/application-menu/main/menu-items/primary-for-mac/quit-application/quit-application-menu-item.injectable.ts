@@ -5,19 +5,22 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemInjectionToken from "../../application-menu-item-injection-token";
 import stopServicesAndExitAppInjectable from "../../../../../../main/stop-services-and-exit-app.injectable";
+import isMacInjectable from "../../../../../../common/vars/is-mac.injectable";
 
 const quitApplicationMenuItemInjectable = getInjectable({
   id: "quit-application-menu-item",
 
   instantiate: (di) => {
     const stopServicesAndExitApp = di.inject(stopServicesAndExitAppInjectable);
+    const isMac = di.inject(isMacInjectable);
 
-    return           {
+    return {
       id: "quit",
-      parentId: "primary-for-mac",
-      orderNumber: 140,
       label: "Quit",
-      accelerator: "Cmd+Q",
+
+      parentId: isMac ? "primary-for-mac" : "file",
+      orderNumber: isMac ? 140 : 70,
+      accelerator: isMac ? "Cmd+Q" : "Alt+F4",
 
       click: () => {
         stopServicesAndExitApp();

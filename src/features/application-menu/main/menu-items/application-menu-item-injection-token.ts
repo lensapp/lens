@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { BrowserWindow, MenuItem, KeyboardEvent } from "electron";
 
 interface Shared {
   parentId: string | null;
@@ -11,10 +12,16 @@ interface Shared {
 }
 
 export interface ApplicationMenuItem extends Shared {
-  id: string;
   label: string;
-  click?: () => void;
   accelerator?: string;
+  id: string;
+
+  // TODO: This leaky abstraction is exposed in Extension API, therefore cannot be updated
+  click?: (
+    menuItem: MenuItem,
+    browserWindow: BrowserWindow | undefined,
+    event: KeyboardEvent
+  ) => void;
 }
 
 export interface Separator extends Shared {
@@ -22,13 +29,37 @@ export interface Separator extends Shared {
 }
 
 export interface OperationSystemAction extends Shared {
-  role: "services" | "hide" | "hideOthers" | "unhide";
+  label?: string;
+  accelerator?: string;
+
+  role:
+    | "services"
+    | "hide"
+    | "hideOthers"
+    | "unhide"
+    | "close"
+    | "undo"
+    | "redo"
+    | "cut"
+    | "copy"
+    | "paste"
+    | "delete"
+    | "selectAll"
+    | "toggleDevTools"
+    | "resetZoom"
+    | "zoomIn"
+    | "zoomOut"
+    | "togglefullscreen";
 }
 
-export type ApplicationMenuItemTypes = ApplicationMenuItem | Separator | OperationSystemAction;
+export type ApplicationMenuItemTypes =
+  | ApplicationMenuItem
+  | Separator
+  | OperationSystemAction;
 
-const applicationMenuItemInjectionToken = getInjectionToken<ApplicationMenuItemTypes>({
-  id: "application-menu-item-injection-token",
-});
+const applicationMenuItemInjectionToken =
+  getInjectionToken<ApplicationMenuItemTypes>({
+    id: "application-menu-item-injection-token",
+  });
 
 export default applicationMenuItemInjectionToken;
