@@ -106,8 +106,6 @@ async function attemptStart() {
 }
 
 export async function start() {
-  console.log(process.env);
-
   // this is an attempted workaround for an issue with playwright not always getting the main window when using Electron 14.2.4 (observed on windows)
   for (let i = 0; ; i++) {
     try {
