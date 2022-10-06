@@ -36,6 +36,15 @@ export function hasTypedProperty<S extends object, K extends PropertyKey, V>(val
 }
 
 /**
+ * Narrows `val` to include the property `key` with type string
+ * @param val the value that we are trying to type narrow
+ * @param key The key to test if it is present on the object (must be a literal for tsc to do any meaningful typing)
+ */
+export function hasStringProperty<S extends object, K extends PropertyKey>(val: S, key: K): val is (S & { [key in K]: string }) {
+  return hasOwnProperty(val, key) && isString(val[key]);
+}
+
+/**
  * Narrows `val` to include the property `key` with type `V | undefined` or doesn't contain it
  * @param val the value that we are trying to type narrow
  * @param key The key to test if it is present on the object (must be a literal for tsc to do any meaningful typing)
