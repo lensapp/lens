@@ -1,399 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`application-menu given enough time passes populates application menu janne 1`] = `
+exports[`application-menu given enough time passes populates application menu 1`] = `
 Array [
-  Array [
-    Array [
-      Object {
-        "id": "root",
-        "label": "some-product-name",
-        "submenu": Array [
-          Object {
-            "id": "primary",
-            "label": "some-product-name",
-            "parentId": null,
-          },
-          Object {
-            "click": [Function],
-            "id": "about",
-            "label": "About some-product-name",
-            "parentId": "primary",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+,",
-            "click": [Function],
-            "id": "preferences",
-            "label": "Preferences",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+Shift+E",
-            "click": [Function],
-            "id": "extensions",
-            "label": "Extensions",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "services",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "hide",
-          },
-          Object {
-            "role": "hideOthers",
-          },
-          Object {
-            "role": "unhide",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "Cmd+Q",
-            "click": [Function],
-            "id": "quit",
-            "label": "Quit",
-          },
-        ],
-      },
-      Object {
-        "id": "file",
-        "label": "File",
-        "submenu": Array [
-          Object {
-            "accelerator": "CmdOrCtrl+Shift+A",
-            "click": [Function],
-            "id": "add-cluster",
-            "label": "Add Cluster",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "Shift+Cmd+W",
-            "label": "Close Window",
-            "role": "close",
-          },
-        ],
-      },
-      Object {
-        "id": "edit",
-        "label": "Edit",
-        "submenu": Array [
-          Object {
-            "role": "undo",
-          },
-          Object {
-            "role": "redo",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "cut",
-          },
-          Object {
-            "role": "copy",
-          },
-          Object {
-            "role": "paste",
-          },
-          Object {
-            "role": "delete",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "selectAll",
-          },
-        ],
-      },
-      Object {
-        "id": "view",
-        "label": "View",
-        "submenu": Array [
-          Object {
-            "accelerator": "Shift+CmdOrCtrl+C",
-            "click": [Function],
-            "id": "catalog",
-            "label": "Catalog",
-          },
-          Object {
-            "accelerator": "Shift+CmdOrCtrl+P",
-            "click": [Function],
-            "id": "command-palette",
-            "label": "Command Palette...",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+[",
-            "click": [Function],
-            "id": "go-back",
-            "label": "Back",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+]",
-            "click": [Function],
-            "id": "go-forward",
-            "label": "Forward",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+R",
-            "click": [Function],
-            "id": "reload",
-            "label": "Reload",
-          },
-          Object {
-            "role": "toggleDevTools",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "resetZoom",
-          },
-          Object {
-            "role": "zoomIn",
-          },
-          Object {
-            "role": "zoomOut",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "togglefullscreen",
-          },
-        ],
-      },
-      Object {
-        "id": "help",
-        "role": "help",
-        "submenu": Array [
-          Object {
-            "click": [Function],
-            "id": "welcome",
-            "label": "Welcome",
-          },
-          Object {
-            "click": [Function],
-            "id": "documentation",
-            "label": "Documentation",
-          },
-          Object {
-            "click": [Function],
-            "id": "support",
-            "label": "Support",
-          },
-        ],
-      },
-    ],
-  ],
-]
-`;
-
-exports[`application-menu given enough time passes populates application menu lol 1`] = `
-Array [
-  Array [
-    Array [
-      Object {
-        "id": "root",
-        "label": "some-product-name",
-        "submenu": Array [
-          Object {
-            "click": [Function],
-            "id": "about",
-            "label": "About some-product-name",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+,",
-            "click": [Function],
-            "id": "preferences",
-            "label": "Preferences",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+Shift+E",
-            "click": [Function],
-            "id": "extensions",
-            "label": "Extensions",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "services",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "hide",
-          },
-          Object {
-            "role": "hideOthers",
-          },
-          Object {
-            "role": "unhide",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "Cmd+Q",
-            "click": [Function],
-            "id": "quit",
-            "label": "Quit",
-          },
-        ],
-      },
-      Object {
-        "id": "file",
-        "label": "File",
-        "submenu": Array [
-          Object {
-            "accelerator": "CmdOrCtrl+Shift+A",
-            "click": [Function],
-            "id": "add-cluster",
-            "label": "Add Cluster",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "Shift+Cmd+W",
-            "label": "Close Window",
-            "role": "close",
-          },
-        ],
-      },
-      Object {
-        "id": "edit",
-        "label": "Edit",
-        "submenu": Array [
-          Object {
-            "role": "undo",
-          },
-          Object {
-            "role": "redo",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "cut",
-          },
-          Object {
-            "role": "copy",
-          },
-          Object {
-            "role": "paste",
-          },
-          Object {
-            "role": "delete",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "selectAll",
-          },
-        ],
-      },
-      Object {
-        "id": "view",
-        "label": "View",
-        "submenu": Array [
-          Object {
-            "accelerator": "Shift+CmdOrCtrl+C",
-            "click": [Function],
-            "id": "catalog",
-            "label": "Catalog",
-          },
-          Object {
-            "accelerator": "Shift+CmdOrCtrl+P",
-            "click": [Function],
-            "id": "command-palette",
-            "label": "Command Palette...",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+[",
-            "click": [Function],
-            "id": "go-back",
-            "label": "Back",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+]",
-            "click": [Function],
-            "id": "go-forward",
-            "label": "Forward",
-          },
-          Object {
-            "accelerator": "CmdOrCtrl+R",
-            "click": [Function],
-            "id": "reload",
-            "label": "Reload",
-          },
-          Object {
-            "role": "toggleDevTools",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "resetZoom",
-          },
-          Object {
-            "role": "zoomIn",
-          },
-          Object {
-            "role": "zoomOut",
-          },
-          Object {
-            "type": "separator",
-          },
-          Object {
-            "role": "togglefullscreen",
-          },
-        ],
-      },
-      Object {
-        "id": "help",
-        "role": "help",
-        "submenu": Array [
-          Object {
-            "click": [Function],
-            "id": "welcome",
-            "label": "Welcome",
-          },
-          Object {
-            "click": [Function],
-            "id": "documentation",
-            "label": "Documentation",
-          },
-          Object {
-            "click": [Function],
-            "id": "support",
-            "label": "Support",
-          },
-        ],
-      },
-    ],
-  ],
+  "root",
+  "root.primary-for-mac",
+  "root.primary-for-mac.about",
+  "root.primary-for-mac.separator-1",
+  "root.primary-for-mac.navigate-to-preferences",
+  "root.primary-for-mac.navigate-to-extensions",
+  "root.primary-for-mac.separator-2",
+  "root.primary-for-mac.services",
+  "root.primary-for-mac.separator-3",
+  "root.primary-for-mac.hide",
+  "root.primary-for-mac.hide-others",
+  "root.primary-for-mac.unhide",
+  "root.primary-for-mac.separator-4",
+  "root.primary-for-mac.quit",
+  "root.file",
+  "root.file.add-cluster",
+  "root.file.separator-1-for-file",
+  "root.file.close-window",
+  "root.edit",
+  "root.edit.undo",
+  "root.edit.redo",
+  "root.edit.separator-1-in-edit",
+  "root.edit.cut",
+  "root.edit.copy",
+  "root.edit.paste",
+  "root.edit.delete",
+  "root.edit.separator-2-in-edit",
+  "root.edit.selectAll",
+  "root.view",
+  "root.view.navigate-to-catalog",
+  "root.view.open-command-palette",
+  "root.view.separator-1-for-view",
+  "root.view.go-back",
+  "root.view.go-forward",
+  "root.view.reload",
+  "root.view.toggle-dev-tools",
+  "root.view.separator-2-for-view",
+  "root.view.reset-zoom",
+  "root.view.zoom-in",
+  "root.view.zoom-out",
+  "root.view.separator-3-for-view",
+  "root.view.toggle-full-screen",
+  "root.help",
+  "root.help.navigate-to-welcome",
+  "root.help.open-documentation",
+  "root.help.open-support",
 ]
 `;
