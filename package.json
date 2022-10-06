@@ -278,7 +278,7 @@
     "request-promise-native": "^1.0.9",
     "rfc6902": "^4.0.2",
     "selfsigned": "^2.1.1",
-    "semver": "^7.3.7",
+    "semver": "^7.3.8",
     "shell-env": "^3.0.1",
     "spdy": "^4.0.2",
     "tar": "^6.1.11",
