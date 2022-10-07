@@ -10,8 +10,8 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import { NodeApi, priorityClassApi, runtimeClassApi, serviceAccountApi } from "../../../common/k8s-api/endpoints";
-import { Pod } from "../../../common/k8s-api/endpoints";
+import { Pod, priorityClassApi, runtimeClassApi, serviceAccountApi } from "../../../common/k8s-api/endpoints";
+import type { NodeApi } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { cssNames, stopPropagation, toJS } from "../../utils";
@@ -144,12 +144,20 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
           {podIPs.map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
         <DrawerItem name="Service Account">
-          <Link key="link" to={serviceAccountDetailsUrl} onClick={stopPropagation}>
+          <Link
+            key="link"
+            to={serviceAccountDetailsUrl}
+            onClick={stopPropagation}
+          >
             {serviceAccountName}
           </Link>
         </DrawerItem>
         <DrawerItem name="Priority Class" hidden={priorityClassName === ""}>
-          <Link key="link" to={priorityClassDetailsUrl} onClick={stopPropagation}>
+          <Link
+            key="link"
+            to={priorityClassDetailsUrl}
+            onClick={stopPropagation}
+          >
             {priorityClassName}
           </Link>
         </DrawerItem>
@@ -157,7 +165,11 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
           {pod.getQosClass()}
         </DrawerItem>
         <DrawerItem name="Runtime Class" hidden={runtimeClassName === ""}>
-          <Link key="link" to={runtimeClassDetailsUrl} onClick={stopPropagation}>
+          <Link
+            key="link"
+            to={runtimeClassDetailsUrl}
+            onClick={stopPropagation}
+          >
             {runtimeClassName}
           </Link>
         </DrawerItem>
