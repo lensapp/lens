@@ -11,9 +11,12 @@ import networkPolicyApiInjectable from "./network-policy.api.injectable";
 import nodeApiInjectable from "./node.api.injectable";
 import persistentVolumeClaimApiInjectable from "./persistent-volume-claim.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
+import priorityClassApiInjectable from "./priority-class.api.injectable";
 import resourceQuotaApiInjectable from "./resource-quota.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
+import runtimeClassApiInjectable from "./runtime-class.api.injectable";
 import secretApiInjectable from "./secret.api.injectable";
+import serviceAccountApiInjectable from "./service-account.api.injectable";
 import serviceApiInjectable from "./service.api.injectable";
 import storageClassApiInjectable from "./storage-class.api.injectable";
 
@@ -58,14 +61,29 @@ export const nodeApi = asLegacyGlobalForExtensionApi(nodeApiInjectable);
 export const persistentVolumeClaimApi = asLegacyGlobalForExtensionApi(persistentVolumeClaimApiInjectable);
 
 /**
+ * @deprecated use `di.inject(priorityClassApiInjectable)` instead
+ */
+export const priorityClassApi = asLegacyGlobalForExtensionApi(priorityClassApiInjectable);
+
+/**
  * @deprecated use `di.inject(resourceQuotaApiInjectable)` instead
  */
 export const resourceQuotaApi = asLegacyGlobalForExtensionApi(resourceQuotaApiInjectable);
 
 /**
+ * @deprecated use `di.inject(runtimeClassApiInjectable)` instead
+ */
+export const runtimeClassApi = asLegacyGlobalForExtensionApi(runtimeClassApiInjectable);
+
+/**
  * @deprecated use `di.inject(secretApiInjectable)` instead
  */
 export const secretApi = asLegacyGlobalForExtensionApi(secretApiInjectable);
+
+/**
+ * @deprecated use `di.inject(serviceAccountApiInjectable)` instead
+ */
+export const serviceAccountApi = asLegacyGlobalForExtensionApi(serviceAccountApiInjectable);
 
 /**
  * @deprecated use `di.inject(serviceApiInjectable)` instead
