@@ -7,6 +7,7 @@ import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/uti
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getOrInsert, getOrInsertSet } from "../../common/utils";
 import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
+import { deserialize, serialize } from "v8";
 
 type ListenerSet = Set<MessageChannelListener<any>>;
 type WindowListenerMap = Map<string, ListenerSet>;
@@ -50,6 +51,12 @@ export const overrideMessagingFromMainToWindow = (): OverriddenWindowMessaging =
       );
     },
     sendToWindow: (windowId, { channel, data, frameInfo }) => {
+      try {
+        data = deserialize(serialize(data));
+      } catch (error) {
+        throw new Error("Tried to send data that is not compatible with StructuredClone");
+      }
+
       const windowListeners = getWindowListeners(channel, windowId);
 
       if (frameInfo) {
