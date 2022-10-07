@@ -3,13 +3,10 @@ on:
   pull_request:
     types:
       - closed
-    branches:
-      - master
-      - "release/v*.*"
 jobs:
   release:
     name: Release
-    if: ${{ github.event.pull_request.merged == 'true' && contains(github.event.pull_request.labels.*.name, 'release') }}
+    if: ${{ github.event.pull_request.merged == 'true' && contains(github.event.pull_request.labels.*.name, 'release') && (github.event.pull_request.base.ref == 'master' || startsWith(github.event.pull_request.base.ref, 'release/v')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Release from lens
