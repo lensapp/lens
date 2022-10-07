@@ -10,7 +10,7 @@ import { shellEnv } from "../utils/shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
-import os from "os";
+import os, { userInfo } from "os";
 import { UserStore } from "../../common/user-store";
 import * as pty from "node-pty";
 import { appEventBus } from "../../common/app-event-bus/event-bus";
@@ -331,9 +331,9 @@ export abstract class ShellSession {
   }
 
   protected async getShellEnv() {
-    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
-    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), process.env.PATH].join(path.delimiter);
     const shell = UserStore.getInstance().resolvedShell;
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv(shell || userInfo().shell))));
+    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), process.env.PATH].join(path.delimiter);
 
     delete env.DEBUG; // don't pass DEBUG into shells
 
