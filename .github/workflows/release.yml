@@ -5,7 +5,7 @@ on:
       - closed
     branches:
       - master
-      - release/**
+      - "release/v*.*"
 jobs:
   release:
     name: Release
