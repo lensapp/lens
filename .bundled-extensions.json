@@ -1,8 +1,0 @@
-{
-  "extensions": [
-    "pod-menu",
-    "node-menu",
-    "metrics-cluster-feature",
-    "kube-object-event-status"
-  ]
-}
