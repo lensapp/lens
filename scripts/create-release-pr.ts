@@ -296,6 +296,7 @@ const createPrArgs = [
   "--base", prBase,
   "--title", `Release ${newVersion.format()}`,
   "--label", "skip-changelog",
+  "--label", "release",
   "--body-file", "-",
 ];
 
