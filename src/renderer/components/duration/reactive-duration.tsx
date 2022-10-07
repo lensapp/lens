@@ -18,19 +18,29 @@ export interface ReactiveDurationProps {
   compact?: boolean;
 }
 
+const everySecond = 1000;
+const everyMinute = 60 * 1000;
+
 /**
- * This function computes a resonable update
+ * This function computes a resonable update interval, matching `formatDuration`'s rules on when to display seconds
  */
-function computeUpdateInterval(creationTimestampEpoch: number): number {
+function computeUpdateInterval(creationTimestampEpoch: number, compact: boolean): number {
   const seconds = Math.floor((Date.now() - creationTimestampEpoch) / 1000);
   const minutes = Math.floor(seconds / 60);
 
   if (minutes < 10) {
-    // Update every second
-    return 1000;
+    return everySecond;
   }
 
-  return 60 * 1000;
+  if (compact) {
+    return everyMinute;
+  }
+
+  if (minutes < (60 * 3)) {
+    return everySecond;
+  }
+
+  return everyMinute;
 }
 
 export const ReactiveDuration = observer(({ timestamp, compact = true }: ReactiveDurationProps) => {
@@ -42,7 +52,7 @@ export const ReactiveDuration = observer(({ timestamp, compact = true }: Reactiv
 
   return (
     <>
-      {formatDuration(reactiveNow(computeUpdateInterval(timestampSeconds)) - timestampSeconds, compact)}
+      {formatDuration(reactiveNow(computeUpdateInterval(timestampSeconds, compact)) - timestampSeconds, compact)}
     </>
   );
 });
