@@ -11,6 +11,7 @@ jobs:
       - name: Print event
         run: |
           echo "merged=${{ github.event.pull_request.merged }}"
+          echo "merged=${{ github.event.pull_request.merged == 'true' }}"
           echo "ref=${{ github.event.pull_request.base.ref }}"
           echo "targets_master=${{ github.event.pull_request.base.ref == 'master' }}"
           echo "targets_release_branch=${{ startsWith(github.event.pull_request.base.ref, 'release/v') }}"
