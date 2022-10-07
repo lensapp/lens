@@ -7,6 +7,7 @@ import { getInjectable, getInjectionToken, lifecycleEnum } from "@ogre-tools/inj
 import { Router } from "./router";
 import parseRequestInjectable from "./parse-request.injectable";
 import type { Route } from "./route";
+import createHandlerForRouteInjectable from "./create-handler-for-route.injectable";
 
 export const routeInjectionToken = getInjectionToken<Route<unknown, string>>({
   id: "route-injection-token",
@@ -28,13 +29,11 @@ export function getRouteInjectable<
 const routerInjectable = getInjectable({
   id: "router",
 
-  instantiate: (di) => {
-    const routes = di.injectMany(routeInjectionToken);
-
-    return new Router(routes, {
-      parseRequest: di.inject(parseRequestInjectable),
-    });
-  },
+  instantiate: (di) => new Router({
+    parseRequest: di.inject(parseRequestInjectable),
+    routes: di.injectMany(routeInjectionToken),
+    createHandlerForRoute: di.inject(createHandlerForRouteInjectable),
+  }),
 });
 
 export default routerInjectable;

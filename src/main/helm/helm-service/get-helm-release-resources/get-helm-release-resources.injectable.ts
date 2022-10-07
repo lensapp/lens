@@ -3,48 +3,37 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import callForKubeResourcesByManifestInjectable from "./call-for-kube-resources-by-manifest/call-for-kube-resources-by-manifest.injectable";
-import { groupBy, map } from "lodash/fp";
-import type { JsonObject } from "type-fest";
-import { pipeline } from "@ogre-tools/fp";
 import callForHelmManifestInjectable from "./call-for-helm-manifest/call-for-helm-manifest.injectable";
+import type { KubeJsonApiData, KubeJsonApiDataList } from "../../../../common/k8s-api/kube-json-api";
+import type { AsyncResult } from "../../../../common/utils/async-result";
 
 export type GetHelmReleaseResources = (
   name: string,
   namespace: string,
   kubeconfigPath: string,
-  kubectlPath: string
-) => Promise<JsonObject[]>;
+) => Promise<AsyncResult<KubeJsonApiData[], string>>;
 
 const getHelmReleaseResourcesInjectable = getInjectable({
   id: "get-helm-release-resources",
 
   instantiate: (di): GetHelmReleaseResources => {
     const callForHelmManifest = di.inject(callForHelmManifestInjectable);
-    const callForKubeResourcesByManifest = di.inject(callForKubeResourcesByManifestInjectable);
 
-    return async (name, namespace, kubeconfigPath, kubectlPath) => {
+    return async (name, namespace, kubeconfigPath) => {
       const result = await callForHelmManifest(name, namespace, kubeconfigPath);
 
       if (!result.callWasSuccessful) {
-        throw new Error(result.error);
+        return result;
       }
 
-      const results = await pipeline(
-        result.response,
-
-        groupBy((item) => item.metadata.namespace || namespace),
-
-        (x) => Object.entries(x),
-
-        map(([namespace, manifest]) =>
-          callForKubeResourcesByManifest(namespace, kubeconfigPath, kubectlPath, manifest),
-        ),
-
-        promises => Promise.all(promises),
-      );
-
-      return results.flat(1);
+      return {
+        callWasSuccessful: true,
+        response: result.response.flatMap(item => (
+          Array.isArray(item.items)
+            ? (item as KubeJsonApiDataList).items
+            : item as KubeJsonApiData
+        )),
+      };
     };
   },
 });
