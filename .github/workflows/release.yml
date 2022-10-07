@@ -10,7 +10,8 @@ jobs:
     steps:
       - name: Print event
         run: |
-          echo ${{ github.event.pull_request }}
+          echo "${{ github.event.pull_request.merged }}"
+          echo "${{ github.event.pull_request.base.ref }}"
           exit 1
       - name: Checkout Release from lens
         uses: actions/checkout@v2
