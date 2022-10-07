@@ -15,6 +15,7 @@ jobs:
           echo "targets_master=${{ github.event.pull_request.base.ref == 'master' }}"
           echo "targets_release_branch=${{ startsWith(github.event.pull_request.base.ref, 'release/v') }}"
           echo "is_release=${{ contains(github.event.pull_request.labels.*.name, 'release') }}"
+          echo "should_continue_release=${{ true && true && (false || true) }}"
           echo "should_continue=${{ github.event.pull_request.merged == 'true' && contains(github.event.pull_request.labels.*.name, 'release') && (github.event.pull_request.base.ref == 'master' || startsWith(github.event.pull_request.base.ref, 'release/v')) }}"
           exit 1
       # - name: Checkout Release from lens
