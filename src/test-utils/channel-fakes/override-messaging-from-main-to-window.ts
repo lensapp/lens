@@ -54,7 +54,7 @@ export const overrideMessagingFromMainToWindow = (): OverriddenWindowMessaging =
       try {
         data = deserialize(serialize(data));
       } catch (error) {
-        throw new Error("Tried to send data that is not compatible with StructuredClone");
+        throw new Error(`Tried to send a message to channel "${channel}" that is not compatible with StructuredClone: ${error}`);
       }
 
       const windowListeners = getWindowListeners(channel, windowId);
