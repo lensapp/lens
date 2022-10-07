@@ -22,9 +22,9 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           tag_prefix: "v"
       - uses: ncipollo/release-action@v1
-        if: ${{ needs.tag.outputs.tagname != '' }}
+        if: ${{ steps.tagger.outputs.tagname != '' }}
         with:
-          name: v${{ steps.open-lens-version.outputs.VERSION }}
+          name: ${{ steps.tagger.outputs.tagname }}
           commit: master
-          tag: v${{ steps.open-lens-version.outputs.VERSION }}
+          tag: ${{ steps.tagger.outputs.tagname }}
           body: ${{ github.event.pull_request.body }}
