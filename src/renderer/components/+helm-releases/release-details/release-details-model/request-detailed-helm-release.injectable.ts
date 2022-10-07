@@ -11,7 +11,7 @@ import type { AsyncResult } from "../../../../../common/utils/async-result";
 
 export interface DetailedHelmRelease {
   release: HelmReleaseDto;
-  details: HelmReleaseDetails;
+  details?: HelmReleaseDetails;
 }
 
 export type RequestDetailedHelmRelease = (

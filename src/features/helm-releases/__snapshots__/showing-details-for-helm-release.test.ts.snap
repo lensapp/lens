@@ -5552,11 +5552,6 @@ exports[`showing details for helm release given application is started when navi
                 >
                   Namespace
                 </div>
-                <div
-                  class="TableCell age"
-                >
-                  Age
-                </div>
               </div>
               <div
                 class="TableRow"
@@ -5570,11 +5565,6 @@ exports[`showing details for helm release given application is started when navi
                   class="TableCell namespace"
                 >
                   some-namespace
-                </div>
-                <div
-                  class="TableCell age"
-                >
-                  0s
                 </div>
               </div>
             </div>
@@ -6784,11 +6774,6 @@ exports[`showing details for helm release given application is started when navi
                 >
                   Namespace
                 </div>
-                <div
-                  class="TableCell age"
-                >
-                  Age
-                </div>
               </div>
               <div
                 class="TableRow"
@@ -6802,11 +6787,6 @@ exports[`showing details for helm release given application is started when navi
                   class="TableCell namespace"
                 >
                   some-namespace
-                </div>
-                <div
-                  class="TableCell age"
-                >
-                  0s
                 </div>
               </div>
             </div>
@@ -8016,11 +7996,6 @@ exports[`showing details for helm release given application is started when navi
                 >
                   Namespace
                 </div>
-                <div
-                  class="TableCell age"
-                >
-                  Age
-                </div>
               </div>
               <div
                 class="TableRow"
@@ -8034,11 +8009,6 @@ exports[`showing details for helm release given application is started when navi
                   class="TableCell namespace"
                 >
                   some-namespace
-                </div>
-                <div
-                  class="TableCell age"
-                >
-                  0s
                 </div>
               </div>
             </div>
@@ -9073,11 +9043,6 @@ exports[`showing details for helm release given application is started when navi
                 >
                   Namespace
                 </div>
-                <div
-                  class="TableCell age"
-                >
-                  Age
-                </div>
               </div>
               <div
                 class="TableRow"
@@ -9091,11 +9056,6 @@ exports[`showing details for helm release given application is started when navi
                   class="TableCell namespace"
                 >
                   some-namespace
-                </div>
-                <div
-                  class="TableCell age"
-                >
-                  0s
                 </div>
               </div>
             </div>
@@ -10132,11 +10092,6 @@ exports[`showing details for helm release given application is started when navi
                 >
                   Namespace
                 </div>
-                <div
-                  class="TableCell age"
-                >
-                  Age
-                </div>
               </div>
               <div
                 class="TableRow"
@@ -10150,11 +10105,6 @@ exports[`showing details for helm release given application is started when navi
                   class="TableCell namespace"
                 >
                   some-namespace
-                </div>
-                <div
-                  class="TableCell age"
-                >
-                  0s
                 </div>
               </div>
             </div>
@@ -11364,11 +11314,6 @@ exports[`showing details for helm release given application is started when navi
                 >
                   Namespace
                 </div>
-                <div
-                  class="TableCell age"
-                >
-                  Age
-                </div>
               </div>
               <div
                 class="TableRow"
@@ -11382,11 +11327,6 @@ exports[`showing details for helm release given application is started when navi
                   class="TableCell namespace"
                 >
                   some-namespace
-                </div>
-                <div
-                  class="TableCell age"
-                >
-                  0s
                 </div>
               </div>
             </div>
