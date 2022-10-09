@@ -100,6 +100,7 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
     const initContainers = pod.getInitContainers();
     const containers = pod.getContainers();
 
+    const namespace = pod.getNs();
     const priorityClassName = pod.getPriorityClassName();
     const runtimeClassName = pod.getRuntimeClassName();
     const serviceAccountName = pod.getServiceAccountName();
@@ -112,6 +113,7 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
     }));
     const serviceAccountDetailsUrl = getDetailsUrl(this.props.serviceAccountApi.getUrl({
       name: serviceAccountName,
+      namespace,
     }));
 
     return (
