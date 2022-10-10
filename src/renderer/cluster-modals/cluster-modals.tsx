@@ -15,7 +15,7 @@ interface Dependencies {
 
 export const NonInjectedClusterModals = ({ clusterModals }: Dependencies) => {
   return (
-    <div className={styles.clusterModals}>
+    <div className={styles.clusterModals} style={{ height: 0 }}>
       {clusterModals.map((modal) => {
         return modal.visible ? <modal.Component key={modal.id} /> : null;
       })}
