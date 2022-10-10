@@ -69,10 +69,10 @@ export class Menu extends React.Component<MenuProps, State> {
     super(props);
     autoBind(this);
   }
-  public opener: HTMLElement | null = null;
-  public elem: HTMLUListElement | null = null;
+  private opener: HTMLElement | null = null;
+  private elem: HTMLUListElement | null = null;
   protected items: { [index: number]: MenuItem } = {};
-  public state: State = {};
+  state: State = {};
 
   get isOpen() {
     return !!this.props.isOpen;
@@ -88,15 +88,15 @@ export class Menu extends React.Component<MenuProps, State> {
       htmlFor,
       toggleEvent,
     } = this.props;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const elem = this.elem!;
 
     if (!usePortal) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const parent = elem.parentElement!;
-      const position = window.getComputedStyle(parent).position;
+      if (this.elem?.parentElement) {
+        const { position } = window.getComputedStyle(this.elem.parentElement);
 
-      if (position === "static") parent.style.position = "relative";
+        if (position === "static") {
+          this.elem.parentElement.style.position = "relative";
+        }
+      }
     } else if (this.isOpen) {
       this.refreshPosition();
     }
