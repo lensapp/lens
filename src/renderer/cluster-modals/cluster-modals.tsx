@@ -1,3 +1,5 @@
+import styles from "./cluster-modals.module.css";
+
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import type { ClusterModalRegistration } from "../../extensions/registries";
@@ -9,7 +11,7 @@ interface Dependencies {
 
 export const NonInjectedClusterModals = ({ clusterModals }: Dependencies) => {
   return (
-    <div className="clusterFrameModals" style={{ height: 0 }}>
+    <div className={styles.clusterModals}>
       {clusterModals.map((modal) => {
         return modal.visible ? <modal.Component key={modal.id} /> : null;
       })}

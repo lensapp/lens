@@ -3,8 +3,7 @@
 exports[`cluster modal elements given custom cluster modal available renders 1`] = `
 <div>
   <div
-    class="clusterFrameModals"
-    style="height: 0px;"
+    class="clusterModals"
   >
     <div
       data-testid="test-modal"
@@ -521,8 +520,7 @@ exports[`cluster modal elements given custom cluster modal available renders 1`]
 exports[`cluster modal elements given custom cluster modal not available renders 1`] = `
 <div>
   <div
-    class="clusterFrameModals"
-    style="height: 0px;"
+    class="clusterModals"
   />
   <div
     class="Notifications flex column align-flex-end"
