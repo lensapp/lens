@@ -10,6 +10,7 @@ export const ResourceNames: Record<KubeResource, string> = {
   "namespaces": "Namespaces",
   "nodes": "Nodes",
   "events": "Events",
+  "leases": "Leases",
   "resourcequotas": "Resource Quotas",
   "services": "Services",
   "secrets": "Secrets",
