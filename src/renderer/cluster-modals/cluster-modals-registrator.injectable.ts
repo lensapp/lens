@@ -1,5 +1,5 @@
 import { getInjectable } from "@ogre-tools/injectable";
-import { extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
+import { ExtensionRegistrator, extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 
 const clusterModalsRegistratorInjectable = getInjectable({
@@ -9,16 +9,18 @@ const clusterModalsRegistratorInjectable = getInjectable({
     return (ext) => {
       const extension = ext as LensRendererExtension;
 
-      return extension.clusterModals.map((registration) => {
-        return {
+      return extension.clusterModals.map(registration => {
+        return getInjectable({
           id: registration.id,
-          Component: registration.component,
-          visible: registration.visible,
-        }
-      })
+
+          instantiate: () => ({
+            Component: registration.Component,
+            visible: registration.visible,
+          }),
+        });
+      });
     };
   },
-
   injectionToken: extensionRegistratorInjectionToken,
 });
 
