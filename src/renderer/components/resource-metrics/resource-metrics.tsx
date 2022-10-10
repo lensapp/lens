@@ -16,13 +16,14 @@ import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";
 
 export type AtLeastOneMetricTab = [MetricsTab, ...MetricsTab[]];
 
-export interface ResourceMetricsProps extends React.HTMLProps<any> {
+export interface ResourceMetricsProps<Keys extends string> {
   tabs: AtLeastOneMetricTab;
   object: KubeObject;
   loader?: () => void;
   interval?: number;
   className?: string;
-  metrics: Partial<Record<string, MetricData>> | null | undefined;
+  metrics: Partial<Record<Keys, MetricData>> | null | undefined;
+  children: React.ReactChild | React.ReactChild[];
 }
 
 export interface ResourceMetricsValue {
@@ -33,7 +34,7 @@ export interface ResourceMetricsValue {
 
 export const ResourceMetricsContext = createContext<ResourceMetricsValue | null>(null);
 
-export function ResourceMetrics({ object, loader = noop, interval = 60, tabs, children, className, metrics }: ResourceMetricsProps) {
+export function ResourceMetrics<Keys extends string>({ object, loader = noop, interval = 60, tabs, children, className, metrics }: ResourceMetricsProps<Keys>) {
   const [tab, setTab] = useState<MetricsTab>(tabs[0]);
 
   // This is done just incase `loader` is actually something like `() => Promise<void>`

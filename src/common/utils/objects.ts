@@ -17,6 +17,7 @@ export function keys<K extends keyof any>(obj: Record<K, any>): K[] {
   return Object.keys(obj) as K[];
 }
 
+export function entries<K extends string, V>(obj: Partial<Record<K, V>> | null | undefined): [K, V][];
 export function entries<K extends string | number | symbol, V>(obj: Partial<Record<K, V>> | null | undefined): [K, V][];
 export function entries<K extends string | number | symbol, V>(obj: Record<K, V> | null | undefined): [K, V][];
 

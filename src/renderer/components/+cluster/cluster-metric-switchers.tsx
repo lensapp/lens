@@ -24,7 +24,7 @@ const NonInjectedClusterMetricSwitchers = observer(({
   nodeStore,
 }: Dependencies) => {
   const { masterNodes, workerNodes } = nodeStore;
-  const { cpuUsage, memoryUsage } = clusterOverviewStore.metrics;
+  const { cpuUsage, memoryUsage } = clusterOverviewStore.metrics ?? {};
   const hasMasterNodes = masterNodes.length > 0;
   const hasWorkerNodes = workerNodes.length > 0;
   const hasCpuMetrics = normalizeMetrics(cpuUsage).data.result[0].values.length > 0;

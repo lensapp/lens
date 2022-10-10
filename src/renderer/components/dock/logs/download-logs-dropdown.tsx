@@ -13,9 +13,10 @@ import { Dropdown } from "../../dropdown/dropdown";
 interface DownloadLogsDropdownProps {
   downloadVisibleLogs: () => void;
   downloadAllLogs: () => Promise<void> | undefined;
+  disabled?: boolean;
 }
 
-export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: DownloadLogsDropdownProps) {
+export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs, disabled }: DownloadLogsDropdownProps) {
   const [waiting, setWaiting] = useState(false);
 
   const downloadAll = async () => {
@@ -35,7 +36,7 @@ export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs }: D
         <button
           data-testid="download-logs-dropdown"
           className={styles.dropdown}
-          disabled={waiting}
+          disabled={waiting || disabled}
         >
           Download
           <Icon material="arrow_drop_down" smallest/>

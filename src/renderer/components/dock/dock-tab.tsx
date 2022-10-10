@@ -103,6 +103,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
                     material="close"
                     tooltip={`Close ${this.props.isMac ? "⌘+W" : "Ctrl+W"}`}
                     onClick={close}
+                    data-testid={`dock-tab-close-for-${id}`}
                   />
                 </div>
               )}

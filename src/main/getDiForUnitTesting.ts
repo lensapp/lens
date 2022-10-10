@@ -18,10 +18,6 @@ import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader
 import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
-import getAbsolutePathInjectable from "../common/path/get-absolute-path.injectable";
-import { getAbsolutePathFake } from "../common/test-utils/get-absolute-path-fake";
-import joinPathsInjectable from "../common/path/join-paths.injectable";
-import { joinPathsFake } from "../common/test-utils/join-paths-fake";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import { EventEmitter } from "../common/event-emitter";
@@ -74,7 +70,7 @@ import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import execFileInjectable from "../common/fs/exec-file.injectable";
 import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-platform-architecture.injectable";
-import getHelmChartInjectable from "./helm/helm-service/get-helm-chart.injectable";
+import getHelmChartVersionsInjectable from "./helm/helm-service/get-helm-chart-versions.injectable";
 import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-values.injectable";
 import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
 import deleteHelmReleaseInjectable from "./helm/helm-service/delete-helm-release.injectable";
@@ -161,7 +157,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(periodicalCheckForUpdatesInjectable, () => ({ start: () => {}, stop: () => {}, started: false }));
 
     overrideFunctionalInjectables(di, [
-      getHelmChartInjectable,
+      getHelmChartVersionsInjectable,
       getHelmChartValuesInjectable,
       listHelmChartsInjectable,
       deleteHelmReleaseInjectable,
@@ -228,8 +224,6 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
 
 const overrideOperatingSystem = (di: DiContainer) => {
   di.override(platformInjectable, () => "darwin");
-  di.override(getAbsolutePathInjectable, () => getAbsolutePathFake);
-  di.override(joinPathsInjectable, () => joinPathsFake);
   di.override(normalizedPlatformArchitectureInjectable, () => "arm64");
 };
 
@@ -267,7 +261,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
 
   di.override(
     getElectronAppPathInjectable,
-    () => (name: string) => `some-electron-app-path-for-${kebabCase(name)}`,
+    () => (name: string) => `/some-electron-app-path-for-${kebabCase(name)}`,
   );
 
   di.override(setElectronAppPathInjectable, () => () => {});

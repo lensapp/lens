@@ -26,8 +26,8 @@ interface Dependencies {
 
 const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics }}: Dependencies) => {
   const [plugins] = useState([new ZebraStripesPlugin()]);
-  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(metrics);
-  const metricValues = getMetricsValues(metrics);
+  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(metrics ?? {});
+  const metricValues = getMetricsValues(metrics ?? {});
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
   const data = metricValues.map(value => ({
     x: value[0],

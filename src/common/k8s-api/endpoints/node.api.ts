@@ -6,8 +6,6 @@
 import type { BaseKubeObjectCondition, ClusterScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { cpuUnitsToNumber, unitsToBytes, isObject } from "../../../renderer/utils";
-import type { MetricData } from "./metrics.api";
-import { metricsApi } from "./metrics.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { TypedRegEx } from "typed-regex";
@@ -19,32 +17,6 @@ export class NodeApi extends KubeApi<Node> {
       objectConstructor: Node,
     });
   }
-}
-
-export function getMetricsForAllNodes(): Promise<NodeMetricData> {
-  const opts = { category: "nodes" };
-
-  return metricsApi.getMetrics({
-    memoryUsage: opts,
-    workloadMemoryUsage: opts,
-    memoryCapacity: opts,
-    memoryAllocatableCapacity: opts,
-    cpuUsage: opts,
-    cpuCapacity: opts,
-    fsSize: opts,
-    fsUsage: opts,
-  });
-}
-
-export interface NodeMetricData extends Partial<Record<string, MetricData>> {
-  memoryUsage: MetricData;
-  workloadMemoryUsage: MetricData;
-  memoryCapacity: MetricData;
-  memoryAllocatableCapacity: MetricData;
-  cpuUsage: MetricData;
-  cpuCapacity: MetricData;
-  fsUsage: MetricData;
-  fsSize: MetricData;
 }
 
 export interface NodeTaint {

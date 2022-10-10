@@ -10,8 +10,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import type { PodMetricData } from "../../../common/k8s-api/endpoints";
-import { Deployment, getMetricsForDeployments } from "../../../common/k8s-api/endpoints";
+import { Deployment } from "../../../common/k8s-api/endpoints";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
@@ -34,6 +33,8 @@ import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectabl
 import deploymentStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { DeploymentPodMetricData, RequestPodMetricsForDeployments } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-deployments.injectable";
+import requestPodMetricsForDeploymentsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-deployments.injectable";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
@@ -44,11 +45,12 @@ interface Dependencies {
   replicaSetStore: ReplicaSetStore;
   deploymentStore: DeploymentStore;
   getActiveClusterEntity: GetActiveClusterEntity;
+  requestPodMetricsForDeployments: RequestPodMetricsForDeployments;
 }
 
 @observer
 class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProps & Dependencies> {
-  @observable metrics: PodMetricData | null = null;
+  @observable metrics: DeploymentPodMetricData | null = null;
 
   constructor(props: DeploymentDetailsProps & Dependencies) {
     super(props);
@@ -69,9 +71,9 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
   }
 
   loadMetrics = async () => {
-    const { object: deployment } = this.props;
+    const { object: deployment, requestPodMetricsForDeployments } = this.props;
 
-    this.metrics = await getMetricsForDeployments([deployment], deployment.getNs(), "");
+    this.metrics = await requestPodMetricsForDeployments([deployment], deployment.getNs());
   };
 
   render() {
@@ -173,6 +175,7 @@ export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetails
     replicaSetStore: di.inject(replicaSetStoreInjectable),
     deploymentStore: di.inject(deploymentStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    requestPodMetricsForDeployments: di.inject(requestPodMetricsForDeploymentsInjectable),
   }),
 });
 

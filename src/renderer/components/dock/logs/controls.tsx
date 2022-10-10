@@ -63,6 +63,7 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
         />
 
         <DownloadLogsDropdown
+          disabled={logs.length === 0}
           downloadVisibleLogs={model.downloadLogs}
           downloadAllLogs={model.downloadAllLogs}
         />

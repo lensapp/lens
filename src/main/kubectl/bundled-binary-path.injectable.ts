@@ -3,16 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import path from "path";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import baseBundledBinariesDirectoryInjectable from "../../common/vars/base-bundled-binaries-dir.injectable";
 import kubectlBinaryNameInjectable from "./binary-name.injectable";
 
 const bundledKubectlBinaryPathInjectable = getInjectable({
   id: "bundled-kubectl-binary-path",
-  instantiate: (di) => path.join(
-    di.inject(baseBundledBinariesDirectoryInjectable),
-    di.inject(kubectlBinaryNameInjectable),
-  ),
+  instantiate: (di) => {
+    const joinPaths = di.inject(joinPathsInjectable);
+
+    return joinPaths(
+      di.inject(baseBundledBinariesDirectoryInjectable),
+      di.inject(kubectlBinaryNameInjectable),
+    );
+  },
 });
 
 export default bundledKubectlBinaryPathInjectable;

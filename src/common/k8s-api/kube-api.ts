@@ -5,28 +5,25 @@
 
 // Base class for building all kubernetes apis
 
-import { isFunction, merge } from "lodash";
+import { merge } from "lodash";
 import { stringify } from "querystring";
-import { apiKubePrefix, isDevelopment } from "../../common/vars";
-import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata } from "./kube-object";
 import { KubeObject, KubeStatus, isKubeStatusData } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
-import type { KubeJsonApiData } from "./kube-json-api";
-import { KubeJsonApi } from "./kube-json-api";
+import type { KubeJsonApiData, KubeJsonApi } from "./kube-json-api";
 import type { Disposer } from "../utils";
 import { isDefined, noop, WrappedAbortController } from "../utils";
-import type { RequestInit } from "node-fetch";
-import type { AgentOptions } from "https";
-import { Agent } from "https";
+import type { RequestInit, Response } from "node-fetch";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import logger from "../logger";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
+import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { apiKubeInjectionToken } from "./api-kube";
 import type AbortController from "abort-controller";
 
 /**
@@ -145,146 +142,39 @@ export interface KubeApiResourceList {
   resources: KubeApiResource[];
 }
 
-export interface ILocalKubeApiConfig {
-  metadata: {
-    uid: string;
-  };
-}
-
 export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
 
-/**
- * @deprecated
- */
-export interface IKubeApiCluster extends ILocalKubeApiConfig { }
-
-export interface IRemoteKubeApiConfig {
-  cluster: {
-    server: string;
-    caData?: string;
-    skipTLSVerify?: boolean;
-  };
-  user: {
-    token?: string | (() => Promise<string>);
-    clientCertificateData?: string;
-    clientKeyData?: string;
-  };
-  /**
-   * Custom instance of https.agent to use for the requests
-   *
-   * @remarks the custom agent replaced default agent, options skipTLSVerify,
-   * clientCertificateData, clientKeyData and caData are ignored.
-   */
-   agent?: Agent;
-}
-
-export function forCluster<
-  Object extends KubeObject,
-  Api extends KubeApi<Object>,
-  Data extends KubeJsonApiDataFor<Object>,
->(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => Api): Api;
-export function forCluster<
-  Object extends KubeObject,
-  Data extends KubeJsonApiDataFor<Object>,
->(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>): KubeApi<Object>;
-
-export function forCluster<
-  Object extends KubeObject,
-  Data extends KubeJsonApiDataFor<Object>,
->(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: (new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>) = KubeApi): KubeApi<Object> {
-  const url = new URL(apiBase.config.serverAddress);
-  const request = new KubeJsonApi({
-    serverAddress: apiBase.config.serverAddress,
-    apiBase: apiKubePrefix,
-    debug: isDevelopment,
-  }, {
-    headers: {
-      "Host": `${cluster.metadata.uid}.localhost:${url.port}`,
-    },
-  });
-
-  return new apiClass({
-    objectConstructor: kubeClass as KubeObjectConstructor<Object, KubeJsonApiDataFor<Object>>,
-    request,
-  });
-}
-
-export function forRemoteCluster<
-  Object extends KubeObject,
-  Api extends KubeApi<Object>,
-  Data extends KubeJsonApiDataFor<Object>,
->(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => Api): Api;
-export function forRemoteCluster<
-  Object extends KubeObject,
-  Data extends KubeJsonApiDataFor<Object>,
->(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>): KubeApi<Object>;
-
-export function forRemoteCluster<
-  Object extends KubeObject,
-  Api extends KubeApi<Object>,
-  Data extends KubeJsonApiDataFor<Object>,
->(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<Object, Data>, apiClass: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object> = KubeApi): KubeApi<Object> {
-  const reqInit: RequestInit = {};
-  const agentOptions: AgentOptions = {};
-
-  if (config.cluster.skipTLSVerify === true) {
-    agentOptions.rejectUnauthorized = false;
-  }
-
-  if (config.user.clientCertificateData) {
-    agentOptions.cert = config.user.clientCertificateData;
-  }
-
-  if (config.user.clientKeyData) {
-    agentOptions.key = config.user.clientKeyData;
-  }
-
-  if (config.cluster.caData) {
-    agentOptions.ca = config.cluster.caData;
-  }
-
-  if (Object.keys(agentOptions).length > 0) {
-    reqInit.agent = new Agent(agentOptions);
-  }
-
-  if (config.agent) {
-    reqInit.agent = config.agent;
-  }
-
-  const token = config.user.token;
-  const request = new KubeJsonApi({
-    serverAddress: config.cluster.server,
-    apiBase: "",
-    debug: isDevelopment,
-    ...(token ? {
-      getRequestOptions: async () => ({
-        headers: {
-          "Authorization": `Bearer ${isFunction(token) ? await token() : token}`,
-        },
-      }),
-    } : {}),
-  }, reqInit);
-
-  if (!apiClass) {
-    apiClass = KubeApi as new (apiOpts: KubeApiOptions<Object>) => Api;
-  }
-
-  return new apiClass({
-    objectConstructor: kubeClass as KubeObjectConstructor<Object, KubeJsonApiDataFor<Object>>,
-    request,
-  });
-}
-
-export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = (data: IKubeWatchEvent<T>, error: any) => void;
+export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = (data: IKubeWatchEvent<T> | null, error: KubeStatus | Response | null | any) => void;
 
 export interface KubeApiWatchOptions<Object extends KubeObject, Data extends KubeJsonApiDataFor<Object>> {
-  namespace: string;
+  /**
+   * If the resource is namespaced then the default is `"default"`
+   */
+  namespace?: string;
+
+  /**
+   * This will be called when either an error occurs or some data is received
+   */
   callback?: KubeApiWatchCallback<Data>;
+
+  /**
+   * This is a way of aborting the request
+   */
   abortController?: AbortController;
+
+  /**
+   * The ID used for tracking within logs
+   */
   watchId?: string;
+
+  /**
+   * @default false
+   */
   retry?: boolean;
 
-  // timeout in seconds
+  /**
+   * timeout in seconds
+   */
   timeout?: number;
 }
 
@@ -368,7 +258,7 @@ export class KubeApi<
   constructor(opts: KubeApiOptions<Object, Data>) {
     const {
       objectConstructor,
-      request = apiKube,
+      request = asLegacyGlobalForExtensionApi(apiKubeInjectionToken),
       kind = objectConstructor.kind,
       isNamespaced,
       apiBase: fullApiPathname = objectConstructor.apiBase,
@@ -411,13 +301,14 @@ export class KubeApi<
    */
   private async getLatestApiPrefixGroup() {
     // Note that this.fullApiPathname is the "full" url, whereas this.apiBase is parsed
-    const apiBases = [this.fullApiPathname, this.objectConstructor.apiBase, ...this.fallbackApiBases ?? []];
+    const rawApiBases = [
+      this.fullApiPathname,
+      this.objectConstructor.apiBase,
+      ...this.fallbackApiBases ?? [],
+    ].filter(isDefined);
+    const apiBases = new Set(rawApiBases);
 
     for (const apiUrl of apiBases) {
-      if (!apiUrl) {
-        continue;
-      }
-
       try {
         // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
         const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
@@ -502,16 +393,45 @@ export class KubeApi<
     });
   }
 
-  getUrl({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<KubeApiQueryParams>) {
+  /**
+   * This method differs from {@link formatUrlForNotListing} because this treats `""` as "all namespaces"
+   * @param namespace The namespace to list in or `""` for all namespaces
+   */
+  formatUrlForListing(namespace: string) {
+    return createKubeApiURL({
+      apiPrefix: this.apiPrefix,
+      apiVersion: this.apiVersionWithGroup,
+      resource: this.apiResource,
+      namespace: this.isNamespaced
+        ? namespace ?? "default"
+        : undefined,
+    });
+  }
+
+  /**
+   * Format a URL pathname and query for acting upon a specific resource.
+   */
+  formatUrlForNotListing(resource?: Partial<ResourceDescriptor>, query?: Partial<KubeApiQueryParams>): string;
+
+  formatUrlForNotListing({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<KubeApiQueryParams>) {
     const resourcePath = createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
       resource: this.apiResource,
-      namespace: this.isNamespaced ? namespace ?? "default" : undefined,
+      namespace: this.isNamespaced
+        ? namespace || "default"
+        : undefined,
       name,
     });
 
     return resourcePath + (query ? `?${stringify(this.normalizeQuery(query))}` : "");
+  }
+
+  /**
+   * @deprecated use {@link formatUrlForNotListing} instead
+   */
+  getUrl(resource?: Partial<ResourceDescriptor>, query?: Partial<KubeApiQueryParams>) {
+    return this.formatUrlForNotListing(resource, query);
   }
 
   protected normalizeQuery(query: Partial<KubeApiQueryParams> = {}) {
@@ -591,7 +511,7 @@ export class KubeApi<
   async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: KubeApiQueryParams): Promise<Object[] | null> {
     await this.checkPreferredVersion();
 
-    const url = this.getUrl({ namespace });
+    const url = this.formatUrlForListing(namespace);
     const res = await this.request.get(url, { query }, reqInit);
     const parsed = this.parseResponse(res, namespace);
 
@@ -609,7 +529,7 @@ export class KubeApi<
   async get(desc: ResourceDescriptor, query?: KubeApiQueryParams): Promise<Object | null> {
     await this.checkPreferredVersion();
 
-    const url = this.getUrl(desc);
+    const url = this.formatUrlForNotListing(desc);
     const res = await this.request.get(url, { query });
     const parsed = this.parseResponse(res);
 
@@ -623,7 +543,7 @@ export class KubeApi<
   async create({ name, namespace }: Partial<ResourceDescriptor>, partialData?: PartialDeep<Object>): Promise<Object | null> {
     await this.checkPreferredVersion();
 
-    const apiUrl = this.getUrl({ namespace });
+    const apiUrl = this.formatUrlForNotListing({ namespace });
     const data = merge(partialData, {
       kind: this.kind,
       apiVersion: this.apiVersionWithGroup,
@@ -644,7 +564,7 @@ export class KubeApi<
 
   async update({ name, namespace }: ResourceDescriptor, data: PartialDeep<Object>): Promise<Object | null> {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl({ namespace, name });
+    const apiUrl = this.formatUrlForNotListing({ namespace, name });
 
     const res = await this.request.put(apiUrl, {
       data: merge(data, {
@@ -663,9 +583,13 @@ export class KubeApi<
     return parsed;
   }
 
+  async patch(desc: ResourceDescriptor, data: PartialDeep<Object>): Promise<Object | null>;
+  async patch(desc: ResourceDescriptor, data: PartialDeep<Object>, strategy: "strategic" | "merge"): Promise<Object | null>;
+  async patch(desc: ResourceDescriptor, data: Patch, strategy: "json"): Promise<Object | null>;
+  async patch(desc: ResourceDescriptor, data: PartialDeep<Object> | Patch, strategy: KubeApiPatchType): Promise<Object | null>;
   async patch(desc: ResourceDescriptor, data: PartialDeep<Object> | Patch, strategy: KubeApiPatchType = "strategic"): Promise<Object | null> {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl(desc);
+    const apiUrl = this.formatUrlForNotListing(desc);
 
     const res = await this.request.patch(apiUrl, { data }, {
       headers: {
@@ -683,7 +607,7 @@ export class KubeApi<
 
   async delete({ propagationPolicy = "Background", ...desc }: DeleteResourceDescriptor) {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl(desc);
+    const apiUrl = this.formatUrlForNotListing(desc);
 
     return this.request.del(apiUrl, {
       query: {
@@ -692,22 +616,27 @@ export class KubeApi<
     });
   }
 
-  getWatchUrl(namespace = "", query: KubeApiQueryParams = {}) {
-    return this.getUrl({ namespace }, {
+  getWatchUrl(namespace?: string, query: KubeApiQueryParams = {}) {
+    return this.formatUrlForNotListing({ namespace }, {
       watch: 1,
       resourceVersion: this.getResourceVersion(namespace),
       ...query,
     });
   }
 
-  watch(opts: KubeApiWatchOptions<Object, Data> = { namespace: "", retry: false }): () => void {
+  watch(opts?: KubeApiWatchOptions<Object, Data>): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
-    const { namespace, callback = noop, retry, timeout } = opts;
-    const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
+    const {
+      namespace,
+      callback = noop as KubeApiWatchCallback<Data>,
+      retry = false,
+      timeout,
+      watchId = `${this.kind.toLowerCase()}-${this.watchId++}`,
+    } = opts ?? {};
 
     // Create AbortController for this request
-    const abortController = new WrappedAbortController(opts.abortController);
+    const abortController = new WrappedAbortController(opts?.abortController);
 
     abortController.signal.addEventListener("abort", () => {
       logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
@@ -778,7 +707,7 @@ export class KubeApi<
 
         byline(response.body).on("data", (line) => {
           try {
-            const event = JSON.parse(line) as IKubeWatchEvent<KubeJsonApiData<KubeObjectMetadata>>;
+            const event = JSON.parse(line) as IKubeWatchEvent<Data>;
 
             if (event.type === "ERROR" && isKubeStatusData(event.object)) {
               errorReceived = true;

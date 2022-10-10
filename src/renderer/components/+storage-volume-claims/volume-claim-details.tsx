@@ -10,26 +10,39 @@ import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { podStore } from "../+workloads-pods/legacy-store";
 import { Link } from "react-router-dom";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForPvc, type PersistentVolumeClaimMetricData, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
-import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
+import { PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
+import type { PersistentVolumeClaimMetricData, RequestPersistentVolumeClaimMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-persistent-volume-claim-metrics.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import requestPersistentVolumeClaimMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-persistent-volume-claim-metrics.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import type { PodStore } from "../+workloads-pods/store";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
 
+interface Dependencies {
+  requestPersistentVolumeClaimMetrics: RequestPersistentVolumeClaimMetrics;
+  getActiveClusterEntity: GetActiveClusterEntity;
+  getDetailsUrl: GetDetailsUrl;
+  podStore: PodStore;
+}
+
 @observer
-export class PersistentVolumeClaimDetails extends React.Component<PersistentVolumeClaimDetailsProps> {
+class NonInjectedPersistentVolumeClaimDetails extends React.Component<PersistentVolumeClaimDetailsProps & Dependencies> {
   @observable metrics: PersistentVolumeClaimMetricData | null = null;
 
-  constructor(props: PersistentVolumeClaimDetailsProps) {
+  constructor(props: PersistentVolumeClaimDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -43,13 +56,13 @@ export class PersistentVolumeClaimDetails extends React.Component<PersistentVolu
   }
 
   loadMetrics = async () => {
-    const { object: volumeClaim } = this.props;
+    const { object: volumeClaim, requestPersistentVolumeClaimMetrics } = this.props;
 
-    this.metrics = await getMetricsForPvc(volumeClaim);
+    this.metrics = await requestPersistentVolumeClaimMetrics(volumeClaim);
   };
 
   render() {
-    const { object: volumeClaim } = this.props;
+    const { object: volumeClaim, getActiveClusterEntity, podStore, getDetailsUrl } = this.props;
 
     if (!volumeClaim) {
       return null;
@@ -119,3 +132,13 @@ export class PersistentVolumeClaimDetails extends React.Component<PersistentVolu
     );
   }
 }
+
+export const PersistentVolumeClaimDetails = withInjectables<Dependencies, PersistentVolumeClaimDetailsProps>(NonInjectedPersistentVolumeClaimDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    requestPersistentVolumeClaimMetrics: di.inject(requestPersistentVolumeClaimMetricsInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});

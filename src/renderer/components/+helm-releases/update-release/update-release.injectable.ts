@@ -4,15 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import releasesInjectable from "../releases.injectable";
-import type { CallForHelmReleaseUpdate } from "./call-for-helm-release-update/call-for-helm-release-update.injectable";
-import callForHelmReleaseUpdateInjectable from "./call-for-helm-release-update/call-for-helm-release-update.injectable";
+import type { RequestHelmReleaseUpdate } from "../../../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
+import requestHelmReleaseUpdateInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
 
 const updateReleaseInjectable = getInjectable({
   id: "update-release",
 
-  instantiate: (di): CallForHelmReleaseUpdate => {
+  instantiate: (di): RequestHelmReleaseUpdate => {
     const releases = di.inject(releasesInjectable);
-    const callForHelmReleaseUpdate = di.inject(callForHelmReleaseUpdateInjectable);
+    const callForHelmReleaseUpdate = di.inject(requestHelmReleaseUpdateInjectable);
 
     return async (
       name,

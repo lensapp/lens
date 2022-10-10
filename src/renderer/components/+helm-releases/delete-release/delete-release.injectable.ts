@@ -3,11 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type {
-  HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import {
-  deleteRelease,
-} from "../../../../common/k8s-api/endpoints/helm-releases.api";
+import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
+import requestDeleteHelmReleaseInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-delete.injectable";
 import releasesInjectable from "../releases.injectable";
 
 const deleteReleaseInjectable = getInjectable({
@@ -15,9 +12,10 @@ const deleteReleaseInjectable = getInjectable({
 
   instantiate: (di) => {
     const releases = di.inject(releasesInjectable);
+    const requestDeleteHelmRelease = di.inject(requestDeleteHelmReleaseInjectable);
 
     return async (release: HelmRelease) => {
-      await deleteRelease(release.getName(), release.getNs());
+      await requestDeleteHelmRelease(release.getName(), release.getNs());
 
       releases.invalidate();
     };

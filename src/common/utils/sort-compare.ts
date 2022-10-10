@@ -3,11 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { SemVer } from "semver";
 import semver, { coerce } from "semver";
-import * as iter from "./iter";
-import type { RawHelmChart } from "../k8s-api/endpoints/helm-charts.api";
-import logger from "../logger";
 
 export enum Ordering {
   LESS = -1,
@@ -49,52 +45,31 @@ export function sortCompare<T>(left: T, right: T): Ordering {
   return Ordering.GREATER;
 }
 
-interface ChartVersion {
-  version: string;
-  __version?: SemVer | null;
-}
+/**
+ * This function sorts of list of items that have what should be a semver version formated string
+ * as the field `version` but if it is not loosely coercable to semver falls back to sorting them
+ * alphanumerically
+ */
+export function sortBySemverVersion<T extends { version: string }>(versioneds: T[]): T[] {
+  return versioneds
+    .map(versioned => ({
+      __version: coerce(versioned.version, { loose: true }),
+      raw: versioned,
+    }))
+    .sort((left, right) => {
+      if (left.__version && right.__version) {
+        return semver.compare(right.__version, left.__version);
+      }
 
-export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion): Ordering {
-  if (left.__version && right.__version) {
-    return semver.compare(right.__version, left.__version);
-  }
+      if (!left.__version && right.__version) {
+        return Ordering.GREATER;
+      }
 
-  if (!left.__version && right.__version) {
-    return Ordering.GREATER;
-  }
+      if (left.__version && !right.__version) {
+        return Ordering.LESS;
+      }
 
-  if (left.__version && !right.__version) {
-    return Ordering.LESS;
-  }
-
-  return sortCompare(left.version, right.version);
-}
-
-
-
-export function sortCharts(charts: RawHelmChart[]) {
-  interface ExtendedHelmChart extends RawHelmChart {
-    __version?: SemVer | null;
-  }
-
-  const chartsWithVersion = Array.from(
-    iter.map(
-      charts,
-      chart => {
-        const __version = coerce(chart.version, { loose: true });
-
-        if (!__version) {
-          logger.warn(`[HELM-SERVICE]: Version from helm chart is not loosely coercable to semver.`, { name: chart.name, version: chart.version, repo: chart.repo });
-        }
-
-        (chart as ExtendedHelmChart).__version = __version;
-
-        return chart as ExtendedHelmChart;
-      },
-    ),
-  );
-
-  return chartsWithVersion
-    .sort(sortCompareChartVersions)
-    .map(chart => (delete chart.__version, chart as RawHelmChart));
+      return sortCompare(left.raw.version, right.raw.version);
+    })
+    .map(({ raw }) => raw);
 }

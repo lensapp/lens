@@ -15,7 +15,7 @@ import { PodDetailsTolerations } from "../+workloads-pods/pod-details-toleration
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import type { JobStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForJobs, type PodMetricData, Job } from "../../../common/k8s-api/endpoints";
+import { Job } from "../../../common/k8s-api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable, reaction } from "mobx";
@@ -31,6 +31,8 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import jobStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { JobPodMetricData, RequestPodMetricsForJobs } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-jobs.injectable";
+import requestPodMetricsForJobsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-jobs.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
@@ -40,11 +42,12 @@ interface Dependencies {
   podStore: PodStore;
   jobStore: JobStore;
   getActiveClusterEntity: GetActiveClusterEntity;
+  requestPodMetricsForJobs: RequestPodMetricsForJobs;
 }
 
 @observer
 class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependencies> {
-  @observable metrics: PodMetricData | null = null;
+  @observable metrics: JobPodMetricData | null = null;
 
   constructor(props: JobDetailsProps & Dependencies) {
     super(props);
@@ -63,9 +66,9 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   }
 
   loadMetrics = async () => {
-    const { object: job } = this.props;
+    const { object: job, requestPodMetricsForJobs } = this.props;
 
-    this.metrics = await getMetricsForJobs([job], job.getNs(), "");
+    this.metrics = await requestPodMetricsForJobs([job], job.getNs(), "");
   };
 
   render() {
@@ -159,6 +162,7 @@ export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInje
     podStore: di.inject(podStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    requestPodMetricsForJobs: di.inject(requestPodMetricsForJobsInjectable),
   }),
 });
 

@@ -5,25 +5,30 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import type WebSocket from "ws";
-import localShellSessionInjectable from "./local-shell-session/local-shell-session.injectable";
-import nodeShellSessionInjectable from "./node-shell-session/node-shell-session.injectable";
+import openLocalShellSessionInjectable from "./local-shell-session/open.injectable";
+import openNodeShellSessionInjectable from "./node-shell-session/open.injectable";
 
-interface Args {
-  webSocket: WebSocket;
+export interface OpenShellSessionArgs {
+  websocket: WebSocket;
   cluster: Cluster;
   tabId: string;
   nodeName?: string;
 }
 
-const createShellSessionInjectable = getInjectable({
-  id: "create-shell-session",
+export type OpenShellSession = (args: OpenShellSessionArgs) => Promise<void>;
 
-  instantiate:
-    (di) =>
-      ({ nodeName, ...rest }: Args) =>
-        !nodeName
-          ? di.inject(localShellSessionInjectable, rest)
-          : di.inject(nodeShellSessionInjectable, { nodeName, ...rest }),
+const openShellSessionInjectable = getInjectable({
+  id: "open-shell-session",
+
+  instantiate: (di): OpenShellSession => {
+    const openLocalShellSession = di.inject(openLocalShellSessionInjectable);
+
+    return ({ nodeName, ...args }) => (
+      nodeName
+        ? di.inject(openNodeShellSessionInjectable, { nodeName, ...args })
+        : openLocalShellSession(args)
+    );
+  },
 });
 
-export default createShellSessionInjectable;
+export default openShellSessionInjectable;

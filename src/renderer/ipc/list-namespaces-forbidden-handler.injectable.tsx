@@ -11,6 +11,7 @@ import { Button } from "../components/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
+import { getMillisecondsFromUnixEpoch } from "../../common/utils/date/get-current-date-time";
 
 const listNamespacesForbiddenHandlerInjectable = getInjectable({
   id: "list-namespaces-forbidden-handler",
@@ -18,7 +19,6 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
   instantiate: (di) => {
     const navigateToEntitySettings = di.inject(navigateToEntitySettingsInjectable);
     const notificationsStore = di.inject(notificationsStoreInjectable);
-
     const notificationLastDisplayedAt = new Map<string, number>();
     const intervalBetweenNotifications = 1000 * 60; // 60s
 
@@ -27,7 +27,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
       ...[clusterId]: ListNamespaceForbiddenArgs
     ): void => {
       const lastDisplayedAt = notificationLastDisplayedAt.get(clusterId);
-      const now = Date.now();
+      const now = getMillisecondsFromUnixEpoch();
 
       if (
         typeof lastDisplayedAt !== "number" ||
@@ -74,7 +74,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
        * Set the time when the notification is closed as well so that there is at
        * least a minute between closing the notification as seeing it again
        */
-          onClose: () => notificationLastDisplayedAt.set(clusterId, Date.now()),
+          onClose: () => notificationLastDisplayedAt.set(clusterId, getMillisecondsFromUnixEpoch()),
         },
       );
     };

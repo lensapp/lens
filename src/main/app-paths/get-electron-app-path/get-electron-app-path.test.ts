@@ -6,8 +6,6 @@ import electronAppInjectable from "../../electron-app/electron-app.injectable";
 import getElectronAppPathInjectable from "./get-electron-app-path.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { App } from "electron";
-import joinPathsInjectable from "../../../common/path/join-paths.injectable";
-import { joinPathsFake } from "../../../common/test-utils/join-paths-fake";
 
 describe("get-electron-app-path", () => {
   let getElectronAppPath: (name: string) => string;
@@ -31,7 +29,6 @@ describe("get-electron-app-path", () => {
     } as App;
 
     di.override(electronAppInjectable, () => appStub);
-    di.override(joinPathsInjectable, () => joinPathsFake);
 
     getElectronAppPath = di.inject(getElectronAppPathInjectable) as (name: string) => string;
   });

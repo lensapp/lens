@@ -1,0 +1,12 @@
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: spot
+handler: runc
+scheduling:
+  nodeSelector:
+    eks.amazonaws.com/capacityType: "SPOT"
+  tolerations:
+  - key: eks.amazonaws.com/capacityType
+    value: SPOT
+    effect: NoSchedule

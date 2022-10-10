@@ -3,23 +3,106 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
-import { render } from "@testing-library/react";
 import { RenderDelay } from "../render-delay";
-import { mockWindow } from "../../../../../__mocks__/windowMock";
-
-mockWindow();
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { advanceFakeTime, useFakeTime } from "../../../../common/test-utils/use-fake-time";
+import cancelIdleCallbackInjectable from "../cancel-idle-callback.injectable";
+import requestIdleCallbackInjectable from "../request-idle-callback.injectable";
+import type { RenderResult } from "@testing-library/react";
+import idleCallbackTimeoutInjectable from "../idle-callback-timeout.injectable";
 
 describe("<RenderDelay/>", () => {
-  it("renders w/o errors", () => {
-    const { container } = render(<RenderDelay><button>My button</button></RenderDelay>);
+  let render: DiRender;
 
-    expect(container).toBeInstanceOf(HTMLElement);
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+
+    useFakeTime("2020-01-17 12:18:19");
+
+    di.override(cancelIdleCallbackInjectable, () => clearTimeout);
+    di.override(requestIdleCallbackInjectable, () => (callback, opts) => setTimeout(callback, opts.timeout) as any);
+    di.override(idleCallbackTimeoutInjectable, () => 5);
   });
 
-  it("renders it's child", () => {
-    const { getByText } = render(<RenderDelay><button>My button</button></RenderDelay>);
+  describe("when rendered without placeholder", () => {
+    let result: RenderResult;
 
-    expect(getByText("My button")).toBeInTheDocument();
+    beforeEach(() => {
+      result = render((
+        <RenderDelay>
+          <div data-testid="child" />
+        </RenderDelay>
+      ));
+    });
+
+    it("renders", () => {
+      expect(result.baseElement).toMatchSnapshot();
+    });
+
+    it("does not show the children yet", () => {
+      expect(result.queryByTestId("child")).not.toBeInTheDocument();
+    });
+
+    describe("when the idle callback is called", () => {
+      beforeEach(() => {
+        advanceFakeTime(5);
+      });
+
+      it("renders", () => {
+        expect(result.baseElement).toMatchSnapshot();
+      });
+
+      it("shows the children", () => {
+        expect(result.queryByTestId("child")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("when rendered with placeholder", () => {
+    let result: RenderResult;
+
+    beforeEach(() => {
+      result = render((
+        <RenderDelay
+          placeholder={<div data-testid="placeholder"></div>}
+        >
+          <div data-testid="child" />
+        </RenderDelay>
+      ));
+    });
+
+    it("renders", () => {
+      expect(result.baseElement).toMatchSnapshot();
+    });
+
+    it("does not show the children yet", () => {
+      expect(result.queryByTestId("child")).not.toBeInTheDocument();
+    });
+
+    it("shows the placeholder", () => {
+      expect(result.queryByTestId("placeholder")).toBeInTheDocument();
+    });
+
+    describe("when the idle callback is called", () => {
+      beforeEach(() => {
+        advanceFakeTime(5);
+      });
+
+      it("renders", () => {
+        expect(result.baseElement).toMatchSnapshot();
+      });
+
+      it("shows the children", () => {
+        expect(result.queryByTestId("child")).toBeInTheDocument();
+      });
+
+      it("does not show the placeholder", () => {
+        expect(result.queryByTestId("placeholder")).not.toBeInTheDocument();
+      });
+    });
   });
 });

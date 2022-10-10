@@ -2,12 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type {
-  Disposer,
-  ExtendableDisposer } from "../../../../common/utils";
-import {
-  disposer,
-} from "../../../../common/utils";
+import type { ExtendableDisposer } from "../../../../common/utils";
+import { disposer } from "../../../../common/utils";
 import { Notifications } from "../../notifications";
 import { Button } from "../../button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
@@ -15,29 +11,19 @@ import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import React from "react";
 import { remove as removeDir } from "fs-extra";
 import { shell } from "electron";
-import type { InstallRequestValidated } from "./create-temp-files-and-validate/create-temp-files-and-validate";
 import type { InstallRequest } from "./install-request";
-import type {
-  ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import {
-  ExtensionInstallationState,
-} from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import { ExtensionInstallationState } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import type { UnpackExtension } from "./unpack-extension/unpack-extension.injectable";
+import type { CreateTempFilesAndValidate } from "./create-temp-files-and-validate/create-temp-files-and-validate.injectable";
+import type { GetExtensionDestFolder } from "./get-extension-dest-folder/get-extension-dest-folder.injectable";
 
 interface Dependencies {
   extensionLoader: ExtensionLoader;
   uninstallExtension: (id: LensExtensionId) => Promise<boolean>;
-
-  unpackExtension: (
-    request: InstallRequestValidated,
-    disposeDownloading: Disposer,
-  ) => Promise<void>;
-
-  createTempFilesAndValidate: (
-    installRequest: InstallRequest,
-  ) => Promise<InstallRequestValidated | null>;
-
-  getExtensionDestFolder: (name: string) => string;
-
+  unpackExtension: UnpackExtension;
+  createTempFilesAndValidate: CreateTempFilesAndValidate;
+  getExtensionDestFolder: GetExtensionDestFolder;
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
@@ -51,6 +37,8 @@ export const attemptInstall =
     extensionInstallationStateStore,
   }: Dependencies) =>
     async (request: InstallRequest, d?: ExtendableDisposer): Promise<void> => {
+      console.log("Attempting to install extension");
+
       const dispose = disposer(
         extensionInstallationStateStore.startPreInstall(),
         d,

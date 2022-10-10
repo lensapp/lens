@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<RenderDelay/> when rendered with placeholder renders 1`] = `
+<body>
+  <div>
+    <div
+      data-testid="placeholder"
+    />
+  </div>
+</body>
+`;
+
+exports[`<RenderDelay/> when rendered with placeholder when the idle callback is called renders 1`] = `
+<body>
+  <div>
+    <div
+      data-testid="child"
+    />
+  </div>
+</body>
+`;
+
+exports[`<RenderDelay/> when rendered without placeholder renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`<RenderDelay/> when rendered without placeholder when the idle callback is called renders 1`] = `
+<body>
+  <div>
+    <div
+      data-testid="child"
+    />
+  </div>
+</body>
+`;

@@ -7,20 +7,33 @@ import React from "react";
 import type { KubeObjectMenuProps } from "../../kube-object-menu";
 import type { ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { MenuItem } from "../../menu";
-import { openServiceAccountKubeConfig } from "../../kubeconfig-dialog";
 import { Icon } from "../../icon";
+import type { OpenServiceAccountKubeConfigDialog } from "../../kubeconfig-dialog/open-service-account-kube-config-dialog.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import openServiceAccountKubeConfigDialogInjectable from "../../kubeconfig-dialog/open-service-account-kube-config-dialog.injectable";
 
-export function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
-  const { object, toolbar } = props;
+interface Dependencies {
+  openServiceAccountKubeConfigDialog: OpenServiceAccountKubeConfigDialog;
+}
+
+function NonInjectedServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount> & Dependencies) {
+  const { object, toolbar, openServiceAccountKubeConfigDialog } = props;
 
   return (
-    <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
+    <MenuItem onClick={() => openServiceAccountKubeConfigDialog(object)}>
       <Icon
         material="insert_drive_file"
         tooltip="Kubeconfig File"
-        interactive={toolbar} 
+        interactive={toolbar}
       />
       <span className="title">Kubeconfig</span>
     </MenuItem>
   );
 }
+
+export const ServiceAccountMenu = withInjectables<Dependencies, KubeObjectMenuProps<ServiceAccount>>(NonInjectedServiceAccountMenu, {
+  getProps: (di, props) => ({
+    ...props,
+    openServiceAccountKubeConfigDialog: di.inject(openServiceAccountKubeConfigDialogInjectable),
+  }),
+});

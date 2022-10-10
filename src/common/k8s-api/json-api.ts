@@ -9,12 +9,12 @@ import { Agent as HttpAgent } from "http";
 import { Agent as HttpsAgent } from "https";
 import { merge } from "lodash";
 import type { Response, RequestInit } from "node-fetch";
-import fetch from "node-fetch";
 import { stringify } from "querystring";
 import type { Patch } from "rfc6902";
 import type { PartialDeep, ValueOf } from "type-fest";
 import { EventEmitter } from "../../common/event-emitter";
-import logger from "../../common/logger";
+import type { Logger } from "../../common/logger";
+import type { Fetch } from "../fetch/fetch.injectable";
 import type { Defaulted } from "../utils";
 import { json } from "../utils";
 
@@ -59,6 +59,11 @@ export type ParamsAndQuery<Params, Query> = (
     : Params & { query?: undefined }
 );
 
+export interface JsonApiDependencies {
+  fetch: Fetch;
+  readonly logger: Logger;
+}
+
 export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = JsonApiParams<Data>> {
   static readonly reqInitDefault = {
     headers: {
@@ -71,7 +76,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     debug: false,
   };
 
-  constructor(public readonly config: JsonApiConfig, reqInit?: RequestInit) {
+  constructor(protected readonly dependencies: JsonApiDependencies, public readonly config: JsonApiConfig, reqInit?: RequestInit) {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
@@ -105,7 +110,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
 
-    return fetch(reqUrl, reqInit);
+    return this.dependencies.fetch(reqUrl, reqInit);
   }
 
   get<OutData = Data, Query = QueryParams>(
@@ -177,7 +182,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
       reqInit,
     };
 
-    const res = await fetch(reqUrl, reqInit);
+    const res = await this.dependencies.fetch(reqUrl, reqInit);
 
     return this.parseResponse<OutData>(res, infoLog);
   }
@@ -233,7 +238,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
   protected writeLog(log: JsonApiLog) {
     const { method, reqUrl, ...params } = log;
 
-    logger.debug(`[JSON-API] request ${method} ${reqUrl}`, params);
+    this.dependencies.logger.debug(`[JSON-API] request ${method} ${reqUrl}`, params);
   }
 }
 

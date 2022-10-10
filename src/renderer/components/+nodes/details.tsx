@@ -13,8 +13,7 @@ import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { Badge } from "../badge";
 import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { ClusterMetricData } from "../../../common/k8s-api/endpoints";
-import { formatNodeTaint, getMetricsByNodeNames, Node } from "../../../common/k8s-api/endpoints";
+import { formatNodeTaint, Node } from "../../../common/k8s-api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -30,6 +29,8 @@ import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import requestClusterMetricsByNodeNamesInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
@@ -38,11 +39,12 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   getActiveClusterEntity: GetActiveClusterEntity;
+  requestClusterMetricsByNodeNames: RequestClusterMetricsByNodeNames;
 }
 
 @observer
 class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependencies> {
-  @observable metrics: Partial<ClusterMetricData> | null = null;
+  @observable metrics: ClusterMetricData | null = null;
 
   constructor(props: NodeDetailsProps & Dependencies) {
     super(props);
@@ -62,9 +64,9 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
   }
 
   loadMetrics = async () => {
-    const { object: node } = this.props;
+    const { object: node, requestClusterMetricsByNodeNames } = this.props;
 
-    this.metrics = await getMetricsByNodeNames([node.getName()]);
+    this.metrics = await requestClusterMetricsByNodeNames([node.getName()]);
   };
 
   render() {
@@ -196,6 +198,7 @@ export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonIn
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    requestClusterMetricsByNodeNames: di.inject(requestClusterMetricsByNodeNamesInjectable),
   }),
 });
 

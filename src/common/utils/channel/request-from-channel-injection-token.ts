@@ -12,7 +12,7 @@ export type RequestFromChannel = <
   channel: TChannel,
   ...request: TChannel["_requestSignature"] extends void
     ? []
-    : [TChannel["_requestSignature"]]
+    : [SetRequired<TChannel, "_requestSignature">["_requestSignature"]]
 ) => Promise<SetRequired<TChannel, "_responseSignature">["_responseSignature"]>;
 
 export const requestFromChannelInjectionToken =

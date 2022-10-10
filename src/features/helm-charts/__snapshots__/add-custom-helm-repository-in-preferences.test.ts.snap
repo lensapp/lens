@@ -272,7 +272,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -303,7 +303,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -850,7 +850,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -881,7 +881,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -1439,7 +1439,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -1470,7 +1470,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -2139,7 +2139,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -2170,7 +2170,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -2736,7 +2736,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -2767,7 +2767,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -3436,7 +3436,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -3467,7 +3467,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -4318,7 +4318,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -4349,7 +4349,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -5018,7 +5018,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -5049,7 +5049,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -5900,7 +5900,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -5931,7 +5931,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -6601,7 +6601,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -6632,7 +6632,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -6916,7 +6916,7 @@ exports[`add custom helm repository in preferences when navigating to preference
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter leave"
+    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -7198,7 +7198,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -7229,7 +7229,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />
@@ -7502,7 +7502,7 @@ exports[`add custom helm repository in preferences when navigating to preference
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter leave"
+    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -7784,7 +7784,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         <input
                           class="input box grow"
                           disabled=""
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries"
+                          placeholder="/some-electron-app-path-for-user-data/binaries"
                           spellcheck="false"
                           value=""
                         />
@@ -7815,7 +7815,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                       >
                         <input
                           class="input box grow"
-                          placeholder="/some-absolute-root-directory/some-electron-app-path-for-user-data/binaries/kubectl"
+                          placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                           spellcheck="false"
                           value=""
                         />

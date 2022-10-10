@@ -20,10 +20,10 @@ export const getDi = () => {
     autoRegister({
       di,
       requireContexts: [
-        require.context("./", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
-        require.context("../common", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
-        require.context("../extensions", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
-        require.context("../features", true, CONTEXT_MATCHER_FOR_FEATURES),
+        require.context("./", true, /\.injectable\.(ts|tsx)$/),
+        require.context("../common", true, /\.injectable\.(ts|tsx)$/),
+        require.context("../extensions", true, /\.injectable\.(ts|tsx)$/),
+        require.context("../features", true, /.*\/(renderer|common)\/.*\.injectable\.(ts|tsx)$/),
       ],
     });
   });

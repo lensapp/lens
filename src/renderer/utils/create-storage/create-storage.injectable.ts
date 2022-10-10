@@ -9,9 +9,9 @@ import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { observable } from "mobx";
 import loggerInjectable from "../../../common/logger.injectable";
-import getAbsolutePathInjectable from "../../../common/path/get-absolute-path.injectable";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import storageSaveDelayInjectable from "./storage-save-delay.injectable";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 
 const createStorageInjectable = getInjectable({
   id: "create-storage",
@@ -26,7 +26,7 @@ const createStorageInjectable = getInjectable({
     writeJsonFile: di.inject(writeJsonFileInjectable),
     logger: di.inject(loggerInjectable),
     directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
-    getAbsolutePath: di.inject(getAbsolutePathInjectable),
+    joinPaths: di.inject(joinPathsInjectable),
     hostedClusterId: di.inject(hostedClusterIdInjectable),
     saveDelay: di.inject(storageSaveDelayInjectable),
   }),

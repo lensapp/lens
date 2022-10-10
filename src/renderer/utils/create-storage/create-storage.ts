@@ -8,10 +8,9 @@
 import { comparer, reaction, toJS, when } from "mobx";
 import type { StorageLayer } from "../storageHelper";
 import { StorageHelper } from "../storageHelper";
-import { isTestEnv } from "../../../common/vars";
 import type { JsonObject, JsonValue } from "type-fest";
 import type { Logger } from "../../../common/logger";
-import type { GetAbsolutePath } from "../../../common/path/get-absolute-path.injectable";
+import type { JoinPaths } from "../../../common/path/join-paths.injectable";
 
 interface Dependencies {
   storage: { initialized: boolean; loaded: boolean; data: Record<string, any> };
@@ -19,7 +18,7 @@ interface Dependencies {
   directoryForLensLocalStorage: string;
   readJsonFile: (filePath: string) => Promise<JsonValue>;
   writeJsonFile: (filePath: string, contentObject: JsonObject) => Promise<void>;
-  getAbsolutePath: GetAbsolutePath;
+  joinPaths: JoinPaths;
   hostedClusterId: string | undefined;
   saveDelay: number;
 }
@@ -31,7 +30,7 @@ export type CreateStorage = <T>(key: string, defaultValue: T) => StorageLayer<T>
  */
 export const createStorage = ({
   storage,
-  getAbsolutePath,
+  joinPaths,
   logger,
   directoryForLensLocalStorage,
   readJsonFile,
@@ -45,17 +44,14 @@ export const createStorage = ({
     storage.initialized = true;
 
     (async () => {
-      const filePath = getAbsolutePath(directoryForLensLocalStorage, `${hostedClusterId || "app"}.json`);
+      const filePath = joinPaths(directoryForLensLocalStorage, `${hostedClusterId || "app"}.json`);
 
       try {
         storage.data = (await readJsonFile(filePath)) as JsonObject;
       } catch {
         // do nothing
       } finally {
-        if (!isTestEnv) {
-          logger.info(`${logPrefix} loading finished for ${filePath}`);
-        }
-
+        logger.info(`${logPrefix} loading finished for ${filePath}`);
         storage.loaded = true;
       }
 

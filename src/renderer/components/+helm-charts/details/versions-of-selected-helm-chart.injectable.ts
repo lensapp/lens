@@ -4,18 +4,18 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import callForHelmChartVersionsInjectable from "./versions/call-for-helm-chart-versions.injectable";
 import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
+import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 
 const versionsOfSelectedHelmChartInjectable = getInjectable({
   id: "versions-of-selected-helm-chart",
 
   instantiate: (di, chart: HelmChart) => {
-    const callForHelmChartVersions = di.inject(callForHelmChartVersionsInjectable);
+    const requestHelmChartVersions = di.inject(requestHelmChartVersionsInjectable);
 
     return asyncComputed(
       async () =>
-        await callForHelmChartVersions(chart.getRepository(), chart.getName()),
+        await requestHelmChartVersions(chart.getRepository(), chart.getName()),
       [],
     );
   },

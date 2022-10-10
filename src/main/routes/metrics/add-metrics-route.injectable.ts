@@ -18,7 +18,7 @@ import getMetricsInjectable from "../../get-metrics.injectable";
 // This is used for backoff retry tracking.
 const ATTEMPTS = [false, false, false, false, true];
 
-const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> => {
+const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Partial<Record<string, string>>): Promise<any[]> => {
   const queries = promQueries.map(p => p.trim());
   const loaders = new Map<string, Promise<any>>();
 
@@ -59,7 +59,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
     const getMetrics = di.inject(getMetricsInjectable);
     const loadMetrics = loadMetricsFor(getMetrics);
 
-    const queryParams = Object.fromEntries(query.entries());
+    const queryParams: Partial<Record<string, string>> = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 
     try {

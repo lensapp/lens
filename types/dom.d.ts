@@ -8,9 +8,4 @@ declare global {
   interface Element {
     scrollIntoViewIfNeeded?(opt_center?: boolean): void;
   }
-
-  interface Window {
-    requestIdleCallback(callback: () => void, options: { timeout: number });
-    cancelIdleCallback(callback: () => void);
-  }
 }

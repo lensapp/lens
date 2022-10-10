@@ -241,6 +241,6 @@ export class LensProxy {
     }
 
     res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
-    this.dependencies.router.route(cluster, req, res);
+    await this.dependencies.router.route(cluster, req, res);
   }
 }

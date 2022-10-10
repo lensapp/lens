@@ -22,7 +22,6 @@ export * from "./hash-set";
 export * from "./n-fircate";
 export * from "./noop";
 export * from "./observable-crate/impl";
-export * from "./paths";
 export * from "./promise-exec";
 export * from "./readonly";
 export * from "./reject-promise";

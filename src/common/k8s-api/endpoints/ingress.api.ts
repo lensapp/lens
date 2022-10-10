@@ -6,8 +6,6 @@
 import type { NamespaceScopedMetadata, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { hasTypedProperty, isString, iter } from "../../utils";
-import type { MetricData } from "./metrics.api";
-import { metricsApi } from "./metrics.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { RequireExactlyOne } from "type-fest";
@@ -22,26 +20,6 @@ export class IngressApi extends KubeApi<Ingress> {
       fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
     });
   }
-}
-
-export function getMetricsForIngress(ingress: string, namespace: string): Promise<IngressMetricData> {
-  const opts = { category: "ingress", ingress, namespace };
-
-  return metricsApi.getMetrics({
-    bytesSentSuccess: opts,
-    bytesSentFailure: opts,
-    requestDurationSeconds: opts,
-    responseDurationSeconds: opts,
-  }, {
-    namespace,
-  });
-}
-
-export interface IngressMetricData extends Partial<Record<string, MetricData>> {
-  bytesSentSuccess: MetricData;
-  bytesSentFailure: MetricData;
-  requestDurationSeconds: MetricData;
-  responseDurationSeconds: MetricData;
 }
 
 export interface ILoadBalancerIngress {

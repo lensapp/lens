@@ -34,6 +34,7 @@ export * from "./replica-set.api";
 export * from "./resource-quota.api";
 export * from "./role.api";
 export * from "./role-binding.api";
+export * from "./runtime-class.api";
 export * from "./secret.api";
 export * from "./self-subject-rules-reviews.api";
 export * from "./service.api";

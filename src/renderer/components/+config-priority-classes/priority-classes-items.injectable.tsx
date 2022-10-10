@@ -27,7 +27,7 @@ const priorityClassesSidebarItemsInjectable = getInjectable({
         onClick: navigateToPriorityClasses,
         isActive: routeIsActive,
         isVisible: route.isEnabled,
-        orderNumber: 60,
+        orderNumber: 70,
       },
     ]);
   },

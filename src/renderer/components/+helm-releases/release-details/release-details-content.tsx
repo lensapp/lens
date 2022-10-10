@@ -19,7 +19,6 @@ import { kebabCase } from "lodash/fp";
 import { Badge } from "../../badge";
 import { SubTitle } from "../../layout/sub-title";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
-import { ReactiveDuration } from "../../duration/reactive-duration";
 import { Checkbox } from "../../checkbox";
 import { MonacoEditor } from "../../monaco-editor";
 import { Spinner } from "../../spinner";
@@ -131,12 +130,10 @@ const ResourceGroup = ({
         <TableCell className="name">Name</TableCell>
 
         {isNamespaced && <TableCell className="namespace">Namespace</TableCell>}
-
-        <TableCell className="age">Age</TableCell>
       </TableHead>
 
       {resources.map(
-        ({ creationTimestamp, detailsUrl, name, namespace, uid }) => (
+        ({ detailsUrl, name, namespace, uid }) => (
           <TableRow key={uid}>
             <TableCell className="name">
               {detailsUrl ? <Link to={detailsUrl}>{name}</Link> : name}
@@ -145,10 +142,6 @@ const ResourceGroup = ({
             {isNamespaced && (
               <TableCell className="namespace">{namespace}</TableCell>
             )}
-
-            <TableCell className="age">
-              <ReactiveDuration timestamp={creationTimestamp} />
-            </TableCell>
           </TableRow>
         ),
       )}

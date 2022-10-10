@@ -15,8 +15,7 @@ import { PodDetailsTolerations } from "../+workloads-pods/pod-details-toleration
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import type { StatefulSetStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { PodMetricData } from "../../../common/k8s-api/endpoints";
-import { getMetricsForStatefulSets, StatefulSet } from "../../../common/k8s-api/endpoints";
+import { StatefulSet } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -31,6 +30,8 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import statefulSetStoreInjectable from "./store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { RequestPodMetricsForStatefulSets, StatefulSetPodMetricData } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-stateful-sets.injectable";
+import requestPodMetricsForStatefulSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-stateful-sets.injectable";
 
 export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -40,11 +41,12 @@ interface Dependencies {
   podStore: PodStore;
   statefulSetStore: StatefulSetStore;
   getActiveClusterEntity: GetActiveClusterEntity;
+  requestPodMetricsForStatefulSets: RequestPodMetricsForStatefulSets;
 }
 
 @observer
 class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsProps & Dependencies> {
-  @observable metrics: PodMetricData | null = null;
+  @observable metrics: StatefulSetPodMetricData | null = null;
 
   constructor(props: StatefulSetDetailsProps & Dependencies) {
     super(props);
@@ -64,9 +66,9 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
   }
 
   loadMetrics = async () => {
-    const { object: statefulSet } = this.props;
+    const { object: statefulSet, requestPodMetricsForStatefulSets } = this.props;
 
-    this.metrics = await getMetricsForStatefulSets([statefulSet], statefulSet.getNs(), "");
+    this.metrics = await requestPodMetricsForStatefulSets([statefulSet], statefulSet.getNs());
   };
 
   render() {
@@ -143,6 +145,7 @@ export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetai
     podStore: di.inject(podStoreInjectable),
     statefulSetStore: di.inject(statefulSetStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    requestPodMetricsForStatefulSets: di.inject(requestPodMetricsForStatefulSetsInjectable),
   }),
 });
 
