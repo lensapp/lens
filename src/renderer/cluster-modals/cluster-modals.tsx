@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import styles from "./cluster-modals.module.css";
 
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -17,7 +21,7 @@ export const NonInjectedClusterModals = ({ clusterModals }: Dependencies) => {
       })}
     </div>
   );
-}
+};
 
 export const ClusterModals = withInjectables<Dependencies>(NonInjectedClusterModals, {
   getProps: (di, props) => ({

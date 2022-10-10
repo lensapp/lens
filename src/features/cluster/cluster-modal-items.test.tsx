@@ -1,9 +1,15 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { computed, runInAction } from "mobx";
 import React from "react";
-import { ClusterModalRegistration, clusterModalsInjectionToken } from "../../extensions/registries";
-import { ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ClusterModalRegistration } from "../../extensions/registries";
+import { clusterModalsInjectionToken } from "../../extensions/registries";
+import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
 describe("cluster modal elements", () => {
   let builder: ApplicationBuilder;
@@ -50,8 +56,8 @@ const testClusterModalsInjectable = getInjectable({
       id: "test-modal-id",
       Component: () => <div data-testid="test-modal">test modal</div>,
       visible: computed(() => true),
-    }])
+    }]);
   },
 
-  injectionToken: clusterModalsInjectionToken
+  injectionToken: clusterModalsInjectionToken,
 });
