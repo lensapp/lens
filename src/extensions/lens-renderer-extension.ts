@@ -33,6 +33,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
   globalPages: registries.PageRegistration[] = [];
   clusterPages: registries.PageRegistration[] = [];
   clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
+  clusterModals: registries.ClusterModalRegistration[] = [];
   kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
   appPreferenceTabs: AppPreferenceTabRegistration[] = [];
