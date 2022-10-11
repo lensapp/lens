@@ -39,7 +39,7 @@ export function getRequestChannelListenerInjectable<
   Response,
 >(info: GetRequestChannelListenerInjectableInfo<Channel, Request, Response>) {
   return getInjectable({
-    id: `${info.channel.id}-listener`,
+    id: `${info.channel.id}-listener-for-${info.handlerInjectable.id}`,
     instantiate: (di) => ({
       channel: info.channel,
       handler: di.inject(info.handlerInjectable),
