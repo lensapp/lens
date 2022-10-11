@@ -4,6 +4,7 @@
  */
 
 import { sortBy } from "lodash/fp";
+import type { Composite } from "./get-composite";
 import getComposite from "./get-composite";
 import { getCompositePaths } from "./get-composite-paths/get-composite-paths";
 
@@ -165,7 +166,7 @@ describe("get-composite", () => {
     );
   });
 
-  it("given missing parent ids, throws", () => {
+  it("given items with missing parent ids, when creating composite without handling for unknown parents, throws", () => {
     const someItem = {
       someId: "some-id",
       someParentId: undefined,
@@ -186,8 +187,52 @@ describe("get-composite", () => {
         getParentId: (x) => x.someParentId,
       });
     }).toThrow(
-      'Tried to get a composite but encountered missing parent ids: "some-missing-id"',
+      `Tried to get a composite but encountered missing parent ids: "some-missing-id".
+
+Available parent ids are:
+"some-id",
+"some-other-id"`,
     );
+  });
+
+  describe("given items with missing parent ids, when creating composite with handling for missing parents", () => {
+    let composite: Composite<any>;
+    let handleMissingParentIdMock: jest.Mock;
+
+    beforeEach(() => {
+      const someItem = {
+        id: "some-root-id",
+        parentId: undefined,
+      };
+
+      const someItemWithMissingParentId = {
+        id: "some-orphan-id",
+        // Note: missing parent id makes the item orphan.
+        parentId: "some-missing-id",
+      };
+
+      const items = [someItem, someItemWithMissingParentId];
+
+      handleMissingParentIdMock = jest.fn();
+
+      composite = getComposite({
+        source: items,
+        handleMissingParentIds: handleMissingParentIdMock,
+      });
+    });
+
+    it("creates composite without the orphan item, and without throwing", () => {
+      const paths = getCompositePaths(composite);
+
+      expect(paths).toEqual(["some-root-id"]);
+    });
+
+    it("handles the missing parent ids", () => {
+      expect(handleMissingParentIdMock).toHaveBeenCalledWith({
+        missingParentIds: ["some-missing-id"],
+        availableParentIds: ["some-root-id", "some-orphan-id"],
+      });
+    });
   });
 
   it("given undefined ids, throws", () => {

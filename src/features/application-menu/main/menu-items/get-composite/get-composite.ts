@@ -30,12 +30,14 @@ export default <T>({
   getId = get("id"),
   getParentId = get("parentId"),
   getOrderedChildren = (things: T[]) => sortBy("orderNumber", things),
+  handleMissingParentIds = throwMissingParentIds,
 }: {
   source: T[];
   rootId?: string;
   getId?: (thing: T) => string;
   getParentId?: (thing: T) => string | undefined;
   getOrderedChildren?: (things: T[]) => T[];
+  handleMissingParentIds?: (parentIdsForHandling: ParentIdsForHandling) => void;
 }) => {
   const undefinedIds = pipeline(
     source,
@@ -68,14 +70,10 @@ export default <T>({
 
   const allParentIds = pipeline(source, map(getParentId), uniq, compact);
 
-  const unknownParentIds = without(allIds, allParentIds);
+  const missingParentIds = without(allIds, allParentIds);
 
-  if (unknownParentIds.length) {
-    throw new Error(
-      `Tried to get a composite but encountered missing parent ids: "${unknownParentIds
-        .map((x) => String(x))
-        .join('", "')}"`,
-    );
+  if (missingParentIds.length) {
+    handleMissingParentIds({ missingParentIds, availableParentIds: allIds });
   }
 
   const toComposite = (thing: T): Composite<T> => {
@@ -117,4 +115,20 @@ export default <T>({
   }
 
   return toComposite(roots[0]);
+};
+
+interface ParentIdsForHandling {
+  missingParentIds: string[];
+  availableParentIds: string[];
+}
+
+const throwMissingParentIds = ({
+  missingParentIds,
+  availableParentIds,
+}: ParentIdsForHandling) => {
+  throw new Error(
+    `Tried to get a composite but encountered missing parent ids: "${missingParentIds.join(
+      '", "',
+    )}".\n\nAvailable parent ids are:\n"${availableParentIds.join('",\n"')}"`,
+  );
 };
