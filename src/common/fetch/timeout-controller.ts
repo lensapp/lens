@@ -5,7 +5,7 @@
 
 /**
  * Creates an AbortController with an associated timeout
- * @param timeout The number of miliseconds before this controller will auto abort
+ * @param timeout The number of milliseconds before this controller will auto abort
  */
 export function withTimeout(timeout: number): AbortController {
   const controller = new AbortController();

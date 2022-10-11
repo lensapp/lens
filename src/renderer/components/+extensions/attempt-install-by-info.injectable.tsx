@@ -65,13 +65,13 @@ const attemptInstallByInfoInjectable = getInjectable({
         const result = await downloadJson(registryUrl);
 
         if (!result.callWasSuccessful) {
-          showErrorNotification(`Failed to get registry information for that extension: ${result.error}`);
+          showErrorNotification(`Failed to get registry information for extension: ${result.error}`);
 
           return disposer();
         }
 
         if (!isObject(result.response) || Array.isArray(result.response)) {
-          showErrorNotification("Failed to get registry information for that extension");
+          showErrorNotification("Failed to get registry information for extension");
 
           return disposer();
         }
@@ -79,7 +79,7 @@ const attemptInstallByInfoInjectable = getInjectable({
         if (result.response.error || !isObject(result.response.versions)) {
           const message = result.response.error ? `: ${result.response.error}` : "";
 
-          showErrorNotification(`Failed to get registry information for that extension${message}`);
+          showErrorNotification(`Failed to get registry information for extension${message}`);
 
           return disposer();
         }
@@ -89,10 +89,10 @@ const attemptInstallByInfoInjectable = getInjectable({
         if (error instanceof SyntaxError) {
           // assume invalid JSON
           logger.warn("Set registry has invalid json", { url: baseUrl }, error);
-          showErrorNotification("Failed to get valid registry information for that extension. Registry did not return valid JSON");
+          showErrorNotification("Failed to get valid registry information for extension. Registry did not return valid JSON");
         } else {
           logger.error("Failed to download registry information", error);
-          showErrorNotification(`Failed to get valid registry information for that extension. ${error}`);
+          showErrorNotification(`Failed to get valid registry information for extension. ${error}`);
         }
 
         return disposer();
@@ -151,7 +151,7 @@ const attemptInstallByInfoInjectable = getInjectable({
       }
 
       if (!version) {
-        logger.error("No versions supplied for that extension", { name });
+        logger.error("No versions supplied for extension", { name });
         showErrorNotification(`No versions found for ${name}`);
 
         return disposer();
