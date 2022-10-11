@@ -9,6 +9,7 @@ import getComposite from "./menu-items/get-composite/get-composite";
 import { computed } from "mobx";
 import { pipeline } from "@ogre-tools/fp";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface MenuItemRoot { id: "root"; parentId: undefined; kind: "root"; orderNumber: 0 }
 
@@ -17,6 +18,7 @@ const applicationMenuItemCompositeInjectable = getInjectable({
 
   instantiate: (di) => {
     const menuItems = di.inject(applicationMenuItemsInjectable);
+    const logger = di.inject(loggerInjectable);
 
     return computed((): Composite<ApplicationMenuItemTypes | MenuItemRoot> => {
       const items = menuItems.get();
@@ -33,7 +35,15 @@ const applicationMenuItemCompositeInjectable = getInjectable({
           ...items,
         ],
 
-        (x) => getComposite({ source: x }),
+        (x) => getComposite({
+          source: x,
+
+          handleMissingParentIds: ({ missingParentIds }) => {
+            logger.error(
+              `[MENU]: cannot render menu item for missing parentIds: "${missingParentIds.join('", "')}"`,
+            );
+          },
+        }),
       );
     });
   },

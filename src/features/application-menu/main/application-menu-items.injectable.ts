@@ -23,24 +23,6 @@ const applicationMenuItemsInjectable = getInjectable({
         .get()
         .filter(isShown),
     );
-
-    // Prepare menu items order
-
-    // // Modify menu from extensions-api
-    // for (const menuItem of electronMenuItems.get()) {
-    //   const parentMenu = appMenu.get(menuItem.parentId);
-    //
-    //   if (!parentMenu) {
-    //     logger.error(
-    //       `[MENU]: cannot register menu item for parentId=${menuItem.parentId}, parent item doesn't exist`,
-    //       { menuItem },
-    //     );
-    //
-    //     continue;
-    //   }
-    //
-    //   // (parentMenu.submenu ??= []).push(menuItem);
-    // }
   },
 });
 
