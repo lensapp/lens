@@ -4,6 +4,10 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
 <body>
   <div>
     <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -428,6 +432,10 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
 <body>
   <div>
     <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -811,6 +819,10 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
 exports[`disable kube object statuses when cluster is not relevant given not yet known if extension should be enabled for the cluster renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />

@@ -3,6 +3,10 @@
 exports[`cluster - visibility of sidebar items given kube resource for route is not allowed renders 1`] = `
 <div>
   <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
+  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -510,6 +514,10 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
 
 exports[`cluster - visibility of sidebar items given kube resource for route is not allowed when kube resource becomes allowed renders 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />

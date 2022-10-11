@@ -4,6 +4,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
 <body>
   <div>
     <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -450,6 +454,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
 exports[`disable kube object detail items when cluster is not relevant given extension shouldn't be enabled for the cluster renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -935,6 +943,10 @@ exports[`disable kube object detail items when cluster is not relevant given ext
 exports[`disable kube object detail items when cluster is not relevant given not yet known if extension should be enabled for the cluster renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />

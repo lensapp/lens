@@ -3,6 +3,10 @@
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given empty state for expanded sidebar items already exists, when rendered renders without errors 1`] = `
 <div>
   <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
+  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -539,6 +543,10 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered renders 1`] = `
 <div>
   <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
+  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -1074,6 +1082,10 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered when a parent sidebar item is expanded renders 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />
@@ -1647,6 +1659,10 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered when a parent sidebar item is expanded when a child of the parent is selected renders 1`] = `
 <div>
   <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
+  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -2137,6 +2153,10 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered when a parent sidebar item is expanded when a child of the parent is selected when selecting sibling tab renders 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />
@@ -2629,6 +2649,10 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered renders 1`] = `
 <div>
   <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
+  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -3082,6 +3106,10 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given state for expanded sidebar items already exists, when rendered renders 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />
@@ -3654,6 +3682,10 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given state for expanded unknown sidebar items already exists, when rendered renders without errors 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />

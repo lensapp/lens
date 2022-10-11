@@ -4,6 +4,10 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
 <body>
   <div>
     <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -663,6 +667,10 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
 exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navigating to the helm releases view when helm releases resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -1416,6 +1424,10 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
 exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navigating to the helm releases view when helm releases resolves when clicking the menu for a helm release renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -2223,6 +2235,10 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
 exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navigating to the helm releases view when helm releases resolves when clicking the menu for a helm release when clicking the upgrade chart menu item renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -3066,6 +3082,10 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
 exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navigating to the helm releases view when helm releases resolves when clicking the menu for a helm release when clicking the upgrade chart menu item when request for all helm charts resolves when the requests of versions of the helm charts resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -4049,6 +4069,10 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
 exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navigating to the helm releases view when helm releases resolves when clicking the menu for a helm release when clicking the upgrade chart menu item when request for all helm charts resolves when the requests of versions of the helm charts resolves when the configuration request resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -5034,6 +5058,10 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
 exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navigating to the helm releases view when helm releases resolves when clicking the menu for a helm release when clicking the upgrade chart menu item when request for all helm charts resolves when the requests of versions of the helm charts resolves when the configuration request resolves when closing the upgrade chart tab renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />

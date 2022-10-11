@@ -4,6 +4,10 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -500,6 +504,10 @@ exports[`opening dock tab for installing helm chart given application is started
 exports[`opening dock tab for installing helm chart given application is started, when navigating to helm charts when charts resolve renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -1167,6 +1175,10 @@ exports[`opening dock tab for installing helm chart given application is started
 exports[`opening dock tab for installing helm chart given application is started, when navigating to helm charts when charts resolve when opening details of a chart renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -1891,6 +1903,10 @@ exports[`opening dock tab for installing helm chart given application is started
 exports[`opening dock tab for installing helm chart given application is started, when navigating to helm charts when charts resolve when opening details of a chart when chart versions resolve renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -2794,6 +2810,10 @@ exports[`opening dock tab for installing helm chart given application is started
 exports[`opening dock tab for installing helm chart given application is started, when navigating to helm charts when charts resolve when opening details of a chart when chart versions resolve when readme resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -3708,6 +3728,10 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -4610,6 +4634,10 @@ exports[`opening dock tab for installing helm chart given application is started
 exports[`opening dock tab for installing helm chart given application is started, when navigating to helm charts when charts resolve when opening details of a chart when chart versions resolve when readme resolves when selecting different version when readme resolves renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -5523,6 +5551,10 @@ exports[`opening dock tab for installing helm chart given application is started
 exports[`opening dock tab for installing helm chart given application is started, when navigating to helm charts when charts resolve when opening details of a chart when chart versions resolve when readme resolves when selecting to install the chart renders 1`] = `
 <body>
   <div>
+    <div
+      class="clusterModals"
+      style="height: 0px;"
+    />
     <div
       class="Notifications flex column align-flex-end"
     />

@@ -3,6 +3,10 @@
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions given no matching component given current url is starting url renders 1`] = `
 <div>
   <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
+  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -464,6 +468,10 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions renders 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />
@@ -933,6 +941,10 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 
 exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces permissions renders 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />

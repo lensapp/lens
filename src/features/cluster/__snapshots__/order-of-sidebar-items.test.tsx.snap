@@ -3,6 +3,10 @@
 exports[`cluster - order of sidebar items when rendered renders 1`] = `
 <div>
   <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
+  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -565,6 +569,10 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
 
 exports[`cluster - order of sidebar items when rendered when parent is expanded renders 1`] = `
 <div>
+  <div
+    class="clusterModals"
+    style="height: 0px;"
+  />
   <div
     class="Notifications flex column align-flex-end"
   />
