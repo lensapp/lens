@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import leasesRouteInjectable from "./leases-route.injectable";
 import { navigateToRouteInjectionToken } from "../../../../navigate-to-route-injection-token";
 
-const navigateToPriorityClassesInjectable = getInjectable({
+const navigateToLeasesInjectable = getInjectable({
   id: "navigate-to-leases",
 
   instantiate: (di) => {
@@ -17,4 +17,4 @@ const navigateToPriorityClassesInjectable = getInjectable({
   },
 });
 
-export default navigateToPriorityClassesInjectable;
+export default navigateToLeasesInjectable;
