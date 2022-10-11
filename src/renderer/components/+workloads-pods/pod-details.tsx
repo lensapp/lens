@@ -10,8 +10,8 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import { Pod, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "../../../common/k8s-api/endpoints";
-import type { NodeApi } from "../../../common/k8s-api/endpoints";
+import { Pod } from "../../../common/k8s-api/endpoints";
+import type { NodeApi, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { cssNames, stopPropagation, toJS } from "../../utils";
@@ -49,7 +49,7 @@ interface Dependencies {
   nodeApi: NodeApi;
   priorityClassApi: PriorityClassApi;
   runtimeClassApi: RuntimeClassApi;
-  serviceAccountApi: ServiceAccountApi
+  serviceAccountApi: ServiceAccountApi;
 }
 
 @observer
