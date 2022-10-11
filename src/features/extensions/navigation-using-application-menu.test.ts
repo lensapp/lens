@@ -6,6 +6,8 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import downloadBinaryInjectable, { type DownloadBinary } from "../../common/fetch/download-binary.injectable";
+import downloadJsonInjectable, { type DownloadJson } from "../../common/fetch/download-json.injectable";
 import focusWindowInjectable from "../../renderer/navigation/focus-window.injectable";
 
 // TODO: Make components free of side effects by making them deterministic
@@ -15,14 +17,20 @@ describe("extensions - navigation using application menu", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let focusWindowMock: jest.Mock;
+  let downloadJson: jest.MockedFunction<DownloadJson>;
+  let downloadBinary: jest.MockedFunction<DownloadBinary>;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
     builder.beforeWindowStart((windowDi) => {
       focusWindowMock = jest.fn();
+      downloadJson = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
+      downloadBinary = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
 
       windowDi.override(focusWindowInjectable, () => focusWindowMock);
+      windowDi.override(downloadJsonInjectable, () => downloadJson);
+      windowDi.override(downloadBinaryInjectable, () => downloadBinary);
     });
 
     rendered = await builder.render();

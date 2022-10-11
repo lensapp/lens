@@ -7,6 +7,7 @@ import "./input.scss";
 
 import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import React from "react";
+import type { SingleOrMany } from "../../utils";
 import { autoBind, cssNames, debouncePromise, getRandId, isPromiseSettledFulfilled } from "../../utils";
 import { Icon } from "../icon";
 import type { TooltipProps } from "../tooltip";
@@ -72,7 +73,7 @@ export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   iconLeft?: IconData;
   iconRight?: IconData;
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
-  validators?: InputValidator<boolean> | InputValidator<boolean>[];
+  validators?: SingleOrMany<InputValidator>;
   blurOnEnter?: boolean;
   onChange?(value: string, evt: React.ChangeEvent<InputElement>): void;
   onSubmit?(value: string, evt: React.KeyboardEvent<InputElement>): void;
