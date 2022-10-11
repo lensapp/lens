@@ -44,9 +44,23 @@ export default <T>({
     filter((x) => getId(x) === undefined),
   );
 
-  if(undefinedIds.length) {
+  if (undefinedIds.length) {
     throw new Error(
       `Tried to get a composite but encountered ${undefinedIds.length} undefined ids`,
+    );
+  }
+
+  const selfReferencingIds = pipeline(
+    source,
+    filter((x) => getId(x) === getParentId(x)),
+    map(getId),
+  );
+
+  if (selfReferencingIds.length) {
+    throw new Error(
+      `Tried to get a composite, but found items with self as parent: "${selfReferencingIds.join(
+        '", ',
+      )}"`,
     );
   }
 

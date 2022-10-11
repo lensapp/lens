@@ -235,6 +235,26 @@ Available parent ids are:
     });
   });
 
+  it("given items with same id and parent id, throws", () => {
+    const someItem = {
+      id: "some-id",
+      parentId: "some-id",
+    };
+
+    const someRoot = {
+      id: "root",
+      someParentId: undefined,
+    };
+
+    const items = [someItem, someRoot];
+
+    expect(() => {
+      getComposite({
+        source: items,
+      });
+    }).toThrow('Tried to get a composite, but found items with self as parent: "some-id"');
+  });
+
   it("given undefined ids, throws", () => {
     const root = {
       someParentId: undefined,
