@@ -4,11 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-import applicationMenuItemInjectionToken from "../../application-menu-item-injection-token";
-import processCheckingForUpdatesInjectable from "../../../../../application-update/main/process-checking-for-updates.injectable";
-import showApplicationWindowInjectable from "../../../../../../main/start-main-application/lens-window/show-application-window.injectable";
-import updatingIsEnabledInjectable from "../../../../../application-update/main/updating-is-enabled/updating-is-enabled.injectable";
-import isMacInjectable from "../../../../../../common/vars/is-mac.injectable";
+import applicationMenuItemInjectionToken from "../../../../application-menu/main/menu-items/application-menu-item-injection-token";
+import processCheckingForUpdatesInjectable from "../../../main/process-checking-for-updates.injectable";
+import showApplicationWindowInjectable from "../../../../../main/start-main-application/lens-window/show-application-window.injectable";
+import updatingIsEnabledInjectable from "../../../main/updating-is-enabled/updating-is-enabled.injectable";
+import isMacInjectable from "../../../../../common/vars/is-mac.injectable";
 
 const checkForUpdatesMenuItemInjectable = getInjectable({
   id: "check-for-updates-menu-item",
