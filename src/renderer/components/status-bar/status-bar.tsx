@@ -25,14 +25,20 @@ const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps)
     <div className={styles.StatusBar} data-testid="status-bar">
       <div className={styles.leftSide} data-testid="status-bar-left">
         {left.map((Item, index) => (
-          <div className={styles.item} key={index} data-origin={Item.id}>
+          <div
+            className={styles.item}
+            key={index}
+            data-origin={Item.id}>
             {<Item.component/>}
           </div>
         ))}
       </div>
       <div className={styles.rightSide} data-testid="status-bar-right">
         {right.map((Item, index) => (
-          <div className={styles.item} key={index} data-origin={Item.id}>
+          <div
+            className={styles.item}
+            key={index}
+            data-origin={Item.id}>
             {<Item.component/>}
           </div>
         ))}

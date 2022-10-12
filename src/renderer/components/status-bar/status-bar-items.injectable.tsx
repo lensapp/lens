@@ -11,8 +11,8 @@ import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 
 interface StatusItem {
-  id?: string,
-  component: React.ComponentType<StatusBarItemProps>
+  id?: string;
+  component: React.ComponentType<StatusBarItemProps>;
 }
 
 export interface StatusBarItems {
@@ -40,7 +40,7 @@ function getStatusBarItems({ registrations }: Dependencies): IComputedValue<Stat
 
       res[position].push({
         id,
-        component
+        component,
       });
     }
 
