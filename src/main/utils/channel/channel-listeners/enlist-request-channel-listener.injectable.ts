@@ -5,12 +5,16 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcMainInvokeEvent } from "electron";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
-import { enlistRequestChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-request-channel-listener-injection-token";
+import type { Disposer } from "../../../../common/utils";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannelListener } from "./listener-tokens";
+
+export type EnlistRequestChannelListener = <TChannel extends RequestChannel<unknown, unknown>>(listener: RequestChannelListener<TChannel>) => Disposer;
 
 const enlistRequestChannelListenerInjectable = getInjectable({
   id: "enlist-request-channel-listener-for-main",
 
-  instantiate: (di) => {
+  instantiate: (di): EnlistRequestChannelListener => {
     const ipcMain = di.inject(ipcMainInjectable);
 
     return ({ channel, handler }) => {
@@ -23,8 +27,6 @@ const enlistRequestChannelListenerInjectable = getInjectable({
       };
     };
   },
-
-  injectionToken: enlistRequestChannelListenerInjectionToken,
 });
 
 export default enlistRequestChannelListenerInjectable;

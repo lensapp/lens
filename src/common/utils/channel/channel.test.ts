@@ -13,12 +13,13 @@ import type { MessageChannel } from "./message-channel-listener-injection-token"
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
 import type { RequestFromChannel } from "./request-from-channel-injection-token";
 import { requestFromChannelInjectionToken } from "./request-from-channel-injection-token";
-import type { RequestChannel, RequestChannelHandler } from "./request-channel-listener-injection-token";
-import { getRequestChannelListenerInjectable } from "./request-channel-listener-injection-token";
+import type { RequestChannel } from "./request-channel-listener-injection-token";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "../../test-utils/get-promise-status";
 import { runInAction } from "mobx";
+import type { RequestChannelHandler } from "../../../main/utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "../../../main/utils/channel/channel-listeners/listener-tokens";
 
 type TestMessageChannel = MessageChannel<string>;
 type TestRequestChannel = RequestChannel<string, string>;
@@ -148,19 +149,13 @@ describe("channel", () => {
 
       requestListenerInMainMock = asyncFn();
 
-      const testChannelHandlerInjectable = getInjectable({
-        id: "test-channel-handler",
-        instantiate: (): RequestChannelHandler<TestRequestChannel> => requestListenerInMainMock,
-      });
-
       const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
         channel: testRequestChannel,
-        handlerInjectable: testChannelHandlerInjectable,
+        handler: () => requestListenerInMainMock,
       });
 
       applicationBuilder.beforeApplicationStart((mainDi) => {
         runInAction(() => {
-          mainDi.register(testChannelHandlerInjectable);
           mainDi.register(testChannelListenerInMainInjectable);
         });
       });

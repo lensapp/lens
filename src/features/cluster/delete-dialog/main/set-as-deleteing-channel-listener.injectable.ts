@@ -2,13 +2,19 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRequestChannelListenerInjectable } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import clustersThatAreBeingDeletedInjectable from "../../../../main/cluster/are-being-deleted.injectable";
+import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
 import { setClusterAsDeletingChannel } from "../common/set-as-deleting-channel";
-import setClusterAsDeletingHandlerInjectable from "./set-as-deleting-handler.injectable";
 
 const setClusterAsDeletingChannelHandlerInjectable = getRequestChannelListenerInjectable({
   channel: setClusterAsDeletingChannel,
-  handlerInjectable: setClusterAsDeletingHandlerInjectable,
+  handler: (di) => {
+    const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);
+
+    return (clusterId) => {
+      clustersThatAreBeingDeleted.add(clusterId);
+    };
+  },
 });
 
 export default setClusterAsDeletingChannelHandlerInjectable;
