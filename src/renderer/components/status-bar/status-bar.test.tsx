@@ -65,7 +65,7 @@ describe("<StatusBar />", () => {
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(statusBarItemsInjectable, () => computed(() => ({
-        right: [ () => <span data-testid={testId} >{text}</span> ],
+        right: [ { id: testId, component: () => <span data-testid={testId} >{text}</span> }],
         left: [],
       }) as StatusBarItems));
     });
