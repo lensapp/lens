@@ -11,7 +11,6 @@ interface Iterator<T> {
   find(fn: (val: T) => unknown): T | undefined;
   collect<U>(fn: (values: Iterable<T>) => U): U;
   map<U>(fn: (val: T) => U): Iterator<U>;
-  tap(fn: (val: T) => void): Iterator<T>;
   flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
   join(sep?: string): string;
 }
@@ -22,7 +21,6 @@ export function pipeline<T>(src: IterableIterator<T>): Iterator<T> {
     filterMap: (fn) => pipeline(filterMap(src, fn)),
     map: (fn) => pipeline(map(src, fn)),
     flatMap: (fn) => pipeline(flatMap(src, fn)),
-    tap: (fn) => pipeline(tap(src, fn)),
     find: (fn) => find(src, fn),
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
@@ -34,13 +32,6 @@ export function pipeline<T>(src: IterableIterator<T>): Iterator<T> {
  * @returns An `Iterable` that yields 0 items
  */
 export function* newEmpty<T>(): IterableIterator<T> {}
-
-export function* tap<T>(src: Iterable<T>, fn: (val: T) => void): IterableIterator<T> {
-  for (const val of src) {
-    fn(val);
-    yield val;
-  }
-}
 
 /**
  * Creates a new `Iterable` that yields at most n items from src.

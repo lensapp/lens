@@ -8,20 +8,18 @@ import { disposer } from "../index";
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
 import { enlistMessageChannelListenerInjectionToken } from "./enlist-message-channel-listener-injection-token";
 
-const listeningOfChannelsInjectable = getInjectable({
-  id: "listening-of-channels",
+const listeningOnMessageChannelsInjectable = getInjectable({
+  id: "listening-on-message-channels",
 
   instantiate: (di) => {
     const enlistMessageChannelListener = di.inject(enlistMessageChannelListenerInjectionToken);
     const messageChannelListeners = di.injectMany(messageChannelListenerInjectionToken);
 
-    return getStartableStoppable("listening-of-channels", () => {
-      const messageChannelDisposers = messageChannelListeners.map(enlistMessageChannelListener);
-
-      return disposer(...messageChannelDisposers);
-    });
+    return getStartableStoppable("listening-on-channels", () => (
+      disposer(messageChannelListeners.map(enlistMessageChannelListener))
+    ));
   },
 });
 
 
-export default listeningOfChannelsInjectable;
+export default listeningOnMessageChannelsInjectable;
