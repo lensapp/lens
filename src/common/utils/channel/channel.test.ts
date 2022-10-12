@@ -195,6 +195,30 @@ describe("channel", () => {
       });
     });
   });
+
+  it("when registering multiple handlers for the same channel, throws", async () => {
+    const applicationBuilder = getApplicationBuilder();
+
+    const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
+      channel: testRequestChannel,
+      handler: () => () => "some-value",
+    });
+    const testChannelListenerInMain2Injectable = getRequestChannelListenerInjectable({
+      channel: testRequestChannel,
+      handler: () => () => "some-other-value",
+    });
+
+    testChannelListenerInMain2Injectable.id += "2";
+
+    applicationBuilder.beforeApplicationStart((mainDi) => {
+      runInAction(() => {
+        mainDi.register(testChannelListenerInMainInjectable);
+        mainDi.register(testChannelListenerInMain2Injectable);
+      });
+    });
+
+    await expect(applicationBuilder.render()).rejects.toThrow('Tried to register a multiple channel handlers for "some-request-channel-id", only one handler is supported for a request channel.');
+  });
 });
 
 const testMessageChannel: TestMessageChannel = {
