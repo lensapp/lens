@@ -16,7 +16,7 @@ const navigateToExtensionsMenuItem = getInjectable({
 
     return {
       kind: "clickable-menu-item" as const,
-      parentId: isMac ? "primary-for-mac" : "file",
+      parentId: isMac ? "mac" : "file",
       id: "navigate-to-extensions",
       orderNumber: isMac ? 50 : 40,
       label: "Extensions",

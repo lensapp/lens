@@ -29,7 +29,7 @@ describe("welcome - navigation using application menu", () => {
 
   describe("when navigated somewhere else", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.primary-for-mac.navigate-to-preferences");
+      applicationBuilder.applicationMenu.click("root.mac.navigate-to-preferences");
     });
 
     it("renders", () => {

@@ -19,7 +19,7 @@ const quitApplicationMenuItemInjectable = getInjectable({
       id: "quit",
       label: "Quit",
 
-      parentId: isMac ? "primary-for-mac" : "file",
+      parentId: isMac ? "mac" : "file",
       orderNumber: isMac ? 140 : 70,
       keyboardShortcut: isMac ? "Cmd+Q" : "Alt+F4",
 

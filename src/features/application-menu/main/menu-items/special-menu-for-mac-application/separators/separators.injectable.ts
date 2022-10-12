@@ -9,24 +9,24 @@ import {
 
 export const separator1 = getApplicationMenuSeparatorInjectable({
   id: "separator-1",
-  parentId: "primary-for-mac",
+  parentId: "mac",
   orderNumber: 30,
 });
 
 export const separator2 = getApplicationMenuSeparatorInjectable({
   id: "separator-2",
-  parentId: "primary-for-mac",
+  parentId: "mac",
   orderNumber: 70,
 });
 
 export const separator3 = getApplicationMenuSeparatorInjectable({
   id: "separator-3",
-  parentId: "primary-for-mac",
+  parentId: "mac",
   orderNumber: 90,
 });
 
 export const separator4 = getApplicationMenuSeparatorInjectable({
   id: "separator-4",
-  parentId: "primary-for-mac",
+  parentId: "mac",
   orderNumber: 130,
 });

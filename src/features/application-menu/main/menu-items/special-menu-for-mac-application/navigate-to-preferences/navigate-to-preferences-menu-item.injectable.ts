@@ -16,7 +16,7 @@ const navigateToPreferencesMenuItemInjectable = getInjectable({
 
     return {
       kind: "clickable-menu-item" as const,
-      parentId: isMac ? "primary-for-mac" : "file",
+      parentId: isMac ? "mac" : "file",
       id: "navigate-to-preferences",
       orderNumber: isMac ? 40 : 30,
       label: "Preferences",
