@@ -297,6 +297,7 @@ exports[`preferences - navigation to application preferences given in some child
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -935,6 +936,7 @@ exports[`preferences - navigation to application preferences given in some child
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

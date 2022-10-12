@@ -560,6 +560,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1138,6 +1139,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1608,6 +1610,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -2186,6 +2189,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -2656,6 +2660,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -3234,6 +3239,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -3857,6 +3863,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -4327,6 +4334,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -4797,6 +4805,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -5267,6 +5276,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

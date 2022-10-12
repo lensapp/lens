@@ -560,6 +560,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1149,6 +1150,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1740,6 +1742,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -2380,6 +2383,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -2969,6 +2973,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -3547,6 +3552,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -4170,6 +4176,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -4795,6 +4802,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -5479,6 +5487,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -6057,6 +6066,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
