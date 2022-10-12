@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { noop } from "lodash/fp";
 import { action } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -41,6 +42,14 @@ describe("application-menu-in-legacy-extension-api", () => {
         mainOptions: {
           appMenus: [
             {
+              id: "some-non-shown-item",
+              parentId: "some-top-menu-item",
+              click: noop,
+              label: "Irrelevant",
+              visible: false,
+            },
+
+            {
               id: "some-clickable-item",
               parentId: "some-top-menu-item",
               click: onClickMock,
@@ -50,6 +59,21 @@ describe("application-menu-in-legacy-extension-api", () => {
               parentId: "some-top-menu-item",
               type: "separator",
             },
+
+            {
+              id: "some-os-action-menu-item-id",
+              parentId: "some-top-menu-item",
+              role: "help",
+            },
+
+            {
+              id: "some-submenu-with-explicit-children",
+              parentId: "some-top-menu-item",
+
+              submenu: [
+                { id: "some-explicit-child", label: "Some explicit child", click: noop },
+              ],
+            },
           ],
         },
       };
@@ -57,21 +81,25 @@ describe("application-menu-in-legacy-extension-api", () => {
       builder.extensions.enable(testExtensionOptions);
     });
 
-    it("menu related items exist", () => {
+    it("related menu items exist", () => {
       const menuItemPathsForExtension = builder.applicationMenu.items.filter(
         (x) =>
           x.startsWith("root.some-top-menu-item.some-extension-name"),
       );
 
       expect(menuItemPathsForExtension).toEqual([
-        "root.some-top-menu-item.some-extension-name/application-menu-item/clickable-menu-item(some-clickable-item)",
-        "root.some-top-menu-item.some-extension-name/application-menu-item/separator(1)",
+        "root.some-top-menu-item.some-extension-name/some-clickable-item",
+        // Note: anonymous index "1" is used by the non-visible menu item.
+        "root.some-top-menu-item.some-extension-name/2-separator",
+        "root.some-top-menu-item.some-extension-name/some-os-action-menu-item-id",
+        "root.some-top-menu-item.some-extension-name/some-submenu-with-explicit-children",
+        "root.some-top-menu-item.some-extension-name/some-submenu-with-explicit-children.some-extension-name/some-submenu-with-explicit-children/some-explicit-child",
       ]);
     });
 
     it("when the extension-based clickable menu item is clicked, does so", () => {
       builder.applicationMenu.click(
-        "root.some-top-menu-item.some-extension-name/application-menu-item/clickable-menu-item(some-clickable-item)",
+        "root.some-top-menu-item.some-extension-name/some-clickable-item",
       );
 
       expect(onClickMock).toHaveBeenCalled();
@@ -100,8 +128,11 @@ describe("application-menu-in-legacy-extension-api", () => {
         );
 
         expect(menuItemPathsForExtension).toEqual([
-          "root.some-top-menu-item.some-extension-name/application-menu-item/clickable-menu-item(some-clickable-item)",
-          "root.some-top-menu-item.some-extension-name/application-menu-item/separator(1)",
+          "root.some-top-menu-item.some-extension-name/some-clickable-item",
+          "root.some-top-menu-item.some-extension-name/2-separator",
+          "root.some-top-menu-item.some-extension-name/some-os-action-menu-item-id",
+          "root.some-top-menu-item.some-extension-name/some-submenu-with-explicit-children",
+          "root.some-top-menu-item.some-extension-name/some-submenu-with-explicit-children.some-extension-name/some-submenu-with-explicit-children/some-explicit-child",
         ]);
       });
     });
