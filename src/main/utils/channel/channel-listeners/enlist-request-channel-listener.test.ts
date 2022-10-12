@@ -5,12 +5,13 @@
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
 import type { IpcMain, IpcMainInvokeEvent } from "electron";
-import type { EnlistRequestChannelListener } from "../../../../common/utils/channel/enlist-request-channel-listener-injection-token";
-import { enlistRequestChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-request-channel-listener-injection-token";
 import { getPromiseStatus } from "../../../../common/test-utils/get-promise-status";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { RequestChannel, RequestChannelHandler } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { EnlistRequestChannelListener } from "./enlist-request-channel-listener.injectable";
+import enlistRequestChannelListenerInjectable from "./enlist-request-channel-listener.injectable";
+import type { RequestChannelHandler } from "./listener-tokens";
 
 type TestRequestChannel = RequestChannel<unknown, unknown>;
 
@@ -37,9 +38,7 @@ describe("enlist request channel listener in main", () => {
 
     di.override(ipcMainInjectable, () => ipcMainStub);
 
-    enlistRequestChannelListener = di.inject(
-      enlistRequestChannelListenerInjectionToken,
-    );
+    enlistRequestChannelListener = di.inject(enlistRequestChannelListenerInjectable);
   });
 
   describe("when called", () => {
