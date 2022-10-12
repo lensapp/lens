@@ -4,11 +4,12 @@
  */
 import { getMessageChannelListenerInjectable } from "../../../../common/utils/channel/message-channel-listener-injection-token";
 import { reloadPageChannel } from "../common/channel";
-import reloadPageHandlerInjectable from "./handler.injectable";
 
 const reloadPageChannelListenerInjectable = getMessageChannelListenerInjectable({
+  id: "handler",
   channel: reloadPageChannel,
-  handlerInjectable: reloadPageHandlerInjectable,
+  handler: () => () => location.reload(),
+  causesSideEffects: true,
 });
 
 export default reloadPageChannelListenerInjectable;

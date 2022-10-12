@@ -7,8 +7,9 @@ import { getMessageChannelListenerInjectable } from "../../../common/utils/chann
 import quitAndInstallUpdateInjectable from "../quit-and-install-update.injectable";
 
 const restartAndInstallUpdateListenerInjectable = getMessageChannelListenerInjectable({
+  id: "restart",
   channel: restartAndInstallUpdateChannel,
-  handlerInjectable: quitAndInstallUpdateInjectable,
+  handler: (di) => di.inject(quitAndInstallUpdateInjectable),
 });
 
 export default restartAndInstallUpdateListenerInjectable;

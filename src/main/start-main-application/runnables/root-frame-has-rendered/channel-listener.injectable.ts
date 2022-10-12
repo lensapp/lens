@@ -4,11 +4,17 @@
  */
 import { getMessageChannelListenerInjectable } from "../../../../common/utils/channel/message-channel-listener-injection-token";
 import { rootFrameHasRenderedChannel } from "../../../../common/root-frame/root-frame-rendered-channel";
-import rootFrameHasRenderedHandlerInjectable from "./handler.injectable";
+import { runManyFor } from "../../../../common/runnable/run-many-for";
+import { afterRootFrameIsReadyInjectionToken } from "../../runnable-tokens/after-root-frame-is-ready-injection-token";
 
 const rootFrameRenderedChannelListenerInjectable = getMessageChannelListenerInjectable({
+  id: "action",
   channel: rootFrameHasRenderedChannel,
-  handlerInjectable: rootFrameHasRenderedHandlerInjectable,
+  handler: (di) => {
+    const runMany = runManyFor(di);
+
+    return runMany(afterRootFrameIsReadyInjectionToken);
+  },
 });
 
 export default rootFrameRenderedChannelListenerInjectable;

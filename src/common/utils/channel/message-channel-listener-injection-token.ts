@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Injectable } from "@ogre-tools/injectable";
+import type { DiContainerForInjection } from "@ogre-tools/injectable";
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 
 export interface MessageChannel<Message> {
@@ -29,8 +29,10 @@ export interface GetMessageChannelListenerInfo<
   Channel extends MessageChannel<Message>,
   Message,
 > {
+  id: string;
   channel: Channel;
-  handlerInjectable: Injectable<MessageChannelHandler<Channel>, unknown, void>;
+  handler: (di: DiContainerForInjection) => MessageChannelHandler<Channel>;
+  causesSideEffects?: boolean;
 }
 
 export function getMessageChannelListenerInjectable<
@@ -38,11 +40,12 @@ export function getMessageChannelListenerInjectable<
   Message,
 >(info: GetMessageChannelListenerInfo<Channel, Message>) {
   return getInjectable({
-    id: `${info.channel.id}-listener`,
+    id: `${info.channel.id}-listener-${info.id}`,
     instantiate: (di) => ({
       channel: info.channel,
-      handler: di.inject(info.handlerInjectable),
+      handler: info.handler(di),
     }),
     injectionToken: messageChannelListenerInjectionToken,
+    causesSideEffects: info.causesSideEffects,
   });
 }
