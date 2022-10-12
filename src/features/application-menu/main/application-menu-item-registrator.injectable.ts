@@ -15,16 +15,22 @@ import type {
 } from "./menu-items/application-menu-item-injection-token";
 import applicationMenuItemInjectionToken from "./menu-items/application-menu-item-injection-token";
 import type { MenuRegistration } from "./menu-registration";
+import logErrorInjectable from "../../../common/log-error.injectable";
 
 const applicationMenuItemRegistratorInjectable = getInjectable({
   id: "application-menu-item-registrator",
 
-  instantiate: () => (ext: LensExtension) => {
-    const extension = ext as LensMainExtension;
+  instantiate: (di) => {
+    const logError = di.inject(logErrorInjectable);
+    const toRecursedInjectables = toRecursedInjectablesFor(logError);
 
-    return extension.appMenus.flatMap(
-      toRecursedInjectables([extension.sanitizedExtensionId]),
-    );
+    return (ext: LensExtension) => {
+      const extension = ext as LensMainExtension;
+
+      return extension.appMenus.flatMap(
+        toRecursedInjectables([extension.sanitizedExtensionId]),
+      );
+    };
   },
 
   injectionToken: extensionRegistratorInjectionToken,
@@ -32,13 +38,17 @@ const applicationMenuItemRegistratorInjectable = getInjectable({
 
 export default applicationMenuItemRegistratorInjectable;
 
-const toRecursedInjectables =
-  (previousIdPath: string[]) =>
+const toRecursedInjectablesFor = (logError: (errorMessage: string) => void) => {
+  const toRecursedInjectables = (previousIdPath: string[]) =>
     (
       registration: MenuRegistration,
       index: number,
-    // Todo: new version of injectable would require less type parameters with defaults.
-    ): Injectable<ApplicationMenuItemTypes, ApplicationMenuItemTypes, void>[] => {
+      // Todo: new version of injectable would require less type parameters with defaults.
+    ): Injectable<
+      ApplicationMenuItemTypes,
+      ApplicationMenuItemTypes,
+      void
+      >[] => {
       const previousIdPathString = previousIdPath.join("/");
       const registrationId = registration.id || index.toString();
       const currentIdPath = [...previousIdPath, registrationId];
@@ -52,7 +62,9 @@ const toRecursedInjectables =
         index,
       });
 
-      if(!menuItem) {
+      if (!menuItem) {
+        logError(`[MENU]: Tried to register menu item "${currentIdPathString}" but it is not recognizable as any of ApplicationMenuItemTypes`);
+
         return [];
       }
 
@@ -72,6 +84,9 @@ const toRecursedInjectables =
           : []),
       ];
     };
+
+  return toRecursedInjectables;
+};
 
 const getApplicationMenuItem = ({
   registration,

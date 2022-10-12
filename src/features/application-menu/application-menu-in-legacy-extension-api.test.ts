@@ -4,25 +4,33 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { noop } from "lodash/fp";
-import { action } from "mobx";
+import { runInAction } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import applicationMenuItemInjectionToken from "./main/menu-items/application-menu-item-injection-token";
+import logErrorInjectable from "../../common/log-error.injectable";
 
 describe("application-menu-in-legacy-extension-api", () => {
   let builder: ApplicationBuilder;
+  let logErrorMock: jest.Mock;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
     builder.beforeApplicationStart(
-      action((mainDi) => {
-        mainDi.register(
-          someTopMenuItemInjectable,
-          someNonExtensionBasedMenuItemInjectable,
-        );
-      }),
+      (mainDi) => {
+        runInAction(() => {
+          mainDi.register(
+            someTopMenuItemInjectable,
+            someNonExtensionBasedMenuItemInjectable,
+          );
+        });
+
+        logErrorMock = jest.fn();
+
+        mainDi.override(logErrorInjectable, () => logErrorMock);
+      },
     );
 
     await builder.startHidden();
@@ -135,6 +143,55 @@ describe("application-menu-in-legacy-extension-api", () => {
           "root.some-top-menu-item.some-extension-name/some-submenu-with-explicit-children.some-extension-name/some-submenu-with-explicit-children/some-explicit-child",
         ]);
       });
+    });
+  });
+
+  describe("when extension with unrecognizable application menu items is enabled", () => {
+
+    beforeEach(() => {
+      const testExtensionOptions: FakeExtensionOptions = {
+        id: "some-test-extension",
+        name: "some-extension-name",
+
+        mainOptions: {
+          appMenus: [
+            {
+              id: "some-recognizable-item",
+              parentId: "some-top-menu-item",
+              click: noop,
+            },
+
+            {
+              id: "some-unrecognizable-item",
+              parentId: "some-top-menu-item",
+              // Note: there is no way to recognize this
+              // click: noop,
+              // role: "help"
+              // submenu: []
+              // type: "separator"
+            },
+          ],
+        },
+      };
+
+      builder.extensions.enable(testExtensionOptions);
+    });
+
+    it("only recognizable menu items from extension exist", () => {
+      const menuItemPathsForExtension = builder.applicationMenu.items.filter(
+        (x) =>
+          x.startsWith("root.some-top-menu-item.some-extension-name"),
+      );
+
+      expect(menuItemPathsForExtension).toEqual([
+        "root.some-top-menu-item.some-extension-name/some-recognizable-item",
+      ]);
+    });
+
+    it("logs about the unrecognizable item", () => {
+      expect(logErrorMock).toHaveBeenCalledWith(
+        '[MENU]: Tried to register menu item "some-extension-name/some-unrecognizable-item" but it is not recognizable as any of ApplicationMenuItemTypes',
+      );
     });
   });
 });
