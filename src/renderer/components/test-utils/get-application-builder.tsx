@@ -373,8 +373,7 @@ export const getApplicationBuilder = () => {
         }
 
         // Todo: prevent leaking of Electron.
-        // @ts-ignore
-        clickableMenuItem.value.onClick();
+        (clickableMenuItem.value as any).onClick();
       },
     },
 
