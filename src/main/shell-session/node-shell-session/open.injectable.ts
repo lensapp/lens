@@ -35,7 +35,7 @@ const openNodeShellSessionInjectable = getInjectable({
       logger: di.inject(loggerInjectable),
       resolvedShell: di.inject(resolvedShellInjectable),
       appName: di.inject(appNameInjectable),
-      buildVersion: di.inject(buildVersionInjectable).get(),
+      buildVersion: di.inject(buildVersionInjectable),
       createKubeJsonApiForCluster: di.inject(createKubeJsonApiForClusterInjectable),
       computeShellEnvironment: di.inject(computeShellEnvironmentInjectable),
       spawnPty: di.inject(spawnPtyInjectable),

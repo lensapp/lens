@@ -17,6 +17,7 @@ import { type TerminalMessage, TerminalChannels } from "../../common/terminal/ch
 import type { Logger } from "../../common/logger";
 import type { ComputeShellEnvironment } from "../utils/shell-env/compute-shell-environment.injectable";
 import type { SpawnPty } from "./spawn-pty.injectable";
+import type { InitializableState } from "../../common/initializable-state/create";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -108,7 +109,7 @@ export interface ShellSessionDependencies {
   readonly logger: Logger;
   readonly resolvedShell: string | undefined;
   readonly appName: string;
-  readonly buildVersion: string;
+  readonly buildVersion: InitializableState<string>;
   computeShellEnvironment: ComputeShellEnvironment;
   spawnPty: SpawnPty;
 }
@@ -376,7 +377,7 @@ export abstract class ShellSession {
     env.PTYPID = process.pid.toString();
     env.KUBECONFIG = await this.kubeconfigPathP;
     env.TERM_PROGRAM = this.dependencies.appName;
-    env.TERM_PROGRAM_VERSION = this.dependencies.buildVersion;
+    env.TERM_PROGRAM_VERSION = this.dependencies.buildVersion.get();
 
     if (this.cluster.preferences.httpsProxy) {
       env.HTTPS_PROXY = this.cluster.preferences.httpsProxy;

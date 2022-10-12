@@ -44,7 +44,7 @@ const openLocalShellSessionInjectable = getInjectable({
       userStore: di.inject(userStoreInjectable),
       resolvedShell: di.inject(resolvedShellInjectable),
       appName: di.inject(appNameInjectable),
-      buildVersion: di.inject(buildVersionInjectable).get(),
+      buildVersion: di.inject(buildVersionInjectable),
       modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       joinPaths: di.inject(joinPathsInjectable),
