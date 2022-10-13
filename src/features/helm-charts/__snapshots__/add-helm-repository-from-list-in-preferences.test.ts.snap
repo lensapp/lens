@@ -1756,7 +1756,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
     />
   </div>
   <div
-    class="Select__menu-portal css-yj2v5g"
+    class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
       class="theme-lens selection-of-active-public-helm-repository-options Select__menu css-26l3qy-menu"
@@ -4811,7 +4811,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
     />
   </div>
   <div
-    class="Select__menu-portal css-yj2v5g"
+    class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
       class="theme-lens selection-of-active-public-helm-repository-options Select__menu css-26l3qy-menu"

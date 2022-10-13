@@ -3071,7 +3071,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
     </div>
   </div>
   <div
-    class="Select__menu-portal css-yj2v5g"
+    class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
       class="theme-outlined install-chart-version-select-for-some-first-tab-id-options Select__menu css-26l3qy-menu"
@@ -7984,7 +7984,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
     </div>
   </div>
   <div
-    class="Select__menu-portal css-yj2v5g"
+    class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
       class="NamespaceSelectMenu theme-outlined install-chart-namespace-select-for-some-first-tab-id-options Select__menu css-26l3qy-menu"
