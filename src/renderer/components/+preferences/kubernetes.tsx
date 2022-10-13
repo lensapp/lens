@@ -4,7 +4,7 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
-import { HelmCharts } from "./kubernetes/helm-charts/helm-charts";
+import { HelmCharts } from "../../../features/helm-charts/child-features/preferences/renderer/helm-charts";
 import { KubeconfigSyncs } from "./kubeconfig-syncs";
 import { KubectlBinaries } from "./kubectl-binaries";
 import { Preferences } from "./preferences";
@@ -22,10 +22,7 @@ export const Kubernetes = observer(() => (
         <KubeconfigSyncs />
       </section>
       <hr />
-      <section id="helm">
-        <h2>Helm Charts</h2>
-        <HelmCharts />
-      </section>
+      <HelmCharts />
     </section>
   </Preferences>
 ));

@@ -14,7 +14,7 @@ import type { HelmRepositoriesErrorState } from "./helm-repositories-error-state
 import helmRepositoriesErrorStateInjectable from "./helm-repositories-error-state.injectable";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
-import { Notice } from "../../../+extensions/notice";
+import { Notice } from "../../../../../renderer/components/+extensions/notice";
 
 interface Dependencies {
   helmRepositoriesErrorState: IObservableValue<HelmRepositoriesErrorState>;
@@ -25,27 +25,31 @@ const NonInjectedHelmCharts = observer(
     const state = helmRepositoriesErrorState.get();
 
     return (
-      <div>
-        {!state.controlsAreShown && (
-          <Notice>
-            <div className="flex-grow text-center">{state.errorMessage}</div>
-          </Notice>
-        )}
+      <section id="helm">
+        <h2>Helm Charts</h2>
 
-        {state.controlsAreShown && (
-          <div data-testid="helm-controls">
-            <div className="flex gaps">
-              <AddingOfPublicHelmRepository />
+        <div>
+          {!state.controlsAreShown && (
+            <Notice>
+              <div className="flex-grow text-center">{state.errorMessage}</div>
+            </Notice>
+          )}
 
-              <AddingOfCustomHelmRepositoryOpenButton />
+          {state.controlsAreShown && (
+            <div data-testid="helm-controls">
+              <div className="flex gaps">
+                <AddingOfPublicHelmRepository />
+
+                <AddingOfCustomHelmRepositoryOpenButton />
+              </div>
+
+              <HelmRepositories />
+
+              <AddingOfCustomHelmRepositoryDialog />
             </div>
-
-            <HelmRepositories />
-
-            <AddingOfCustomHelmRepositoryDialog />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </section>
     );
   },
 );

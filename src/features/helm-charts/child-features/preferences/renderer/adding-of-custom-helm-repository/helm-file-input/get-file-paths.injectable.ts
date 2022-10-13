@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { FileFilter } from "electron";
-import { requestOpenFilePickingDialog } from "../../../../../../ipc";
+import { requestOpenFilePickingDialog } from "../../../../../../../renderer/ipc";
 
 const getFilePathsInjectable = getInjectable({
   id: "get-file-paths",

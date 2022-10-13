@@ -2,14 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { InputValidator } from "../../../../../input";
-import { Input } from "../../../../../input";
-import { Icon } from "../../../../../icon";
+import type { InputValidator } from "../../../../../../../renderer/components/input";
+import { Input } from "../../../../../../../renderer/components/input";
+import { Icon } from "../../../../../../../renderer/components/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import getFilePathsInjectable from "./get-file-paths.injectable";
 import type { FileFilter } from "electron";
-import isPathInjectable from "../../../../../input/validators/is-path.injectable";
+import isPathInjectable from "../../../../../../../renderer/components/input/validators/is-path.injectable";
 
 interface HelmFileInputProps {
   placeholder: string;

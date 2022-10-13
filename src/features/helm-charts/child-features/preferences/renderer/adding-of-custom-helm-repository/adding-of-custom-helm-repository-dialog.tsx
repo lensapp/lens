@@ -6,7 +6,7 @@
 import "./add-helm-repo-dialog.scss";
 
 import React from "react";
-import { Dialog } from "../../../../dialog";
+import { Dialog } from "../../../../../../renderer/components/dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { AddingOfCustomHelmRepositoryDialogContent } from "./adding-of-custom-helm-repository-dialog-content";
 import addingOfCustomHelmRepositoryDialogIsVisibleInjectable from "./dialog-visibility/adding-of-custom-helm-repository-dialog-is-visible.injectable";

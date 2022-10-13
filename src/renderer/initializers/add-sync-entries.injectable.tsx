@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getAllEntries } from "../components/+preferences/kubeconfig-syncs";
+import { getAllEntries } from "../../features/preferences/renderer/preference-items/kubernetes/kubeconfig-sync/kubeconfig-sync";
 import { Notifications } from "../components/notifications";
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";

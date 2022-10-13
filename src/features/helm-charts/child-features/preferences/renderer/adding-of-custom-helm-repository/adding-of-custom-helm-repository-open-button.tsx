@@ -4,7 +4,7 @@
  */
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { Button } from "../../../../button";
+import { Button } from "../../../../../../renderer/components/button";
 import showDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/show-dialog-for-adding-custom-helm-repository.injectable";
 
 interface Dependencies {

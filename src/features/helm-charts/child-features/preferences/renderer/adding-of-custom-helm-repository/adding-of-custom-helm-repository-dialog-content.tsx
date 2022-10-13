@@ -6,9 +6,9 @@
 import "./add-helm-repo-dialog.scss";
 
 import React from "react";
-import { Wizard, WizardStep } from "../../../../wizard";
-import { Input } from "../../../../input";
-import { systemName, isUrl } from "../../../../input/input_validators";
+import { Wizard, WizardStep } from "../../../../../../renderer/components/wizard";
+import { Input } from "../../../../../../renderer/components/input";
+import { isUrl, systemName } from "../../../../../../renderer/components/input/input_validators";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import customHelmRepoInjectable from "./custom-helm-repo.injectable";
 import type { HelmRepo } from "../../../../../../common/helm/helm-repo";
@@ -17,11 +17,11 @@ import type { IObservableValue } from "mobx";
 import { action } from "mobx";
 import submitCustomHelmRepositoryInjectable from "./submit-custom-helm-repository.injectable";
 import hideDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/hide-dialog-for-adding-custom-helm-repository.injectable";
-import { Button } from "../../../../button";
-import { Icon } from "../../../../icon";
+import { Button } from "../../../../../../renderer/components/button";
+import { Icon } from "../../../../../../renderer/components/icon";
 import maximalCustomHelmRepoOptionsAreShownInjectable from "./maximal-custom-helm-repo-options-are-shown.injectable";
-import { SubTitle } from "../../../../layout/sub-title";
-import { Checkbox } from "../../../../checkbox";
+import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
+import { Checkbox } from "../../../../../../renderer/components/checkbox";
 import { HelmFileInput } from "./helm-file-input/helm-file-input";
 
 interface Dependencies {
