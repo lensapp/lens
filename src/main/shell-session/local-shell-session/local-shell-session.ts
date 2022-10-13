@@ -3,20 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type WebSocket from "ws";
 import path from "path";
 import { UserStore } from "../../../common/user-store";
-import type { Cluster } from "../../../common/cluster/cluster";
 import type { ClusterId } from "../../../common/cluster-types";
+import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-session";
 import { ShellSession } from "../shell-session";
-import type { Kubectl } from "../../kubectl/kubectl";
 import { baseBinariesDir } from "../../../common/vars";
+
+interface LocalShellSessionDependencies extends ShellSessionDependencies {
+  modifyTerminalShellEnv: (clusterId: ClusterId, env: Record<string, string | undefined>) => Record<string, string | undefined>;
+}
 
 export class LocalShellSession extends ShellSession {
   ShellType = "shell";
 
-  constructor(protected shellEnvModify: (clusterId: ClusterId, env: Record<string, string | undefined>) => Record<string, string | undefined>, kubectl: Kubectl, websocket: WebSocket, cluster: Cluster, terminalId: string) {
-    super(kubectl, websocket, cluster, terminalId);
+  constructor(protected readonly dependencies: LocalShellSessionDependencies, args: ShellSessionArgs) {
+    super(dependencies, args);
   }
 
   protected getPathEntries(): string[] {
@@ -28,11 +30,8 @@ export class LocalShellSession extends ShellSession {
   }
 
   public async open() {
-    let env = await this.getCachedShellEnv();
-
     // extensions can modify the env
-    env = this.shellEnvModify(this.cluster.id, env);
-
+    const env = this.dependencies.modifyTerminalShellEnv(this.cluster.id, await this.getCachedShellEnv());
     const shell = env.PTYSHELL;
 
     if (!shell) {
