@@ -16,6 +16,7 @@ import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import resolvedShellInjectable from "../../../common/user-store/resolved-shell.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 
 interface InstantiationParameter {
   websocket: WebSocket;
@@ -39,6 +40,7 @@ const localShellSessionInjectable = getInjectable({
       logger: di.inject(loggerInjectable),
       resolvedShell: di.inject(resolvedShellInjectable),
       spawnPty: di.inject(spawnPtyInjectable),
+      userStore: di.inject(userStoreInjectable),
     }, {
       kubectl: createKubectl(cluster.version),
       websocket,
