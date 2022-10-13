@@ -16,7 +16,7 @@ interface Dependencies {
   authenticateRequest: (clusterId: ClusterId, tabId: string, shellToken: string | undefined) => boolean;
 
   createShellSession: (args: {
-    webSocket: WebSocket;
+    websocket: WebSocket;
     cluster: Cluster;
     tabId: string;
     nodeName?: string;
@@ -37,8 +37,8 @@ export const shellApiRequest = ({ createShellSession, authenticateRequest, clust
 
   const ws = new WebSocketServer({ noServer: true });
 
-  ws.handleUpgrade(req, socket, head, (webSocket) => {
-    const shell = createShellSession({ webSocket, cluster, tabId, nodeName });
+  ws.handleUpgrade(req, socket, head, (websocket) => {
+    const shell = createShellSession({ websocket, cluster, tabId, nodeName });
 
     shell.open()
       .catch(error => logger.error(`[SHELL-SESSION]: failed to open a ${nodeName ? "node" : "local"} shell`, error));
