@@ -12,10 +12,9 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
 import type { Kubectl } from "../../kubectl/kubectl";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
-import type { OpenShellSession } from "../create-shell-session.injectable";
 import type { SpawnPty } from "../spawn-pty.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
-import openLocalShellSessionInjectable from "./open.injectable";
+import localShellSessionInjectable from "./local-shell-session.injectable";
 
 describe("technical unit tests for local shell sessions", () => {
   let di: DiContainer;
@@ -32,7 +31,6 @@ describe("technical unit tests for local shell sessions", () => {
   });
 
   describe("when on windows", () => {
-    let openLocalShellSession: OpenShellSession;
     let spawnPtyMock: jest.MockedFunction<SpawnPty>;
 
     beforeEach(() => {
@@ -45,8 +43,6 @@ describe("technical unit tests for local shell sessions", () => {
         binDir: async () => "/some-kubectl-binary-dir",
         getBundledPath: () => "/some-bundled-kubectl-path",
       }) as Partial<Kubectl> as Kubectl);
-
-      openLocalShellSession = di.inject(openLocalShellSessionInjectable);
     });
 
     describe("when opening a local shell session", () => {
@@ -76,7 +72,7 @@ describe("technical unit tests for local shell sessions", () => {
           };
         });
 
-        await openLocalShellSession({
+        const session = di.inject(localShellSessionInjectable, {
           cluster: {
             getProxyKubeconfigPath: async () => "/some-proxy-kubeconfig",
             preferences: {},
@@ -84,6 +80,8 @@ describe("technical unit tests for local shell sessions", () => {
           tabId: "my-tab-id",
           websocket: new WebSocket(null),
         });
+
+        await session.open();
       });
     });
   });
