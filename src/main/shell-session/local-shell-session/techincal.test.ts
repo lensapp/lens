@@ -7,6 +7,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { WebSocket } from "ws";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
+import resolvedShellInjectable from "../../../common/user-store/resolved-shell.injectable";
 import platformInjectable from "../../../common/vars/platform.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
@@ -24,6 +25,7 @@ describe("technical unit tests for local shell sessions", () => {
       doGeneralOverrides: true,
     });
 
+    di.override(resolvedShellInjectable, () => "powershell.exe");
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(buildVersionInjectable, () => ({
       get: () => "1.1.1",
