@@ -6,9 +6,8 @@
 import { observable, makeObservable } from "mobx";
 import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
-import type { Arguments } from "typed-emitter";
 import type { Defaulted } from "../utils";
-import type { DefaultWebsocketApiParams } from "./default-websocket-api-params.injectable";
+import type { DefaultWebsocketApiParams } from "./default-websocket-params.injectable";
 
 interface WebsocketApiParams {
   /**
@@ -72,7 +71,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   protected pendingCommands: string[] = [];
   protected reconnectTimer?: number;
   protected pingTimer?: number;
-  protected params: Defaulted<WebsocketApiParams, keyof DefaultWebsocketApiParams>;
+  protected readonly params: Defaulted<WebsocketApiParams, keyof DefaultWebsocketApiParams>;
 
   @observable readyState = WebSocketApiState.PENDING;
 
@@ -157,14 +156,14 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   protected _onOpen(evt: Event) {
-    this.emit("open", ...[] as Arguments<Events["open"]>);
+    (this as TypedEventEmitter<WebSocketEvents>).emit("open");
     if (this.params.flushOnOpen) this.flush();
     this.readyState = WebSocketApiState.OPEN;
     this.writeLog("%cOPEN", "color:green;font-weight:bold;", evt);
   }
 
   protected _onMessage({ data }: MessageEvent): void {
-    this.emit("data", ...[data] as Arguments<Events["data"]>);
+    (this as TypedEventEmitter<WebSocketEvents>).emit("data", data);
     this.writeLog("%cMESSAGE", "color:black;font-weight:bold;", data);
   }
 
@@ -188,7 +187,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
       }
     } else {
       this.readyState = WebSocketApiState.CLOSED;
-      this.emit("close", ...[] as Arguments<Events["close"]>);
+      (this as TypedEventEmitter<WebSocketEvents>).emit("close");
     }
     this.writeLog("%cCLOSE", `color:${error ? "red" : "black"};font-weight:bold;`, evt);
   }
