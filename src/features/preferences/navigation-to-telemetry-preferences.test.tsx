@@ -6,7 +6,7 @@ import type { RenderResult } from "@testing-library/react";
 import React from "react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import navigateToTelemetryPreferencesInjectable from "../../common/front-end-routing/routes/preferences/telemetry/navigate-to-telemetry-preferences.injectable";
+import navigateToTelemetryPreferencesInjectable from "./common/navigate-to-telemetry-preferences.injectable";
 import sentryDataSourceNameInjectable from "../../common/vars/sentry-dsn-url.injectable";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 
