@@ -402,7 +402,7 @@
     "node-gyp": "^8.3.0",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
-    "playwright": "^1.27.0",
+    "playwright": "^1.27.1",
     "postcss": "^8.4.18",
     "postcss-loader": "^6.2.1",
     "query-string": "^7.1.1",
