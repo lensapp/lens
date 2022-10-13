@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import terminalPreferencesRouteInjectable from "./terminal-preferences-route.injectable";
-import { navigateToRouteInjectionToken } from "../../../navigate-to-route-injection-token";
+import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import preferencesRouteInjectable from "./preferences-route.injectable";
 
 const navigateToTerminalPreferencesInjectable = getInjectable({
   id: "navigate-to-terminal-preferences",
 
   instantiate: (di) => {
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
-    const route = di.inject(terminalPreferencesRouteInjectable);
+    const route = di.inject(preferencesRouteInjectable);
 
-    return () => navigateToRoute(route);
+    return () => navigateToRoute(route, { parameters: { preferenceTabId: "terminal" }});
   },
 });
 

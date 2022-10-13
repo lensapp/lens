@@ -4,29 +4,23 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
-import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { computed } from "mobx";
-import terminalPreferencesRouteInjectable from "../../../../common/front-end-routing/routes/preferences/terminal/terminal-preferences-route.injectable";
-import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab.injectable";
+import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import preferenceTabIsActiveInjectable from "./navigate-to-preference-tab/preference-tab-is-active.injectable";
 
 const terminalPreferencesNavigationItemInjectable = getInjectable({
   id: "terminal-preferences-navigation-item",
 
   instantiate: (di) => {
-    const navigateToPreferenceTab = di.inject(
-      navigateToPreferenceTabInjectable,
-    );
-
-    const route = di.inject(terminalPreferencesRouteInjectable);
-
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
+    const navigateToPreferenceTab = di.inject(navigateToPreferenceTabInjectable);
+    const preferenceTabIsActive = di.inject(preferenceTabIsActiveInjectable, "terminal");
 
     return {
       id: "terminal",
       label: "Terminal",
       parent: "general",
-      navigate: navigateToPreferenceTab(route),
-      isActive: routeIsActive,
+      navigate: () => navigateToPreferenceTab("terminal"),
+      isActive: preferenceTabIsActive,
       isVisible: computed(() => true),
       orderNumber: 50,
     };
