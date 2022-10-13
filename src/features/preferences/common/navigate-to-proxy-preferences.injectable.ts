@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import proxyPreferencesRouteInjectable from "./proxy-preferences-route.injectable";
-import { navigateToRouteInjectionToken } from "../../../navigate-to-route-injection-token";
+import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import preferencesRouteInjectable from "./preferences-route.injectable";
 
 const navigateToProxyPreferencesInjectable = getInjectable({
   id: "navigate-to-proxy-preferences",
 
   instantiate: (di) => {
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
-    const route = di.inject(proxyPreferencesRouteInjectable);
+    const route = di.inject(preferencesRouteInjectable);
 
-    return () => navigateToRoute(route);
+    return () => navigateToRoute(route, { parameters: { preferenceTabId: "proxy" }});
   },
 });
 

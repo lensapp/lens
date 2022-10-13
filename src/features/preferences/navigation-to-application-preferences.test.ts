@@ -5,7 +5,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import navigateToProxyPreferencesInjectable from "../../common/front-end-routing/routes/preferences/proxy/navigate-to-proxy-preferences.injectable";
+import navigateToProxyPreferencesInjectable from "./common/navigate-to-proxy-preferences.injectable";
 
 describe("preferences - navigation to application preferences", () => {
   let builder: ApplicationBuilder;
