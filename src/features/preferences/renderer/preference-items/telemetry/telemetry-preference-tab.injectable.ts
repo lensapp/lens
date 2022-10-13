@@ -1,0 +1,24 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+import { getInjectable } from "@ogre-tools/injectable";
+import { preferenceItemInjectionToken } from "../preference-item-injection-token";
+
+const telemetryPreferenceTabInjectable = getInjectable({
+  id: "telemetry-preference-tab",
+
+  instantiate: () => ({
+    kind: "tab" as const,
+    id: "telemetry-tab",
+    parentId: "preference-tabs" as const,
+    pathId: "telemetry",
+    testId: "terminal-preferences-page",
+    label: "Telemetry",
+    orderNumber: 20,
+  }),
+
+  injectionToken: preferenceItemInjectionToken,
+});
+
+export default telemetryPreferenceTabInjectable;
