@@ -7,17 +7,17 @@ import fse from "fs-extra";
 import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import { Notice } from "../+extensions/notice";
-import type { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
-import { iter, tuple } from "../../utils";
-import { SubTitle } from "../layout/sub-title";
-import { PathPicker } from "../path-picker/path-picker";
-import { Spinner } from "../spinner";
-import { RemovableItem } from "./removable-item";
-import userStoreInjectable from "../../../common/user-store/user-store.injectable";
-import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
-import type { Logger } from "../../../common/logger";
+import { Notice } from "../../../../../../renderer/components/+extensions/notice";
+import type { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../../../../common/user-store";
+import { iter, tuple } from "../../../../../../renderer/utils";
+import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
+import { PathPicker } from "../../../../../../renderer/components/path-picker/path-picker";
+import { Spinner } from "../../../../../../renderer/components/spinner";
+import { RemovableItem } from "../../../../../../renderer/components/+preferences/removable-item";
+import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
+import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
+import loggerInjectable from "../../../../../../common/logger.injectable";
+import type { Logger } from "../../../../../../common/logger";
 
 interface SyncInfo {
   type: "file" | "folder" | "unknown";
@@ -66,7 +66,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedKubeconfigSyncs extends React.Component<Dependencies> {
+class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
   syncs = observable.map<string, Value>();
   @observable loaded = false;
 
@@ -195,17 +195,19 @@ class NonInjectedKubeconfigSyncs extends React.Component<Dependencies> {
 
   render() {
     return (
-      <>
+      <section id="kube-sync">
+        <h2 data-testid="kubernetes-sync-header">Kubeconfig Syncs</h2>
+
         {this.renderSyncButtons()}
         <SubTitle title="Synced Items" className="pt-5"/>
         {this.renderEntries()}
-      </>
+      </section>
     );
   }
 }
 
-export const KubeconfigSyncs = withInjectables<Dependencies>(
-  NonInjectedKubeconfigSyncs,
+export const KubeconfigSync = withInjectables<Dependencies>(
+  NonInjectedKubeconfigSync,
 
   {
     getProps: (di) => ({

@@ -5,7 +5,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 import { HelmCharts } from "../../../features/helm-charts/child-features/preferences/renderer/helm-charts";
-import { KubeconfigSyncs } from "./kubeconfig-syncs";
+import { KubeconfigSync } from "../../../features/preferences/renderer/preference-items/kubernetes/kubeconfig-sync/kubeconfig-sync";
 import { KubectlBinaries } from "./kubectl-binaries";
 import { Preferences } from "./preferences";
 
@@ -17,10 +17,7 @@ export const Kubernetes = observer(() => (
         <KubectlBinaries />
       </section>
       <hr />
-      <section id="kube-sync">
-        <h2 data-testid="kubernetes-sync-header">Kubeconfig Syncs</h2>
-        <KubeconfigSyncs />
-      </section>
+      <KubeconfigSync />
       <hr />
       <HelmCharts />
     </section>
