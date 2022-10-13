@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeSpecificComponentInjectionToken } from "../../../renderer/routes/route-specific-component-injection-token";
 import { Preferences } from "./preferences";
-import preferencesRouteInjectable from "./preferences-route.injectable";
+import preferencesRouteInjectable from "../common/preferences-route.injectable";
 
 const preferencesRouteComponentInjectable = getInjectable({
   id: "preferences-route-component",

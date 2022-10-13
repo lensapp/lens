@@ -743,6 +743,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       />
       <div
         class="SettingLayout showNavigation Preferences"
+        data-testid="some-test-id-for-test-tab"
       >
         <nav
           class="sidebarRegion"
@@ -839,9 +840,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         >
           <div
             class="content"
-          >
-            Some test page
-          </div>
+          />
           <div
             class="toolsRegion"
           >
@@ -1014,7 +1013,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       <div
         id="lens-views"
       />
-      <div>
+      <div
+        data-testid="some-front-page"
+      >
         Some front page
       </div>
     </main>
@@ -1153,7 +1154,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       <div
         id="lens-views"
       />
-      <div>
+      <div
+        data-testid="some-front-page"
+      >
         Some front page
       </div>
     </main>
@@ -1963,6 +1966,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
       />
       <div
         class="SettingLayout showNavigation Preferences"
+        data-testid="some-test-id-for-test-tab"
       >
         <nav
           class="sidebarRegion"
@@ -2059,9 +2063,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         >
           <div
             class="content"
-          >
-            Some test page
-          </div>
+          />
           <div
             class="toolsRegion"
           >
@@ -2235,141 +2237,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
         id="lens-views"
       />
       <div
-        class="SettingLayout showNavigation Preferences"
+        data-testid="some-page"
       >
-        <nav
-          class="sidebarRegion"
-        >
-          <div
-            class="sidebar"
-          >
-            <div
-              class="Tabs flex column"
-            >
-              <div
-                class="header"
-              >
-                Preferences
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  App
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Proxy
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Kubernetes
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Editor
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Terminal
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-some-test-preference-navigation-item-id"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Some preference navigation item
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <div
-          class="contentRegion"
-          id="ScrollSpyRoot"
-        >
-          <div
-            class="content"
-          >
-            Some test page
-          </div>
-          <div
-            class="toolsRegion"
-          >
-            <div
-              class="fixed top-[60px]"
-            >
-              <div
-                data-testid="close-preferences"
-              >
-                <div
-                  aria-label="Close"
-                  class="closeButton"
-                  role="button"
-                >
-                  <i
-                    class="Icon icon material focusable"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="close"
-                    >
-                      close
-                    </span>
-                  </i>
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="esc"
-                >
-                  ESC
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        Some content
       </div>
     </main>
     <div
@@ -2508,141 +2378,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
         id="lens-views"
       />
       <div
-        class="SettingLayout showNavigation Preferences"
+        data-testid="some-page"
       >
-        <nav
-          class="sidebarRegion"
-        >
-          <div
-            class="sidebar"
-          >
-            <div
-              class="Tabs flex column"
-            >
-              <div
-                class="header"
-              >
-                Preferences
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  App
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Proxy
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Kubernetes
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Editor
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Terminal
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-some-test-preference-navigation-item-id"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Some preference navigation item
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <div
-          class="contentRegion"
-          id="ScrollSpyRoot"
-        >
-          <div
-            class="content"
-          >
-            Some test page
-          </div>
-          <div
-            class="toolsRegion"
-          >
-            <div
-              class="fixed top-[60px]"
-            >
-              <div
-                data-testid="close-preferences"
-              >
-                <div
-                  aria-label="Close"
-                  class="closeButton"
-                  role="button"
-                >
-                  <i
-                    class="Icon icon material focusable"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="close"
-                    >
-                      close
-                    </span>
-                  </i>
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="esc"
-                >
-                  ESC
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        Some content
       </div>
     </main>
     <div

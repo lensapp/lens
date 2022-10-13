@@ -3,16 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { generalCatalogEntityInjectionToken } from "../general-catalog-entity-injection-token";
-import { GeneralEntity } from "../../index";
-import { buildURL } from "../../../utils/buildUrl";
-import appPreferencesRouteInjectable from "../../../front-end-routing/routes/preferences/app/app-preferences-route.injectable";
+import { generalCatalogEntityInjectionToken } from "../../../common/catalog-entities/general-catalog-entities/general-catalog-entity-injection-token";
+import { GeneralEntity } from "../../../common/catalog-entities";
+import { buildURL } from "../../../common/utils/buildUrl";
+import preferencesRouteInjectable from "./preferences-route.injectable";
 
 const preferencesCatalogEntityInjectable = getInjectable({
   id: "general-catalog-entity-for-preferences",
 
   instantiate: (di) => {
-    const route = di.inject(appPreferencesRouteInjectable);
+    const route = di.inject(preferencesRouteInjectable);
     const url = buildURL(route.path);
 
     return new GeneralEntity({

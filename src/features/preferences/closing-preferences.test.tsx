@@ -11,17 +11,17 @@ import currentPathInjectable from "../../renderer/routes/current-path.injectable
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import { computed, runInAction } from "mobx";
 import { preferenceNavigationItemInjectionToken } from "../../renderer/components/+preferences/preferences-navigation/preference-navigation-items.injectable";
-import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
-import { Preferences } from "../../renderer/components/+preferences";
 import React from "react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import observableHistoryInjectable from "../../renderer/navigation/observable-history.injectable";
 import { searchParamsOptions } from "../../renderer/navigation";
 import { createMemoryHistory } from "history";
 import { createObservableHistory } from "mobx-observable-history";
-import navigateToPreferenceTabInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab.injectable";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
+import navigateToPreferenceTabInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import preferenceTabIsActiveInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab/preference-tab-is-active.injectable";
+import { preferenceItemInjectionToken } from "./renderer/preference-items/preference-item-injection-token";
 
 describe("preferences - closing-preferences", () => {
   let builder: ApplicationBuilder;
@@ -31,8 +31,9 @@ describe("preferences - closing-preferences", () => {
 
     builder.beforeWindowStart((windowDi) => {
       runInAction(() => {
-        windowDi.register(testPreferencesRouteInjectable);
-        windowDi.register(testPreferencesRouteComponentInjectable);
+        windowDi.register(testPreferenceTabInjectable);
+        windowDi.register(testRouteInjectable);
+        windowDi.register(testRouteComponentInjectable);
         windowDi.register(testFrontPageRouteInjectable);
         windowDi.register(testFrontPageRouteComponentInjectable);
         windowDi.register(testNavigationItemInjectable);
@@ -57,7 +58,7 @@ describe("preferences - closing-preferences", () => {
       builder.beforeWindowStart((windowDi) => {
         windowDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
-            initialEntries: ["/some-test-path"],
+            initialEntries: ["/some-page"],
             initialIndex: 0,
           });
 
@@ -89,7 +90,11 @@ describe("preferences - closing-preferences", () => {
       it("navigates back to the original page", () => {
         const currentPath = windowDi.inject(currentPathInjectable).get();
 
-        expect(currentPath).toBe("/some-test-path");
+        expect(currentPath).toBe("/some-page");
+      });
+
+      it("shows the original page", () => {
+        expect(rendered.getByTestId("some-page")).toBeInTheDocument();
       });
     });
 
@@ -116,7 +121,11 @@ describe("preferences - closing-preferences", () => {
         it("navigates back to the original page", () => {
           const currentPath = windowDi.inject(currentPathInjectable).get();
 
-          expect(currentPath).toBe("/some-test-path");
+          expect(currentPath).toBe("/some-page");
+        });
+
+        it("shows the original page", () => {
+          expect(rendered.getByTestId("some-page")).toBeInTheDocument();
         });
       });
     });
@@ -130,7 +139,7 @@ describe("preferences - closing-preferences", () => {
       builder.beforeWindowStart((windowDi) => {
         windowDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
-            initialEntries: ["/preferences/app"],
+            initialEntries: ["/preferences2/app"],
             initialIndex: 0,
           });
 
@@ -163,6 +172,10 @@ describe("preferences - closing-preferences", () => {
 
         expect(currentPath).toBe("/some-front-page");
       });
+
+      it("shows front page", () => {
+        expect(rendered.getByTestId("some-front-page")).toBeInTheDocument();
+      });
     });
 
     describe("when navigating to a tab in preferences", () => {
@@ -190,36 +203,34 @@ describe("preferences - closing-preferences", () => {
 
           expect(currentPath).toBe("/some-front-page");
         });
+
+        it("shows front page", () => {
+          expect(rendered.getByTestId("some-front-page")).toBeInTheDocument();
+        });
       });
     });
   });
 });
 
-const testPreferencesRouteInjectable = getInjectable({
-  id: "test-preferences-route",
+const testPreferenceTabInjectable = getInjectable({
+  id: "test-preference-tab",
 
   instantiate: () => ({
-    path: "/some-test-path",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
+    kind: "tab" as const,
+    id: "test-tab",
+    pathId: "test-tab",
+    parentId: "preference-tabs" as const,
+    testId: "some-test-id-for-test-tab",
+    label: "Test",
+    orderNumber: 90,
   }),
 
-  injectionToken: frontEndRouteInjectionToken,
+  injectionToken: preferenceItemInjectionToken,
 });
 
-const testPreferencesRouteComponentInjectable = getInjectable({
-  id: "test-route-component",
-
-  instantiate: (di) => ({
-    route: di.inject(testPreferencesRouteInjectable),
-    Component: () => <Preferences>Some test page</Preferences>,
-  }),
-
-  injectionToken: routeSpecificComponentInjectionToken,
-});
 
 const testFrontPageRouteInjectable = getInjectable({
-  id: "test-front-page-route",
+  id: "some-front-page",
 
   instantiate: () => ({
     path: "/some-front-page",
@@ -231,11 +242,34 @@ const testFrontPageRouteInjectable = getInjectable({
 });
 
 const testFrontPageRouteComponentInjectable = getInjectable({
-  id: "test-front-page-route-component",
+  id: "some-front-page-component",
 
   instantiate: (di) => ({
     route: di.inject(testFrontPageRouteInjectable),
-    Component: () => <div>Some front page</div>,
+    Component: () => <div data-testid="some-front-page">Some front page</div>,
+  }),
+
+  injectionToken: routeSpecificComponentInjectionToken,
+});
+
+const testRouteInjectable = getInjectable({
+  id: "some-page",
+
+  instantiate: () => ({
+    path: "/some-page",
+    clusterFrame: false,
+    isEnabled: computed(() => true),
+  }),
+
+  injectionToken: frontEndRouteInjectionToken,
+});
+
+const testRouteComponentInjectable = getInjectable({
+  id: "some-page-component",
+
+  instantiate: (di) => ({
+    route: di.inject(testRouteInjectable),
+    Component: () => <div data-testid="some-page">Some content</div>,
   }),
 
   injectionToken: routeSpecificComponentInjectionToken,
@@ -245,17 +279,16 @@ const testNavigationItemInjectable = getInjectable({
   id: "some-test-preference-navigation-item-id",
 
   instantiate: (di) => {
-    const testRoute = di.inject(testPreferencesRouteInjectable);
     const navigateToPreferenceTab = di.inject(navigateToPreferenceTabInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, testRoute);
+    const preferenceTabIsActive = di.inject(preferenceTabIsActiveInjectable, "test-tab");
 
     return {
       id: "some-test-preference-navigation-item-id",
       label: "Some preference navigation item",
       parent: "general",
-      isActive: routeIsActive,
-      isVisible: testRoute.isEnabled,
-      navigate: navigateToPreferenceTab(testRoute),
+      isActive: preferenceTabIsActive,
+      isVisible: computed(() => true),
+      navigate: () => navigateToPreferenceTab("test-tab"),
       orderNumber: 100,
     };
   },

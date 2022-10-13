@@ -4,29 +4,23 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
-import appPreferencesRouteInjectable from "../../../../common/front-end-routing/routes/preferences/app/app-preferences-route.injectable";
-import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import { computed } from "mobx";
-import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab.injectable";
+import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import preferenceTabIsActiveInjectable from "./navigate-to-preference-tab/preference-tab-is-active.injectable";
 
 const applicationPreferencesNavigationItemInjectable = getInjectable({
   id: "application-preferences-navigation-item",
 
   instantiate: (di) => {
-    const route = di.inject(appPreferencesRouteInjectable);
     const navigateToPreferenceTab = di.inject(navigateToPreferenceTabInjectable);
-
-    const routeIsActive = di.inject(
-      routeIsActiveInjectable,
-      route,
-    );
+    const preferenceTabIsActive = di.inject(preferenceTabIsActiveInjectable, "app");
 
     return {
       id: "application",
       label: "App",
       parent: "general",
-      navigate: navigateToPreferenceTab(route),
-      isActive: routeIsActive,
+      navigate: () => navigateToPreferenceTab("app"),
+      isActive: preferenceTabIsActive,
       isVisible: computed(() => true),
       orderNumber: 10,
     };

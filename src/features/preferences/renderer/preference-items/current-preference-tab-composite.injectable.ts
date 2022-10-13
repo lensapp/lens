@@ -10,7 +10,7 @@ import { preferenceItemInjectionToken } from "./preference-item-injection-token"
 import type { Composite } from "../../../application-menu/main/menu-items/get-composite/get-composite";
 import getComposite from "../../../application-menu/main/menu-items/get-composite/get-composite";
 import routePathParametersInjectable from "../../../../renderer/routes/route-path-parameters.injectable";
-import preferencesRouteInjectable from "../preferences-route.injectable";
+import preferencesRouteInjectable from "../../common/preferences-route.injectable";
 import { filter, find } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 
