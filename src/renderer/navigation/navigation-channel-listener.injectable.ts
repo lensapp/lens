@@ -2,12 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { InjectionToken } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
-import appNavigationChannelInjectable from "../../common/front-end-routing/app-navigation-channel.injectable";
-import clusterFrameNavigationChannelInjectable from "../../common/front-end-routing/cluster-frame-navigation-channel.injectable";
+import { appNavigationChannel } from "../../common/front-end-routing/app-navigation-channel";
+import { clusterFrameNavigationChannel } from "../../common/front-end-routing/cluster-frame-navigation-channel";
 import focusWindowInjectable from "./focus-window.injectable";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
+import type { MessageChannel, MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
 import { messageChannelListenerInjectionToken } from "../../common/utils/channel/message-channel-listener-injection-token";
 
 const navigationChannelListenerInjectable = getInjectable({
@@ -15,8 +17,6 @@ const navigationChannelListenerInjectable = getInjectable({
 
   instantiate: (di) => {
     const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
-    const appNavigationChannel = di.inject(appNavigationChannelInjectable);
-    const clusterFrameNavigationChannel = di.inject(clusterFrameNavigationChannelInjectable);
     const focusWindow = di.inject(focusWindowInjectable);
     const navigateToUrl = di.inject(navigateToUrlInjectionToken);
 
@@ -34,7 +34,7 @@ const navigationChannelListenerInjectable = getInjectable({
       },
     };
   },
-  injectionToken: messageChannelListenerInjectionToken,
+  injectionToken: messageChannelListenerInjectionToken as InjectionToken<MessageChannelListener<MessageChannel<string>>, void>,
 });
 
 export default navigationChannelListenerInjectable;

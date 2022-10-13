@@ -88,8 +88,8 @@ describe("enlist message channel listener in main", () => {
       expect(handlerMock).toHaveBeenCalledWith(true);
     });
 
-    it("given stringified object as message, when message arrives, calls the handler with the message", () => {
-      onMock.mock.calls[0][1]({} as IpcMainEvent, JSON.stringify({ some: "object" }));
+    it("given object as message, when message arrives, calls the handler with the message", () => {
+      onMock.mock.calls[0][1]({} as IpcMainEvent, { some: "object" });
 
       expect(handlerMock).toHaveBeenCalledWith({ some: "object" });
     });

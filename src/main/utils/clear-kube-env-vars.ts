@@ -13,7 +13,7 @@ const anyKubeconfig = /^kubeconfig$/i;
  * before KUBECONFIG and we only set KUBECONFIG.
  * @param env The current copy of env
  */
-export function clearKubeconfigEnvVars(env: Record<string, any>): Record<string, any> {
+export function clearKubeconfigEnvVars(env: Partial<Record<string, string>>): Partial<Record<string, string>> {
   return Object.fromEntries(
     Object.entries(env)
       .filter(([key]) => anyKubeconfig.exec(key) === null),

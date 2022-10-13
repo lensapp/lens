@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsInjectionToken } from "../../../before-frame-starts/before-frame-starts-injection-token";
-import listeningOfChannelsInjectable from "../../../../common/utils/channel/listening-of-channels.injectable";
+import listeningOnMessageChannelsInjectable from "../../../../common/utils/channel/listening-on-message-channels.injectable";
 
 const startListeningOfChannelsInjectable = getInjectable({
   id: "start-listening-of-channels-renderer",
 
   instantiate: (di) => {
-    const listeningOfChannels = di.inject(listeningOfChannelsInjectable);
+    const listeningOfChannels = di.inject(listeningOnMessageChannelsInjectable);
 
     return {
       id: "start-listening-of-channels-renderer",

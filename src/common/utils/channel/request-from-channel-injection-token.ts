@@ -3,19 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { SetRequired } from "type-fest";
-import type { RequestChannel } from "./request-channel-injection-token";
+import type { RequestChannel } from "./request-channel-listener-injection-token";
 
-export type RequestFromChannel = <
-  TChannel extends RequestChannel<any, any>,
->(
-  channel: TChannel,
-  ...request: TChannel["_requestSignature"] extends void
-    ? []
-    : [SetRequired<TChannel, "_requestSignature">["_requestSignature"]]
-) => Promise<SetRequired<TChannel, "_responseSignature">["_responseSignature"]>;
+export interface RequestFromChannel {
+  <Request, Response>(channel: RequestChannel<Request, Response>, request: Request): Promise<Response>;
+  <Response>(channel: RequestChannel<void, Response>): Promise<Response>;
+}
 
-export const requestFromChannelInjectionToken =
-  getInjectionToken<RequestFromChannel>({
-    id: "request-from-request-channel",
-  });
+export const requestFromChannelInjectionToken = getInjectionToken<RequestFromChannel>({
+  id: "request-from-request-channel",
+});

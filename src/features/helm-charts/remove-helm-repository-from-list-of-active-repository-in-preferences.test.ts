@@ -8,6 +8,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
+import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
@@ -19,9 +20,7 @@ describe("remove helm repository from list of active repositories in preferences
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
-  let execFileMock: AsyncFnMock<
-    ReturnType<typeof execFileInjectable["instantiate"]>
-  >;
+  let execFileMock: AsyncFnMock<ExecFile>;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
@@ -101,8 +100,10 @@ describe("remove helm repository from list of active repositories in preferences
                 "some-helm-binary-path",
                 ["repo", "remove", "some-active-repository"],
               ],
-
-              "",
+              {
+                callWasSuccessful: true,
+                response: "",
+              },
             );
           });
 

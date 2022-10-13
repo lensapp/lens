@@ -17,6 +17,11 @@ import type WebSocket from "ws";
 import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
+import computeShellEnvironmentInjectable from "../../utils/shell-env/compute-shell-environment.injectable";
+import spawnPtyInjectable from "../spawn-pty.injectable";
+import resolvedShellInjectable from "../../../common/user-store/resolved-shell.injectable";
+import appNameInjectable from "../../../common/vars/app-name.injectable";
+import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -34,13 +39,18 @@ const openLocalShellSessionInjectable = getInjectable({
     const dependencies: LocalShellSessionDependencies = {
       directoryForBinaries: di.inject(directoryForBinariesInjectable),
       isMac: di.inject(isMacInjectable),
-      modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),
       isWindows: di.inject(isWindowsInjectable),
       logger: di.inject(loggerInjectable),
       userStore: di.inject(userStoreInjectable),
+      resolvedShell: di.inject(resolvedShellInjectable),
+      appName: di.inject(appNameInjectable),
+      buildVersion: di.inject(buildVersionInjectable),
+      modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
+      computeShellEnvironment: di.inject(computeShellEnvironmentInjectable),
+      spawnPty: di.inject(spawnPtyInjectable),
     };
 
     return (args) => {

@@ -61,7 +61,6 @@ import createApplicationWindowInjectable from "../../../main/start-main-applicat
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import { applicationWindowInjectionToken } from "../../../main/start-main-application/lens-window/application-window/application-window-injection-token";
-import sendToChannelInElectronBrowserWindowInjectable from "../../../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import closeAllWindowsInjectable from "../../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
@@ -166,7 +165,7 @@ export const getApplicationBuilder = () => {
     mainDi.register(mainExtensionsStateInjectable);
   });
 
-  const overrideChannelsForWindow = overrideChannels(mainDi);
+  const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 
   const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeWindowStartCallbacks: Callback[] = [];
@@ -208,7 +207,7 @@ export const getApplicationBuilder = () => {
 
     const windowDi = getRendererDi({ doGeneralOverrides: true });
 
-    overrideChannelsForWindow(windowDi, windowId);
+    overrideForWindow(windowDi, windowId);
     overrideFsWithFakes(windowDi, fsState);
 
     runInAction(() => {
@@ -259,9 +258,7 @@ export const getApplicationBuilder = () => {
       },
 
       send: (arg) => {
-        const sendFake = mainDi.inject(sendToChannelInElectronBrowserWindowInjectable) as any;
-
-        sendFake(windowId, null, arg);
+        sendToWindow(windowId, arg);
       },
 
       reload: () => {

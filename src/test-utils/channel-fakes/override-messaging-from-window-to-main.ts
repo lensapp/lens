@@ -3,54 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import assert from "assert";
-import type { MessageChannel } from "../../common/utils/channel/message-channel-injection-token";
-import type { MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
+import type { MessageChannel, MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
 import enlistMessageChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
+import { getOrInsertSet } from "../../renderer/utils";
 import sendToMainInjectable from "../../renderer/utils/channel/send-to-main.injectable";
 
 export const overrideMessagingFromWindowToMain = (mainDi: DiContainer) => {
   const messageChannelListenerFakesForMain = new Map<
     string,
-    Set<MessageChannelListener<MessageChannel<any>>>
+    Set<MessageChannelListener<MessageChannel<unknown>>>
   >();
 
   mainDi.override(
     enlistMessageChannelListenerInjectableInMain,
 
     () => (listener) => {
-      const channelId = listener.channel.id;
+      const listeners = getOrInsertSet(messageChannelListenerFakesForMain, listener.channel.id);
 
-      if (!messageChannelListenerFakesForMain.has(channelId)) {
-        messageChannelListenerFakesForMain.set(channelId, new Set());
-      }
-
-      const listeners = messageChannelListenerFakesForMain.get(
-        channelId,
-      );
-
-      assert(listeners);
-
-      // TODO: Figure out typing
-      listeners.add(
-        listener as unknown as MessageChannelListener<MessageChannel<any>>,
-      );
+      listeners.add(listener);
 
       return () => {
-        // TODO: Figure out typing
-        listeners.delete(
-          listener as unknown as MessageChannelListener<MessageChannel<any>>,
-        );
+        listeners.delete(listener);
       };
     },
   );
 
   return (windowDi: DiContainer) => {
     windowDi.override(sendToMainInjectable, () => (channelId, message) => {
-      const listeners =
-        messageChannelListenerFakesForMain.get(channelId) || new Set();
+      const listeners = messageChannelListenerFakesForMain.get(channelId);
 
-      if (listeners.size === 0) {
+      if (!listeners || listeners.size === 0) {
         throw new Error(
           `Tried to send message to channel "${channelId}" but there where no listeners. Current channels with listeners: "${[
             ...messageChannelListenerFakesForMain.keys(),
