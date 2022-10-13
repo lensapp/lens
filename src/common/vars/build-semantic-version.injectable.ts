@@ -7,7 +7,7 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import { SemVer } from "semver";
 import type { InitializableState } from "../initializable-state/create";
 import { createInitializableState } from "../initializable-state/create";
-import type { RequestChannel } from "../utils/channel/request-channel-injection-token";
+import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
 
 export const buildVersionInjectionToken = getInjectionToken<InitializableState<string>>({
   id: "build-version-token",

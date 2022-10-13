@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
-import appPathsChannelInjectable from "../../common/app-paths/app-paths-channel.injectable";
+import { appPathsChannel } from "../../common/app-paths/app-paths-channel";
 import { requestFromChannelInjectionToken } from "../../common/utils/channel/request-from-channel-injection-token";
 
 const setupAppPathsInjectable = getInjectable({
@@ -13,15 +13,12 @@ const setupAppPathsInjectable = getInjectable({
 
   instantiate: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
-    const appPathsChannel = di.inject(appPathsChannelInjectable);
     const appPathsState = di.inject(appPathsStateInjectable);
 
     return {
       id: "setup-app-paths",
       run: async () => {
-        const appPaths = await requestFromChannel(
-          appPathsChannel,
-        );
+        const appPaths = await requestFromChannel(appPathsChannel);
 
         appPathsState.set(appPaths);
       },

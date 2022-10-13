@@ -19,7 +19,7 @@ const selectedUpdateChannelInjectable = getInjectable({
 
   instantiate: (di): SelectedUpdateChannel => {
     const defaultUpdateChannel = di.inject(defaultUpdateChannelInjectable);
-    const state = observable.box<UpdateChannel>();
+    const state = observable.box<UpdateChannel>(undefined, { deep: false });
 
     return {
       value: computed(() => state.get() ?? defaultUpdateChannel.get()),

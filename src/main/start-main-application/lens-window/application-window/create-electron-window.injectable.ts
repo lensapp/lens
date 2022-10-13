@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
 import { BrowserWindow } from "electron";
-import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in-electron-browser-window.injectable";
 import type { ElectronWindow } from "./create-lens-window.injectable";
 import type { RequireExactlyOne } from "type-fest";
 import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-browser.injectable";
@@ -45,7 +44,6 @@ const createElectronWindowInjectable = getInjectable({
 
   instantiate: (di): CreateElectronWindow => {
     const logger = di.inject(loggerInjectable);
-    const sendToChannelInLensWindow = di.inject(sendToChannelInElectronBrowserWindowInjectable);
     const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
 
     return (configuration) => {
@@ -140,7 +138,17 @@ const createElectronWindowInjectable = getInjectable({
 
         show: () => browserWindow.show(),
         close: () => browserWindow.close(),
-        send: (args) => sendToChannelInLensWindow(configuration.id, browserWindow, args),
+        send: ({ channel, data, frameInfo }) => {
+          if (frameInfo) {
+            browserWindow.webContents.sendToFrame(
+              [frameInfo.processId, frameInfo.frameId],
+              channel,
+              data,
+            );
+          } else {
+            browserWindow.webContents.send(channel, data);
+          }
+        },
 
         reload: () => {
           const wc = browserWindow.webContents;

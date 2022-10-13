@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
-import syncBoxInitialValueChannelInjectable from "../../../common/utils/sync-box/sync-box-initial-value-channel.injectable";
+import { syncBoxInitialValueChannel } from "../../../common/utils/sync-box/channels";
 import createSyncBoxStateInjectable from "../../../common/utils/sync-box/sync-box-state.injectable";
 import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
 import { runInAction } from "mobx";
@@ -17,7 +17,6 @@ const provideInitialValuesForSyncBoxesInjectable = getInjectable({
 
   instantiate: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
-    const syncBoxInitialValueChannel = di.inject(syncBoxInitialValueChannelInjectable);
 
     const syncBoxes = di.injectMany(syncBoxInjectionToken);
 
