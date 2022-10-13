@@ -9,7 +9,7 @@ import localShellSessionInjectable from "./local-shell-session/local-shell-sessi
 import nodeShellSessionInjectable from "./node-shell-session/node-shell-session.injectable";
 
 interface Args {
-  webSocket: WebSocket;
+  websocket: WebSocket;
   cluster: Cluster;
   tabId: string;
   nodeName?: string;
