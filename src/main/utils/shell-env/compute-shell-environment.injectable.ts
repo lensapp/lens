@@ -51,6 +51,8 @@ const computeShellEnvironmentInjectable = getInjectable({
           callWasSuccessful: false,
           error: String(error),
         };
+      } finally {
+        cleanup();
       }
     };
   },
