@@ -6,18 +6,18 @@
 import type { Cluster } from "../../common/cluster/cluster";
 import type { Kubectl } from "../kubectl/kubectl";
 import type WebSocket from "ws";
-import { shellEnv } from "../utils/shell-env";
-import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
 import os, { userInfo } from "os";
-import { UserStore } from "../../common/user-store";
-import * as pty from "node-pty";
+import type * as pty from "node-pty";
 import { appEventBus } from "../../common/app-event-bus/event-bus";
 import { stat } from "fs/promises";
 import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 import type { Logger } from "../../common/logger";
+import type { ComputeShellEnvironment } from "../utils/shell-env/compute-shell-environment.injectable";
+import type { SpawnPty } from "./spawn-pty.injectable";
+import type { InitializableState } from "../../common/initializable-state/create";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -107,6 +107,11 @@ export interface ShellSessionDependencies {
   readonly isWindows: boolean;
   readonly isMac: boolean;
   readonly logger: Logger;
+  readonly resolvedShell: string | undefined;
+  readonly appName: string;
+  readonly buildVersion: InitializableState<string>;
+  computeShellEnvironment: ComputeShellEnvironment;
+  spawnPty: SpawnPty;
 }
 
 export interface ShellSessionArgs {
@@ -148,14 +153,14 @@ export abstract class ShellSession {
 
   protected abstract get cwd(): string | undefined;
 
-  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string | undefined>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
+  protected ensureShellProcess(shell: string, args: string[], env: Partial<Record<string, string>>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
     const resume = ShellSession.processes.has(this.terminalId);
     const shellProcess = getOrInsertWith(ShellSession.processes, this.terminalId, () => (
-      pty.spawn(shell, args, {
+      this.dependencies.spawnPty(shell, args, {
         rows: 30,
         cols: 80,
         cwd,
-        env: env as Record<string, string>,
+        env,
         name: "xterm-256color",
         // TODO: Something else is broken here so we need to force the use of winPty on windows
         useConpty: false,
@@ -331,19 +336,27 @@ export abstract class ShellSession {
   }
 
   protected async getShellEnv() {
-    const shell = UserStore.getInstance().resolvedShell;
-    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv(shell || userInfo().shell))));
-    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), process.env.PATH].join(path.delimiter);
+    const shell = this.dependencies.resolvedShell || userInfo().shell;
+    const result = await this.dependencies.computeShellEnvironment(shell);
+    const rawEnv = (() => {
+      if (result.callWasSuccessful) {
+        return result.response ?? process.env;
+      }
+
+      return process.env;
+    })();
+
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(rawEnv)));
+    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), env.PATH].join(path.delimiter);
 
     delete env.DEBUG; // don't pass DEBUG into shells
 
     if (this.dependencies.isWindows) {
-      env.SystemRoot = process.env.SystemRoot;
       env.PTYSHELL = shell || "powershell.exe";
       env.PATH = pathStr;
       env.LENS_SESSION = "true";
       env.WSLENV = [
-        process.env.WSLENV,
+        env.WSLENV,
         "KUBECONFIG/up:LENS_SESSION/u",
       ]
         .filter(Boolean)
@@ -363,8 +376,8 @@ export abstract class ShellSession {
 
     env.PTYPID = process.pid.toString();
     env.KUBECONFIG = await this.kubeconfigPathP;
-    env.TERM_PROGRAM = app.getName();
-    env.TERM_PROGRAM_VERSION = app.getVersion();
+    env.TERM_PROGRAM = this.dependencies.appName;
+    env.TERM_PROGRAM_VERSION = this.dependencies.buildVersion.get();
 
     if (this.cluster.preferences.httpsProxy) {
       env.HTTPS_PROXY = this.cluster.preferences.httpsProxy;
