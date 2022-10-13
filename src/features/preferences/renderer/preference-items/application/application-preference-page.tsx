@@ -3,9 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
+import type { PreferenceItemComponent } from "../preference-item-injection-token";
 
-export const ApplicationPreferencePage = () => (
-  <div>
+export const ApplicationPreferencePage: PreferenceItemComponent = ({ children }) => (
+  <section id="application">
     <h2 data-testid="application-header">Application</h2>
-  </div>
+
+    {children}
+  </section>
 );

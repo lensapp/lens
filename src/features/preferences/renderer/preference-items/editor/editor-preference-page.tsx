@@ -6,9 +6,9 @@ import React from "react";
 import type { PreferenceItemComponent } from "../preference-item-injection-token";
 
 export const EditorPreferencePage: PreferenceItemComponent = ({ children }) => (
-  <div>
+  <section id="editor">
     <h2 data-testid="editor-configuration-header">Editor configuration</h2>
 
     {children}
-  </div>
+  </section>
 );

@@ -6,9 +6,9 @@ import React from "react";
 import type { PreferenceItemComponent } from "../preference-item-injection-token";
 
 export const TelemetryPage: PreferenceItemComponent = ({ children }) => (
-  <div>
+  <section id="telemetry">
     <h2 data-testid="telemetry-header">Telemetry</h2>
 
     {children}
-  </div>
+  </section>
 );

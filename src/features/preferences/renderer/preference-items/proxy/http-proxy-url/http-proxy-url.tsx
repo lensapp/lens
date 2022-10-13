@@ -19,8 +19,7 @@ const NonInjectedHttpProxyUrl = observer(
     const [proxy, setProxy] = React.useState(userStore.httpsProxy || "");
 
     return (
-      <div>
-        <h2 data-testid="proxy-header">Proxy</h2>
+      <section>
         <SubTitle title="HTTP Proxy" />
         <Input
           theme="round-black"
@@ -32,7 +31,7 @@ const NonInjectedHttpProxyUrl = observer(
         <small className="hint">
           Proxy is used only for non-cluster communication.
         </small>
-      </div>
+      </section>
     );
   },
 );
