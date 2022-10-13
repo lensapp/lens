@@ -164,14 +164,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -332,7 +332,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -367,7 +369,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -761,14 +765,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -929,7 +933,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -964,7 +970,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -1369,14 +1377,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -1537,7 +1545,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -1572,7 +1582,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -2088,14 +2100,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -2256,7 +2268,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -2291,7 +2305,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -2704,14 +2720,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -2872,7 +2888,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -2907,7 +2925,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -3423,14 +3443,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -3591,7 +3611,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -3626,7 +3648,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -4324,14 +4348,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -4492,7 +4516,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -4527,7 +4553,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -5043,14 +5071,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -5211,7 +5239,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -5246,7 +5276,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -5944,14 +5976,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -6112,7 +6144,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -6147,7 +6181,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -6664,14 +6700,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -6832,7 +6868,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -6867,7 +6905,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -7280,14 +7320,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -7448,7 +7488,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -7483,7 +7525,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >
@@ -7885,14 +7929,14 @@ exports[`add custom helm repository in preferences when navigating to preference
               <section
                 id="kubernetes"
               >
+                <h2
+                  data-testid="kubernetes-header"
+                >
+                  Kubernetes
+                </h2>
                 <section
                   id="kubectl"
                 >
-                  <h2
-                    data-testid="kubernetes-header"
-                  >
-                    Kubernetes
-                  </h2>
                   <section>
                     <div
                       class="SubTitle"
@@ -8053,7 +8097,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="kube-sync"
                 >
@@ -8088,7 +8134,9 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr />
+                <hr
+                  class="horizontalLine"
+                />
                 <section
                   id="helm"
                 >

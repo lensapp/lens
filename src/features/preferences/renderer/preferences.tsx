@@ -14,13 +14,14 @@ import type { Composite } from "../../application-menu/main/menu-items/get-compo
 import type { PreferenceTypes, PreferenceTab } from "./preference-items/preference-item-injection-token";
 import type { IComputedValue } from "mobx";
 import { Map } from "../../../renderer/components/map/map";
+import { observer } from "mobx-react";
 
 interface Dependencies {
   closePreferences: () => void;
   pageComposite: IComputedValue<Composite<PreferenceTab>>;
 }
 
-const NonInjectedPreferences = ({
+const NonInjectedPreferences = observer(({
   closePreferences,
   pageComposite,
 }: Dependencies) => {
@@ -38,7 +39,7 @@ const NonInjectedPreferences = ({
       {toPreferenceItemHierarchy(composite)}
     </SettingLayout>
   );
-};
+});
 
 const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
   switch (composite.value.kind) {
