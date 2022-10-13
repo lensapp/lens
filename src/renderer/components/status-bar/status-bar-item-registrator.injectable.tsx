@@ -74,7 +74,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
       id,
 
       instantiate: () => ({
-        id: extension.sanitizedExtensionId,
+        origin: extension.sanitizedExtensionId,
         component,
         position,
         visible: visible ?? computed(() => true),

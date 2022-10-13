@@ -28,7 +28,7 @@ const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps)
           <div
             className={styles.item}
             key={index}
-            data-origin={Item.id}>
+            data-origin={Item.origin}>
             {<Item.component/>}
           </div>
         ))}
@@ -38,7 +38,7 @@ const NonInjectedStatusBar = observer(({ items }: Dependencies & StatusBarProps)
           <div
             className={styles.item}
             key={index}
-            data-origin={Item.id}>
+            data-origin={Item.origin}>
             {<Item.component/>}
           </div>
         ))}
