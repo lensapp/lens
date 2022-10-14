@@ -60,6 +60,10 @@ describe("channel", () => {
       messageToChannel = mainDi.inject(sendMessageToChannelInjectionToken);
     });
 
+    afterEach(() => {
+      builder.quit();
+    });
+
     describe("given window is started", () => {
       let someWindowFake: LensWindow;
 
@@ -103,10 +107,10 @@ describe("channel", () => {
   describe("messaging from renderer to main, given listener for channel in a main and application has started", () => {
     let messageListenerInMainMock: jest.Mock;
     let messageToChannel: SendMessageToChannel;
+    let builder: ApplicationBuilder;
 
     beforeEach(async () => {
-      const applicationBuilder = getApplicationBuilder();
-
+      builder = getApplicationBuilder();
       messageListenerInMainMock = jest.fn();
 
       const testChannelListenerInMainInjectable = getInjectable({
@@ -120,17 +124,21 @@ describe("channel", () => {
         injectionToken: messageChannelListenerInjectionToken,
       });
 
-      applicationBuilder.beforeApplicationStart((mainDi) => {
+      builder.beforeApplicationStart((mainDi) => {
         runInAction(() => {
           mainDi.register(testChannelListenerInMainInjectable);
         });
       });
 
-      await applicationBuilder.render();
+      await builder.render();
 
-      const windowDi = applicationBuilder.applicationWindow.only.di;
+      const windowDi = builder.applicationWindow.only.di;
 
       messageToChannel = windowDi.inject(sendMessageToChannelInjectionToken);
+    });
+
+    afterEach(() => {
+      builder.quit();
     });
 
     it("when sending message, triggers listener in main", () => {
@@ -143,10 +151,10 @@ describe("channel", () => {
   describe("requesting from main in renderer, given listener for channel in a main and application has started", () => {
     let requestListenerInMainMock: AsyncFnMock<RequestChannelHandler<TestRequestChannel>>;
     let requestFromChannel: RequestFromChannel;
+    let builder: ApplicationBuilder;
 
     beforeEach(async () => {
-      const applicationBuilder = getApplicationBuilder();
-
+      builder = getApplicationBuilder();
       requestListenerInMainMock = asyncFn();
 
       const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
@@ -154,17 +162,21 @@ describe("channel", () => {
         handler: () => requestListenerInMainMock,
       });
 
-      applicationBuilder.beforeApplicationStart((mainDi) => {
+      builder.beforeApplicationStart((mainDi) => {
         runInAction(() => {
           mainDi.register(testChannelListenerInMainInjectable);
         });
       });
 
-      await applicationBuilder.render();
+      await builder.render();
 
-      const windowDi = applicationBuilder.applicationWindow.only.di;
+      const windowDi = builder.applicationWindow.only.di;
 
       requestFromChannel = windowDi.inject(requestFromChannelInjectable);
+    });
+
+    afterEach(() => {
+      builder.quit();
     });
 
     describe("when requesting from channel", () => {
@@ -194,28 +206,38 @@ describe("channel", () => {
     });
   });
 
-  it("when registering multiple handlers for the same channel, throws", async () => {
-    const applicationBuilder = getApplicationBuilder();
+  describe("when registering multiple handlers for the same channel", () => {
+    let builder: ApplicationBuilder;
 
-    const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
-      channel: testRequestChannel,
-      handler: () => () => "some-value",
-    });
-    const testChannelListenerInMain2Injectable = getRequestChannelListenerInjectable({
-      channel: testRequestChannel,
-      handler: () => () => "some-other-value",
-    });
+    beforeEach(() => {
+      builder = getApplicationBuilder();
 
-    testChannelListenerInMain2Injectable.id += "2";
+      const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
+        channel: testRequestChannel,
+        handler: () => () => "some-value",
+      });
+      const testChannelListenerInMain2Injectable = getRequestChannelListenerInjectable({
+        channel: testRequestChannel,
+        handler: () => () => "some-other-value",
+      });
 
-    applicationBuilder.beforeApplicationStart((mainDi) => {
-      runInAction(() => {
-        mainDi.register(testChannelListenerInMainInjectable);
-        mainDi.register(testChannelListenerInMain2Injectable);
+      testChannelListenerInMain2Injectable.id += "2";
+
+      builder.beforeApplicationStart((mainDi) => {
+        runInAction(() => {
+          mainDi.register(testChannelListenerInMainInjectable);
+          mainDi.register(testChannelListenerInMain2Injectable);
+        });
       });
     });
 
-    await expect(applicationBuilder.render()).rejects.toThrow('Tried to register a multiple channel handlers for "some-request-channel-id", only one handler is supported for a request channel.');
+    afterEach(() => {
+      builder.quit();
+    });
+
+    it("throws on startup", async () => {
+      await expect(builder.render()).rejects.toThrow('Tried to register a multiple channel handlers for "some-request-channel-id", only one handler is supported for a request channel.');
+    });
   });
 });
 

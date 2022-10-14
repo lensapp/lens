@@ -41,6 +41,10 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given tab was previously opened, when application is started", () => {
     let rendered: RenderResult;
 

@@ -12,22 +12,26 @@ import type { SyncBox } from "./sync-box-injection-token";
 import { syncBoxInjectionToken } from "./sync-box-injection-token";
 
 describe("sync-box", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(mainDi => {
+    builder.beforeApplicationStart(mainDi => {
       runInAction(() => {
         mainDi.register(someInjectable);
       });
     });
 
-    applicationBuilder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart((windowDi) => {
       runInAction(() => {
         windowDi.register(someInjectable);
       });
     });
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   describe("given application is started, when value is set in main", () => {
@@ -35,9 +39,9 @@ describe("sync-box", () => {
     let syncBoxInMain: SyncBox<string>;
 
     beforeEach(async () => {
-      await applicationBuilder.startHidden();
+      await builder.startHidden();
 
-      syncBoxInMain = applicationBuilder.mainDi.inject(someInjectable);
+      syncBoxInMain = builder.mainDi.inject(someInjectable);
 
       observe(syncBoxInMain.value, ({ newValue }) => {
         valueInMain = newValue as string;
@@ -59,7 +63,7 @@ describe("sync-box", () => {
 
       beforeEach(async () => {
         const applicationWindow =
-          applicationBuilder.applicationWindow.create("some-window-id");
+          builder.applicationWindow.create("some-window-id");
 
         await applicationWindow.start();
 
@@ -101,11 +105,11 @@ describe("sync-box", () => {
     let syncBoxInRenderer: SyncBox<string>;
 
     beforeEach(async () => {
-      await applicationBuilder.render();
+      await builder.render();
 
-      const applicationWindow = applicationBuilder.applicationWindow.only;
+      const applicationWindow = builder.applicationWindow.only;
 
-      syncBoxInMain = applicationBuilder.mainDi.inject(someInjectable);
+      syncBoxInMain = builder.mainDi.inject(someInjectable);
       syncBoxInRenderer = applicationWindow.di.inject(someInjectable);
 
       observe(syncBoxInRenderer.value, ({ newValue }) => {

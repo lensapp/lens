@@ -19,6 +19,10 @@ describe("preferences - navigation to telemetry preferences", () => {
     builder = getApplicationBuilder();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
     let discover: Discover;

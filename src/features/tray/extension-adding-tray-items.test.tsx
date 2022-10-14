@@ -85,6 +85,10 @@ describe("preferences: extension adding tray items", () => {
       builder.extensions.enable(testExtension);
     });
 
+    afterEach(() => {
+      builder.quit();
+    });
+
     describe("given controlled label", () => {
       it("has the label", () => {
         const item = builder.tray.get(

@@ -66,6 +66,10 @@ describe("reactively hide kube object menu item", () => {
     builder.extensions.enable(testExtension);
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("does not show the kube object menu item", () => {
     const actual = rendered.queryByTestId("some-kube-object-menu-item");
 

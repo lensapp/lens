@@ -11,22 +11,26 @@ import type { FakeExtensionOptions } from "../../renderer/components/test-utils/
 import { computed } from "mobx";
 
 describe("status-bar-items-originating-from-extensions", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart((windowDi) => {
       windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
     });
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   describe("when application starts", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("when multiple extensions with status bar items are loaded, shows items in correct order", () => {
@@ -62,7 +66,7 @@ describe("status-bar-items-originating-from-extensions", () => {
         },
       };
 
-      applicationBuilder.extensions.enable(testExtension1, testExtension2);
+      builder.extensions.enable(testExtension1, testExtension2);
 
       const rightSide = rendered.getByTestId("status-bar-right");
 
@@ -119,7 +123,7 @@ describe("status-bar-items-originating-from-extensions", () => {
           },
         };
 
-        applicationBuilder.extensions.enable(testExtensionOptions);
+        builder.extensions.enable(testExtensionOptions);
       });
 
       it("renders", () => {
@@ -153,7 +157,7 @@ describe("status-bar-items-originating-from-extensions", () => {
       });
 
       it("when the extension is removed, shows there are no extension status bar items", () => {
-        applicationBuilder.extensions.disable(testExtensionOptions);
+        builder.extensions.disable(testExtensionOptions);
 
         const actual = rendered.queryAllByTestId("some-testId");
 

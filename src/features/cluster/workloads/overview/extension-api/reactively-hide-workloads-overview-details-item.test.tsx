@@ -54,6 +54,10 @@ describe("reactively hide workloads overview details item", () => {
     builder.extensions.enable(testExtension);
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("does not show the workload overview detail item", () => {
     const actual = rendered.queryByTestId("some-workload-overview-detail-item");
 

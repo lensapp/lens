@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
+import type { ApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
 import React from "react";
 import getRandomIdInjectable from "../../../../../common/utils/get-random-id.injectable";
@@ -12,9 +13,10 @@ import { computed, runInAction } from "mobx";
 
 describe("order of workload overview details", () => {
   let rendered: RenderResult;
+  let builder: ApplicationBuilder;
 
   beforeEach(async () => {
-    const builder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.unoverride(getRandomIdInjectable);
@@ -76,6 +78,10 @@ describe("order of workload overview details", () => {
     };
 
     builder.extensions.enable(testExtension);
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   it("shows items in correct order", () => {

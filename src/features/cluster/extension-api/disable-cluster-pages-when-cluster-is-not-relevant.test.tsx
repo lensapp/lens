@@ -47,6 +47,10 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
       builder.extensions.get("test-extension-id").applicationWindows.only;
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given not yet known if extension should be enabled for the cluster, when navigating", () => {
     beforeEach(() => {
       rendererTestExtension.navigate();

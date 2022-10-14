@@ -46,6 +46,10 @@ describe("reactively disable cluster pages", () => {
       builder.extensions.get("test-extension-id").applicationWindows.only;
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("when navigating to the page, does not show the page", () => {
     testExtensionInstance.navigate();
 

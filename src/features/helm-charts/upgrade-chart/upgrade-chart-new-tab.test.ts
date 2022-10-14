@@ -64,6 +64,10 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
     dockStore.closeTab("terminal");
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given a namespace is selected", () => {
     beforeEach(() => {
       builder.namespaces.select("my-second-namespace");

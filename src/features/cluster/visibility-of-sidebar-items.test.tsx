@@ -33,6 +33,10 @@ describe("cluster - visibility of sidebar items", () => {
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given kube resource for route is not allowed", () => {
     beforeEach(async () => {
       rendered = await builder.render();

@@ -83,6 +83,10 @@ describe("showing details for helm release", () => {
     builder.namespaces.select("some-other-namespace");
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given application is started", () => {
     let rendered: RenderResult;
 

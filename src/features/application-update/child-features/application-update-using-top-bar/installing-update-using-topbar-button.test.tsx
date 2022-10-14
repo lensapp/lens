@@ -23,7 +23,7 @@ function daysToMilliseconds(days: number) {
 }
 
 describe("encourage user to update when sufficient time passed since update was downloaded", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let quitAndInstallUpdateMock: jest.MockedFunction<() => void>;
@@ -31,9 +31,9 @@ describe("encourage user to update when sufficient time passed since update was 
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart((mainDi) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
 
@@ -55,11 +55,15 @@ describe("encourage user to update when sufficient time passed since update was 
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when started", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -76,7 +80,7 @@ describe("encourage user to update when sufficient time passed since update was 
       let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
       beforeEach(async () => {
-        processCheckingForUpdates = applicationBuilder.mainDi.inject(
+        processCheckingForUpdates = builder.mainDi.inject(
           processCheckingForUpdatesInjectable,
         );
 
@@ -106,9 +110,9 @@ describe("encourage user to update when sufficient time passed since update was 
         });
 
         it("given closing the application window, when starting the application window again, still shows the button", async () => {
-          applicationBuilder.applicationWindow.closeAll();
+          builder.applicationWindow.closeAll();
 
-          const window = applicationBuilder.applicationWindow.create("some-window-id");
+          const window = builder.applicationWindow.create("some-window-id");
 
           await window.start();
 

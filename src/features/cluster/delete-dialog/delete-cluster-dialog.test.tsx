@@ -104,6 +104,10 @@ describe("Deleting a cluster", () => {
     rendered = await builder.render();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when the kubeconfig has multiple clusters", () => {
     let currentCluster: Cluster;
     let nonCurrentCluster: Cluster;

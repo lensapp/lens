@@ -20,6 +20,10 @@ describe("multiple separators originating from extension", () => {
     await builder.render();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("given extension with multiple separators, when extension is enabled, does not throw", () => {
     const someExtension = {
       id: "some-extension-id",

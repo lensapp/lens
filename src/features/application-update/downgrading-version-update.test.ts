@@ -17,14 +17,14 @@ import { updateChannels } from "./common/update-channels";
 import getBuildVersionInjectable from "../../main/vars/build-version/get-build-version.injectable";
 
 describe("downgrading version update", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let mainDi: DiContainer;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(mainDi => {
+    builder.beforeApplicationStart(mainDi => {
       checkForPlatformUpdatesMock = asyncFn();
 
       mainDi.override(
@@ -36,7 +36,11 @@ describe("downgrading version update", () => {
       mainDi.override(publishIsConfiguredInjectable, () => true);
     });
 
-    mainDi = applicationBuilder.mainDi;
+    mainDi = builder.mainDi;
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   [
@@ -104,7 +108,7 @@ describe("downgrading version update", () => {
     it(`given application version "${appVersion}" and update channel "${updateChannel.id}", when checking for updates, can${downgradeIsAllowed ? "": "not"} downgrade`, async () => {
       mainDi.override(getBuildVersionInjectable, () => () => appVersion);
 
-      await applicationBuilder.render();
+      await builder.render();
 
       const selectedUpdateChannel = mainDi.inject(selectedUpdateChannelInjectable);
 

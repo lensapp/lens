@@ -110,6 +110,10 @@ describe("show status for a kube object", () => {
     builder.setEnvironmentToClusterFrame();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given application starts and in test page", () => {
     let windowDi: DiContainer;
     let rendered: RenderResult;

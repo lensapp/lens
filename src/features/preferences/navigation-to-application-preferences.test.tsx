@@ -18,6 +18,10 @@ describe("preferences - navigation to application preferences", () => {
     builder = getApplicationBuilder();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
     let discover: Discover;
@@ -57,8 +61,7 @@ describe("preferences - navigation to application preferences", () => {
       });
 
       it("shows preference items of the extension as last", () => {
-        const { attributeValues } =
-            discover.queryAllElements("preference-item");
+        const { attributeValues } = discover.queryAllElements("preference-item");
 
         expect(attributeValues.at(-1)).toBe("preference-item-for-extension-some-test-extension-name-item-some-application-preference-item-id");
       });

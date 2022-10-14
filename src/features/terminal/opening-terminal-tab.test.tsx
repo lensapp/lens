@@ -32,6 +32,10 @@ describe("test for opening terminal tab within cluster frame", () => {
     result = await builder.render();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when new terminal tab is opened", () => {
     beforeEach(() => {
       result.getByTestId("dock-tab-for-terminal").click();

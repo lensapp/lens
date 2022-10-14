@@ -56,6 +56,10 @@ describe("listing active helm repositories in preferences", () => {
     rendered = await builder.render();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when navigating to preferences containing helm repositories", () => {
     beforeEach(async () => {
       builder.preferences.navigate();

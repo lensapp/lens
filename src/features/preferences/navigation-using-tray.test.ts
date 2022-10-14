@@ -9,15 +9,19 @@ import type { Discover } from "../../renderer/components/test-utils/discovery-of
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("show-about-using-tray", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let discover: Discover;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
     discover = discoverFor(() => rendered);
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   it("renders", () => {
@@ -35,7 +39,7 @@ describe("show-about-using-tray", () => {
 
   describe("when navigating using tray", () => {
     beforeEach(async () => {
-      await applicationBuilder.tray.click("open-preferences");
+      await builder.tray.click("open-preferences");
     });
 
     it("renders", () => {

@@ -73,6 +73,10 @@ describe("selection of update stability", () => {
     mainDi = builder.mainDi;
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when started", () => {
     let rendered: RenderResult;
     let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;

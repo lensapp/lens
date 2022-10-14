@@ -57,6 +57,10 @@ describe("disable workloads overview details when cluster is not relevant", () =
     builder.extensions.enable(testExtension);
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given not yet known if extension should be enabled for the cluster", () => {
     it("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();

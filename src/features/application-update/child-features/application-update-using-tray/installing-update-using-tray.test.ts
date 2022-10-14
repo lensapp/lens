@@ -43,6 +43,10 @@ describe("installing update using tray", () => {
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when started", () => {
     let rendered: RenderResult;
 

@@ -31,6 +31,10 @@ describe("resolve-system-proxy", () => {
     await builder.render();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given in main, when called with URL", () => {
     beforeEach(async () => {
       const resolveSystemProxyInMain = builder.mainDi.inject(

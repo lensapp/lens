@@ -56,6 +56,10 @@ describe("opening dock tab for installing helm chart", () => {
     builder.setEnvironmentToClusterFrame();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given application is started, when navigating to helm charts", () => {
     let rendered: RenderResult;
 

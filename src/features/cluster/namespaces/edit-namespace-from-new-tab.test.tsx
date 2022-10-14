@@ -70,6 +70,10 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when navigating to namespaces", () => {
     let rendered: RenderResult;
     let windowDi: DiContainer;

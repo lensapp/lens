@@ -16,6 +16,10 @@ describe("Command Pallet: keyboard shortcut tests", () => {
     builder = getApplicationBuilder();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when on macOS", () => {
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {

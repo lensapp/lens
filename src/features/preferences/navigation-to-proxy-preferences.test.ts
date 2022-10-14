@@ -9,10 +9,14 @@ import type { Discover } from "../../renderer/components/test-utils/discovery-of
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to proxy preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   describe("given in preferences, when rendered", () => {
@@ -20,11 +24,11 @@ describe("preferences - navigation to proxy preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      applicationBuilder.beforeWindowStart(() => {
-        applicationBuilder.preferences.navigate();
+      builder.beforeWindowStart(() => {
+        builder.preferences.navigate();
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
       discover = discoverFor(() => rendered);
     });
 
@@ -43,7 +47,7 @@ describe("preferences - navigation to proxy preferences", () => {
 
     describe("when navigating to proxy preferences using navigation", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click("proxy");
+        builder.preferences.navigation.click("proxy");
       });
 
       it("renders", () => {

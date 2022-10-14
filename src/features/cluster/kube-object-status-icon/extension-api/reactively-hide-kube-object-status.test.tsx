@@ -67,6 +67,10 @@ describe("reactively hide kube object status", () => {
     builder.extensions.enable(testExtension);
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("does not show the kube object status", () => {
     const actual = rendered.baseElement.querySelectorAll(
       ".KubeObjectStatusIcon",

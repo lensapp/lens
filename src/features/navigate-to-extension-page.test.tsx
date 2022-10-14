@@ -9,6 +9,7 @@ import isEmpty from "lodash/isEmpty";
 import queryParametersInjectable from "../renderer/routes/query-parameters.injectable";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import type { IComputedValue } from "mobx";
+import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import type { FakeExtensionOptions } from "../renderer/components/test-utils/get-extension-fake";
 import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
@@ -18,9 +19,10 @@ describe("navigate to extension page", () => {
   let testExtension: LensRendererExtension;
   let queryParameters: IComputedValue<object>;
   let currentPath: IComputedValue<string>;
+  let builder: ApplicationBuilder;
 
   beforeEach(async () => {
-    const builder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
     builder.extensions.enable(extensionWithPagesHavingParameters);
 
@@ -33,6 +35,10 @@ describe("navigate to extension page", () => {
 
     queryParameters = windowDi.inject(queryParametersInjectable);
     currentPath = windowDi.inject(currentPathInjectable);
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   it("renders", () => {

@@ -545,7 +545,7 @@ exports[`test for opening terminal tab within cluster frame when new terminal ta
                     <span
                       aria-hidden="true"
                       class="xterm-char-measure-element"
-                      style="font-size: 42px;"
+                      style="font-family: RobotoMono; font-size: 12px;"
                     >
                       W
                     </span>

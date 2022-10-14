@@ -37,6 +37,10 @@ describe("quitting the app using application menu", () => {
       await builder.render();
     });
 
+    afterEach(() => {
+      builder.quit();
+    });
+
     it("first application window is open", () => {
       const windows = builder.applicationWindow.getAll();
 

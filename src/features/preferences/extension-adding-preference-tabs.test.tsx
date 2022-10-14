@@ -18,6 +18,10 @@ describe("preferences: extension adding preference tabs", () => {
     builder = getApplicationBuilder();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given in preferences, when extension with preference tabs is enabled", () => {
     let rendered: RenderResult;
     let someObservable: IObservableValue<boolean>;

@@ -39,6 +39,10 @@ describe("<StatusBar />", () => {
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("renders w/o errors", async () => {
     const { container } = await builder.render();
 

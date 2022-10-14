@@ -27,6 +27,10 @@ describe("navigating between routes", () => {
     builder = getApplicationBuilder();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given route without path parameters", () => {
     let windowDi: DiContainer;
 

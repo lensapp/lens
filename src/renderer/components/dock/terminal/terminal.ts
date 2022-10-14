@@ -176,6 +176,7 @@ export class Terminal {
   };
 
   onClear = () => {
+    console.log("clearing");
     this.xterm.clear();
   };
 

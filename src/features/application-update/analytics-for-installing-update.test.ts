@@ -62,6 +62,10 @@ describe("analytics for installing update", () => {
     mainDi = builder.mainDi;
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given application is started and checking updates periodically", () => {
     beforeEach(async () => {
       mainDi.unoverride(periodicalCheckForUpdatesInjectable);

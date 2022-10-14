@@ -9,23 +9,26 @@ import type { Discover } from "../../renderer/components/test-utils/discovery-of
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to editor preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let discover: Discover;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
+  });
+
+  afterEach(() => {
+    builder.quit();
   });
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      applicationBuilder.beforeWindowStart(() => {
-        applicationBuilder.preferences.navigate();
+      builder.beforeWindowStart(() => {
+        builder.preferences.navigate();
       });
 
-      rendered = await applicationBuilder.render();
-
+      rendered = await builder.render();
       discover = discoverFor(() => rendered);
     });
 
@@ -43,7 +46,7 @@ describe("preferences - navigation to editor preferences", () => {
 
     describe("when navigating to editor preferences using navigation", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click("editor");
+        builder.preferences.navigation.click("editor");
       });
 
       it("renders", () => {

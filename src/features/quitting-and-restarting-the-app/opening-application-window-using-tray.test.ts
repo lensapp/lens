@@ -75,6 +75,10 @@ describe("opening application window using tray", () => {
       await builder.render();
     });
 
+    afterEach(() => {
+      builder.quit();
+    });
+
     it("only the first application window is open", () => {
       expectWindowsToBeOpen(["first-application-window"]);
     });

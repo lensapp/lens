@@ -49,6 +49,10 @@ describe("preferences - closing-preferences", () => {
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given already in a page and then navigated to preferences", () => {
     let rendered: RenderResult;
     let windowDi: DiContainer;

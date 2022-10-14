@@ -43,6 +43,10 @@ describe("reactively disable global pages", () => {
     rendererTestExtension = builder.extensions.get("test-extension-id").applicationWindows.only;
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("when navigating to the page, does not show the page", () => {
     rendererTestExtension.navigate();
 

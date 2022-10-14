@@ -28,6 +28,10 @@ describe("extensions - navigation using application menu", () => {
     rendered = await builder.render();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("renders", () => {
     expect(rendered.container).toMatchSnapshot();
   });

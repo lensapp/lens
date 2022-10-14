@@ -25,6 +25,10 @@ describe("extension special characters in page registrations", () => {
     windowDi = builder.applicationWindow.only.di;
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   it("renders", () => {
     expect(rendered.container).toMatchSnapshot();
   });

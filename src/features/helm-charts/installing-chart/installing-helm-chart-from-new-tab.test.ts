@@ -71,6 +71,10 @@ describe("installing helm chart from new tab", () => {
     builder.namespaces.add("some-other-namespace");
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given tab for installing chart was not previously opened and application is started", () => {
     let rendered: RenderResult;
     let windowDi: DiContainer;

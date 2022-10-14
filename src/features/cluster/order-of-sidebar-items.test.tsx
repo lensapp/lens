@@ -28,6 +28,10 @@ describe("cluster - order of sidebar items", () => {
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("when rendered", () => {
     beforeEach(async () => {
       rendered = await builder.render();

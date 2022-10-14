@@ -35,6 +35,10 @@ describe("periodical checking of updates", () => {
     });
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given updater is enabled and configuration exists, when started", () => {
     let rendered: RenderResult;
 
