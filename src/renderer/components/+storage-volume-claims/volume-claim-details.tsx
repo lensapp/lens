@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
+import { PersistentVolumeClaim, storageClassApi } from "../../../common/k8s-api/endpoints";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
@@ -27,6 +27,7 @@ import type { PodStore } from "../+workloads-pods/store";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
+import { stopPropagation } from "../../../renderer/utils";
 
 export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
@@ -78,6 +79,10 @@ class NonInjectedPersistentVolumeClaimDetails extends React.Component<Persistent
     const pods = volumeClaim.getPods(podStore.items);
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.VolumeClaim);
 
+    const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
+      name: storageClassName,
+    }));
+
     return (
       <div className="PersistentVolumeClaimDetails">
         {!isMetricHidden && (
@@ -89,15 +94,21 @@ class NonInjectedPersistentVolumeClaimDetails extends React.Component<Persistent
             object={volumeClaim}
             metrics={this.metrics}
           >
-            <VolumeClaimDiskChart/>
+            <VolumeClaimDiskChart />
           </ResourceMetrics>
         )}
-        <KubeObjectMeta object={volumeClaim}/>
+        <KubeObjectMeta object={volumeClaim} />
         <DrawerItem name="Access Modes">
           {accessModes?.join(", ")}
         </DrawerItem>
         <DrawerItem name="Storage Class Name">
-          {storageClassName}
+          <Link
+            key="link"
+            to={storageClassDetailsUrl}
+            onClick={stopPropagation}
+          >
+            {storageClassName}
+          </Link>
         </DrawerItem>
         <DrawerItem name="Storage">
           {volumeClaim.getStorage()}
@@ -116,7 +127,7 @@ class NonInjectedPersistentVolumeClaimDetails extends React.Component<Persistent
         <DrawerTitle>Selector</DrawerTitle>
 
         <DrawerItem name="Match Labels" labelsOnly>
-          {volumeClaim.getMatchLabels().map(label => <Badge key={label} label={label}/>)}
+          {volumeClaim.getMatchLabels().map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
 
         <DrawerItem name="Match Expressions">
