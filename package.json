@@ -385,7 +385,6 @@
     "eslint-plugin-react": "7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^6.5.2",
     "gunzip-maybe": "^1.4.2",
     "html-webpack-plugin": "^5.5.0",
