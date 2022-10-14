@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
 import { computed } from "mobx";
-import preferenceTabIsActiveInjectable from "./navigate-to-preference-tab/preference-tab-is-active.injectable";
-import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import preferenceTabIsActiveInjectable from "../../../../features/preferences/renderer/preference-navigation/navigate-to-preference-tab/preference-tab-is-active.injectable";
+import navigateToPreferenceTabInjectable from "../../../../features/preferences/renderer/preference-navigation/navigate-to-preference-tab/navigate-to-preference-tab.injectable";
 
 const editorPreferencesNavigationItemInjectable = getInjectable({
   id: "editor-preferences-navigation-item",

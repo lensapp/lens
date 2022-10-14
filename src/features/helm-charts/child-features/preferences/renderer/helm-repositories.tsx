@@ -13,7 +13,7 @@ import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { Spinner } from "../../../../../renderer/components/spinner";
 import type { HelmRepo } from "../../../../../common/helm/helm-repo";
-import { RemovableItem } from "../../../../../renderer/components/+preferences/removable-item";
+import { RemovableItem } from "../../../../preferences/renderer/removable-item/removable-item";
 import removeHelmRepositoryInjectable from "./remove-helm-repository.injectable";
 
 interface Dependencies {

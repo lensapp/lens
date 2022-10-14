@@ -19,8 +19,8 @@ import { createMemoryHistory } from "history";
 import { createObservableHistory } from "mobx-observable-history";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
-import navigateToPreferenceTabInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab/navigate-to-preference-tab.injectable";
-import preferenceTabIsActiveInjectable from "../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab/preference-tab-is-active.injectable";
+import navigateToPreferenceTabInjectable from "./renderer/preference-navigation/navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import preferenceTabIsActiveInjectable from "./renderer/preference-navigation/navigate-to-preference-tab/preference-tab-is-active.injectable";
 import { preferenceItemInjectionToken } from "./renderer/preference-items/preference-item-injection-token";
 
 describe("preferences - closing-preferences", () => {

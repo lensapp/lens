@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../../../../common/front-end-routing/navigate-to-route-injection-token";
-import preferencesRouteInjectable from "../../../../../features/preferences/common/preferences-route.injectable";
+import preferencesRouteInjectable from "../../../common/preferences-route.injectable";
 
 const navigateToPreferenceTabInjectable = getInjectable({
   id: "navigate-to-preference-tab-2",

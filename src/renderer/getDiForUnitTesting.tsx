@@ -27,7 +27,6 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
 import { observable, computed, runInAction } from "mobx";
-import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
@@ -96,6 +95,7 @@ export const getDiForUnitTesting = (
     [
       startTopbarStateSyncInjectable,
       setupSystemCaInjectable,
+      setupOnApiErrorListenersInjectable
     ].forEach((injectable) => {
       di.override(injectable, () => ({
         id: injectable.id,

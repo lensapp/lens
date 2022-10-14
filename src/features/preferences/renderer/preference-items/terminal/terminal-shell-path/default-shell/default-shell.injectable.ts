@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
+import isWindowsInjectable from "../../../../../../../common/vars/is-windows.injectable";
 
 const defaultShellInjectable = getInjectable({
   id: "default-shell",

@@ -7,8 +7,8 @@ import { preferenceNavigationItemInjectionToken } from "./preference-navigation-
 import { computed } from "mobx";
 import telemetryPreferenceItemsInjectable from "../telemetry-preference-items.injectable";
 import sentryDataSourceNameInjectable from "../../../../common/vars/sentry-dsn-url.injectable";
-import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
-import preferenceTabIsActiveInjectable from "./navigate-to-preference-tab/preference-tab-is-active.injectable";
+import navigateToPreferenceTabInjectable from "../../../../features/preferences/renderer/preference-navigation/navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import preferenceTabIsActiveInjectable from "../../../../features/preferences/renderer/preference-navigation/navigate-to-preference-tab/preference-tab-is-active.injectable";
 
 const terminalPreferencesNavigationItemInjectable = getInjectable({
   id: "telemetry-preferences-navigation-item",

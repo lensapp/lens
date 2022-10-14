@@ -13,7 +13,7 @@ import { iter, tuple } from "../../../../../../renderer/utils";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { PathPicker } from "../../../../../../renderer/components/path-picker/path-picker";
 import { Spinner } from "../../../../../../renderer/components/spinner";
-import { RemovableItem } from "../../../../../../renderer/components/+preferences/removable-item";
+import { RemovableItem } from "../../../removable-item/removable-item";
 import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../../../../common/logger.injectable";

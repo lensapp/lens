@@ -9,7 +9,7 @@ import type { UserStore } from "../../../../../../common/user-store";
 import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Input } from "../../../../../../renderer/components/input";
-import defaultShellInjectable from "../../../../../../renderer/components/+preferences/default-shell.injectable";
+import defaultShellInjectable from "./default-shell/default-shell.injectable";
 
 interface Dependencies {
   userStore: UserStore;

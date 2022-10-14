@@ -2,12 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import "../../../renderer/components/+preferences/preferences.scss";
+import "./preferences.scss";
 import React from "react";
 
 import { SettingLayout } from "../../../renderer/components/layout/setting-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import closePreferencesInjectable from "../../../renderer/components/+preferences/close-preferences.injectable";
+import closePreferencesInjectable from "./close-preferences/close-preferences.injectable";
 import currentPreferenceTabCompositeInjectable from "./preference-items/current-preference-tab-composite.injectable";
 import type { Composite } from "../../application-menu/main/menu-items/get-composite/get-composite";
 import type { PreferenceTypes, PreferenceTab } from "./preference-items/preference-item-injection-token";

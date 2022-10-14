@@ -4,9 +4,9 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import routeIsActiveInjectable from "../../../../routes/route-is-active.injectable";
-import preferencesRouteInjectable from "../../../../../features/preferences/common/preferences-route.injectable";
-import routePathParametersInjectable from "../../../../routes/route-path-parameters.injectable";
+import routeIsActiveInjectable from "../../../../../renderer/routes/route-is-active.injectable";
+import preferencesRouteInjectable from "../../../common/preferences-route.injectable";
+import routePathParametersInjectable from "../../../../../renderer/routes/route-path-parameters.injectable";
 
 const preferenceTabIsActiveInjectable = getInjectable({
   id: "preference-tab-is-active",

@@ -7,8 +7,8 @@ import styles from "./removable-item.module.scss";
 import type { DOMAttributes } from "react";
 import React from "react";
 
-import { cssNames } from "../../utils";
-import { Icon } from "../icon";
+import { cssNames } from "../../../../renderer/utils";
+import { Icon } from "../../../../renderer/components/icon";
 
 export interface RemovableItemProps extends DOMAttributes<any>{
   icon?: string;

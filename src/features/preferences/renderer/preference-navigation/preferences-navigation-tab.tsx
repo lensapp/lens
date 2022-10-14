@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { Tab } from "../../../../renderer/components/tabs";
-import navigateToPreferenceTabInjectable from "../../../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import type { PreferenceTab } from "../preference-items/preference-item-injection-token";
 import type { IComputedValue } from "mobx";
-import preferenceTabIsActiveInjectable from "../../../../renderer/components/+preferences/preferences-navigation/navigate-to-preference-tab/preference-tab-is-active.injectable";
+import preferenceTabIsActiveInjectable from "./navigate-to-preference-tab/preference-tab-is-active.injectable";
 import React from "react";
 
 interface Dependencies {

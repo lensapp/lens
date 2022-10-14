@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceNavigationItemInjectionToken } from "./preference-navigation-items.injectable";
 import { computed } from "mobx";
-import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
-import preferenceTabIsActiveInjectable from "./navigate-to-preference-tab/preference-tab-is-active.injectable";
+import navigateToPreferenceTabInjectable from "../../../../features/preferences/renderer/preference-navigation/navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import preferenceTabIsActiveInjectable from "../../../../features/preferences/renderer/preference-navigation/navigate-to-preference-tab/preference-tab-is-active.injectable";
 
 const terminalPreferencesNavigationItemInjectable = getInjectable({
   id: "terminal-preferences-navigation-item",
