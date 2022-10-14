@@ -13,7 +13,7 @@ const terminalFontFamilyPreferenceItemInjectable = getInjectable({
     kind: "item" as const,
     id: "terminal-font-family-preference-item",
     parentId: "terminal-page",
-    orderNumber: 40,
+    orderNumber: 50,
     Component: TerminalFontFamily,
   }),
 

@@ -18,7 +18,7 @@ const NonInjectedCopyPasteFromTerminal = observer(
   ({ userStore }: Dependencies) => {
 
     return (
-      <div>
+      <section id="terminalSelection">
         <SubTitle title="Terminal copy & paste" />
         <Switch
           checked={userStore.terminalCopyOnSelect}
@@ -26,7 +26,7 @@ const NonInjectedCopyPasteFromTerminal = observer(
         >
           Copy on select and paste on right-click
         </Switch>
-      </div>
+      </section>
     );
   },
 );

@@ -20,7 +20,7 @@ const NonInjectedTerminalShellPath = observer(
   ({ userStore, defaultShell }: Dependencies) => {
 
     return (
-      <div>
+      <section id="shell">
         <SubTitle title="Terminal Shell Path" />
         <Input
           theme="round-black"
@@ -28,7 +28,7 @@ const NonInjectedTerminalShellPath = observer(
           value={userStore.shell ?? ""}
           onChange={(value) => userStore.shell = value}
         />
-      </div>
+      </section>
 
     );
   },

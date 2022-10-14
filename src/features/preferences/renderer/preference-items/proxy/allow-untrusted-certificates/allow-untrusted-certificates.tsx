@@ -15,7 +15,7 @@ interface Dependencies {
 }
 
 const NonInjectedAllowUntrustedCertificates = observer(({ userStore }: Dependencies) => (
-  <div>
+  <section className="small">
     <SubTitle title="Certificate Trust" />
     <Switch
       checked={userStore.allowUntrustedCAs}
@@ -30,7 +30,7 @@ const NonInjectedAllowUntrustedCertificates = observer(({ userStore }: Dependenc
       validations. Needed with some corporate proxies that do certificate
       re-writing. Does not affect cluster communications!
     </small>
-  </div>
+  </section>
 ));
 
 export const AllowUntrustedCertificates = withInjectables<Dependencies>(

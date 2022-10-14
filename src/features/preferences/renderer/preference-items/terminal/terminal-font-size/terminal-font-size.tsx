@@ -18,7 +18,7 @@ const NonInjectedTerminalFontSize = observer(
   ({ userStore }: Dependencies) => {
 
     return (
-      <div>
+      <section>
         <SubTitle title="Font size" />
         <Input
           theme="round-black"
@@ -28,7 +28,7 @@ const NonInjectedTerminalFontSize = observer(
           defaultValue={userStore.terminalConfig.fontSize.toString()}
           onChange={(value) => userStore.terminalConfig.fontSize = Number(value)}
         />
-      </div>
+      </section>
     );
   },
 );

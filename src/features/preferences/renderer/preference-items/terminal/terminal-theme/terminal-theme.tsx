@@ -32,7 +32,7 @@ const NonInjectedTerminalTheme = observer(
     ];
 
     return (
-      <div>
+      <section id="terminalTheme">
         <SubTitle title="Terminal theme" />
         <Select
           id="terminal-theme-input"
@@ -41,7 +41,7 @@ const NonInjectedTerminalTheme = observer(
           value={userStore.terminalTheme}
           onChange={option => userStore.terminalTheme = option?.value ?? ""}
         />
-      </div>
+      </section>
     );
   },
 );

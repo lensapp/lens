@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
 import { EditorPreferencePage } from "./editor-preference-page";
-import { HorizontalLine } from "../../../../../renderer/components/+preferences/horizontal-line/horizontal-line";
 
 const editorPreferencePageInjectable = getInjectable({
   id: "editor-preference-page",
@@ -16,7 +15,6 @@ const editorPreferencePageInjectable = getInjectable({
     parentId: "editor-tab",
     orderNumber: 0,
     Component: EditorPreferencePage,
-    childrenSeparator: HorizontalLine,
   }),
 
   injectionToken: preferenceItemInjectionToken,

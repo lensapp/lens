@@ -13,7 +13,7 @@ const terminalFontSizePreferenceItemInjectable = getInjectable({
     kind: "item" as const,
     id: "terminal-font-size-preference-item",
     parentId: "terminal-page",
-    orderNumber: 30,
+    orderNumber: 40,
     Component: TerminalFontSize,
   }),
 

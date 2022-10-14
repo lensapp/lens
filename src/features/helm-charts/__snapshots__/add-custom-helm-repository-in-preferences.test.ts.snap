@@ -332,9 +332,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -369,9 +367,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -933,9 +929,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -970,9 +964,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -1545,9 +1537,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -1582,9 +1572,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -2268,9 +2256,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -2305,9 +2291,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -2888,9 +2872,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -2925,9 +2907,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -3611,9 +3591,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -3648,9 +3626,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -4516,9 +4492,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -4553,9 +4527,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -5239,9 +5211,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -5276,9 +5246,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -6144,9 +6112,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -6181,9 +6147,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -6868,9 +6832,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -6905,9 +6867,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -7488,9 +7448,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -7525,9 +7483,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
@@ -8097,9 +8053,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </section>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="kube-sync"
                 >
@@ -8134,9 +8088,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                     </div>
                   </div>
                 </section>
-                <hr
-                  class="horizontalLine"
-                />
+                <hr />
                 <section
                   id="helm"
                 >
