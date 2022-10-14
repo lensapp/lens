@@ -621,6 +621,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1173,6 +1174,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

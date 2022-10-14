@@ -182,6 +182,7 @@ exports[`navigate to extension page renders 1`] = `
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -302,6 +303,7 @@ exports[`navigate to extension page when extension navigates to child route rend
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -438,6 +440,7 @@ exports[`navigate to extension page when extension navigates to route with param
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -574,6 +577,7 @@ exports[`navigate to extension page when extension navigates to route without pa
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -710,6 +714,7 @@ exports[`navigate to extension page when extension navigates to route without pa
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

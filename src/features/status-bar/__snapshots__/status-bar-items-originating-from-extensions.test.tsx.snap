@@ -183,6 +183,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -190,6 +191,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
         >
           <div
             class="item"
+            data-origin="some-name"
           >
             <div
               data-testid="some-testId"
@@ -199,6 +201,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           </div>
           <div
             class="item"
+            data-origin="some-name"
           >
             <div
               data-testid="some-testId"
@@ -213,6 +216,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
         >
           <div
             class="item"
+            data-origin="some-name"
           >
             <div
               data-testid="some-testId"
@@ -222,6 +226,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           </div>
           <div
             class="item"
+            data-origin="some-name"
           >
             <span
               data-testid="some-testId"
@@ -231,6 +236,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           </div>
           <div
             class="item"
+            data-origin="some-name"
           >
             <span
               data-testid="some-testId"

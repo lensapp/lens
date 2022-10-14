@@ -183,6 +183,7 @@ exports[`periodical checking of updates given updater is enabled and configurati
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
