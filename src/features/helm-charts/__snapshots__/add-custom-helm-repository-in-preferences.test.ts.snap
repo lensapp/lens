@@ -151,6 +151,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                     Terminal
                   </div>
                 </div>
+                <div
+                  class="header"
+                >
+                  Extensions
+                </div>
               </div>
             </div>
           </nav>
@@ -747,6 +752,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     Terminal
                   </div>
+                </div>
+                <div
+                  class="header"
+                >
+                  Extensions
                 </div>
               </div>
             </div>
@@ -1355,6 +1365,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     Terminal
                   </div>
+                </div>
+                <div
+                  class="header"
+                >
+                  Extensions
                 </div>
               </div>
             </div>
@@ -2075,6 +2090,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                     Terminal
                   </div>
                 </div>
+                <div
+                  class="header"
+                >
+                  Extensions
+                </div>
               </div>
             </div>
           </nav>
@@ -2690,6 +2710,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     Terminal
                   </div>
+                </div>
+                <div
+                  class="header"
+                >
+                  Extensions
                 </div>
               </div>
             </div>
@@ -3409,6 +3434,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     Terminal
                   </div>
+                </div>
+                <div
+                  class="header"
+                >
+                  Extensions
                 </div>
               </div>
             </div>
@@ -4311,6 +4341,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                     Terminal
                   </div>
                 </div>
+                <div
+                  class="header"
+                >
+                  Extensions
+                </div>
               </div>
             </div>
           </nav>
@@ -5029,6 +5064,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     Terminal
                   </div>
+                </div>
+                <div
+                  class="header"
+                >
+                  Extensions
                 </div>
               </div>
             </div>
@@ -5931,6 +5971,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                     Terminal
                   </div>
                 </div>
+                <div
+                  class="header"
+                >
+                  Extensions
+                </div>
               </div>
             </div>
           </nav>
@@ -6651,6 +6696,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                     Terminal
                   </div>
                 </div>
+                <div
+                  class="header"
+                >
+                  Extensions
+                </div>
               </div>
             </div>
           </nav>
@@ -7267,6 +7317,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                     Terminal
                   </div>
                 </div>
+                <div
+                  class="header"
+                >
+                  Extensions
+                </div>
               </div>
             </div>
           </nav>
@@ -7871,6 +7926,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                   >
                     Terminal
                   </div>
+                </div>
+                <div
+                  class="header"
+                >
+                  Extensions
                 </div>
               </div>
             </div>
