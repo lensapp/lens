@@ -6,7 +6,6 @@ import "../../../renderer/components/+preferences/preferences.scss";
 import React from "react";
 
 import { SettingLayout } from "../../../renderer/components/layout/setting-layout";
-import { PreferencesNavigation } from "../../../renderer/components/+preferences/preferences-navigation/preferences-navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import closePreferencesInjectable from "../../../renderer/components/+preferences/close-preferences.injectable";
 import currentPreferenceTabCompositeInjectable from "./preference-items/current-preference-tab-composite.injectable";
@@ -15,6 +14,7 @@ import type { PreferenceTypes, PreferenceTab } from "./preference-items/preferen
 import type { IComputedValue } from "mobx";
 import { Map } from "../../../renderer/components/map/map";
 import { observer } from "mobx-react";
+import { PreferencesNavigation } from "./preference-navigation/preferences-navigation";
 
 interface Dependencies {
   closePreferences: () => void;
@@ -69,6 +69,9 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
       );
     }
 
+    case "tab-group":
+
+    // eslint-disable-next-line no-fallthrough
     case "tab": {
       return (
         <Map items={composite.children}>
@@ -78,7 +81,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
     }
 
     default: {
-      // Note: this will fail at transpilation time, if all ApplicationMenuItemTypes
+      // Note: this will fail at transpilation time, if all kinds
       // are not handled in switch/case.
       const _exhaustiveCheck: never = composite.value;
 

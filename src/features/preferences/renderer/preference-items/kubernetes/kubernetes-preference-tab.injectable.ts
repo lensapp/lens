@@ -11,11 +11,11 @@ const kubernetesPreferenceTabInjectable = getInjectable({
   instantiate: () => ({
     kind: "tab" as const,
     id: "kubernetes-tab",
-    parentId: "preference-tabs" as const,
+    parentId: "general-tab-group" as const,
     pathId: "kubernetes",
     testId: "kubernetes-preferences-page",
     label: "Kubernetes",
-    orderNumber: 10,
+    orderNumber: 30,
   }),
 
   injectionToken: preferenceItemInjectionToken,

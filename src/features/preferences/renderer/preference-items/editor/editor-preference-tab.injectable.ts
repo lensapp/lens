@@ -11,11 +11,11 @@ const editorPreferenceTabInjectable = getInjectable({
   instantiate: () => ({
     kind: "tab" as const,
     id: "editor-tab",
-    parentId: "preference-tabs" as const,
+    parentId: "general-tab-group" as const,
     pathId: "editor",
     testId: "editor-preferences-page",
     label: "Editor",
-    orderNumber: 30,
+    orderNumber: 40,
   }),
 
   injectionToken: preferenceItemInjectionToken,

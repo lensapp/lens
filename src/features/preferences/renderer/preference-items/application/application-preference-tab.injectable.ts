@@ -11,10 +11,10 @@ const applicationPreferenceTabInjectable = getInjectable({
   instantiate: () => ({
     kind: "tab" as const,
     id: "application-tab",
-    parentId: "preference-tabs" as const,
+    parentId: "general-tab-group" as const,
     pathId: "app",
     testId: "application-preferences-page",
-    label: "Application",
+    label: "App",
     orderNumber: 10,
   }),
 

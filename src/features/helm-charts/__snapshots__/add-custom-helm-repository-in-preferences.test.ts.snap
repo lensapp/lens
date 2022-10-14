@@ -93,7 +93,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -690,7 +690,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -1298,7 +1298,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -2017,7 +2017,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -2633,7 +2633,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -3352,7 +3352,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -4253,7 +4253,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -4972,7 +4972,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -5873,7 +5873,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -6593,7 +6593,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -7209,7 +7209,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >
@@ -7814,7 +7814,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                 </div>
                 <div
                   class="Tab flex gaps align-center"
-                  data-testid="tab-link-for-application"
+                  data-testid="tab-link-for-app"
                   role="tab"
                   tabindex="0"
                 >

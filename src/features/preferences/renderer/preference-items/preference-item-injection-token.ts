@@ -10,9 +10,18 @@ export type PreferenceItemComponent = React.ComponentType<{ children: React.Reac
 export interface PreferenceTab {
   kind: "tab";
   id: string;
-  parentId: "preference-tabs";
+  parentId: string;
   pathId: string;
   testId: string;
+  label: string;
+  orderNumber: number;
+  isShown?: boolean;
+}
+
+export interface PreferenceTabGroup {
+  kind: "tab-group";
+  id: string;
+  parentId: "preference-tabs";
   label: string;
   orderNumber: number;
   isShown?: boolean;
@@ -45,7 +54,7 @@ export interface PreferenceItem {
   childrenSeparator?: () => React.ReactElement;
 }
 
-export type PreferenceTypes = PreferenceTab | PreferenceItem | PreferencePage | PreferenceGroup;
+export type PreferenceTypes = PreferenceTabGroup | PreferenceTab | PreferenceItem | PreferencePage | PreferenceGroup;
 
 export const preferenceItemInjectionToken = getInjectionToken<PreferenceTypes>({
   id: "preference-item-injection-token",

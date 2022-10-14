@@ -219,7 +219,7 @@ const testPreferenceTabInjectable = getInjectable({
     kind: "tab" as const,
     id: "test-tab",
     pathId: "test-tab",
-    parentId: "preference-tabs" as const,
+    parentId: "general-tab-group" as const,
     testId: "some-test-id-for-test-tab",
     label: "Test",
     orderNumber: 90,

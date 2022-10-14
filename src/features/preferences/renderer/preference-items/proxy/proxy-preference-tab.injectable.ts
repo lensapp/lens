@@ -11,7 +11,7 @@ const proxyPreferenceTabInjectable = getInjectable({
   instantiate: () => ({
     kind: "tab" as const,
     id: "proxy-tab",
-    parentId: "preference-tabs" as const,
+    parentId: "general-tab-group" as const,
     pathId: "proxy",
     testId: "proxy-preferences-page",
     label: "Proxy",
