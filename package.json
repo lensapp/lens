@@ -118,8 +118,7 @@
       "<rootDir>/packages"
     ],
     "setupFiles": [
-      "<rootDir>/src/jest.setup.ts",
-      "jest-canvas-mock"
+      "<rootDir>/src/jest.setup.ts"
     ],
     "globalSetup": "<rootDir>/src/jest.timezone.ts",
     "setupFilesAfterEnv": [
@@ -265,7 +264,7 @@
     "immer": "^9.0.17",
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
-    "jsdom": "^16.7.0",
+    "jsdom": "^20.0.1",
     "lodash": "^4.17.15",
     "marked": "^4.2.5",
     "md5-file": "^5.0.0",
@@ -335,6 +334,7 @@
     "@types/html-webpack-plugin": "^3.2.6",
     "@types/http-proxy": "^1.17.9",
     "@types/jest": "^28.1.6",
+    "@types/jest-image-snapshot": "^5.1.0",
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^16.2.14",
     "@types/lodash": "^4.14.191",
@@ -375,6 +375,7 @@
     "adr": "^1.4.3",
     "ansi_up": "^5.1.0",
     "chalk": "^4.1.2",
+    "canvas": "^2.10.1",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
     "cli-progress": "^3.11.2",
@@ -403,8 +404,8 @@
     "ignore-loader": "^0.1.2",
     "include-media": "^1.4.9",
     "jest": "^28.1.3",
-    "jest-canvas-mock": "^2.3.1",
     "jest-environment-jsdom": "^28.1.3",
+    "jest-image-snapshot": "^5.2.0",
     "jest-mock-extended": "^2.0.9",
     "make-plural": "^6.2.2",
     "memfs": "^3.4.12",

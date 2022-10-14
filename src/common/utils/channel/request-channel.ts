@@ -8,3 +8,11 @@ export interface RequestChannel<Request, Response> {
   _requestSignature?: Request; // used only to mark `Request` as "used"
   _responseSignature?: Response; // used only to mark `Response` as "used"
 }
+
+export type ChannelRequest<Channel> = Channel extends RequestChannel<infer Request, any>
+  ? Request
+  : never;
+
+export type ChannelResponse<Channel> = Channel extends RequestChannel<any, infer Response>
+  ? Response
+  : never;

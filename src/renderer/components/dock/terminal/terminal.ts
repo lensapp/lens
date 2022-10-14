@@ -6,7 +6,7 @@
 import debounce from "lodash/debounce";
 import type { IComputedValue } from "mobx";
 import { reaction } from "mobx";
-import { Terminal as XTerm } from "xterm";
+import type { Terminal as XTerminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
@@ -19,6 +19,7 @@ import assert from "assert";
 import { TerminalChannels } from "../../../../common/terminal/channels";
 import { LinkProvider } from "xterm-link-provider";
 import type { OpenLinkInBrowser } from "../../../../common/utils/open-link-in-browser.injectable";
+import type { CreateTerminalRenderer } from "./create-renderer.injectable";
 
 export interface TerminalDependencies {
   readonly spawningPool: HTMLElement;
@@ -28,6 +29,7 @@ export interface TerminalDependencies {
   readonly xtermColorTheme: IComputedValue<Record<string, string>>;
   readonly logger: Logger;
   openLinkInBrowser: OpenLinkInBrowser;
+  createTerminalRenderer: CreateTerminalRenderer;
 }
 
 export interface TerminalArguments {
@@ -36,7 +38,7 @@ export interface TerminalArguments {
 }
 
 export class Terminal {
-  private readonly xterm: XTerm;
+  private readonly xterm: XTerminal;
   private readonly fitAddon = new FitAddon();
   private scrollPos = 0;
   private readonly disposer = disposer();
@@ -44,13 +46,19 @@ export class Terminal {
   protected readonly api: TerminalApi;
 
   private get elem() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.xterm.element!;
+    const { element } = this.xterm;
+
+    assert(element, "Terminal element must be mounted");
+
+    return element;
   }
 
   private get viewport() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.elem.querySelector(".xterm-viewport")!;
+    const viewport = this.elem.querySelector(".xterm-viewport");
+
+    assert(viewport, 'Terminal element must have a descendant with a className of ".xterm-viewport"');
+
+    return viewport;
   }
 
   attachTo(parentElem: HTMLElement) {
@@ -67,11 +75,11 @@ export class Terminal {
     }
   }
 
-  get fontFamily() {
+  private get fontFamily() {
     return this.dependencies.terminalConfig.get().fontFamily;
   }
 
-  get fontSize() {
+  private get fontSize() {
     return this.dependencies.terminalConfig.get().fontSize;
   }
 
@@ -82,11 +90,12 @@ export class Terminal {
     this.tabId = tabId;
     this.api = api;
 
-    this.xterm = new XTerm({
+    this.xterm = this.dependencies.createTerminalRenderer({
       cursorBlink: true,
       cursorStyle: "bar",
       fontSize: this.fontSize,
       fontFamily: this.fontFamily,
+      theme: this.dependencies.xtermColorTheme.get(),
     });
     // enable terminal addons
     this.xterm.loadAddon(this.fitAddon);
@@ -96,7 +105,6 @@ export class Terminal {
     this.xterm.onSelectionChange(this.onSelectionChange);
 
     // bind events
-    const onDataHandler = this.xterm.onData(this.onData);
     const clearOnce = once(this.onClear);
 
     this.viewport.addEventListener("scroll", this.onScroll);
@@ -117,15 +125,13 @@ export class Terminal {
 
     this.disposer.push(
       this.xterm.registerLinkProvider(linkProvider),
-      reaction(() => this.dependencies.xtermColorTheme.get(),
+      reaction(
+        () => this.dependencies.xtermColorTheme.get(),
         colors => this.xterm.options.theme = colors,
-        {
-          fireImmediately: true,
-        },
       ),
-      reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true }),
-      reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true }),
-      () => onDataHandler.dispose(),
+      reaction(() => this.fontSize, this.setFontSize),
+      reaction(() => this.fontFamily, this.setFontFamily),
+      this.xterm.onData(this.onData),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
       () => window.removeEventListener("resize", this.onResize),

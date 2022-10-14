@@ -82,7 +82,7 @@ const setupLensProxyInjectable = getInjectable({
     };
   },
 
-  causesSideEffects: true,
+  // causesSideEffects: true,
 
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });

@@ -10,7 +10,6 @@ import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
-import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
@@ -18,8 +17,8 @@ import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
 import type { SelfSignedCert } from "selfsigned";
+import type { GetClusterForRequest } from "../cluster/get-cluster-for-request.injectable";
 
-export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
 export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
 
@@ -115,7 +114,6 @@ export class LensProxy {
           const { address, port } = this.proxyServer.address() as net.AddressInfo;
 
           this.dependencies.lensProxyPort.set(port);
-
           this.dependencies.logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
 
           this.proxyServer.on("error", (error) => {

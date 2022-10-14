@@ -21,7 +21,6 @@ import { filter, first, join, last, map, matches } from "lodash/fp";
 import navigateToPreferencesInjectable from "../../../features/preferences/common/navigate-to-preferences.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
-import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
@@ -35,7 +34,6 @@ import { overrideChannels } from "../../../test-utils/channel-fakes/override-cha
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
-import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
 import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
@@ -46,8 +44,6 @@ import { renderFor } from "./renderFor";
 import { RootFrame } from "../../frames/root-frame/root-frame";
 import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
-import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
-import { catalogEntityFromCluster } from "../../../main/cluster/manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
@@ -69,6 +65,12 @@ import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import type { ClusterId } from "../../../common/cluster-types";
+import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
+import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
+import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import currentLocationInjectable from "../../api/current-location.injectable";
+import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -265,11 +267,14 @@ export const getApplicationBuilder = () => {
 
         const render = renderFor(windowDi);
 
-        rendered = render(
-          <Router history={history}>
-            <environment.RootComponent />
-          </Router>,
-        );
+        rendered = render((
+          <>
+            <div id="terminal-init" />
+            <Router history={history}>
+              <environment.RootComponent />
+            </Router>
+          </>
+        ));
       },
 
       send: (arg) => {
@@ -289,11 +294,11 @@ export const getApplicationBuilder = () => {
   const namespaces = observable.set<string>();
   const namespaceItems = observable.array<Namespace>();
   const selectedNamespaces = observable.set<string>();
+  const clusters = observable.map<ClusterId, Cluster>();
+  const clusterId = "some-cluster-id";
   const startMainApplication = mainDi.inject(startMainApplicationInjectable);
 
   const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
-    mainDi.inject(lensProxyPortInjectable).set(42);
-
     for (const callback of beforeApplicationStartCallbacks) {
       await callback(mainDi);
     }
@@ -307,6 +312,41 @@ export const getApplicationBuilder = () => {
 
     applicationHasStarted = true;
   };
+
+  mainDi.override(getClusterByIdInjectable, () => (id) => clusters.get(id));
+
+  beforeWindowStartCallbacks.push((windowDi) => windowDi.override(getClusterByIdInjectable, () => (id) => clusters.get(id)));
+  beforeWindowStartCallbacks.push((windowDi) => windowDi.override(currentLocationInjectable, () => {
+    const port = mainDi.inject(lensProxyPortInjectable);
+
+    return {
+      hostname: "localhost",
+      port: `${port.get()}`,
+      protocol: "http",
+    };
+  }));
+
+  runInAction(() => {
+    mainDi.register(getInjectable({
+      id: "create-fake-cluster",
+      instantiate: (di) => ({
+        id: "create-fake-cluster",
+        run: () => {
+          const createCluster = di.inject(createClusterInjectable);
+          const cluster = createCluster({
+            contextName: "some-context-name",
+            id: clusterId,
+            kubeConfigPath: "/some-kube-config-path",
+          }, {
+            clusterServerUrl: "https://some-url.com:8797",
+          });
+
+          clusters.set(clusterId, cluster);
+        },
+      }),
+      injectionToken: onLoadOfApplicationInjectionToken,
+    }));
+  });
 
   const builder: ApplicationBuilder = {
     mainDi,
@@ -501,18 +541,7 @@ export const getApplicationBuilder = () => {
       environment = environments.clusterFrame;
 
       builder.beforeWindowStart((windowDi) => {
-        const clusterStub = {
-          id: "some-cluster-id",
-          accessibleNamespaces: observable.array(),
-          shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
-        } as Partial<Cluster> as Cluster;
-
-        windowDi.override(activeKubernetesClusterInjectable, () =>
-          computed(() => catalogEntityFromCluster(clusterStub)),
-        );
-
-        windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
-        windowDi.override(hostedClusterInjectable, () => clusterStub);
+        windowDi.override(hostedClusterIdInjectable, () => clusterId);
 
         // TODO: Figure out a way to remove this stub.
         windowDi.override(namespaceStoreInjectable, () => ({

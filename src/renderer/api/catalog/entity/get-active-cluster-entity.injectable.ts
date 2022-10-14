@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
+import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import catalogEntityRegistryInjectable from "./registry.injectable";
 
@@ -12,10 +12,18 @@ export type GetActiveClusterEntity = () => Cluster | undefined;
 const getActiveClusterEntityInjectable = getInjectable({
   id: "get-active-cluster-entity",
   instantiate: (di): GetActiveClusterEntity => {
-    const store = di.inject(clusterStoreInjectable);
+    const getClusterById = di.inject(getClusterByIdInjectable);
     const entityRegistry = di.inject(catalogEntityRegistryInjectable);
 
-    return () => store.getById(entityRegistry.activeEntity?.getId());
+    return () => {
+      const clusterId = entityRegistry.activeEntity?.getId();
+
+      if (!clusterId) {
+        return undefined;
+      }
+
+      return getClusterById(clusterId);
+    };
   },
 });
 

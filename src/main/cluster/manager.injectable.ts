@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../common/cluster-store/cluster-store.injectable";
 import loggerInjectable from "../../common/logger.injectable";
+import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 import clustersThatAreBeingDeletedInjectable from "./are-being-deleted.injectable";
 import { ClusterManager } from "./manager";
@@ -19,6 +20,7 @@ const clusterManagerInjectable = getInjectable({
     clustersThatAreBeingDeleted: di.inject(clustersThatAreBeingDeletedInjectable),
     visibleCluster: di.inject(visibleClusterInjectable),
     logger: di.inject(loggerInjectable),
+    getClusterById: di.inject(getClusterByIdInjectable),
   }),
 });
 

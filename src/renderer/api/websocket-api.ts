@@ -8,6 +8,7 @@ import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Defaulted } from "../utils";
 import type { DefaultWebsocketApiParams } from "./default-websocket-params.injectable";
+import type { Logger } from "../../common/logger";
 
 interface WebsocketApiParams {
   /**
@@ -64,6 +65,7 @@ export interface WebSocketEvents {
 
 export interface WebSocketApiDependencies {
   readonly defaultParams: DefaultWebsocketApiParams;
+  readonly logger: Logger;
 }
 
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
@@ -93,7 +95,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     return this.socket?.readyState === WebSocket.OPEN;
   }
 
-  connect(url: string) {
+  connectTo(url: string) {
     // close previous connection first
     this.socket?.close();
 
@@ -114,10 +116,10 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
 
   reconnect(): void {
     if (!this.socket) {
-      return void console.error("[WEBSOCKET-API]: cannot reconnect to a socket that is not connected");
+      return this.dependencies.logger.error("[WEBSOCKET-API]: cannot reconnect to a socket that is not connected");
     }
 
-    this.connect(this.socket.url);
+    this.connectTo(this.socket.url);
   }
 
   destroy() {
@@ -182,7 +184,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
 
         this.writeLog("will reconnect in", `${reconnectDelay}s`);
 
-        this.reconnectTimer = window.setTimeout(() => this.connect(url), reconnectDelay * 1000);
+        this.reconnectTimer = window.setTimeout(() => this.connectTo(url), reconnectDelay * 1000);
         this.readyState = WebSocketApiState.RECONNECTING;
       }
     } else {
@@ -192,9 +194,9 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.writeLog("%cCLOSE", `color:${error ? "red" : "black"};font-weight:bold;`, evt);
   }
 
-  protected writeLog(...data: any[]) {
+  protected writeLog(message: string, ...data: any[]) {
     if (this.params.logging) {
-      console.debug(...data);
+      this.dependencies.logger.debug(message, ...data);
     }
   }
 }

@@ -4,17 +4,17 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
-import { requestFromChannelInjectionToken } from "../../../../../../../common/utils/channel/request-from-channel-injection-token";
 import activeHelmRepositoriesInjectable from "../../active-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../../../../../../renderer/components/notifications/show-error-notification.injectable";
 import showSuccessNotificationInjectable from "../../../../../../../renderer/components/notifications/show-success-notification.injectable";
 import { addHelmRepositoryChannel } from "../../../../../../../common/helm/add-helm-repository-channel";
+import requestFromChannelInjectable from "../../../../../../utils/channel/request-from-channel.injectable";
 
 const addHelmRepositoryInjectable = getInjectable({
   id: "add-public-helm-repository",
 
   instantiate: (di) => {
-    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
+    const requestFromChannel = di.inject(requestFromChannelInjectable);
     const activeHelmRepositories = di.inject(activeHelmRepositoriesInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);

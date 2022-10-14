@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { MessageChannel } from "../channel/message-channel-listener-injection-token";
-import type { RequestChannel } from "../channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../channel/request-channel";
 
 export type SyncBoxChannel = MessageChannel<{ id: string; value: any }>;
 

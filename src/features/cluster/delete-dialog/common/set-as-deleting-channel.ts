@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { ClusterId } from "../../../../common/cluster-types";
-import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel";
 
 export type SetClusterAsDeletingChannel = RequestChannel<ClusterId, void>;
 

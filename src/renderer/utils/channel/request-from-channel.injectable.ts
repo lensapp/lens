@@ -3,9 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { ChannelRequest, ChannelResponse, RequestChannel } from "../../../common/utils/channel/request-channel";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
-import type { RequestFromChannel } from "../../../common/utils/channel/request-from-channel-injection-token";
-import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
+
+export interface RequestFromChannel {
+  <Channel extends RequestChannel<void, unknown>>(channel: Channel): Promise<ChannelResponse<Channel>>;
+  <Channel extends RequestChannel<unknown, unknown>>(channel: Channel, request: ChannelRequest<Channel>): Promise<ChannelResponse<Channel>>;
+}
 
 const requestFromChannelInjectable = getInjectable({
   id: "request-from-channel",
@@ -15,8 +19,6 @@ const requestFromChannelInjectable = getInjectable({
 
     return ((channel, request) => ipcRenderer.invoke(channel.id, request)) as RequestFromChannel;
   },
-
-  injectionToken: requestFromChannelInjectionToken,
 });
 
 export default requestFromChannelInjectable;

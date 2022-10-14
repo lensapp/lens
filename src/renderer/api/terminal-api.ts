@@ -8,10 +8,11 @@ import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import url from "url";
 import { makeObservable, observable } from "mobx";
-import { ipcRenderer } from "electron";
 import type { Logger } from "../../common/logger";
 import { once } from "lodash";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
+import type { RequestShellApiToken } from "../../features/terminal/renderer/request-shell-api-token.injectable";
+import type { CurrentLocation } from "./current-location.injectable";
 
 enum TerminalColor {
   RED = "\u001b[31m",
@@ -38,8 +39,13 @@ export interface TerminalEvents extends WebSocketEvents {
 }
 
 export interface TerminalApiDependencies extends WebSocketApiDependencies {
-  readonly hostedClusterId: string;
   readonly logger: Logger;
+  readonly currentLocation: CurrentLocation;
+  requestShellApiToken: RequestShellApiToken;
+}
+
+export interface ConnectOpts {
+  signal: AbortSignal;
 }
 
 export class TerminalApi extends WebSocketApi<TerminalEvents> {
@@ -68,13 +74,8 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
       this.emitStatus("Connecting ...");
     }
 
-    const authTokenArray = await ipcRenderer.invoke("cluster:shell-api", this.dependencies.hostedClusterId, this.query.id);
-
-    if (!(authTokenArray instanceof Uint8Array)) {
-      throw new TypeError("ShellApi token is not a Uint8Array");
-    }
-
-    const { hostname, protocol, port } = location;
+    const authTokenArray = await this.dependencies.requestShellApiToken(this.query.id);
+    const { hostname, protocol, port } = this.dependencies.currentLocation;
     const socketUrl = url.format({
       protocol: protocol.includes("https") ? "wss" : "ws",
       hostname,
@@ -110,8 +111,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
 
     this.prependListener("data", onReady);
     this.prependListener("connected", onReady);
-
-    super.connect(socketUrl);
+    this.connectTo(socketUrl);
   }
 
   sendMessage(message: TerminalMessage) {

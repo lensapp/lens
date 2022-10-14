@@ -16,12 +16,14 @@ import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../catalog";
 import type { Logger } from "../../common/logger";
+import type { GetClusterById } from "../../common/cluster-store/get-by-id.injectable";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
 const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKubernetesClusterStatus));
 
 interface Dependencies {
+  getClusterById: GetClusterById;
   readonly store: ClusterStore;
   readonly catalogEntityRegistry: CatalogEntityRegistry;
   readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
@@ -181,7 +183,7 @@ export class ClusterManager {
   @action
   protected syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
-      const cluster = this.dependencies.store.getById(entity.getId());
+      const cluster = this.dependencies.getClusterById(entity.getId());
 
       if (!cluster) {
         const model = {

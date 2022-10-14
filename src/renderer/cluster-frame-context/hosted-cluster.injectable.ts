@@ -4,16 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import hostedClusterIdInjectable from "./hosted-cluster-id.injectable";
-import clusterStoreInjectable from "../../common/cluster-store/cluster-store.injectable";
+import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 
 const hostedClusterInjectable = getInjectable({
   id: "hosted-cluster",
 
   instantiate: (di) => {
     const hostedClusterId = di.inject(hostedClusterIdInjectable);
-    const store = di.inject(clusterStoreInjectable);
+    const getClusterById = di.inject(getClusterByIdInjectable);
 
-    return store.getById(hostedClusterId);
+    if (!hostedClusterId) {
+      return undefined;
+    }
+
+    return getClusterById(hostedClusterId);
   },
 });
 

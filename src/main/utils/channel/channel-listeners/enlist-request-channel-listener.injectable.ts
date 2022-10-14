@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcMainInvokeEvent } from "electron";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
 import type { Disposer } from "../../../../common/utils";
-import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel";
 import type { RequestChannelListener } from "./listener-tokens";
 
 export type EnlistRequestChannelListener = <TChannel extends RequestChannel<unknown, unknown>>(listener: RequestChannelListener<TChannel>) => Disposer;

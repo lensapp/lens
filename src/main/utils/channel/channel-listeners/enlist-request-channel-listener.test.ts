@@ -8,7 +8,7 @@ import type { IpcMain, IpcMainInvokeEvent } from "electron";
 import { getPromiseStatus } from "../../../../common/test-utils/get-promise-status";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel";
 import type { EnlistRequestChannelListener } from "./enlist-request-channel-listener.injectable";
 import enlistRequestChannelListenerInjectable from "./enlist-request-channel-listener.injectable";
 import type { RequestChannelHandler } from "./listener-tokens";

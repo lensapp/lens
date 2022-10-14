@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, observable } from "mobx";
+import { action, runInAction } from "mobx";
 import type { Terminal } from "./terminal";
 import type { TerminalApi } from "../../../api/terminal-api";
 import type { DockTab, TabId } from "../dock/store";
@@ -20,69 +20,71 @@ interface Dependencies {
   createTerminalApi: CreateTerminalApi;
 }
 
+export interface TerminalConnection {
+  terminal: Terminal;
+  api: TerminalApi;
+}
+
+export interface TerminalConnectOptions {
+  signal: AbortSignal;
+}
+
 export class TerminalStore {
-  protected terminals = new Map<TabId, Terminal>();
-  protected connections = observable.map<TabId, TerminalApi>();
+  private readonly connections = new Map<TabId, TerminalConnection>();
 
-  constructor(private dependencies: Dependencies) {
-  }
+  constructor(private readonly dependencies: Dependencies) {}
 
-  @action
-  connect(tab: ITerminalTab) {
-    if (this.isConnected(tab.id)) {
-      return;
+  connect(tab: ITerminalTab): TerminalConnection & { connectionPromise?: Promise<void> } {
+    {
+      const connection = this.connections.get(tab.id);
+
+      if (connection) {
+        return connection;
+      }
     }
+
     const api = this.dependencies.createTerminalApi({
       id: tab.id,
       node: tab.node,
     });
     const terminal = this.dependencies.createTerminal(tab.id, api);
 
-    this.connections.set(tab.id, api);
-    this.terminals.set(tab.id, terminal);
+    runInAction(() => {
+      this.connections.set(tab.id, { api, terminal });
+    });
 
-    api.connect();
+    const connectionPromise = api.connect();
+
+    return { terminal, api, connectionPromise };
   }
 
   @action
   destroy(tabId: TabId) {
-    const terminal = this.terminals.get(tabId);
-    const terminalApi = this.connections.get(tabId);
+    const { terminal, api } = this.connections.get(tabId) ?? {};
 
     terminal?.destroy();
-    terminalApi?.destroy();
+    api?.destroy();
+
     this.connections.delete(tabId);
-    this.terminals.delete(tabId);
   }
 
-  /**
-   * @deprecated use `this.destroy()` instead
-   */
-  disconnect(tabId: TabId) {
-    this.destroy(tabId);
+  async reconnect(tabId: TabId): Promise<void> {
+    await this.connections.get(tabId)?.api.connect();
   }
 
-  reconnect(tabId: TabId) {
-    this.connections.get(tabId)?.connect();
+  isDisconnected(tabId: TabId): boolean {
+    return this.connections.get(tabId)?.api.readyState === WebSocketApiState.CLOSED;
   }
 
-  isConnected(tabId: TabId) {
-    return Boolean(this.connections.get(tabId));
+  getTerminal(tabId: TabId): Terminal | undefined {
+    return this.connections.get(tabId)?.terminal;
   }
 
-  isDisconnected(tabId: TabId) {
-    return this.connections.get(tabId)?.readyState === WebSocketApiState.CLOSED;
+  getTerminalApi(tabId: TabId): TerminalApi | undefined {
+    return this.connections.get(tabId)?.api;
   }
 
-  getTerminal(tabId: TabId) {
-    return this.terminals.get(tabId);
-  }
-
-  getTerminalApi(tabId: TabId) {
-    return this.connections.get(tabId);
-  }
-
-  reset() {
+  reset(): void {
     [...this.connections].forEach(([tabId]) => {
       this.destroy(tabId);
     });

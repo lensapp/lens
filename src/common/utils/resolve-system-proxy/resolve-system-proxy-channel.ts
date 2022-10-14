@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { RequestChannel } from "../channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../channel/request-channel";
 
 export type ResolveSystemProxyChannel = RequestChannel<string, string>;
 

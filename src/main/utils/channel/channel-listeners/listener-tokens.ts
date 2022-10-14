@@ -5,7 +5,7 @@
 
 import type { DiContainerForInjection } from "@ogre-tools/injectable";
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel";
 
 export type RequestChannelHandler<Channel> = Channel extends RequestChannel<infer Request, infer Response>
   ? (req: Request) => Promise<Response> | Response

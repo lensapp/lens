@@ -11,15 +11,15 @@ import { getApplicationBuilder } from "../../../renderer/components/test-utils/g
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { MessageChannel } from "./message-channel-listener-injection-token";
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
-import type { RequestFromChannel } from "./request-from-channel-injection-token";
-import { requestFromChannelInjectionToken } from "./request-from-channel-injection-token";
-import type { RequestChannel } from "./request-channel-listener-injection-token";
+import type { RequestChannel } from "./request-channel";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "../../test-utils/get-promise-status";
 import { runInAction } from "mobx";
 import type { RequestChannelHandler } from "../../../main/utils/channel/channel-listeners/listener-tokens";
 import { getRequestChannelListenerInjectable } from "../../../main/utils/channel/channel-listeners/listener-tokens";
+import type { RequestFromChannel } from "../../../renderer/utils/channel/request-from-channel.injectable";
+import requestFromChannelInjectable from "../../../renderer/utils/channel/request-from-channel.injectable";
 
 type TestMessageChannel = MessageChannel<string>;
 type TestRequestChannel = RequestChannel<string, string>;
@@ -164,9 +164,7 @@ describe("channel", () => {
 
       const windowDi = applicationBuilder.applicationWindow.only.di;
 
-      requestFromChannel = windowDi.inject(
-        requestFromChannelInjectionToken,
-      );
+      requestFromChannel = windowDi.inject(requestFromChannelInjectable);
     });
 
     describe("when requesting from channel", () => {

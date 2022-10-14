@@ -4,7 +4,7 @@
  */
 import type { HelmRepo } from "./helm-repo";
 import type { AsyncResult } from "../utils/async-result";
-import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../utils/channel/request-channel";
 
 export type AddHelmRepositoryChannel = RequestChannel<HelmRepo, AsyncResult<void, string>>;
 

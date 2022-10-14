@@ -14,7 +14,6 @@ const terminalSpawningPoolInjectable = getInjectable({
 
     return pool;
   },
-  causesSideEffects: true,
 });
 
 export default terminalSpawningPoolInjectable;
