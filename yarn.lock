@@ -6098,11 +6098,6 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.5.tgz#76c8584f4fc843db64702a6bd04ab7a8bd666da3"
   integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
 
-flex.box@^3.4.4:
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/flex.box/-/flex.box-3.4.4.tgz#cef28a542458f4668c5d499bcd7fa97aa82b8413"
-  integrity sha512-PG0rguh20zXyBuWmMmDCR0JjW9rtxK48OGMSzpLyGSRioTKeMNs9nbn1Dun+EsIp3wZozSpChbqMsU8a3IgHXg==
-
 fn.name@1.x.x:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
