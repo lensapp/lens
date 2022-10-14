@@ -182,6 +182,7 @@ exports[`add-cluster - navigation using application menu renders 1`] = `
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -386,6 +387,7 @@ exports[`add-cluster - navigation using application menu when navigating to add 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

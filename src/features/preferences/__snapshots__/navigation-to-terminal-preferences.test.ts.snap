@@ -621,6 +621,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1110,6 +1111,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

@@ -633,6 +633,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -887,6 +888,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1007,6 +1009,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1127,6 +1130,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1777,6 +1781,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -2031,6 +2036,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -2285,6 +2291,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -2539,6 +2546,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
