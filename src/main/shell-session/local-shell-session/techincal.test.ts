@@ -17,9 +17,9 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
 import type { Kubectl } from "../../kubectl/kubectl";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
-import type { OpenShellSession } from "../create-shell-session.injectable";
 import type { SpawnPty } from "../spawn-pty.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
+import type { OpenLocalShellSession } from "./open.injectable";
 import openLocalShellSessionInjectable from "./open.injectable";
 
 describe("technical unit tests for local shell sessions", () => {
@@ -42,7 +42,7 @@ describe("technical unit tests for local shell sessions", () => {
   });
 
   describe("when on windows", () => {
-    let openLocalShellSession: OpenShellSession;
+    let openLocalShellSession: OpenLocalShellSession;
     let spawnPtyMock: jest.MockedFunction<SpawnPty>;
 
     beforeEach(() => {

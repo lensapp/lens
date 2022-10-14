@@ -20,12 +20,12 @@ import type { SelfSignedCert } from "selfsigned";
 import type { GetClusterForRequest } from "../cluster/get-cluster-for-request.injectable";
 
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
-export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
+export type ProxyRequestHandler = (args: ProxyApiRequestArgs) => void | Promise<void>;
 
 interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
-  shellApiRequest: LensProxyApiRequest;
-  kubeApiUpgradeRequest: LensProxyApiRequest;
+  shellApiRequest: ProxyRequestHandler;
+  kubeApiUpgradeRequest: ProxyRequestHandler;
   emitAppEvent: EmitAppEvent;
   readonly router: Router;
   readonly proxy: httpProxy;
