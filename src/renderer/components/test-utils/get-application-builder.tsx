@@ -17,8 +17,7 @@ import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { filter, first, get, join, last, map, matches } from "lodash/fp";
-import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
+import { filter, first, join, last, map, matches } from "lodash/fp";
 import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
@@ -70,6 +69,7 @@ import { getCompositePaths } from "../../../features/application-menu/main/menu-
 import { normalizeComposite } from "../../../features/application-menu/main/menu-items/get-composite/normalize-composite/normalize-composite";
 import type { ClickableMenuItem } from "../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
 import type { Composite } from "../../../features/application-menu/main/menu-items/get-composite/get-composite";
+import { getSingleElement } from "./discovery-of-html-elements";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -444,24 +444,10 @@ export const getApplicationBuilder = () => {
       },
 
       navigation: {
-        click: (id: string) => {
-          const { di: windowDi, rendered } = builder.applicationWindow.only;
+        click: (pathId: string) => {
+          const { rendered } = builder.applicationWindow.only;
 
-          const link = rendered.queryByTestId(`tab-link-for-${id}`);
-
-          if (!link) {
-            const preferencesNavigationItems = windowDi.inject(
-              preferenceNavigationItemsInjectable,
-            );
-
-            const availableIds = preferencesNavigationItems
-              .get()
-              .map(get("id"));
-
-            throw new Error(
-              `Tried to click navigation item "${id}" which does not exist in preferences. Available IDs are "${availableIds.join('", "')}"`,
-            );
-          }
+          const link = getSingleElement("preference-tab-link", pathId)(rendered);
 
           fireEvent.click(link);
         },
