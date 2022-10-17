@@ -22,6 +22,7 @@ export interface PreferenceTabGroup {
   kind: "tab-group";
   id: string;
   parentId: "preference-tabs";
+  testId: string;
   label: string;
   orderNumber: number;
   isShown?: boolean;

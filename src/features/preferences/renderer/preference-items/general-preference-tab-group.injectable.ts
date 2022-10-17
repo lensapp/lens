@@ -11,6 +11,7 @@ const generalPreferenceTabGroupInjectable = getInjectable({
   instantiate: () => ({
     kind: "tab-group" as const,
     id: "general-tab-group",
+    testId: "general-tab-group",
     parentId: "preference-tabs" as const,
     label: "Preferences",
     orderNumber: 10,

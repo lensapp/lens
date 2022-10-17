@@ -12,6 +12,7 @@ import type { IComputedValue } from "mobx";
 import preferencesCompositeInjectable from "../preference-items/preferences-composite.injectable";
 import { observer } from "mobx-react";
 import { PreferencesNavigationTab } from "./preferences-navigation-tab";
+import { compositeHasDescendant } from "../../../application-menu/main/menu-items/get-composite/composite-has-descendant/composite-has-descendant";
 
 interface Dependencies {
   composite: IComputedValue<Composite<PreferenceTypes>>;
@@ -35,21 +36,34 @@ export const PreferencesNavigation = withInjectables<Dependencies>(
 
 
 const toNavigationHierarchy = (composite: Composite<PreferenceTypes>) => {
+  // Note: This makes tab groups and tabs without content not render anything in navigation.
+  if (!hasContent(composite)) {
+    return emptyRender;
+  }
+
   const value = composite.value;
 
   switch (value.kind) {
-    case "page":
-    case "item":
+    // Note: These preference item types are not rendered in navigation,
+    // yet they are interesting for deciding if eg. a tab group or a tab has content
+    // somewhere in structure, and therefore not be hidden.
+    case "page": {
+      return emptyRender;
+    }
 
-    // eslint-disable-next-line no-fallthrough
+    case "item": {
+      return emptyRender;
+    }
+
     case "group": {
-      throw new Error("Should never come here");
+      return emptyRender;
     }
 
     case "tab-group": {
+
       return (
         <>
-          <div className="header">{value.label}</div>
+          <div data-testid={value.testId} className="header">{value.label}</div>
 
           <Map items={composite.children}>{toNavigationHierarchy}</Map>
         </>
@@ -76,3 +90,10 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes>) => {
     }
   }
 };
+
+const hasContent = compositeHasDescendant<PreferenceTypes>(
+  (composite) => composite.value.kind === "item",
+);
+
+const emptyRender = <></>;
+
