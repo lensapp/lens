@@ -10,6 +10,7 @@ import { runInAction } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { preferenceItemInjectionToken } from "./renderer/preference-items/preference-item-injection-token";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - hiding-of-empty-branches, given in preferences page", () => {
   let builder: ApplicationBuilder;
@@ -34,7 +35,6 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
         instantiate: () => ({
           kind: "tab-group" as const,
           id: "some-tab-group",
-          testId: "some-tab-group-test-id",
           parentId: "preference-tabs" as const,
           label: "Some tab group label",
           orderNumber: 10,
@@ -43,32 +43,30 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
         injectionToken: preferenceItemInjectionToken,
       });
 
-      const tabWithItemsInjectable = getInjectable({
+      const someTabInjectable = getInjectable({
         id: "some-tab",
 
         instantiate: () => ({
           kind: "tab" as const,
-          id: "some-tab-with-items-id",
+          id: "some-tab-id",
           parentId: "some-tab-group" as const,
-          testId: "some-tab-with-items",
-          pathId: "irrelevant",
-          label: "Some label for tab with items",
+          pathId: "some-path-id-for-some-tab-id",
+          label: "Some tab label",
           orderNumber: 10,
         }),
 
         injectionToken: preferenceItemInjectionToken,
       });
 
-      const tabWithoutItemsInjectable = getInjectable({
-        id: "some-empty-tab",
+      const someOtherTabInjectable = getInjectable({
+        id: "some-other-tab",
 
         instantiate: () => ({
           kind: "tab" as const,
-          id: "some-tab-without-items-id",
+          id: "some-other-tab-id",
           parentId: "some-tab-group" as const,
-          testId: "some-tab-without-items",
-          pathId: "irrelevant",
-          label: "Some label for tab without items",
+          pathId: "some-path-id-for-some-other-tab-id",
+          label: "Some other tab label",
           orderNumber: 10,
         }),
 
@@ -78,8 +76,8 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
       runInAction(() => {
         windowDi.register(
           someTabGroupInjectable,
-          tabWithItemsInjectable,
-          tabWithoutItemsInjectable,
+          someTabInjectable,
+          someOtherTabInjectable,
         );
       });
     });
@@ -89,14 +87,25 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
     });
 
     it("does not render the empty tab group", () => {
-      const someTabGroup = rendered.queryByTestId("some-tab-group-test-id");
+      const someTabGroup = querySingleElement(
+        "preference-tab-group",
+        "some-tab-group",
+      )(rendered);
 
       expect(someTabGroup).toBeNull();
     });
 
     it("does not render the empty tabs", () => {
-      const someTab = rendered.queryByTestId("some-tab-with-items");
-      const someOtherTab = rendered.queryByTestId("some-tab-without-items");
+      const someTab = querySingleElement(
+        "preference-tab-link",
+        "some-path-id-for-some-tab-id",
+      )(rendered);
+
+      const someOtherTab = querySingleElement(
+        "preference-tab-link",
+        "some-path-id-for-some-other-tab-id",
+      )(rendered);
+
 
       expect([someTab, someOtherTab]).toEqual([null, null]);
     });
@@ -109,7 +118,7 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
           instantiate: () => ({
             kind: "item" as const,
             id: "some-preference-item-id",
-            parentId: "some-tab-with-items-id" as const,
+            parentId: "some-tab-id" as const,
             testId: "some-preference-item",
             Component: () => <div>Irrelevant</div>,
             orderNumber: 10,
@@ -128,19 +137,28 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
       });
 
       it("renders the tab group that is no longer empty", () => {
-        const someTabGroup = rendered.queryByTestId("some-tab-group-test-id");
+        const someTabGroup = querySingleElement(
+          "preference-tab-group",
+          "some-tab-group",
+        )(rendered);
 
         expect(someTabGroup).not.toBeNull();
       });
 
       it("renders the tab that is no longer empty", () => {
-        const someTab = rendered.queryByTestId("some-tab-with-items");
+        const someTab = getSingleElement(
+          "preference-tab-link",
+          "some-path-id-for-some-tab-id",
+        )(rendered);
 
         expect(someTab).not.toBeNull();
       });
 
       it("does not render the tab that is still empty", () => {
-        const someTab = rendered.queryByTestId("some-tab-without-items");
+        const someTab = querySingleElement(
+          "preference-tab-link",
+          "some-path-id-for-some-other-tab-id",
+        )(rendered);
 
         expect(someTab).toBeNull();
       });
@@ -153,7 +171,7 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
             instantiate: () => ({
               kind: "item" as const,
               id: "some-other-preference-item-id",
-              parentId: "some-tab-without-items-id" as const,
+              parentId: "some-other-tab-id" as const,
               testId: "some-other-preference-item",
               Component: () => <div>Irrelevant</div>,
               orderNumber: 10,
@@ -172,19 +190,28 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
         });
 
         it("still renders the tab group that is not empty", () => {
-          const someTabGroup = rendered.queryByTestId("some-tab-group-test-id");
+          const someTabGroup = getSingleElement(
+            "preference-tab-group",
+            "some-tab-group",
+          )(rendered);
 
           expect(someTabGroup).not.toBeNull();
         });
 
         it("still renders the tab that is not empty", () => {
-          const someTab = rendered.queryByTestId("some-tab-with-items");
+          const someTab = getSingleElement(
+            "preference-tab-link",
+            "some-path-id-for-some-tab-id",
+          )(rendered);
 
           expect(someTab).not.toBeNull();
         });
 
         it("now renders the other tab that is no longer empty", () => {
-          const someTab = rendered.queryByTestId("some-tab-without-items");
+          const someTab = getSingleElement(
+            "preference-tab-link",
+            "some-path-id-for-some-other-tab-id",
+          )(rendered);
 
           expect(someTab).not.toBeNull();
         });

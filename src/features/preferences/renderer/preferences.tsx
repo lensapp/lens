@@ -34,7 +34,6 @@ const NonInjectedPreferences = observer(({
       contentGaps={false}
       closeButtonProps={{ "data-testid": "close-preferences" }}
       back={closePreferences}
-      data-testid={composite.value.testId}
     >
       {toPreferenceItemHierarchy(composite)}
     </SettingLayout>

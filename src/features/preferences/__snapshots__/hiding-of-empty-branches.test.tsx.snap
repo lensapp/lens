@@ -74,7 +74,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="application-preferences-page"
       >
         <nav
           class="sidebarRegion"
@@ -87,14 +86,13 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
             >
               <div
                 class="header flex items-center"
-                data-testid="general-tab-group"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
                 data-preference-tab-link-test="app"
-                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -107,7 +105,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="proxy"
-                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -120,7 +117,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="kubernetes"
-                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -133,7 +129,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="editor"
-                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -146,7 +141,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="terminal"
-                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -739,7 +733,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="application-preferences-page"
       >
         <nav
           class="sidebarRegion"
@@ -752,14 +745,13 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
             >
               <div
                 class="header flex items-center"
-                data-testid="general-tab-group"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
                 data-preference-tab-link-test="app"
-                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -772,7 +764,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="proxy"
-                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -785,7 +776,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="kubernetes"
-                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -798,7 +788,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="editor"
-                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -811,7 +800,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="terminal"
-                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -824,21 +812,20 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <hr />
               <div
                 class="header flex items-center"
-                data-testid="some-tab-group-test-id"
+                data-preference-tab-group-test="some-tab-group"
               >
                 Some tab group label
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-preference-tab-link-test="irrelevant"
-                data-testid="some-tab-with-items"
+                data-preference-tab-link-test="some-path-id-for-some-tab-id"
                 role="tab"
                 tabindex="0"
               >
                 <div
                   class="label"
                 >
-                  Some label for tab with items
+                  Some tab label
                 </div>
               </div>
               <hr />
@@ -1423,7 +1410,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="application-preferences-page"
       >
         <nav
           class="sidebarRegion"
@@ -1436,14 +1422,13 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
             >
               <div
                 class="header flex items-center"
-                data-testid="general-tab-group"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
                 data-preference-tab-link-test="app"
-                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1456,7 +1441,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="proxy"
-                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1469,7 +1453,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="kubernetes"
-                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1482,7 +1465,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="editor"
-                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1495,7 +1477,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <div
                 class="Tab flex gaps align-center"
                 data-preference-tab-link-test="terminal"
-                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1508,34 +1489,32 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
               <hr />
               <div
                 class="header flex items-center"
-                data-testid="some-tab-group-test-id"
+                data-preference-tab-group-test="some-tab-group"
               >
                 Some tab group label
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-preference-tab-link-test="irrelevant"
-                data-testid="some-tab-with-items"
+                data-preference-tab-link-test="some-path-id-for-some-tab-id"
                 role="tab"
                 tabindex="0"
               >
                 <div
                   class="label"
                 >
-                  Some label for tab with items
+                  Some tab label
                 </div>
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-preference-tab-link-test="irrelevant"
-                data-testid="some-tab-without-items"
+                data-preference-tab-link-test="some-path-id-for-some-other-tab-id"
                 role="tab"
                 tabindex="0"
               >
                 <div
                   class="label"
                 >
-                  Some label for tab without items
+                  Some other tab label
                 </div>
               </div>
               <hr />
