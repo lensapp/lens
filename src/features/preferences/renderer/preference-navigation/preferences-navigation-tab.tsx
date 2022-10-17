@@ -23,7 +23,6 @@ interface PreferenceNavigationTabProps {
 const NonInjectedPreferencesNavigationTab = observer(({ navigateToTab, tabIsActive, tab } : Dependencies & PreferenceNavigationTabProps) => (
   <Tab
     onClick={() => navigateToTab(tab.pathId)}
-    data-testid={tab.testId}
     active={tabIsActive.get()}
     label={tab.label}
     data-preference-tab-link-test={tab.pathId}

@@ -75,7 +75,6 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
         />
         <div
           class="SettingLayout showNavigation Preferences"
-          data-testid="application-preferences-page"
         >
           <nav
             class="sidebarRegion"
@@ -88,14 +87,12 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
               >
                 <div
                   class="header flex items-center"
-                  data-testid="general-tab-group"
                 >
                   Preferences
                 </div>
                 <div
                   class="Tab flex gaps align-center active"
                   data-preference-tab-link-test="app"
-                  data-testid="application-preferences-page"
                   role="tab"
                   tabindex="0"
                 >
@@ -108,7 +105,6 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                 <div
                   class="Tab flex gaps align-center"
                   data-preference-tab-link-test="proxy"
-                  data-testid="proxy-preferences-page"
                   role="tab"
                   tabindex="0"
                 >
@@ -121,7 +117,6 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                 <div
                   class="Tab flex gaps align-center"
                   data-preference-tab-link-test="kubernetes"
-                  data-testid="kubernetes-preferences-page"
                   role="tab"
                   tabindex="0"
                 >
@@ -134,7 +129,6 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                 <div
                   class="Tab flex gaps align-center"
                   data-preference-tab-link-test="editor"
-                  data-testid="editor-preferences-page"
                   role="tab"
                   tabindex="0"
                 >
@@ -147,7 +141,6 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                 <div
                   class="Tab flex gaps align-center"
                   data-preference-tab-link-test="terminal"
-                  data-testid="terminal-preferences-page"
                   role="tab"
                   tabindex="0"
                 >

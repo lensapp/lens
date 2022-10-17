@@ -13,7 +13,6 @@ const telemetryPreferenceTabInjectable = getInjectable({
     id: "telemetry-tab",
     parentId: "general-tab-group" as const,
     pathId: "telemetry",
-    testId: "terminal-preferences-page",
     label: "Telemetry",
     orderNumber: 60,
   }),

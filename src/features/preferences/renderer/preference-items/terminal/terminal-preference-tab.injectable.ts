@@ -13,7 +13,6 @@ const terminalPreferenceTabInjectable = getInjectable({
     id: "terminal-tab",
     pathId: "terminal",
     parentId: "general-tab-group" as const,
-    testId: "terminal-preferences-page",
     label: "Terminal",
     orderNumber: 50,
   }),

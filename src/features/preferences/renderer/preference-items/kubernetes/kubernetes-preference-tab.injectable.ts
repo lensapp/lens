@@ -13,7 +13,6 @@ const kubernetesPreferenceTabInjectable = getInjectable({
     id: "kubernetes-tab",
     parentId: "general-tab-group" as const,
     pathId: "kubernetes",
-    testId: "kubernetes-preferences-page",
     label: "Kubernetes",
     orderNumber: 30,
   }),

@@ -13,7 +13,6 @@ const applicationPreferenceTabInjectable = getInjectable({
     id: "application-tab",
     parentId: "general-tab-group" as const,
     pathId: "app",
-    testId: "application-preferences-page",
     label: "App",
     orderNumber: 10,
   }),

@@ -13,7 +13,6 @@ const proxyPreferenceTabInjectable = getInjectable({
     id: "proxy-tab",
     parentId: "general-tab-group" as const,
     pathId: "proxy",
-    testId: "proxy-preferences-page",
     label: "Proxy",
     orderNumber: 20,
   }),
