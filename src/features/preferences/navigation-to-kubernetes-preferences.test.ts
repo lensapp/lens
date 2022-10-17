@@ -7,6 +7,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import callForPublicHelmRepositoriesInjectable from "../helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to kubernetes preferences", () => {
   let builder: ApplicationBuilder;
@@ -42,7 +43,10 @@ describe("preferences - navigation to kubernetes preferences", () => {
     });
 
     it("does not show kubernetes preferences yet", () => {
-      const page = rendered.queryByTestId("kubernetes-preferences-page");
+      const page = querySingleElement(
+        "preference-page",
+        "kubernetes",
+      )(rendered);
 
       expect(page).toBeNull();
     });
@@ -57,7 +61,10 @@ describe("preferences - navigation to kubernetes preferences", () => {
       });
 
       it("shows kubernetes preferences", () => {
-        const page = rendered.getByTestId("kubernetes-preferences-page");
+        const page = getSingleElement(
+          "preference-page",
+          "kubernetes",
+        )(rendered);
 
         expect(page).not.toBeNull();
       });

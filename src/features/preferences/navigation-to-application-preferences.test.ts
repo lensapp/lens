@@ -6,6 +6,7 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import navigateToProxyPreferencesInjectable from "./common/navigate-to-proxy-preferences.injectable";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to application preferences", () => {
   let builder: ApplicationBuilder;
@@ -32,14 +33,17 @@ describe("preferences - navigation to application preferences", () => {
     });
 
     it("does not show application preferences yet", () => {
-      const page = rendered.queryByTestId("application-preferences-page");
+      const page = querySingleElement(
+        "preference-page",
+        "application",
+      )(rendered);
 
       expect(page).toBeNull();
     });
 
     describe("when navigating to application preferences using navigation", () => {
       beforeEach(() => {
-        builder.preferences.navigation.click("application");
+        builder.preferences.navigation.click("app");
       });
 
       it("renders", () => {
@@ -47,10 +51,14 @@ describe("preferences - navigation to application preferences", () => {
       });
 
       it("shows application preferences", () => {
-        const page = rendered.getByTestId("application-preferences-page");
+        const page = getSingleElement(
+          "preference-page",
+          "application",
+        )(rendered);
 
         expect(page).not.toBeNull();
       });
     });
   });
 });
+

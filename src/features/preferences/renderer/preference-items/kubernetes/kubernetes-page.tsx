@@ -6,7 +6,7 @@ import React from "react";
 import type { PreferenceItemComponent } from "../preference-item-injection-token";
 
 export const KubernetesPage: PreferenceItemComponent = ({ children }) => (
-  <section id="kubernetes">
+  <section id="kubernetes" data-preference-page-test="kubernetes">
     <h2 data-testid="kubernetes-header">Kubernetes</h2>
 
     {children}

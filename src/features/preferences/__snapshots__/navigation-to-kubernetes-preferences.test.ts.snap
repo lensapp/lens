@@ -86,13 +86,15 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -104,7 +106,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -116,7 +119,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -128,7 +132,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -140,7 +145,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -150,6 +156,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   Terminal
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -161,6 +168,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             class="content"
           >
             <section
+              data-preference-page-test="application"
               id="application"
             >
               <h2
@@ -743,13 +751,15 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -761,7 +771,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -773,7 +784,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -785,7 +797,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -797,7 +810,8 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -807,6 +821,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                   Terminal
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -818,16 +833,17 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             class="content"
           >
             <section
+              data-preference-page-test="kubernetes"
               id="kubernetes"
             >
+              <h2
+                data-testid="kubernetes-header"
+              >
+                Kubernetes
+              </h2>
               <section
                 id="kubectl"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
-                  Kubernetes
-                </h2>
                 <section>
                   <div
                     class="SubTitle"

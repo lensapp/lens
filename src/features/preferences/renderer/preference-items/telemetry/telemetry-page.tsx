@@ -6,7 +6,7 @@ import React from "react";
 import type { PreferenceItemComponent } from "../preference-item-injection-token";
 
 export const TelemetryPage: PreferenceItemComponent = ({ children }) => (
-  <section id="telemetry">
+  <section id="telemetry" data-preference-page-test="telemetry">
     <h2 data-testid="telemetry-header">Telemetry</h2>
 
     {children}

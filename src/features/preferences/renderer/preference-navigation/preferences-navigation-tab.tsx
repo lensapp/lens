@@ -26,6 +26,7 @@ const NonInjectedPreferencesNavigationTab = observer(({ navigateToTab, tabIsActi
     data-testid={tab.testId}
     active={tabIsActive.get()}
     label={tab.label}
+    data-preference-tab-link-test={tab.pathId}
   />
 ));
 

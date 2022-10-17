@@ -5,6 +5,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to editor preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -27,9 +28,11 @@ describe("preferences - navigation to editor preferences", () => {
     it("renders", () => {
       expect(rendered.container).toMatchSnapshot();
     });
-
     it("does not show editor preferences yet", () => {
-      const page = rendered.queryByTestId("editor-preferences-page");
+      const page = querySingleElement(
+        "preference-page",
+        "editor",
+      )(rendered);
 
       expect(page).toBeNull();
     });
@@ -44,7 +47,10 @@ describe("preferences - navigation to editor preferences", () => {
       });
 
       it("shows editor preferences", () => {
-        const page = rendered.getByTestId("editor-preferences-page");
+        const page = getSingleElement(
+          "preference-page",
+          "editor",
+        )(rendered);
 
         expect(page).not.toBeNull();
       });

@@ -9,6 +9,7 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import navigateToTelemetryPreferencesInjectable from "./common/navigate-to-telemetry-preferences.injectable";
 import sentryDataSourceNameInjectable from "../../common/vars/sentry-dsn-url.injectable";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to telemetry preferences", () => {
   let builder: ApplicationBuilder;
@@ -33,7 +34,10 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("does not show telemetry preferences yet", () => {
-      const page = rendered.queryByTestId("telemetry-preferences-page");
+      const page = querySingleElement(
+        "preference-page",
+        "telemetry",
+      )(rendered);
 
       expect(page).toBeNull();
     });
@@ -71,7 +75,10 @@ describe("preferences - navigation to telemetry preferences", () => {
         });
 
         it("shows telemetry preferences", () => {
-          const page = rendered.getByTestId("telemetry-preferences-page");
+          const page = getSingleElement(
+            "preference-page",
+            "telemetry",
+          )(rendered);
 
           expect(page).not.toBeNull();
         });

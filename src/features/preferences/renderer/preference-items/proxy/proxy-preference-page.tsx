@@ -6,7 +6,7 @@ import React from "react";
 import type { PreferenceItemComponent } from "../preference-item-injection-token";
 
 export const ProxyPreferencePage: PreferenceItemComponent = ({ children }) => (
-  <section id="proxy">
+  <section id="proxy" data-preference-page-test="proxy">
     <h2 data-testid="proxy-header">Proxy</h2>
 
     {children}

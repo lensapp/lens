@@ -5,6 +5,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to proxy preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -29,7 +30,10 @@ describe("preferences - navigation to proxy preferences", () => {
     });
 
     it("does not show proxy preferences yet", () => {
-      const page = rendered.queryByTestId("proxy-preferences-page");
+      const page = querySingleElement(
+        "preference-page",
+        "proxy",
+      )(rendered);
 
       expect(page).toBeNull();
     });
@@ -44,7 +48,10 @@ describe("preferences - navigation to proxy preferences", () => {
       });
 
       it("shows proxy preferences", () => {
-        const page = rendered.getByTestId("proxy-preferences-page");
+        const page = getSingleElement(
+          "preference-page",
+          "proxy",
+        )(rendered);
 
         expect(page).not.toBeNull();
       });

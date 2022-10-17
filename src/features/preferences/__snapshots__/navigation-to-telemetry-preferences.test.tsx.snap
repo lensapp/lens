@@ -74,7 +74,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="telemetry-preferences-page"
+        data-testid="terminal-preferences-page"
       >
         <nav
           class="sidebarRegion"
@@ -86,13 +86,15 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -104,7 +106,8 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -116,7 +119,8 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -128,7 +132,8 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -140,7 +145,8 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -152,7 +158,8 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-telemetry"
+                data-preference-tab-link-test="telemetry"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -162,6 +169,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
                   Telemetry
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -173,6 +181,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
             class="content"
           >
             <section
+              data-preference-page-test="telemetry"
               id="telemetry"
             >
               <h2
@@ -180,7 +189,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
               >
                 Telemetry
               </h2>
-              <section
+              <div
                 class="small"
                 data-testid="telemetry-preferences-for-automatic-error-reporting"
                 id="sentry"
@@ -213,10 +222,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
                     Automatic error reports provide vital information about issues and application crashes. It is highly recommended to keep this feature enabled to ensure fast turnaround for issues you might encounter.
                   </span>
                 </div>
-              </section>
-              <hr
-                class="small"
-              />
+              </div>
             </section>
           </div>
           <div
@@ -405,13 +411,15 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -423,7 +431,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -435,7 +444,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -447,7 +457,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -459,7 +470,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -469,6 +481,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   Terminal
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -480,6 +493,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             class="content"
           >
             <section
+              data-preference-page-test="application"
               id="application"
             >
               <h2
@@ -1062,13 +1076,15 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1080,7 +1096,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1092,7 +1109,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1104,7 +1122,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1116,7 +1135,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1126,18 +1146,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   Terminal
                 </div>
               </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-telemetry"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Telemetry
-                </div>
-              </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -1149,6 +1158,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             class="content"
           >
             <section
+              data-preference-page-test="application"
               id="application"
             >
               <h2
@@ -2026,7 +2036,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="telemetry-preferences-page"
+        data-testid="terminal-preferences-page"
       >
         <nav
           class="sidebarRegion"
@@ -2038,13 +2048,15 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2056,7 +2068,8 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2068,7 +2081,8 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2080,7 +2094,8 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2092,7 +2107,8 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2102,6 +2118,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
                   Terminal
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -2113,6 +2130,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
             class="content"
           >
             <section
+              data-preference-page-test="telemetry"
               id="telemetry"
             >
               <h2

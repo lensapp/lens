@@ -6,7 +6,7 @@ import React from "react";
 import type { PreferenceItemComponent } from "../preference-item-injection-token";
 
 export const ApplicationPreferencePage: PreferenceItemComponent = ({ children }) => (
-  <section id="application">
+  <section id="application" data-preference-page-test="application">
     <h2 data-testid="application-header">Application</h2>
 
     {children}

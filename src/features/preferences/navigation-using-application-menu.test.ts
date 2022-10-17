@@ -6,6 +6,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation using application menu", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -21,10 +22,13 @@ describe("preferences - navigation using application menu", () => {
     expect(rendered.container).toMatchSnapshot();
   });
 
-  it("does not show application preferences page yet", () => {
-    const actual = rendered.queryByTestId("application-preferences-page");
+  it("does not show application preferences yet", () => {
+    const page = querySingleElement(
+      "preference-page",
+      "application",
+    )(rendered);
 
-    expect(actual).toBeNull();
+    expect(page).toBeNull();
   });
 
   describe("when navigating to preferences using application menu", () => {
@@ -36,10 +40,13 @@ describe("preferences - navigation using application menu", () => {
       expect(rendered.container).toMatchSnapshot();
     });
 
-    it("shows application preferences page", () => {
-      const actual = rendered.getByTestId("application-preferences-page");
+    it("shows application preferences", () => {
+      const page = getSingleElement(
+        "preference-page",
+        "application",
+      )(rendered);
 
-      expect(actual).not.toBeNull();
+      expect(page).not.toBeNull();
     });
   });
 });

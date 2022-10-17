@@ -5,6 +5,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to terminal preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -29,7 +30,10 @@ describe("preferences - navigation to terminal preferences", () => {
     });
 
     it("does not show terminal preferences yet", () => {
-      const page = rendered.queryByTestId("terminal-preferences-page");
+      const page = querySingleElement(
+        "preference-page",
+        "terminal",
+      )(rendered);
 
       expect(page).toBeNull();
     });
@@ -43,8 +47,12 @@ describe("preferences - navigation to terminal preferences", () => {
         expect(rendered.container).toMatchSnapshot();
       });
 
+
       it("shows terminal preferences", () => {
-        const page = rendered.getByTestId("terminal-preferences-page");
+        const page = getSingleElement(
+          "preference-page",
+          "terminal",
+        )(rendered);
 
         expect(page).not.toBeNull();
       });
