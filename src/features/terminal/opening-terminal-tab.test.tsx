@@ -4,32 +4,22 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
-import assert from "assert";
-import { TypedRegEx } from "typed-regex";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-
-const pngBase64Matcher = TypedRegEx("data:image/png;base64,(?<ENCODED>.+)");
-
-function convertCanvasToPngBuffer(canvas: { toDataURL: () => string }): Buffer {
-  const content = canvas.toDataURL();
-  const match = pngBase64Matcher.captures(content);
-
-  assert(match);
-
-  return Buffer.from(match.ENCODED, "base64");
-}
+import type { FindByTextWithMarkup } from "../../test-utils/findByTextWithMarkup";
+import { findByTextWithMarkupFor } from "../../test-utils/findByTextWithMarkup";
 
 describe("test for opening terminal tab within cluster frame", () => {
   let builder: ApplicationBuilder;
   let result: RenderResult;
-  let textCanvas: HTMLCanvasElement;
+  let findByTextWithMarkup: FindByTextWithMarkup;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
 
     result = await builder.render();
+    findByTextWithMarkup = findByTextWithMarkupFor(result);
   });
 
   afterEach(() => {
@@ -39,7 +29,6 @@ describe("test for opening terminal tab within cluster frame", () => {
   describe("when new terminal tab is opened", () => {
     beforeEach(() => {
       result.getByTestId("dock-tab-for-terminal").click();
-      textCanvas = result.baseElement.querySelector("canvas.xterm-text-layer") as HTMLCanvasElement;
     });
 
     it("renders", () => {
@@ -53,7 +42,7 @@ describe("test for opening terminal tab within cluster frame", () => {
     });
 
     it("shows connecting message", async () => {
-      expect(convertCanvasToPngBuffer(textCanvas)).toMatchImageSnapshot();
+      await findByTextWithMarkup("Connecting ...");
     });
 
     it.skip("connects websocket to main", () => {
