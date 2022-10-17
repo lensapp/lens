@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
-import { ProxyPreferencePage } from "./proxy-preference-page";
 import React from "react";
+import { getPreferencePage } from "../../get-preference-page";
 
 const proxyPreferencePageInjectable = getInjectable({
   id: "proxy-preference-page",
@@ -15,7 +15,7 @@ const proxyPreferencePageInjectable = getInjectable({
     id: "proxy-page",
     parentId: "proxy-tab",
     orderNumber: 0,
-    Component: ProxyPreferencePage,
+    Component: getPreferencePage("Proxy"),
     childrenSeparator: () => <hr className="small" />,
   }),
 

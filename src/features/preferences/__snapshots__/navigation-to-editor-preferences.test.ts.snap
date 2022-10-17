@@ -86,6 +86,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -161,12 +162,10 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -744,6 +743,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -819,13 +819,11 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
             class="content"
           >
             <section
-              data-preference-page-test="editor"
-              id="editor"
+              data-preference-page-test="editor-page"
+              id="editor-page"
             >
-              <h2
-                data-testid="editor-configuration-header"
-              >
-                Editor configuration
+              <h2>
+                Editor
               </h2>
               <section>
                 <div

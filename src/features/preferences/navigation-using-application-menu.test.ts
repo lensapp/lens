@@ -25,7 +25,7 @@ describe("preferences - navigation using application menu", () => {
   it("does not show application preferences yet", () => {
     const page = querySingleElement(
       "preference-page",
-      "application",
+      "application-page",
     )(rendered);
 
     expect(page).toBeNull();
@@ -43,7 +43,7 @@ describe("preferences - navigation using application menu", () => {
     it("shows application preferences", () => {
       const page = getSingleElement(
         "preference-page",
-        "application",
+        "application-page",
       )(rendered);
 
       expect(page).not.toBeNull();

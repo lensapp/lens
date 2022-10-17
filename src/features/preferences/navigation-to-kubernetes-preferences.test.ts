@@ -45,7 +45,7 @@ describe("preferences - navigation to kubernetes preferences", () => {
     it("does not show kubernetes preferences yet", () => {
       const page = querySingleElement(
         "preference-page",
-        "kubernetes",
+        "kubernetes-page",
       )(rendered);
 
       expect(page).toBeNull();
@@ -63,7 +63,7 @@ describe("preferences - navigation to kubernetes preferences", () => {
       it("shows kubernetes preferences", () => {
         const page = getSingleElement(
           "preference-page",
-          "kubernetes",
+          "kubernetes-page",
         )(rendered);
 
         expect(page).not.toBeNull();

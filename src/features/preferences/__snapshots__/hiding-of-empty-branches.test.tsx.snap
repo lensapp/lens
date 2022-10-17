@@ -163,12 +163,10 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -840,12 +838,10 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -1529,12 +1525,10 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section

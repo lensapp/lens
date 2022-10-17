@@ -86,6 +86,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -161,12 +162,10 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -744,6 +743,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -819,12 +819,10 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
             class="content"
           >
             <section
-              data-preference-page-test="terminal"
-              id="terminal"
+              data-preference-page-test="terminal-page"
+              id="terminal-page"
             >
-              <h2
-                data-testid="terminal-header"
-              >
+              <h2>
                 Terminal
               </h2>
               <section

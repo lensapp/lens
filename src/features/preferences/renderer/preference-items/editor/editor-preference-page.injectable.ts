@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
-import { EditorPreferencePage } from "./editor-preference-page";
+import { getPreferencePage } from "../../get-preference-page";
 
 const editorPreferencePageInjectable = getInjectable({
   id: "editor-preference-page",
@@ -14,7 +14,7 @@ const editorPreferencePageInjectable = getInjectable({
     id: "editor-page",
     parentId: "editor-tab",
     orderNumber: 0,
-    Component: EditorPreferencePage,
+    Component: getPreferencePage("Editor"),
   }),
 
   injectionToken: preferenceItemInjectionToken,

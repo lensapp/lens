@@ -31,7 +31,7 @@ describe("preferences - navigation to editor preferences", () => {
     it("does not show editor preferences yet", () => {
       const page = querySingleElement(
         "preference-page",
-        "editor",
+        "editor-page",
       )(rendered);
 
       expect(page).toBeNull();
@@ -49,7 +49,7 @@ describe("preferences - navigation to editor preferences", () => {
       it("shows editor preferences", () => {
         const page = getSingleElement(
           "preference-page",
-          "editor",
+          "editor-page",
         )(rendered);
 
         expect(page).not.toBeNull();

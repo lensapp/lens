@@ -86,6 +86,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -173,12 +174,10 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -744,7 +743,6 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="some-test-id-for-some-test-tab-id"
       >
         <nav
           class="sidebarRegion"
@@ -757,6 +755,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -1315,6 +1314,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -1402,12 +1402,10 @@ exports[`preferences - closing-preferences given already in a page and then navi
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -1973,7 +1971,6 @@ exports[`preferences - closing-preferences given already in a page and then navi
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="some-test-id-for-some-test-tab-id"
       >
         <nav
           class="sidebarRegion"
@@ -1986,6 +1983,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>

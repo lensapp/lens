@@ -5,7 +5,14 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type React from "react";
 
-export type PreferenceItemComponent = React.ComponentType<{ children: React.ReactElement }>;
+export type PreferenceItemComponent = React.ComponentType<{
+  children: React.ReactElement;
+}>;
+
+export type PreferencePageComponent = React.ComponentType<{
+  children: React.ReactElement;
+  item: PreferencePage;
+}>;
 
 export interface PreferenceTab {
   kind: "tab";
@@ -33,7 +40,7 @@ export interface PreferencePage {
   parentId: string;
   isShown?: boolean;
   childrenSeparator?: () => React.ReactElement;
-  Component: PreferenceItemComponent;
+  Component: PreferencePageComponent;
 }
 
 export interface PreferenceGroup {

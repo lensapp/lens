@@ -1388,6 +1388,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -1463,12 +1464,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -2046,6 +2045,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -2121,12 +2121,10 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section

@@ -32,7 +32,7 @@ describe("preferences - navigation to terminal preferences", () => {
     it("does not show terminal preferences yet", () => {
       const page = querySingleElement(
         "preference-page",
-        "terminal",
+        "terminal-page",
       )(rendered);
 
       expect(page).toBeNull();
@@ -51,7 +51,7 @@ describe("preferences - navigation to terminal preferences", () => {
       it("shows terminal preferences", () => {
         const page = getSingleElement(
           "preference-page",
-          "terminal",
+          "terminal-page",
         )(rendered);
 
         expect(page).not.toBeNull();

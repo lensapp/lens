@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
-import { TelemetryPage } from "./telemetry-page";
 import React from "react";
+import { getPreferencePage } from "../../get-preference-page";
 
 const telemetryPreferencePageInjectable = getInjectable({
   id: "telemetry-preference-page",
@@ -15,7 +15,7 @@ const telemetryPreferencePageInjectable = getInjectable({
     id: "telemetry-page",
     parentId: "telemetry-tab",
     orderNumber: 0,
-    Component: TelemetryPage,
+    Component: getPreferencePage("Telemetry"),
     childrenSeparator: () => <hr className="small" />,
   }),
 

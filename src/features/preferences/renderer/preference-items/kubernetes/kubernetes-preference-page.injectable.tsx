@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
-import { KubernetesPage } from "./kubernetes-page";
 import React from "react";
+import { getPreferencePage } from "../../get-preference-page";
 
 const kubernetesPreferencePageInjectable = getInjectable({
   id: "kubernetes-preference-page",
@@ -15,7 +15,7 @@ const kubernetesPreferencePageInjectable = getInjectable({
     id: "kubernetes-page",
     parentId: "kubernetes-tab",
     orderNumber: 0,
-    Component: KubernetesPage,
+    Component: getPreferencePage("Kubernetes"),
     childrenSeparator: () => <hr />,
   }),
 

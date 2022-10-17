@@ -86,6 +86,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -161,12 +162,10 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -744,6 +743,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -819,12 +819,10 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
             class="content"
           >
             <section
-              data-preference-page-test="proxy"
-              id="proxy"
+              data-preference-page-test="proxy-page"
+              id="proxy-page"
             >
-              <h2
-                data-testid="proxy-header"
-              >
+              <h2>
                 Proxy
               </h2>
               <section>

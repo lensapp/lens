@@ -35,7 +35,7 @@ describe("preferences - navigation to application preferences", () => {
     it("does not show application preferences yet", () => {
       const page = querySingleElement(
         "preference-page",
-        "application",
+        "application-page",
       )(rendered);
 
       expect(page).toBeNull();
@@ -53,7 +53,7 @@ describe("preferences - navigation to application preferences", () => {
       it("shows application preferences", () => {
         const page = getSingleElement(
           "preference-page",
-          "application",
+          "application-page",
         )(rendered);
 
         expect(page).not.toBeNull();

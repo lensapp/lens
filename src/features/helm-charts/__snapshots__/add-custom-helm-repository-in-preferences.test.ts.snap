@@ -87,6 +87,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -162,12 +163,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -685,6 +684,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -760,12 +760,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -1294,6 +1292,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -1369,12 +1368,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -2014,6 +2011,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -2089,12 +2087,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -2631,6 +2627,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -2706,12 +2703,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -3351,6 +3346,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -3426,12 +3422,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -4253,6 +4247,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -4328,12 +4323,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -4973,6 +4966,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -5048,12 +5042,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -5875,6 +5867,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -5950,12 +5943,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -6596,6 +6587,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -6671,12 +6663,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -7213,6 +7203,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -7288,12 +7279,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -7819,6 +7808,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -7894,12 +7884,10 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section

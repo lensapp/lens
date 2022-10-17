@@ -36,7 +36,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     it("does not show telemetry preferences yet", () => {
       const page = querySingleElement(
         "preference-page",
-        "telemetry",
+        "telemetry-page",
       )(rendered);
 
       expect(page).toBeNull();
@@ -77,7 +77,7 @@ describe("preferences - navigation to telemetry preferences", () => {
         it("shows telemetry preferences", () => {
           const page = getSingleElement(
             "preference-page",
-            "telemetry",
+            "telemetry-page",
           )(rendered);
 
           expect(page).not.toBeNull();

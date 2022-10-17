@@ -87,6 +87,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -162,12 +163,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -685,6 +684,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -760,12 +760,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -1283,6 +1281,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -1358,12 +1357,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -1773,6 +1770,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -1848,12 +1846,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -2371,6 +2367,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -2446,12 +2443,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -2861,6 +2856,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -2936,12 +2932,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -3459,6 +3453,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -3534,12 +3529,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -4102,6 +4095,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -4177,12 +4171,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -4592,6 +4584,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -4667,12 +4660,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section
@@ -5082,6 +5073,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
               >
                 <div
                   class="header flex items-center"
+                  data-preference-tab-group-test="general-tab-group"
                 >
                   Preferences
                 </div>
@@ -5157,12 +5149,10 @@ exports[`listing active helm repositories in preferences when navigating to pref
               class="content"
             >
               <section
-                data-preference-page-test="kubernetes"
-                id="kubernetes"
+                data-preference-page-test="kubernetes-page"
+                id="kubernetes-page"
               >
-                <h2
-                  data-testid="kubernetes-header"
-                >
+                <h2>
                   Kubernetes
                 </h2>
                 <section

@@ -86,6 +86,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -173,12 +174,10 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
             class="content"
           >
             <section
-              data-preference-page-test="telemetry"
-              id="telemetry"
+              data-preference-page-test="telemetry-page"
+              id="telemetry-page"
             >
-              <h2
-                data-testid="telemetry-header"
-              >
+              <h2>
                 Telemetry
               </h2>
               <div
@@ -403,6 +402,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -478,12 +478,10 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -1061,6 +1059,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -1136,12 +1135,10 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
             class="content"
           >
             <section
-              data-preference-page-test="application"
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
-              <h2
-                data-testid="application-header"
-              >
+              <h2>
                 Application
               </h2>
               <section
@@ -2026,6 +2023,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
             >
               <div
                 class="header flex items-center"
+                data-preference-tab-group-test="general-tab-group"
               >
                 Preferences
               </div>
@@ -2101,12 +2099,10 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
             class="content"
           >
             <section
-              data-preference-page-test="telemetry"
-              id="telemetry"
+              data-preference-page-test="telemetry-page"
+              id="telemetry-page"
             >
-              <h2
-                data-testid="telemetry-header"
-              >
+              <h2>
                 Telemetry
               </h2>
             </section>

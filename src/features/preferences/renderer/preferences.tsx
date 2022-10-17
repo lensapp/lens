@@ -41,27 +41,39 @@ const NonInjectedPreferences = observer(({
 });
 
 const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
-  switch (composite.value.kind) {
+  const value = composite.value;
 
+  switch (value.kind) {
     case "group": {
       return (
-        <section id={composite.value.id}>
-          <Map items={composite.children} getSeparator={composite.value.childrenSeparator}>
+        <section id={value.id}>
+          <Map items={composite.children} getSeparator={value.childrenSeparator}>
             {toPreferenceItemHierarchy}
           </Map>
         </section>
       );
     }
 
-    case "item":
-
-    // eslint-disable-next-line no-fallthrough
-    case "page": {
-      const Component = composite.value.Component;
+    case "item": {
+      const Component = value.Component;
 
       return (
         <Component>
-          <Map items={composite.children} getSeparator={composite.value.childrenSeparator}>
+          <Map items={composite.children} getSeparator={value.childrenSeparator}>
+            {toPreferenceItemHierarchy}
+          </Map>
+        </Component>
+      );
+
+    }
+
+    // eslint-disable-next-line no-fallthrough
+    case "page": {
+      const Component = value.Component;
+
+      return (
+        <Component item={value}>
+          <Map items={composite.children} getSeparator={value.childrenSeparator}>
             {toPreferenceItemHierarchy}
           </Map>
         </Component>
@@ -82,12 +94,12 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
     default: {
       // Note: this will fail at transpilation time, if all kinds
       // are not handled in switch/case.
-      const _exhaustiveCheck: never = composite.value;
+      const _exhaustiveCheck: never = value;
 
       // Note: this code is unreachable, it is here to make ts not complain about
       // _exhaustiveCheck not being used.
       // See: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
-      throw new Error(`Tried to create preferences, but foreign item was encountered: ${_exhaustiveCheck} ${composite.value}`);
+      throw new Error(`Tried to create preferences, but foreign item was encountered: ${_exhaustiveCheck} ${value}`);
     }
   }
 };

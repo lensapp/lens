@@ -32,7 +32,7 @@ describe("preferences - navigation to proxy preferences", () => {
     it("does not show proxy preferences yet", () => {
       const page = querySingleElement(
         "preference-page",
-        "proxy",
+        "proxy-page",
       )(rendered);
 
       expect(page).toBeNull();
@@ -50,7 +50,7 @@ describe("preferences - navigation to proxy preferences", () => {
       it("shows proxy preferences", () => {
         const page = getSingleElement(
           "preference-page",
-          "proxy",
+          "proxy-page",
         )(rendered);
 
         expect(page).not.toBeNull();
