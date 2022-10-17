@@ -1388,13 +1388,15 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1406,7 +1408,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1418,7 +1421,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1430,7 +1434,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1442,7 +1447,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1452,6 +1458,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   Terminal
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -1463,6 +1470,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="content"
           >
             <section
+              data-preference-page-test="application"
               id="application"
             >
               <h2
@@ -2045,13 +2053,15 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2063,7 +2073,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2075,7 +2086,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2087,7 +2099,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2099,7 +2112,8 @@ exports[`preferences - navigation to extension specific preferences given in pre
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2109,41 +2123,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   Terminal
                 </div>
               </div>
-              <div
-                data-testid="extension-settings"
-              >
-                <hr />
-                <div
-                  class="header flex items-center"
-                >
-                  <i
-                    class="Icon mr-3 material focusable smallest"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="extension"
-                    >
-                      extension
-                    </span>
-                  </i>
-                   
-                  Extensions
-                </div>
-                <div>
-                  <div
-                    class="Tab flex gaps align-center"
-                    data-testid="tab-link-for-extension-some-test-extension-id"
-                    role="tab"
-                    tabindex="0"
-                  >
-                    <div
-                      class="label"
-                    >
-                      some-test-extension-id
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -2155,6 +2135,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="content"
           >
             <section
+              data-preference-page-test="application"
               id="application"
             >
               <h2
@@ -3331,177 +3312,40 @@ exports[`preferences - navigation to extension specific preferences when navigat
       <div
         id="lens-views"
       />
-      <div
-        class="SettingLayout showNavigation Preferences"
-        data-testid="extension-preferences-page"
+      <section
+        id="extensions"
       >
-        <nav
-          class="sidebarRegion"
+        <h2
+          data-testid="extension-preferences-page-title"
+        >
+          Metrics tab
+        </h2>
+        <section
+          class="small"
+          data-testid="extension-preference-item-for-another-metrics-preference-item-id"
+          id="another-metrics-preference-item-id"
         >
           <div
-            class="sidebar"
+            class="SubTitle"
           >
-            <div
-              class="Tabs flex column"
-            >
-              <div
-                class="header"
-              >
-                Preferences
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  App
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Proxy
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Kubernetes
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Editor
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Terminal
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Metrics tab
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <div
-          class="contentRegion"
-          id="ScrollSpyRoot"
-        >
-          <div
-            class="content"
-          >
-            <section
-              id="extensions"
-            >
-              <h2
-                data-testid="extension-preferences-page-title"
-              >
-                Metrics tab
-              </h2>
-              <section
-                class="small"
-                data-testid="extension-preference-item-for-another-metrics-preference-item-id"
-                id="another-metrics-preference-item-id"
-              >
-                <div
-                  class="SubTitle"
-                >
-                  Another metrics
-                   
-                </div>
-                <div
-                  data-testid="another-metrics-preference-item-input"
-                />
-                <div
-                  class="hint"
-                >
-                  <div
-                    data-testid="another-metrics-preference-item-hint"
-                  />
-                </div>
-              </section>
-              <hr
-                class="small"
-              />
-            </section>
+            Another metrics
+             
           </div>
           <div
-            class="toolsRegion"
+            data-testid="another-metrics-preference-item-input"
+          />
+          <div
+            class="hint"
           >
             <div
-              class="fixed top-[60px]"
-            >
-              <div
-                data-testid="close-preferences"
-              >
-                <div
-                  aria-label="Close"
-                  class="closeButton"
-                  role="button"
-                >
-                  <i
-                    class="Icon icon material focusable"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="close"
-                    >
-                      close
-                    </span>
-                  </i>
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="esc"
-                >
-                  ESC
-                </div>
-              </div>
-            </div>
+              data-testid="another-metrics-preference-item-hint"
+            />
           </div>
-        </div>
-      </div>
+        </section>
+        <hr
+          class="small"
+        />
+      </section>
     </main>
     <div
       class="HotbarMenu flex column"
@@ -3638,177 +3482,40 @@ exports[`preferences - navigation to extension specific preferences when navigat
       <div
         id="lens-views"
       />
-      <div
-        class="SettingLayout showNavigation Preferences"
-        data-testid="extension-preferences-page"
+      <section
+        id="extensions"
       >
-        <nav
-          class="sidebarRegion"
+        <h2
+          data-testid="extension-preferences-page-title"
+        >
+          extension-using-someone-else-tab-id preferences
+        </h2>
+        <section
+          class="small"
+          data-testid="extension-preference-item-for-my-preferences-item-id"
+          id="my-preferences-item-id"
         >
           <div
-            class="sidebar"
+            class="SubTitle"
           >
-            <div
-              class="Tabs flex column"
-            >
-              <div
-                class="header"
-              >
-                Preferences
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  App
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Proxy
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Kubernetes
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Editor
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Terminal
-                </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-extension-duplicated-tab-page-id-nav-item-metrics-extension-tab"
-                role="tab"
-                tabindex="0"
-              >
-                <div
-                  class="label"
-                >
-                  Metrics tab
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <div
-          class="contentRegion"
-          id="ScrollSpyRoot"
-        >
-          <div
-            class="content"
-          >
-            <section
-              id="extensions"
-            >
-              <h2
-                data-testid="extension-preferences-page-title"
-              >
-                extension-using-someone-else-tab-id preferences
-              </h2>
-              <section
-                class="small"
-                data-testid="extension-preference-item-for-my-preferences-item-id"
-                id="my-preferences-item-id"
-              >
-                <div
-                  class="SubTitle"
-                >
-                  My preferences
-                   
-                </div>
-                <div
-                  data-testid="my-preferences-item-input"
-                />
-                <div
-                  class="hint"
-                >
-                  <div
-                    data-testid="my-preferences-item-hint"
-                  />
-                </div>
-              </section>
-              <hr
-                class="small"
-              />
-            </section>
+            My preferences
+             
           </div>
           <div
-            class="toolsRegion"
+            data-testid="my-preferences-item-input"
+          />
+          <div
+            class="hint"
           >
             <div
-              class="fixed top-[60px]"
-            >
-              <div
-                data-testid="close-preferences"
-              >
-                <div
-                  aria-label="Close"
-                  class="closeButton"
-                  role="button"
-                >
-                  <i
-                    class="Icon icon material focusable"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="close"
-                    >
-                      close
-                    </span>
-                  </i>
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="esc"
-                >
-                  ESC
-                </div>
-              </div>
-            </div>
+              data-testid="my-preferences-item-hint"
+            />
           </div>
-        </div>
-      </div>
+        </section>
+        <hr
+          class="small"
+        />
+      </section>
     </main>
     <div
       class="HotbarMenu flex column"

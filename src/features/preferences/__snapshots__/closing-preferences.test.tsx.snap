@@ -86,13 +86,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -104,7 +106,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -116,7 +119,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -128,7 +132,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -140,7 +145,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -152,16 +158,18 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-some-test-preference-navigation-item-id"
+                data-preference-tab-link-test="some-path-id-for-some-test-tab-id"
+                data-testid="some-test-id-for-some-test-tab-id"
                 role="tab"
                 tabindex="0"
               >
                 <div
                   class="label"
                 >
-                  Some preference navigation item
+                  Test tab
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -173,6 +181,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
             class="content"
           >
             <section
+              data-preference-page-test="application"
               id="application"
             >
               <h2
@@ -743,7 +752,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="some-test-id-for-test-tab"
+        data-testid="some-test-id-for-some-test-tab-id"
       >
         <nav
           class="sidebarRegion"
@@ -755,13 +764,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -773,7 +784,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -785,7 +797,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -797,7 +810,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -809,7 +823,8 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -821,16 +836,18 @@ exports[`preferences - closing-preferences given accessing preferences directly 
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-some-test-preference-navigation-item-id"
+                data-preference-tab-link-test="some-path-id-for-some-test-tab-id"
+                data-testid="some-test-id-for-some-test-tab-id"
                 role="tab"
                 tabindex="0"
               >
                 <div
                   class="label"
                 >
-                  Some preference navigation item
+                  Test tab
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -840,7 +857,11 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         >
           <div
             class="content"
-          />
+          >
+            <div>
+              irrelevant
+            </div>
+          </div>
           <div
             class="toolsRegion"
           >
@@ -1309,13 +1330,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1327,7 +1350,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1339,7 +1363,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1351,7 +1376,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1363,7 +1389,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1375,16 +1402,18 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-some-test-preference-navigation-item-id"
+                data-preference-tab-link-test="some-path-id-for-some-test-tab-id"
+                data-testid="some-test-id-for-some-test-tab-id"
                 role="tab"
                 tabindex="0"
               >
                 <div
                   class="label"
                 >
-                  Some preference navigation item
+                  Test tab
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -1396,6 +1425,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
             class="content"
           >
             <section
+              data-preference-page-test="application"
               id="application"
             >
               <h2
@@ -1966,7 +1996,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="some-test-id-for-test-tab"
+        data-testid="some-test-id-for-some-test-tab-id"
       >
         <nav
           class="sidebarRegion"
@@ -1978,13 +2008,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
               class="Tabs flex column"
             >
               <div
-                class="header"
+                class="header flex items-center"
+                data-testid="general-tab-group"
               >
                 Preferences
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
+                data-preference-tab-link-test="app"
+                data-testid="application-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -1996,7 +2028,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
+                data-preference-tab-link-test="proxy"
+                data-testid="proxy-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2008,7 +2041,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
+                data-preference-tab-link-test="kubernetes"
+                data-testid="kubernetes-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2020,7 +2054,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
+                data-preference-tab-link-test="editor"
+                data-testid="editor-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2032,7 +2067,8 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
+                data-preference-tab-link-test="terminal"
+                data-testid="terminal-preferences-page"
                 role="tab"
                 tabindex="0"
               >
@@ -2044,16 +2080,18 @@ exports[`preferences - closing-preferences given already in a page and then navi
               </div>
               <div
                 class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-some-test-preference-navigation-item-id"
+                data-preference-tab-link-test="some-path-id-for-some-test-tab-id"
+                data-testid="some-test-id-for-some-test-tab-id"
                 role="tab"
                 tabindex="0"
               >
                 <div
                   class="label"
                 >
-                  Some preference navigation item
+                  Test tab
                 </div>
               </div>
+              <hr />
             </div>
           </div>
         </nav>
@@ -2063,7 +2101,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
         >
           <div
             class="content"
-          />
+          >
+            <div>
+              irrelevant
+            </div>
+          </div>
           <div
             class="toolsRegion"
           >
