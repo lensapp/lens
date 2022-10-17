@@ -26,6 +26,7 @@ export interface PreferenceTabGroup {
   label: string;
   orderNumber: number;
   isShown?: boolean;
+  iconName?: string;
 }
 
 export interface PreferencePage {

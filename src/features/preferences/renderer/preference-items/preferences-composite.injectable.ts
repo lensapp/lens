@@ -10,20 +10,7 @@ import { preferenceItemInjectionToken } from "./preference-item-injection-token"
 import getComposite from "../../../application-menu/main/menu-items/get-composite/get-composite";
 import { filter } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
-
-export interface PreferenceTabsRoot {
-  kind: "preference-tabs-root";
-  id: string;
-  parentId: undefined;
-  isShown: true;
-}
-
-const preferenceTabsRoot: PreferenceTabsRoot = {
-  kind: "preference-tabs-root" as const,
-  id: "preference-tabs",
-  parentId: undefined,
-  isShown: true,
-};
+import { preferenceTabsRoot } from "./preference-tab-root";
 
 const preferencesCompositeInjectable = getInjectable({
   id: "preferences-composite",

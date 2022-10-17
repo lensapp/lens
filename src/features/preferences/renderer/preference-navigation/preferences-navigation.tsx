@@ -13,14 +13,16 @@ import preferencesCompositeInjectable from "../preference-items/preferences-comp
 import { observer } from "mobx-react";
 import { PreferencesNavigationTab } from "./preferences-navigation-tab";
 import { compositeHasDescendant } from "../../../application-menu/main/menu-items/get-composite/composite-has-descendant/composite-has-descendant";
+import type { PreferenceTabsRoot } from "../preference-items/preference-tab-root";
+import { Icon } from "../../../../renderer/components/icon";
 
 interface Dependencies {
-  composite: IComputedValue<Composite<PreferenceTypes>>;
+  composite: IComputedValue<Composite<PreferenceTypes | PreferenceTabsRoot>>;
 }
 
 const NonInjectedPreferencesNavigation = observer(({ composite }: Dependencies) => (
   <Tabs className="flex column" scrollable={false}>
-    <Map items={composite.get().children}>{toNavigationHierarchy}</Map>
+    {toNavigationHierarchy(composite.get())}
   </Tabs>
 ));
 
@@ -35,7 +37,7 @@ export const PreferencesNavigation = withInjectables<Dependencies>(
 );
 
 
-const toNavigationHierarchy = (composite: Composite<PreferenceTypes>) => {
+const toNavigationHierarchy = (composite: Composite<PreferenceTypes | PreferenceTabsRoot>) => {
   // Note: This makes tab groups and tabs without content not render anything in navigation.
   if (!hasContent(composite)) {
     return emptyRender;
@@ -60,10 +62,18 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes>) => {
     }
 
     case "tab-group": {
-
       return (
         <>
-          <div data-testid={value.testId} className="header">{value.label}</div>
+          <div data-testid={value.testId} className="header flex items-center">
+            {value.iconName && (
+              <Icon
+                material={value.iconName}
+                smallest
+                className="mr-3"
+              />
+            )}
+            {value.label}
+          </div>
 
           <Map items={composite.children}>{toNavigationHierarchy}</Map>
         </>
@@ -71,8 +81,14 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes>) => {
     }
 
     case "tab": {
+      return <PreferencesNavigationTab tab={value} />;
+    }
+
+    case "preference-tabs-root": {
       return (
-        <PreferencesNavigationTab tab={value} />
+        <Map items={composite.children} getSeparator={value.childrenSeparator}>
+          {toNavigationHierarchy}
+        </Map>
       );
     }
 
@@ -91,7 +107,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes>) => {
   }
 };
 
-const hasContent = compositeHasDescendant<PreferenceTypes>(
+const hasContent = compositeHasDescendant<PreferenceTypes | PreferenceTabsRoot>(
   (composite) => composite.value.kind === "item",
 );
 

@@ -15,6 +15,7 @@ const extensionsPreferenceTabGroupInjectable = getInjectable({
     parentId: "preference-tabs" as const,
     label: "Extensions",
     orderNumber: 20,
+    iconName: "extension",
   }),
 
   injectionToken: preferenceItemInjectionToken,
