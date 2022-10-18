@@ -16,7 +16,7 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
 import accessPathInjectable from "../../common/fs/access-path.injectable";
 import copyInjectable from "../../common/fs/copy.injectable";
-import ensureDirInjectable from "../../common/fs/ensure-dir.injectable";
+import ensureDirectoryInjectable from "../../common/fs/ensure-directory.injectable";
 import isProductionInjectable from "../../common/vars/is-production.injectable";
 import lstatInjectable from "../../common/fs/lstat.injectable";
 import readDirectoryInjectable from "../../common/fs/read-directory.injectable";
@@ -47,7 +47,7 @@ const extensionDiscoveryInjectable = getInjectable({
     accessPath: di.inject(accessPathInjectable),
     copy: di.inject(copyInjectable),
     removePath: di.inject(removePathInjectable),
-    ensureDirectory: di.inject(ensureDirInjectable),
+    ensureDirectory: di.inject(ensureDirectoryInjectable),
     isProduction: di.inject(isProductionInjectable),
     lstat: di.inject(lstatInjectable),
     readDirectory: di.inject(readDirectoryInjectable),

@@ -27,14 +27,21 @@ const shellApiRequestInjectable = getInjectable({
       const nodeName = searchParams.get("node");
       const shellToken = searchParams.get("shellToken");
 
+      console.log("got shell api request", { tabId, clusterId: cluster?.id, nodeName });
+
       if (!tabId || !cluster || !shellApiAuthenticator.authenticate(cluster.id, tabId, shellToken)) {
         socket.write("Invalid shell request");
         socket.end();
       } else {
         new WebSocketServer({ noServer: true })
           .handleUpgrade(req, socket, head, (websocket) => {
-            openShellSession({ websocket, cluster, tabId, nodeName })
-              .catch(error => logger.error(`[SHELL-SESSION]: failed to open a ${nodeName ? "node" : "local"} shell`, error));
+            (async () => {
+              try {
+                await openShellSession({ websocket, cluster, tabId, nodeName });
+              } catch (error) {
+                logger.error(`[SHELL-SESSION]: failed to open a ${nodeName ? "node" : "local"} shell`, error);
+              }
+            })();
           });
       }
     };

@@ -29,6 +29,11 @@ export interface KubeconfigManagerDependencies {
   certificate: SelfSignedCert;
 }
 
+export interface KubeconfigManager {
+  getPath(): Promise<string>;
+  clear(): Promise<void>;
+}
+
 export class KubeconfigManager {
   /**
    * The path to the temp config file
@@ -40,7 +45,7 @@ export class KubeconfigManager {
 
   protected readonly contextHandler: ClusterContextHandler;
 
-  constructor(private readonly dependencies: KubeconfigManagerDependencies, protected cluster: Cluster) {
+  constructor(private readonly dependencies: KubeconfigManagerDependencies, protected readonly cluster: Cluster) {
     this.contextHandler = cluster.contextHandler;
   }
 
@@ -87,10 +92,6 @@ export class KubeconfigManager {
     }
   }
 
-  get resolveProxyUrl() {
-    return `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
-  }
-
   /**
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
@@ -109,7 +110,7 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl,
+          server: `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`,
           skipTLSVerify: false,
           caData: Buffer.from(certificate.cert).toString("base64"),
         },

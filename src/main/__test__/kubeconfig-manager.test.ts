@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
+import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import type { Cluster } from "../../common/cluster/cluster";
 import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kubeconfig-manager.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
@@ -30,6 +30,7 @@ import removePathInjectable from "../../common/fs/remove.injectable";
 import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
 import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
+import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 
@@ -90,6 +91,8 @@ describe("kubeconfig manager tests", () => {
       ensureServer: ensureServerMock,
     }));
 
+    di.inject(lensProxyPortInjectable).set(9191);
+
     const createCluster = di.inject(createClusterInjectionToken);
 
     createKubeconfigManager = di.inject(createKubeconfigManagerInjectable);
@@ -101,8 +104,6 @@ describe("kubeconfig manager tests", () => {
     }, {
       clusterServerUrl,
     });
-
-    jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("https://127.0.0.1:9191/foo");
 
     kubeConfManager = createKubeconfigManager(clusterFake);
   });
@@ -174,7 +175,7 @@ describe("kubeconfig manager tests", () => {
           beforeEach(async () => {
             await writeFileMock.resolveSpecific(
               [
-                "/some-directory-for-temp/kubeconfig-foo", 
+                "/some-directory-for-temp/kubeconfig-foo",
                 "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      certificate-authority-data: PGNhLWRhdGE+\n      server: https://127.0.0.1:9191/foo\n      insecure-skip-tls-verify: false\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user:\n      username: lens\n      password: fake\n",
               ],
             );
@@ -303,7 +304,7 @@ describe("kubeconfig manager tests", () => {
                     beforeEach(async () => {
                       await writeFileMock.resolveSpecific(
                         [
-                          "/some-directory-for-temp/kubeconfig-foo", 
+                          "/some-directory-for-temp/kubeconfig-foo",
                           "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      certificate-authority-data: PGNhLWRhdGE+\n      server: https://127.0.0.1:9191/foo\n      insecure-skip-tls-verify: false\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user:\n      username: lens\n      password: fake\n",
                         ],
                       );

@@ -164,7 +164,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.writeLog("%cOPEN", "color:green;font-weight:bold;", evt);
   }
 
-  protected _onMessage({ data }: MessageEvent): void {
+  protected _onMessage({ data }: MessageEvent<string>): void {
     (this as TypedEventEmitter<WebSocketEvents>).emit("data", data);
     this.writeLog("%cMESSAGE", "color:black;font-weight:bold;", data);
   }

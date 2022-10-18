@@ -37,23 +37,21 @@ export class LocalShellSession extends ShellSession {
   }
 
   public async open() {
-    // extensions can modify the env
-    const env = this.dependencies.modifyTerminalShellEnv(this.cluster.id, await this.getCachedShellEnv());
+    const cachedShellEnv = await this.getCachedShellEnv();
+    const env = this.dependencies.modifyTerminalShellEnv(this.cluster.id, cachedShellEnv);
     const shell = env.PTYSHELL;
 
-    if (!shell) {
+    if (shell) {
+      const args = await this.getShellArgs(shell);
+
+      await this.openShellProcess(shell, args, env);
+    } else {
       this.send({
         type: TerminalChannels.ERROR,
         data: "PTYSHELL is not defined with the environment",
       });
       this.dependencies.logger.warn(`[LOCAL-SHELL-SESSION]: PTYSHELL env var is not defined for ${this.terminalId}`);
-
-      return;
     }
-
-    const args = await this.getShellArgs(shell);
-
-    await this.openShellProcess(shell, args, env);
   }
 
   protected async getShellArgs(shell: string): Promise<string[]> {

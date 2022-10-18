@@ -18,12 +18,16 @@ import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injecta
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import computeShellEnvironmentInjectable from "../../../features/shell-sync/main/compute-shell-environment.injectable";
-import spawnPtyInjectable from "../spawn-pty.injectable";
 import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
+import shellEnvironmentCacheInjectable from "../shell-environment-cache.injectable";
+import shellProcessesInjectable from "../shell-processes.injectable";
+import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
+import pathDelimiterInjectable from "../../../common/path/delimiter.injectable";
+import spawnPtyInjectable from "../spawn-pty.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -55,6 +59,10 @@ const openLocalShellSessionInjectable = getInjectable({
       computeShellEnvironment: di.inject(computeShellEnvironmentInjectable),
       spawnPty: di.inject(spawnPtyInjectable),
       stat: di.inject(statInjectable),
+      shellEnvironmentCache: di.inject(shellEnvironmentCacheInjectable),
+      shellProcesses: di.inject(shellProcessesInjectable),
+      homeDirectory: di.inject(homeDirectoryPathInjectable),
+      pathDelimiter: di.inject(pathDelimiterInjectable),
     };
 
     return (args) => {

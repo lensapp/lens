@@ -645,14 +645,6 @@ exports[`test for opening terminal tab within cluster frame when new terminal ta
                   <div
                     class="xterm-decoration-container"
                   />
-                  <canvas
-                    class="xterm-link-layer"
-                    style="z-index: 2;"
-                  />
-                  <canvas
-                    class="xterm-cursor-layer"
-                    style="z-index: 3;"
-                  />
                 </div>
               </div>
             </div>

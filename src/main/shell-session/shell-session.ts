@@ -7,18 +7,17 @@ import type { Cluster } from "../../common/cluster/cluster";
 import type { Kubectl } from "../kubectl/kubectl";
 import type WebSocket from "ws";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
-import path from "path";
-import os from "os";
-import type * as pty from "node-pty";
-import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 import type { Logger } from "../../common/logger";
 import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";
-import type { SpawnPty } from "./spawn-pty.injectable";
 import type { InitializableState } from "../../common/initializable-state/create";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Stat } from "../../common/fs/stat.injectable";
 import type { IComputedValue } from "mobx";
+import type { ShellProcesses } from "./shell-processes.injectable";
+import type { ShellEnvironmentCache } from "./shell-environment-cache.injectable";
+import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
+import type { SpawnPty } from "./spawn-pty.injectable";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -109,12 +108,17 @@ export interface ShellSessionDependencies {
   readonly isMac: boolean;
   readonly logger: Logger;
   readonly userShellSetting: IComputedValue<string>;
+  readonly homeDirectory: string;
   readonly appName: string;
   readonly buildVersion: InitializableState<string>;
+  readonly shellProcesses: ShellProcesses;
+  readonly pathDelimiter: string;
   computeShellEnvironment: ComputeShellEnvironment;
   spawnPty: SpawnPty;
   emitAppEvent: EmitAppEvent;
   stat: Stat;
+  shellEnvironmentCache: ShellEnvironmentCache;
+  getBasenameOfPath: GetBasenameOfPath;
 }
 
 export interface ShellSessionArgs {
@@ -127,25 +131,6 @@ export interface ShellSessionArgs {
 export abstract class ShellSession {
   abstract readonly ShellType: string;
 
-  private static readonly shellEnvs = new Map<string, Record<string, string | undefined>>();
-  private static readonly processes = new Map<string, pty.IPty>();
-
-  /**
-   * Kill all remaining shell backing processes. Should be called when about to
-   * quit
-   */
-  public static cleanup(): void {
-    for (const shellProcess of this.processes.values()) {
-      try {
-        process.kill(shellProcess.pid);
-      } catch {
-        // ignore error
-      }
-    }
-
-    this.processes.clear();
-  }
-
   protected running = false;
   protected readonly kubectlBinDirP: Promise<string>;
   protected readonly kubeconfigPathP: Promise<string>;
@@ -155,36 +140,6 @@ export abstract class ShellSession {
   protected readonly cluster: Cluster;
 
   protected abstract get cwd(): string | undefined;
-
-  protected ensureShellProcess(shell: string, args: string[], env: Partial<Record<string, string>>, cwd: string): { shellProcess: pty.IPty; resume: boolean } | null {
-    try {
-      const resume = ShellSession.processes.has(this.terminalId);
-
-      const shellProcess = getOrInsertWith(ShellSession.processes, this.terminalId, () => (
-        this.dependencies.spawnPty(shell, args, {
-          rows: 30,
-          cols: 80,
-          cwd,
-          env,
-          name: "xterm-256color",
-          // TODO: Something else is broken here so we need to force the use of winPty on windows
-          useConpty: false,
-        })
-      ));
-
-      this.dependencies.logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
-
-      return { shellProcess, resume };
-    } catch (error) {
-      this.send({
-        type: TerminalChannels.ERROR,
-        data: `Failed to start shell (${shell}): ${error}`,
-      });
-      this.dependencies.logger.warn(`[SHELL-SESSION]: Failed to start PTY for ${this.terminalId}: ${error}`, { shell });
-
-      return null;
-    }
-  }
 
   constructor(protected readonly dependencies: ShellSessionDependencies, { kubectl, websocket, cluster, tabId: terminalId }: ShellSessionArgs) {
     this.kubectl = kubectl;
@@ -205,13 +160,13 @@ export abstract class ShellSession {
     if (this.dependencies.isWindows) {
       cwdOptions.push(
         env.USERPROFILE,
-        os.homedir(),
+        this.dependencies.homeDirectory,
         "C:\\",
       );
     } else {
       cwdOptions.push(
         env.HOME,
-        os.homedir(),
+        this.dependencies.homeDirectory,
       );
 
       if (this.dependencies.isMac) {
@@ -242,20 +197,34 @@ export abstract class ShellSession {
 
   protected async openShellProcess(shell: string, args: string[], env: Record<string, string | undefined>) {
     const cwd = await this.getCwd(env);
-    const ensured = this.ensureShellProcess(shell, args, env, cwd);
+    const result = this.dependencies.shellProcesses.startOrResume({
+      terminalId: this.terminalId,
+      shell,
+      args,
+      env,
+      cwd,
+    });
 
-    if (!ensured) {
+    if (!result.callWasSuccessful) {
+      this.send({
+        type: TerminalChannels.ERROR,
+        data: `Failed to start shell (${shell}): ${result.error}`,
+      });
+
       return;
     }
 
-    const { shellProcess, resume } = ensured;
+    const { shellProcess, resume } = result.response;
 
     if (resume) {
       this.send({ type: TerminalChannels.CONNECTED });
     }
 
     this.running = true;
-    shellProcess.onData(data => this.send({ type: TerminalChannels.STDOUT, data }));
+    shellProcess.onData(data => {
+      console.log("sending", { data });
+      this.send({ type: TerminalChannels.STDOUT, data });
+    });
     shellProcess.onExit(({ exitCode }) => {
       this.dependencies.logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with exitcode=${exitCode}`);
 
@@ -322,8 +291,8 @@ export abstract class ShellSession {
 
           try {
             this.dependencies.logger.info(`[SHELL-SESSION]: Killing shell process (pid=${shellProcess.pid}) for ${this.terminalId}`);
+            this.dependencies.shellProcesses.clear(this.terminalId);
             shellProcess.kill();
-            ShellSession.processes.delete(this.terminalId);
           } catch (error) {
             this.dependencies.logger.warn(`[SHELL-SESSION]: failed to kill shell process (pid=${shellProcess.pid}) for ${this.terminalId}`, error);
           }
@@ -338,21 +307,7 @@ export abstract class ShellSession {
   }
 
   protected async getCachedShellEnv() {
-    const { id: clusterId } = this.cluster;
-
-    let env = ShellSession.shellEnvs.get(clusterId);
-
-    if (!env) {
-      env = await this.getShellEnv();
-      ShellSession.shellEnvs.set(clusterId, env);
-    } else {
-      // refresh env in the background
-      this.getShellEnv().then((shellEnv: any) => {
-        ShellSession.shellEnvs.set(clusterId, shellEnv);
-      });
-    }
-
-    return env;
+    return this.dependencies.shellEnvironmentCache(this.cluster.id, () => this.getShellEnv());
   }
 
   protected async getShellEnv() {
@@ -367,13 +322,13 @@ export abstract class ShellSession {
     })();
 
     const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(rawEnv)));
-    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), env.PATH].join(path.delimiter);
+    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), env.PATH].join(this.dependencies.pathDelimiter);
 
     delete env.DEBUG; // don't pass DEBUG into shells
+    env.PTYSHELL = shell;
+    env.PATH = pathStr;
 
     if (this.dependencies.isWindows) {
-      env.PTYSHELL = shell || "powershell.exe";
-      env.PATH = pathStr;
       env.LENS_SESSION = "true";
       env.WSLENV = [
         env.WSLENV,
@@ -381,14 +336,9 @@ export abstract class ShellSession {
       ]
         .filter(Boolean)
         .join(":");
-    } else if (shell !== undefined) {
-      env.PTYSHELL = shell;
-      env.PATH = pathStr;
-    } else {
-      env.PTYSHELL = ""; // blank runs the system default shell
     }
 
-    if (path.basename(env.PTYSHELL) === "zsh") {
+    if (this.dependencies.getBasenameOfPath(env.PTYSHELL) === "zsh") {
       env.OLD_ZDOTDIR = env.ZDOTDIR || env.HOME;
       env.ZDOTDIR = await this.kubectlBinDirP;
       env.DISABLE_AUTO_UPDATE = "true";

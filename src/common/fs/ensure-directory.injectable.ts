@@ -3,11 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { EnsureOptions } from "fs-extra";
 import fsInjectable from "./fs.injectable";
 
-export type EnsureDirectory = (dirPath: string) => Promise<void>;
+export type EnsureDirectory = (dirPath: string, options?: number | EnsureOptions) => Promise<void>;
 
-const ensureDirInjectable = getInjectable({
+const ensureDirectoryInjectable = getInjectable({
   id: "ensure-dir",
 
   // TODO: Remove usages of ensureDir from business logic.
@@ -15,4 +16,4 @@ const ensureDirInjectable = getInjectable({
   instantiate: (di): EnsureDirectory => di.inject(fsInjectable).ensureDir,
 });
 
-export default ensureDirInjectable;
+export default ensureDirectoryInjectable;

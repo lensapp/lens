@@ -2,11 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { IComputedValue } from "mobx";
+import type { IComputedValue, IObservableValue } from "mobx";
 import { runInAction, when } from "mobx";
 import type { Disposer } from "./disposer";
 
-export async function waitUntilDefined<T>(getter: (() => T | null | undefined) | IComputedValue<T | null | undefined>, opts?: { timeout?: number }): Promise<T> {
+export async function waitUntilDefined<T>(getter: (() => T | null | undefined) | IComputedValue<T | null | undefined> | IObservableValue<T | null | undefined>, opts?: { timeout?: number }): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     when(
       () => {

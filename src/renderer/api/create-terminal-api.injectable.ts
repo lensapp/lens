@@ -3,8 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import assert from "assert";
 import loggerInjectable from "../../common/logger.injectable";
 import requestShellApiTokenInjectable from "../../features/terminal/renderer/request-shell-api-token.injectable";
+import hostedClusterIdInjectable from "../cluster-frame-context/hosted-cluster-id.injectable";
 import currentLocationInjectable from "./current-location.injectable";
 import defaultWebsocketApiParamsInjectable from "./default-websocket-params.injectable";
 import type { TerminalApiDependencies, TerminalApiQuery } from "./terminal-api";
@@ -15,11 +17,16 @@ export type CreateTerminalApi = (query: TerminalApiQuery) => TerminalApi;
 const createTerminalApiInjectable = getInjectable({
   id: "create-terminal-api",
   instantiate: (di): CreateTerminalApi => {
+    const hostedClusterId = di.inject(hostedClusterIdInjectable);
+
+    assert(hostedClusterId, "Can only create Terminal APIs within cluster frames");
+
     const deps: TerminalApiDependencies = {
       requestShellApiToken: di.inject(requestShellApiTokenInjectable),
       defaultParams: di.inject(defaultWebsocketApiParamsInjectable),
       logger: di.inject(loggerInjectable),
       currentLocation: di.inject(currentLocationInjectable),
+      hostedClusterId,
     };
 
     return (query) => new TerminalApi(deps, query);

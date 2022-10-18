@@ -18,6 +18,15 @@ import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
 import loggerInjectable from "../../common/logger.injectable";
+import changePathModeInjectable from "../../common/fs/change-path-mode.injectable";
+import copyFileInjectable from "../../common/fs/copy-file.injectable";
+import createWriteFileStreamInjectable from "../../common/fs/create-write-file-stream.injectable";
+import execFileInjectable from "../../common/fs/exec-file.injectable";
+import pathExistsInjectable from "../../common/fs/path-exists.injectable";
+import removePathInjectable from "../../common/fs/remove.injectable";
+import writeFileInjectable from "../../common/fs/write-file.injectable";
+import ensureDirectoryInjectable from "../../common/fs/ensure-directory.injectable";
+import fetchInjectable from "../../common/fetch/fetch.injectable";
 
 const createKubectlInjectable = getInjectable({
   id: "create-kubectl",
@@ -37,6 +46,15 @@ const createKubectlInjectable = getInjectable({
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
+      changePathMode: di.inject(changePathModeInjectable),
+      copyFile: di.inject(copyFileInjectable),
+      createWriteFileStream: di.inject(createWriteFileStreamInjectable),
+      ensureDirectory: di.inject(ensureDirectoryInjectable),
+      execFile: di.inject(execFileInjectable),
+      pathExists: di.inject(pathExistsInjectable),
+      removePath: di.inject(removePathInjectable),
+      writeFile: di.inject(writeFileInjectable),
+      fetch: di.inject(fetchInjectable),
     };
 
     return (clusterVersion: string) => new Kubectl(dependencies, clusterVersion);

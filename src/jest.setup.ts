@@ -9,7 +9,6 @@ import { TextEncoder, TextDecoder as TextDecoderNode } from "util";
 import glob from "glob";
 import path from "path";
 import { enableMapSet, setAutoFreeze } from "immer";
-import { WebSocket } from "ws";
 
 declare global {
   interface InjectablePaths {
@@ -52,8 +51,6 @@ global.ResizeObserver = class {
   unobserve = () => {};
   disconnect = () => {};
 };
-
-global.WebSocket = WebSocket as any;
 
 jest.mock("./renderer/components/monaco-editor/monaco-editor");
 jest.mock("./renderer/components/tooltip/withTooltip");

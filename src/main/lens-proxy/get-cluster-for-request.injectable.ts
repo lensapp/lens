@@ -17,30 +17,43 @@ const getClusterForRequestInjectable = getInjectable({
     const getClusterById = di.inject(getClusterByIdInjectable);
 
     return (req) => {
-      if (!req.headers.host) {
+      const { host } = req.headers;
+
+      if (!host || !req.url) {
         return undefined;
       }
 
       // lens-server is connecting to 127.0.0.1:<port>/<uid>
-      if (req.url && req.headers.host.startsWith("127.0.0.1")) {
-        const clusterId = req.url.split("/")[1];
-        const cluster = getClusterById(clusterId);
+      if (host.startsWith("127.0.0.1") || host.startsWith("localhost")) {
+        {
+          const clusterId = req.url.split("/")[1];
+          const cluster = getClusterById(clusterId);
 
-        if (cluster) {
-        // we need to swap path prefix so that request is proxied to kube api
-          req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
+          if (cluster) {
+            // we need to swap path prefix so that request is proxied to kube api
+            req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
+
+            return cluster;
+          }
         }
 
-        return cluster;
+        {
+          const searchParams = new URLSearchParams(req.url);
+          const clusterId = searchParams.get("clusterId");
+
+          if (clusterId) {
+            return getClusterById(clusterId);
+          }
+        }
       }
 
-      const clusterId = getClusterIdFromHost(req.headers.host);
+      const clusterId = getClusterIdFromHost(host);
 
-      if (!clusterId) {
-        return undefined;
+      if (clusterId) {
+        return getClusterById(clusterId);
       }
 
-      return getClusterById(clusterId);
+      return undefined;
     };
   },
 });
