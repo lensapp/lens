@@ -18,7 +18,12 @@ export const queryAllElements =
   (attributeName: string) => (rendered: RenderResult) => {
     const dataAttribute = `data-${attributeName}-test`;
 
-    return [...rendered.baseElement.querySelectorAll(`[${dataAttribute}]`)];
+    const results = [...rendered.baseElement.querySelectorAll(`[${dataAttribute}]`)];
+
+    return {
+      elements: results,
+      attributeValues: results.map(result => result.getAttribute(dataAttribute)),
+    };
   };
 
 export const getSingleElement =
@@ -29,9 +34,7 @@ export const getSingleElement =
       const element = querySingleElement(attributeName, attributeValue)(rendered);
 
       if (!element) {
-        const validValues = queryAllElements(attributeName)(rendered).map(
-          (elem) => elem.getAttribute(dataAttribute),
-        );
+        const validValues = queryAllElements(attributeName)(rendered).attributeValues;
 
         throw new Error(
           `Couldn't find HTML element with attribute "${dataAttribute}" with value "${attributeValue}". Valid values are:\n\n"${validValues.join(
