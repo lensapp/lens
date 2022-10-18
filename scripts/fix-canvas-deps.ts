@@ -7,7 +7,6 @@ import child_process from "child_process";
 import fsExtra from "fs-extra";
 import fetch from "node-fetch";
 import { platform } from "process";
-import { SemVer } from "semver";
 import stream from "stream";
 import { promisify } from "util";
 import { extract } from "tar";
