@@ -4,37 +4,45 @@
  */
 import type { RenderResult } from "@testing-library/react";
 
+type DiscoverySourceTypes = RenderResult | Element;
+
 export const querySingleElement =
   (attributeName: string, attributeValue: string) =>
-    (rendered: RenderResult) => {
+    (source: DiscoverySourceTypes) => {
       const dataAttribute = `data-${attributeName}-test`;
 
-      return rendered.baseElement.querySelector(
+      return getBaseElement(source).querySelector(
         `[${dataAttribute}="${attributeValue}"]`,
       );
     };
 
 export const queryAllElements =
-  (attributeName: string) => (rendered: RenderResult) => {
+  (attributeName: string) => (source: DiscoverySourceTypes) => {
     const dataAttribute = `data-${attributeName}-test`;
 
-    const results = [...rendered.baseElement.querySelectorAll(`[${dataAttribute}]`)];
+    const results = [
+      ...getBaseElement(source).querySelectorAll(`[${dataAttribute}]`),
+    ];
 
     return {
       elements: results,
-      attributeValues: results.map(result => result.getAttribute(dataAttribute)),
+
+      attributeValues: results.map((result) =>
+        result.getAttribute(dataAttribute),
+      ),
     };
   };
 
 export const getSingleElement =
   (attributeName: string, attributeValue: string) =>
-    (rendered: RenderResult) => {
+    (source: DiscoverySourceTypes) => {
       const dataAttribute = `data-${attributeName}-test`;
 
-      const element = querySingleElement(attributeName, attributeValue)(rendered);
+      const element = querySingleElement(attributeName, attributeValue)(source);
 
       if (!element) {
-        const validValues = queryAllElements(attributeName)(rendered).attributeValues;
+        const validValues =
+        queryAllElements(attributeName)(source).attributeValues;
 
         throw new Error(
           `Couldn't find HTML element with attribute "${dataAttribute}" with value "${attributeValue}". Valid values are:\n\n"${validValues.join(
@@ -45,3 +53,6 @@ export const getSingleElement =
 
       return element;
     };
+
+const getBaseElement = (source: DiscoverySourceTypes) =>
+  "baseElement" in source ? source.baseElement : source;
