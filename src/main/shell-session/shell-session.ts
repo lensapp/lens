@@ -222,7 +222,6 @@ export abstract class ShellSession {
 
     this.running = true;
     shellProcess.onData(data => {
-      console.log("sending", { data });
       this.send({ type: TerminalChannels.STDOUT, data });
     });
     shellProcess.onExit(({ exitCode }) => {

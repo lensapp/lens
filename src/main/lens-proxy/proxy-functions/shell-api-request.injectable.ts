@@ -27,8 +27,6 @@ const shellApiRequestInjectable = getInjectable({
       const nodeName = searchParams.get("node");
       const shellToken = searchParams.get("shellToken");
 
-      console.log("got shell api request", { tabId, clusterId: cluster?.id, nodeName });
-
       if (!tabId || !cluster || !shellApiAuthenticator.authenticate(cluster.id, tabId, shellToken)) {
         socket.write("Invalid shell request");
         socket.end();
