@@ -78,6 +78,7 @@
     "build:theme-vars": "yarn run ts-node build/build_theme_vars.ts",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix",
+    "postinstall": "yarn run fix-canvas-deps",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
     "typedocs-extensions-api": "yarn run typedoc src/extensions/extension-api.ts",
@@ -86,7 +87,9 @@
     "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
     "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version",
     "precreate-release-pr": "npx swc ./scripts/create-release-pr.ts -o ./scripts/create-release-pr.mjs",
-    "create-release-pr": "node ./scripts/create-release-pr.mjs"
+    "create-release-pr": "node ./scripts/create-release-pr.mjs",
+    "prefix-canvas-deps": "npx swc ./scripts/fix-canvas-deps.ts -o ./scripts/fix-canvas-deps.mjs",
+    "fix-canvas-deps": "node ./scripts/fix-canvas-deps.mjs"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
