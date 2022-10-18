@@ -121,14 +121,6 @@
     display: flex;
     flex-direction: column;
 
-    &:not(:first-of-type) {
-      margin-top: 40px;
-
-      &.small {
-        margin-top: 20px;
-      }
-    }
-
     h1, h2 {
       color: var(--textColorAccent);
     }
@@ -167,15 +159,14 @@
 
     hr {
       margin-top: 40px;
+      margin-bottom: 40px;
+
       height: 1px;
       border-top: thin solid var(--hrColor);
 
       &.small {
         margin-top: 20px;
-      }
-
-      &:last-child {
-        display: none;
+        margin-bottom: 20px;
       }
     }
 

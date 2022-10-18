@@ -37,8 +37,6 @@ const NonInjectedKubectlDownloadMirror = observer(({ userStore }: Dependencies) 
       themeName="lens"
     />
   </section>
-
-
 ));
 
 export const KubectlDownloadMirror = withInjectables<Dependencies>(

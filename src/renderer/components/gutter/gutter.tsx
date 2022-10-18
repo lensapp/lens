@@ -7,7 +7,7 @@ import { cssNames } from "../../utils";
 import styles from "./gutter.module.scss";
 
 interface GutterProps {
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "xl";
 }
 
 const Gutter = ({ size = "md" }: GutterProps) => {

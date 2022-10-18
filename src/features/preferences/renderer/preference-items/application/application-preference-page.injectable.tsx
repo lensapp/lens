@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
-import React from "react";
 import { getPreferencePage } from "../../get-preference-page";
+import { HorizontalLine } from "../../horizontal-line/horizontal-line";
 
 const applicationPreferencePageInjectable = getInjectable({
   id: "application-preference-page",
@@ -16,7 +16,7 @@ const applicationPreferencePageInjectable = getInjectable({
     parentId: "application-tab",
     orderNumber: 0,
     Component: getPreferencePage("Application"),
-    childrenSeparator: () => <hr />,
+    childrenSeparator: HorizontalLine,
   }),
 
   injectionToken: preferenceItemInjectionToken,

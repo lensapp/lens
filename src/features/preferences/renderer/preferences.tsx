@@ -15,39 +15,39 @@ import type { IComputedValue } from "mobx";
 import { Map } from "../../../renderer/components/map/map";
 import { observer } from "mobx-react";
 import { PreferencesNavigation } from "./preference-navigation/preferences-navigation";
+import Gutter from "../../../renderer/components/gutter/gutter";
 
 interface Dependencies {
   closePreferences: () => void;
   pageComposite: IComputedValue<Composite<PreferenceTab> | undefined>;
 }
 
-const NonInjectedPreferences = observer(({
-  closePreferences,
-  pageComposite,
-}: Dependencies) => {
-  const composite = pageComposite.get();
+const NonInjectedPreferences = observer(
+  ({ closePreferences, pageComposite }: Dependencies) => {
+    const composite = pageComposite.get();
 
-  return (
-    <SettingLayout
-      navigation={<PreferencesNavigation />}
-      className="Preferences"
-      contentGaps={false}
-      closeButtonProps={{ "data-testid": "close-preferences" }}
-      back={closePreferences}
-    >
-      {composite ? (
-        toPreferenceItemHierarchy(composite)
-      ) : (
-        <div
-          className="flex items-center"
-          data-preference-page-does-not-exist-test={true}
-        >
-          No preferences found
-        </div>
-      )}
-    </SettingLayout>
-  );
-});
+    return (
+      <SettingLayout
+        navigation={<PreferencesNavigation />}
+        className="Preferences"
+        contentGaps={false}
+        closeButtonProps={{ "data-testid": "close-preferences" }}
+        back={closePreferences}
+      >
+        {composite ? (
+          toPreferenceItemHierarchy(composite)
+        ) : (
+          <div
+            className="flex items-center"
+            data-preference-page-does-not-exist-test={true}
+          >
+            No preferences found
+          </div>
+        )}
+      </SettingLayout>
+    );
+  },
+);
 
 const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
   const value = composite.value;
@@ -56,7 +56,10 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
     case "group": {
       return (
         <section id={value.id}>
-          <Map items={composite.children} getSeparator={value.childrenSeparator}>
+          <Map
+            items={composite.children}
+            getSeparator={value.childrenSeparator || DefaultSeparator}
+          >
             {toPreferenceItemHierarchy}
           </Map>
         </section>
@@ -69,7 +72,10 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
       return (
         <div data-preference-item-test={composite.id}>
           <Component>
-            <Map items={composite.children} getSeparator={value.childrenSeparator}>
+            <Map
+              items={composite.children}
+              getSeparator={value.childrenSeparator}
+            >
               {toPreferenceItemHierarchy}
             </Map>
           </Component>
@@ -83,7 +89,10 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
 
       return (
         <Component item={value}>
-          <Map items={composite.children} getSeparator={value.childrenSeparator}>
+          <Map
+            items={composite.children}
+            getSeparator={value.childrenSeparator || DefaultSeparator}
+          >
             {toPreferenceItemHierarchy}
           </Map>
         </Component>
@@ -94,11 +103,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
 
     // eslint-disable-next-line no-fallthrough
     case "tab": {
-      return (
-        <Map items={composite.children}>
-          {toPreferenceItemHierarchy}
-        </Map>
-      );
+      return <Map items={composite.children}>{toPreferenceItemHierarchy}</Map>;
     }
 
     default: {
@@ -109,7 +114,9 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
       // Note: this code is unreachable, it is here to make ts not complain about
       // _exhaustiveCheck not being used.
       // See: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
-      throw new Error(`Tried to create preferences, but foreign item was encountered: ${_exhaustiveCheck} ${value}`);
+      throw new Error(
+        `Tried to create preferences, but foreign item was encountered: ${_exhaustiveCheck} ${value}`,
+      );
     }
   }
 };
@@ -126,3 +133,4 @@ export const Preferences = withInjectables<Dependencies>(
   },
 );
 
+const DefaultSeparator = () => <Gutter size="xl" />;
