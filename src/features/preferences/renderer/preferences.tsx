@@ -53,6 +53,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
   const value = composite.value;
 
   switch (value.kind) {
+    // Todo: rename to item-group
     case "group": {
       return (
         <section id={value.id}>
