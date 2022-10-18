@@ -7,13 +7,13 @@ import type { RenderResult } from "@testing-library/react";
 type DiscoverySourceTypes = RenderResult | Element;
 
 export const querySingleElement =
-  (attributeName: string, attributeValue: string) =>
+  (attributeName: string, attributeValue?: string) =>
     (source: DiscoverySourceTypes) => {
       const dataAttribute = `data-${attributeName}-test`;
 
-      return getBaseElement(source).querySelector(
-        `[${dataAttribute}="${attributeValue}"]`,
-      );
+      const selector =  attributeValue ? `[${dataAttribute}="${attributeValue}"]` : `[${dataAttribute}]` ;
+
+      return getBaseElement(source).querySelector(selector);
     };
 
 export const queryAllElements =
@@ -34,7 +34,7 @@ export const queryAllElements =
   };
 
 export const getSingleElement =
-  (attributeName: string, attributeValue: string) =>
+  (attributeName: string, attributeValue?: string) =>
     (source: DiscoverySourceTypes) => {
       const dataAttribute = `data-${attributeName}-test`;
 
@@ -44,11 +44,15 @@ export const getSingleElement =
         const validValues =
         queryAllElements(attributeName)(source).attributeValues;
 
-        throw new Error(
-          `Couldn't find HTML element with attribute "${dataAttribute}" with value "${attributeValue}". Valid values are:\n\n"${validValues.join(
-            '",\n"',
-          )}"`,
-        );
+        if(attributeValue) {
+          throw new Error(
+            `Couldn't find HTML-element with attribute "${dataAttribute}" with value "${attributeValue}". Present values are:\n\n"${validValues.join(
+              '",\n"',
+            )}"`,
+          );
+        }
+
+        throw new Error(`Couldn't find HTML-element with attribute "${dataAttribute}"`);
       }
 
       return element;
