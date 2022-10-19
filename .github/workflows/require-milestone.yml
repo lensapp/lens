@@ -3,9 +3,10 @@ on:
   pull_request:
     types: [opened, edited]
 jobs:
-  label:
+  milestone:
     runs-on: ubuntu-latest
     steps:
       - name: Require Milestone
         run: |
-          echo "${{ github.event.pull_request }}"
+          echo "${{ github.event.pull_request }}" | jq '.milestone' -e
+          exit $?
