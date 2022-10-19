@@ -371,7 +371,9 @@ exports[`preferences - navigation using application menu when navigating to pref
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -479,7 +481,9 @@ exports[`preferences - navigation using application menu when navigating to pref
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -597,7 +601,9 @@ exports[`preferences - navigation using application menu when navigating to pref
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -622,7 +628,9 @@ exports[`preferences - navigation using application menu when navigating to pref
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -709,7 +717,9 @@ exports[`preferences - navigation using application menu when navigating to pref
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >

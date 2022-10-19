@@ -178,7 +178,9 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                     </div>
                   </div>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
               </div>
             </div>
           </nav>
@@ -286,7 +288,9 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                     </div>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="extension-install-registry"
                 >
@@ -404,7 +408,9 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                     </div>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="start-up"
                 >
@@ -429,7 +435,9 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                     </label>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="update-channel"
                 >
@@ -516,7 +524,9 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                     </div>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="timezone"
                 >

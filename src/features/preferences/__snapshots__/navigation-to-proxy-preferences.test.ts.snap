@@ -153,7 +153,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -261,7 +263,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -379,7 +383,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -404,7 +410,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -491,7 +499,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -835,7 +845,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -890,8 +902,8 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                   </small>
                 </section>
               </div>
-              <hr
-                class="small"
+              <div
+                class="HorizontalLine Small"
               />
               <div
                 data-preference-item-test="allow-untrusted-certificates"

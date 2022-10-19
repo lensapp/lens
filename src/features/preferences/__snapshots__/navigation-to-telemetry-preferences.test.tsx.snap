@@ -165,7 +165,9 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -478,7 +480,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -586,7 +590,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -704,7 +710,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -729,7 +737,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -816,7 +826,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -1172,7 +1184,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -1280,7 +1294,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -1398,7 +1414,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -1423,7 +1441,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -1510,7 +1530,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -1866,7 +1888,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -2169,7 +2193,9 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>

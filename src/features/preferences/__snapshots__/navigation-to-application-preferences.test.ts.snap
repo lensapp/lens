@@ -153,7 +153,9 @@ exports[`preferences - navigation to application preferences given in some child
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -208,8 +210,8 @@ exports[`preferences - navigation to application preferences given in some child
                   </small>
                 </section>
               </div>
-              <hr
-                class="small"
+              <div
+                class="HorizontalLine Small"
               />
               <div
                 data-preference-item-test="allow-untrusted-certificates"
@@ -495,7 +497,9 @@ exports[`preferences - navigation to application preferences given in some child
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -603,7 +607,9 @@ exports[`preferences - navigation to application preferences given in some child
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -721,7 +727,9 @@ exports[`preferences - navigation to application preferences given in some child
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -746,7 +754,9 @@ exports[`preferences - navigation to application preferences given in some child
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -833,7 +843,9 @@ exports[`preferences - navigation to application preferences given in some child
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >

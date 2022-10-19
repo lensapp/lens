@@ -153,7 +153,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -261,7 +263,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -379,7 +383,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -404,7 +410,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -491,7 +499,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -835,7 +845,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -969,6 +981,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                 </section>
               </div>
               <div
+                class="size-xl"
+              />
+              <div
                 data-preference-item-test="line-numbers"
               >
                 <section>
@@ -1055,6 +1070,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                 </section>
               </div>
               <div
+                class="size-xl"
+              />
+              <div
                 data-preference-item-test="tab-size"
               >
                 <section>
@@ -1086,6 +1104,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                 </section>
               </div>
               <div
+                class="size-xl"
+              />
+              <div
                 data-preference-item-test="editor-font-size"
               >
                 <section>
@@ -1116,6 +1137,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </div>
                 </section>
               </div>
+              <div
+                class="size-xl"
+              />
               <div
                 data-preference-item-test="editor-font-family"
               >

@@ -374,7 +374,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     </div>
                   </div>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
               </div>
             </div>
           </nav>
@@ -482,7 +484,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     </div>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="extension-install-registry"
                 >
@@ -600,7 +604,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     </div>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="start-up"
                 >
@@ -625,7 +631,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     </label>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="update-channel"
                 >
@@ -712,7 +720,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     </div>
                   </section>
                 </div>
-                <hr />
+                <div
+                  class="HorizontalLine"
+                />
                 <div
                   data-preference-item-test="timezone"
                 >

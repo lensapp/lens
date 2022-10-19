@@ -153,8 +153,12 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </div>
               </div>
-              <hr />
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -262,7 +266,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -380,7 +386,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -405,7 +413,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -492,7 +502,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -835,7 +847,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-tab-group-test="some-tab-group"
               >
@@ -857,7 +871,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -965,7 +981,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -1083,7 +1101,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -1108,7 +1128,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -1195,7 +1217,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -1538,7 +1562,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-tab-group-test="some-tab-group"
               >
@@ -1572,7 +1598,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -1680,7 +1708,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -1798,7 +1828,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -1823,7 +1855,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -1910,7 +1944,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >

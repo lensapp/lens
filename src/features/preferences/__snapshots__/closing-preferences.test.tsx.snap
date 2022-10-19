@@ -165,7 +165,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -273,7 +275,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -391,7 +395,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -416,7 +422,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -503,7 +511,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -859,7 +869,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -1425,7 +1437,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
@@ -1533,7 +1547,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="extension-install-registry"
               >
@@ -1651,7 +1667,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="start-up"
               >
@@ -1676,7 +1694,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   </label>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="update-channel"
               >
@@ -1763,7 +1783,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   </div>
                 </section>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
               <div
                 data-preference-item-test="timezone"
               >
@@ -2119,7 +2141,9 @@ exports[`preferences - closing-preferences given already in a page and then navi
                   </div>
                 </div>
               </div>
-              <hr />
+              <div
+                class="HorizontalLine"
+              />
             </div>
           </div>
         </nav>
