@@ -9,7 +9,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Require Milestone
         run: |
-          echo "${{ toJson(github.event.pull_request.milestone) }}"
-          echo "${{ toJson(github.event.pull_request.milestone) }}" | jq 'if . == null then 1 else 0 end'
-
-          exit 1
+          exit $(echo "${{ toJson(github.event.pull_request.milestone) }}" | jq 'if . == null then 1 else 0 end')
