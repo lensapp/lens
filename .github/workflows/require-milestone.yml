@@ -1,12 +1,12 @@
 name: Require Milestone
 on:
   pull_request:
-    types: [opened, edited]
+    types: [opened, edited, synchronize]
 jobs:
   milestone:
     runs-on: ubuntu-latest
     steps:
       - name: Require Milestone
         run: |
-          echo "${{ github.event.pull_request }}" | jq '.milestone' -e
+          echo "${{ toJson(github.event.pull_request) }}" | jq '.milestone' -e
           exit $?
