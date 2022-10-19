@@ -36,7 +36,6 @@ export const PreferencesNavigation = withInjectables<Dependencies>(
   },
 );
 
-
 const toNavigationHierarchy = (composite: Composite<PreferenceTypes | PreferenceTabsRoot>) => {
   // Note: This makes tab groups and tabs without content not render anything in navigation.
   if (!hasContent(composite)) {
@@ -54,10 +53,6 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
     }
 
     case "item": {
-      return emptyRender;
-    }
-
-    case "group": {
       return emptyRender;
     }
 

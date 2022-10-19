@@ -53,26 +53,12 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
   const value = composite.value;
 
   switch (value.kind) {
-    // Todo: rename to item-group
-    case "group": {
-      return (
-        <section id={value.id}>
-          <Map
-            items={composite.children}
-            getSeparator={value.childrenSeparator || DefaultSeparator}
-          >
-            {toPreferenceItemHierarchy}
-          </Map>
-        </section>
-      );
-    }
-
     case "item": {
       const Component = value.Component;
 
       return (
         <div data-preference-item-test={composite.id}>
-          <Component>
+          <Component item={value}>
             <Map
               items={composite.children}
               getSeparator={value.childrenSeparator}

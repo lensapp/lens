@@ -6,13 +6,9 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import type React from "react";
 
-export type PreferenceItemComponent = React.ComponentType<{
+export type PreferenceItemComponent<T> = React.ComponentType<{
   children: React.ReactElement;
-}>;
-
-export type PreferencePageComponent = React.ComponentType<{
-  children: React.ReactElement;
-  item: PreferencePage;
+  item: T;
 }>;
 
 export interface PreferenceTab {
@@ -41,28 +37,20 @@ export interface PreferencePage {
   parentId: string;
   isShown?: IComputedValue<boolean> | boolean;
   childrenSeparator?: () => React.ReactElement;
-  Component: PreferencePageComponent;
-}
-
-export interface PreferenceGroup {
-  kind: "group";
-  id: string;
-  parentId: string;
-  isShown?: IComputedValue<boolean> | boolean;
-  childrenSeparator?: () => React.ReactElement;
+  Component: PreferenceItemComponent<PreferencePage>;
 }
 
 export interface PreferenceItem {
   kind: "item";
-  Component: PreferenceItemComponent;
   id: string;
   parentId: string;
   orderNumber: number;
   isShown?: IComputedValue<boolean> | boolean;
   childrenSeparator?: () => React.ReactElement;
+  Component: PreferenceItemComponent<PreferenceItem>;
 }
 
-export type PreferenceTypes = PreferenceTabGroup | PreferenceTab | PreferenceItem | PreferencePage | PreferenceGroup;
+export type PreferenceTypes = PreferenceTabGroup | PreferenceTab | PreferenceItem | PreferencePage;
 
 export const preferenceItemInjectionToken = getInjectionToken<PreferenceTypes>({
   id: "preference-item-injection-token",
