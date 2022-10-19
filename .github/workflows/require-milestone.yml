@@ -1,0 +1,11 @@
+name: Require Milestone
+on:
+  pull_request:
+    types: [opened, edited]
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require Milestone
+        if: ${{ github.event.pull_request.milestone == null }}
+        run: exit 1
