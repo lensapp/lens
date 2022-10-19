@@ -12,7 +12,7 @@ import { filter } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import { preferenceTabsRoot } from "./preference-tab-root";
 import logErrorInjectable from "../../../../common/log-error.injectable";
-import { isBoolean } from "../../../../common/utils";
+import { isShown } from "../../../../common/utils/composable-responsibilities/showable/showable";
 
 const preferencesCompositeInjectable = getInjectable({
   id: "preferences-composite",
@@ -25,18 +25,7 @@ const preferencesCompositeInjectable = getInjectable({
     return computed(() =>
       pipeline(
         [preferenceTabsRoot, ...preferenceItems.get()],
-
-        filter((item: PreferenceTypes) => {
-          if (item.isShown === undefined) {
-            return true;
-          }
-
-          if (isBoolean(item.isShown)) {
-            return item.isShown;
-          }
-
-          return item.isShown.get();
-        }),
+        filter((item: PreferenceTypes) => isShown(item)),
 
         (items) =>
           getComposite({

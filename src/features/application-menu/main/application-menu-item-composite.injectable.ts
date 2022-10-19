@@ -10,8 +10,14 @@ import { computed } from "mobx";
 import { pipeline } from "@ogre-tools/fp";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
 import loggerInjectable from "../../../common/logger.injectable";
+import type { RootComposite } from "../../../common/utils/composite/interfaces";
+import type { Discriminable } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
+import type { Orderable } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 
-export interface MenuItemRoot { id: "root"; parentId: undefined; kind: "root"; orderNumber: 0 }
+export type MenuItemRoot =
+  & Discriminable<"root">
+  & RootComposite<"root">
+  & Orderable;
 
 const applicationMenuItemCompositeInjectable = getInjectable({
   id: "application-menu-item-composite",

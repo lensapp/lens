@@ -5,17 +5,16 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { BrowserWindow, KeyboardEvent, MenuItemConstructorOptions, MenuItem as ElectronMenuItem } from "electron";
 import type { SetOptional } from "type-fest";
+import type { ChildOfParentComposite, ParentOfChildComposite } from "../../../../common/utils/composite/interfaces";
+import type { Showable } from "../../../../common/utils/composable-responsibilities/showable/showable";
+import type { Discriminable } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
+import type { Orderable } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 
 export interface MayHaveKeyboardShortcut {
   keyboardShortcut?: string;
 }
 
-export interface Showable {
-  isShown?: boolean;
-}
-export const isShown = (showable: Showable) => showable.isShown !== false;
-
-export interface Clickable {
+export interface ElectronClickable {
   // TODO: This leaky abstraction is exposed in Extension API, therefore cannot be updated
   onClick: (menuItem: ElectronMenuItem, browserWindow: (BrowserWindow) | (undefined), event: KeyboardEvent) => void;
 }
@@ -26,28 +25,14 @@ export interface Labeled {
 
 export interface MaybeLabeled extends SetOptional<Labeled, "label"> {}
 
-export interface CanBeChildOfParent {
-  parentId: string;
-}
-
-export interface Orderable {
-  orderNumber: number;
-}
-
-export interface Identifiable {
-  id: string;
-}
-
 type ApplicationMenuItemType<T extends string> =
   // Note: "kind" is being used for Discriminated unions of TypeScript to achieve type narrowing.
   // See: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions
-  & Kind<T>
-  & Identifiable
-  & CanBeChildOfParent
+  & Discriminable<T>
+  & ParentOfChildComposite
+  & ChildOfParentComposite
   & Showable
   & Orderable;
-
-interface Kind<T extends string> { kind: T }
 
 export type TopLevelMenu =
   & ApplicationMenuItemType<"top-level-menu">
@@ -64,13 +49,13 @@ type ElectronRoles = Exclude<MenuItemConstructorOptions["role"], undefined>;
 export type SubMenu =
   & ApplicationMenuItemType<"sub-menu">
   & Labeled
-  & CanBeChildOfParent;
+  & ChildOfParentComposite;
 
 export type ClickableMenuItem =
   & ApplicationMenuItemType<"clickable-menu-item">
   & MenuItem
   & Labeled
-  & Clickable;
+  & ElectronClickable;
 
 export type OsActionMenuItem =
   & ApplicationMenuItemType<"os-action-menu-item">
@@ -79,7 +64,7 @@ export type OsActionMenuItem =
   & TriggersElectronAction;
 
 type MenuItem =
-  & CanBeChildOfParent
+  & ChildOfParentComposite
   & MayHaveKeyboardShortcut;
 
 interface TriggersElectronAction {
@@ -89,7 +74,7 @@ interface TriggersElectronAction {
 // Todo: SeparatorMenuItem
 export type Separator =
   & ApplicationMenuItemType<"separator">
-  & CanBeChildOfParent;
+  & ChildOfParentComposite;
 
 export type ApplicationMenuItemTypes =
   | TopLevelMenu
