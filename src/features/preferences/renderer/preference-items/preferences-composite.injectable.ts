@@ -7,7 +7,7 @@ import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-f
 import { computed } from "mobx";
 import type { PreferenceTypes } from "./preference-item-injection-token";
 import { preferenceItemInjectionToken } from "./preference-item-injection-token";
-import getComposite from "../../../application-menu/main/menu-items/composite/get-composite/get-composite";
+import getComposite from "../../../../common/utils/composite/get-composite/get-composite";
 import { filter } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import { preferenceTabsRoot } from "./preference-tab-root";
