@@ -8,7 +8,7 @@ import type { PreferenceTab, PreferenceTypes } from "./preference-item-injection
 import type { Composite } from "../../../application-menu/main/menu-items/get-composite/get-composite";
 import { filter, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
-import { normalizeComposite } from "../../../application-menu/main/menu-items/get-composite/normalize-composite/normalize-composite";
+import { getCompositeNormalization } from "../../../application-menu/main/menu-items/get-composite/get-composite-normalization/get-composite-normalization";
 import preferencesCompositeInjectable from "./preferences-composite.injectable";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
 import currentPreferenceTabIdInjectable from "./current-preference-tab-id.injectable";
@@ -24,7 +24,7 @@ const currentPreferenceTabCompositeInjectable = getInjectable({
       const tabId = currentTabId.get();
 
       const tabComposites = pipeline(
-        normalizeComposite(preferencesComposite.get()),
+        getCompositeNormalization(preferencesComposite.get()),
         map(([, composite]) => composite),
         filter(isPreferenceTab),
         filter(hasMatchingPathId(tabId)),

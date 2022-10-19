@@ -66,7 +66,7 @@ import { Namespace } from "../../../common/k8s-api/endpoints";
 import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
 import { getCompositePaths } from "../../../features/application-menu/main/menu-items/get-composite/get-composite-paths/get-composite-paths";
-import { normalizeComposite } from "../../../features/application-menu/main/menu-items/get-composite/normalize-composite/normalize-composite";
+import { getCompositeNormalization } from "../../../features/application-menu/main/menu-items/get-composite/get-composite-normalization/get-composite-normalization";
 import type { ClickableMenuItem } from "../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
 import type { Composite } from "../../../features/application-menu/main/menu-items/get-composite/get-composite";
 import { getSingleElement } from "./discovery-of-html-elements";
@@ -359,7 +359,7 @@ export const getApplicationBuilder = () => {
           applicationMenuItemCompositeInjectable,
         ).get();
 
-        const clickableMenuItems = normalizeComposite(composite).filter(isClickableMenuItem);
+        const clickableMenuItems = getCompositeNormalization(composite).filter(isClickableMenuItem);
         const clickableMenuItemMap = new Map(clickableMenuItems);
         // TODO: find out why this any!? The typing of above map is strict, so why map.get() isn't?
         const clickableMenuItem = clickableMenuItemMap.get(path);

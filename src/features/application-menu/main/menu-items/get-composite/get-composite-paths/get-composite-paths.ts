@@ -5,8 +5,8 @@
 import { pipeline } from "@ogre-tools/fp";
 import { map } from "lodash/fp";
 import type { Composite } from "../get-composite";
-import { normalizeComposite } from "../normalize-composite/normalize-composite";
+import { getCompositeNormalization } from "../get-composite-normalization/get-composite-normalization";
 
 export const getCompositePaths = (
   composite: Composite<unknown>,
-): string[] => pipeline(composite, normalizeComposite, map(([path]) => path));
+): string[] => pipeline(composite, getCompositeNormalization, map(([path]) => path));

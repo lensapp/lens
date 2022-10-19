@@ -4,7 +4,7 @@
  */
 import type { Composite } from "../get-composite";
 
-export const normalizeComposite = <T>(composite: Composite<T>) => {
+export const getCompositeNormalization = <T>(composite: Composite<T>) => {
   const _normalizeComposite = <T>(
     composite: Composite<T>,
     previousPath: string[] = [],

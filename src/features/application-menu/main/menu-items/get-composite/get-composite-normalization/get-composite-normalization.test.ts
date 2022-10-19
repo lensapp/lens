@@ -2,10 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { normalizeComposite } from "./normalize-composite";
+import { getCompositeNormalization } from "./get-composite-normalization";
 import getComposite from "../get-composite";
 
-describe("normalize-composite", () => {
+describe("get-composite-normalization", () => {
   it("given a composite, flattens it to path and composite", () => {
     const someRootItem = {
       id: "some-root-id",
@@ -28,7 +28,7 @@ describe("normalize-composite", () => {
       source: items,
     });
 
-    const actual = normalizeComposite(composite);
+    const actual = getCompositeNormalization(composite);
 
     expect(actual).toEqual([
       ["some-root-id", expect.objectContaining({ value: someRootItem })],
