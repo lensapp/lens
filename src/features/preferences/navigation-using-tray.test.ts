@@ -5,16 +5,19 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("show-about-using-tray", () => {
   let applicationBuilder: ApplicationBuilder;
   let rendered: RenderResult;
+  let discover: Discover;
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder();
 
     rendered = await applicationBuilder.render();
+    discover = discoverFor(() => rendered);
   });
 
   it("renders", () => {
@@ -22,12 +25,12 @@ describe("show-about-using-tray", () => {
   });
 
   it("does not show application preferences yet", () => {
-    const page = querySingleElement(
+    const { discovered } = discover.querySingleElement(
       "preference-page",
       "application-page",
-    )(rendered);
+    );
 
-    expect(page).toBeNull();
+    expect(discovered).toBeNull();
   });
 
   describe("when navigating using tray", () => {
@@ -40,12 +43,12 @@ describe("show-about-using-tray", () => {
     });
 
     it("shows application preferences", () => {
-      const page = getSingleElement(
+      const { discovered } = discover.getSingleElement(
         "preference-page",
         "application-page",
-      )(rendered);
+      );
 
-      expect(page).not.toBeNull();
+      expect(discovered).not.toBeNull();
     });
   });
 });

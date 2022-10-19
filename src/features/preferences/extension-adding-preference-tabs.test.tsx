@@ -7,7 +7,8 @@ import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getSingleElement, queryAllElements, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import React from "react";
 
 describe("preferences: extension adding preference tabs", () => {
@@ -20,9 +21,12 @@ describe("preferences: extension adding preference tabs", () => {
   describe("given in preferences, when extension with preference tabs is enabled", () => {
     let rendered: RenderResult;
     let someObservable: IObservableValue<boolean>;
+    let discover: Discover;
 
     beforeEach(async () => {
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
 
       builder.preferences.navigate();
 
@@ -95,11 +99,11 @@ describe("preferences: extension adding preference tabs", () => {
     });
 
     it("shows tabs in order", () => {
-      const actual = queryAllElements("preference-tab-link")(
-        rendered,
-      ).attributeValues.filter((value) =>
-        value?.startsWith("extension-some-extension"),
-      );
+      const actual = discover
+        .queryAllElements("preference-tab-link")
+        .attributeValues.filter((value) =>
+          value?.startsWith("extension-some-extension"),
+        );
 
       expect(actual).toEqual([
         "extension-some-extension-some-other-preference-tab-id",
@@ -108,12 +112,12 @@ describe("preferences: extension adding preference tabs", () => {
     });
 
     it("does not show hidden tab", () => {
-      const actual = querySingleElement(
+      const { discovered } = discover.querySingleElement(
         "preference-tab-link",
         "extension-some-extension-some-preference-tab-id-with-controlled-visibility",
-      )(rendered);
+      );
 
-      expect(actual).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     it("when item becomes visible, shows the tab", () => {
@@ -121,12 +125,12 @@ describe("preferences: extension adding preference tabs", () => {
         someObservable.set(true);
       });
 
-      const actual = getSingleElement(
+      const { discovered } = discover.getSingleElement(
         "preference-tab-link",
         "extension-some-extension-some-preference-tab-id-with-controlled-visibility",
-      )(rendered);
+      );
 
-      expect(actual).not.toBeNull();
+      expect(discovered).not.toBeNull();
     });
   });
 });

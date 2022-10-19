@@ -10,17 +10,21 @@ import { runInAction } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { preferenceItemInjectionToken } from "./renderer/preference-items/preference-item-injection-token";
-import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - hiding-of-empty-branches, given in preferences page", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let windowDi: DiContainer;
+  let discover: Discover;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
     rendered = await builder.render();
+
+    discover = discoverFor(() => rendered);
 
     builder.preferences.navigate();
 
@@ -87,25 +91,24 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
     });
 
     it("does not render the empty tab group", () => {
-      const someTabGroup = querySingleElement(
+      const { discovered } = discover.querySingleElement(
         "preference-tab-group",
         "some-tab-group",
-      )(rendered);
+      );
 
-      expect(someTabGroup).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     it("does not render the empty tabs", () => {
-      const someTab = querySingleElement(
+      const { discovered: someTab } = discover.querySingleElement(
         "preference-tab-link",
         "some-path-id-for-some-tab-id",
-      )(rendered);
+      );
 
-      const someOtherTab = querySingleElement(
+      const { discovered: someOtherTab } = discover.querySingleElement(
         "preference-tab-link",
         "some-path-id-for-some-other-tab-id",
-      )(rendered);
-
+      );
 
       expect([someTab, someOtherTab]).toEqual([null, null]);
     });
@@ -137,30 +140,30 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
       });
 
       it("renders the tab group that is no longer empty", () => {
-        const someTabGroup = querySingleElement(
+        const { discovered } = discover.querySingleElement(
           "preference-tab-group",
           "some-tab-group",
-        )(rendered);
+        );
 
-        expect(someTabGroup).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
 
       it("renders the tab that is no longer empty", () => {
-        const someTab = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-tab-link",
           "some-path-id-for-some-tab-id",
-        )(rendered);
+        );
 
-        expect(someTab).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
 
       it("does not render the tab that is still empty", () => {
-        const someTab = querySingleElement(
+        const { discovered } = discover.querySingleElement(
           "preference-tab-link",
           "some-path-id-for-some-other-tab-id",
-        )(rendered);
+        );
 
-        expect(someTab).toBeNull();
+        expect(discovered).toBeNull();
       });
 
       describe("when an item appears for the remaining tab", () => {
@@ -190,30 +193,30 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
         });
 
         it("still renders the tab group that is not empty", () => {
-          const someTabGroup = getSingleElement(
+          const { discovered } = discover.getSingleElement(
             "preference-tab-group",
             "some-tab-group",
-          )(rendered);
+          );
 
-          expect(someTabGroup).not.toBeNull();
+          expect(discovered).not.toBeNull();
         });
 
         it("still renders the tab that is not empty", () => {
-          const someTab = getSingleElement(
+          const { discovered } = discover.getSingleElement(
             "preference-tab-link",
             "some-path-id-for-some-tab-id",
-          )(rendered);
+          );
 
-          expect(someTab).not.toBeNull();
+          expect(discovered).not.toBeNull();
         });
 
         it("now renders the other tab that is no longer empty", () => {
-          const someTab = getSingleElement(
+          const { discovered } = discover.getSingleElement(
             "preference-tab-link",
             "some-path-id-for-some-other-tab-id",
-          )(rendered);
+          );
 
-          expect(someTab).not.toBeNull();
+          expect(discovered).not.toBeNull();
         });
       });
     });

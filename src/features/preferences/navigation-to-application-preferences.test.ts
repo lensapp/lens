@@ -6,7 +6,8 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import navigateToProxyPreferencesInjectable from "./common/navigate-to-proxy-preferences.injectable";
-import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to application preferences", () => {
   let builder: ApplicationBuilder;
@@ -17,6 +18,7 @@ describe("preferences - navigation to application preferences", () => {
 
   describe("given in some child page of preferences, when rendered", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
@@ -26,6 +28,8 @@ describe("preferences - navigation to application preferences", () => {
       });
 
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -33,12 +37,12 @@ describe("preferences - navigation to application preferences", () => {
     });
 
     it("does not show application preferences yet", () => {
-      const page = querySingleElement(
+      const { discovered } = discover.querySingleElement(
         "preference-page",
         "application-page",
-      )(rendered);
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     describe("when navigating to application preferences using navigation", () => {
@@ -51,12 +55,12 @@ describe("preferences - navigation to application preferences", () => {
       });
 
       it("shows application preferences", () => {
-        const page = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-page",
           "application-page",
-        )(rendered);
+        );
 
-        expect(page).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
     });
 
@@ -70,12 +74,12 @@ describe("preferences - navigation to application preferences", () => {
       });
 
       it("shows tab for application preferences for it being the default", () => {
-        const page = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-page",
           "application-page",
-        )(rendered);
+        );
 
-        expect(page).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
     });
   });

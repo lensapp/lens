@@ -5,7 +5,8 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to terminal preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -16,6 +17,7 @@ describe("preferences - navigation to terminal preferences", () => {
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       applicationBuilder.beforeWindowStart(() => {
@@ -23,6 +25,8 @@ describe("preferences - navigation to terminal preferences", () => {
       });
 
       rendered = await applicationBuilder.render();
+
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -30,12 +34,12 @@ describe("preferences - navigation to terminal preferences", () => {
     });
 
     it("does not show terminal preferences yet", () => {
-      const page = querySingleElement(
+      const { discovered } = discover.querySingleElement(
         "preference-page",
         "terminal-page",
-      )(rendered);
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     describe("when navigating to terminal preferences using navigation", () => {
@@ -49,12 +53,12 @@ describe("preferences - navigation to terminal preferences", () => {
 
 
       it("shows terminal preferences", () => {
-        const page = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-page",
           "terminal-page",
-        )(rendered);
+        );
 
-        expect(page).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
     });
   });

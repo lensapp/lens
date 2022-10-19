@@ -69,7 +69,7 @@ import { getCompositePaths } from "../../../common/utils/composite/get-composite
 import { getCompositeNormalization } from "../../../common/utils/composite/get-composite-normalization/get-composite-normalization";
 import type { ClickableMenuItem } from "../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
 import type { Composite } from "../../../common/utils/composite/get-composite/get-composite";
-import { getSingleElement } from "./discovery-of-html-elements";
+import { discoverFor } from "./discovery-of-html-elements";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -447,7 +447,12 @@ export const getApplicationBuilder = () => {
         click: (pathId: string) => {
           const { rendered } = builder.applicationWindow.only;
 
-          const link = getSingleElement("preference-tab-link", pathId)(rendered);
+          const discover = discoverFor(() => rendered);
+
+          const { discovered: link } = discover.getSingleElement(
+            "preference-tab-link",
+            pathId,
+          );
 
           fireEvent.click(link);
         },

@@ -9,7 +9,8 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import navigateToTelemetryPreferencesInjectable from "./common/navigate-to-telemetry-preferences.injectable";
 import sentryDataSourceNameInjectable from "../../common/vars/sentry-dsn-url.injectable";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
-import { getSingleElement, queryAllElements, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to telemetry preferences", () => {
   let builder: ApplicationBuilder;
@@ -20,6 +21,7 @@ describe("preferences - navigation to telemetry preferences", () => {
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       builder.beforeWindowStart(() => {
@@ -27,6 +29,8 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
 
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -34,21 +38,21 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("does not show telemetry preferences yet", () => {
-      const page = querySingleElement(
+      const { discovered } = discover.querySingleElement(
         "preference-page",
         "telemetry-page",
-      )(rendered);
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     it("does not show link for telemetry preferences", () => {
-      const actual = querySingleElement(
+      const { discovered } = discover.querySingleElement(
         "preference-tab-link",
         "telemetry",
-      )(rendered);
+      );
 
-      expect(actual).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     describe("when extension with telemetry preference items gets enabled", () => {
@@ -63,12 +67,12 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
 
       it("shows link for telemetry preferences", () => {
-        const actual = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-tab-link",
           "telemetry",
-        )(rendered);
+        );
 
-        expect(actual).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
 
       describe("when clicking link to telemetry preferences from navigation", () => {
@@ -81,19 +85,19 @@ describe("preferences - navigation to telemetry preferences", () => {
         });
 
         it("shows telemetry preferences", () => {
-          const page = getSingleElement(
+          const { discovered } = discover.getSingleElement(
             "preference-page",
             "telemetry-page",
-          )(rendered);
+          );
 
-          expect(page).not.toBeNull();
+          expect(discovered).not.toBeNull();
         });
 
         it("shows extension telemetry preference items", () => {
-          const actual =
-            queryAllElements("preference-item")(rendered).attributeValues;
+          const { attributeValues } =
+            discover.queryAllElements("preference-item");
 
-          expect(actual).toEqual([
+          expect(attributeValues).toEqual([
             "preference-item-for-extension-some-test-extension-name-item-some-telemetry-preference-item-id",
           ]);
         });
@@ -117,17 +121,18 @@ describe("preferences - navigation to telemetry preferences", () => {
         },
       });
 
-      const actual = querySingleElement(
+      const { discovered } = discover.querySingleElement(
         "preference-tab-link",
         "telemetry",
-      )(rendered);
+      );
 
-      expect(actual).toBeNull();
+      expect(discovered).toBeNull();
     });
   });
 
   describe("given URL for Sentry DNS, when navigating to preferences", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
@@ -135,6 +140,8 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
 
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
 
       builder.preferences.navigate();
     });
@@ -149,17 +156,18 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
 
       it("allows configuration of automatic error reporting", () => {
-        const actual = queryAllElements(
+        const { attributeValues } = discover.queryAllElements(
           "preference-item",
-        )(rendered).attributeValues;
+        );
 
-        expect(actual).toEqual(["automatic-error-reporting"]);
+        expect(attributeValues).toEqual(["automatic-error-reporting"]);
       });
     });
   });
 
   describe("given no URL for Sentry DNS, when navigating to telemetry preferences", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
@@ -167,6 +175,8 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
 
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
 
       const windowDi = builder.applicationWindow.only.di;
 
@@ -180,11 +190,11 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("does not allow configuration of automatic error reporting", () => {
-      const actual = queryAllElements(
+      const { attributeValues } = discover.queryAllElements(
         "preference-item",
-      )(rendered).attributeValues;
+      );
 
-      expect(actual).toEqual([]);
+      expect(attributeValues).toEqual([]);
     });
   });
 });

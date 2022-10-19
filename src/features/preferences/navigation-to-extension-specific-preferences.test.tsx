@@ -8,7 +8,8 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
-import { getSingleElement, queryAllElements, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import logErrorInjectable from "../../common/log-error.injectable";
 
 describe("preferences - navigation to extension specific preferences", () => {
@@ -21,6 +22,7 @@ describe("preferences - navigation to extension specific preferences", () => {
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
     let logErrorMock: jest.Mock;
+    let discover: Discover;
 
     beforeEach(async () => {
       logErrorMock = jest.fn();
@@ -32,6 +34,8 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -40,9 +44,12 @@ describe("preferences - navigation to extension specific preferences", () => {
 
     it("does not show extension preferences yet", () => {
       // Todo: check if query is correct.
-      const page = querySingleElement("preference-page", "extension")(rendered);
+      const { discovered } = discover.querySingleElement(
+        "preference-page",
+        "extension",
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     it("does not show link for extension preferences", () => {
@@ -68,21 +75,21 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("doesn't show preferences from unrelated extension", () => {
-        const actual = querySingleElement(
+        const { discovered } = discover.querySingleElement(
           "preference-page",
           "preference-item-for-extension-some-other-test-extension-id-page",
-        )(rendered);
+        );
 
-        expect(actual).toBeNull();
+        expect(discovered).toBeNull();
       });
 
       it("shows preferences from related extension", () => {
-        const actual = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-page",
           "preference-item-for-extension-some-test-extension-id-page",
-        )(rendered);
+        );
 
-        expect(actual).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
     });
 
@@ -118,12 +125,12 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("link should not be active", () => {
-        const actual = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-tab-link",
           "some-test-extension-id",
-        )(rendered);
+        );
 
-        expect(actual).not.toHaveClass("active");
+        expect(discovered).not.toHaveClass("active");
       });
 
       describe("when navigating to extension preferences using navigation", () => {
@@ -136,25 +143,27 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
 
         it("shows proper page title", () => {
-          const title = getSingleElement("preference-page-title")(rendered);
+          const { discovered } = discover.getSingleElement("preference-page-title");
 
-          expect(title).toHaveTextContent("some-test-extension-id preferences");
+          expect(discovered).toHaveTextContent("some-test-extension-id preferences");
         });
 
         it("shows only extension specific preference items", () => {
-          const actual = queryAllElements(
-            "preference-item",
-          )(rendered).attributeValues;
+          const { attributeValues } =
+            discover.queryAllElements("preference-item");
 
-          expect(actual).toEqual([
+          expect(attributeValues).toEqual([
             "preference-item-for-extension-some-test-extension-id-item-some-preference-item-id",
           ]);
         });
 
         it("link is active", () => {
-          const actual = getSingleElement("preference-tab-link", "some-test-extension-id")(rendered);
+          const { discovered } = discover.getSingleElement(
+            "preference-tab-link",
+            "some-test-extension-id",
+          );
 
-          expect(actual).toHaveClass("active");
+          expect(discovered).toHaveClass("active");
         });
 
         describe("when extension is disabled", () => {
@@ -167,20 +176,20 @@ describe("preferences - navigation to extension specific preferences", () => {
           });
 
           it("does not show any preference page", () => {
-            const actual = querySingleElement("preference-page")(rendered);
+            const { discovered } = discover.querySingleElement("preference-page");
 
-            expect(actual).toBeNull();
+            expect(discovered).toBeNull();
           });
 
           it("when extension is enabled again, shows the preference page", () => {
             builder.extensions.enable(extensionStubWithExtensionSpecificPreferenceItems);
 
-            const actual = getSingleElement(
+            const { discovered } = discover.getSingleElement(
               "preference-page",
               "preference-item-for-extension-some-test-extension-id-page",
-            )(rendered);
+            );
 
-            expect(actual).not.toBeNull();
+            expect(discovered).not.toBeNull();
           });
         });
       });
@@ -204,26 +213,23 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows extension tab in general area", () => {
-        const generalTabGroup = getSingleElement(
-          "preference-tab-group",
-          "general-tab-group",
-        )(rendered);
+        const { discovered } = discover
+          .getSingleElement("preference-tab-group", "general-tab-group")
+          .getSingleElement(
+            "preference-tab-link",
+            "extension-registered-tab-page-id-metrics-extension-tab",
+          );
 
-        const actual = getSingleElement(
-          "preference-tab-link",
-          "extension-registered-tab-page-id-metrics-extension-tab",
-        )(generalTabGroup);
-
-        expect(actual).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
 
       it("does not show tab group for extensions for there being no content", () => {
-        const actual = querySingleElement(
+        const { discovered } = discover.querySingleElement(
           "preference-tab-group",
           "extensions-tab-group",
-        )(rendered);
+        );
 
-        expect(actual).toBeNull();
+        expect(discovered).toBeNull();
       });
 
       describe("when navigating to specific extension tab", () => {
@@ -248,9 +254,11 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
 
         it("shows correct page title", () => {
-          const pageTitle = getSingleElement("preference-page-title")(rendered);
+          const { discovered } = discover.getSingleElement(
+            "preference-page-title",
+          );
 
-          expect(pageTitle).toHaveTextContent("Metrics tab");
+          expect(discovered).toHaveTextContent("Metrics tab");
         });
       });
     });
@@ -264,21 +272,21 @@ describe("preferences - navigation to extension specific preferences", () => {
       });
 
       it("shows tab from the first extension", () => {
-        const actual = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-tab-link",
           "extension-registered-tab-page-id-metrics-extension-tab",
-        )(rendered);
+        );
 
-        expect(actual).toBeInTheDocument();
+        expect(discovered).toBeInTheDocument();
       });
 
       it("shows tab from the second extension", () => {
-        const actual = getSingleElement(
+        const { discovered } = discover.getSingleElement(
           "preference-tab-link",
           "extension-duplicated-tab-page-id-metrics-extension-tab",
-        )(rendered);
+        );
 
-        expect(actual).toBeInTheDocument();
+        expect(discovered).toBeInTheDocument();
       });
 
       describe("when navigating to first extension tab", () => {
@@ -293,10 +301,9 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
 
         it("shows related preferences for this tab", () => {
-          const actual =
-            queryAllElements("preference-item")(rendered).attributeValues;
+          const { attributeValues } = discover.queryAllElements("preference-item");
 
-          expect(actual).toEqual([
+          expect(attributeValues).toEqual([
             "preference-item-for-extension-registered-tab-page-id-item-metrics-preference-item-id",
           ]);
         });
@@ -314,10 +321,10 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
 
         it("shows related preferences for this tab", () => {
-          const actual =
-            queryAllElements("preference-item")(rendered).attributeValues;
+          const { attributeValues } =
+            discover.queryAllElements("preference-item");
 
-          expect(actual).toEqual([
+          expect(attributeValues).toEqual([
             "preference-item-for-extension-duplicated-tab-page-id-item-another-metrics-preference-item-id",
           ]);
         });
