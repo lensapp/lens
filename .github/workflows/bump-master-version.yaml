@@ -1,0 +1,35 @@
+name: Bump Version on master
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release') }}
+    steps:
+      - name: Checkout Release from lens
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+          npm i --location=global semver
+      - name: Bump version to first alpha of next minor version
+        run: |
+          NEW_VERSION=$(cat package.json | jq .version --raw-output| xargs semver -i preminor --preid alpha)
+          cat package.json | jq --arg new_version "$NEW_VERSION" '.version = $new_version' > new-package.json
+          mv new-package.json package.json
+      - uses: peter-evans/create-pull-request@v4
+        with:
+          add-paths: package.json
+          commit-message: Update package.json version to next preminor because of recent release
+          signoff: true
+          delete-branch: true
+          title: Update version to next preminor
+          labels: chore
