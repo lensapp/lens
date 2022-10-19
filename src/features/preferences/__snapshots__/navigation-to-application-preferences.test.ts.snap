@@ -154,8 +154,12 @@ exports[`preferences - navigation to application preferences given in some child
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -498,8 +502,12 @@ exports[`preferences - navigation to application preferences given in some child
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -1191,8 +1199,12 @@ exports[`preferences - navigation to application preferences given in some child
                   </div>
                 </div>
                 <div
-                  class="HorizontalLine"
-                />
+                  style="padding: 0px 10px;"
+                >
+                  <div
+                    class="HorizontalLine Small"
+                  />
+                </div>
               </div>
             </div>
           </nav>

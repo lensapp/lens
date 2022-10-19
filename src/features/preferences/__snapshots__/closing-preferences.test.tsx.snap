@@ -166,8 +166,12 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -870,8 +874,12 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -1438,8 +1446,12 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -2142,8 +2154,12 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>

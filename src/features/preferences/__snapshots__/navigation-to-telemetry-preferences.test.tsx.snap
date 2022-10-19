@@ -166,8 +166,12 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -481,8 +485,12 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -1185,8 +1193,12 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -1889,8 +1901,12 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -2194,8 +2210,12 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>

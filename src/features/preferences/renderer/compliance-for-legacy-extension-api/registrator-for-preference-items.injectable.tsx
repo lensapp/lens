@@ -10,6 +10,7 @@ import { extensionRegistratorInjectionToken } from "../../../../extensions/exten
 import { PreferencePageComponent } from "../preference-page-component";
 import { ExtensionPreferenceItem } from "./extension-preference-item";
 import { computed } from "mobx";
+import { HorizontalLine } from "../horizontal-line/horizontal-line";
 
 const registratorForPreferenceItemsInjectable = getInjectable({
   id: "registrator-for-preference-items",
@@ -53,7 +54,7 @@ const registratorForPreferenceItemsInjectable = getInjectable({
           </PreferencePageComponent>
         ),
 
-        childSeparator: () => <hr />,
+        childSeparator: HorizontalLine,
       }),
 
       injectionToken: preferenceItemInjectionToken,
@@ -132,7 +133,7 @@ const registratorForPreferenceItemsInjectable = getInjectable({
             <ExtensionPreferenceItem registration={registration} />
           ),
 
-          childSeparator: () => <hr />,
+          childSeparator: HorizontalLine,
         }),
 
         injectionToken: preferenceItemInjectionToken,

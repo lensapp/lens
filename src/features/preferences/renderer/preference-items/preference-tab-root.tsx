@@ -4,6 +4,7 @@
  */
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
+import React from "react";
 import { HorizontalLine } from "../horizontal-line/horizontal-line";
 
 export interface PreferenceTabsRoot {
@@ -19,5 +20,10 @@ export const preferenceTabsRoot: PreferenceTabsRoot = {
   id: "preference-tabs",
   parentId: undefined,
   isShown: computed(() => true as const),
-  childSeparator: HorizontalLine,
+
+  childSeparator: () => (
+    <div style={{ padding: "0 10px" }}>
+      <HorizontalLine small />
+    </div>
+  ),
 };

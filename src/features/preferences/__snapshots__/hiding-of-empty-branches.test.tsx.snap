@@ -154,11 +154,19 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -848,8 +856,12 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
               <div
                 data-preference-tab-group-test="some-tab-group"
               >
@@ -872,8 +884,12 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
@@ -1563,8 +1579,12 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
               <div
                 data-preference-tab-group-test="some-tab-group"
               >
@@ -1599,8 +1619,12 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </div>
               </div>
               <div
-                class="HorizontalLine"
-              />
+                style="padding: 0px 10px;"
+              >
+                <div
+                  class="HorizontalLine Small"
+                />
+              </div>
             </div>
           </div>
         </nav>
