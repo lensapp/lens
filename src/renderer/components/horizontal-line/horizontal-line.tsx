@@ -4,7 +4,7 @@
  */
 import React from "react";
 import styles from "./horizontal-line.module.scss";
-import { cssNames } from "../../../../renderer/utils";
+import { cssNames } from "../../utils";
 
 export const HorizontalLine = ({ small } = { small: false }) => (
   <div

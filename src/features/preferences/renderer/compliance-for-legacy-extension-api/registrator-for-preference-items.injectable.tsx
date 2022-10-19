@@ -10,7 +10,7 @@ import { extensionRegistratorInjectionToken } from "../../../../extensions/exten
 import { PreferencePageComponent } from "../preference-page-component";
 import { ExtensionPreferenceBlock } from "./extension-preference-block";
 import { computed } from "mobx";
-import { HorizontalLine } from "../horizontal-line/horizontal-line";
+import { HorizontalLine } from "../../../../renderer/components/horizontal-line/horizontal-line";
 
 const registratorForPreferenceItemsInjectable = getInjectable({
   id: "registrator-for-preference-items",

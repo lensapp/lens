@@ -7,7 +7,7 @@ import type { PreferenceItemComponent, PreferencePage } from "../preference-item
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
 import React from "react";
 import { PreferencePageComponent } from "../../preference-page-component";
-import { HorizontalLine } from "../../horizontal-line/horizontal-line";
+import { HorizontalLine } from "../../../../../renderer/components/horizontal-line/horizontal-line";
 
 const ProxyPage: PreferenceItemComponent<PreferencePage> = ({ children, item }) => (
   <PreferencePageComponent title="Proxy" id={item.id}>

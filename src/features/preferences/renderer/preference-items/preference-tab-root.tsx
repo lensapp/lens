@@ -5,7 +5,7 @@
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import React from "react";
-import { HorizontalLine } from "../horizontal-line/horizontal-line";
+import { HorizontalLine } from "../../../../renderer/components/horizontal-line/horizontal-line";
 
 export interface PreferenceTabsRoot {
   kind: "preference-tabs-root";
