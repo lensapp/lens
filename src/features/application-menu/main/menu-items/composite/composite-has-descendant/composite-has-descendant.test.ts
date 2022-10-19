@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Composite } from "../get-composite";
-import getComposite from "../get-composite";
+import type { Composite } from "../get-composite/get-composite";
+import getComposite from "../get-composite/get-composite";
 import { compositeHasDescendant } from "./composite-has-descendant";
 
 describe("composite-has-descendant, given composite with children and grand children", () => {

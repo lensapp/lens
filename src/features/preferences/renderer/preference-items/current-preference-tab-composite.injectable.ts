@@ -5,10 +5,10 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { PreferenceTab, PreferenceTypes } from "./preference-item-injection-token";
-import type { Composite } from "../../../application-menu/main/menu-items/get-composite/get-composite";
+import type { Composite } from "../../../application-menu/main/menu-items/composite/get-composite/get-composite";
 import { filter, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
-import { getCompositeNormalization } from "../../../application-menu/main/menu-items/get-composite/get-composite-normalization/get-composite-normalization";
+import { getCompositeNormalization } from "../../../application-menu/main/menu-items/composite/get-composite-normalization/get-composite-normalization";
 import preferencesCompositeInjectable from "./preferences-composite.injectable";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
 import currentPreferenceTabIdInjectable from "./current-preference-tab-id.injectable";

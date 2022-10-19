@@ -9,7 +9,7 @@ import { SettingLayout } from "../../../renderer/components/layout/setting-layou
 import { withInjectables } from "@ogre-tools/injectable-react";
 import closePreferencesInjectable from "./close-preferences/close-preferences.injectable";
 import currentPreferenceTabCompositeInjectable from "./preference-items/current-preference-tab-composite.injectable";
-import type { Composite } from "../../application-menu/main/menu-items/get-composite/get-composite";
+import type { Composite } from "../../application-menu/main/menu-items/composite/get-composite/get-composite";
 import type { PreferenceTypes, PreferenceTab } from "./preference-items/preference-item-injection-token";
 import type { IComputedValue } from "mobx";
 import { Map } from "../../../renderer/components/map/map";

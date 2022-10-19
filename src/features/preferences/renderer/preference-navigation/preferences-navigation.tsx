@@ -4,7 +4,7 @@
  */
 import { Tabs } from "../../../../renderer/components/tabs";
 import React from "react";
-import type { Composite } from "../../../application-menu/main/menu-items/get-composite/get-composite";
+import type { Composite } from "../../../application-menu/main/menu-items/composite/get-composite/get-composite";
 import type { PreferenceTypes } from "../preference-items/preference-item-injection-token";
 import { Map } from "../../../../renderer/components/map/map";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -12,7 +12,7 @@ import type { IComputedValue } from "mobx";
 import preferencesCompositeInjectable from "../preference-items/preferences-composite.injectable";
 import { observer } from "mobx-react";
 import { PreferencesNavigationTab } from "./preferences-navigation-tab";
-import { compositeHasDescendant } from "../../../application-menu/main/menu-items/get-composite/composite-has-descendant/composite-has-descendant";
+import { compositeHasDescendant } from "../../../application-menu/main/menu-items/composite/composite-has-descendant/composite-has-descendant";
 import type { PreferenceTabsRoot } from "../preference-items/preference-tab-root";
 import { Icon } from "../../../../renderer/components/icon";
 

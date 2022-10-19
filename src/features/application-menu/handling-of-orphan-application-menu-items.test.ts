@@ -6,7 +6,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import populateApplicationMenuInjectable from "./main/populate-application-menu.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
-import { getCompositePaths } from "./main/menu-items/get-composite/get-composite-paths/get-composite-paths";
+import { getCompositePaths } from "./main/menu-items/composite/get-composite-paths/get-composite-paths";
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemInjectionToken from "./main/menu-items/application-menu-item-injection-token";
 import { runInAction } from "mobx";

@@ -6,7 +6,7 @@
 import { sortBy } from "lodash/fp";
 import type { Composite } from "./get-composite";
 import getComposite from "./get-composite";
-import { getCompositePaths } from "./get-composite-paths/get-composite-paths";
+import { getCompositePaths } from "../get-composite-paths/get-composite-paths";
 
 describe("get-composite", () => {
   it("given items and a specified root id, creates a composite", () => {

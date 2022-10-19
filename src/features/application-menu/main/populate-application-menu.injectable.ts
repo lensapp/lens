@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { Menu } from "electron";
 import type { MenuItemOpts } from "./application-menu-items.injectable";
-import type { Composite } from "./menu-items/get-composite/get-composite";
+import type { Composite } from "./menu-items/composite/get-composite/get-composite";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
 import { pipeline } from "@ogre-tools/fp";
 import { map, sortBy } from "lodash/fp";

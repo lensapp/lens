@@ -65,10 +65,10 @@ import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
-import { getCompositePaths } from "../../../features/application-menu/main/menu-items/get-composite/get-composite-paths/get-composite-paths";
-import { getCompositeNormalization } from "../../../features/application-menu/main/menu-items/get-composite/get-composite-normalization/get-composite-normalization";
+import { getCompositePaths } from "../../../features/application-menu/main/menu-items/composite/get-composite-paths/get-composite-paths";
+import { getCompositeNormalization } from "../../../features/application-menu/main/menu-items/composite/get-composite-normalization/get-composite-normalization";
 import type { ClickableMenuItem } from "../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
-import type { Composite } from "../../../features/application-menu/main/menu-items/get-composite/get-composite";
+import type { Composite } from "../../../features/application-menu/main/menu-items/composite/get-composite/get-composite";
 import { getSingleElement } from "./discovery-of-html-elements";
 
 type Callback = (di: DiContainer) => void | Promise<void>;

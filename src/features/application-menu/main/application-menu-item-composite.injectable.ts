@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemsInjectable from "./application-menu-items.injectable";
-import type { Composite } from "./menu-items/get-composite/get-composite";
-import getComposite from "./menu-items/get-composite/get-composite";
+import type { Composite } from "./menu-items/composite/get-composite/get-composite";
+import getComposite from "./menu-items/composite/get-composite/get-composite";
 import { computed } from "mobx";
 import { pipeline } from "@ogre-tools/fp";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
