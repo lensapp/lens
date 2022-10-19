@@ -53,7 +53,7 @@ const registratorForPreferenceItemsInjectable = getInjectable({
           </PreferencePageComponent>
         ),
 
-        childrenSeparator: () => <hr />,
+        childSeparator: () => <hr />,
       }),
 
       injectionToken: preferenceItemInjectionToken,
@@ -132,7 +132,7 @@ const registratorForPreferenceItemsInjectable = getInjectable({
             <ExtensionPreferenceItem registration={registration} />
           ),
 
-          childrenSeparator: () => <hr />,
+          childSeparator: () => <hr />,
         }),
 
         injectionToken: preferenceItemInjectionToken,

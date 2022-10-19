@@ -23,7 +23,7 @@ const kubernetesPreferencePageInjectable = getInjectable({
     id: "kubernetes-page",
     parentId: "kubernetes-tab",
     Component: KubernetesPage,
-    childrenSeparator: HorizontalLine,
+    childSeparator: HorizontalLine,
   }),
 
   injectionToken: preferenceItemInjectionToken,

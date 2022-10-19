@@ -36,7 +36,7 @@ export interface PreferencePage {
   id: string;
   parentId: string;
   isShown?: IComputedValue<boolean> | boolean;
-  childrenSeparator?: () => React.ReactElement;
+  childSeparator?: () => React.ReactElement;
   Component: PreferenceItemComponent<PreferencePage>;
 }
 
@@ -46,7 +46,7 @@ export interface PreferenceItem {
   parentId: string;
   orderNumber: number;
   isShown?: IComputedValue<boolean> | boolean;
-  childrenSeparator?: () => React.ReactElement;
+  childSeparator?: () => React.ReactElement;
   Component: PreferenceItemComponent<PreferenceItem>;
 }
 

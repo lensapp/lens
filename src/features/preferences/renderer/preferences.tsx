@@ -61,7 +61,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
           <Component item={value}>
             <Map
               items={composite.children}
-              getSeparator={value.childrenSeparator}
+              getSeparator={value.childSeparator}
             >
               {toPreferenceItemHierarchy}
             </Map>
@@ -78,7 +78,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
         <Component item={value}>
           <Map
             items={composite.children}
-            getSeparator={value.childrenSeparator || DefaultSeparator}
+            getSeparator={value.childSeparator || DefaultSeparator}
           >
             {toPreferenceItemHierarchy}
           </Map>

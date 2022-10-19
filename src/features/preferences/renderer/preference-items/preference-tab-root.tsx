@@ -11,7 +11,7 @@ export interface PreferenceTabsRoot {
   id: string;
   parentId: undefined;
   isShown: IComputedValue<true>;
-  childrenSeparator: () => React.ReactElement;
+  childSeparator: () => React.ReactElement;
 }
 
 export const preferenceTabsRoot: PreferenceTabsRoot = {
@@ -19,5 +19,5 @@ export const preferenceTabsRoot: PreferenceTabsRoot = {
   id: "preference-tabs",
   parentId: undefined,
   isShown: computed(() => true as const),
-  childrenSeparator: HorizontalLine,
+  childSeparator: HorizontalLine,
 };

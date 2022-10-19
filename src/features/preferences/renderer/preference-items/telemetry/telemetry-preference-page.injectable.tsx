@@ -22,7 +22,7 @@ const telemetryPreferencePageInjectable = getInjectable({
     id: "telemetry-page",
     parentId: "telemetry-tab",
     Component: TelemetryPage,
-    childrenSeparator: () => <hr className="small" />,
+    childSeparator: () => <hr className="small" />,
   }),
 
   injectionToken: preferenceItemInjectionToken,

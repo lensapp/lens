@@ -25,7 +25,7 @@ const kubectlGroupPreferenceItemInjectable = getInjectable({
     parentId: "kubernetes-page",
     orderNumber: 10,
     Component: PreferenceItemGroup,
-    childrenSeparator: () => <Gutter size="xl" />,
+    childSeparator: () => <Gutter size="xl" />,
   }),
 
   injectionToken: preferenceItemInjectionToken,
