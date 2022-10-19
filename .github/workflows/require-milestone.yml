@@ -8,8 +8,8 @@ jobs:
     steps:
       - name: Require Milestone
         run: |
-          MILESTONE=$(echo "${{ toJson(github.event.pull_request) }}" | jq '.milestone')
-          echo ${MILESTONE}
+          MILESTONE=$(echo "${{ toJson(github.event.pull_request) }}" | jq '.milestone' --raw-output)
+          echo "${MILESTONE}"
 
           if [ "${MILESTONE}" == "null" ]; then
             exit 1
