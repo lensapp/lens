@@ -138,7 +138,7 @@ describe("preferences - closing-preferences", () => {
       builder.beforeWindowStart((windowDi) => {
         windowDi.override(observableHistoryInjectable, () => {
           const historyFake = createMemoryHistory({
-            initialEntries: ["/preferences2/app"],
+            initialEntries: ["/preferences/app"],
             initialIndex: 0,
           });
 

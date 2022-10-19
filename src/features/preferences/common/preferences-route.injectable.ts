@@ -10,7 +10,7 @@ const preferencesRouteInjectable = getInjectable({
   id: "preferences-route",
 
   instantiate: () => ({
-    path: "/preferences2/:preferenceTabId?",
+    path: "/preferences/:preferenceTabId?",
     clusterFrame: false,
     isEnabled: computed(() => true),
   }),
