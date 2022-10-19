@@ -6,12 +6,10 @@ jobs:
   milestone:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.5
       - name: Require Milestone
         run: |
-          MILESTONE=$(echo "${{ toJson(github.event.pull_request) }}" | jq '.milestone' --raw-output)
-          echo "${MILESTONE}"
+          echo "${{ toJson(github.event.pull_request) }}"
+          echo "${{ toJson(github.event.pull_request) }}" | jq '.milestone' --raw-output
 
-          if [ "${MILESTONE}" == "null" ]; then
-            exit 1
-          fi
+          exit 1
