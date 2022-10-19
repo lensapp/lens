@@ -59,6 +59,25 @@ describe("preferences - navigation to application preferences", () => {
         expect(page).not.toBeNull();
       });
     });
+
+    describe("when navigating to preferences without specifying the tab", () => {
+      beforeEach(() => {
+        builder.preferences.navigate();
+      });
+
+      it("renders", () => {
+        expect(rendered.baseElement).toMatchSnapshot();
+      });
+
+      it("shows tab for application preferences for it being the default", () => {
+        const page = getSingleElement(
+          "preference-page",
+          "application-page",
+        )(rendered);
+
+        expect(page).not.toBeNull();
+      });
+    });
   });
 });
 

@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import routeIsActiveInjectable from "../../../../../renderer/routes/route-is-active.injectable";
 import preferencesRouteInjectable from "../../../common/preferences-route.injectable";
-import routePathParametersInjectable from "../../../../../renderer/routes/route-path-parameters.injectable";
+import currentPreferenceTabIdInjectable from "../../preference-items/current-preference-tab-id.injectable";
 
 const preferenceTabIsActiveInjectable = getInjectable({
   id: "preference-tab-is-active",
@@ -14,11 +14,11 @@ const preferenceTabIsActiveInjectable = getInjectable({
   instantiate: (di, tabId: string) => {
     const route = di.inject(preferencesRouteInjectable);
     const routeIsActive = di.inject(routeIsActiveInjectable, route);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const currentTabId = di.inject(currentPreferenceTabIdInjectable);
 
     return computed(
       () =>
-        routeIsActive.get() && pathParameters.get().preferenceTabId === tabId,
+        routeIsActive.get() && currentTabId.get() === tabId,
     );
   },
 

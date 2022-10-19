@@ -6,30 +6,28 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { PreferenceTab, PreferenceTypes } from "./preference-item-injection-token";
 import type { Composite } from "../../../application-menu/main/menu-items/get-composite/get-composite";
-import routePathParametersInjectable from "../../../../renderer/routes/route-path-parameters.injectable";
-import preferencesRouteInjectable from "../../common/preferences-route.injectable";
 import { filter, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import { normalizeComposite } from "../../../application-menu/main/menu-items/get-composite/normalize-composite/normalize-composite";
 import preferencesCompositeInjectable from "./preferences-composite.injectable";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
+import currentPreferenceTabIdInjectable from "./current-preference-tab-id.injectable";
 
 const currentPreferenceTabCompositeInjectable = getInjectable({
   id: "current-preference-page-composite",
 
   instantiate: (di) => {
-    const preferencesRoute = di.inject(preferencesRouteInjectable);
-    const routePathParameters = di.inject(routePathParametersInjectable, preferencesRoute);
+    const currentTabId = di.inject(currentPreferenceTabIdInjectable);
     const preferencesComposite = di.inject(preferencesCompositeInjectable);
 
     return computed(() => {
-      const { preferenceTabId } = routePathParameters.get();
+      const tabId = currentTabId.get();
 
       const tabComposites = pipeline(
         normalizeComposite(preferencesComposite.get()),
         map(([, composite]) => composite),
         filter(isPreferenceTab),
-        filter(hasMatchingPathId(preferenceTabId)),
+        filter(hasMatchingPathId(tabId)),
       );
 
       if (tabComposites.length === 0) {
