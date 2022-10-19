@@ -7,5 +7,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Require Milestone
-        if: ${{ github.event.pull_request.milestone == null }}
-        run: exit 1
+        run: |
+          echo "${{ github.event.pull_request }}"
