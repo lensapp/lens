@@ -11,7 +11,6 @@ import preferencesRouteInjectable from "../../common/preferences-route.injectabl
 import { filter, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import { normalizeComposite } from "../../../application-menu/main/menu-items/get-composite/normalize-composite/normalize-composite";
-import { findExactlyOne } from "../../../../common/utils/find-exactly-one/find-exactly-one";
 import preferencesCompositeInjectable from "./preferences-composite.injectable";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
 
@@ -26,12 +25,18 @@ const currentPreferenceTabCompositeInjectable = getInjectable({
     return computed(() => {
       const { preferenceTabId } = routePathParameters.get();
 
-      return pipeline(
+      const tabComposites = pipeline(
         normalizeComposite(preferencesComposite.get()),
         map(([, composite]) => composite),
         filter(isPreferenceTab),
-        findExactlyOne(hasMatchingPathId(preferenceTabId)),
+        filter(hasMatchingPathId(preferenceTabId)),
       );
+
+      if (tabComposites.length === 0) {
+        return undefined;
+      }
+
+      return tabComposites[0];
     });
   },
 });

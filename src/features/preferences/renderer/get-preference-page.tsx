@@ -7,7 +7,7 @@ import type { PreferencePageComponent } from "./preference-items/preference-item
 
 export const getPreferencePage = (label: string): PreferencePageComponent => ({ children, item }) => (
   <section id={item.id} data-preference-page-test={item.id}>
-    <h2>{label}</h2>
+    <h2 data-preference-page-title-test={true}>{label}</h2>
 
     {children}
   </section>

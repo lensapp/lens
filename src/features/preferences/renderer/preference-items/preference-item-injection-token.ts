@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
 import type React from "react";
 
 export type PreferenceItemComponent = React.ComponentType<{
@@ -21,7 +22,7 @@ export interface PreferenceTab {
   pathId: string;
   label: string;
   orderNumber: number;
-  isShown?: boolean;
+  isShown?: IComputedValue<boolean> | boolean;
 }
 
 export interface PreferenceTabGroup {
@@ -30,7 +31,7 @@ export interface PreferenceTabGroup {
   parentId: "preference-tabs";
   label: string;
   orderNumber: number;
-  isShown?: boolean;
+  isShown?: IComputedValue<boolean> | boolean;
   iconName?: string;
 }
 
@@ -38,7 +39,7 @@ export interface PreferencePage {
   kind: "page";
   id: string;
   parentId: string;
-  isShown?: boolean;
+  isShown?: IComputedValue<boolean> | boolean;
   childrenSeparator?: () => React.ReactElement;
   Component: PreferencePageComponent;
 }
@@ -47,7 +48,7 @@ export interface PreferenceGroup {
   kind: "group";
   id: string;
   parentId: string;
-  isShown?: boolean;
+  isShown?: IComputedValue<boolean> | boolean;
   childrenSeparator?: () => React.ReactElement;
 }
 
@@ -57,7 +58,7 @@ export interface PreferenceItem {
   id: string;
   parentId: string;
   orderNumber: number;
-  isShown?: boolean;
+  isShown?: IComputedValue<boolean> | boolean;
   childrenSeparator?: () => React.ReactElement;
 }
 

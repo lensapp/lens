@@ -63,8 +63,8 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
 
     case "tab-group": {
       return (
-        <>
-          <div className="header flex items-center" data-preference-tab-group-test={value.id}>
+        <div data-preference-tab-group-test={value.id}>
+          <div className="header flex items-center">
             {value.iconName && (
               <Icon
                 material={value.iconName}
@@ -76,7 +76,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
           </div>
 
           <Map items={composite.children}>{toNavigationHierarchy}</Map>
-        </>
+        </div>
       );
     }
 

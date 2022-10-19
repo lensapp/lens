@@ -18,7 +18,7 @@ import { PreferencesNavigation } from "./preference-navigation/preferences-navig
 
 interface Dependencies {
   closePreferences: () => void;
-  pageComposite: IComputedValue<Composite<PreferenceTab>>;
+  pageComposite: IComputedValue<Composite<PreferenceTab> | undefined>;
 }
 
 const NonInjectedPreferences = observer(({
@@ -35,7 +35,16 @@ const NonInjectedPreferences = observer(({
       closeButtonProps={{ "data-testid": "close-preferences" }}
       back={closePreferences}
     >
-      {toPreferenceItemHierarchy(composite)}
+      {composite ? (
+        toPreferenceItemHierarchy(composite)
+      ) : (
+        <div
+          className="flex items-center"
+          data-preference-page-does-not-exist-test={true}
+        >
+          No preferences found
+        </div>
+      )}
     </SettingLayout>
   );
 });
@@ -58,13 +67,14 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
       const Component = value.Component;
 
       return (
-        <Component>
-          <Map items={composite.children} getSeparator={value.childrenSeparator}>
-            {toPreferenceItemHierarchy}
-          </Map>
-        </Component>
+        <div data-preference-item-test={composite.id}>
+          <Component>
+            <Map items={composite.children} getSeparator={value.childrenSeparator}>
+              {toPreferenceItemHierarchy}
+            </Map>
+          </Component>
+        </div>
       );
-
     }
 
     // eslint-disable-next-line no-fallthrough

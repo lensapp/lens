@@ -9,7 +9,7 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import navigateToTelemetryPreferencesInjectable from "./common/navigate-to-telemetry-preferences.injectable";
 import sentryDataSourceNameInjectable from "../../common/vars/sentry-dsn-url.injectable";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
-import { getSingleElement, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { getSingleElement, queryAllElements, querySingleElement } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to telemetry preferences", () => {
   let builder: ApplicationBuilder;
@@ -43,7 +43,10 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("does not show link for telemetry preferences", () => {
-      const actual = rendered.queryByTestId("tab-link-for-telemetry");
+      const actual = querySingleElement(
+        "preference-tab-link",
+        "telemetry",
+      )(rendered);
 
       expect(actual).toBeNull();
     });
@@ -60,7 +63,10 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
 
       it("shows link for telemetry preferences", () => {
-        const actual = rendered.getByTestId("tab-link-for-telemetry");
+        const actual = getSingleElement(
+          "preference-tab-link",
+          "telemetry",
+        )(rendered);
 
         expect(actual).not.toBeNull();
       });
@@ -84,11 +90,12 @@ describe("preferences - navigation to telemetry preferences", () => {
         });
 
         it("shows extension telemetry preference items", () => {
-          const actual = rendered.getByTestId(
-            "telemetry-preference-item-for-some-telemetry-preference-item-id",
-          );
+          const actual =
+            queryAllElements("preference-item")(rendered).attributeValues;
 
-          expect(actual).not.toBeNull();
+          expect(actual).toEqual([
+            "preference-item-for-extension-some-test-extension-name-item-some-telemetry-preference-item-id",
+          ]);
         });
       });
     });
@@ -110,7 +117,10 @@ describe("preferences - navigation to telemetry preferences", () => {
         },
       });
 
-      const actual = rendered.queryByTestId("tab-link-for-telemetry");
+      const actual = querySingleElement(
+        "preference-tab-link",
+        "telemetry",
+      )(rendered);
 
       expect(actual).toBeNull();
     });
@@ -139,9 +149,11 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
 
       it("allows configuration of automatic error reporting", () => {
-        const actual = rendered.getByTestId("telemetry-preferences-for-automatic-error-reporting");
+        const actual = queryAllElements(
+          "preference-item",
+        )(rendered).attributeValues;
 
-        expect(actual).not.toBeNull();
+        expect(actual).toEqual(["automatic-error-reporting"]);
       });
     });
   });
@@ -168,9 +180,11 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("does not allow configuration of automatic error reporting", () => {
-      const actual = rendered.queryByTestId("telemetry-preferences-for-automatic-error-reporting");
+      const actual = queryAllElements(
+        "preference-item",
+      )(rendered).attributeValues;
 
-      expect(actual).toBeNull();
+      expect(actual).toEqual([]);
     });
   });
 });
