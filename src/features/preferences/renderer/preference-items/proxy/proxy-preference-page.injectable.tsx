@@ -3,10 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { PreferenceItemComponent, PreferencePage } from "../preference-item-injection-token";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
 import React from "react";
-import { getPreferencePage } from "../../get-preference-page";
+import { PreferencePageComponent } from "../../preference-page-component";
 import { HorizontalLine } from "../../horizontal-line/horizontal-line";
+
+const ProxyPage: PreferenceItemComponent<PreferencePage> = ({ children, item }) => (
+  <PreferencePageComponent title="Proxy" id={item.id}>
+    {children}
+  </PreferencePageComponent>
+);
 
 const proxyPreferencePageInjectable = getInjectable({
   id: "proxy-preference-page",
@@ -15,8 +22,7 @@ const proxyPreferencePageInjectable = getInjectable({
     kind: "page" as const,
     id: "proxy-page",
     parentId: "proxy-tab",
-    orderNumber: 0,
-    Component: getPreferencePage("Proxy"),
+    Component: ProxyPage,
     childrenSeparator: () => <HorizontalLine small />,
   }),
 

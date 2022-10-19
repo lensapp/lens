@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import { preferenceItemInjectionToken } from "../preference-items/preference-item-injection-token";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
-import { getPreferencePage } from "../get-preference-page";
+import { PreferencePageComponent } from "../preference-page-component";
 import { ExtensionPreferenceItem } from "./extension-preference-item";
 import { computed } from "mobx";
 
@@ -35,16 +35,24 @@ const registratorForPreferenceItemsInjectable = getInjectable({
       injectionToken: preferenceItemInjectionToken,
     });
 
-    const pageId = `${commonId}-page`;
+    const primaryPageId = `${commonId}-page`;
     const primaryPageInjectable = getInjectable({
-      id: pageId,
+      id: primaryPageId,
 
       instantiate: () => ({
         kind: "page" as const,
-        id: pageId,
+        id: primaryPageId,
         parentId: tabId,
-        orderNumber: 0,
-        Component: getPreferencePage(`${extension.name} preferences`),
+
+        Component: ({ children }: { children: React.ReactElement }) => (
+          <PreferencePageComponent
+            id={primaryPageId}
+            title={`${extension.name} preferences`}
+          >
+            {children}
+          </PreferencePageComponent>
+        ),
+
         childrenSeparator: () => <hr />,
       }),
 
@@ -85,7 +93,15 @@ const registratorForPreferenceItemsInjectable = getInjectable({
             kind: "page" as const,
             id: additionalPageId,
             parentId: additionalTabId,
-            Component: getPreferencePage(registration.title),
+
+            Component: ({ children }: { children: React.ReactElement }) => (
+              <PreferencePageComponent
+                id={additionalPageId}
+                title={registration.title}
+              >
+                {children}
+              </PreferencePageComponent>
+            ),
           }),
 
           injectionToken: preferenceItemInjectionToken,
@@ -108,7 +124,7 @@ const registratorForPreferenceItemsInjectable = getInjectable({
             ? registration.showInPreferencesTab === "telemetry"
               ? "telemetry-page"
               : `${commonId}-additional-page-${registration.showInPreferencesTab}`
-            : pageId,
+            : primaryPageId,
 
           orderNumber: i * 10,
 

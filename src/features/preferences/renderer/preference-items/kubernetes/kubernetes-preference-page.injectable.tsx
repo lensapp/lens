@@ -3,9 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { PreferenceItemComponent, PreferencePage } from "../preference-item-injection-token";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
-import { getPreferencePage } from "../../get-preference-page";
+import { PreferencePageComponent } from "../../preference-page-component";
 import { HorizontalLine } from "../../horizontal-line/horizontal-line";
+import React from "react";
+
+const KubernetesPage: PreferenceItemComponent<PreferencePage> = ({ children, item }) => (
+  <PreferencePageComponent title="Kubernetes" id={item.id}>
+    {children}
+  </PreferencePageComponent>
+);
 
 const kubernetesPreferencePageInjectable = getInjectable({
   id: "kubernetes-preference-page",
@@ -14,8 +22,7 @@ const kubernetesPreferencePageInjectable = getInjectable({
     kind: "page" as const,
     id: "kubernetes-page",
     parentId: "kubernetes-tab",
-    orderNumber: 0,
-    Component: getPreferencePage("Kubernetes"),
+    Component: KubernetesPage,
     childrenSeparator: HorizontalLine,
   }),
 

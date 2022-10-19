@@ -3,9 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { PreferenceItemComponent, PreferencePage } from "../preference-item-injection-token";
 import { preferenceItemInjectionToken } from "../preference-item-injection-token";
-import { getPreferencePage } from "../../get-preference-page";
+import { PreferencePageComponent } from "../../preference-page-component";
 import { HorizontalLine } from "../../horizontal-line/horizontal-line";
+import React from "react";
+
+const ApplicationPage: PreferenceItemComponent<PreferencePage> = ({ children, item }) => (
+  <PreferencePageComponent title="Application" id={item.id}>
+    {children}
+  </PreferencePageComponent>
+);
 
 const applicationPreferencePageInjectable = getInjectable({
   id: "application-preference-page",
@@ -14,8 +22,7 @@ const applicationPreferencePageInjectable = getInjectable({
     kind: "page" as const,
     id: "application-page",
     parentId: "application-tab",
-    orderNumber: 0,
-    Component: getPreferencePage("Application"),
+    Component: ApplicationPage,
     childrenSeparator: HorizontalLine,
   }),
 
