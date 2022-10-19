@@ -157,14 +157,14 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
               <div
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -275,7 +275,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -395,7 +395,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -422,7 +422,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -511,7 +511,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"
@@ -859,7 +859,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
               <div
@@ -887,7 +887,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -998,7 +998,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -1118,7 +1118,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -1145,7 +1145,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -1234,7 +1234,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"
@@ -1582,7 +1582,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
               <div
@@ -1622,7 +1622,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -1733,7 +1733,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -1853,7 +1853,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -1880,7 +1880,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -1969,7 +1969,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"

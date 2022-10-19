@@ -169,7 +169,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -280,7 +280,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -400,7 +400,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -427,7 +427,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -516,7 +516,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"
@@ -877,7 +877,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -1449,7 +1449,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -1560,7 +1560,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -1680,7 +1680,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -1707,7 +1707,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -1796,7 +1796,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"
@@ -2157,7 +2157,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>

@@ -4,14 +4,22 @@
  */
 
 .HorizontalLine {
-  margin-top: 40px;
-  margin-bottom: 40px;
-
   height: 1px;
   border-top: thin solid var(--hrColor);
 }
 
-.Small {
-  margin-top: 20px;
-  margin-bottom: 20px;
+@mixin horizontalLineSize(
+  $sizeName,
+  $size
+) {
+  .size-#{$sizeName} {
+  margin-top: $size;
+  margin-bottom: $size;
+  }
 }
+
+$baseline: 8px;
+
+@include horizontalLineSize('sm', 2 * $baseline);
+@include horizontalLineSize('md', 3 * $baseline);
+@include horizontalLineSize('xl', 5 * $baseline);

@@ -6,11 +6,12 @@ import React from "react";
 import styles from "./horizontal-line.module.scss";
 import { cssNames } from "../../utils";
 
-export const HorizontalLine = ({ small } = { small: false }) => (
-  <div
-    className={cssNames({
-      [styles.HorizontalLine]: true,
-      [styles.Small]: small,
-    })}
-  />
-);
+interface HorizontalLineProps {
+  size: "sm" | "md" | "xl";
+}
+
+export const HorizontalLine = ({ size }: HorizontalLineProps = { size: "xl" }) => {
+  const classNames = cssNames(styles.HorizontalLine, styles[`size-${size}`]);
+
+  return <div className={classNames} />;
+};

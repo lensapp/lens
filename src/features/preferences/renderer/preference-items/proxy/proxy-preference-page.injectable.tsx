@@ -23,7 +23,7 @@ const proxyPreferencePageInjectable = getInjectable({
     id: "proxy-page",
     parentId: "proxy-tab",
     Component: ProxyPage,
-    childSeparator: () => <HorizontalLine small />,
+    childSeparator: () => <HorizontalLine size="sm" />,
   }),
 
   injectionToken: preferenceItemInjectionToken,

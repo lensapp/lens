@@ -169,7 +169,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -488,7 +488,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -599,7 +599,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -719,7 +719,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -746,7 +746,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -835,7 +835,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"
@@ -1196,7 +1196,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -1307,7 +1307,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -1427,7 +1427,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -1454,7 +1454,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -1543,7 +1543,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"
@@ -1904,7 +1904,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -2213,7 +2213,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>

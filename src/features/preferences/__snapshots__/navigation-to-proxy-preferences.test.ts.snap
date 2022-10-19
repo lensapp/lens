@@ -157,7 +157,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -268,7 +268,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="extension-install-registry"
@@ -388,7 +388,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="start-up"
@@ -415,7 +415,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="update-channel"
@@ -504,7 +504,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                 </section>
               </div>
               <div
-                class="HorizontalLine"
+                class="HorizontalLine size-xl"
               />
               <div
                 data-preference-item-test="timezone"
@@ -853,7 +853,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                 style="padding: 0px 10px;"
               >
                 <div
-                  class="HorizontalLine Small"
+                  class="HorizontalLine size-sm"
                 />
               </div>
             </div>
@@ -911,7 +911,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
                 </section>
               </div>
               <div
-                class="HorizontalLine Small"
+                class="HorizontalLine size-sm"
               />
               <div
                 data-preference-item-test="allow-untrusted-certificates"

@@ -23,7 +23,7 @@ export const preferenceTabsRoot: PreferenceTabsRoot = {
 
   childSeparator: () => (
     <div style={{ padding: "0 10px" }}>
-      <HorizontalLine small />
+      <HorizontalLine size="sm" />
     </div>
   ),
 };
