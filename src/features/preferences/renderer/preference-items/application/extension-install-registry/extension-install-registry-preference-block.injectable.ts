@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
-import { TerminalFontFamily } from "./terminal-font-family";
+import { ExtensionInstallRegistry } from "./extension-install-registry";
 
-const terminalFontFamilyPreferenceItemInjectable = getInjectable({
-  id: "terminal-font-family-preference-item",
+const extensionInstallRegistryPreferenceBlockInjectable = getInjectable({
+  id: "extension-install-registry-preference-item",
 
   instantiate: () => ({
     kind: "block" as const,
-    id: "terminal-font-family-preference-item",
-    parentId: "terminal-page",
-    orderNumber: 50,
-    Component: TerminalFontFamily,
+    id: "extension-install-registry",
+    parentId: "application-page",
+    orderNumber: 20,
+    Component: ExtensionInstallRegistry,
   }),
 
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default terminalFontFamilyPreferenceItemInjectable;
+export default extensionInstallRegistryPreferenceBlockInjectable;

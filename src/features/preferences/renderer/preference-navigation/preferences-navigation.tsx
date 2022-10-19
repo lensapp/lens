@@ -52,7 +52,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
       return emptyRender;
     }
 
-    case "item": {
+    case "block": {
       return emptyRender;
     }
 
@@ -103,7 +103,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
 };
 
 const hasContent = compositeHasDescendant<PreferenceTypes | PreferenceTabsRoot>(
-  (composite) => composite.value.kind === "item",
+  (composite) => composite.value.kind === "block",
 );
 
 const emptyRender = <></>;

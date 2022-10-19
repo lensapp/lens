@@ -10,7 +10,7 @@ const copyPasteFromTerminalPreferenceItemInjectable = getInjectable({
   id: "copy-paste-from-terminal-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "copy-paste-from-terminal-preference-item",
     parentId: "terminal-page",
     orderNumber: 20,

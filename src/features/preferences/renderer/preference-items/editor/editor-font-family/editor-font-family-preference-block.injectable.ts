@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
-import { LineNumbers } from "./line-numbers";
+import { EditorFontFamily } from "./editor-font-family";
 
-const lineNumbersPreferenceItemInjectable = getInjectable({
-  id: "line-numbers-preference-item",
+const editorFontFamilyPreferenceBlockInjectable = getInjectable({
+  id: "editor-font-family-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
-    id: "line-numbers",
+    kind: "block" as const,
+    id: "editor-font-family",
     parentId: "editor-page",
-    orderNumber: 20,
-    Component: LineNumbers,
+    orderNumber: 50,
+    Component: EditorFontFamily,
   }),
 
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default lineNumbersPreferenceItemInjectable;
+export default editorFontFamilyPreferenceBlockInjectable;

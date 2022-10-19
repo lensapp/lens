@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
-import { EditorFontFamily } from "./editor-font-family";
+import { TabSize } from "./tab-size";
 
-const editorFontFamilyPreferenceItemInjectable = getInjectable({
-  id: "editor-font-family-preference-item",
+const tabSizePreferenceBlockInjectable = getInjectable({
+  id: "tab-size-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
-    id: "editor-font-family",
+    kind: "block" as const,
+    id: "tab-size",
     parentId: "editor-page",
-    orderNumber: 50,
-    Component: EditorFontFamily,
+    orderNumber: 30,
+    Component: TabSize,
   }),
 
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default editorFontFamilyPreferenceItemInjectable;
+export default tabSizePreferenceBlockInjectable;

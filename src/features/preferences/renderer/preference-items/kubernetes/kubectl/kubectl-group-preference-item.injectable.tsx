@@ -20,7 +20,7 @@ const kubectlGroupPreferenceItemInjectable = getInjectable({
   id: "kubectl-group-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "kubectl",
     parentId: "kubernetes-page",
     orderNumber: 10,

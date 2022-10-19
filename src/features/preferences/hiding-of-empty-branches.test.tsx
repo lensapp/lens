@@ -116,7 +116,7 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
           id: "some-preference-item",
 
           instantiate: () => ({
-            kind: "item" as const,
+            kind: "block" as const,
             id: "some-preference-item-id",
             parentId: "some-tab-id" as const,
             testId: "some-preference-item",
@@ -169,7 +169,7 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
             id: "some-other-preference-item",
 
             instantiate: () => ({
-              kind: "item" as const,
+              kind: "block" as const,
               id: "some-other-preference-item-id",
               parentId: "some-other-tab-id" as const,
               testId: "some-other-preference-item",

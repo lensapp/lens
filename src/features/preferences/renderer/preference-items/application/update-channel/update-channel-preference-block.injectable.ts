@@ -6,11 +6,11 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
 import { UpdateChannel } from "./update-channel";
 
-const updateChannelPreferenceItemInjectable = getInjectable({
+const updateChannelPreferenceBlockInjectable = getInjectable({
   id: "update-channel-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "update-channel",
     parentId: "application-page",
     orderNumber: 50,
@@ -20,4 +20,4 @@ const updateChannelPreferenceItemInjectable = getInjectable({
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default updateChannelPreferenceItemInjectable;
+export default updateChannelPreferenceBlockInjectable;

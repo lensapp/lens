@@ -277,7 +277,7 @@ const testPreferenceItemInjectable = getInjectable({
   id: "test-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "test-item",
     parentId: "some-test-tab-id" as const,
     Component: () => <div>irrelevant</div>,

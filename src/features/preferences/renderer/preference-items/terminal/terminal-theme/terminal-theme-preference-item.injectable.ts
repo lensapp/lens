@@ -10,7 +10,7 @@ const terminalThemePreferenceItemInjectable = getInjectable({
   id: "terminal-theme",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "terminal-theme",
     parentId: "terminal-page",
     orderNumber: 30,

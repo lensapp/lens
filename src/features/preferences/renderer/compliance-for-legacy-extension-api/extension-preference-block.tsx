@@ -10,7 +10,7 @@ export interface ExtensionSettingsProps {
   registration: AppPreferenceRegistration;
 }
 
-export function ExtensionPreferenceItem({ registration }: ExtensionSettingsProps) {
+export function ExtensionPreferenceBlock({ registration }: ExtensionSettingsProps) {
   const {
     title,
     id,

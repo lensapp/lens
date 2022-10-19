@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
-import { StartUp } from "./start-up";
+import { LineNumbers } from "./line-numbers";
 
-const startUpPreferenceItemInjectable = getInjectable({
-  id: "start-up-preference-item",
+const lineNumbersPreferenceBlockInjectable = getInjectable({
+  id: "line-numbers-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
-    id: "start-up",
-    parentId: "application-page",
-    orderNumber: 30,
-    Component: StartUp,
+    kind: "block" as const,
+    id: "line-numbers",
+    parentId: "editor-page",
+    orderNumber: 20,
+    Component: LineNumbers,
   }),
 
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default startUpPreferenceItemInjectable;
+export default lineNumbersPreferenceBlockInjectable;

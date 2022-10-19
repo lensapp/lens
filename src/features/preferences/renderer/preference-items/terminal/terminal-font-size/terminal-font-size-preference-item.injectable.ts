@@ -10,7 +10,7 @@ const terminalFontSizePreferenceItemInjectable = getInjectable({
   id: "terminal-font-size-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "terminal-font-size-preference-item",
     parentId: "terminal-page",
     orderNumber: 40,

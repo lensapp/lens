@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
-import { Minimap } from "./minimap";
+import { EditorFontSize } from "./editor-font-size";
 
-const minimapPreferenceItemInjectable = getInjectable({
-  id: "minimap-preference-item",
+const editorFontSizePreferenceBlockInjectable = getInjectable({
+  id: "editor-font-size-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
-    id: "minimap",
+    kind: "block" as const,
+    id: "editor-font-size",
     parentId: "editor-page",
-    orderNumber: 10,
-    Component: Minimap,
+    orderNumber: 40,
+    Component: EditorFontSize,
   }),
 
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default minimapPreferenceItemInjectable;
+export default editorFontSizePreferenceBlockInjectable;

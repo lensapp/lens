@@ -40,17 +40,17 @@ export interface PreferencePage {
   Component: PreferenceItemComponent<PreferencePage>;
 }
 
-export interface PreferenceItem {
-  kind: "item";
+export interface PreferenceBlock {
+  kind: "block";
   id: string;
   parentId: string;
   orderNumber: number;
   isShown?: IComputedValue<boolean> | boolean;
   childSeparator?: () => React.ReactElement;
-  Component: PreferenceItemComponent<PreferenceItem>;
+  Component: PreferenceItemComponent<PreferenceBlock>;
 }
 
-export type PreferenceTypes = PreferenceTabGroup | PreferenceTab | PreferenceItem | PreferencePage;
+export type PreferenceTypes = PreferenceTabGroup | PreferenceTab | PreferenceBlock | PreferencePage;
 
 export const preferenceItemInjectionToken = getInjectionToken<PreferenceTypes>({
   id: "preference-item-injection-token",

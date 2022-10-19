@@ -6,11 +6,11 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { HelmCharts } from "./helm-charts";
 import { preferenceItemInjectionToken } from "../../../../preferences/renderer/preference-items/preference-item-injection-token";
 
-const helmChartsPreferenceItemInjectable = getInjectable({
-  id: "helm-charts-preference-item",
+const helmChartsPreferenceBlockInjectable = getInjectable({
+  id: "helm-charts-preference-block",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "helm-charts",
     parentId: "kubernetes-page",
     orderNumber: 30,
@@ -20,4 +20,4 @@ const helmChartsPreferenceItemInjectable = getInjectable({
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default helmChartsPreferenceItemInjectable;
+export default helmChartsPreferenceBlockInjectable;

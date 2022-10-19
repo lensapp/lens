@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import type { RegisteredAppPreference } from "./app-preferences/app-preference-registration";
 import extensionPreferencesModelInjectable from "./extension-preference-model.injectable";
-import { ExtensionPreferenceItem } from "../../../features/preferences/renderer/compliance-for-legacy-extension-api/extension-preference-item";
+import { ExtensionPreferenceBlock } from "../../../features/preferences/renderer/compliance-for-legacy-extension-api/extension-preference-block";
 
 interface Dependencies {
   model: IComputedValue<{
@@ -36,7 +36,7 @@ const NonInjectedExtensions = ({ model }: Dependencies) => {
         </div>
       )}
       {preferenceItems.map((preferenceItem, index) => (
-        <ExtensionPreferenceItem
+        <ExtensionPreferenceBlock
           key={`${preferenceItem.id}-${index}`}
           registration={preferenceItem}
           data-testid={`extension-preference-item-for-${preferenceItem.id}`}

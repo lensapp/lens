@@ -6,11 +6,11 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../../preference-item-injection-token";
 import { KubectlDirectoryForBinaries } from "./kubectl-directory-for-binaries";
 
-const kubectlDirectoryForBinariesPreferenceItemInjectable = getInjectable({
+const kubectlDirectoryForBinariesPreferenceBlockInjectable = getInjectable({
   id: "kubectl-directory-for-binaries-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "kubectl-directory-for-binaries",
     parentId: "kubectl",
     orderNumber: 30,
@@ -20,4 +20,4 @@ const kubectlDirectoryForBinariesPreferenceItemInjectable = getInjectable({
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default kubectlDirectoryForBinariesPreferenceItemInjectable;
+export default kubectlDirectoryForBinariesPreferenceBlockInjectable;

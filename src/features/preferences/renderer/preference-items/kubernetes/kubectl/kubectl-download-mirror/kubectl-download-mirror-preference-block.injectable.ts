@@ -6,11 +6,11 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../../preference-item-injection-token";
 import { KubectlDownloadMirror } from "./kubectl-download-mirror";
 
-const kubectlDownloadMirrorPreferenceItemInjectable = getInjectable({
+const kubectlDownloadMirrorPreferenceBlockInjectable = getInjectable({
   id: "kubectl-download-mirror-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "kubectl-download-mirror",
     parentId: "kubectl",
     orderNumber: 20,
@@ -20,4 +20,4 @@ const kubectlDownloadMirrorPreferenceItemInjectable = getInjectable({
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default kubectlDownloadMirrorPreferenceItemInjectable;
+export default kubectlDownloadMirrorPreferenceBlockInjectable;

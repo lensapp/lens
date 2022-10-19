@@ -53,7 +53,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
   const value = composite.value;
 
   switch (value.kind) {
-    case "item": {
+    case "block": {
       const Component = value.Component;
 
       return (

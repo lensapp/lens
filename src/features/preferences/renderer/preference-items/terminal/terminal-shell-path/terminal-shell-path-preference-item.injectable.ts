@@ -10,7 +10,7 @@ const terminalShellPathPreferenceItemInjectable = getInjectable({
   id: "terminal-shell-path-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
+    kind: "block" as const,
     id: "terminal-shell-path",
     parentId: "terminal-page",
     orderNumber: 10,

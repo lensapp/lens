@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
-import { KubeconfigSync } from "./kubeconfig-sync";
+import { HttpProxyUrl } from "./http-proxy-url";
 
-const kubeconfigSyncPreferenceItemInjectable = getInjectable({
-  id: "kubeconfig-sync-preference-item",
+const httpProxyUrlPreferenceBlockInjectable = getInjectable({
+  id: "http-proxy-url-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
-    id: "kubeconfig-sync",
-    parentId: "kubernetes-page",
-    orderNumber: 20,
-    Component: KubeconfigSync,
+    kind: "block" as const,
+    id: "http-proxy-url",
+    parentId: "proxy-page",
+    orderNumber: 10,
+    Component: HttpProxyUrl,
   }),
 
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default kubeconfigSyncPreferenceItemInjectable;
+export default httpProxyUrlPreferenceBlockInjectable;

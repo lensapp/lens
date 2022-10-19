@@ -14,7 +14,7 @@ const automaticErrorReportingPreferenceItemInjectable = getInjectable({
     const sentryDnsUrl = di.inject(sentryDataSourceNameInjectable);
 
     return {
-      kind: "item" as const,
+      kind: "block" as const,
       id: "automatic-error-reporting",
       parentId: "telemetry-page",
       orderNumber: 20,

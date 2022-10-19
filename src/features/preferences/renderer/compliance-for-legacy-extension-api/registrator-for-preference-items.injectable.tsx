@@ -8,7 +8,7 @@ import type { LensRendererExtension } from "../../../../extensions/lens-renderer
 import { preferenceItemInjectionToken } from "../preference-items/preference-item-injection-token";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import { PreferencePageComponent } from "../preference-page-component";
-import { ExtensionPreferenceItem } from "./extension-preference-item";
+import { ExtensionPreferenceBlock } from "./extension-preference-block";
 import { computed } from "mobx";
 import { HorizontalLine } from "../horizontal-line/horizontal-line";
 
@@ -117,7 +117,7 @@ const registratorForPreferenceItemsInjectable = getInjectable({
         id: itemId,
 
         instantiate: () => ({
-          kind: "item" as const,
+          kind: "block" as const,
           id: itemId,
 
           // Note: Legacy extensions considered telemetry as magic string, and so does this code
@@ -130,7 +130,7 @@ const registratorForPreferenceItemsInjectable = getInjectable({
           orderNumber: i * 10,
 
           Component: () => (
-            <ExtensionPreferenceItem registration={registration} />
+            <ExtensionPreferenceBlock registration={registration} />
           ),
 
           childSeparator: HorizontalLine,

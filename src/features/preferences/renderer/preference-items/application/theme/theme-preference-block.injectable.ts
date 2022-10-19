@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
-import { ExtensionInstallRegistry } from "./extension-install-registry";
+import { Theme } from "./theme";
 
-const extensionInstallRegistryPreferenceItemInjectable = getInjectable({
-  id: "extension-install-registry-preference-item",
+const themePreferenceBlockInjectable = getInjectable({
+  id: "theme-preference-item",
 
   instantiate: () => ({
-    kind: "item" as const,
-    id: "extension-install-registry",
+    kind: "block" as const,
+    id: "theme",
     parentId: "application-page",
-    orderNumber: 20,
-    Component: ExtensionInstallRegistry,
+    orderNumber: 10,
+    Component: Theme,
   }),
 
   injectionToken: preferenceItemInjectionToken,
 });
 
-export default extensionInstallRegistryPreferenceItemInjectable;
+export default themePreferenceBlockInjectable;
