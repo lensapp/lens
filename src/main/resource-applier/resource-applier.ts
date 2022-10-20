@@ -63,7 +63,7 @@ export class ResourceApplier {
       return result.response;
     }
 
-    throw result.error.stderr || result.error.error;
+    throw result.error.stderr || result.error.message;
   }
 
   async create(resource: string): Promise<string> {
@@ -102,7 +102,7 @@ export class ResourceApplier {
         return result.response;
       }
 
-      throw result.error.stderr || result.error.error;
+      throw result.error.stderr || result.error.message;
     } finally {
       await this.dependencies.deleteFile(fileName);
     }
@@ -141,11 +141,11 @@ export class ResourceApplier {
       return result.response;
     }
 
-    this.dependencies.logger.error(`[RESOURCE-APPLIER] kubectl errored: ${result.error.error}`);
+    this.dependencies.logger.error(`[RESOURCE-APPLIER] kubectl errored: ${result.error.message}`);
 
     const splitError = result.error.stderr.split(`.yaml": `);
 
-    throw splitError[1] || result.error.error;
+    throw splitError[1] || result.error.message;
   }
 
   protected sanitizeObject(resource: string) {

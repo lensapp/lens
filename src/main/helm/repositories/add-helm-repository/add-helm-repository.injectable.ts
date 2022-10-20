@@ -65,7 +65,7 @@ const addHelmRepositoryInjectable = getInjectable({
 
       return {
         callWasSuccessful: false,
-        error: result.error.stderr || result.error.error.message,
+        error: result.error.stderr || result.error.message,
       };
     };
   },

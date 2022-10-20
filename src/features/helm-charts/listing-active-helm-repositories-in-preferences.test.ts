@@ -85,10 +85,9 @@ describe("listing active helm repositories in preferences", () => {
       beforeEach(async () => {
         await execFileMock.resolve({
           callWasSuccessful: false,
-          error: {
-            error: new Error("some error"),
+          error: Object.assign(new Error("Some error"), {
             stderr: "some-error",
-          },
+          }),
         });
       });
 
@@ -235,10 +234,9 @@ describe("listing active helm repositories in preferences", () => {
         beforeEach(async () => {
           await execFileMock.resolve({
             callWasSuccessful: false,
-            error: {
-              error: new Error("Some error"),
+            error: Object.assign(new Error("Some error"), {
               stderr: "Some error",
-            },
+            }),
           });
         });
 
@@ -271,10 +269,9 @@ describe("listing active helm repositories in preferences", () => {
 
           await execFileMock.resolve({
             callWasSuccessful: false,
-            error: {
-              error: new Error("no repositories found. You must add one before updating"),
+            error: Object.assign(new Error("no repositories found. You must add one before updating"), {
               stderr: "no repositories found. You must add one before updating",
-            },
+            }),
           });
         });
 
@@ -300,10 +297,9 @@ describe("listing active helm repositories in preferences", () => {
           beforeEach(async () => {
             await execFileMock.resolve({
               callWasSuccessful: false,
-              error: {
-                error: new Error("Some error"),
+              error: Object.assign(new Error("Some error"), {
                 stderr: "Some error",
-              },
+              }),
             });
           });
 
