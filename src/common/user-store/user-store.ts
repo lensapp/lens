@@ -11,6 +11,8 @@ import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
+
+// TODO: Remove coupling with Feature
 import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 
