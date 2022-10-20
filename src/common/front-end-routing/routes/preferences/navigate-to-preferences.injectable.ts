@@ -13,7 +13,10 @@ const navigateToPreferencesInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const preferencesRoute = di.inject(preferencesRouteInjectable);
 
-    return () => navigateToRoute(preferencesRoute);
+    return (tabId?: string) =>
+      navigateToRoute(preferencesRoute, {
+        parameters: tabId ? { preferenceTabId: tabId } : {},
+      });
   },
 });
 

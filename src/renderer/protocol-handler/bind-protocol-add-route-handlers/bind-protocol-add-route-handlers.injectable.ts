@@ -11,8 +11,8 @@ import navigateToAddClusterInjectable from "../../../common/front-end-routing/ro
 import navigateToExtensionsInjectable from "../../../common/front-end-routing/routes/extensions/navigate-to-extensions.injectable";
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import navigateToClusterViewInjectable from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
-import navigateToPreferenceTabIdInjectable from "./navigate-to-preference-tab-id.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
 
 const bindProtocolAddRouteHandlersInjectable = getInjectable({
   id: "bind-protocol-add-route-handlers",
@@ -25,7 +25,7 @@ const bindProtocolAddRouteHandlersInjectable = getInjectable({
     navigateToExtensions: di.inject(navigateToExtensionsInjectable),
     navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
     navigateToClusterView: di.inject(navigateToClusterViewInjectable),
-    navigateToPreferenceTabId: di.inject(navigateToPreferenceTabIdInjectable),
+    navigateToPreferences: di.inject(navigateToPreferencesInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
   }),
 });
