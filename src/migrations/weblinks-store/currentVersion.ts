@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { lensSlackWeblinkId, slackUrl } from "../../common/vars";
+import { docsUrl, lensDocumentationWeblinkId, lensSlackWeblinkId, slackUrl } from "../../common/vars";
 import type { WeblinkData } from "../../common/weblink-store";
 import type { MigrationDeclaration } from "../helpers";
 import packageJson from "../../../package.json";
@@ -18,6 +18,12 @@ export default {
 
     if (slackWeblink) {
       slackWeblink.url = slackUrl;
+    }
+
+    const docsWeblink = weblinks.find(weblink => weblink.id === lensDocumentationWeblinkId);
+
+    if (docsWeblink) {
+      docsWeblink.url = docsUrl;
     }
 
     store.set("weblinks", weblinks);
