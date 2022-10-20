@@ -15,6 +15,7 @@ import { PreferencesNavigationTab } from "./preferences-navigation-tab";
 import { compositeHasDescendant } from "../../../../common/utils/composite/composite-has-descendant/composite-has-descendant";
 import type { PreferenceTabsRoot } from "../preference-items/preference-tab-root";
 import { Icon } from "../../../../renderer/components/icon";
+import { checkThatAllDiscriminablesAreExhausted } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
 
 interface Dependencies {
   composite: IComputedValue<Composite<PreferenceTypes | PreferenceTabsRoot>>;
@@ -88,16 +89,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
     }
 
     default: {
-      // Note: this will fail at transpilation time, if all kinds
-      // are not handled in switch/case.
-      const _exhaustiveCheck: never = value;
-
-      // Note: this code is unreachable, it is here to make ts not complain about
-      // _exhaustiveCheck not being used.
-      // See: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
-      throw new Error(
-        `Tried to create preference navigation, but foreign item was encountered: ${_exhaustiveCheck} ${composite.value}`,
-      );
+      throw checkThatAllDiscriminablesAreExhausted(value);
     }
   }
 };
@@ -107,4 +99,5 @@ const hasContent = compositeHasDescendant<PreferenceTypes | PreferenceTabsRoot>(
 );
 
 const emptyRender = <></>;
+
 

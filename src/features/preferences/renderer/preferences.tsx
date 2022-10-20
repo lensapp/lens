@@ -16,6 +16,7 @@ import { Map } from "../../../renderer/components/map/map";
 import { observer } from "mobx-react";
 import { PreferencesNavigation } from "./preference-navigation/preferences-navigation";
 import Gutter from "../../../renderer/components/gutter/gutter";
+import { checkThatAllDiscriminablesAreExhausted } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
 
 interface Dependencies {
   closePreferences: () => void;
@@ -94,16 +95,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
     }
 
     default: {
-      // Note: this will fail at transpilation time, if all kinds
-      // are not handled in switch/case.
-      const _exhaustiveCheck: never = value;
-
-      // Note: this code is unreachable, it is here to make ts not complain about
-      // _exhaustiveCheck not being used.
-      // See: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
-      throw new Error(
-        `Tried to create preferences, but foreign item was encountered: ${_exhaustiveCheck} ${value}`,
-      );
+      throw checkThatAllDiscriminablesAreExhausted(value);
     }
   }
 };

@@ -10,6 +10,7 @@ import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-ite
 import { pipeline } from "@ogre-tools/fp";
 import { map, sortBy } from "lodash/fp";
 import type { MenuItemRoot } from "./application-menu-item-composite.injectable";
+import { checkThatAllDiscriminablesAreExhausted } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
 
 const populateApplicationMenuInjectable = getInjectable({
   id: "populate-application-menu",
@@ -32,12 +33,12 @@ export default populateApplicationMenuInjectable;
 const toHierarchicalElectronMenuItem = (
   composite: Composite<ApplicationMenuItemTypes>,
 ): MenuItemOpts => {
-  switch (composite.value.kind) {
+  const value = composite.value;
+
+  switch (value.kind) {
     case "top-level-menu": {
-      const {
-        id,
-        value: { label, role },
-      } = composite;
+      const { id } = composite;
+      const { label, role } = value;
 
       return {
         ...(id ? { id } : {}),
@@ -53,10 +54,8 @@ const toHierarchicalElectronMenuItem = (
     }
 
     case "sub-menu": {
-      const {
-        id,
-        value: { label },
-      } = composite;
+      const { id } = composite;
+      const { label } = value;
 
       return {
         ...(id ? { id } : {}),
@@ -71,10 +70,8 @@ const toHierarchicalElectronMenuItem = (
     }
 
     case "clickable-menu-item": {
-      const {
-        id,
-        value: { label, onClick, keyboardShortcut },
-      } = composite;
+      const { id } = composite;
+      const { label, onClick, keyboardShortcut } = value;
 
       return {
         ...(id ? { id } : {}),
@@ -85,9 +82,7 @@ const toHierarchicalElectronMenuItem = (
     }
 
     case "os-action-menu-item": {
-      const {
-        value: { label, keyboardShortcut, actionName },
-      } = composite;
+      const { label, keyboardShortcut, actionName } = value;
 
       return {
         ...(label ? { label } : {}),
@@ -103,14 +98,7 @@ const toHierarchicalElectronMenuItem = (
     }
 
     default: {
-      // Note: this will fail at transpilation time, if all ApplicationMenuItemTypes
-      // are not handled in switch/case.
-      const _exhaustiveCheck: never = composite.value;
-
-      // Note: this code is unreachable, it is here to make ts not complain about
-      // _exhaustiveCheck not being used.
-      // See: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
-      throw new Error(`Tried to create application menu, but foreign menu item was encountered: ${_exhaustiveCheck} ${composite.value}`);
+      throw checkThatAllDiscriminablesAreExhausted(value);
     }
   }
 };
