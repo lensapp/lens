@@ -15,7 +15,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import commandOverlayInjectable from "../command-overlay.injectable";
 import createTerminalTabInjectable from "../../dock/terminal/create-terminal-tab.injectable";
 import type { DockTabCreate } from "../../dock/dock/store";
-import navigateToPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import navigateToPreferencesInjectable from "../../../../features/preferences/common/navigate-to-preferences.injectable";
 import navigateToHelmChartsInjectable from "../../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmReleasesInjectable from "../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToConfigMapsInjectable from "../../../../common/front-end-routing/routes/cluster/config/config-maps/navigate-to-config-maps.injectable";

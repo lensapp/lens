@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
-import navigateToPreferencesInjectable from "../../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import navigateToPreferencesInjectable from "../../../../features/preferences/common/navigate-to-preferences.injectable";
 import { computed } from "mobx";
 import { withErrorSuppression } from "../../../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";

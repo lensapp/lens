@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemInjectionToken from "../../application-menu-item-injection-token";
-import navigateToPreferencesInjectable from "../../../../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import navigateToPreferencesInjectable from "../../../../../preferences/common/navigate-to-preferences.injectable";
 import isMacInjectable from "../../../../../../common/vars/is-mac.injectable";
 
 const navigateToPreferencesMenuItemInjectable = getInjectable({

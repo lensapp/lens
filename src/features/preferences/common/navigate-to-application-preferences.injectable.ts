@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import navigateToPreferencesInjectable from "./navigate-to-preferences.injectable";
 
 const navigateToApplicationPreferencesInjectable = getInjectable({
   id: "navigate-to-application-preferences",

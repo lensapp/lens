@@ -12,7 +12,7 @@ import navigateToExtensionsInjectable from "../../../common/front-end-routing/ro
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import navigateToClusterViewInjectable from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
-import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
+import navigateToPreferencesInjectable from "../../../features/preferences/common/navigate-to-preferences.injectable";
 
 const bindProtocolAddRouteHandlersInjectable = getInjectable({
   id: "bind-protocol-add-route-handlers",
