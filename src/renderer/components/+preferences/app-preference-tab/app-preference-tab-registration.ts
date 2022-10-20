@@ -11,4 +11,3 @@ export interface AppPreferenceTabRegistration {
   orderNumber?: number;
   visible?: IComputedValue<boolean>;
 }
-
