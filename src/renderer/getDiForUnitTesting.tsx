@@ -95,7 +95,6 @@ export const getDiForUnitTesting = (
     [
       startTopbarStateSyncInjectable,
       setupSystemCaInjectable,
-      setupOnApiErrorListenersInjectable
     ].forEach((injectable) => {
       di.override(injectable, () => ({
         id: injectable.id,
@@ -159,7 +158,6 @@ export const getDiForUnitTesting = (
     }) as unknown as HotbarStore);
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-    di.override(defaultShellInjectable, () => "some-default-shell");
 
     di.override(userStoreInjectable, () => ({
       isTableColumnHidden: () => false,
