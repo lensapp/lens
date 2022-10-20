@@ -201,6 +201,7 @@ exports[`extendability-using-extension-api given an extension with a weakly type
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -429,6 +430,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -648,6 +650,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -867,6 +870,7 @@ exports[`extendability-using-extension-api renders 1`] = `
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

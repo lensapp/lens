@@ -685,6 +685,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1408,6 +1409,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -2143,6 +2145,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
