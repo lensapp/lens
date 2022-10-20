@@ -7,6 +7,7 @@ import { getGlobalOverride } from "../test-utils/get-global-override";
 import applicationInformationInjectable from "./application-information.injectable";
 
 export default getGlobalOverride(applicationInformationInjectable, () => ({
+  name: "some-product-name",
   productName: "some-product-name",
   version: "6.0.0",
   build: {},
