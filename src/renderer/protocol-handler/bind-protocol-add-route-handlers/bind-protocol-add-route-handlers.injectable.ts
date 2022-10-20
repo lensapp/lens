@@ -12,6 +12,8 @@ import navigateToExtensionsInjectable from "../../../common/front-end-routing/ro
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import navigateToClusterViewInjectable from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+
+// TODO: Importing from features is not OK. Make protocol-router to comply with Open Closed Principle to allow moving implementation under a feature
 import navigateToPreferencesInjectable from "../../../features/preferences/common/navigate-to-preferences.injectable";
 
 const bindProtocolAddRouteHandlersInjectable = getInjectable({
