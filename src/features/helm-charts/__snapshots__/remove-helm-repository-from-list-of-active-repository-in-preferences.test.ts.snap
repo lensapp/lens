@@ -154,13 +154,6 @@ exports[`remove helm repository from list of active repositories in preferences 
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -802,13 +795,6 @@ exports[`remove helm repository from list of active repositories in preferences 
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>
@@ -1463,13 +1449,6 @@ exports[`remove helm repository from list of active repositories in preferences 
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -2122,13 +2101,6 @@ exports[`remove helm repository from list of active repositories in preferences 
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>

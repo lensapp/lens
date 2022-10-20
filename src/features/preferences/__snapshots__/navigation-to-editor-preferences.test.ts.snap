@@ -153,13 +153,6 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -848,13 +841,6 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                     Terminal
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>

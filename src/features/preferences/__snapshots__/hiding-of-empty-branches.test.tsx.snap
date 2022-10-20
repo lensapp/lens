@@ -153,20 +153,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -883,13 +869,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                     Some tab label
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>
@@ -1619,13 +1598,6 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                     Some other tab label
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>

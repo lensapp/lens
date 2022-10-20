@@ -38,11 +38,6 @@ export const PreferencesNavigation = withInjectables<Dependencies>(
 );
 
 const toNavigationHierarchy = (composite: Composite<PreferenceTypes | PreferenceTabsRoot>) => {
-  // Note: This makes tab groups and tabs without content not render anything in navigation.
-  if (!hasContent(composite)) {
-    return emptyRender;
-  }
-
   const value = composite.value;
 
   switch (value.kind) {
@@ -65,13 +60,14 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
               <Icon
                 material={value.iconName}
                 smallest
-                className="mr-3"
-              />
+                className="mr-3" />
             )}
             {value.label}
           </div>
 
-          <Map items={composite.children}>{toNavigationHierarchy}</Map>
+          <Map items={composite.children.filter(hasContent)}>
+            {toNavigationHierarchy}
+          </Map>
         </div>
       );
     }
@@ -84,7 +80,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
       return (
         <Map
           // Note: stricter typing for composite children could maybe remove this curiosity.
-          items={composite.children as Composite<PreferenceTypes>[]}
+          items={composite.children.filter(hasContent) as Composite<PreferenceTypes>[]}
           getSeparator={value.childSeparator}
         >
           {toNavigationHierarchy}

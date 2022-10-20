@@ -374,13 +374,6 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>

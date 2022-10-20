@@ -154,13 +154,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -802,13 +795,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>
@@ -1452,13 +1438,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -1992,13 +1971,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>
@@ -2642,13 +2614,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -3182,13 +3147,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>
@@ -3831,13 +3789,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>
@@ -4526,13 +4477,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -5067,13 +5011,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -5607,13 +5544,6 @@ exports[`listing active helm repositories in preferences when navigating to pref
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>

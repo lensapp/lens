@@ -166,13 +166,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>
@@ -875,13 +868,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -1208,13 +1194,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -1540,13 +1519,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                     Metrics tab
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>
@@ -2201,13 +2173,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                     Terminal
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>
@@ -3965,13 +3930,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>

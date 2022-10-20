@@ -165,13 +165,6 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -873,13 +866,6 @@ exports[`preferences - closing-preferences given accessing preferences directly 
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -1444,13 +1430,6 @@ exports[`preferences - closing-preferences given already in a page and then navi
                     Test tab
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>
@@ -2152,13 +2131,6 @@ exports[`preferences - closing-preferences given already in a page and then navi
                     Test tab
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>

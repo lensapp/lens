@@ -178,13 +178,6 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                     </div>
                   </div>
                 </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
-                </div>
               </div>
             </div>
           </nav>

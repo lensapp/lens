@@ -153,13 +153,6 @@ exports[`preferences - navigation to application preferences given in some child
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -500,13 +493,6 @@ exports[`preferences - navigation to application preferences given in some child
                     Terminal
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>
@@ -1197,13 +1183,6 @@ exports[`preferences - navigation to application preferences given in some child
                       Terminal
                     </div>
                   </div>
-                </div>
-                <div
-                  style="padding: 0px 10px;"
-                >
-                  <div
-                    class="HorizontalLine size-sm"
-                  />
                 </div>
               </div>
             </div>

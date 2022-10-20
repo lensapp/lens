@@ -165,13 +165,6 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -483,13 +476,6 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     Terminal
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>
@@ -1192,13 +1178,6 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -1900,13 +1879,6 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   </div>
                 </div>
               </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
-              </div>
             </div>
           </div>
         </nav>
@@ -2208,13 +2180,6 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
                     Terminal
                   </div>
                 </div>
-              </div>
-              <div
-                style="padding: 0px 10px;"
-              >
-                <div
-                  class="HorizontalLine size-sm"
-                />
               </div>
             </div>
           </div>
