@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationMenuItemInjectionToken from "../../application-menu-item-injection-token";
-import navigateToPreferencesInjectable from "../../../../../preferences/common/navigate-to-preferences.injectable";
+import applicationMenuItemInjectionToken from "../../../../../application-menu/main/menu-items/application-menu-item-injection-token";
+import navigateToPreferencesInjectable from "../../../../common/navigate-to-preferences.injectable";
 import isMacInjectable from "../../../../../../common/vars/is-mac.injectable";
 
 const navigateToPreferencesMenuItemInjectable = getInjectable({
