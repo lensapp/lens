@@ -53,7 +53,6 @@ export class ContextHandler implements ClusterContextHandler {
 
   constructor(private dependencies: Dependencies, protected cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
-    this.setupPrometheus(cluster.preferences);
   }
 
   public setupPrometheus(preferences: ClusterPrometheusPreferences = {}) {
@@ -94,6 +93,8 @@ export class ContextHandler implements ClusterContextHandler {
   }
 
   protected async getPrometheusService(): Promise<PrometheusService> {
+    this.setupPrometheus(this.cluster.preferences);
+
     if (this.prometheus && this.prometheusProvider) {
       return {
         id: this.prometheusProvider,
