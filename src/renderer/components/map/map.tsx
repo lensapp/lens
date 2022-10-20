@@ -5,6 +5,7 @@
 import { pipeline } from "@ogre-tools/fp";
 import { identity, map } from "lodash/fp";
 import React from "react";
+import type { GetSeparator } from "../../../common/utils/add-separator/add-separator";
 import { addSeparator } from "../../../common/utils/add-separator/add-separator";
 
 interface RequiredPropertiesForItem {
@@ -15,7 +16,7 @@ interface MapProps<Item extends RequiredPropertiesForItem> {
   items: Item[];
   children: (item: Item) => React.ReactElement;
   getPlaceholder?: () => React.ReactElement;
-  getSeparator?: () => React.ReactElement;
+  getSeparator?: GetSeparator<Item, React.ReactElement>;
 }
 
 export const Map = <Item extends RequiredPropertiesForItem>(
@@ -42,7 +43,7 @@ export const Map = <Item extends RequiredPropertiesForItem>(
                   id: `separator-between-${left.item.id}-and-${right.item.id}`,
                 },
 
-                render: getSeparator,
+                render: () => getSeparator(left.item, right.item),
               }),
 
               items,

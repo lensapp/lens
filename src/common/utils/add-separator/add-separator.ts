@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-type GetSeparator<Item, Separator> = (left: Item, right: Item) => Separator;
+export type GetSeparator<Item, Separator> = (left: Item, right: Item) => Separator;
 
 export const addSeparator = <Item, Separator>(
   getSeparator: GetSeparator<Item, Separator>,

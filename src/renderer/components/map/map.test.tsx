@@ -118,4 +118,42 @@ describe("Map", () => {
       expect(rendered.getAllByTestId("separator")).toHaveLength(2);
     });
   });
+
+  describe("given more than one item and separator using left and right", () => {
+    let rendered: RenderResult;
+
+    beforeEach(() => {
+      rendered = render(
+        <Map
+          items={[
+            { id: "some-item-id" },
+            { id: "some-other-item-id" },
+            { id: "some-another-item-id" },
+          ]}
+          getSeparator={(left, right) => (
+            <div data-testid={`separator-between-${left.id}-and-${right.id}`}>
+              Some separator between
+              {left.id}
+              and
+              {right.id}
+            </div>
+          )}
+        >
+          {(item) => <div data-testid={item.id} />}
+        </Map>,
+      );
+    });
+
+    it("renders", () => {
+      expect(rendered.baseElement).toMatchSnapshot();
+    });
+
+    it("renders items", () => {
+      expect(rendered.getByTestId("some-item-id")).toBeInTheDocument();
+    });
+
+    it("renders separator", () => {
+      expect(rendered.getByTestId("separator-between-some-item-id-and-some-other-item-id")).toBeInTheDocument();
+    });
+  });
 });

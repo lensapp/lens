@@ -39,6 +39,38 @@ exports[`Map given more than one item and separator renders 1`] = `
 </body>
 `;
 
+exports[`Map given more than one item and separator using left and right renders 1`] = `
+<body>
+  <div>
+    <div
+      data-testid="some-item-id"
+    />
+    <div
+      data-testid="separator-between-some-item-id-and-some-other-item-id"
+    >
+      Some separator between
+      some-item-id
+      and
+      some-other-item-id
+    </div>
+    <div
+      data-testid="some-other-item-id"
+    />
+    <div
+      data-testid="separator-between-some-other-item-id-and-some-another-item-id"
+    >
+      Some separator between
+      some-other-item-id
+      and
+      some-another-item-id
+    </div>
+    <div
+      data-testid="some-another-item-id"
+    />
+  </div>
+</body>
+`;
+
 exports[`Map given no items and placeholder renders 1`] = `
 <body>
   <div>
