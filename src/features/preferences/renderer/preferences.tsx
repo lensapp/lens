@@ -79,7 +79,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
         <Component item={value}>
           <Map
             items={composite.children}
-            getSeparator={value.childSeparator || DefaultSeparator}
+            getSeparator={value.childSeparator || defaultSeparator}
           >
             {toPreferenceItemHierarchy}
           </Map>
@@ -112,4 +112,4 @@ export const Preferences = withInjectables<Dependencies>(
   },
 );
 
-const DefaultSeparator = () => <Gutter size="xl" />;
+const defaultSeparator = () => <Gutter size="xl" />;

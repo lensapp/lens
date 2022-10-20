@@ -7,12 +7,13 @@ import { HorizontalLine } from "../../../../renderer/components/horizontal-line/
 import type { RootComposite } from "../../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import type { Showable } from "../../../../common/utils/composable-responsibilities/showable/showable";
+import type { ChildrenAreSeparated } from "./preference-item-injection-token";
 
 export type PreferenceTabsRoot =
   & Discriminable<"preference-tabs-root">
   & RootComposite
-  & Showable<true>
-  & { childSeparator: () => React.ReactElement };
+  & ChildrenAreSeparated
+  & Showable<true>;
 
 export const preferenceTabsRoot: PreferenceTabsRoot = {
   kind: "preference-tabs-root" as const,

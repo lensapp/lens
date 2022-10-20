@@ -9,6 +9,14 @@ import type { Discriminable } from "../../../../common/utils/composable-responsi
 import type { Labelable } from "../../../../common/utils/composable-responsibilities/labelable/labelable";
 import type { Showable } from "../../../../common/utils/composable-responsibilities/showable/showable";
 import type { Orderable } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
+import type { GetSeparator } from "../../../../common/utils/add-separator/add-separator";
+import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
+
+export type ChildrenAreSeparated =
+  & { childSeparator: GetSeparator<Composite<PreferenceTypes>, React.ReactElement> };
+
+export type ChildrenAreMaybeSeparated =
+  & Partial<ChildrenAreSeparated>;
 
 export type PreferenceItemComponent<T> = React.ComponentType<{
   children: React.ReactElement;
@@ -33,8 +41,8 @@ export type PreferenceTabGroup =
   & Orderable
   & { iconName? : string };
 
-interface RenderableWithSiblings<T extends PreferenceTypes> {
-  childSeparator?: () => React.ReactElement;
+interface RenderableWithSiblings<T extends PreferenceTypes>
+  extends ChildrenAreMaybeSeparated {
   Component: PreferenceItemComponent<T>;
 }
 

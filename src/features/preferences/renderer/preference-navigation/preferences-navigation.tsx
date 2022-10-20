@@ -82,7 +82,11 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
 
     case "preference-tabs-root": {
       return (
-        <Map items={composite.children} getSeparator={value.childSeparator}>
+        <Map
+          // Note: stricter typing for composite children could maybe remove this curiosity.
+          items={composite.children as Composite<PreferenceTypes>[]}
+          getSeparator={value.childSeparator}
+        >
           {toNavigationHierarchy}
         </Map>
       );

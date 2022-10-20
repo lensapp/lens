@@ -23,7 +23,7 @@ const applicationPreferencePageInjectable = getInjectable({
     id: "application-page",
     parentId: "application-tab",
     Component: ApplicationPage,
-    childSeparator: HorizontalLine,
+    childSeparator: () => <HorizontalLine />,
   }),
 
   injectionToken: preferenceItemInjectionToken,
