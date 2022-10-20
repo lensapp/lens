@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { SubTitle } from "../../../../renderer/components/layout/sub-title";
-import type { AppPreferenceRegistration } from "../../../../renderer/components/+preferences/app-preferences/app-preference-registration";
+import type { AppPreferenceRegistration } from "./app-preference-registration";
 import React from "react";
 
 export interface ExtensionSettingsProps {
