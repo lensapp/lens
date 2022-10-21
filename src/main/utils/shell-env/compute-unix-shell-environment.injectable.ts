@@ -38,17 +38,12 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
     } else {
       command = `'${process.execPath}' -p '"${mark}" + JSON.stringify(process.env) + "${mark}"'`;
 
-      if (shellName === "tcsh") {
-        shellArgs = ["-ic"];
-      } else {
-        shellArgs = ["-ilc"];
-      }
+      shellArgs = ["-l"];
     }
 
     return new Promise((resolve, reject) => {
-      const shellProcess = spawn(shell, [...shellArgs, command], {
+      const shellProcess = spawn(shell, [...shellArgs], {
         detached: true,
-        stdio: ["ignore", "pipe", "pipe"],
         env,
       });
       const stdout: Buffer[] = [];
@@ -57,6 +52,10 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
 
       shellProcess.on("error", (err) => reject(err));
       shellProcess.stdout.on("data", b => stdout.push(b));
+
+      shellProcess.stdin.write(command);
+      shellProcess.stdin.end(command);
+
       shellProcess.on("close", (code, signal) => {
         if (code || signal) {
           return reject(new Error(`Unexpected return code from spawned shell (code: ${code}, signal: ${signal})`));
@@ -64,6 +63,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
 
         try {
           const rawOutput = Buffer.concat(stdout).toString("utf-8");
+
           const match = regex.exec(rawOutput);
           const strippedRawOutput = match ? match[1] : "{}";
           const resolvedEnv = JSON.parse(strippedRawOutput);
