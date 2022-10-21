@@ -36,7 +36,11 @@ describe("preferences - navigation using application menu", () => {
 
   describe("when navigating to preferences using application menu", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click("root.mac.navigate-to-preferences");
+      applicationBuilder.applicationMenu.click(
+        "root",
+        "mac",
+        "navigate-to-preferences",
+      );
     });
 
     it("renders", () => {

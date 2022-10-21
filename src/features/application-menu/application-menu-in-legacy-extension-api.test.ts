@@ -107,7 +107,7 @@ describe("application-menu-in-legacy-extension-api", () => {
 
     it("when the extension-based clickable menu item is clicked, does so", () => {
       builder.applicationMenu.click(
-        "root.some-top-menu-item.some-extension-name/some-clickable-item",
+        "root", "some-top-menu-item", "some-extension-name/some-clickable-item",
       );
 
       expect(onClickMock).toHaveBeenCalled();

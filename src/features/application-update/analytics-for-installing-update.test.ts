@@ -142,7 +142,7 @@ describe("analytics for installing update", () => {
     it("when checking for updates using application menu, sends event to analytics for being checked from application menu", async () => {
       analyticsListenerMock.mockClear();
 
-      builder.applicationMenu.click("root.mac.check-for-updates");
+      builder.applicationMenu.click("root", "mac", "check-for-updates");
 
       expect(analyticsListenerMock.mock.calls).toEqual([
         [

@@ -66,10 +66,8 @@ import { Namespace } from "../../../common/k8s-api/endpoints";
 import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
 import { getCompositePaths } from "../../../common/utils/composite/get-composite-paths/get-composite-paths";
-import { getCompositeNormalization } from "../../../common/utils/composite/get-composite-normalization/get-composite-normalization";
-import type { ClickableMenuItem } from "../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
-import type { Composite } from "../../../common/utils/composite/get-composite/get-composite";
 import { discoverFor } from "./discovery-of-html-elements";
+import { findComposite } from "../../../common/utils/composite/find-composite/find-composite";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -128,7 +126,7 @@ export interface ApplicationBuilder {
   };
 
   applicationMenu: {
-    click: (path: string) => void;
+    click: (...path: string[]) => void;
     items: string[];
   };
   preferences: {
@@ -354,26 +352,19 @@ export const getApplicationBuilder = () => {
         return getCompositePaths(composite);
       },
 
-      click: (path: string) => {
+      click: (...path: string[]) => {
         const composite = mainDi.inject(
           applicationMenuItemCompositeInjectable,
         ).get();
 
-        const clickableMenuItems = getCompositeNormalization(composite).filter(isClickableMenuItem);
-        const clickableMenuItemMap = new Map(clickableMenuItems);
-        // TODO: find out why this any!? The typing of above map is strict, so why map.get() isn't?
-        const clickableMenuItem = clickableMenuItemMap.get(path);
+        const clickableMenuItem = findComposite(...path)(composite).value;
 
-        if (clickableMenuItem === undefined) {
-          const clickableIds = [...clickableMenuItemMap.keys()];
-
-          throw new Error(
-            `Tried to click application menu item with unknown path "${path}". Available clickable paths are: \n"${clickableIds.join('",\n"')}"`,
-          );
+        if(clickableMenuItem.kind === "clickable-menu-item") {
+          // Todo: prevent leaking of Electron
+          (clickableMenuItem.onClick as any)();
+        } else {
+          throw new Error(`Tried to trigger clicking of an application menu item, but item at path '${path.join(" -> ")}' isn't clickable.`);
         }
-
-        // Todo: prevent leaking of Electron.
-        (clickableMenuItem.value as any).onClick();
       },
     },
 
@@ -868,10 +859,3 @@ const disableExtensionFor =
         extensionsState.delete(id);
       });
     };
-
-const isClickableMenuItem = (
-  pathAndComposite: readonly [path: string, composite: any],
-): pathAndComposite is [string, Composite<ClickableMenuItem>] =>
-  pathAndComposite[1].value.kind === "clickable-menu-item";
-
-
