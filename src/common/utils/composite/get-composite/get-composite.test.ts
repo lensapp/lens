@@ -380,10 +380,10 @@ Available parent ids are:
 
     expect(orderedPaths).toEqual([
       "some-root-id",
-      "some-root-id.some-id-1",
-      "some-root-id.some-id-1.some-child-id-1",
-      "some-root-id.some-id-1.some-child-id-2",
-      "some-root-id.some-id-2",
+      "some-root-id -> some-id-1",
+      "some-root-id -> some-id-1 -> some-child-id-1",
+      "some-root-id -> some-id-1 -> some-child-id-2",
+      "some-root-id -> some-id-2",
     ]);
   });
 
@@ -436,10 +436,10 @@ Available parent ids are:
 
     expect(orderedPaths).toEqual([
       "some-root-id",
-      "some-root-id.some-id-1",
-      "some-root-id.some-id-1.some-child-id-1",
-      "some-root-id.some-id-1.some-child-id-2",
-      "some-root-id.some-id-2",
+      "some-root-id -> some-id-1",
+      "some-root-id -> some-id-1 -> some-child-id-1",
+      "some-root-id -> some-id-1 -> some-child-id-2",
+      "some-root-id -> some-id-2",
     ]);
   });
 });
