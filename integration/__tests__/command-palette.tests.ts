@@ -10,7 +10,7 @@ describe("Lens command palette", () => {
   let window: Page;
   let cleanup: undefined | (() => Promise<void>);
   let app: ElectronApplication;
-  
+
   beforeEach(async () => {
     ({ window, cleanup, app } = await utils.start());
     await utils.clickWelcomeButton(window);
@@ -25,7 +25,7 @@ describe("Lens command palette", () => {
       await app.evaluate(async ({ app }) => {
         await app.applicationMenu
           ?.getMenuItemById("view")
-          ?.submenu?.getMenuItemById("command-palette")
+          ?.submenu?.getMenuItemById("open-command-palette")
           ?.click();
       });
       await window.waitForSelector(".Select__option >> text=Hotbar: Switch");
