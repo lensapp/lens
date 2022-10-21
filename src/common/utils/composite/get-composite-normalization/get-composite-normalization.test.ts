@@ -6,7 +6,7 @@ import { getCompositeNormalization } from "./get-composite-normalization";
 import getComposite from "../get-composite/get-composite";
 
 describe("get-composite-normalization", () => {
-  it("given a composite, flattens it to path and composite", () => {
+  it("given a composite, flattens it to paths and composites", () => {
     const someRootItem = {
       id: "some-root-id",
       parentId: undefined,
@@ -31,12 +31,12 @@ describe("get-composite-normalization", () => {
     const actual = getCompositeNormalization(composite);
 
     expect(actual).toEqual([
-      ["some-root-id", expect.objectContaining({ value: someRootItem })],
+      [["some-root-id"], expect.objectContaining({ value: someRootItem })],
 
-      ["some-root-id.some-id", expect.objectContaining({ value: someItem })],
+      [["some-root-id", "some-id"], expect.objectContaining({ value: someItem })],
 
       [
-        "some-root-id.some-id.some-child-id",
+        ["some-root-id", "some-id", "some-child-id"],
         expect.objectContaining({ value: someNestedItem }),
       ],
     ]);

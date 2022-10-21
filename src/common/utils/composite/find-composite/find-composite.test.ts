@@ -7,15 +7,15 @@ import getComposite from "../get-composite/get-composite";
 import { findComposite } from "./find-composite";
 
 describe("find-composite", () => {
-  let composite: Composite<{ id: string; parentId?: string; someProperty: string }>;
+  let composite: Composite<{ id: string; parentId?: string }>;
 
   beforeEach(() => {
     composite = getComposite({
       source: [
-        { id: "some-root-id", someProperty: "some-value" },
-        { id: "some-child-id", parentId: "some-root-id", someProperty: "some-value" },
-        { id: "some-irrelevant-grandchild-id", parentId: "some-child-id", someProperty: "some-value" },
-        { id: "some-grandchild-id", parentId: "some-child-id", someProperty: "some-value" },
+        { id: "some-root-id" },
+        { id: "some-child-id", parentId: "some-root-id" },
+        { id: "some-grandchild-id", parentId: "some-child-id" },
+        { id: "some-other-grandchild-id", parentId: "some-child-id" },
       ],
 
       rootId: "some-root-id",
@@ -25,28 +25,62 @@ describe("find-composite", () => {
   it("when finding root using path, does so", () => {
     const actual = findComposite("some-root-id")(composite);
 
-    expect(actual?.id).toBe("some-root-id");
+    expect(actual.id).toBe("some-root-id");
   });
 
   it("when finding child using path, does so", () => {
-    const actual = findComposite("some-root-id.some-child-id")(composite);
+    const actual = findComposite("some-root-id", "some-child-id")(composite);
 
-    expect(actual?.id).toBe("some-child-id");
+    expect(actual.id).toBe("some-child-id");
   });
 
   it("when finding grandchild using path, does so", () => {
     const actual = findComposite(
-      "some-root-id.some-child-id.some-grandchild-id",
+      "some-root-id",
+      "some-child-id",
+      "some-grandchild-id",
     )(composite);
 
-    expect(actual?.id).toBe("some-grandchild-id");
+    expect(actual.id).toBe("some-grandchild-id");
   });
 
-  it("when finding with non existing path, returns undefined", () => {
-    const actual = findComposite("some-root-id.some-non-existing-path")(
-      composite,
-    );
+  it("when finding with non existing leaf-level path, throws", () => {
+    expect(() => {
+      findComposite(
+        "some-root-id",
+        "some-child-id",
+        "some-non-existing-grandchild-id",
+      )(composite);
+    }).toThrow(`Tried to find 'some-root-id -> some-child-id -> some-non-existing-grandchild-id' from a composite, but found nothing.
 
-    expect(actual).toBe(undefined);
+Node 'some-root-id -> some-child-id' had only following children:
+some-grandchild-id
+some-other-grandchild-id`);
+  });
+
+  it("when finding with non-existing mid-level path, throws", () => {
+    expect(() => {
+      findComposite(
+        "some-root-id",
+        "some-non-existing-child-id",
+        "some-non-existing-grandchild-id",
+      )(composite);
+    }).toThrow(`Tried to find 'some-root-id -> some-non-existing-child-id -> some-non-existing-grandchild-id' from a composite, but found nothing.
+
+Node 'some-root-id' had only following children:
+some-child-id`);
+  });
+
+  it("when finding with non-existing root-level path, throws", () => {
+    expect(() => {
+      findComposite(
+        "some-non-existing-root-id",
+        "some-non-existing-child-id",
+        "some-non-existing-grandchild-id",
+      )(composite);
+    }).toThrow(`Tried to find 'some-non-existing-root-id -> some-non-existing-child-id -> some-non-existing-grandchild-id' from a composite, but found nothing.
+
+Node 'some-root-id' had only following children:
+some-child-id`);
   });
 });

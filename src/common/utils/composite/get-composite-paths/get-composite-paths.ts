@@ -9,4 +9,4 @@ import { getCompositeNormalization } from "../get-composite-normalization/get-co
 
 export const getCompositePaths = (
   composite: Composite<unknown>,
-): string[] => pipeline(composite, getCompositeNormalization, map(([path]) => path));
+): string[] => pipeline(composite, getCompositeNormalization, map(([path]) => path.join(" -> ")));

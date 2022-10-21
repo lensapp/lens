@@ -8,15 +8,17 @@ export const getCompositeNormalization = <T>(composite: Composite<T>) => {
   const _normalizeComposite = <T>(
     composite: Composite<T>,
     previousPath: string[] = [],
-  ): (readonly [path: string, composite: Composite<T>])[] => {
+  ): (readonly [path: string[], composite: Composite<T>])[] => {
     const currentPath = [...previousPath, composite.id];
 
-    const pathAndCompositeTuple = [currentPath.join("."), composite] as const;
+    const pathAndCompositeTuple = [currentPath, composite] as const;
 
     return [
       pathAndCompositeTuple,
 
-      ...composite.children.flatMap((x) => _normalizeComposite(x, currentPath)),
+      ...composite.children.flatMap((child) =>
+        _normalizeComposite(child, currentPath),
+      ),
     ];
   };
 
