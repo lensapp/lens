@@ -54,7 +54,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
       shellProcess.stdout.on("data", b => stdout.push(b));
 
       shellProcess.stdin.write(command);
-      shellProcess.stdin.end(command);
+      shellProcess.stdin.end();
 
       shellProcess.on("close", (code, signal) => {
         if (code || signal) {
