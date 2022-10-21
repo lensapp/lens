@@ -29,7 +29,7 @@ describe("handling-of-orphan-application-menu-items, given orphan menu item", ()
     builder.beforeApplicationStart((mainDi) => {
       const someOrphanMenuItemInjectable = getInjectable({
         id: "some-orphan-menu-item",
-        instantiate: di => ({
+        instantiate: () => ({
           kind: "sub-menu" as const,
           id: "some-item-id",
           // Note: unknown id makes this item an orphan.
