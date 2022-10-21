@@ -10,6 +10,12 @@ import sendToChannelInElectronBrowserWindowInjectable from "./send-to-channel-in
 import type { ElectronWindow } from "./create-lens-window.injectable";
 import type { RequireExactlyOne } from "type-fest";
 import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-browser.injectable";
+import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
+import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
+import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
+import fsInjectable from "../../../../common/fs/fs.injectable";
+import applicationInformationInjectable from "../../../../common/vars/application-information.injectable";
+
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
 
@@ -47,6 +53,10 @@ const createElectronWindowInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const sendToChannelInLensWindow = di.inject(sendToChannelInElectronBrowserWindowInjectable);
     const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
+    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
+    const lensResourcesDir = di.inject(lensResourcesDirInjectable);
+    const isLinux = di.inject(isLinuxInjectable);
+    const applicationInformation = di.inject(applicationInformationInjectable);
 
     return (configuration) => {
       const applicationWindowState = di.inject(
@@ -80,6 +90,23 @@ const createElectronWindowInjectable = getInjectable({
           contextIsolation: false,
         },
       });
+
+      if (isLinux) {
+        const iconFileName = [
+          getAbsolutePath(lensResourcesDir, `../${applicationInformation.name}.png`),
+          `/usr/share/icons/hicolor/512x512/apps/${applicationInformation.name}.png`,
+        ].find(di.inject(fsInjectable).existsSync);
+
+        if (iconFileName != null) {
+          try {
+            browserWindow.setIcon(iconFileName);
+          } catch (err) {
+            logger.warn(`Error while setting window icon ${err}`);
+          }
+        } else {
+          logger.warn(`No suitable icon found for task bar.`);
+        }
+      }
 
       applicationWindowState.manage(browserWindow);
 
