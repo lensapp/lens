@@ -78,7 +78,7 @@ npm run dev
 You must restart Lens for the extension to load.
 After this initial restart, reload Lens and it will automatically pick up changes any time the extension rebuilds.
 
-With Lens running, either connect to an existing cluster or create a new one - refer to the latest [Lens Documentation](https://docs.k8slens.dev/main/catalog/) for details on how to add a cluster in Lens IDE.
+With Lens running, either connect to an existing cluster or create a new one - refer to the latest [Lens Documentation](https://docs.k8slens.dev/getting-started/add-cluster/) for details on how to add a cluster in Lens IDE.
 You will see the "Hello World" page in the left-side cluster menu.
 
 ## Develop the Extension

@@ -312,6 +312,7 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -698,6 +699,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1117,6 +1119,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1615,6 +1618,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -2113,6 +2117,7 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

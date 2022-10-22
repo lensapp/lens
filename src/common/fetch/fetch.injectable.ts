@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { RequestInfo, RequestInit, Response } from "node-fetch";
 import fetch from "node-fetch";
+import type { RequestInit, Response } from "node-fetch";
 
-export type Fetch = (url: RequestInfo, init?: RequestInit) => Promise<Response>;
+export type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
 const fetchInjectable = getInjectable({
   id: "fetch",

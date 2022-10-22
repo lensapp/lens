@@ -10,11 +10,11 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import type { NodeApi } from "../../../common/k8s-api/endpoints";
 import { Pod } from "../../../common/k8s-api/endpoints";
+import type { NodeApi, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { cssNames, toJS } from "../../utils";
+import { cssNames, stopPropagation, toJS } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
@@ -35,6 +35,9 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
+import runtimeClassApiInjectable from "../../../common/k8s-api/endpoints/runtime-class.api.injectable";
+import serviceAccountApiInjectable from "../../../common/k8s-api/endpoints/service-account.api.injectable";
+import priorityClassApiInjectable from "../../../common/k8s-api/endpoints/priority-class.api.injectable";
 
 export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 }
@@ -44,6 +47,9 @@ interface Dependencies {
   getActiveClusterEntity: GetActiveClusterEntity;
   getDetailsUrl: GetDetailsUrl;
   nodeApi: NodeApi;
+  priorityClassApi: PriorityClassApi;
+  runtimeClassApi: RuntimeClassApi;
+  serviceAccountApi: ServiceAccountApi;
 }
 
 @observer
@@ -94,6 +100,22 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
     const initContainers = pod.getInitContainers();
     const containers = pod.getContainers();
 
+    const namespace = pod.getNs();
+    const priorityClassName = pod.getPriorityClassName();
+    const runtimeClassName = pod.getRuntimeClassName();
+    const serviceAccountName = pod.getServiceAccountName();
+
+    const priorityClassDetailsUrl = getDetailsUrl(this.props.priorityClassApi.getUrl({
+      name: priorityClassName,
+    }));
+    const runtimeClassDetailsUrl = getDetailsUrl(this.props.runtimeClassApi.getUrl({
+      name: runtimeClassName,
+    }));
+    const serviceAccountDetailsUrl = getDetailsUrl(this.props.serviceAccountApi.getUrl({
+      name: serviceAccountName,
+      namespace,
+    }));
+
     return (
       <div className="PodDetails">
         {!isMetricHidden && (
@@ -130,16 +152,34 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
           {podIPs.map(label => <Badge key={label} label={label} />)}
         </DrawerItem>
         <DrawerItem name="Service Account">
-          {pod.getServiceAccountName()}
+          <Link
+            key="link"
+            to={serviceAccountDetailsUrl}
+            onClick={stopPropagation}
+          >
+            {serviceAccountName}
+          </Link>
         </DrawerItem>
-        <DrawerItem name="Priority Class" hidden={pod.getPriorityClassName() === ""}>
-          {pod.getPriorityClassName()}
+        <DrawerItem name="Priority Class" hidden={priorityClassName === ""}>
+          <Link
+            key="link"
+            to={priorityClassDetailsUrl}
+            onClick={stopPropagation}
+          >
+            {priorityClassName}
+          </Link>
         </DrawerItem>
         <DrawerItem name="QoS Class">
           {pod.getQosClass()}
         </DrawerItem>
-        <DrawerItem name="Runtime Class" hidden={pod.getRuntimeClassName() === ""}>
-          {pod.getRuntimeClassName()}
+        <DrawerItem name="Runtime Class" hidden={runtimeClassName === ""}>
+          <Link
+            key="link"
+            to={runtimeClassDetailsUrl}
+            onClick={stopPropagation}
+          >
+            {runtimeClassName}
+          </Link>
         </DrawerItem>
 
         <DrawerItem
@@ -207,5 +247,8 @@ export const PodDetails = withInjectables<Dependencies, PodDetailsProps>(NonInje
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     nodeApi: di.inject(nodeApiInjectable),
+    priorityClassApi: di.inject(priorityClassApiInjectable),
+    runtimeClassApi: di.inject(runtimeClassApiInjectable),
+    serviceAccountApi: di.inject(serviceAccountApiInjectable),
   }),
 });

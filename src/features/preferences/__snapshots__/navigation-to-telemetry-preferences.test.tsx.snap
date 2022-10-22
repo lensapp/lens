@@ -283,6 +283,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -921,6 +922,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1571,6 +1573,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1859,6 +1862,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -2110,6 +2114,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

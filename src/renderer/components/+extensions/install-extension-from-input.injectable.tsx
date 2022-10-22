@@ -4,7 +4,6 @@
  */
 import React from "react";
 import type { ExtendableDisposer } from "../../../common/utils";
-import { downloadFile } from "../../../common/utils";
 import { InputValidators } from "../input";
 import { getMessageFromError } from "./get-message-from-error/get-message-from-error";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -15,6 +14,8 @@ import readFileNotifyInjectable from "./read-file-notify/read-file-notify.inject
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import downloadBinaryInjectable from "../../../common/fetch/download-binary.injectable";
+import { withTimeout } from "../../../common/fetch/timeout-controller";
 
 export type InstallExtensionFromInput = (input: string) => Promise<void>;
 
@@ -29,19 +30,28 @@ const installExtensionFromInputInjectable = getInjectable({
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const logger = di.inject(loggerInjectable);
+    const downloadBinary = di.inject(downloadBinaryInjectable);
 
     return async (input) => {
       let disposer: ExtendableDisposer | undefined = undefined;
 
       try {
-      // fixme: improve error messages for non-tar-file URLs
+        // fixme: improve error messages for non-tar-file URLs
         if (InputValidators.isUrl.validate(input)) {
-        // install via url
+          // install via url
           disposer = extensionInstallationStateStore.startPreInstall();
-          const { promise } = downloadFile({ url: input, timeout: 10 * 60 * 1000 });
+          const { signal } = withTimeout(10 * 60 * 1000);
+          const result = await downloadBinary(input, { signal });
+
+          if (!result.callWasSuccessful) {
+            showErrorNotification(`Failed to download extension: ${result.error}`);
+
+            return disposer();
+          }
+
           const fileName = getBasenameOfPath(input);
 
-          return await attemptInstall({ fileName, dataP: promise }, disposer);
+          return await attemptInstall({ fileName, data: result.response }, disposer);
         }
 
         try {
@@ -49,8 +59,13 @@ const installExtensionFromInputInjectable = getInjectable({
 
           // install from system path
           const fileName = getBasenameOfPath(input);
+          const data = await readFileNotify(input);
 
-          return await attemptInstall({ fileName, dataP: readFileNotify(input) });
+          if (!data) {
+            return;
+          }
+
+          return await attemptInstall({ fileName, data });
         } catch (error) {
           const extNameCaptures = InputValidators.isExtensionNameInstallRegex.captures(input);
 

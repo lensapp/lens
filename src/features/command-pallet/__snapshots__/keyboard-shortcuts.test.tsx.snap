@@ -264,6 +264,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -546,6 +547,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -828,6 +830,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1122,6 +1125,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1323,6 +1327,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1524,6 +1529,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1725,6 +1731,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1938,6 +1945,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

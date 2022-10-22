@@ -172,7 +172,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
     </div>
   </div>
   <div
-    class="Select__menu-portal css-yj2v5g"
+    class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
       class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-26l3qy-menu"
@@ -822,7 +822,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
     </div>
   </div>
   <div
-    class="Select__menu-portal css-yj2v5g"
+    class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
       class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-26l3qy-menu"
@@ -1340,7 +1340,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
     </div>
   </div>
   <div
-    class="Select__menu-portal css-yj2v5g"
+    class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
       class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-26l3qy-menu"

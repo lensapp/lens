@@ -771,7 +771,7 @@ Construct the table using the `Renderer.Component.Table` and related elements.
 
 For each pod the name, age, and status are obtained using the `Renderer.K8sApi.Pod` methods.
 The table is constructed using the `Renderer.Component.Table` and related elements.
-See [Component documentation](https://docs.k8slens.dev/latest/extensions/api/modules/_renderer_api_components_/) for further details.
+See [Component documentation](https://api-docs.k8slens.dev/latest/extensions/api/modules/Renderer.Component/) for further details.
 
 ### `kubeObjectStatusTexts`
 

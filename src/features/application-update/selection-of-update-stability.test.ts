@@ -222,7 +222,7 @@ describe("selection of update stability", () => {
             it('given user changes update channel to "alpha", when user would close the application, installs the update for being stable enough', () => {
               selectedUpdateChannel.setValue(updateChannels.alpha.id);
 
-              expect(setUpdateOnQuitMock).toHaveBeenLastCalledWith(false);
+              expect(setUpdateOnQuitMock).toHaveBeenLastCalledWith(true);
             });
           });
         });

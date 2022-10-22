@@ -4,7 +4,7 @@
  */
 
 export type KubeResource =
-  "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" |
+  "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" | "leases" |
   "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
@@ -35,6 +35,7 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   "jobs": { kind: "Job", group: "batch" },
   "namespaces": { kind: "Namespace" },
   "limitranges": { kind: "LimitRange" },
+  "leases": { kind: "Lease" },
   "networkpolicies": { kind: "NetworkPolicy", group: "networking.k8s.io" },
   "nodes": { kind: "Node" },
   "persistentvolumes": { kind: "PersistentVolume" },

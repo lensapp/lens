@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import getActiveHelmRepositoriesChannelInjectable from "../../../../../common/helm/get-active-helm-repositories-channel.injectable";
+import { getActiveHelmRepositoriesChannel } from "../../../../../common/helm/get-active-helm-repositories-channel";
 import { requestFromChannelInjectionToken } from "../../../../../common/utils/channel/request-from-channel-injection-token";
 import showErrorNotificationInjectable from "../../../notifications/show-error-notification.injectable";
 import helmRepositoriesErrorStateInjectable from "./helm-repositories-error-state.injectable";
@@ -15,12 +15,11 @@ const activeHelmRepositoriesInjectable = getInjectable({
 
   instantiate: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
-    const getHelmRepositoriesChannel = di.inject(getActiveHelmRepositoriesChannelInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const helmRepositoriesErrorState = di.inject(helmRepositoriesErrorStateInjectable);
 
     return asyncComputed(async () => {
-      const result = await requestFromChannel(getHelmRepositoriesChannel);
+      const result = await requestFromChannel(getActiveHelmRepositoriesChannel);
 
       if (result.callWasSuccessful) {
         return result.response;

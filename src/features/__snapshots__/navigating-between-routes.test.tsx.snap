@@ -106,6 +106,7 @@ exports[`navigating between routes given route with optional path parameters whe
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -226,6 +227,7 @@ exports[`navigating between routes given route without path parameters when navi
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

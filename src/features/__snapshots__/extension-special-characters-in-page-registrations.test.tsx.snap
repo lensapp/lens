@@ -182,6 +182,7 @@ exports[`extension special characters in page registrations renders 1`] = `
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -302,6 +303,7 @@ exports[`extension special characters in page registrations when navigating to r
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

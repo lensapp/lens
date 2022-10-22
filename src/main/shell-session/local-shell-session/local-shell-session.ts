@@ -36,11 +36,8 @@ export class LocalShellSession extends ShellSession {
   }
 
   public async open() {
-    let env = await this.getCachedShellEnv();
-
     // extensions can modify the env
-    env = this.dependencies.modifyTerminalShellEnv(this.cluster.id, env);
-
+    const env = this.dependencies.modifyTerminalShellEnv(this.cluster.id, await this.getCachedShellEnv());
     const shell = env.PTYSHELL;
 
     if (!shell) {

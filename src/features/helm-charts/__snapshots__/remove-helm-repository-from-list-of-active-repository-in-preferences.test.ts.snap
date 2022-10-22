@@ -560,6 +560,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1149,6 +1150,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1738,6 +1740,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -2316,6 +2319,7 @@ exports[`remove helm repository from list of active repositories in preferences 
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

@@ -19,6 +19,7 @@ export * from "./events.api";
 export * from "./horizontal-pod-autoscaler.api";
 export * from "./ingress.api";
 export * from "./job.api";
+export * from "./lease.api";
 export * from "./limit-range.api";
 export * from "./namespace.api";
 export * from "./network-policy.api";

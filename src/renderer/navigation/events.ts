@@ -5,14 +5,11 @@
 
 import { ipcRenderer } from "electron";
 import { reaction } from "mobx";
-import { broadcastMessage, ipcRendererOn } from "../../common/ipc";
-import {
-  getLegacyGlobalDiForExtensionApi,
-} from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { broadcastMessage } from "../../common/ipc";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import matchedClusterIdInjectable from "./matched-cluster-id.injectable";
 
 export const enum IpcRendererNavigationEvents {
-  RELOAD_PAGE = "renderer:page-reload",
   CLUSTER_VIEW_CURRENT_ID = "renderer:cluster-id-of-active-view",
   NAVIGATE_IN_APP = "renderer:navigate",
   NAVIGATE_IN_CLUSTER = "renderer:navigate-in-cluster",
@@ -27,11 +24,6 @@ export function bindEvents() {
   if (process.isMainFrame) {
     bindClusterManagerRouteEvents();
   }
-
-  // Reload dashboard window
-  ipcRendererOn(IpcRendererNavigationEvents.RELOAD_PAGE, () => {
-    location.reload();
-  });
 }
 
 // Handle events only in main window renderer process (see also: cluster-manager.tsx)

@@ -183,6 +183,7 @@ exports[`show-about-using-tray renders 1`] = `
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -823,6 +824,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

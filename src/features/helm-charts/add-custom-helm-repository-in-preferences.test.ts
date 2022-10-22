@@ -8,6 +8,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
+import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
@@ -24,9 +25,7 @@ describe("add custom helm repository in preferences", () => {
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
-  let execFileMock: AsyncFnMock<
-    ReturnType<typeof execFileInjectable["instantiate"]>
-  >;
+  let execFileMock: AsyncFnMock<ExecFile>;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
 
   beforeEach(async () => {
@@ -184,9 +183,13 @@ describe("add custom helm repository in preferences", () => {
 
             describe("when activation rejects", () => {
               beforeEach(async () => {
-                await execFileMock.reject(
-                  "Some error",
-                );
+                await execFileMock.resolve({
+                  callWasSuccessful: false,
+                  error: {
+                    error: new Error("Some error"),
+                    stderr: "",
+                  },
+                });
               });
 
               it("renders", () => {
@@ -219,8 +222,10 @@ describe("add custom helm repository in preferences", () => {
                     "some-helm-binary-path",
                     ["repo", "add", "some-custom-repository", "http://some.url"],
                   ],
-
-                  "",
+                  {
+                    callWasSuccessful: true,
+                    response: "",
+                  },
                 );
               });
 

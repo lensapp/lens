@@ -2,8 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { downloadFile, downloadJson } from "../../../common/utils";
-import { Notifications } from "../notifications";
+import { isObject } from "../../../common/utils";
 import React from "react";
 import { SemVer } from "semver";
 import URLParse from "url-parse";
@@ -14,11 +13,30 @@ import extensionInstallationStateStoreInjectable from "../../../extensions/exten
 import confirmInjectable from "../confirm-dialog/confirm.injectable";
 import { reduce } from "lodash";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
+import { withTimeout } from "../../../common/fetch/timeout-controller";
+import downloadBinaryInjectable from "../../../common/fetch/download-binary.injectable";
+import downloadJsonInjectable from "../../../common/fetch/download-json.injectable";
+import type { PackageJson } from "type-fest";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface ExtensionInfo {
   name: string;
   version?: string;
   requireConfirmation?: boolean;
+}
+
+interface NpmPackageVersionDescriptor extends PackageJson {
+  dist: {
+    integrity: string;
+    shasum: string;
+    tarball: string;
+  };
+}
+
+interface NpmRegistryPackageDescriptor {
+  versions: Partial<Record<string, NpmPackageVersionDescriptor>>;
+  "dist-tags"?: Partial<Record<string, string>>;
 }
 
 export type AttemptInstallByInfo = (info: ExtensionInfo) => Promise<void>;
@@ -31,84 +49,131 @@ const attemptInstallByInfoInjectable = getInjectable({
     const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const confirm = di.inject(confirmInjectable);
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
+    const downloadJson = di.inject(downloadJsonInjectable);
+    const downloadBinary = di.inject(downloadBinaryInjectable);
+    const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const logger = di.inject(loggerInjectable);
 
     return async (info) => {
-      const { name, version, requireConfirmation = false } = info;
+      const { name, version: versionOrTagName, requireConfirmation = false } = info;
       const disposer = extensionInstallationStateStore.startPreInstall();
       const baseUrl = await getBaseRegistryUrl();
       const registryUrl = new URLParse(baseUrl).set("pathname", name).toString();
-      let json: any;
-      let finalVersion = version;
+      let json: NpmRegistryPackageDescriptor;
 
       try {
-        json = await downloadJson({ url: registryUrl }).promise;
+        const result = await downloadJson(registryUrl);
 
-        if (!json || json.error || typeof json.versions !== "object" || !json.versions) {
-          const message = json?.error ? `: ${json.error}` : "";
-
-          Notifications.error(`Failed to get registry information for that extension${message}`);
+        if (!result.callWasSuccessful) {
+          showErrorNotification(`Failed to get registry information for extension: ${result.error}`);
 
           return disposer();
         }
+
+        if (!isObject(result.response) || Array.isArray(result.response)) {
+          showErrorNotification("Failed to get registry information for extension");
+
+          return disposer();
+        }
+
+        if (result.response.error || !isObject(result.response.versions)) {
+          const message = result.response.error ? `: ${result.response.error}` : "";
+
+          showErrorNotification(`Failed to get registry information for extension${message}`);
+
+          return disposer();
+        }
+
+        json = result.response as unknown as NpmRegistryPackageDescriptor;
       } catch (error) {
         if (error instanceof SyntaxError) {
-        // assume invalid JSON
-          console.warn("Set registry has invalid json", { url: baseUrl }, error);
-          Notifications.error("Failed to get valid registry information for that extension. Registry did not return valid JSON");
+          // assume invalid JSON
+          logger.warn("Set registry has invalid json", { url: baseUrl }, error);
+          showErrorNotification("Failed to get valid registry information for extension. Registry did not return valid JSON");
         } else {
-          console.error("Failed to download registry information", error);
-          Notifications.error(`Failed to get valid registry information for that extension. ${error}`);
+          logger.error("Failed to download registry information", error);
+          showErrorNotification(`Failed to get valid registry information for extension. ${error}`);
         }
 
         return disposer();
       }
 
-      if (version) {
-        if (!json.versions[version]) {
-          if (json["dist-tags"][version]) {
-            finalVersion = json["dist-tags"][version];
-          } else {
-            Notifications.error((
-              <p>
-                {"The "}
-                <em>{name}</em>
-                {" extension does not have a version or tag "}
-                <code>{version}</code>
-                .
-              </p>
-            ));
+      let version = versionOrTagName;
 
-            return disposer();
+      if (versionOrTagName) {
+        validDistTagName:
+        if (!json.versions[versionOrTagName]) {
+          if (json["dist-tags"]) {
+            const potentialVersion = json["dist-tags"][versionOrTagName];
+
+            if (potentialVersion) {
+              if (!json.versions[potentialVersion]) {
+                showErrorNotification((
+                  <p>
+                    Configured registry claims to have tag
+                    {" "}
+                    <code>{versionOrTagName}</code>
+                    .
+                    {" "}
+                    But does not have version infomation for the reference.
+                  </p>
+                ));
+
+                return disposer();
+              }
+
+              version = potentialVersion;
+              break validDistTagName;
+            }
           }
+
+          showErrorNotification((
+            <p>
+              {"The "}
+              <em>{name}</em>
+              {" extension does not have a version or tag "}
+              <code>{versionOrTagName}</code>
+              .
+            </p>
+          ));
+
+          return disposer();
         }
       } else {
         const versions = Object.keys(json.versions)
           .map(version => new SemVer(version, { loose: true }))
-        // ignore pre-releases for auto picking the version
+          // ignore pre-releases for auto picking the version
           .filter(version => version.prerelease.length === 0);
 
         const latestVersion = reduce(versions, (prev, curr) => prev.compareMain(curr) === -1 ? curr : prev);
 
-        if (!latestVersion) {
-          console.error("No versions supplied for that extension", { name });
-          Notifications.error(`No versions found for ${name}`);
+        version = latestVersion?.format();
+      }
 
-          return disposer();
-        }
+      if (!version) {
+        logger.error("No versions supplied for extension", { name });
+        showErrorNotification(`No versions found for ${name}`);
 
-        finalVersion = latestVersion.format();
+        return disposer();
+      }
+
+      const versionInfo = json.versions[version];
+      const tarballUrl = versionInfo?.dist.tarball;
+
+      if (!tarballUrl) {
+        showErrorNotification("Configured registry has invalid data model. Please verify that it is like NPM's.");
+        logger.warn(`[ATTEMPT-INSTALL-BY-INFO]: registry returned unexpected data, final version is ${version} but the versions object is missing .dist.tarball as a string`, versionInfo);
+
+        return disposer();
       }
 
       if (requireConfirmation) {
         const proceed = await confirm({
           message: (
             <p>
-              Are you sure you want to install
-              {" "}
+              {"Are you sure you want to install "}
               <b>
-                {name}
-                @
-                {finalVersion}
+                {`${name}@${version}`}
               </b>
               ?
             </p>
@@ -122,12 +187,17 @@ const attemptInstallByInfoInjectable = getInjectable({
         }
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const url = json.versions[finalVersion!].dist.tarball;
-      const fileName = getBasenameOfPath(url);
-      const { promise: dataP } = downloadFile({ url, timeout: 10 * 60 * 1000 });
+      const fileName = getBasenameOfPath(tarballUrl);
+      const { signal } = withTimeout(10 * 60 * 1000);
+      const request = await downloadBinary(tarballUrl, { signal });
 
-      return attemptInstall({ fileName, dataP }, disposer);
+      if (!request.callWasSuccessful) {
+        showErrorNotification(`Failed to download extension: ${request.error}`);
+
+        return disposer();
+      }
+
+      return attemptInstall({ fileName, data: request.response }, disposer);
     };
   },
 });

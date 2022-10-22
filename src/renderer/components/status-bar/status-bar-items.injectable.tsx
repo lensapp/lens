@@ -10,9 +10,14 @@ import type { StatusBarItem } from "./status-bar-item-injection-token";
 import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 
+interface StatusItem {
+  origin?: string;
+  component: React.ComponentType<StatusBarItemProps>;
+}
+
 export interface StatusBarItems {
-  right: React.ComponentType<StatusBarItemProps>[];
-  left: React.ComponentType<StatusBarItemProps>[];
+  right: StatusItem[];
+  left: StatusItem[];
 }
 
 interface Dependencies {
@@ -27,13 +32,16 @@ function getStatusBarItems({ registrations }: Dependencies): IComputedValue<Stat
     };
 
     for (const registration of registrations.get()) {
-      const { position = "right", component, visible } = registration;
+      const { position = "right", component, visible, origin } = registration;
 
       if (!visible.get()) {
         continue;
       }
 
-      res[position].push(component);
+      res[position].push({
+        origin,
+        component,
+      });
     }
 
     // This is done so that the first ones registered are closest to the corner

@@ -621,6 +621,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1143,6 +1144,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

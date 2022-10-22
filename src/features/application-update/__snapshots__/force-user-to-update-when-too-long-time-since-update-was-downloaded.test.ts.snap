@@ -201,6 +201,7 @@ exports[`force user to update when too long since update was downloaded when app
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -420,6 +421,7 @@ exports[`force user to update when too long since update was downloaded when app
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -686,6 +688,7 @@ exports[`force user to update when too long since update was downloaded when app
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

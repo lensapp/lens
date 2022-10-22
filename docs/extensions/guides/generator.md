@@ -46,14 +46,14 @@ Open `my-first-lens-ext/renderer.tsx` and change the value of `title` from `"Hel
 
 ```typescript
 clusterPageMenus = [
-    {
-        target: { pageId: "hello" },
-        title: "Hello Lens",
-        components: {
-            Icon: ExampleIcon,
-        }
-    }
-]
+  {
+    target: { pageId: "hello" },
+    title: "Hello Lens",
+    components: {
+      Icon: ExampleIcon,
+    },
+  },
+];
 ```
 
 Reload Lens and you will see that the menu item text has changed to "Hello Lens".
@@ -70,6 +70,6 @@ To debug your extension, please see our instructions on [Testing Extensions](../
 To dive deeper, consider looking at [Common Capabilities](../capabilities/common-capabilities.md), [Styling](../capabilities/styling.md), or [Extension Anatomy](anatomy.md).
 
 If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues).
-You can find the latest Lens contribution guidelines [here](https://docs.k8slens.dev/latest/contributing).
+You can find the latest Lens contribution guidelines [here](https://docs.k8slens.dev/contributing).
 
 The Generator source code is hosted at [GitHub](https://github.com/lensapp/generator-lens-ext).
