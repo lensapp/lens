@@ -53,6 +53,7 @@ export class ContextHandler implements ClusterContextHandler {
 
   constructor(private dependencies: Dependencies, protected cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
+    this.setupPrometheus(cluster.preferences);
   }
 
   public setupPrometheus(preferences: ClusterPrometheusPreferences = {}) {
