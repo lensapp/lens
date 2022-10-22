@@ -7,7 +7,7 @@ import type { RenderResult } from "@testing-library/react";
 import { computed, runInAction } from "mobx";
 import React from "react";
 import type { ClusterModalRegistration } from "../../extensions/registries";
-import { clusterModalsInjectionToken } from "../../extensions/registries";
+import { clusterModalsInjectionToken } from "../../renderer/cluster-modals/cluster-modals-injection-token";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 

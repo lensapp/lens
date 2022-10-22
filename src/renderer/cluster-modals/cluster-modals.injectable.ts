@@ -8,7 +8,7 @@ import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-f
 import { flatMap } from "lodash/fp";
 import type { IComputedValue } from "mobx";
 import type { ClusterModalRegistration } from "../../extensions/registries";
-import { clusterModalsInjectionToken } from "../../extensions/registries";
+import { clusterModalsInjectionToken } from "./cluster-modals-injection-token";
 
 const clusterModalsInjectable = getInjectable({
   id: "cluster-modals",
