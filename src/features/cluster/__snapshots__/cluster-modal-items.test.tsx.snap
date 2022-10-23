@@ -1,17 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`cluster modal elements given custom cluster modal available renders 1`] = `
+exports[`<body/> elements originated from cluster modal registration given custom component for cluster view not available renders 1`] = `
 <div>
   <div
     class="clusterModals"
     style="height: 0px;"
-  >
-    <div
-      data-testid="test-modal"
-    >
-      test modal
-    </div>
-  </div>
+  />
   <div
     class="Notifications flex column align-flex-end"
   />
@@ -518,12 +512,18 @@ exports[`cluster modal elements given custom cluster modal available renders 1`]
 </div>
 `;
 
-exports[`cluster modal elements given custom cluster modal not available renders 1`] = `
+exports[`<body/> elements originated from cluster modal registration given custom components for cluster view available renders 1`] = `
 <div>
   <div
     class="clusterModals"
     style="height: 0px;"
-  />
+  >
+    <div
+      data-testid="test-modal"
+    >
+      test modal
+    </div>
+  </div>
   <div
     class="Notifications flex column align-flex-end"
   />

@@ -10,6 +10,6 @@ import type { IComputedValue } from "mobx";
 export interface ClusterModalRegistration {
   id: string;
   Component: React.ComponentType;
-  visible?: IComputedValue<boolean>;
+  visible: IComputedValue<boolean>;
 }
 
