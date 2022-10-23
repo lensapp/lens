@@ -2,9 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, Injectable } from "@ogre-tools/injectable";
+import type { Injectable } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
-import { computed, IComputedValue, IObservableValue, observable, runInAction } from "mobx";
+import type { IComputedValue, IObservableValue } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import React from "react";
 import type { ClusterModalRegistration } from "../../extensions/registries";
 import { clusterModalsInjectionToken } from "../../renderer/cluster-modals/cluster-modals-injection-token";
@@ -106,6 +108,6 @@ describe("<body/> elements originated from cluster modal registration", () => {
       const modal = rendered.queryByTestId("test-modal");
 
       expect(modal).not.toBeInTheDocument();
-    })
+    });
   });
 });
