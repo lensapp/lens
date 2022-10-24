@@ -103,7 +103,7 @@ export default <T>({
         filter((childThing) => {
           const parentId = getParentId(childThing);
 
-          return parentId !== undefined && parentId === thingId;
+          return parentId === thingId;
         }),
 
         transformChildren,
