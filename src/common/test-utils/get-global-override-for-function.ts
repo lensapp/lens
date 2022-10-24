@@ -4,10 +4,22 @@
  */
 import type { Injectable } from "@ogre-tools/injectable";
 import { getGlobalOverride } from "./get-global-override";
+import { camelCase } from "lodash/fp";
 
 export const getGlobalOverrideForFunction = (
   injectable: Injectable<Function, any, any>,
 ) =>
-  getGlobalOverride(injectable, () => () => {
-    throw new Error(`Tried to invoke a function "${injectable.id}" without override`);
+  getGlobalOverride(injectable, () => (...args: any[]) => {
+    console.warn(
+      `Tried to invoke a function "${injectable.id}" without override. The args were:`,
+      args,
+    );
+
+    throw new Error(
+      `Tried to invoke a function "${
+        injectable.id
+      }" without override. Add eg. "di.override(${camelCase(
+        injectable.id,
+      )}Mock)" to the unit test interested in this.`,
+    );
   });
