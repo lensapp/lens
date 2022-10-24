@@ -8,12 +8,15 @@ import getCompositeFor from "./get-composite";
 import { getCompositePaths } from "../get-composite-paths/get-composite-paths";
 import { sortBy } from "lodash/fp";
 
+interface SomeItem {
+  id: string;
+  parentId?: string;
+  orderNumber?: number;
+}
+
 describe("get-composite", () => {
   it("given items and a specified root id, creates a composite", () => {
-    const getComposite = getCompositeFor<{
-      id: string;
-      parentId: string | undefined;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       rootId: "some-root-id",
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
@@ -86,10 +89,7 @@ describe("get-composite", () => {
 
     const items = [someRootItem, someItem, someNestedItem];
 
-    const getComposite = getCompositeFor<{
-      id: string;
-      parentId: string | undefined;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       // Notice: no root id
       // rootId: "some-root-id",
       getId: (x) => x.id,
@@ -136,10 +136,7 @@ describe("get-composite", () => {
 
     const items = [someRootItem, someOtherRootItem];
 
-    const getComposite = getCompositeFor<{
-      id: string;
-      parentId: string | undefined;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
     });
@@ -164,10 +161,7 @@ describe("get-composite", () => {
 
     const items = [someItem, someOtherItem];
 
-    const getComposite = getCompositeFor<{
-      id: string;
-      parentId: string | undefined;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
     });
@@ -192,10 +186,7 @@ describe("get-composite", () => {
 
     const items = [someItem, someItemWithMissingParentId];
 
-    const getComposite = getCompositeFor<{
-      id: string;
-      parentId: string | undefined;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
     });
@@ -230,10 +221,7 @@ Available parent ids are:
 
       handleMissingParentIdMock = jest.fn();
 
-      const getComposite = getCompositeFor<{
-        id: string;
-        parentId?: string;
-      }>({
+      const getComposite = getCompositeFor<SomeItem>({
         getId: (x) => x.id,
         getParentId: (x) => x.parentId,
         handleMissingParentIds: handleMissingParentIdMock,
@@ -269,10 +257,7 @@ Available parent ids are:
 
     const items = [someItem, someRoot];
 
-    const getComposite = getCompositeFor<{
-      id: string;
-      parentId: string | undefined;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
     });
@@ -302,10 +287,7 @@ Available parent ids are:
 
     const items = [root, someItem, someOtherItem];
 
-    const getComposite = getCompositeFor<{
-      id: any;
-      parentId: string | undefined;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
     });
@@ -354,11 +336,7 @@ Available parent ids are:
       someChildItem1,
     ];
 
-    const getComposite = getCompositeFor<{
-      id: string;
-      parentId?: string;
-      orderNumber?: number;
-    }>({
+    const getComposite = getCompositeFor<SomeItem>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
       transformChildren: (things) =>
