@@ -92,16 +92,16 @@ describe("application-menu-in-legacy-extension-api", () => {
     it("related menu items exist", () => {
       const menuItemPathsForExtension = builder.applicationMenu.items.filter(
         (x) =>
-          x.startsWith("root -> some-top-menu-item -> some-extension-name"),
+          x.join(".").startsWith("root.some-top-menu-item.some-extension-name"),
       );
 
       expect(menuItemPathsForExtension).toEqual([
-        "root -> some-top-menu-item -> some-extension-name/some-clickable-item",
+        ["root", "some-top-menu-item", "some-extension-name/some-clickable-item"],
         // Note: anonymous index "1" is used by the non-visible menu item.
-        "root -> some-top-menu-item -> some-extension-name/2-separator",
-        "root -> some-top-menu-item -> some-extension-name/some-os-action-menu-item-id",
-        "root -> some-top-menu-item -> some-extension-name/some-submenu-with-explicit-children",
-        "root -> some-top-menu-item -> some-extension-name/some-submenu-with-explicit-children -> some-extension-name/some-submenu-with-explicit-children/some-explicit-child",
+        ["root", "some-top-menu-item", "some-extension-name/2-separator"],
+        ["root", "some-top-menu-item", "some-extension-name/some-os-action-menu-item-id"],
+        ["root", "some-top-menu-item", "some-extension-name/some-submenu-with-explicit-children"],
+        ["root", "some-top-menu-item", "some-extension-name/some-submenu-with-explicit-children", "some-extension-name/some-submenu-with-explicit-children/some-explicit-child"],
       ]);
     });
 
@@ -121,7 +121,7 @@ describe("application-menu-in-legacy-extension-api", () => {
       it("when related menu items no longer exist", () => {
         const menuItemPathsForExtension = builder.applicationMenu.items.filter(
           (x) =>
-            x.startsWith("root.some-top-menu-item.some-extension-name"),
+            x.join(".").startsWith("root.some-top-menu-item.some-extension-name"),
         );
 
         expect(menuItemPathsForExtension).toEqual([]);
@@ -132,15 +132,15 @@ describe("application-menu-in-legacy-extension-api", () => {
 
         const menuItemPathsForExtension = builder.applicationMenu.items.filter(
           (x) =>
-            x.startsWith("root -> some-top-menu-item -> some-extension-name"),
+            x.join(".").startsWith("root.some-top-menu-item.some-extension-name"),
         );
 
         expect(menuItemPathsForExtension).toEqual([
-          "root -> some-top-menu-item -> some-extension-name/some-clickable-item",
-          "root -> some-top-menu-item -> some-extension-name/2-separator",
-          "root -> some-top-menu-item -> some-extension-name/some-os-action-menu-item-id",
-          "root -> some-top-menu-item -> some-extension-name/some-submenu-with-explicit-children",
-          "root -> some-top-menu-item -> some-extension-name/some-submenu-with-explicit-children -> some-extension-name/some-submenu-with-explicit-children/some-explicit-child",
+          ["root", "some-top-menu-item", "some-extension-name/some-clickable-item"],
+          ["root", "some-top-menu-item", "some-extension-name/2-separator"],
+          ["root", "some-top-menu-item", "some-extension-name/some-os-action-menu-item-id"],
+          ["root", "some-top-menu-item", "some-extension-name/some-submenu-with-explicit-children"],
+          ["root", "some-top-menu-item", "some-extension-name/some-submenu-with-explicit-children", "some-extension-name/some-submenu-with-explicit-children/some-explicit-child"],
         ]);
       });
     });
@@ -180,11 +180,11 @@ describe("application-menu-in-legacy-extension-api", () => {
     it("only recognizable menu items from extension exist", () => {
       const menuItemPathsForExtension = builder.applicationMenu.items.filter(
         (x) =>
-          x.startsWith("root -> some-top-menu-item -> some-extension-name"),
+          x.join(".").startsWith("root.some-top-menu-item.some-extension-name"),
       );
 
       expect(menuItemPathsForExtension).toEqual([
-        "root -> some-top-menu-item -> some-extension-name/some-recognizable-item",
+        ["root", "some-top-menu-item", "some-extension-name/some-recognizable-item"],
       ]);
     });
 

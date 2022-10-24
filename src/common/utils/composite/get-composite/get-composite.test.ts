@@ -224,7 +224,7 @@ Available parent ids are:
     it("creates composite without the orphan item, and without throwing", () => {
       const paths = getCompositePaths(composite);
 
-      expect(paths).toEqual(["some-root-id"]);
+      expect(paths).toEqual([["some-root-id"]]);
     });
 
     it("handles the missing parent ids", () => {
@@ -379,11 +379,11 @@ Available parent ids are:
     const orderedPaths = getCompositePaths(composite);
 
     expect(orderedPaths).toEqual([
-      "some-root-id",
-      "some-root-id -> some-id-1",
-      "some-root-id -> some-id-1 -> some-child-id-1",
-      "some-root-id -> some-id-1 -> some-child-id-2",
-      "some-root-id -> some-id-2",
+      ["some-root-id"],
+      ["some-root-id", "some-id-1"],
+      ["some-root-id", "some-id-1", "some-child-id-1"],
+      ["some-root-id", "some-id-1", "some-child-id-2"],
+      ["some-root-id", "some-id-2"],
     ]);
   });
 
@@ -435,11 +435,11 @@ Available parent ids are:
     const orderedPaths = getCompositePaths(composite);
 
     expect(orderedPaths).toEqual([
-      "some-root-id",
-      "some-root-id -> some-id-1",
-      "some-root-id -> some-id-1 -> some-child-id-1",
-      "some-root-id -> some-id-1 -> some-child-id-2",
-      "some-root-id -> some-id-2",
+      ["some-root-id"],
+      ["some-root-id", "some-id-1"],
+      ["some-root-id", "some-id-1", "some-child-id-1"],
+      ["some-root-id", "some-id-1", "some-child-id-2"],
+      ["some-root-id", "some-id-2"],
     ]);
   });
 });

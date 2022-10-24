@@ -57,7 +57,7 @@ describe("handling-of-orphan-application-menu-items, given orphan menu item", ()
   });
 
   describe("given some time passes", () => {
-    let applicationMenuPaths: string[];
+    let applicationMenuPaths: string[][];
 
     beforeEach(() => {
       advanceFakeTime(100);
@@ -72,7 +72,7 @@ describe("handling-of-orphan-application-menu-items, given orphan menu item", ()
     });
 
     it("does not show orphan application menu item", () => {
-      expect(applicationMenuPaths.find(x => x.endsWith("some-item-id")));
+      expect(applicationMenuPaths.find(x => x.join(".").endsWith("some-item-id")));
     });
 
     it("logs about bad menu item", () => {

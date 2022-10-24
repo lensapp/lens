@@ -51,11 +51,11 @@ describe("get-composite-paths", () => {
     const actual = getCompositePaths(composite);
 
     expect(actual).toEqual([
-      "some-root-id",
-      "some-root-id -> some-child-id-1",
-      "some-root-id -> some-child-id-1 -> some-grandchild-id-1",
-      "some-root-id -> some-child-id-1 -> some-grandchild-id-2",
-      "some-root-id -> some-child-id-2",
+      ["some-root-id"],
+      ["some-root-id", "some-child-id-1"],
+      ["some-root-id", "some-child-id-1", "some-grandchild-id-1"],
+      ["some-root-id", "some-child-id-1", "some-grandchild-id-2"],
+      ["some-root-id", "some-child-id-2"],
     ]);
   });
 });

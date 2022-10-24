@@ -127,7 +127,7 @@ export interface ApplicationBuilder {
 
   applicationMenu: {
     click: (...path: string[]) => void;
-    items: string[];
+    items: string[][];
   };
   preferences: {
     close: () => void;

@@ -36,7 +36,7 @@ describe("application-menu", () => {
   });
 
   describe("given enough time passes", () => {
-    let applicationMenuPaths: string[];
+    let applicationMenuPaths: string[][];
 
     beforeEach(() => {
       advanceFakeTime(100);
