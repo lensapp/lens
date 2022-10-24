@@ -51,7 +51,7 @@
     "create-release-pr": "node ./scripts/create-release-pr.mjs"
   },
   "config": {
-    "k8sProxyVersion": "0.2.1",
+    "k8sProxyVersion": "0.3.0",
     "bundledKubectlVersion": "1.23.3",
     "bundledHelmVersion": "3.7.2",
     "sentryDsn": "",
