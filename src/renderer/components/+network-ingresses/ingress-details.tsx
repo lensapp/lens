@@ -17,18 +17,20 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { computeRuleDeclarations } from "../../../common/k8s-api/endpoints/ingress.api";
-import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import logger from "../../../common/logger";
 import type { IngressMetricData, RequestIngressMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import requestIngressMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
+import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 }
 
 interface Dependencies {
   requestIngressMetrics: RequestIngressMetrics;
+  getActiveClusterEntity: GetActiveClusterEntity;
 }
 
 @observer
@@ -124,7 +126,7 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
   }
 
   render() {
-    const { object: ingress } = this.props;
+    const { object: ingress, getActiveClusterEntity } = this.props;
 
     if (!ingress) {
       return null;
@@ -182,5 +184,6 @@ export const IngressDetails = withInjectables<Dependencies, IngressDetailsProps>
   getProps: (di, props) => ({
     ...props,
     requestIngressMetrics: di.inject(requestIngressMetricsInjectable),
+    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
   }),
 });
