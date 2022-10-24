@@ -12,7 +12,7 @@ const defaultKubeObjectMetaDetailsItemInjectable = getInjectable({
   instantiate: () => ({
     Component: KubeObjectMeta,
     enabled: computed(() => true),
-    orderNumber: -Infinity,
+    orderNumber: 0,
   }),
   injectionToken: kubeObjectDetailItemInjectionToken,
 });
