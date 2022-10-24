@@ -2,11 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { spawn } from "child_process";
-import { randomUUID } from "crypto";
-import { basename } from "path";
 import type { EnvironmentVariables } from "./compute-shell-environment.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
+import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
+import spawnInjectable from "../../child-process/spawn.injectable";
+import randomUUIDInjectable from "../../crypto/random-uuid.injectable";
 
 export interface UnixShellEnvOptions {
   signal?: AbortSignal;
@@ -16,11 +16,37 @@ export type ComputeUnixShellEnvironment = (shell: string, opts?: UnixShellEnvOpt
 
 const computeUnixShellEnvironmentInjectable = getInjectable({
   id: "compute-unix-shell-environment",
-  instantiate: (): ComputeUnixShellEnvironment => {
+  instantiate: (di): ComputeUnixShellEnvironment => {
     const powerShellName = /^pwsh(-preview)?$/;
     const nonBashLikeShellName = /^t?csh$/;
 
-    return async (shell, opts = {}) => {
+    const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
+    const spawn = di.inject(spawnInjectable);
+    const randomUUID = di.inject(randomUUIDInjectable);
+
+    const getShellSpecifices = (shellPath: string, mark: string) => {
+      const shellName = getBasenameOfPath(shellPath);
+
+      if (powerShellName.test(shellName)) {
+        // Older versions of PowerShell removes double quotes sometimes so we use "double single quotes" which is how
+        // you escape single quotes inside of a single quoted string.
+        return {
+          command: `Command '${process.execPath}' -p '\\"${mark}\\" + JSON.stringify(process.env) + \\"${mark}\\"'`,
+          shellArgs: ["-Login"],
+        };
+      }
+
+      return {
+        command: `'${process.execPath}' -p '"${mark}" + JSON.stringify(process.env) + "${mark}"'`,
+        shellArgs: nonBashLikeShellName.test(shellName)
+          // tcsh and csh don't support any other options when providing the -l (login) shell option
+          ? ["-l"]
+          // zsh (at least, maybe others) don't load RC files when in non-interactive mode, even when using -l (login) option
+          : ["-li"],
+      };
+    };
+
+    return async (shellPath, opts = {}) => {
       const runAsNode = process.env["ELECTRON_RUN_AS_NODE"];
       const noAttach = process.env["ELECTRON_NO_ATTACH_CONSOLE"];
       const env = {
@@ -30,29 +56,10 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
       };
       const mark = randomUUID().replace(/-/g, "");
       const regex = new RegExp(`${mark}(\\{.*\\})${mark}`);
-      const shellName = basename(shell);
-      const { command, shellArgs } = (() => {
-        if (powerShellName.test(shellName)) {
-          // Older versions of PowerShell removes double quotes sometimes so we use "double single quotes" which is how
-          // you escape single quotes inside of a single quoted string.
-          return {
-            command: `Command '${process.execPath}' -p '\\"${mark}\\" + JSON.stringify(process.env) + \\"${mark}\\"'`,
-            shellArgs: ["-Login"],
-          };
-        }
-
-        return {
-          command: `'${process.execPath}' -p '"${mark}" + JSON.stringify(process.env) + "${mark}"'`,
-          shellArgs: nonBashLikeShellName.test(shellName)
-            // tcsh and csh don't support any other options when providing the -l (login) shell option
-            ? ["-l"]
-            // zsh (at least, maybe others) don't load RC files when in non-interactive mode, even when using -l (login) option
-            : ["-li"],
-        };
-      })();
+      const { command, shellArgs } = getShellSpecifices(shellPath, mark);
 
       return new Promise((resolve, reject) => {
-        const shellProcess = spawn(shell, shellArgs, {
+        const shellProcess = spawn(shellPath, shellArgs, {
           detached: true,
           env,
         });
