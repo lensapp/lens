@@ -17,11 +17,12 @@ import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";
 import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
-import { navigate } from "../../navigation";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import activeEntityInjectable from "../../api/catalog/entity/active.injectable";
+import type { Navigate } from "../../navigation/navigate.injectable";
+import navigateInjectable from "../../navigation/navigate.injectable";
 
 export interface HotbarEntityIconProps {
   entity: CatalogEntity;
@@ -38,13 +39,14 @@ interface Dependencies {
   visitEntityContextMenu: VisitEntityContextMenu;
   catalogCategoryRegistry: CatalogCategoryRegistry;
   activeEntity: IComputedValue<CatalogEntity | undefined>;
+  navigate: Navigate;
 }
 
 @observer
 class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps & Dependencies> {
   private readonly menuItems = observable.array<CatalogEntityContextMenu>();
 
-  get kindIcon() {
+  private renderKindIcon() {
     const className = styles.badge;
     const category = this.props.catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
 
@@ -59,7 +61,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
     return <Icon material={category.metadata.icon} className={className} />;
   }
 
-  get ledIcon() {
+  private renderLedIcon() {
     if (this.props.entity.kind !== "KubernetesCluster") {
       return null;
     }
@@ -86,7 +88,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
 
     this.props.visitEntityContextMenu(this.props.entity, {
       menuItems: this.menuItems,
-      navigate,
+      navigate: this.props.navigate,
     });
   }
 
@@ -113,8 +115,8 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
         )}
         onClick={onClick}
       >
-        { this.ledIcon }
-        { this.kindIcon }
+        {this.renderLedIcon()}
+        {this.renderKindIcon()}
       </HotbarIcon>
     );
   }
@@ -126,5 +128,6 @@ export const HotbarEntityIcon = withInjectables<Dependencies, HotbarEntityIconPr
     catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     activeEntity: di.inject(activeEntityInjectable),
+    navigate: di.inject(navigateInjectable),
   }),
 });

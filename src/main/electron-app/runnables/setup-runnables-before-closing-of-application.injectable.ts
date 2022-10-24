@@ -26,6 +26,7 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
     );
 
     return {
+      id: "setup-closing-of-application",
       run: () => {
         const app = di.inject(electronAppInjectable);
 

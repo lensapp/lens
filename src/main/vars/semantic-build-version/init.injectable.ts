@@ -13,6 +13,7 @@ const initSemanticBuildVersionInjectable = getInjectable({
     const buildSemanticVersion = di.inject(buildSemanticVersionInjectable);
 
     return {
+      id: "init-semantic-build-version",
       run: () => buildSemanticVersion.init(),
       runAfter: di.inject(initializeBuildVersionInjectable),
     };

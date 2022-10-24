@@ -15,6 +15,7 @@ const setupRunnablesAfterWindowIsOpenedInjectable = getInjectable({
     const afterWindowIsOpened = runManyFor(di)(afterWindowIsOpenedInjectionToken);
 
     return {
+      id: "setup-runnables-after-window-is-opened",
       run: () => {
         const app = di.inject(electronAppInjectable);
 

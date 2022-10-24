@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
-import clusterManagerInjectable from "./cluster-manager.injectable";
+import clusterManagerInjectable from "./cluster/manager.injectable";
 import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import closeAllWindowsInjectable from "./start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";

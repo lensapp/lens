@@ -15,6 +15,7 @@ const stopApplicationMenuInjectable = getInjectable({
     );
 
     return {
+      id: "stop-application-menu",
       run: async () => {
         await applicationMenu.stop();
       },

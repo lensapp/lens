@@ -27,6 +27,7 @@ const setupAppPathsInjectable = getInjectable({
     const joinPaths = di.inject(joinPathsInjectable);
 
     return {
+      id: "setup-app-paths",
       run: () => {
         if (directoryForIntegrationTesting) {
           setElectronAppPath("appData", directoryForIntegrationTesting);

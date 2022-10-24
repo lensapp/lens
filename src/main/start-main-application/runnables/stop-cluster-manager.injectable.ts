@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import clusterManagerInjectable from "../../cluster-manager.injectable";
+import clusterManagerInjectable from "../../cluster/manager.injectable";
 import { beforeQuitOfFrontEndInjectionToken } from "../runnable-tokens/before-quit-of-front-end-injection-token";
 
 const stopClusterManagerInjectable = getInjectable({
@@ -13,6 +13,7 @@ const stopClusterManagerInjectable = getInjectable({
     const clusterManager = di.inject(clusterManagerInjectable);
 
     return {
+      id: "stop-cluster-manager",
       run: () => {
         clusterManager.stop();
       },

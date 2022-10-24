@@ -17,6 +17,7 @@ const setupMainWindowVisibilityAfterActivationInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
 
     return {
+      id: "setup-main-window-visibility-after-activation",
       run: () => {
         app.on("activate", async (_, windowIsVisible) => {
           logger.info("APP:ACTIVATE", { hasVisibleWindows: windowIsVisible });

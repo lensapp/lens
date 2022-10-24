@@ -15,6 +15,7 @@ const enforceSingleApplicationInstanceInjectable = getInjectable({
     const exitApp = di.inject(exitAppInjectable);
 
     return {
+      id: "enforce-single-application-instance",
       run: () => {
         if (!requestSingleInstanceLock()) {
           exitApp();

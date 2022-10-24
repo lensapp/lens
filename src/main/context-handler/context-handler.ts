@@ -94,6 +94,8 @@ export class ContextHandler implements ClusterContextHandler {
   }
 
   protected async getPrometheusService(): Promise<PrometheusService> {
+    this.setupPrometheus(this.cluster.preferences);
+
     if (this.prometheus && this.prometheusProvider) {
       return {
         id: this.prometheusProvider,

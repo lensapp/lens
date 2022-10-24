@@ -3,17 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { pipeline } from "@ogre-tools/fp";
-import type {
-  DiContainerForInjection,
-  InjectionToken,
-} from "@ogre-tools/injectable";
+import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/injectable";
 import { filter, forEach, map, tap } from "lodash/fp";
 import type { Runnable } from "./run-many-for";
 import { throwWithIncorrectHierarchyFor } from "./throw-with-incorrect-hierarchy-for";
 
 export interface RunnableSync<TParameter = void> {
+  id: string;
   run: RunSync<TParameter>;
-  runAfter?: this;
+  runAfter?: RunnableSync<TParameter>;
 }
 
 type RunSync<Param> = (parameter: Param) => void;
@@ -26,7 +24,7 @@ export function runManySyncFor(di: DiContainerForInjection): RunManySync {
   return (injectionToken) => async (parameter) => {
     const allRunnables = di.injectMany(injectionToken);
 
-    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor(allRunnables);
+    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor((injectionToken as any).id, allRunnables);
 
     const recursedRun = (
       runAfterRunnable: RunnableSync<any> | undefined = undefined,

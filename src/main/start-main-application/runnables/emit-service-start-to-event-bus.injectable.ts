@@ -13,6 +13,7 @@ const emitServiceStartToEventBusInjectable = getInjectable({
     const appEventBus = di.inject(appEventBusInjectable);
 
     return {
+      id: "emit-service-start-to-event-bus",
       run: () => {
         appEventBus.emit({ name: "service", action: "start" });
       },

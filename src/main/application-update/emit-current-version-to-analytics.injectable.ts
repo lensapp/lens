@@ -16,6 +16,7 @@ const emitCurrentVersionToAnalyticsInjectable = getInjectable({
     const buildVersion = di.inject(buildVersionInjectable);
 
     return {
+      id: "emit-current-version-to-analytics",
       run: () => {
         emitEvent({
           name: "app",
